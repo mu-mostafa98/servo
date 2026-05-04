@@ -1,0 +1,99 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 750 900" font-family="Consolas, monospace">
+  <defs>
+    <linearGradient id="g-app" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2c3e50"/><stop offset="100%" stop-color="#34495e"/></linearGradient>
+    <linearGradient id="g-script" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#3498db"/><stop offset="100%" stop-color="#2980b9"/></linearGradient>
+    <linearGradient id="g-layout" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1abc9c"/><stop offset="100%" stop-color="#16a085"/></linearGradient>
+    <linearGradient id="g-net" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2ecc71"/><stop offset="100%" stop-color="#27ae60"/></linearGradient>
+    <linearGradient id="g-third" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f39c12"/><stop offset="100%" stop-color="#e67e22"/></linearGradient>
+    <linearGradient id="g-resvg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#e74c3c"/><stop offset="100%" stop-color="#c0392b"/></linearGradient>
+    <linearGradient id="g-base" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#95a5a6"/><stop offset="100%" stop-color="#7f8c8d"/></linearGradient>
+    <filter id="shadow"><feDropShadow dx="2" dy="2" stdDeviation="2" flood-opacity="0.2"/></filter>
+    <filter id="glow"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-opacity="0.4" flood-color="#e74c3c"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="375" y="35" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">Component Dependency Layer Cake</text>
+  <text x="375" y="53" text-anchor="middle" font-size="12" fill="#7f8c8d">Servo SVG rendering crate architecture</text>
+
+  <!-- Layer 0: Binary / Application -->
+  <rect x="100" y="75" width="550" height="60" rx="4" fill="url(#g-app)" filter="url(#shadow)"/>
+  <text x="375" y="100" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">servo (Application Binary)</text>
+  <text x="375" y="118" text-anchor="middle" font-size="11" fill="#bdc3c7">servo — Main binary, component initialization, thread spawning</text>
+
+  <!-- Layer Arrow -->
+  <line x1="375" y1="135" x2="375" y2="155" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#555"/></marker>
+    <marker id="arrow-down" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#7f8c8d"/></marker>
+  </defs>
+
+  <!-- Layer 1: Script (DOM) -->
+  <rect x="100" y="165" width="550" height="75" rx="4" fill="url(#g-script)" filter="url(#shadow)"/>
+  <text x="375" y="188" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">Script Layer — DOM Element Hierarchy</text>
+  <text x="375" y="205" text-anchor="middle" font-size="11" fill="#d6eaf8">script::dom::svg — SVGSVGElement, SVGElement, SVGImageElement</text>
+  <text x="375" y="220" text-anchor="middle" font-size="11" fill="#d6eaf8">create.rs — SVG element dispatch, XML serialization, cache invalidation</text>
+
+  <line x1="375" y1="240" x2="375" y2="260" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Layer 2: Layout -->
+  <rect x="100" y="270" width="550" height="75" rx="4" fill="url(#g-layout)" filter="url(#shadow)"/>
+  <text x="375" y="293" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">Layout Layer — Positioning &amp; Display Lists</text>
+  <text x="375" y="310" text-anchor="middle" font-size="11" fill="#d5f5e3">layout::fragment_tree — Fragment::Image(ImageFragment)</text>
+  <text x="375" y="325" text-anchor="middle" font-size="11" fill="#d5f5e3">layout::display_list — push_image(), replaced content handling</text>
+
+  <line x1="375" y1="345" x2="375" y2="365" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Layer 3: Net / Image Cache -->
+  <rect x="100" y="375" width="550" height="75" rx="4" fill="url(#g-net)" filter="url(#shadow)"/>
+  <text x="375" y="398" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">Network &amp; Cache Layer</text>
+  <text x="375" y="415" text-anchor="middle" font-size="11" fill="#d5f5e3">net::image_cache — Three-tier SVG cache (DOM/Vector/Raster)</text>
+  <text x="375" y="430" text-anchor="middle" font-size="11" fill="#d5f5e3">shared::net::image_cache — VectorImage, Image, PendingImageId types</text>
+
+  <line x1="375" y1="450" x2="375" y2="470" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- THIRD-PARTY BOUNDARY - The critical visual marker -->
+  <rect x="80" y="480" width="590" height="35" rx="4" fill="none" stroke="#e74c3c" stroke-width="2.5" stroke-dasharray="8,4" filter="url(#glow)"/>
+  <rect x="260" y="482" width="230" height="30" rx="3" fill="#e74c3c"/>
+  <text x="375" y="503" text-anchor="middle" font-size="13" font-weight="bold" fill="#fff">═══  THIRD-PARTY BOUNDARY  ═══</text>
+  <text x="87" y="532" font-size="9" fill="#c0392b">Servo-owned code above</text>
+  <text x="500" y="532" font-size="9" fill="#c0392b">Third-party crates below</text>
+
+  <!-- Layer 4: resvg / usvg -->
+  <rect x="100" y="548" width="550" height="75" rx="4" fill="url(#g-resvg)" filter="url(#shadow)"/>
+  <text x="375" y="571" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">resvg / usvg — SVG Parser &amp; Rasterizer</text>
+  <text x="375" y="588" text-anchor="middle" font-size="11" fill="#fadbd8">usvg::Tree — Group, Path, Image, Text nodes</text>
+  <text x="375" y="603" text-anchor="middle" font-size="11" fill="#fadbd8">resvg::render() — Tree → Pixmap raster conversion</text>
+
+  <line x1="375" y1="623" x2="375" y2="643" stroke="#7f8c8d" stroke-width="1.5" marker-end="url(#arrow-down)"/>
+
+  <!-- Layer 5: tiny_skia + fontdb -->
+  <rect x="100" y="653" width="550" height="75" rx="4" fill="url(#g-resvg)" opacity="0.8" filter="url(#shadow)"/>
+  <text x="375" y="676" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">tiny_skia / fontdb — Core Graphics Primitives</text>
+  <text x="375" y="693" text-anchor="middle" font-size="11" fill="#fadbd8">tiny_skia::Pixmap — RGBA pixel buffer, transforms, blending</text>
+  <text x="375" y="708" text-anchor="middle" font-size="11" fill="#fadbd8">fontdb::Database — System font loading, font matching</text>
+
+  <line x1="375" y1="728" x2="375" y2="748" stroke="#7f8c8d" stroke-width="1.5" marker-end="url(#arrow-down)"/>
+
+  <!-- Layer 6: Rust Standard Library / System -->
+  <rect x="100" y="758" width="550" height="60" rx="4" fill="url(#g-base)" filter="url(#shadow)"/>
+  <text x="375" y="783" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">Rust Standard Library / System</text>
+  <text x="375" y="800" text-anchor="middle" font-size="11" fill="#ecf0f1">std, alloc — Memory allocation, threading, I/O primitives</text>
+
+  <!-- Side annotations: what each layer uses -->
+  <!-- Arrow pointing up: Dependency direction -->
+  <text x="30" y="440" font-size="10" fill="#7f8c8d" transform="rotate(-90, 30, 440)">depends on ▼</text>
+
+  <!-- What needs replacement annotation -->
+  <rect x="680" y="548" width="60" height="75" rx="3" fill="#fde8e8" stroke="#e74c3c" stroke-width="1"/>
+  <text x="710" y="573" text-anchor="middle" font-size="9" font-weight="bold" fill="#c0392b">REPLACE</text>
+  <text x="710" y="588" text-anchor="middle" font-size="8" fill="#555">with</text>
+  <text x="710" y="600" text-anchor="middle" font-size="8" fill="#555">native</text>
+  <text x="710" y="612" text-anchor="middle" font-size="8" fill="#555">layout</text>
+
+  <!-- Key insight annotation -->
+  <rect x="100" y="830" width="550" height="55" rx="4" fill="#fef9e7" stroke="#f39c12" stroke-width="1.5"/>
+  <text x="375" y="848" text-anchor="middle" font-size="11" font-weight="bold" fill="#e67e22">Key Architectural Insight</text>
+  <text x="375" y="864" text-anchor="middle" font-size="10" fill="#555">The Third-Party Boundary separates Servo's DOM/layout from resvg.</text>
+  <text x="375" y="878" text-anchor="middle" font-size="10" fill="#555">Phase 7 proposes bringing SVG rendering into the Servo-owned layers above this line.</text>
+</svg>

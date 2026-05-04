@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 780" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2c3e50"/></marker>
+    <filter id="shadow-sm"><feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.15"/></filter>
+    <filter id="shadow-bg"><feDropShadow dx="1.5" dy="1.5" stdDeviation="2.5" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="450" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#2c3e50">SVG Parsing Pipeline</text>
+  <text x="450" y="48" text-anchor="middle" font-size="11" fill="#7f8c8d">Data URL bytes → usvg::Tree → VectorImageData — image_cache.rs</text>
+
+  <!-- Package: Image Cache -->
+  <rect x="30" y="65" width="840" height="690" rx="6" fill="#e8f8f5" stroke="#27ae60" stroke-width="1.5" opacity="0.3" filter="url(#shadow-bg)"/>
+  <text x="450" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#27ae60">Subsystem: Net / Image Cache</text>
+
+  <!-- Step 1 -->
+  <rect x="210" y="110" width="480" height="65" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="210" y="110" width="480" height="22" rx="4" fill="#27ae60"/>
+  <rect x="210" y="128" width="480" height="4" fill="#27ae60"/>
+  <circle cx="224" cy="120" r="7" fill="#fff" opacity="0.3"/>
+  <text x="224" y="124" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">1</text>
+  <text x="450" y="125" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Receive Image Cache Request</text>
+  <text x="220" y="148" font-size="9" fill="#555">Layout thread calls ImageCache::get_image(url) or get_cached_image_for_url()</text>
+  <text x="220" y="160" font-size="9" fill="#555">Cache creates pending_loads entry — tracks in-progress fetch</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="450" y1="175" x2="450" y2="210" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 2 -->
+  <rect x="210" y="215" width="480" height="65" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="210" y="215" width="480" height="22" rx="4" fill="#1e8449"/>
+  <rect x="210" y="233" width="480" height="4" fill="#1e8449"/>
+  <circle cx="224" cy="225" r="7" fill="#fff" opacity="0.3"/>
+  <text x="224" y="229" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">2</text>
+  <text x="450" y="230" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Fetch Bytes from URL</text>
+  <text x="220" y="253" font-size="9" fill="#555">Data URLs: immediate in-memory base64 decode → raw SVG bytes</text>
+  <text x="220" y="265" font-size="9" fill="#555">HTTP URLs: async network fetch via net subsystem → bytes arrive</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="450" y1="280" x2="450" y2="315" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 3 -->
+  <rect x="210" y="320" width="480" height="55" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="210" y="320" width="480" height="22" rx="4" fill="#1e8449"/>
+  <rect x="210" y="338" width="480" height="4" fill="#1e8449"/>
+  <circle cx="224" cy="330" r="7" fill="#fff" opacity="0.3"/>
+  <text x="224" y="334" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">3</text>
+  <text x="450" y="335" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Detect SVG Content Type</text>
+  <text x="220" y="358" font-size="9" fill="#555">ImageCacheStore::complete_load() checks Content-Type / magic bytes → SVG detected</text>
+
+  <!-- Arrow 3→4 -->
+  <line x1="450" y1="375" x2="450" y2="410" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 4 -->
+  <rect x="180" y="415" width="540" height="85" rx="4" fill="#fff" stroke="#e67e22" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="180" y="415" width="540" height="22" rx="4" fill="#e67e22"/>
+  <rect x="180" y="433" width="540" height="4" fill="#e67e22"/>
+  <circle cx="194" cy="425" r="7" fill="#fff" opacity="0.3"/>
+  <text x="194" y="429" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">4</text>
+  <text x="450" y="430" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Parse SVG — usvg::Tree::from_data()</text>
+  <text x="190" y="453" font-size="9" fill="#555">usvg::Tree::from_data(bytes, &amp;usvg::Options::default())</text>
+  <text x="190" y="465" font-size="9" fill="#e74c3c">Parses XML → validates structure → builds node tree with gradients, patterns, filters</text>
+  <text x="190" y="477" font-size="9" fill="#555">If error (malformed SVG, invalid XML) → fall back to broken_image_icon</text>
+
+  <!-- Arrow 4→5 -->
+  <line x1="450" y1="500" x2="450" y2="540" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 5 -->
+  <rect x="210" y="545" width="480" height="65" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="210" y="545" width="480" height="22" rx="4" fill="#1e8449"/>
+  <rect x="210" y="563" width="480" height="4" fill="#1e8449"/>
+  <circle cx="224" cy="555" r="7" fill="#fff" opacity="0.3"/>
+  <text x="224" y="559" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">5</text>
+  <text x="450" y="560" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Store VectorImageData in Cache</text>
+  <text x="220" y="583" font-size="9" fill="#555">store.vector_images.insert(id, VectorImageData {</text>
+  <text x="230" y="595" font-size="9" fill="#555">svg_tree: Arc&lt;usvg::Tree&gt;, cors_status });</text>
+
+  <!-- Arrow 5→6 -->
+  <line x1="450" y1="610" x2="450" y2="645" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Step 6 -->
+  <rect x="210" y="650" width="480" height="55" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="210" y="650" width="480" height="22" rx="4" fill="#27ae60"/>
+  <rect x="210" y="668" width="480" height="4" fill="#27ae60"/>
+  <circle cx="224" cy="660" r="7" fill="#fff" opacity="0.3"/>
+  <text x="224" y="664" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">6</text>
+  <text x="450" y="665" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Notify Listeners → Image::Vector</text>
+  <text x="220" y="688" font-size="9" fill="#555">Return Image::Vector(VectorImage) to awaiting callers (Layout)</text>
+
+  <!-- Divider -->
+  <rect x="30" y="720" width="840" height="1" fill="#ccc"/>
+  <text x="50" y="738" font-size="9" fill="#7f8c8d">Note: For inline SVG (data URLs), this runs after serialization pipeline. For external &lt;image&gt; SVG, this runs on first fetch.</text>
+  <text x="50" y="753" font-size="9" fill="#7f8c8d">Result: VectorImageData stored in cache with parsed usvg::Tree, ready for rasterization on demand.</text>
+</svg>

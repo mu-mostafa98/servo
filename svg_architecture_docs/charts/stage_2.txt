@@ -1,0 +1,19 @@
+-> script::dom::svg::svgsvgelement::LayoutDom::data()
+-> layout::dom_traversal::traverse_element()
+    -> script::layout_dom::servo_layout_node::ServoLayoutNode::style()
+    -> layout::dom_traversal::Contents::for_element()
+        -> layout::replaced::ReplacedContents::for_element()
+            -> layout::replaced::ReplacedContents::svg_kind_size()
+                steps{
+                    Parent Style Access
+                    Width/Height from SVG Attributes
+                    Aspect Ratio
+                    Natural Size
+                    THE BRANCHING POINT (very important)
+                        svg_source = 
+                            -> layout::context::ImageResolver::queue_svg_element_for_serialization()
+                            -> Some(svg_source_result)
+                    Image Cache Lookup
+                    return
+                }
+    -> layout::dom_traversal::TraversalHandler()

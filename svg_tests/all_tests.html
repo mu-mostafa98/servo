@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<body>
+<h3>Test 1: CSS Inheritance</h3>
+<div style="fill: green">
+    <svg width="200" height="50">
+        <text y="30">Text should be green</text>
+    </svg>
+</div>
+
+<hr>
+
+<h3>Test 2: Web Fonts</h3>
+<svg width="400" height="60">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&display=swap');
+        .test { font-family: 'Roboto', sans-serif; font-size: 20px; }
+    </style>
+    <text y="30" class="test">Text with web font</text>
+</svg>
+
+<hr>
+
+<h3>Test 3: Crisp Transforms</h3>
+<div style="width: fit-content; transform: scale(4) translate(50%, 50%)">
+    Circle should be crisp<br>
+    <svg width="10" height="10">
+        <circle cx="5" cy="5" r="5" fill="green"></circle>
+    </svg>
+</div>
+</body>
+</html>

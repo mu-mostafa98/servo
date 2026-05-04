@@ -1,0 +1,375 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1580" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <!-- Arrowhead markers -->
+    <marker id="arrowDown" markerWidth="10" markerHeight="8" refX="5" refY="8" orient="auto">
+      <path d="M0,0 L5,8 L10,0" fill="#555" />
+    </marker>
+    <marker id="arrowRight" markerWidth="10" markerHeight="8" refX="8" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8" fill="#555" />
+    </marker>
+    <marker id="arrowLeft" markerWidth="10" markerHeight="8" refX="2" refY="4" orient="auto">
+      <path d="M8,0 L0,4 L8,8" fill="#555" />
+    </marker>
+
+    <!-- Drop shadow -->
+    <filter id="shadow" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="2" dy="3" stdDeviation="3" flood-color="#00000030" />
+    </filter>
+    <filter id="shadowLight" x="-5%" y="-5%" width="115%" height="115%">
+      <feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#00000020" />
+    </filter>
+
+    <!-- Gradients for thread lanes -->
+    <linearGradient id="bgScript" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EBF2FB" />
+      <stop offset="100%" stop-color="#D6E6F6" />
+    </linearGradient>
+    <linearGradient id="bgLayout" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EBF5EE" />
+      <stop offset="100%" stop-color="#D6ECD9" />
+    </linearGradient>
+    <linearGradient id="bgImageCache" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#FEF7EB" />
+      <stop offset="100%" stop-color="#FDF0D6" />
+    </linearGradient>
+    <linearGradient id="bgWR" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#F6EDFA" />
+      <stop offset="100%" stop-color="#EDDCF2" />
+    </linearGradient>
+
+    <!-- Node fill gradients -->
+    <linearGradient id="nodeScript" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5A9EE6" />
+      <stop offset="100%" stop-color="#4A90D9" />
+    </linearGradient>
+    <linearGradient id="nodeLayout" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5FC47E" />
+      <stop offset="100%" stop-color="#50B86C" />
+    </linearGradient>
+    <linearGradient id="nodeImageCache" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#EDB044" />
+      <stop offset="100%" stop-color="#E6A23C" />
+    </linearGradient>
+    <linearGradient id="nodeWR" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#CC71E8" />
+      <stop offset="100%" stop-color="#C45DE6" />
+    </linearGradient>
+    <linearGradient id="nodeResult" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#5CB85C" />
+      <stop offset="100%" stop-color="#4CAE4C" />
+    </linearGradient>
+
+    <!-- Re-entry node gradient -->
+    <linearGradient id="nodeReentry" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#6BD48A" />
+      <stop offset="100%" stop-color="#5CC47C" />
+    </linearGradient>
+  </defs>
+
+  <!-- ===== BACKGROUND ===== -->
+  <rect width="1100" height="1580" fill="#FAFBFC" />
+
+  <!-- ===== PASS BACKGROUND ZONES ===== -->
+  <!-- Pass 1 -->
+  <rect x="40" y="80" width="30" height="335" rx="4" fill="#4A90D9" opacity="0.15" />
+  <rect x="80" y="80" width="1000" height="335" rx="8" fill="#4A90D9" opacity="0.04" />
+  <!-- Pass 2 -->
+  <rect x="40" y="440" width="30" height="145" rx="4" fill="#E6A23C" opacity="0.15" />
+  <rect x="80" y="440" width="1000" height="145" rx="8" fill="#E6A23C" opacity="0.04" />
+  <!-- Pass 3 -->
+  <rect x="40" y="610" width="30" height="225" rx="4" fill="#C45DE6" opacity="0.15" />
+  <rect x="80" y="610" width="1000" height="225" rx="8" fill="#C45DE6" opacity="0.04" />
+  <!-- Pass 4 -->
+  <rect x="40" y="860" width="30" height="650" rx="4" fill="#50B86C" opacity="0.15" />
+  <rect x="80" y="860" width="1000" height="650" rx="8" fill="#50B86C" opacity="0.04" />
+
+  <!-- ===== PASS LABELS ===== -->
+  <text x="55" y="115" fill="#4A90D9" font-size="14" font-weight="bold" text-anchor="middle">P</text>
+  <text x="55" y="132" fill="#4A90D9" font-size="14" font-weight="bold" text-anchor="middle">1</text>
+
+  <text x="55" y="480" fill="#E6A23C" font-size="14" font-weight="bold" text-anchor="middle">P</text>
+  <text x="55" y="497" fill="#E6A23C" font-size="14" font-weight="bold" text-anchor="middle">2</text>
+
+  <text x="55" y="710" fill="#C45DE6" font-size="14" font-weight="bold" text-anchor="middle">P</text>
+  <text x="55" y="727" fill="#C45DE6" font-size="14" font-weight="bold" text-anchor="middle">3</text>
+
+  <text x="55" y="1100" fill="#50B86C" font-size="14" font-weight="bold" text-anchor="middle">P</text>
+  <text x="55" y="1117" fill="#50B86C" font-size="14" font-weight="bold" text-anchor="middle">4</text>
+
+  <!-- ===== PASS DIVIDER LINES ===== -->
+  <line x1="100" y1="430" x2="1040" y2="430" stroke="#CCC" stroke-width="1" stroke-dasharray="6,4" />
+  <line x1="100" y1="600" x2="1040" y2="600" stroke="#CCC" stroke-width="1" stroke-dasharray="6,4" />
+  <line x1="100" y1="850" x2="1040" y2="850" stroke="#CCC" stroke-width="1" stroke-dasharray="6,4" />
+
+  <!-- ===== TITLE ===== -->
+  <text x="550" y="42" fill="#222" font-size="24" font-weight="bold" text-anchor="middle">SVG Rendering Pipeline — Complete Flow</text>
+  <text x="550" y="62" fill="#777" font-size="13" text-anchor="middle">&lt;svg width="200" height="200" viewBox="0 0 200 200"&gt;&lt;circle cx="100" cy="100" r="50" fill="blue"/&gt;&lt;/svg&gt;</text>
+
+  <!-- ===== LEGEND ===== -->
+  <rect x="830" y="12" width="250" height="120" rx="6" fill="#FFF" stroke="#DDD" stroke-width="1" filter="url(#shadowLight)" />
+  <text x="845" y="32" fill="#444" font-size="12" font-weight="bold">Thread Legend</text>
+
+  <rect x="845" y="42" width="14" height="14" rx="3" fill="#4A90D9" />
+  <text x="866" y="54" fill="#555" font-size="11">Script Thread</text>
+
+  <rect x="845" y="62" width="14" height="14" rx="3" fill="#50B86C" />
+  <text x="866" y="74" fill="#555" font-size="11">Layout Thread</text>
+
+  <rect x="845" y="82" width="14" height="14" rx="3" fill="#E6A23C" />
+  <text x="866" y="94" fill="#555" font-size="11">Image Cache (Async)</text>
+
+  <rect x="845" y="102" width="14" height="14" rx="3" fill="#C45DE6" />
+  <text x="866" y="114" fill="#555" font-size="11">WebRender (GPU)</text>
+
+  <!-- ================================================================ -->
+  <!-- PASS 1: Stages 1 → 2 → 3                                         -->
+  <!-- ================================================================ -->
+
+  <!-- Stage 1 — DOM Construction -->
+  <g transform="translate(300, 100)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeScript)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#1A5FA8" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 1 — DOM Construction</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Script Thread</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">HTML parser → SVGSVGElement with uuid, attributes</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">uuid="90b40da2..."  cached_serialized_data_url=None</text>
+  </g>
+
+  <!-- Arrow S1 → S2 -->
+  <line x1="530" y1="170" x2="530" y2="210" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+  <text x="540" y="194" fill="#888" font-size="10">PendingRestyles</text>
+
+  <!-- Stage 2 (Pass 1) — Style Resolution & Layout Dispatch -->
+  <g transform="translate(300, 215)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeLayout)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#2D8A4A" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 2 — Style Resolution &amp; Layout Dispatch</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Layout Thread</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">Contents::for_element() → Replaced(SVGElement)</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">SVGElementData::data() → source=None</text>
+  </g>
+
+  <!-- Decision diamond: source=None? -->
+  <g transform="translate(530, 300)">
+    <polygon points="0,-15 20,0 0,15 -20,0" fill="#FFF" stroke="#E6A23C" stroke-width="2" filter="url(#shadowLight)" />
+    <text x="0" y="4" fill="#E6A23C" font-size="9" font-weight="bold" text-anchor="middle">?</text>
+  </g>
+  <text x="563" y="303" fill="#888" font-size="10">source=None?</text>
+
+  <!-- Arrow S2 → Queue -->
+  <line x1="530" y1="285" x2="530" y2="305" stroke="#555" stroke-width="1.5" />
+  <line x1="530" y1="315" x2="530" y2="345" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+
+  <!-- Stage 3 — Queue & Serialization Dispatch -->
+  <g transform="translate(300, 350)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeLayout)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#2D8A4A" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 3 — Queue &amp; Serialization Dispatch</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Layout → Script bridge</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">queue_svg_element_for_serialization()</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">→ post-reflow: handle_pending_images_post_reflow()</text>
+  </g>
+
+  <!-- Arrow: bridge from post-reflow to Pass 2 -->
+  <line x1="530" y1="420" x2="530" y2="465" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+  <rect x="420" y="426" width="225" height="20" rx="4" fill="#FFF" stroke="#CCC" stroke-width="1" />
+  <text x="532" y="440" fill="#888" font-size="10" text-anchor="middle">serialize_and_cache_subtree() → dirty node</text>
+
+  <!-- ================================================================ -->
+  <!-- PASS 2: Stage 4                                                  -->
+  <!-- ================================================================ -->
+
+  <!-- Stage 4 — SVG Subtree Serialization -->
+  <g transform="translate(300, 470)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeScript)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#1A5FA8" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 4 — SVG Subtree Serialization</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Script Thread</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">xml_serialize() → base64::encode() → build data URL</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">231 bytes XML → 334 chars base64 → cached_serialized = Some(Ok(url))</text>
+  </g>
+
+  <!-- Arrow S4 → Pass 3 -->
+  <line x1="530" y1="540" x2="530" y2="580" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+  <rect x="420" y="548" width="225" height="20" rx="4" fill="#FFF" stroke="#CCC" stroke-width="1" />
+  <text x="532" y="562" fill="#888" font-size="10" text-anchor="middle">node.dirty() → triggers reflow</text>
+
+  <!-- ================================================================ -->
+  <!-- PASS 3: Stage 2 (re-entry) → Stage 5                             -->
+  <!-- ================================================================ -->
+
+  <!-- Stage 2b — Re-entry: source=Some(url) -->
+  <g transform="translate(300, 615)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeReentry)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#2D8A4A" stroke-width="1.5" stroke-dasharray="6,3" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 2 (re-entry) — Image Cache Check</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Layout Thread</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">svg_kind_size() → get_cached_image_for_url()</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">source=Some(Ok(data_url))  →  Result: "ERR/NOT_CACHED"</text>
+  </g>
+
+  <!-- Decision: cached? -->
+  <g transform="translate(530, 695)">
+    <polygon points="0,-14 18,0 0,14 -18,0" fill="#FFF" stroke="#D9534F" stroke-width="2" filter="url(#shadowLight)" />
+    <text x="0" y="-6" fill="#D9534F" font-size="8" font-weight="bold" text-anchor="middle">CACHED?</text>
+    <text x="0" y="6" fill="#D9534F" font-size="8" font-weight="bold" text-anchor="middle">↙ NO</text>
+  </g>
+  <line x1="530" y1="685" x2="530" y2="700" stroke="#555" stroke-width="1.5" />
+  <line x1="530" y1="709" x2="530" y2="735" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+
+  <!-- Stage 5 — Image Cache Load -->
+  <g transform="translate(300, 740)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeImageCache)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#B8860B" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 5 — Image Cache Load (SVG Parsing)</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Image Cache (Async)</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">service_thread() → fetch data URL → usvg parse</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">complete_load() → usvg::Tree, natural = 200×200</text>
+  </g>
+
+  <!-- Async notification arrow -->
+  <line x1="300" y1="775" x2="120" y2="775" stroke="#E6A23C" stroke-width="1.5" stroke-dasharray="5,3" />
+  <text x="130" y="768" fill="#E6A23C" font-size="9" text-anchor="end">async</text>
+
+  <!-- ================================================================ -->
+  <!-- PASS 4: Stage 2 (re-entry) → Stages 6 → 7 → 8 → 9                -->
+  <!-- ================================================================ -->
+
+  <!-- Stage 2c — Re-entry: vector_image=Some -->
+  <g transform="translate(300, 885)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeReentry)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#2D8A4A" stroke-width="1.5" stroke-dasharray="6,3" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 2 (re-entry) — Vector Image Found</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Layout Thread</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">svg_kind_size() → get_cached_image_for_url() → OK</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">→ Got VectorImage { id: PendingImageId(1), 200×200 }</text>
+  </g>
+
+  <!-- Decision: rasterized? -->
+  <g transform="translate(530, 965)">
+    <polygon points="0,-14 18,0 0,14 -18,0" fill="#FFF" stroke="#D9534F" stroke-width="2" filter="url(#shadowLight)" />
+    <text x="0" y="-6" fill="#D9534F" font-size="8" font-weight="bold" text-anchor="middle">CACHED?</text>
+    <text x="0" y="6" fill="#D9534F" font-size="8" font-weight="bold" text-anchor="middle">↙ NO</text>
+  </g>
+  <line x1="530" y1="955" x2="530" y2="970" stroke="#555" stroke-width="1.5" />
+  <line x1="530" y1="979" x2="530" y2="1005" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+  <text x="540" y="973" fill="#888" font-size="9">rasterize_vector_image(id=1, 200×200)</text>
+
+  <!-- Stage 6 — Vector Rasterization -->
+  <g transform="translate(300, 1010)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeImageCache)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#B8860B" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 6 — Vector Image Rasterization</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Image Cache (Async Thread Pool)</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">usvg::Tree → tiny_skia Pixmap → resvg::render()</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">→ RasterImage { 200×200, 160000 bytes RGBA, id: None }</text>
+  </g>
+
+  <!-- Arrow S6 → S7 -->
+  <line x1="530" y1="1080" x2="530" y2="1115" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+  <text x="540" y="1101" fill="#888" font-size="10">load_image_with_keycache(Svg)</text>
+
+  <!-- Stage 7 — WebRender Key Assignment -->
+  <g transform="translate(300, 1120)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeImageCache)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#B8860B" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 7 — WebRender Image Key Assignment</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Image Cache</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">set_key_and_finish_load() → set_webrender_image_key()</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">→ raster_image.id = Some(ImageKey(IdNamespace(1), 90))</text>
+  </g>
+
+  <!-- Notification arrow from IC to Layout -->
+  <line x1="300" y1="1155" x2="120" y2="1155" stroke="#E6A23C" stroke-width="1.5" stroke-dasharray="5,3" />
+  <text x="130" y="1148" fill="#E6A23C" font-size="9" text-anchor="end">notify pipeline → reflow</text>
+
+  <!-- Arrow S7 → S8 -->
+  <line x1="530" y1="1190" x2="530" y2="1225" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+  <text x="540" y="1211" fill="#888" font-size="10">complete_load_svg() triggers re-render</text>
+
+  <!-- Stage 8 — Fragment Construction -->
+  <g transform="translate(300, 1230)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeLayout)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#2D8A4A" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 8 — Fragment Construction</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Layout Thread</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">make_fragments() → rasterize_vector_image() → CACHED</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">→ Fragment::Image { image_key: Some(ImageKey(1, 90)) }</text>
+  </g>
+
+  <!-- Arrow S8 → S9 -->
+  <line x1="530" y1="1300" x2="530" y2="1335" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+
+  <!-- Stage 9 — Display List & GPU -->
+  <g transform="translate(300, 1340)">
+    <rect width="460" height="70" rx="8" fill="url(#nodeWR)" filter="url(#shadow)" />
+    <rect width="460" height="70" rx="8" fill="none" stroke="#8B30B0" stroke-width="1.5" />
+    <text x="18" y="26" fill="#FFF" font-size="14" font-weight="bold">Stage 9 — Display List Building &amp; GPU Rendering</text>
+    <text x="415" y="26" fill="#FFF" font-size="10" opacity="0.8" text-anchor="end">Layout → WebRender (GPU)</text>
+    <text x="18" y="46" fill="#FFF" font-size="12" opacity="0.95">push_image(ImageKey(1,90), rect=200×200, clip=...)</text>
+    <text x="18" y="61" fill="#FFF" font-size="11" opacity="0.8" font-family="Consolas, monospace">→ WR batches, uploads texture, renders with shader</text>
+  </g>
+
+  <!-- Final Arrow to Result -->
+  <line x1="530" y1="1410" x2="530" y2="1445" stroke="#555" stroke-width="2" marker-end="url(#arrowDown)" />
+
+  <!-- ===== RESULT NODE ===== -->
+  <g transform="translate(350, 1450)">
+    <rect width="360" height="50" rx="25" fill="url(#nodeResult)" filter="url(#shadow)" />
+    <rect width="360" height="50" rx="25" fill="none" stroke="#3D8B3D" stroke-width="1.5" />
+    <text x="180" y="30" fill="#FFF" font-size="16" font-weight="bold" text-anchor="middle">✅ Blue Circle Visible on Screen!</text>
+  </g>
+
+  <!-- ===== SIDE ANNOTATIONS ===== -->
+
+  <!-- Pass 1 annotation -->
+  <text x="820" y="120" fill="#4A90D9" font-size="11" font-weight="bold">Pass 1: DOM → source=None</text>
+  <text x="820" y="136" fill="#888" font-size="10">- DOM tree built</text>
+  <text x="820" y="150" fill="#888" font-size="10">- Layout detects no serialization</text>
+  <text x="820" y="164" fill="#888" font-size="10">- SVG queued for serialization</text>
+  <text x="820" y="178" fill="#888" font-size="10">- make_fragments() → vec![]</text>
+  <text x="820" y="196" fill="#555" font-size="10" font-style="italic">SVG NOT visible</text>
+
+  <!-- Pass 2 annotation -->
+  <text x="820" y="480" fill="#E6A23C" font-size="11" font-weight="bold">Pass 2: Serialization</text>
+  <text x="820" y="496" fill="#888" font-size="10">- XML serialized (231 bytes)</text>
+  <text x="820" y="510" fill="#888" font-size="10">- Base64 encoded (334 chars)</text>
+  <text x="820" y="524" fill="#888" font-size="10">- Data URL cached on element</text>
+  <text x="820" y="542" fill="#555" font-size="10" font-style="italic">SVG NOT visible</text>
+
+  <!-- Pass 3 annotation -->
+  <text x="820" y="655" fill="#C45DE6" font-size="11" font-weight="bold">Pass 3: Image Cache Load</text>
+  <text x="820" y="671" fill="#888" font-size="10">- source=Some(url) now available</text>
+  <text x="820" y="685" fill="#888" font-size="10">- Cache miss → image not ready</text>
+  <text x="820" y="699" fill="#888" font-size="10">- usvg async: parse SVG tree</text>
+  <text x="820" y="713" fill="#888" font-size="10">- natural dimensions = 200×200</text>
+  <text x="820" y="731" fill="#555" font-size="10" font-style="italic">SVG NOT visible</text>
+
+  <!-- Pass 4 annotation -->
+  <text x="820" y="930" fill="#50B86C" font-size="11" font-weight="bold">Pass 4: Render!</text>
+  <text x="820" y="946" fill="#888" font-size="10">- vector_image = Some(VectorImage)</text>
+  <text x="820" y="960" fill="#888" font-size="10">- Rasterize: tiny_skia 200×200</text>
+  <text x="820" y="974" fill="#888" font-size="10">- ImageKey(IdNamespace(1), 90)</text>
+  <text x="820" y="988" fill="#888" font-size="10">- Fragment::Image with key</text>
+  <text x="820" y="1002" fill="#888" font-size="10">- push_image to WR display list</text>
+  <text x="820" y="1020" fill="#5CB85C" font-size="11" font-weight="bold">✅ SVG VISIBLE!</text>
+
+  <!-- ===== DATA TRANSFORMATION BAR ===== -->
+  <rect x="88" y="1530" width="924" height="36" rx="6" fill="#F0F0F0" stroke="#DDD" stroke-width="1" />
+  <text x="100" y="1553" fill="#888" font-size="11" font-weight="bold">Data: </text>
+  <text x="145" y="1553" fill="#4A90D9" font-size="11">HTML bytes</text>
+  <text x="235" y="1553" fill="#888" font-size="11">→</text>
+  <text x="260" y="1553" fill="#4A90D9" font-size="11">DOM Tree</text>
+  <text x="330" y="1553" fill="#888" font-size="11">→</text>
+  <text x="355" y="1553" fill="#50B86C" font-size="11">XML string</text>
+  <text x="430" y="1553" fill="#888" font-size="11">→</text>
+  <text x="455" y="1553" fill="#E6A23C" font-size="11">usvg::Tree</text>
+  <text x="535" y="1553" fill="#888" font-size="11">→</text>
+  <text x="555" y="1553" fill="#E6A23C" font-size="11">Pixmap RGBA</text>
+  <text x="645" y="1553" fill="#888" font-size="11">→</text>
+  <text x="665" y="1553" fill="#E6A23C" font-size="11">ImageKey</text>
+  <text x="730" y="1553" fill="#888" font-size="11">→</text>
+  <text x="750" y="1553" fill="#50B86C" font-size="11">Fragment::Image</text>
+  <text x="850" y="1553" fill="#888" font-size="11">→</text>
+  <text x="870" y="1553" fill="#C45DE6" font-size="11">GPU pixels</text>
+</svg>

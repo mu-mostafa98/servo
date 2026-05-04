@@ -1,0 +1,212 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 1040" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="4.5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2c3e50"/></marker>
+    <filter id="shadow"><feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="550" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#2c3e50">Raster Image Pipeline - Thread Handoff Stages</text>
+  <text x="550" y="48" text-anchor="middle" font-size="11" fill="#7f8c8d">Data types and objects exchanged between subsystems for standard &lt;img&gt; elements</text>
+
+  <!-- Row 1 -->
+  <g transform="translate(0, 65)">
+    <rect x="25" y="0" width="1050" height="125" rx="5" fill="#fff" stroke="#2980b9" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="25" y="0" width="1050" height="26" rx="5" fill="#2980b9"/>
+    <rect x="25" y="21" width="1050" height="5" fill="#2980b9"/>
+    <circle cx="41" cy="13" r="8" fill="#fff" opacity="0.25"/>
+    <text x="41" y="17" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">1</text>
+    <text x="58" y="17" font-size="11" font-weight="bold" fill="#fff">DOM Construction</text>
+    <text x="193" y="17" font-size="10" fill="#fff" opacity="0.75">- HTML Parser -&gt; DOM</text>
+    <text x="1055" y="17" text-anchor="end" font-size="10" fill="#fff">Thread: HTML Parser</text>
+
+    <rect x="25" y="26" width="1050" height="20" fill="#2980b9" opacity="0.06"/>
+    <text x="38" y="40" font-size="9" fill="#34495e" font-style="italic">Purpose: Parse HTML source and construct the image DOM element node</text>
+
+    <rect x="38" y="52" width="440" height="63" rx="3" fill="#eaf2f8" stroke="#2980b9" stroke-width="1"/>
+    <text x="48" y="66" font-size="9" font-weight="bold" fill="#2980b9">&lt;&lt; INPUT</text>
+    <text x="48" y="81" font-size="10" fill="#2c3e50">HTML token (html5ever)</text>
+    <text x="48" y="97" font-size="9" fill="#7f8c8d">"&lt;img src=\"photo.png\"&gt;"</text>
+
+    <line x1="490" y1="83" x2="540" y2="83" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="550" y="52" width="510" height="63" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+    <text x="560" y="66" font-size="9" font-weight="bold" fill="#16a085">&gt;&gt; OUTPUT</text>
+    <text x="560" y="81" font-size="10" fill="#2c3e50">HTMLImageElement (DOM node)</text>
+    <text x="560" y="97" font-size="9" fill="#7f8c8d">HTMLImageElement { local_name: "img", attrs: { src: "https://..." } }</text>
+  </g>
+
+  <!-- Row 2 -->
+  <g transform="translate(0, 204)">
+    <rect x="25" y="0" width="1050" height="125" rx="5" fill="#fff" stroke="#16a085" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="25" y="0" width="1050" height="26" rx="5" fill="#16a085"/>
+    <rect x="25" y="21" width="1050" height="5" fill="#16a085"/>
+    <circle cx="41" cy="13" r="8" fill="#fff" opacity="0.25"/>
+    <text x="41" y="17" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">2</text>
+    <text x="58" y="17" font-size="11" font-weight="bold" fill="#fff">Style Resolution and Dispatch</text>
+    <text x="242" y="17" font-size="10" fill="#fff" opacity="0.75">- Style -&gt; Layout</text>
+    <text x="1055" y="17" text-anchor="end" font-size="10" fill="#fff">Thread: Script (Stylo)</text>
+
+    <rect x="25" y="26" width="1050" height="20" fill="#16a085" opacity="0.06"/>
+    <text x="38" y="40" font-size="9" fill="#34495e" font-style="italic">Purpose: Resolve CSS, compute replaced-element sizing, dispatch to layout</text>
+
+    <rect x="38" y="52" width="440" height="63" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+    <text x="48" y="66" font-size="9" font-weight="bold" fill="#16a085">&lt;&lt; INPUT</text>
+    <text x="48" y="81" font-size="10" fill="#2c3e50">ComputedValues (CSS resolved)</text>
+    <text x="48" y="97" font-size="9" fill="#7f8c8d">{ display: block, object_fit: Fill, width: Auto, height: Auto }</text>
+
+    <line x1="490" y1="83" x2="540" y2="83" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="550" y="52" width="510" height="63" rx="3" fill="#fef9e7" stroke="#f39c12" stroke-width="1"/>
+    <text x="560" y="66" font-size="9" font-weight="bold" fill="#f39c12">&gt;&gt; OUTPUT</text>
+    <text x="560" y="81" font-size="10" fill="#2c3e50">ReplacedContentKind::Image(ImageInfo) + NaturalSizes</text>
+    <text x="560" y="97" font-size="9" fill="#7f8c8d">Image(ImageInfo { width: Some(800px), height: Some(600px) })</text>
+  </g>
+
+  <!-- Row 3 -->
+  <g transform="translate(0, 343)">
+    <rect x="25" y="0" width="1050" height="125" rx="5" fill="#fff" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="25" y="0" width="1050" height="26" rx="5" fill="#27ae60"/>
+    <rect x="25" y="21" width="1050" height="5" fill="#27ae60"/>
+    <circle cx="41" cy="13" r="8" fill="#fff" opacity="0.25"/>
+    <text x="41" y="17" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">3</text>
+    <text x="58" y="17" font-size="11" font-weight="bold" fill="#fff">Image Fetch and Decode</text>
+    <text x="209" y="17" font-size="10" fill="#fff" opacity="0.75">- Layout -&gt; ImageCache</text>
+    <text x="1055" y="17" text-anchor="end" font-size="10" fill="#fff">Thread: Layout -&gt; Net</text>
+
+    <rect x="25" y="26" width="1050" height="20" fill="#27ae60" opacity="0.06"/>
+    <text x="38" y="40" font-size="9" fill="#34495e" font-style="italic">Purpose: Request network fetch, decode raw bytes into a raster bitmap</text>
+
+    <rect x="38" y="52" width="440" height="63" rx="3" fill="#e8f8f5" stroke="#27ae60" stroke-width="1"/>
+    <text x="48" y="66" font-size="9" font-weight="bold" fill="#27ae60">&lt;&lt; INPUT</text>
+    <text x="48" y="81" font-size="10" fill="#2c3e50">&amp;ServoUrl (image URL from src attr)</text>
+    <text x="48" y="97" font-size="9" fill="#7f8c8d">"https://example.com/photo.png"</text>
+
+    <line x1="490" y1="83" x2="540" y2="83" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="550" y="52" width="510" height="63" rx="3" fill="#e8f8f5" stroke="#27ae60" stroke-width="1"/>
+    <text x="560" y="66" font-size="9" font-weight="bold" fill="#27ae60">&gt;&gt; OUTPUT</text>
+    <text x="560" y="81" font-size="10" fill="#2c3e50">RasterImage (decoded bitmap)</text>
+    <text x="560" y="97" font-size="9" fill="#7f8c8d">RasterImage { bytes: Arc&lt;Vec&lt;u8&gt;&gt;(1920000), metadata: { w:800, h:600 }, format: BGRA8 }</text>
+  </g>
+
+  <!-- Row 4 -->
+  <g transform="translate(0, 482)">
+    <rect x="25" y="0" width="1050" height="125" rx="5" fill="#fff" stroke="#1abc9c" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="25" y="0" width="1050" height="26" rx="5" fill="#1abc9c"/>
+    <rect x="25" y="21" width="1050" height="5" fill="#1abc9c"/>
+    <circle cx="41" cy="13" r="8" fill="#fff" opacity="0.25"/>
+    <text x="41" y="17" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">4</text>
+    <text x="58" y="17" font-size="11" font-weight="bold" fill="#fff">Image Key Assignment</text>
+    <text x="226" y="17" font-size="10" fill="#fff" opacity="0.75">- ImageCache -&gt; Layout</text>
+    <text x="1055" y="17" text-anchor="end" font-size="10" fill="#fff">Thread: Net -&gt; Layout</text>
+
+    <rect x="25" y="26" width="1050" height="20" fill="#1abc9c" opacity="0.06"/>
+    <text x="38" y="40" font-size="9" fill="#34495e" font-style="italic">Purpose: Assign a WebRender GPU handle for the decoded bitmap, populate the fragment</text>
+
+    <rect x="38" y="52" width="440" height="63" rx="3" fill="#e8f8f5" stroke="#1abc9c" stroke-width="1"/>
+    <text x="48" y="66" font-size="9" font-weight="bold" fill="#1abc9c">&lt;&lt; INPUT</text>
+    <text x="48" y="81" font-size="10" fill="#2c3e50">WebRenderImageKey (via KeyCache::assign_key)</text>
+    <text x="48" y="97" font-size="9" fill="#7f8c8d">ImageKey(42)</text>
+
+    <line x1="490" y1="83" x2="540" y2="83" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="550" y="52" width="510" height="63" rx="3" fill="#fef9e7" stroke="#f39c12" stroke-width="1"/>
+    <text x="560" y="66" font-size="9" font-weight="bold" fill="#f39c12">&gt;&gt; OUTPUT</text>
+    <text x="560" y="81" font-size="10" fill="#2c3e50">ImageFragment (fragment tree node)</text>
+    <text x="560" y="97" font-size="9" fill="#7f8c8d">ImageFragment { image_key: Some(ImageKey(42)), clip: PhysicalRect, showing_broken_image_icon: false }</text>
+  </g>
+
+  <!-- Row 5 -->
+  <g transform="translate(0, 621)">
+    <rect x="25" y="0" width="1050" height="125" rx="5" fill="#fff" stroke="#8e44ad" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="25" y="0" width="1050" height="26" rx="5" fill="#8e44ad"/>
+    <rect x="25" y="21" width="1050" height="5" fill="#8e44ad"/>
+    <circle cx="41" cy="13" r="8" fill="#fff" opacity="0.25"/>
+    <text x="41" y="17" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">5</text>
+    <text x="58" y="17" font-size="11" font-weight="bold" fill="#fff">Fragment Tree Integration</text>
+    <text x="237" y="17" font-size="10" fill="#fff" opacity="0.75">- Layout -&gt; Fragment Tree</text>
+    <text x="1055" y="17" text-anchor="end" font-size="10" fill="#fff">Thread: Layout</text>
+
+    <rect x="25" y="26" width="1050" height="20" fill="#8e44ad" opacity="0.06"/>
+    <text x="38" y="40" font-size="9" fill="#34495e" font-style="italic">Purpose: Store the image fragment in the box tree as Fragment::Image for display list building</text>
+
+    <rect x="38" y="52" width="440" height="63" rx="3" fill="#f4ecf7" stroke="#8e44ad" stroke-width="1"/>
+    <text x="48" y="66" font-size="9" font-weight="bold" fill="#8e44ad">&lt;&lt; INPUT</text>
+    <text x="48" y="81" font-size="10" fill="#2c3e50">ImageFragment (from make_fragments())</text>
+    <text x="48" y="97" font-size="9" fill="#7f8c8d">{ image_key: Some(Key(42)), url: Some(url), clip: Rect(0,0,800au,600au) }</text>
+
+    <line x1="490" y1="83" x2="540" y2="83" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="550" y="52" width="510" height="63" rx="3" fill="#f4ecf7" stroke="#8e44ad" stroke-width="1"/>
+    <text x="560" y="66" font-size="9" font-weight="bold" fill="#8e44ad">&gt;&gt; OUTPUT</text>
+    <text x="560" y="81" font-size="10" fill="#2c3e50">Fragment::Image(ArcRefCell&lt;ImageFragment&gt;)</text>
+    <text x="560" y="97" font-size="9" fill="#7f8c8d">Fragment::Image(RefCell { image_key: Some(Key(42)) }) -&gt; stored in box tree</text>
+  </g>
+
+  <!-- Row 6 -->
+  <g transform="translate(0, 760)">
+    <rect x="25" y="0" width="1050" height="125" rx="5" fill="#fff" stroke="#e67e22" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="25" y="0" width="1050" height="26" rx="5" fill="#e67e22"/>
+    <rect x="25" y="21" width="1050" height="5" fill="#e67e22"/>
+    <circle cx="41" cy="13" r="8" fill="#fff" opacity="0.25"/>
+    <text x="41" y="17" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">6</text>
+    <text x="58" y="17" font-size="11" font-weight="bold" fill="#fff">Display List Emission</text>
+    <text x="229" y="17" font-size="10" fill="#fff" opacity="0.75">- Fragment Tree -&gt; DisplayList</text>
+    <text x="1055" y="17" text-anchor="end" font-size="10" fill="#fff">Thread: Layout -&gt; WR IPC</text>
+
+    <rect x="25" y="26" width="1050" height="20" fill="#e67e22" opacity="0.06"/>
+    <text x="38" y="40" font-size="9" fill="#34495e" font-style="italic">Purpose: Convert the image fragment into a DisplayItem::Image command for WebRender</text>
+
+    <rect x="38" y="52" width="440" height="63" rx="3" fill="#fef5e7" stroke="#e67e22" stroke-width="1"/>
+    <text x="48" y="66" font-size="9" font-weight="bold" fill="#e67e22">&lt;&lt; INPUT</text>
+    <text x="48" y="81" font-size="10" fill="#2c3e50">DisplayItem::Image (via push_image())</text>
+    <text x="48" y="97" font-size="9" fill="#7f8c8d">push_image(ImageKey(42), clip_rect, bounds)</text>
+
+    <line x1="490" y1="83" x2="540" y2="83" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="550" y="52" width="510" height="63" rx="3" fill="#fef5e7" stroke="#e67e22" stroke-width="1"/>
+    <text x="560" y="66" font-size="9" font-weight="bold" fill="#e67e22">&gt;&gt; OUTPUT</text>
+    <text x="560" y="81" font-size="10" fill="#2c3e50">WebRender GPU Command</text>
+    <text x="560" y="97" font-size="9" fill="#7f8c8d">WebRenderCmd::DrawImage(ImageKey(42), transform, clip)</text>
+  </g>
+
+  <!-- Row 7 -->
+  <g transform="translate(0, 899)">
+    <rect x="25" y="0" width="1050" height="125" rx="5" fill="#fff" stroke="#c0392b" stroke-width="1.5" filter="url(#shadow)"/>
+    <rect x="25" y="0" width="1050" height="26" rx="5" fill="#c0392b"/>
+    <rect x="25" y="21" width="1050" height="5" fill="#c0392b"/>
+    <circle cx="41" cy="13" r="8" fill="#fff" opacity="0.25"/>
+    <text x="41" y="17" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">7</text>
+    <text x="58" y="17" font-size="11" font-weight="bold" fill="#fff">GPU Compositing</text>
+    <text x="197" y="17" font-size="10" fill="#fff" opacity="0.75">- DisplayList -&gt; WebRender</text>
+    <text x="1055" y="17" text-anchor="end" font-size="10" fill="#fff">Thread: GPU</text>
+
+    <rect x="25" y="26" width="1050" height="20" fill="#c0392b" opacity="0.06"/>
+    <text x="38" y="40" font-size="9" fill="#34495e" font-style="italic">Purpose: Composite the pre-rasterized bitmap onto the screen via the GPU pipeline</text>
+
+    <rect x="38" y="52" width="440" height="63" rx="3" fill="#fdedec" stroke="#c0392b" stroke-width="1"/>
+    <text x="48" y="66" font-size="9" font-weight="bold" fill="#c0392b">&lt;&lt; INPUT</text>
+    <text x="48" y="81" font-size="10" fill="#2c3e50">GPU Framebuffer (composited quads)</text>
+    <text x="48" y="97" font-size="9" fill="#7f8c8d">Framebuffer { pixels: [u8; 1920000], width: 800, height: 600 }</text>
+
+    <line x1="490" y1="83" x2="540" y2="83" stroke="#2c3e50" stroke-width="2" marker-end="url(#arrow)"/>
+
+    <rect x="550" y="52" width="510" height="63" rx="3" fill="#fdedec" stroke="#c0392b" stroke-width="1"/>
+    <text x="560" y="66" font-size="9" font-weight="bold" fill="#c0392b">&gt;&gt; OUTPUT</text>
+    <text x="560" y="81" font-size="10" fill="#2c3e50">Screen Pixels (final display)</text>
+    <text x="560" y="97" font-size="9" fill="#7f8c8d">Display output rendered on monitor via GPU compositing</text>
+  </g>
+
+  <!-- Legend -->
+  <rect x="25" y="1035" width="1050" height="1" fill="#ccc"/>
+  <rect x="32" y="1041" width="12" height="10" rx="2" fill="#2980b9"/>
+  <text x="48" y="1050" font-size="9" fill="#555">1-2 Shared (Parser/Style)</text>
+  <rect x="232" y="1041" width="12" height="10" rx="2" fill="#27ae60"/>
+  <text x="248" y="1050" font-size="9" fill="#555">3-4 Image Cache (Net)</text>
+  <rect x="432" y="1041" width="12" height="10" rx="2" fill="#8e44ad"/>
+  <text x="448" y="1050" font-size="9" fill="#555">5 Fragment/Layout</text>
+  <rect x="632" y="1041" width="12" height="10" rx="2" fill="#e67e22"/>
+  <text x="648" y="1050" font-size="9" fill="#555">6 Display List</text>
+  <rect x="800" y="1041" width="12" height="10" rx="2" fill="#c0392b"/>
+  <text x="816" y="1050" font-size="9" fill="#555">7 GPU Render</text>
+</svg>

@@ -1,0 +1,198 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1150 1050" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow-tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2c3e50"/></marker>
+    <marker id="arrow-dep" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#27ae60"/></marker>
+    <marker id="arrow-com" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#8e44ad"/></marker>
+    <filter id="shadow-sm"><feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.15"/></filter>
+    <filter id="shadow-bg"><feDropShadow dx="1.5" dy="1.5" stdDeviation="2.5" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="575" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#2c3e50">Image Cache — SVG Caching &amp; Rasterization Classes</text>
+  <text x="575" y="48" text-anchor="middle" font-size="11" fill="#7f8c8d">components/net/image_cache.rs — Image cache implementation with SVG support</text>
+
+  <!-- ============================================================ -->
+  <!-- Package: Net / Image Cache -->
+  <!-- ============================================================ -->
+  <rect x="30" y="60" width="1090" height="960" rx="6" fill="#e8f8f5" stroke="#27ae60" stroke-width="1.5" opacity="0.35" filter="url(#shadow-bg)"/>
+  <text x="575" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#27ae60">Package: Image Cache (net::image_cache)</text>
+
+  <!-- ============================================================ -->
+  <!-- Interface: ImageCache (trait) -->
+  <!-- ============================================================ -->
+  <rect x="50" y="105" width="420" height="230" rx="4" fill="#f4f6f7" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="105" width="420" height="22" rx="4" fill="#27ae60"/>
+  <rect x="50" y="123" width="420" height="4" fill="#27ae60"/>
+  <text x="260" y="120" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">«trait» ImageCache</text>
+  <text x="50" y="138" font-size="9" fill="#7f8c8d">  net_traits/image_cache.rs:174-244</text>
+  <text x="60" y="158" font-size="10" font-weight="bold" fill="#2c3e50">Key Methods:</text>
+  <text x="60" y="173" font-size="9" fill="#555">get_image(url, origin, cors) → Option&lt;Image&gt;</text>
+  <text x="60" y="185" font-size="9" fill="#555">get_cached_image_status(url, origin, cors) → ImageCacheResult</text>
+  <text x="60" y="197" font-size="9" fill="#e74c3c" font-weight="bold">rasterize_vector_image(id, size, svg_id) → Option&lt;RasterImage&gt;</text>
+  <text x="60" y="209" font-size="9" fill="#e74c3c" font-weight="bold">add_rasterization_complete_listener(pipe, id, size, cb)</text>
+  <text x="60" y="221" font-size="9" fill="#e74c3c" font-weight="bold">evict_rasterized_image(svg_id: &amp;str)</text>
+  <text x="60" y="233" font-size="9" fill="#555">evict_completed_image(url, origin, cors)</text>
+  <text x="60" y="245" font-size="9" fill="#555">get_image_key() → Option&lt;ImageKey&gt;</text>
+  <text x="60" y="257" font-size="9" fill="#555">add_listener(listener)</text>
+  <text x="60" y="269" font-size="9" fill="#555">fill_key_cache_with_batch_of_keys(keys)</text>
+  <text x="60" y="281" font-size="9" fill="#555">notify_pending_response(id, action)</text>
+  <text x="60" y="293" font-size="9" fill="#555">memory_reports(prefix, ops) → Vec&lt;Report&gt;</text>
+  <line x1="60" y1="301" x2="460" y2="301" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="316" font-size="10" font-weight="bold" fill="#7f8c8d">SVG-specific methods marked in red</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: ImageCacheImpl -->
+  <!-- ============================================================ -->
+  <rect x="520" y="105" width="420" height="200" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="520" y="105" width="420" height="22" rx="4" fill="#1e8449"/>
+  <rect x="520" y="123" width="420" height="4" fill="#1e8449"/>
+  <text x="730" y="120" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">ImageCacheImpl</text>
+  <text x="520" y="138" font-size="9" fill="#7f8c8d">  image_cache.rs:784-799</text>
+  <text x="530" y="158" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="530" y="173" font-size="9" fill="#555">store: Arc&lt;Mutex&lt;ImageCacheStore&gt;&gt;  —  core cache state</text>
+  <text x="530" y="185" font-size="9" fill="#e74c3c">svg_id_image_id_map: Arc&lt;Mutex&lt;FxHashMap&lt;String, PendingImageId&gt;&gt;&gt;</text>
+  <text x="530" y="197" font-size="9" fill="#e74c3c">image_id_size_map: Arc&lt;Mutex&lt;FxHashMap&lt;PendingImageId, Vec&lt;DeviceIntSize&gt;&gt;&gt;&gt;</text>
+  <text x="530" y="209" font-size="9" fill="#555">broken_image_icon_data: Arc&lt;Vec&lt;u8&gt;&gt;</text>
+  <text x="530" y="221" font-size="9" fill="#555">thread_pool: Arc&lt;ThreadPool&gt;  —  shared decoding thread pool</text>
+  <text x="530" y="233" font-size="9" fill="#e74c3c">fontdb: Arc&lt;fontdb::Database&gt;  —  shared font database for SVG</text>
+  <line x1="530" y1="241" x2="930" y2="241" stroke="#ddd" stroke-width="0.5"/>
+  <text x="530" y="256" font-size="10" font-weight="bold" fill="#2c3e50">Implementations:</text>
+  <text x="530" y="271" font-size="9" fill="#555">impl ImageCache for ImageCacheImpl  —  full trait implementation</text>
+  <text x="530" y="283" font-size="9" fill="#555">rasterize_vector_image()  —  spawns thread pool task, tracks sizes</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: ImageCacheStore -->
+  <!-- ============================================================ -->
+  <rect x="50" y="370" width="520" height="255" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="370" width="520" height="22" rx="4" fill="#1e8449"/>
+  <rect x="50" y="388" width="520" height="4" fill="#1e8449"/>
+  <text x="310" y="385" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">ImageCacheStore</text>
+  <text x="50" y="402" font-size="9" fill="#7f8c8d">  image_cache.rs:447-480</text>
+  <text x="60" y="418" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="60" y="433" font-size="9" fill="#555">pending_loads: AllPendingLoads  —  in-progress network loads</text>
+  <text x="60" y="445" font-size="9" fill="#555">completed_loads: HashMap&lt;ImageKey, CompletedLoad&gt;  —  finished images</text>
+  <text x="60" y="457" font-size="9" fill="#e74c3c" font-weight="bold">vector_images: FxHashMap&lt;PendingImageId, VectorImageData&gt;</text>
+  <text x="60" y="469" font-size="9" fill="#e74c3c" font-weight="bold">rasterized_vector_images: FxHashMap&lt;(PendingImageId, DeviceIntSize), RasterizationTask&gt;</text>
+  <text x="60" y="481" font-size="9" fill="#555">broken_image_icon_image: OnceCell&lt;Option&lt;Arc&lt;RasterImage&gt;&gt;&gt;</text>
+  <text x="60" y="493" font-size="9" fill="#555">paint_api: CrossProcessPaintApi  —  WebRender IPC</text>
+  <text x="60" y="505" font-size="9" fill="#555">webview_id: WebViewId</text>
+  <text x="60" y="517" font-size="9" fill="#555">pipeline_id: PipelineId</text>
+  <text x="60" y="529" font-size="9" fill="#555">key_cache: KeyCache  —  WebRender image key management</text>
+  <line x1="60" y1="537" x2="560" y2="537" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="552" font-size="10" font-weight="bold" fill="#2c3e50">Key SVG Methods:</text>
+  <text x="60" y="567" font-size="9" fill="#555">complete_load_svg(rasterized_image, pending_id, size)  —  stores result, notifies listeners</text>
+  <text x="60" y="579" font-size="9" fill="#555">complete_load(key, load_result)  —  handles LoadedVectorImage → VectorImageData</text>
+  <text x="60" y="591" font-size="9" fill="#555">load_image_with_keycache(pending_image)  —  handles PendingKey::Svg variant</text>
+  <text x="60" y="603" font-size="9" fill="#555">remove_rasterized_vector_image(image_id)  —  eviction</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: VectorImageData -->
+  <!-- ============================================================ -->
+  <rect x="620" y="370" width="320" height="100" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="620" y="370" width="320" height="22" rx="4" fill="#27ae60"/>
+  <rect x="620" y="388" width="320" height="4" fill="#27ae60"/>
+  <text x="780" y="385" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">VectorImageData</text>
+  <text x="620" y="402" font-size="9" fill="#7f8c8d">  image_cache.rs:243-248</text>
+  <text x="630" y="418" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="630" y="433" font-size="9" fill="#555">svg_tree: Arc&lt;usvg::Tree&gt;  —  parsed SVG document tree</text>
+  <text x="630" y="445" font-size="9" fill="#555">cors_status: CorsStatus  —  CORS classification</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: RasterizationTask -->
+  <!-- ============================================================ -->
+  <rect x="50" y="765" width="420" height="115" rx="4" fill="#fff" stroke="#e67e22" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="765" width="420" height="22" rx="4" fill="#e67e22"/>
+  <rect x="50" y="783" width="420" height="4" fill="#e67e22"/>
+  <text x="260" y="780" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">RasterizationTask</text>
+  <text x="50" y="797" font-size="9" fill="#7f8c8d">  image_cache.rs:389-394</text>
+  <text x="60" y="813" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="60" y="828" font-size="9" fill="#555">listeners: Vec&lt;(PipelineId, ImageCacheResponseCallback)&gt;</text>
+  <text x="60" y="840" font-size="9" fill="#555">result: Option&lt;RasterImage&gt;  —  populated on completion</text>
+  <line x1="60" y1="848" x2="460" y2="848" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="863" font-size="10" font-weight="bold" fill="#2c3e50">Keyed by:</text>
+  <text x="60" y="875" font-size="9" fill="#555">(PendingImageId, DeviceIntSize) — separate task per rasterization size</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: KeyCache -->
+  <!-- ============================================================ -->
+  <rect x="520" y="765" width="440" height="130" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="520" y="765" width="440" height="22" rx="4" fill="#8e44ad"/>
+  <rect x="520" y="783" width="440" height="4" fill="#8e44ad"/>
+  <text x="740" y="780" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">KeyCache</text>
+  <text x="520" y="797" font-size="9" fill="#7f8c8d">  image_cache.rs:425-433</text>
+  <text x="530" y="813" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="530" y="828" font-size="9" fill="#555">cache: KeyCacheState  —  PendingBatch | Ready(Vec&lt;WebRenderImageKey&gt;)</text>
+  <text x="530" y="840" font-size="9" fill="#555">images_pending_keys: VecDeque&lt;PendingKey&gt;  —  images awaiting keys</text>
+  <text x="530" y="852" font-size="9" fill="#555">evicted_images: HashSet&lt;(LoadKey, DeviceIntSize)&gt;</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: PendingKey enum -->
+  <!-- ============================================================ -->
+  <rect x="520" y="500" width="320" height="80" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="1.5" filter="url(#shadow-sm)"/>
+  <rect x="520" y="500" width="320" height="22" rx="4" fill="#d5d8dc"/>
+  <rect x="520" y="518" width="320" height="4" fill="#d5d8dc"/>
+  <text x="680" y="515" text-anchor="middle" font-size="11" font-weight="bold" fill="#2c3e50">PendingKey (enum)</text>
+  <text x="520" y="532" font-size="9" fill="#7f8c8d">  image_cache.rs:398-401</text>
+  <text x="530" y="548" font-size="10" font-weight="bold" fill="#2c3e50">Variants:</text>
+  <text x="530" y="563" font-size="9" fill="#555">RasterImage((LoadKey, RasterImage))</text>
+  <text x="530" y="575" font-size="9" fill="#e74c3c">Svg((LoadKey, RasterImage, DeviceIntSize))</text>
+
+  <!-- ============================================================ -->
+  <!-- Struct: VectorImage (shared) -->
+  <!-- ============================================================ -->
+  <rect x="500" y="635" width="340" height="95" rx="4" fill="#fff" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow-sm)"/>
+  <rect x="500" y="635" width="340" height="22" rx="4" fill="#d5d8dc"/>
+  <rect x="500" y="653" width="340" height="4" fill="#d5d8dc"/>
+  <text x="670" y="650" text-anchor="middle" font-size="11" font-weight="bold" fill="#2c3e50">VectorImage (shared)</text>
+  <text x="500" y="667" font-size="9" fill="#7f8c8d">  net_traits/image_cache.rs:38-43</text>
+  <text x="510" y="683" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="510" y="698" font-size="9" fill="#555">id: VectorImageId  —  (= PendingImageId)</text>
+  <text x="510" y="710" font-size="9" fill="#555">svg_id: Option&lt;String&gt;  —  UUID for cache mapping</text>
+  <text x="510" y="722" font-size="9" fill="#555">metadata: ImageMetadata, cors_status: CorsStatus</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: Image enum -->
+  <!-- ============================================================ -->
+  <rect x="50" y="635" width="380" height="80" rx="4" fill="#fff" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow-sm)"/>
+  <rect x="50" y="635" width="380" height="22" rx="4" fill="#d5d8dc"/>
+  <rect x="50" y="653" width="380" height="4" fill="#d5d8dc"/>
+  <text x="240" y="650" text-anchor="middle" font-size="11" font-weight="bold" fill="#2c3e50">Image (enum)</text>
+  <text x="50" y="667" font-size="9" fill="#7f8c8d">  net_traits/image_cache.rs:32-35</text>
+  <text x="60" y="683" font-size="10" font-weight="bold" fill="#2c3e50">Variants:</text>
+  <text x="60" y="698" font-size="9" fill="#555">Raster(Arc&lt;RasterImage&gt;)  —  pixel data available</text>
+  <text x="60" y="710" font-size="9" fill="#e74c3c">Vector(VectorImage)  —  needs rasterization</text>
+
+  <!-- ============================================================ -->
+  <!-- SVG Rasterization flow -->
+  <!-- ============================================================ -->
+  <rect x="50" y="915" width="1050" height="95" rx="5" fill="#fef9e7" stroke="#f39c12" stroke-width="1" filter="url(#shadow-sm)"/>
+  <text x="575" y="935" text-anchor="middle" font-size="12" font-weight="bold" fill="#e67e22">SVG Rasterization Flow (within ImageCache)</text>
+  <text x="70" y="955" font-size="10" fill="#555">1. Layout calls rasterize_vector_image(id, size, svg_id) on ImageCacheImpl</text>
+  <text x="70" y="971" font-size="10" fill="#555">2. ImageCacheImpl looks up VectorImageData from store.vector_images, spawns thread pool task</text>
+  <text x="70" y="987" font-size="10" fill="#555">3. Thread pool: tiny_skia::Pixmap::new(w,h) → resvg::render() → load_image_with_keycache()</text>
+  <text x="70" y="1003" font-size="10" fill="#555">4. KeyCache assigns WebRenderImageKey → complete_load_svg() stores RasterImage, notifies listeners</text>
+
+  <!-- Relationships -->
+  <!-- ImageCacheImpl ──▷ ImageCacheStore (composition) -->
+  <line x1="520" y1="200" x2="520" y2="370" stroke="#2c3e50" stroke-width="1.5" stroke-dasharray="6,2" marker-end="url(#arrow-tri)"/>
+  <text x="530" y="280" font-size="8" fill="#555">store field (Arc&lt;Mutex&lt;...&gt;&gt;)</text>
+
+  <!-- ImageCacheImpl ◁── ImageCache -->
+  <line x1="470" y1="180" x2="520" y2="180" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow-tri)"/>
+  <text x="475" y="175" font-size="8" fill="#555">implements</text>
+
+  <!-- ImageCacheStore → VectorImageData (composition) -->
+  <line x1="570" y1="480" x2="620" y2="420" stroke="#2c3e50" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-tri)"/>
+
+  <!-- ImageCacheStore → RasterizationTask -->
+  <line x1="260" y1="625" x2="260" y2="765" stroke="#2c3e50" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-tri)"/>
+
+  <!-- ImageCacheStore → KeyCache -->
+  <line x1="490" y1="530" x2="570" y2="765" stroke="#2c3e50" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arrow-tri)"/>
+
+  <!-- Legend -->
+  <rect x="30" y="1020" width="1090" height="1" fill="#ccc"/>
+  <line x1="50" y1="1037" x2="100" y2="1037" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow-tri)"/>
+  <text x="110" y="1040" font-size="9" fill="#555">Composition / Has-a</text>
+  <text x="350" y="1040" font-size="9" fill="#e74c3c">Red text = SVG-specific</text>
+</svg>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SVG Best Case Test</title>
+  <style>
+    body { margin: 20px; background: #f0f0f0; }
+    .container { background: white; padding: 20px; display: inline-block; }
+  </style>
+</head>
+<body>
+  <h1>SVG Best Case Test</h1>
+  <p>Minimal inline SVG - a blue rectangle with explicit dimensions:</p>
+
+  <div class="container">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         width="200" height="100"
+         viewBox="0 0 200 100">
+      <rect x="10" y="10" width="180" height="80" fill="blue" />
+    </svg>
+  </div>
+
+  <p>Expected: A blue rectangle, 200x100px.</p>
+</body>
+</html>

@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 820" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#555"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#27ae60"/></marker>
+    <filter id="shadow"><feDropShadow dx="1.5" dy="1.5" stdDeviation="2" flood-opacity="0.18"/></filter>
+    <filter id="glow-green"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-opacity="0.35" flood-color="#27ae60"/></filter>
+    <filter id="glow-red"><feDropShadow dx="0" dy="0" stdDeviation="4" flood-opacity="0.35" flood-color="#e74c3c"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="525" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">Current vs. Proposed Architecture</text>
+  <text x="525" y="48" text-anchor="middle" font-size="11" fill="#7f8c8d">Migration from serialization-based replaced element model to native SVG layout module</text>
+
+  <!-- ============================================ -->
+  <!-- LEFT COLUMN: Current Architecture -->
+  <!-- ============================================ -->
+  <rect x="20" y="60" width="490" height="40" rx="5" fill="#e74c3c" filter="url(#shadow)"/>
+  <text x="265" y="80" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">✗ CURRENT: Serialization Pipeline</text>
+  <text x="265" y="94" text-anchor="middle" font-size="9" fill="#fadbd8">SVG treated as opaque replaced element (like &lt;img&gt;)</text>
+
+  <!-- Current Pipeline Steps -->
+  <rect x="35" y="115" width="460" height="50" rx="5" fill="#eaf2f8" stroke="#2980b9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="265" y="134" text-anchor="middle" font-size="11" font-weight="bold" fill="#2980b9">1. DOM Construction</text>
+  <text x="265" y="150" text-anchor="middle" font-size="9" fill="#555">SVGSVGElement created in DOM tree with SVG child elements</text>
+  <line x1="265" y1="165" x2="265" y2="180" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="35" y="185" width="460" height="50" rx="5" fill="#fef5e7" stroke="#e67e22" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="265" y="204" text-anchor="middle" font-size="11" font-weight="bold" fill="#e67e22">2. XML Serialization</text>
+  <text x="265" y="220" text-anchor="middle" font-size="9" fill="#555">serialize_and_cache_subtree() → Node::xml_serialize() → base64 data URL</text>
+  <line x1="265" y1="235" x2="265" y2="250" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="35" y="255" width="460" height="50" rx="5" fill="#e8f8f5" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="265" y="274" text-anchor="middle" font-size="11" font-weight="bold" fill="#27ae60">3. Image Cache Load</text>
+  <text x="265" y="290" text-anchor="middle" font-size="9" fill="#555">Data URL decoded → usvg::Tree::from_data() → VectorImageData stored</text>
+  <line x1="265" y1="305" x2="265" y2="320" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="35" y="325" width="460" height="50" rx="5" fill="#f4ecf7" stroke="#8e44ad" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="265" y="344" text-anchor="middle" font-size="11" font-weight="bold" fill="#8e44ad">4. CPU Rasterization</text>
+  <text x="265" y="360" text-anchor="middle" font-size="9" fill="#555">resvg::render() → tiny_skia::Pixmap → RasterImage at fixed pixel size</text>
+  <line x1="265" y1="375" x2="265" y2="390" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="35" y="395" width="460" height="50" rx="5" fill="#fde8e8" stroke="#c0392b" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="265" y="414" text-anchor="middle" font-size="11" font-weight="bold" fill="#c0392b">5. WebRender Bitmap Display</text>
+  <text x="265" y="430" text-anchor="middle" font-size="9" fill="#555">push_image() with ImageKey → GPU samples rasterized bitmap</text>
+
+  <!-- Issue annotations on left -->
+  <rect x="35" y="460" width="460" height="100" rx="5" fill="#fde8e8" stroke="#e74c3c" stroke-width="1.5"/>
+  <text x="265" y="478" text-anchor="middle" font-size="11" font-weight="bold" fill="#c0392b">Three Cascading Failures</text>
+  <line x1="55" y1="492" x2="475" y2="492" stroke="#f5c6c6" stroke-width="1"/>
+
+  <text x="55" y="508" font-size="10" fill="#c0392b">1. CSS Inheritance Breakage</text>
+  <text x="70" y="522" font-size="9" fill="#555">Serialization isolates SVG subtree → fill/stroke not inherited →</text>
+  <text x="70" y="534" font-size="9" fill="#555">data URL loaded as independent document → no CSS cascade</text>
+
+  <text x="55" y="552" font-size="10" fill="#c0392b">2. Web Fonts Failure</text>
+  <text x="70" y="566" font-size="9" fill="#555">@font-face declarations can't cross serialization boundary →</text>
+  <text x="70" y="578" font-size="9" fill="#555">SVG text rendered with fallback fonts instead of document fonts</text>
+
+  <!-- ============================================ -->
+  <!-- RIGHT COLUMN: Proposed Architecture -->
+  <!-- ============================================ -->
+  <rect x="540" y="60" width="490" height="40" rx="5" fill="#27ae60" filter="url(#shadow)"/>
+  <text x="785" y="80" text-anchor="middle" font-size="14" font-weight="bold" fill="#fff">✓ PROPOSED: Native SVG Layout Module</text>
+  <text x="785" y="94" text-anchor="middle" font-size="9" fill="#d5f5e3">SVG integrated directly into Servo's layout and rendering pipeline</text>
+
+  <!-- Proposed Pipeline Steps -->
+  <rect x="555" y="115" width="460" height="50" rx="5" fill="#eaf2f8" stroke="#2980b9" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="785" y="134" text-anchor="middle" font-size="11" font-weight="bold" fill="#2980b9">1. DOM Construction</text>
+  <text x="785" y="150" text-anchor="middle" font-size="9" fill="#555">SVG elements created with full presentational attribute → CSS mapping</text>
+  <line x1="785" y1="165" x2="785" y2="180" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <rect x="555" y="185" width="460" height="50" rx="5" fill="#e8f8f5" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="785" y="204" text-anchor="middle" font-size="11" font-weight="bold" fill="#27ae60">2. SVG Fragment Types</text>
+  <text x="785" y="220" text-anchor="middle" font-size="9" fill="#555">Fragment::SVG(SVGFragment::{Shape, Text, Image, Group}) replaces Fragment::Image</text>
+  <line x1="785" y1="235" x2="785" y2="250" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <rect x="555" y="255" width="460" height="50" rx="5" fill="#d5f5e3" stroke="#1e8449" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="785" y="274" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e8449">3. CSS Cascade Directly Applied</text>
+  <text x="785" y="290" text-anchor="middle" font-size="9" fill="#555">fill, stroke, font-family inherited from HTML ancestors through SVG subtree</text>
+  <line x1="785" y1="305" x2="785" y2="320" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <rect x="555" y="325" width="460" height="50" rx="5" fill="#d5f5e3" stroke="#1e8449" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="785" y="344" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e8449">4. Vector Display List Items</text>
+  <text x="785" y="360" text-anchor="middle" font-size="9" fill="#555">PushPath, PushText, PushGroup → GPU vector primitives, no CPU rasterization</text>
+  <line x1="785" y1="375" x2="785" y2="390" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <rect x="555" y="395" width="460" height="50" rx="5" fill="#d5f5e3" stroke="#1e8449" stroke-width="1.5" filter="url(#shadow)"/>
+  <text x="785" y="414" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e8449">5. WebRender Vector Display</text>
+  <text x="785" y="430" text-anchor="middle" font-size="9" fill="#555">GPU renders vector paths directly at any resolution → always crisp</text>
+
+  <!-- Benefit annotations on right -->
+  <rect x="555" y="460" width="460" height="100" rx="5" fill="#d5f5e3" stroke="#27ae60" stroke-width="1.5"/>
+  <text x="785" y="478" text-anchor="middle" font-size="11" font-weight="bold" fill="#1e8449">Three Problems Resolved</text>
+  <line x1="575" y1="492" x2="995" y2="492" stroke="#abebc6" stroke-width="1"/>
+
+  <text x="575" y="508" font-size="10" fill="#1e8449">✓ CSS Inheritance Restored</text>
+  <text x="590" y="522" font-size="9" fill="#555">SVG elements in layout tree → full CSS cascade from HTML ancestors →</text>
+  <text x="590" y="534" font-size="9" fill="#555">fill/stroke/opacity inherited naturally, presentational attrs → CSS</text>
+
+  <text x="575" y="552" font-size="10" fill="#1e8449">✓ Web Fonts Work</text>
+  <text x="590" y="566" font-size="9" fill="#555">@font-face declarations applied to SVG text → fontdb shared →</text>
+  <text x="590" y="578" font-size="9" fill="#555">same font loading infrastructure used for HTML and SVG text</text>
+
+  <!-- ============================================ -->
+  <!-- COMPARISON TABLE (bottom) -->
+  <!-- ============================================ -->
+  <rect x="20" y="580" width="1010" height="220" rx="5" fill="#f4f6f7" stroke="#bdc3c7" stroke-width="1"/>
+  <text x="525" y="600" text-anchor="middle" font-size="13" font-weight="bold" fill="#2c3e50">Comparison: Current vs. Proposed</text>
+
+  <!-- Table header -->
+  <rect x="40" y="612" width="300" height="24" rx="2" fill="#34495e"/><text x="190" y="629" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Aspect</text>
+  <rect x="340" y="612" width="320" height="24" rx="2" fill="#e74c3c" opacity="0.8"/><text x="500" y="629" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Current (Serialization)</text>
+  <rect x="660" y="612" width="350" height="24" rx="2" fill="#27ae60" opacity="0.8"/><text x="835" y="629" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Proposed (Native SVG)</text>
+
+  <!-- Row 1 -->
+  <rect x="40" y="636" width="300" height="28" rx="2" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <text x="50" y="654" font-size="10" font-weight="bold" fill="#2c3e50">CSS Inheritance</text>
+  <rect x="340" y="636" width="320" height="28" rx="2" fill="#fde8e8" stroke="#ddd" stroke-width="1"/>
+  <text x="500" y="654" text-anchor="middle" font-size="9" fill="#c0392b">Broken — serialization boundary</text>
+  <rect x="660" y="636" width="350" height="28" rx="2" fill="#d5f5e3" stroke="#ddd" stroke-width="1"/>
+  <text x="835" y="654" text-anchor="middle" font-size="9" fill="#1e8449">Full cascade through SVG elements</text>
+
+  <!-- Row 2 -->
+  <rect x="40" y="664" width="300" height="28" rx="2" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <text x="50" y="682" font-size="10" font-weight="bold" fill="#2c3e50">Web Fonts</text>
+  <rect x="340" y="664" width="320" height="28" rx="2" fill="#fde8e8" stroke="#ddd" stroke-width="1"/>
+  <text x="500" y="682" text-anchor="middle" font-size="9" fill="#c0392b">Not available in data URL context</text>
+  <rect x="660" y="664" width="350" height="28" rx="2" fill="#d5f5e3" stroke="#ddd" stroke-width="1"/>
+  <text x="835" y="682" text-anchor="middle" font-size="9" fill="#1e8449">Document fonts shared with SVG</text>
+
+  <!-- Row 3 -->
+  <rect x="40" y="692" width="300" height="28" rx="2" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <text x="50" y="710" font-size="10" font-weight="bold" fill="#2c3e50">Transforms</text>
+  <rect x="340" y="692" width="320" height="28" rx="2" fill="#fde8e8" stroke="#ddd" stroke-width="1"/>
+  <text x="500" y="710" text-anchor="middle" font-size="9" fill="#c0392b">Rasterized bitmap → blurry at &gt;1x</text>
+  <rect x="660" y="692" width="350" height="28" rx="2" fill="#d5f5e3" stroke="#ddd" stroke-width="1"/>
+  <text x="835" y="710" text-anchor="middle" font-size="9" fill="#1e8449">Vector paths → always crisp</text>
+
+  <!-- Row 4 -->
+  <rect x="40" y="720" width="300" height="28" rx="2" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <text x="50" y="738" font-size="10" font-weight="bold" fill="#2c3e50">Rendering</text>
+  <rect x="340" y="720" width="320" height="28" rx="2" fill="#fde8e8" stroke="#ddd" stroke-width="1"/>
+  <text x="500" y="738" text-anchor="middle" font-size="9" fill="#c0392b">CPU rasterization via resvg/tiny_skia</text>
+  <rect x="660" y="720" width="350" height="28" rx="2" fill="#d5f5e3" stroke="#ddd" stroke-width="1"/>
+  <text x="835" y="738" text-anchor="middle" font-size="9" fill="#1e8449">GPU vector primitives via WebRender</text>
+
+  <!-- Row 5 -->
+  <rect x="40" y="748" width="300" height="28" rx="2" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <text x="50" y="766" font-size="10" font-weight="bold" fill="#2c3e50">Cache</text>
+  <rect x="340" y="748" width="320" height="28" rx="2" fill="#fde8e8" stroke="#ddd" stroke-width="1"/>
+  <text x="500" y="766" text-anchor="middle" font-size="9" fill="#c0392b">3-tier: DOM + Vector + Raster bitmap</text>
+  <rect x="660" y="748" width="350" height="28" rx="2" fill="#d5f5e3" stroke="#ddd" stroke-width="1"/>
+  <text x="835" y="766" text-anchor="middle" font-size="9" fill="#1e8449">Single vector state (no bitmap cache)</text>
+
+  <!-- Row 6 -->
+  <rect x="40" y="776" width="300" height="22" rx="2" fill="#fff" stroke="#ddd" stroke-width="1"/>
+  <text x="50" y="792" font-size="10" font-weight="bold" fill="#2c3e50">Update Model</text>
+  <rect x="340" y="776" width="320" height="22" rx="2" fill="#fde8e8" stroke="#ddd" stroke-width="1"/>
+  <text x="500" y="792" text-anchor="middle" font-size="9" fill="#c0392b">Full re-serialize + re-rasterize</text>
+  <rect x="660" y="776" width="350" height="22" rx="2" fill="#d5f5e3" stroke="#ddd" stroke-width="1"/>
+  <text x="835" y="792" text-anchor="middle" font-size="9" fill="#1e8449">Targeted node-level updates</text>
+</svg>

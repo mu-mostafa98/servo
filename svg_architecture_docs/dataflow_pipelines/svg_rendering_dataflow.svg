@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 950 780" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2c3e50"/></marker>
+    <marker id="arrow-purple" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#8e44ad"/></marker>
+    <filter id="shadow-sm"><feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.15"/></filter>
+    <filter id="shadow-bg"><feDropShadow dx="1.5" dy="1.5" stdDeviation="2.5" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="475" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#2c3e50">SVG Rendering Pipeline</text>
+  <text x="475" y="48" text-anchor="middle" font-size="11" fill="#7f8c8d">ImageFragment → Display List → WebRender → GPU Screen — display_list/mod.rs</text>
+
+  <!-- Package: Layout / Display List -->
+  <rect x="30" y="65" width="440" height="680" rx="6" fill="#e8f8f5" stroke="#16a085" stroke-width="1.5" opacity="0.3" filter="url(#shadow-bg)"/>
+  <text x="250" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#16a085">Layout — Display List Building</text>
+
+  <!-- Package: WebRender -->
+  <rect x="490" y="65" width="430" height="680" rx="6" fill="#f4ecf7" stroke="#8e44ad" stroke-width="1.5" opacity="0.3" filter="url(#shadow-bg)"/>
+  <text x="705" y="85" text-anchor="middle" font-size="13" font-weight="bold" fill="#8e44ad">WebRender — Compositing &amp; GPU</text>
+
+  <!-- ============================================================ -->
+  <!-- Step 1: Layout -->
+  <!-- ============================================================ -->
+  <rect x="50" y="115" width="400" height="70" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="115" width="400" height="22" rx="4" fill="#16a085"/>
+  <rect x="50" y="133" width="400" height="4" fill="#16a085"/>
+  <circle cx="64" cy="125" r="7" fill="#fff" opacity="0.3"/>
+  <text x="64" y="129" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">1</text>
+  <text x="250" y="130" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Fragment Tree Contains Fragment::Image</text>
+  <text x="60" y="155" font-size="9" fill="#555">Fragment::Image(ArcRefCell&lt;ImageFragment&gt;) in the built fragment tree</text>
+  <text x="60" y="169" font-size="9" fill="#555">ImageFragment has image_key: Option&lt;ImageKey&gt; — may be Some or None</text>
+
+  <!-- Arrow 1→2 -->
+  <line x1="250" y1="185" x2="250" y2="220" stroke="#16a085" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ============================================================ -->
+  <!-- Step 2: Layout -->
+  <!-- ============================================================ -->
+  <rect x="50" y="225" width="400" height="85" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="225" width="400" height="22" rx="4" fill="#0e6655"/>
+  <rect x="50" y="243" width="400" height="4" fill="#0e6655"/>
+  <circle cx="64" cy="235" r="7" fill="#fff" opacity="0.3"/>
+  <text x="64" y="239" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">2</text>
+  <text x="250" y="240" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Display List Building — dispatch</text>
+  <text x="60" y="266" font-size="9" fill="#555">Fragment::Image arm in display_list/mod.rs (line ~680)</text>
+  <text x="60" y="280" font-size="9" fill="#555">Checks image_key.is_some() and !showing_broken_image_icon</text>
+  <text x="60" y="294" font-size="9" fill="#555">If no ImageKey yet → skip (image not rasterized) or show placeholder</text>
+
+  <!-- Arrow 2→3 -->
+  <line x1="250" y1="310" x2="250" y2="345" stroke="#16a085" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- ============================================================ -->
+  <!-- Step 3: Layout -->
+  <!-- ============================================================ -->
+  <rect x="50" y="350" width="400" height="70" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="350" width="400" height="22" rx="4" fill="#0e6655"/>
+  <rect x="50" y="368" width="400" height="4" fill="#0e6655"/>
+  <circle cx="64" cy="360" r="7" fill="#fff" opacity="0.3"/>
+  <text x="64" y="364" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">3</text>
+  <text x="250" y="365" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">push_image() Display Item</text>
+  <text x="60" y="390" font-size="9" fill="#555">display_list.push_image(image_key, clip_rect, bounds, style)</text>
+  <text x="60" y="404" font-size="9" fill="#555">Creates a DisplayItem::Image in the built display list</text>
+
+  <!-- Arrow 3→4 (cross to WebRender) -->
+  <path d="M 450 385 L 490 385" fill="none" stroke="#8e44ad" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+  <text x="460" y="380" font-size="8" fill="#8e44ad">IPC</text>
+
+  <!-- ============================================================ -->
+  <!-- Step 4: WebRender -->
+  <!-- ============================================================ -->
+  <rect x="510" y="350" width="390" height="85" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="510" y="350" width="390" height="22" rx="4" fill="#8e44ad"/>
+  <rect x="510" y="368" width="390" height="4" fill="#8e44ad"/>
+  <circle cx="524" cy="360" r="7" fill="#fff" opacity="0.3"/>
+  <text x="524" y="364" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">4</text>
+  <text x="705" y="365" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">WebRender Display List</text>
+  <text x="520" y="391" font-size="9" fill="#555">Display list sent to WebRender renderer process via IPC</text>
+  <text x="520" y="405" font-size="9" fill="#555">ImageKey references the previously uploaded rasterized bitmap texture</text>
+  <text x="520" y="419" font-size="9" fill="#555">WebRender builds GPU-friendly command buffer from display list</text>
+
+  <!-- Arrow 4→5 -->
+  <line x1="705" y1="435" x2="705" y2="475" stroke="#8e44ad" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+  <!-- ============================================================ -->
+  <!-- Step 5: WebRender -->
+  <!-- ============================================================ -->
+  <rect x="510" y="480" width="390" height="70" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="510" y="480" width="390" height="22" rx="4" fill="#6c3483"/>
+  <rect x="510" y="498" width="390" height="4" fill="#6c3483"/>
+  <circle cx="524" cy="490" r="7" fill="#fff" opacity="0.3"/>
+  <text x="524" y="494" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">5</text>
+  <text x="705" y="495" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">GPU Compositing</text>
+  <text x="520" y="520" font-size="9" fill="#555">WebRender batches and composites image quads</text>
+  <text x="520" y="534" font-size="9" fill="#555">Applies clipping (object-fit), transforms, and blending</text>
+
+  <!-- Arrow 5→6 -->
+  <line x1="705" y1="550" x2="705" y2="590" stroke="#8e44ad" stroke-width="1.5" marker-end="url(#arrow-purple)"/>
+
+  <!-- ============================================================ -->
+  <!-- Step 6: GPU -->
+  <!-- ============================================================ -->
+  <rect x="510" y="595" width="390" height="70" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="510" y="595" width="390" height="22" rx="4" fill="#6c3483"/>
+  <rect x="510" y="613" width="390" height="4" fill="#6c3483"/>
+  <circle cx="524" cy="605" r="7" fill="#fff" opacity="0.3"/>
+  <text x="524" y="609" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">6</text>
+  <text x="705" y="610" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">GPU Rasterization → Screen Output</text>
+  <text x="520" y="636" font-size="9" fill="#555">GPU shader renders the bitmap to the framebuffer</text>
+  <text x="520" y="650" font-size="9" fill="#555">Final pixels composited into the browser viewport</text>
+
+  <!-- ============================================================ -->
+  <!-- ImageKey flow annotation -->
+  <!-- ============================================================ -->
+  <rect x="50" y="480" width="400" height="95" rx="4" fill="#fef9e7" stroke="#f39c12" stroke-width="1"/>
+  <text x="250" y="498" text-anchor="middle" font-size="10" font-weight="bold" fill="#e67e22">ImageKey Lifecycle</text>
+  <text x="60" y="516" font-size="9" fill="#555">1. Rasterization pipeline produces RasterImage</text>
+  <text x="60" y="531" font-size="9" fill="#555">2. load_image_with_keycache() assigns KeyCache → WebRenderImageKey</text>
+  <text x="60" y="546" font-size="9" fill="#555">3. ImageFragment.image_key = Some(key)</text>
+  <text x="60" y="561" font-size="9" fill="#555">4. Display list building uses key for push_image()</text>
+  <text x="60" y="576" font-size="9" fill="#555">5. WebRender uploads bitmap to GPU texture referenced by key</text>
+
+  <!-- Divider -->
+  <rect x="30" y="740" width="890" height="1" fill="#ccc"/>
+  <text x="50" y="757" font-size="9" fill="#7f8c8d">Note: In the current architecture, the SVG bitmap is already fully rasterized on the CPU by resvg before WebRender sees it.</text>
+  <text x="50" y="770" font-size="9" fill="#7f8c8d">WebRender only composites the pre-rasterized bitmap — no native SVG vector rendering on GPU.</text>
+</svg>

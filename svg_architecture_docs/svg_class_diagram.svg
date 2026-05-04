@@ -1,0 +1,312 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1500 1050" font-family="Consolas, monospace">
+  <defs>
+    <!-- Relationship markers -->
+    <marker id="arrow-inherit" viewBox="0 0 14 10" refX="13" refY="5" markerWidth="12" markerHeight="9" orient="auto">
+      <polygon points="0,0 14,5 0,10 3,5" fill="#2c3e50" stroke="#2c3e50" stroke-width="1"/>
+    </marker>
+    <marker id="arrow-assoc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="6" orient="auto">
+      <path d="M0,0 L10,5 L0,10 Z" fill="#555" stroke="#555" stroke-width="0.5"/>
+    </marker>
+    <marker id="arrow-compose" viewBox="0 0 14 10" refX="13" refY="5" markerWidth="12" markerHeight="9" orient="auto">
+      <polygon points="7,0 14,5 7,10 0,5" fill="#555"/>
+    </marker>
+    <filter id="shadow"><feDropShadow dx="1.5" dy="1.5" stdDeviation="2" flood-opacity="0.12"/></filter>
+    <filter id="shadow-dark"><feDropShadow dx="2" dy="2" stdDeviation="2.5" flood-opacity="0.2"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="750" y="30" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">SVG Architecture — Key Classes &amp; Relationships</text>
+  <text x="750" y="48" text-anchor="middle" font-size="11" fill="#7f8c8d">UML-style class diagram showing Servo's SVG-related types across all layers</text>
+
+  <!-- ============================================================ -->
+  <!-- PACKAGE 1: Script DOM Layer -->
+  <!-- ============================================================ -->
+  <rect x="30" y="65" width="660" height="28" rx="3" fill="#2980b9" filter="url(#shadow-dark)"/>
+  <text x="360" y="84" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Package: Script DOM — components/script/dom/svg/</text>
+
+  <rect x="30" y="93" width="660" height="200" rx="4" fill="#eaf2f8" stroke="#2980b9" stroke-width="1" stroke-dasharray="6,3" opacity="0.5"/>
+
+  <!-- SVGElement -->
+  <rect x="50" y="105" width="200" height="85" rx="4" fill="#fff" stroke="#2980b9" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="50" y="105" width="200" height="22" rx="4" fill="#2980b9"/>
+  <text x="150" y="120" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">SVGElement</text>
+  <line x1="50" y1="127" x2="250" y2="127" stroke="#2980b9" stroke-width="1"/>
+  <text x="60" y="142" font-size="9" fill="#2c3e50">style_decl: CSSStyleDeclaration</text>
+  <line x1="50" y1="152" x2="250" y2="152" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="167" font-size="9" font-style="italic" fill="#555">+ attribute_mutated()</text>
+  <text x="60" y="180" font-size="9" font-style="italic" fill="#555">+ parse_plain_attribute()</text>
+
+  <!-- SVGGraphicsElement -->
+  <rect x="310" y="105" width="200" height="75" rx="4" fill="#fff" stroke="#2980b9" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="310" y="105" width="200" height="22" rx="4" fill="#2980b9"/>
+  <text x="410" y="120" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">SVGGraphicsElement</text>
+  <line x1="310" y1="127" x2="510" y2="127" stroke="#2980b9" stroke-width="1"/>
+  <text x="320" y="142" font-size="9" fill="#2c3e50">(base class for graphics elements)</text>
+  <line x1="310" y1="152" x2="510" y2="152" stroke="#ddd" stroke-width="0.5"/>
+  <text x="320" y="167" font-size="9" font-style="italic" fill="#555">(no additional fields or methods)</text>
+
+  <!-- Inheritance: SVGElement ← SVGGraphicsElement -->
+  <line x1="250" y1="142" x2="308" y2="142" stroke="#2c3e50" stroke-width="1.8" marker-end="url(#arrow-inherit)"/>
+
+  <!-- SVGSVGElement -->
+  <rect x="150" y="200" width="240" height="85" rx="4" fill="#fff" stroke="#2980b9" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="150" y="200" width="240" height="22" rx="4" fill="#2980b9"/>
+  <text x="270" y="215" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">SVGSVGElement</text>
+  <line x1="150" y1="222" x2="390" y2="222" stroke="#2980b9" stroke-width="1"/>
+  <text x="160" y="237" font-size="9" fill="#2c3e50">uuid: String</text>
+  <text x="160" y="250" font-size="9" fill="#2c3e50">cached_serialized_data_url</text>
+  <text x="175" y="263" font-size="9" fill="#2c3e50">: DomRefCell&lt;Option&lt;Result&lt;ServoUrl&gt;&gt;&gt;</text>
+  <line x1="150" y1="270" x2="390" y2="270" stroke="#ddd" stroke-width="0.5"/>
+  <text x="160" y="282" font-size="9" font-style="italic" fill="#555">+ data() → SVGElementData</text>
+
+  <!-- Inheritance: SVGGraphicsElement ← SVGSVGElement -->
+  <path d="M360,180 L320,198" stroke="#2c3e50" stroke-width="1.8" marker-end="url(#arrow-inherit)" fill="none"/>
+
+  <!-- SVGImageElement -->
+  <rect x="440" y="200" width="220" height="75" rx="4" fill="#fff" stroke="#2980b9" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="440" y="200" width="220" height="22" rx="4" fill="#2980b9"/>
+  <text x="550" y="215" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">SVGImageElement</text>
+  <line x1="440" y1="222" x2="660" y2="222" stroke="#2980b9" stroke-width="1"/>
+  <text x="450" y="237" font-size="9" fill="#2c3e50">width / height: AttrValue</text>
+  <line x1="440" y1="247" x2="660" y2="247" stroke="#ddd" stroke-width="0.5"/>
+  <text x="450" y="262" font-size="9" font-style="italic" fill="#555">+ parse_plain_attribute()</text>
+
+  <!-- Inheritance: SVGGraphicsElement ← SVGImageElement -->
+  <path d="M460,180 L500,198" stroke="#2c3e50" stroke-width="1.8" marker-end="url(#arrow-inherit)" fill="none"/>
+
+  <!-- ============================================================ -->
+  <!-- PACKAGE 2: Layout & Shared Types -->
+  <!-- ============================================================ -->
+  <rect x="30" y="305" width="1440" height="28" rx="3" fill="#16a085" filter="url(#shadow-dark)"/>
+  <text x="750" y="324" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Package: Layout &amp; Shared Types — components/layout/ + components/shared/net/</text>
+
+  <rect x="30" y="333" width="1440" height="190" rx="4" fill="#e8f8f5" stroke="#16a085" stroke-width="1" stroke-dasharray="6,3" opacity="0.4"/>
+
+  <!-- SVGElementData -->
+  <rect x="50" y="345" width="250" height="80" rx="4" fill="#fff" stroke="#16a085" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="50" y="345" width="250" height="22" rx="4" fill="#16a085"/>
+  <text x="175" y="360" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">SVGElementData</text>
+  <line x1="50" y1="367" x2="300" y2="367" stroke="#16a085" stroke-width="1"/>
+  <text x="60" y="382" font-size="9" fill="#2c3e50">width: Option&lt;&amp;AttrValue&gt;</text>
+  <text x="60" y="395" font-size="9" fill="#2c3e50">height: Option&lt;&amp;AttrValue&gt;</text>
+  <text x="60" y="408" font-size="9" fill="#2c3e50">view_box: Option&lt;&amp;AttrValue&gt;</text>
+  <text x="60" y="421" font-size="9" fill="#2c3e50">source: Option&lt;Result&lt;ServoUrl&gt;&gt;</text>
+
+  <!-- ImageFragment (layout) -->
+  <rect x="370" y="345" width="260" height="80" rx="4" fill="#fff" stroke="#16a085" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="370" y="345" width="260" height="22" rx="4" fill="#16a085"/>
+  <text x="500" y="360" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">ImageFragment (layout)</text>
+  <line x1="370" y1="367" x2="630" y2="367" stroke="#16a085" stroke-width="1"/>
+  <text x="380" y="382" font-size="9" fill="#2c3e50">image_key: Option&lt;WebRenderImageKey&gt;</text>
+  <text x="380" y="395" font-size="9" fill="#2c3e50">image_data: Option&lt;Image&gt;</text>
+  <text x="380" y="408" font-size="9" fill="#2c3e50">metadata: ImageMetadata</text>
+  <line x1="370" y1="418" x2="630" y2="418" stroke="#ddd" stroke-width="0.5"/>
+  <text x="380" y="422" font-size="9" font-style="italic" fill="#555">Used in Fragment::Image(variant)</text>
+
+  <!-- VectorImage -->
+  <rect x="700" y="345" width="250" height="80" rx="4" fill="#fff" stroke="#16a085" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="700" y="345" width="250" height="22" rx="4" fill="#16a085"/>
+  <text x="825" y="360" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">VectorImage</text>
+  <line x1="700" y1="367" x2="950" y2="367" stroke="#16a085" stroke-width="1"/>
+  <text x="710" y="382" font-size="9" fill="#2c3e50">id: PendingImageId (= LoadKey)</text>
+  <text x="710" y="395" font-size="9" fill="#2c3e50">svg_id: Option&lt;String&gt;  (UUID)</text>
+  <text x="710" y="408" font-size="9" fill="#2c3e50">metadata: ImageMetadata</text>
+  <text x="710" y="421" font-size="9" fill="#2c3e50">cors_status: CorsStatus</text>
+
+  <!-- RasterImage -->
+  <rect x="1010" y="345" width="240" height="80" rx="4" fill="#fff" stroke="#16a085" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1010" y="345" width="240" height="22" rx="4" fill="#16a085"/>
+  <text x="1130" y="360" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">RasterImage</text>
+  <line x1="1010" y1="367" x2="1250" y2="367" stroke="#16a085" stroke-width="1"/>
+  <text x="1020" y="382" font-size="9" fill="#2c3e50">width: u32, height: u32</text>
+  <text x="1020" y="395" font-size="9" fill="#2c3e50">data: Arc&lt;Vec&lt;u8&gt;&gt; (pixels)</text>
+  <text x="1020" y="408" font-size="9" fill="#2c3e50">image_key: Option&lt;WrImageKey&gt;</text>
+  <text x="1020" y="421" font-size="9" fill="#2c3e50">pixel_density: f32</text>
+
+  <!-- Image enum (shared) -->
+  <rect x="50" y="445" width="260" height="70" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="50" y="445" width="260" height="22" rx="4" fill="#8e44ad"/>
+  <text x="180" y="460" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">Image (enum)</text>
+  <line x1="50" y1="467" x2="310" y2="467" stroke="#8e44ad" stroke-width="1"/>
+  <text x="60" y="482" font-size="9" fill="#2c3e50">Raster(Arc&lt;RasterImage&gt;)</text>
+  <text x="60" y="495" font-size="9" fill="#2c3e50">Vector(VectorImage)</text>
+  <text x="60" y="508" font-size="9" fill="#555">— used in Fragment::Image</text>
+
+  <!-- Enum generalization arrows -->
+  <path d="M310,480 L390,480 L390,390 L698,390" stroke="#8e44ad" stroke-width="1.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arrow-assoc)"/>
+  <text x="500" y="478" text-anchor="middle" font-size="9" fill="#8e44ad">Raster variant →</text>
+  <path d="M310,490 L395,490 L395,415 L1008,415" stroke="#8e44ad" stroke-width="1.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arrow-assoc)"/>
+  <text x="660" y="413" text-anchor="middle" font-size="9" fill="#8e44ad">Vector variant →</text>
+
+  <!-- ============================================================ -->
+  <!-- PACKAGE 3: Image Cache Layer -->
+  <!-- ============================================================ -->
+  <rect x="30" y="535" width="1440" height="28" rx="3" fill="#27ae60" filter="url(#shadow-dark)"/>
+  <text x="750" y="554" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Package: Image Cache — components/net/image_cache.rs</text>
+
+  <rect x="30" y="563" width="1440" height="290" rx="4" fill="#d5f5e3" stroke="#27ae60" stroke-width="1" stroke-dasharray="6,3" opacity="0.4"/>
+
+  <!-- ImageCacheImpl -->
+  <rect x="50" y="575" width="280" height="100" rx="4" fill="#fff" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="50" y="575" width="280" height="22" rx="4" fill="#27ae60"/>
+  <text x="190" y="590" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">ImageCacheImpl</text>
+  <line x1="50" y1="597" x2="330" y2="597" stroke="#27ae60" stroke-width="1"/>
+  <text x="60" y="612" font-size="9" fill="#2c3e50">fontdb: Arc&lt;fontdb::Database&gt;</text>
+  <text x="60" y="625" font-size="9" fill="#2c3e50">store: Arc&lt;Mutex&lt;ImageCacheStore&gt;&gt;</text>
+  <text x="60" y="638" font-size="9" fill="#2c3e50">thread_pool: Option&lt;ThreadPool&gt;</text>
+  <line x1="50" y1="650" x2="330" y2="650" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="665" font-size="9" font-style="italic" fill="#555">+ rasterize_vector_image(id, size, svg_id)</text>
+
+  <!-- Composition: ImageCacheImpl ◆→ ImageCacheStore -->
+  <line x1="330" y1="620" x2="370" y2="620" stroke="#555" stroke-width="1.8" marker-start="url(#arrow-compose)"/>
+
+  <!-- ImageCacheStore -->
+  <rect x="380" y="575" width="320" height="110" rx="4" fill="#fff" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="380" y="575" width="320" height="22" rx="4" fill="#27ae60"/>
+  <text x="540" y="590" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">ImageCacheStore</text>
+  <line x1="380" y1="597" x2="700" y2="597" stroke="#27ae60" stroke-width="1"/>
+  <text x="390" y="612" font-size="9" fill="#2c3e50">vector_images: Map&lt;PendingImageId, VectorImageData&gt;</text>
+  <text x="390" y="625" font-size="9" fill="#2c3e50">rasterized_vector_images: Map&lt;(id, size), Task&gt;</text>
+  <text x="390" y="638" font-size="9" fill="#2c3e50">completed_loads: HashMap&lt;ImageKey, CompletedLoad&gt;</text>
+  <text x="390" y="651" font-size="9" fill="#2c3e50">key_cache: KeyCache</text>
+  <text x="390" y="664" font-size="9" fill="#2c3e50">svg_id_image_id_map: Mutex&lt;HashMap&lt;String, Id&gt;&gt;</text>
+  <text x="390" y="677" font-size="9" fill="#2c3e50">image_id_size_map: Mutex&lt;HashMap&lt;Id, Vec&lt;Size&gt;&gt;&gt;</text>
+
+  <!-- Composition: ImageCacheStore ◆→ VectorImageData -->
+  <path d="M700,615 L730,615 L730,610 L748,610" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-start="url(#arrow-compose)" marker-end="url(#arrow-assoc)"/>
+
+  <!-- VectorImageData -->
+  <rect x="760" y="575" width="250" height="70" rx="4" fill="#fff" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="760" y="575" width="250" height="22" rx="4" fill="#27ae60"/>
+  <text x="885" y="590" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">VectorImageData</text>
+  <line x1="760" y1="597" x2="1010" y2="597" stroke="#27ae60" stroke-width="1"/>
+  <text x="770" y="612" font-size="9" fill="#2c3e50">svg_tree: Arc&lt;usvg::Tree&gt;</text>
+  <text x="770" y="625" font-size="9" fill="#2c3e50">cors_status: CorsStatus</text>
+  <text x="770" y="638" font-size="9" fill="#555">— key: PendingImageId</text>
+
+  <!-- Composition: VectorImageData ◆→ usvg::Tree -->
+  <path d="M1010,600 L1060,600 L1060,470 L1280,470" stroke="#e67e22" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-start="url(#arrow-compose)" marker-end="url(#arrow-assoc)"/>
+
+  <!-- RasterizationTask -->
+  <rect x="760" y="665" width="250" height="80" rx="4" fill="#fff" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="760" y="665" width="250" height="22" rx="4" fill="#27ae60"/>
+  <text x="885" y="680" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">RasterizationTask</text>
+  <line x1="760" y1="687" x2="1010" y2="687" stroke="#27ae60" stroke-width="1"/>
+  <text x="770" y="702" font-size="9" fill="#2c3e50">result: Option&lt;RasterImage&gt;</text>
+  <text x="770" y="715" font-size="9" fill="#2c3e50">listeners: Vec&lt;(PipelineId, Callback)&gt;</text>
+  <text x="770" y="728" font-size="9" fill="#555">— key: (PendingImageId, DeviceIntSize)</text>
+  <line x1="760" y1="735" x2="1010" y2="735" stroke="#ddd" stroke-width="0.5"/>
+  <text x="770" y="743" font-size="9" font-style="italic" fill="#555">Spawns thread pool: resvg::render()</text>
+
+  <!-- Composition: ImageCacheStore ◆→ RasterizationTask -->
+  <path d="M620,680 L700,680 L700,710 L758,710" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-start="url(#arrow-compose)" marker-end="url(#arrow-assoc)"/>
+
+  <!-- KeyCache -->
+  <rect x="760" y="765" width="250" height="70" rx="4" fill="#fff" stroke="#27ae60" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="760" y="765" width="250" height="22" rx="4" fill="#27ae60"/>
+  <text x="885" y="780" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">KeyCache</text>
+  <line x1="760" y1="787" x2="1010" y2="787" stroke="#27ae60" stroke-width="1"/>
+  <text x="770" y="802" font-size="9" fill="#2c3e50">cache: KeyCacheState (Ready|PendingBatch)</text>
+  <text x="770" y="815" font-size="9" fill="#2c3e50">images_pending_keys: VecDeque&lt;PendingKey&gt;</text>
+  <text x="770" y="828" font-size="9" fill="#2c3e50">evicted_images: HashSet&lt;(id, size)&gt;</text>
+
+  <!-- Composition: ImageCacheStore ◆→ KeyCache -->
+  <path d="M620,700 L720,700 L720,800 L758,800" stroke="#555" stroke-width="1.5" stroke-dasharray="5,3" fill="none" marker-start="url(#arrow-compose)" marker-end="url(#arrow-assoc)"/>
+
+  <!-- ============================================================ -->
+  <!-- PACKAGE 4: External Libraries -->
+  <!-- ============================================================ -->
+  <rect x="1280" y="305" width="210" height="28" rx="3" fill="#e67e22" filter="url(#shadow-dark)"/>
+  <text x="1385" y="324" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">External</text>
+
+  <!-- usvg::Tree -->
+  <rect x="1280" y="345" width="210" height="70" rx="4" fill="#fff" stroke="#e67e22" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1280" y="345" width="210" height="22" rx="4" fill="#e67e22"/>
+  <text x="1385" y="360" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">usvg::Tree</text>
+  <line x1="1280" y1="367" x2="1490" y2="367" stroke="#e67e22" stroke-width="1"/>
+  <text x="1290" y="382" font-size="9" fill="#2c3e50">Node tree (Group, Path, Image, Text)</text>
+  <text x="1290" y="395" font-size="9" fill="#2c3e50">Gradients, Patterns, Clip paths</text>
+  <text x="1290" y="408" font-size="9" fill="#2c3e50">fontdb: Arc&lt;Database&gt;</text>
+
+  <!-- tiny_skia::Pixmap -->
+  <rect x="1280" y="440" width="210" height="70" rx="4" fill="#fff" stroke="#e67e22" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1280" y="440" width="210" height="22" rx="4" fill="#e67e22"/>
+  <text x="1385" y="455" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">tiny_skia::Pixmap</text>
+  <line x1="1280" y1="462" x2="1490" y2="462" stroke="#e67e22" stroke-width="1"/>
+  <text x="1290" y="477" font-size="9" fill="#2c3e50">width: u32, height: u32</text>
+  <text x="1290" y="490" font-size="9" fill="#2c3e50">data: Vec&lt;u8&gt; (RGBA pixels)</text>
+  <text x="1290" y="503" font-size="9" fill="#555">— output of resvg::render()</text>
+
+  <!-- fontdb::Database -->
+  <rect x="1280" y="535" width="210" height="55" rx="4" fill="#fff" stroke="#e67e22" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="1280" y="535" width="210" height="22" rx="4" fill="#e67e22"/>
+  <text x="1385" y="550" text-anchor="middle" font-size="11" font-weight="bold" fill="#fff">fontdb::Database</text>
+  <line x1="1280" y1="557" x2="1490" y2="557" stroke="#e67e22" stroke-width="1"/>
+  <text x="1290" y="572" font-size="9" fill="#2c3e50">Loaded system fonts</text>
+  <text x="1290" y="585" font-size="9" fill="#555">— shared via Arc across instances</text>
+
+  <!-- ============================================================ -->
+  <!-- CROSS-PACKAGE RELATIONSHIPS -->
+  <!-- ============================================================ -->
+
+  <!-- Association: SVGSVGElement.data() → SVGElementData -->
+  <path d="M270,285 L270,315 L175,315 L175,343" stroke="#2980b9" stroke-width="1.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arrow-assoc)"/>
+  <text x="225" y="310" font-size="9" fill="#2980b9">«creates» .data()</text>
+
+  <!-- Association: SVGElementData.source → ImageCache (data URL) -->
+  <path d="M300,410 L340,410 L340,700 L380,700" stroke="#16a085" stroke-width="1.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arrow-assoc)"/>
+  <text x="342" y="540" font-size="9" fill="#16a085">«source URL»</text>
+
+  <!-- Association: ImageCacheImpl → VectorImage (return type) -->
+  <path d="M330,655 L370,655 L370,480 L700,480" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arrow-assoc)"/>
+  <polygon points="340,640 380,640 380,670 340,670" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+  <text x="360" y="650" text-anchor="middle" font-size="8" fill="#1e8449">returns</text>
+  <text x="360" y="662" text-anchor="middle" font-size="8" fill="#1e8449">Image::Vector</text>
+
+  <!-- RasterizationTask → RasterImage (produces) -->
+  <path d="M1010,705 L1040,705 L1040,390 L1010,390" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="6,3" fill="none" marker-end="url(#arrow-assoc)"/>
+  <text x="1045" y="550" font-size="9" fill="#27ae60">«produces»</text>
+
+  <!-- ============================================================ -->
+  <!-- LEGEND -->
+  <!-- ============================================================ -->
+  <rect x="30" y="870" width="1440" height="160" rx="5" fill="#f4f6f7" stroke="#bdc3c7" stroke-width="1"/>
+  <text x="750" y="892" text-anchor="middle" font-size="13" font-weight="bold" fill="#2c3e50">Legend</text>
+
+  <!-- Relationship types -->
+  <line x1="50" y1="920" x2="120" y2="920" stroke="#2c3e50" stroke-width="1.8" marker-end="url(#arrow-inherit)"/>
+  <text x="130" y="924" font-size="10" fill="#2c3e50">Inheritance (▷ — "is-a")</text>
+
+  <line x1="350" y1="920" x2="420" y2="920" stroke="#555" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-assoc)"/>
+  <text x="430" y="924" font-size="10" fill="#555">Association (— "uses/creates")</text>
+
+  <line x1="660" y1="920" x2="720" y2="920" stroke="#555" stroke-width="1.8" marker-start="url(#arrow-compose)"/>
+  <text x="730" y="924" font-size="10" fill="#555">Composition (◆— "contains")</text>
+
+  <line x1="950" y1="920" x2="1020" y2="920" stroke="#8e44ad" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrow-assoc)"/>
+  <text x="1030" y="924" font-size="10" fill="#8e44ad">Enum variant generalization</text>
+
+  <!-- Package colors -->
+  <rect x="50" y="945" width="14" height="14" rx="2" fill="#2980b9"/><text x="72" y="957" font-size="10" fill="#2c3e50">Script DOM</text>
+  <rect x="170" y="945" width="14" height="14" rx="2" fill="#16a085"/><text x="192" y="957" font-size="10" fill="#2c3e50">Layout &amp; Shared Types</text>
+  <rect x="350" y="945" width="14" height="14" rx="2" fill="#27ae60"/><text x="372" y="957" font-size="10" fill="#2c3e50">Image Cache</text>
+  <rect x="490" y="945" width="14" height="14" rx="2" fill="#e67e22"/><text x="512" y="957" font-size="10" fill="#2c3e50">External Libraries</text>
+
+  <!-- Class compartments -->
+  <rect x="50" y="975" width="130" height="14" rx="1" fill="#2980b9"/><text x="115" y="986" text-anchor="middle" font-size="8" fill="#fff">Class Name</text>
+  <text x="195" y="986" font-size="10" fill="#555">— top compartment</text>
+
+  <line x1="50" y1="997" x2="180" y2="997" stroke="#ddd" stroke-width="0.5"/>
+  <text x="52" y="1010" font-size="9" fill="#2c3e50">field: Type</text>
+  <text x="195" y="1010" font-size="10" fill="#555">— middle compartment (fields)</text>
+
+  <line x1="50" y1="1018" x2="180" y2="1018" stroke="#ddd" stroke-width="0.5"/>
+  <text x="52" y="1025" font-size="9" fill="#555" font-style="italic">+ method()</text>
+  <text x="195" y="1025" font-size="10" fill="#555">— bottom compartment (methods)</text>
+
+  <!-- Key numbers -->
+  <text x="1050" y="990" font-size="10" font-weight="bold" fill="#e74c3c">Key insight:</text>
+  <text x="1050" y="1005" font-size="10" fill="#555">The SVGElement hierarchy is minimal (4 types). Most SVG tags</text>
+  <text x="1050" y="1020" font-size="10" fill="#555">fall through to generic SVGElement. ImageCacheStore is the</text>
+  <text x="1050" y="1035" font-size="10" fill="#555">central data hub connecting all three cache tiers.</text>
+</svg>

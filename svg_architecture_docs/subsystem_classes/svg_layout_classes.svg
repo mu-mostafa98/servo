@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 950" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow-tri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="6" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2c3e50"/></marker>
+    <marker id="arrow-dep" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#16a085"/></marker>
+    <marker id="arrow-com" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,1 L10,5 L0,9 Z" fill="#8e44ad"/></marker>
+    <filter id="shadow-sm"><feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.15"/></filter>
+    <filter id="shadow-bg"><feDropShadow dx="1.5" dy="1.5" stdDeviation="2.5" flood-opacity="0.12"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="640" y="30" text-anchor="middle" font-size="17" font-weight="bold" fill="#2c3e50">Layout — SVG Replaced Element Classes</text>
+  <text x="640" y="48" text-anchor="middle" font-size="11" fill="#7f8c8d">components/layout/ — Layout-side SVG handling as replaced content</text>
+
+  <!-- ============================================================ -->
+  <!-- Package: Layout -->
+  <!-- ============================================================ -->
+  <rect x="30" y="60" width="1230" height="860" rx="6" fill="#e8f8f5" stroke="#16a085" stroke-width="1.5" opacity="0.35" filter="url(#shadow-bg)"/>
+  <text x="645" y="80" text-anchor="middle" font-size="13" font-weight="bold" fill="#16a085">Package: Layout (layout::replaced + layout::fragment_tree)</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: SVGElementData -->
+  <!-- ============================================================ -->
+  <rect x="50" y="110" width="360" height="175" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="110" width="360" height="22" rx="4" fill="#16a085"/>
+  <rect x="50" y="128" width="360" height="4" fill="#16a085"/>
+  <text x="230" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">SVGElementData&lt;'dom&gt;</text>
+  <text x="50" y="142" font-size="9" fill="#7f8c8d">  components/shared/layout/lib.rs:152</text>
+  <text x="60" y="158" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="60" y="173" font-size="9" fill="#555">source: Option&lt;Result&lt;ServoUrl, ()&gt;&gt;  — cached data URL</text>
+  <text x="60" y="185" font-size="9" fill="#555">width: Option&lt;&amp;'dom AttrValue&gt;  — SVG width attribute</text>
+  <text x="60" y="197" font-size="9" fill="#555">height: Option&lt;&amp;'dom AttrValue&gt;  — SVG height attribute</text>
+  <text x="60" y="209" font-size="9" fill="#555">svg_id: String  — UUID from SVGSVGElement</text>
+  <text x="60" y="221" font-size="9" fill="#555">view_box: Option&lt;&amp;'dom AttrValue&gt;  — viewBox attribute</text>
+  <line x1="60" y1="229" x2="400" y2="229" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="244" font-size="10" font-weight="bold" fill="#2c3e50">Methods:</text>
+  <text x="60" y="259" font-size="9" fill="#555">ratio_from_view_box() → Option&lt;f32&gt;</text>
+  <text x="60" y="271" font-size="9" fill="#555">  — computes width/height ratio from viewBox attribute</text>
+
+  <!-- ============================================================ -->
+  <!-- Enum: ReplacedContentKind -->
+  <!-- ============================================================ -->
+  <rect x="470" y="110" width="360" height="175" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="470" y="110" width="360" height="22" rx="4" fill="#1abc9c"/>
+  <rect x="470" y="128" width="360" height="4" fill="#1abc9c"/>
+  <text x="650" y="125" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">ReplacedContentKind</text>
+  <text x="470" y="142" font-size="9" fill="#7f8c8d">  replaced.rs:139-146</text>
+  <text x="480" y="158" font-size="10" font-weight="bold" fill="#2c3e50">Variants:</text>
+  <text x="480" y="173" font-size="9" fill="#555">Image(ImageInfo)  —  raster/vector image from &lt;img&gt; or content</text>
+  <text x="480" y="185" font-size="9" fill="#555">IFrame(IFrameInfo)  —  &lt;iframe&gt; replaced element</text>
+  <text x="480" y="197" font-size="9" fill="#555">Canvas(CanvasInfo)  —  &lt;canvas&gt; element</text>
+  <text x="480" y="209" font-size="9" fill="#555">Video(VideoInfo)  —  &lt;video&gt; element</text>
+  <text x="480" y="221" font-size="9" fill="#e74c3c" font-weight="bold">SVGElement(Option&lt;VectorImage&gt;)  —  inline SVG</text>
+  <text x="480" y="233" font-size="9" fill="#555">Audio  —  &lt;audio&gt; element</text>
+  <line x1="480" y1="241" x2="820" y2="241" stroke="#ddd" stroke-width="0.5"/>
+  <text x="480" y="256" font-size="10" font-weight="bold" fill="#2c3e50">Used by:</text>
+  <text x="480" y="271" font-size="9" fill="#555">ReplacedContents.kind → determines fragment type</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: ReplacedContents -->
+  <!-- ============================================================ -->
+  <rect x="470" y="320" width="420" height="255" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="470" y="320" width="420" height="22" rx="4" fill="#0e6655"/>
+  <rect x="470" y="338" width="420" height="4" fill="#0e6655"/>
+  <text x="680" y="335" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">ReplacedContents</text>
+  <text x="470" y="352" font-size="9" fill="#7f8c8d">  replaced.rs:48-53</text>
+  <text x="480" y="368" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="480" y="383" font-size="9" fill="#555">kind: ReplacedContentKind  —  the type of replaced content</text>
+  <text x="480" y="395" font-size="9" fill="#555">natural_size: NaturalSizes  —  natural dimensions + aspect ratio</text>
+  <text x="480" y="407" font-size="9" fill="#555">base_fragment_info: BaseFragmentInfo  —  node provenance</text>
+  <line x1="480" y1="415" x2="880" y2="415" stroke="#ddd" stroke-width="0.5"/>
+  <text x="480" y="430" font-size="10" font-weight="bold" fill="#2c3e50">Key Methods:</text>
+  <text x="480" y="445" font-size="9" fill="#555">for_element(node, context) → Option&lt;Self&gt;  —  factory: dispatches</text>
+  <text x="490" y="457" font-size="9" fill="#555">by node type (image, canvas, iframe, svg, etc.)</text>
+  <text x="480" y="472" font-size="9" fill="#e74c3c">svg_kind_size(svg_data, context, node) → (ReplacedContentKind, NaturalSizes)</text>
+  <text x="490" y="484" font-size="9" fill="#555">resolves SVG width/height/viewBox → natural size</text>
+  <text x="480" y="499" font-size="9" fill="#555">make_fragments(layout_context, style, size) → Vec&lt;Fragment&gt;</text>
+  <text x="490" y="511" font-size="9" fill="#555">for SVGElement: requests rasterization, creates ImageFragment</text>
+  <text x="480" y="526" font-size="9" fill="#555">layout(...) → IndependentFormattingContextLayoutResult</text>
+  <text x="480" y="538" font-size="9" fill="#555">preferred_aspect_ratio(style, padding) → Option&lt;AspectRatio&gt;</text>
+  <text x="480" y="550" font-size="9" fill="#555">fallback_inline_size(wm) / fallback_block_size(wm) → Au</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: NaturalSizes -->
+  <!-- ============================================================ -->
+  <rect x="50" y="320" width="370" height="130" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="320" width="370" height="22" rx="4" fill="#1abc9c"/>
+  <rect x="50" y="338" width="370" height="4" fill="#1abc9c"/>
+  <text x="235" y="335" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">NaturalSizes</text>
+  <text x="50" y="352" font-size="9" fill="#7f8c8d">  replaced.rs:72-77</text>
+  <text x="60" y="368" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="60" y="383" font-size="9" fill="#555">width: Option&lt;Au&gt;  —  natural width in app units</text>
+  <text x="60" y="395" font-size="9" fill="#555">height: Option&lt;Au&gt;  —  natural height in app units</text>
+  <text x="60" y="407" font-size="9" fill="#555">ratio: Option&lt;CSSFloat&gt;  —  natural aspect ratio (w/h)</text>
+  <line x1="60" y1="415" x2="410" y2="415" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="430" font-size="10" font-weight="bold" fill="#2c3e50">Methods:</text>
+  <text x="60" y="445" font-size="9" fill="#555">from_width_and_height(w, h) → NaturalSizes</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: ImageFragment -->
+  <!-- ============================================================ -->
+  <rect x="50" y="490" width="370" height="155" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="490" width="370" height="22" rx="4" fill="#8e44ad"/>
+  <rect x="50" y="508" width="370" height="4" fill="#8e44ad"/>
+  <text x="235" y="505" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">ImageFragment</text>
+  <text x="50" y="522" font-size="9" fill="#7f8c8d">  fragment_tree/fragment.rs:86-92</text>
+  <text x="60" y="538" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="60" y="553" font-size="9" fill="#555">base: BaseFragment  —  shared fragment state (rect, style, tag)</text>
+  <text x="60" y="565" font-size="9" fill="#555">clip: PhysicalRect&lt;Au&gt;  —  clipping rect for object-fit</text>
+  <text x="60" y="577" font-size="9" fill="#555">image_key: Option&lt;ImageKey&gt;  —  WebRender image key</text>
+  <text x="60" y="589" font-size="9" fill="#555">showing_broken_image_icon: bool</text>
+  <text x="60" y="601" font-size="9" fill="#555">url: Option&lt;ServoUrl&gt;  —  source URL for LCP tracking</text>
+  <line x1="60" y1="609" x2="410" y2="609" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="624" font-size="10" font-weight="bold" fill="#2c3e50">Used for:</text>
+  <text x="60" y="639" font-size="9" fill="#555">Both raster images AND SVG (after rasterization)</text>
+
+  <!-- ============================================================ -->
+  <!-- Class: ImageResolver -->
+  <!-- ============================================================ -->
+  <rect x="50" y="680" width="510" height="220" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="50" y="680" width="510" height="22" rx="4" fill="#0e6655"/>
+  <rect x="50" y="698" width="510" height="4" fill="#0e6655"/>
+  <text x="305" y="695" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">ImageResolver</text>
+  <text x="50" y="712" font-size="9" fill="#7f8c8d">  context.rs:78-110</text>
+  <text x="60" y="728" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="60" y="743" font-size="9" fill="#555">origin: ImmutableOrigin  —  document origin for cache lookups</text>
+  <text x="60" y="755" font-size="9" fill="#555">image_cache: Arc&lt;dyn ImageCache&gt;  —  shared reference to net image cache</text>
+  <text x="60" y="767" font-size="9" fill="#555">pending_images: Mutex&lt;Vec&lt;PendingImage&gt;&gt;  —  in-progress image loads</text>
+  <text x="60" y="779" font-size="9" fill="#e74c3c">pending_svg_elements_for_serialization: Mutex&lt;Vec&lt;UntrustedNodeAddress&gt;&gt;</text>
+  <text x="60" y="791" font-size="9" fill="#e74c3c">pending_rasterization_images: Mutex&lt;Vec&lt;PendingRasterizationImage&gt;&gt;</text>
+  <text x="60" y="803" font-size="9" fill="#555">resolved_images_cache: Arc&lt;RwLock&lt;HashMap&lt;ServoUrl, CachedImageOrError&gt;&gt;&gt;</text>
+  <text x="60" y="815" font-size="9" fill="#555">animating_images: Arc&lt;RwLock&lt;AnimatingImages&gt;&gt;</text>
+  <line x1="60" y1="823" x2="550" y2="823" stroke="#ddd" stroke-width="0.5"/>
+  <text x="60" y="838" font-size="10" font-weight="bold" fill="#2c3e50">Key SVG Methods:</text>
+  <text x="60" y="853" font-size="9" fill="#555">get_cached_image_for_url(node, url, dest) → Result&lt;CachedImage&gt;</text>
+  <text x="60" y="865" font-size="9" fill="#e74c3c">rasterize_vector_image(id, size, node, svg_id) → Option&lt;RasterImage&gt;</text>
+  <text x="60" y="877" font-size="9" fill="#e74c3c">queue_svg_element_for_serialization(element)</text>
+  <text x="60" y="889" font-size="9" fill="#555">get_or_request_image_or_meta(node, url, dest) → LayoutImageCacheResult</text>
+
+  <!-- ============================================================ -->
+  <!-- Enum: Fragment (partial) -->
+  <!-- ============================================================ -->
+  <rect x="620" y="680" width="390" height="120" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="620" y="680" width="390" height="22" rx="4" fill="#8e44ad"/>
+  <rect x="620" y="698" width="390" height="4" fill="#8e44ad"/>
+  <text x="815" y="695" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Fragment (enum, relevant variants)</text>
+  <text x="620" y="712" font-size="9" fill="#7f8c8d">  fragment_tree/fragment.rs:31-51</text>
+  <text x="630" y="728" font-size="10" font-weight="bold" fill="#2c3e50">Variants:</text>
+  <text x="630" y="743" font-size="9" fill="#555">Box(ArcRefCell&lt;BoxFragment&gt;)  —  block/inline box</text>
+  <text x="630" y="755" font-size="9" fill="#555">Text(ArcRefCell&lt;TextFragment&gt;)  —  text content</text>
+  <text x="630" y="767" font-size="9" fill="#e74c3c" font-weight="bold">Image(ArcRefCell&lt;ImageFragment&gt;)  —  SVG + raster images</text>
+  <text x="630" y="779" font-size="9" fill="#555">IFrame(ArcRefCell&lt;IFrameFragment&gt;)</text>
+
+  <!-- ============================================================ -->
+  <!-- Struct: PendingRasterizationImage -->
+  <!-- ============================================================ -->
+  <rect x="830" y="120" width="340" height="120" rx="4" fill="#fff" stroke="#16a085" stroke-width="1.5" filter="url(#shadow-sm)"/>
+  <rect x="830" y="120" width="340" height="22" rx="4" fill="#bdc3c7"/>
+  <rect x="830" y="138" width="340" height="4" fill="#bdc3c7"/>
+  <text x="1000" y="135" text-anchor="middle" font-size="11" font-weight="bold" fill="#2c3e50">PendingRasterizationImage</text>
+  <text x="830" y="152" font-size="9" fill="#7f8c8d">  components/shared/layout/lib.rs:219-224</text>
+  <text x="840" y="168" font-size="10" font-weight="bold" fill="#2c3e50">Fields:</text>
+  <text x="840" y="183" font-size="9" fill="#555">node: UntrustedNodeAddress  —  DOM node to repaint</text>
+  <text x="840" y="195" font-size="9" fill="#555">id: PendingImageId  —  vector image identifier</text>
+  <text x="840" y="207" font-size="9" fill="#555">size: DeviceIntSize  —  requested rasterization size</text>
+
+  <!-- Relationships -->
+  <!-- SVGElementData → used by ReplacedContents (svg_kind_size) -->
+  <line x1="410" y1="200" x2="470" y2="200" stroke="#16a085" stroke-width="1" marker-end="url(#arrow-dep)"/>
+  <text x="440" y="195" text-anchor="middle" font-size="8" fill="#16a085">used by</text>
+
+  <!-- ReplacedContentKind → ReplacedContents -->
+  <line x1="650" y1="285" x2="650" y2="320" stroke="#2c3e50" stroke-width="1" marker-end="url(#arrow-tri)"/>
+  <text x="660" y="308" font-size="8" fill="#555">kind field</text>
+
+  <!-- ReplacedContents → NaturalSizes -->
+  <line x1="420" y1="380" x2="420" y2="380" stroke="#2c3e50" stroke-width="1"/>
+
+  <!-- ReplacedContents → ImageFragment (creates) -->
+  <line x1="470" y1="480" x2="420" y2="555" stroke="#8e44ad" stroke-width="1" marker-end="url(#arrow-com)"/>
+  <text x="430" y="510" font-size="8" fill="#8e44ad">make_fragments() creates</text>
+
+  <!-- ReplacedContents → ImageResolver (uses) -->
+  <line x1="560" y1="520" x2="560" y2="720" stroke="#16a085" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-dep)"/>
+  <text x="570" y="620" font-size="8" fill="#16a085">uses</text>
+
+  <!-- ImageFragment → DisplayListBuilder (rendered as) -->
+  <line x1="235" y1="645" x2="235" y2="700" stroke="#8e44ad" stroke-width="1" stroke-dasharray="4,3" marker-end="url(#arrow-com)"/>
+  <text x="245" y="675" font-size="8" fill="#8e44ad">push_image()</text>
+
+  <!-- Display List rendering note -->
+  <rect x="50" y="920" width="1180" height="1" fill="#ccc"/>
+  <text x="70" y="936" font-size="9" fill="#555">File: display_list/mod.rs:680-739 — Fragment::Image handling → push_image() with ImageKey → WebRender displays rasterized bitmap</text>
+</svg>

@@ -1,0 +1,14 @@
+# Run with tracing, filter to SVG_TRACE lines
+./target/debug/servoshell.exe --exit "file:///D:/Projects/servo/svg_tests/simple_svg.html" -Z relayout-event 2>&1 | Select-String "\[SVG_TRACE"
+
+# With relayout events too
+./target/debug/servoshell.exe --exit "file:///D:/Projects/servo/svg_tests/simple_svg.html" -Z relayout-event 2>&1 | Select-String "\[SVG_TRACE|Reflow"
+
+# Count total SVG_TRACE lines
+./target/debug/servoshell.exe --exit "file:///D:/Projects/servo/svg_tests/simple_svg.html" -Z relayout-event 2>&1 | Select-String "\[SVG_TRACE" | Measure-Object
+
+# Count reflow passes
+./target/debug/servoshell.exe --exit "file:///D:/Projects/servo/svg_tests/simple_svg.html" -Z relayout-event 2>&1 | Select-String "Reflow"
+
+# Filter to specific stages (e.g., stages 4 and 6)
+./target/debug/servoshell.exe --exit "file:///D:/Projects/servo/svg_tests/simple_svg.html" -Z relayout-event 2>&1 | Select-String "\[SVG_TRACE_STAGE_[46]"

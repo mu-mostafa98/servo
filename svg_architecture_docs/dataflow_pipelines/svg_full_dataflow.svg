@@ -1,0 +1,193 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1520 920" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2c3e50"/></marker>
+    <marker id="arrow-red" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#e74c3c"/></marker>
+    <filter id="shadow-sm"><feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.15"/></filter>
+    <filter id="shadow-bg"><feDropShadow dx="1.5" dy="1.5" stdDeviation="3" flood-opacity="0.10"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="760" y="28" text-anchor="middle" font-size="18" font-weight="bold" fill="#2c3e50">Complete SVG Data Flow - End-to-End Pipeline</text>
+  <text x="760" y="46" text-anchor="middle" font-size="11" fill="#7f8c8d">From DOM mutation to screen pixels - across all 5 subsystems</text>
+
+  <!-- Swimlane backgrounds -->
+  <rect x="20" y="55" width="290" height="800" rx="4" fill="#eaf2f8" stroke="#2980b9" stroke-width="1" opacity="0.2"/>
+  <rect x="300" y="55" width="295" height="800" rx="4" fill="#e8f8f5" stroke="#16a085" stroke-width="1" opacity="0.2"/>
+  <rect x="595" y="55" width="295" height="800" rx="4" fill="#e8f8f5" stroke="#27ae60" stroke-width="1" opacity="0.2"/>
+  <rect x="890" y="55" width="295" height="800" rx="4" fill="#fef5e7" stroke="#e67e22" stroke-width="1" opacity="0.2"/>
+  <rect x="1185" y="55" width="315" height="800" rx="4" fill="#f4ecf7" stroke="#8e44ad" stroke-width="1" opacity="0.2"/>
+
+  <!-- Column headers -->
+  <rect x="70" y="62" width="190" height="20" rx="3" fill="#2980b9"/>
+  <text x="165" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">SCRIPT DOM</text>
+
+  <rect x="353" y="62" width="190" height="20" rx="3" fill="#16a085"/>
+  <text x="448" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">LAYOUT</text>
+
+  <rect x="648" y="62" width="190" height="20" rx="3" fill="#27ae60"/>
+  <text x="743" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">IMAGE CACHE</text>
+
+  <rect x="943" y="62" width="190" height="20" rx="3" fill="#e67e22"/>
+  <text x="1038" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">THREAD POOL</text>
+
+  <rect x="1238" y="62" width="190" height="20" rx="3" fill="#8e44ad"/>
+  <text x="1333" y="76" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">WEBRENDER / GPU</text>
+
+  <!-- Row 1: Script - DOM Mutation -->
+  <rect x="35" y="110" width="250" height="60" rx="4" fill="#fff" stroke="#2980b9" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="35" y="110" width="250" height="22" rx="4" fill="#2980b9"/>
+  <rect x="35" y="128" width="250" height="4" fill="#2980b9"/>
+  <circle cx="49" cy="120" r="7" fill="#fff" opacity="0.3"/>
+  <text x="49" y="124" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">1</text>
+  <text x="160" y="126" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">DOM Mutation</text>
+  <text x="45" y="148" font-size="9" fill="#555">attribute_mutated / children_changed</text>
+  <text x="45" y="162" font-size="9" fill="#555">invalidate_cached_serialized_subtree()</text>
+
+  <!-- Arrow 1-2: cross-thread Script - Layout (dashed red) -->
+  <path d="M 160 170 L 160 175 L 448 175 L 448 180" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="304" y="173" font-size="8" fill="#e74c3c">cross-thread: layout traversal</text>
+
+  <!-- Row 2: Layout - First Layout -->
+  <rect x="323" y="180" width="250" height="60" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="323" y="180" width="250" height="22" rx="4" fill="#16a085"/>
+  <rect x="323" y="198" width="250" height="4" fill="#16a085"/>
+  <circle cx="337" cy="190" r="7" fill="#fff" opacity="0.3"/>
+  <text x="337" y="194" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">2</text>
+  <text x="448" y="196" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">First Layout</text>
+  <text x="333" y="218" font-size="9" fill="#555">SVGElementData { source: None }</text>
+  <text x="333" y="232" font-size="9" fill="#555">queue_svg_element_for_serialization()</text>
+
+  <!-- Arrow 2-3: cross-thread Layout - Script (dashed red) -->
+  <path d="M 448 240 L 448 245 L 160 245 L 160 250" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="305" y="243" font-size="8" fill="#e74c3c">cross-thread: process serialization queue</text>
+
+  <!-- Row 3: Script - Serialize -->
+  <rect x="35" y="250" width="250" height="60" rx="4" fill="#fff" stroke="#2980b9" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="35" y="250" width="250" height="22" rx="4" fill="#2980b9"/>
+  <rect x="35" y="268" width="250" height="4" fill="#2980b9"/>
+  <circle cx="49" cy="260" r="7" fill="#fff" opacity="0.3"/>
+  <text x="49" y="264" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">3</text>
+  <text x="160" y="266" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Serialize Subtree</text>
+  <text x="45" y="288" font-size="9" fill="#555">process_use_elements() -&gt; XML serialize</text>
+  <text x="45" y="302" font-size="9" fill="#555">Base64 encode -&gt; data URL -&gt; dirty layout</text>
+
+  <!-- Arrow 3-4: cross-thread Script - Layout (dashed red) -->
+  <path d="M 160 310 L 160 315 L 448 315 L 448 320" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="305" y="313" font-size="8" fill="#e74c3c">cross-thread: layout re-traverses</text>
+
+  <!-- Row 4: Layout - Second Layout -->
+  <rect x="323" y="320" width="250" height="60" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="323" y="320" width="250" height="22" rx="4" fill="#16a085"/>
+  <rect x="323" y="338" width="250" height="4" fill="#16a085"/>
+  <circle cx="337" cy="330" r="7" fill="#fff" opacity="0.3"/>
+  <text x="337" y="334" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">4</text>
+  <text x="448" y="336" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Second Layout</text>
+  <text x="333" y="358" font-size="9" fill="#555">SVGElementData { source: Some(url) }</text>
+  <text x="333" y="372" font-size="9" fill="#555">get_cached_image_for_url(data_url)</text>
+
+  <!-- Arrow 4-5: cross-thread Layout - ImageCache (dashed red) -->
+  <path d="M 448 380 L 448 385 L 743 385 L 743 390" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="596" y="383" font-size="8" fill="#e74c3c">cross-thread: image cache request</text>
+
+  <!-- Row 5: ImageCache - Parse SVG -->
+  <rect x="618" y="390" width="250" height="60" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="618" y="390" width="250" height="22" rx="4" fill="#27ae60"/>
+  <rect x="618" y="408" width="250" height="4" fill="#27ae60"/>
+  <circle cx="632" cy="400" r="7" fill="#fff" opacity="0.3"/>
+  <text x="632" y="404" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">5</text>
+  <text x="743" y="406" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Parse SVG</text>
+  <text x="628" y="428" font-size="9" fill="#555">Fetch bytes -&gt; detect SVG content</text>
+  <text x="628" y="442" font-size="9" fill="#555">usvg::Tree::from_data() -&gt; VectorImageData</text>
+
+  <!-- Arrow 5-6: same-thread ImageCache (solid) -->
+  <path d="M 743 450 L 743 460" fill="none" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Row 6: ImageCache - Request Rasterization -->
+  <rect x="618" y="460" width="250" height="60" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="618" y="460" width="250" height="22" rx="4" fill="#1e8449"/>
+  <rect x="618" y="478" width="250" height="4" fill="#1e8449"/>
+  <circle cx="632" cy="470" r="7" fill="#fff" opacity="0.3"/>
+  <text x="632" y="474" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">6</text>
+  <text x="743" y="476" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Request Rasterization</text>
+  <text x="628" y="498" font-size="9" fill="#555">rasterize_vector_image(id, size, svg_id)</text>
+  <text x="628" y="512" font-size="9" fill="#555">Arc::clone(tree) -&gt; spawn thread pool task</text>
+
+  <!-- Arrow 6-7: cross-thread ImageCache - ThreadPool (dashed red) -->
+  <path d="M 743 520 L 743 525 L 1040 525 L 1040 530" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="892" y="523" font-size="8" fill="#e74c3c">async task</text>
+
+  <!-- Row 7: ThreadPool - CPU Rasterize -->
+  <rect x="915" y="530" width="250" height="60" rx="4" fill="#fff" stroke="#e67e22" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="915" y="530" width="250" height="22" rx="4" fill="#e67e22"/>
+  <rect x="915" y="548" width="250" height="4" fill="#e67e22"/>
+  <circle cx="929" cy="540" r="7" fill="#fff" opacity="0.3"/>
+  <text x="929" y="544" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">7</text>
+  <text x="1040" y="546" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">CPU Rasterize</text>
+  <text x="925" y="568" font-size="9" fill="#555">Pixmap::new(w,h) -&gt; resvg::render(tree)</text>
+  <text x="925" y="582" font-size="9" fill="#555">pixmap.take() -&gt; RasterImage { bytes }</text>
+
+  <!-- Arrow 7-8: callback ThreadPool - ImageCache (dashed red) -->
+  <path d="M 1040 590 L 1040 595 L 743 595 L 743 600" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="892" y="593" font-size="8" fill="#e74c3c">callback</text>
+
+  <!-- Row 8: ImageCache - Complete Load -->
+  <rect x="618" y="600" width="250" height="60" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="618" y="600" width="250" height="22" rx="4" fill="#1e8449"/>
+  <rect x="618" y="618" width="250" height="4" fill="#1e8449"/>
+  <circle cx="632" cy="610" r="7" fill="#fff" opacity="0.3"/>
+  <text x="632" y="614" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">8</text>
+  <text x="743" y="616" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Complete Load</text>
+  <text x="628" y="638" font-size="9" fill="#555">load_image_with_keycache() -&gt; ImageKey</text>
+  <text x="628" y="652" font-size="9" fill="#555">complete_load_svg() -&gt; notify listeners</text>
+
+  <!-- Arrow 8-9: cross-thread ImageCache - Layout (dashed red) -->
+  <path d="M 743 660 L 743 665 L 448 665 L 448 670" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="596" y="663" font-size="8" fill="#e74c3c">cross-thread: ImageKey delivered</text>
+
+  <!-- Row 9: Layout - Build Fragment -->
+  <rect x="323" y="670" width="250" height="60" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="323" y="670" width="250" height="22" rx="4" fill="#0e6655"/>
+  <rect x="323" y="688" width="250" height="4" fill="#0e6655"/>
+  <circle cx="337" cy="680" r="7" fill="#fff" opacity="0.3"/>
+  <text x="337" y="684" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">9</text>
+  <text x="448" y="686" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Build ImageFragment</text>
+  <text x="333" y="708" font-size="9" fill="#555">make_fragments() -&gt; ImageFragment</text>
+  <text x="333" y="722" font-size="9" fill="#555">{ image_key: Some(key) } in Fragment::Image</text>
+
+  <!-- Arrow 9-10a: same-thread Layout (solid) -->
+  <path d="M 448 730 L 448 740" fill="none" stroke="#2c3e50" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Row 10a: Layout - Display List -->
+  <rect x="323" y="740" width="250" height="60" rx="4" fill="#fff" stroke="#16a085" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="323" y="740" width="250" height="22" rx="4" fill="#0e6655"/>
+  <rect x="323" y="758" width="250" height="4" fill="#0e6655"/>
+  <circle cx="337" cy="750" r="7" fill="#fff" opacity="0.3"/>
+  <text x="337" y="754" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">10</text>
+  <text x="448" y="756" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Display List</text>
+  <text x="333" y="778" font-size="9" fill="#555">push_image(image_key, clip, bounds)</text>
+  <text x="333" y="792" font-size="9" fill="#555">DisplayItem::Image in display list</text>
+
+  <!-- Arrow 10a-10b: IPC to WebRender (dashed red) -->
+  <path d="M 573 770 L 1200 770" fill="none" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow-red)"/>
+  <text x="887" y="766" font-size="8" fill="#e74c3c">IPC</text>
+
+  <!-- Row 10b: WebRender - GPU Render -->
+  <rect x="1200" y="740" width="250" height="60" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow-sm)"/>
+  <rect x="1200" y="740" width="250" height="22" rx="4" fill="#8e44ad"/>
+  <rect x="1200" y="758" width="250" height="4" fill="#8e44ad"/>
+  <circle cx="1214" cy="750" r="7" fill="#fff" opacity="0.3"/>
+  <text x="1214" y="754" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">11</text>
+  <text x="1325" y="756" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">GPU Render</text>
+  <text x="1210" y="778" font-size="9" fill="#555">WebRender compositing -&gt; GPU</text>
+  <text x="1210" y="792" font-size="9" fill="#555">Framebuffer -&gt; screen pixels</text>
+
+  <!-- Arrow legend -->
+  <rect x="30" y="835" width="1460" height="1" fill="#ccc"/>
+  <text x="50" y="855" font-size="11" font-weight="bold" fill="#2c3e50">Arrow Legend:</text>
+  <line x1="170" y1="852" x2="220" y2="852" stroke="#2c3e50" stroke-width="1.5"/>
+  <text x="230" y="856" font-size="9" fill="#555">Same-thread / same-process flow</text>
+  <line x1="470" y1="852" x2="520" y2="852" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="530" y="856" font-size="9" fill="#555">Cross-thread / IPC boundary</text>
+
+  <text x="50" y="878" font-size="9" fill="#7f8c8d">Note: This diagram traces the full end-to-end flow for an inline &lt;svg&gt; element. The serpentine path across columns shows the thread handoffs. Steps 1-4 represent the "two-reflow" serialization pattern - the most significant architectural overhead in the current design.</text>
+</svg>

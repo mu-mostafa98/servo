@@ -1,0 +1,178 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1050 920" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2c3e50"/></marker>
+    <marker id="arrow-blue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2980b9"/></marker>
+    <marker id="arrow-green" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#27ae60"/></marker>
+    <marker id="arrow-orange" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#e67e22"/></marker>
+    <filter id="shadow"><feDropShadow dx="1" dy="1" stdDeviation="1" flood-opacity="0.15"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="525" y="28" text-anchor="middle" font-size="16" font-weight="bold" fill="#2c3e50">Sequence Diagram: Rendering a Frame with Inline SVG</text>
+  <text x="525" y="46" text-anchor="middle" font-size="11" fill="#7f8c8d">Time flows downward. Shows message passing between threads for a single SVG render cycle.</text>
+
+  <!-- Lifeline headers -->
+  <!-- Script -->
+  <rect x="40" y="60" width="140" height="28" rx="4" fill="#2980b9" filter="url(#shadow)"/>
+  <text x="110" y="79" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Script Thread</text>
+  <line x1="110" y1="88" x2="110" y2="880" stroke="#2980b9" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+  <!-- Layout -->
+  <rect x="240" y="60" width="150" height="28" rx="4" fill="#16a085" filter="url(#shadow)"/>
+  <text x="315" y="79" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Layout Thread</text>
+  <line x1="315" y1="88" x2="315" y2="880" stroke="#16a085" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+  <!-- Image Cache -->
+  <rect x="450" y="60" width="150" height="28" rx="4" fill="#27ae60" filter="url(#shadow)"/>
+  <text x="525" y="79" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Image Cache</text>
+  <line x1="525" y1="88" x2="525" y2="880" stroke="#27ae60" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+  <!-- Thread Pool -->
+  <rect x="660" y="60" width="140" height="28" rx="4" fill="#e67e22" filter="url(#shadow)"/>
+  <text x="730" y="79" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">Thread Pool</text>
+  <line x1="730" y1="88" x2="730" y2="880" stroke="#e67e22" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+  <!-- WebRender -->
+  <rect x="860" y="60" width="140" height="28" rx="4" fill="#8e44ad" filter="url(#shadow)"/>
+  <text x="930" y="79" text-anchor="middle" font-size="12" font-weight="bold" fill="#fff">WebRender</text>
+  <line x1="930" y1="88" x2="930" y2="880" stroke="#8e44ad" stroke-width="1.5" stroke-dasharray="6,3"/>
+
+  <!-- === SEQUENCE FLOW === -->
+
+  <!-- 1. HTML Parsing -->
+  <rect x="45" y="100" width="130" height="24" rx="3" fill="#eaf2f8" stroke="#2980b9" stroke-width="1"/>
+  <text x="110" y="116" text-anchor="middle" font-size="10" fill="#2c3e50">Parse HTML</text>
+  <text x="260" y="116" font-size="9" fill="#888">1</text>
+  <line x1="110" y1="124" x2="315" y2="130" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="170" y="127" font-size="9" fill="#2980b9">DOM tree with SVGSVGElement</text>
+
+  <!-- 2. Layout Walk -->
+  <rect x="245" y="142" width="140" height="24" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+  <text x="315" y="158" text-anchor="middle" font-size="10" fill="#2c3e50">Layout Walk</text>
+  <text x="400" y="158" font-size="9" fill="#888">2</text>
+
+  <!-- 3. Check SVG source -->
+  <rect x="245" y="178" width="140" height="24" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+  <text x="315" y="194" text-anchor="middle" font-size="10" fill="#2c3e50">SVGElementData.source</text>
+  <text x="400" y="194" font-size="9" fill="#888">3</text>
+
+  <!-- Decision: source is None -->
+  <polygon points="315,215 295,230 315,245 335,230" fill="#fef9e7" stroke="#f39c12" stroke-width="1.5"/>
+  <text x="315" y="233" text-anchor="middle" font-size="8" fill="#e67e22">None?</text>
+
+  <!-- 4a. Queue for serialization -->
+  <rect x="245" y="257" width="140" height="24" rx="3" fill="#fde8e8" stroke="#e74c3c" stroke-width="1"/>
+  <text x="315" y="273" text-anchor="middle" font-size="10" fill="#c0392b">queue_svg_element()</text>
+  <text x="400" y="273" font-size="9" fill="#888">4a</text>
+
+  <line x1="315" y1="281" x2="110" y2="290" stroke="#e74c3c" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#arrow)"/>
+  <text x="180" y="287" font-size="9" fill="#e74c3c">pending_svg_elements</text>
+
+  <!-- 5. No fragments yet -->
+  <rect x="245" y="300" width="140" height="24" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+  <text x="315" y="316" text-anchor="middle" font-size="10" fill="#2c3e50">No SVG fragments</text>
+  <text x="400" y="316" font-size="9" fill="#888">4b</text>
+
+  <!-- 6. Script serializes SVG -->
+  <rect x="45" y="335" width="130" height="40" rx="3" fill="#eaf2f8" stroke="#2980b9" stroke-width="1"/>
+  <text x="110" y="352" text-anchor="middle" font-size="10" fill="#2c3e50">serialize_and_cache</text>
+  <text x="110" y="366" text-anchor="middle" font-size="10" fill="#2c3e50">_subtree()</text>
+  <text x="190" y="366" font-size="9" fill="#888">5</text>
+
+  <!-- Self-loop: process use elements -->
+  <path d="M175,350 Q195,340 195,365 Q195,375 175,370" stroke="#2980b9" stroke-width="1" fill="none" marker-end="url(#arrow-blue)"/>
+  <text x="200" y="362" font-size="8" fill="#2980b9">process_use</text>
+  <text x="200" y="372" font-size="8" fill="#2980b9">_elements</text>
+
+  <!-- 7. Dirty node -->
+  <rect x="45" y="390" width="130" height="24" rx="3" fill="#eaf2f8" stroke="#2980b9" stroke-width="1"/>
+  <text x="110" y="406" text-anchor="middle" font-size="10" fill="#2c3e50">dirty(NodeDamage::Other)</text>
+  <text x="190" y="406" font-size="9" fill="#888">6</text>
+
+  <line x1="110" y1="414" x2="315" y2="420" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrow-blue)"/>
+  <text x="180" y="417" font-size="9" fill="#2980b9">trigger reflow</text>
+
+  <!-- 8. Second Layout -->
+  <rect x="245" y="432" width="140" height="24" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+  <text x="315" y="448" text-anchor="middle" font-size="10" fill="#2c3e50">Second Layout</text>
+  <text x="400" y="448" font-size="9" fill="#888">7</text>
+
+  <!-- 9. Check source again -->
+  <polygon points="315,470 295,485 315,500 335,485" fill="#e8f8f5" stroke="#27ae60" stroke-width="1.5"/>
+  <text x="315" y="488" text-anchor="middle" font-size="8" fill="#27ae60">Some(Ok)</text>
+
+  <!-- 10. Request data URL -->
+  <rect x="245" y="512" width="140" height="24" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+  <text x="315" y="528" text-anchor="middle" font-size="10" fill="#2c3e50">get_cached_image()</text>
+  <text x="400" y="528" font-size="9" fill="#888">8</text>
+
+  <line x1="315" y1="536" x2="525" y2="542" stroke="#16a085" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="390" y="539" font-size="9" fill="#16a085">data URL</text>
+
+  <!-- 11. Parse with usvg -->
+  <rect x="450" y="550" width="150" height="24" rx="3" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+  <text x="525" y="566" text-anchor="middle" font-size="10" fill="#2c3e50">parse_svg_document()</text>
+  <text x="615" y="566" font-size="9" fill="#888">9</text>
+
+  <line x1="525" y1="574" x2="525" y2="595" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+
+  <!-- 12. Store VectorImageData -->
+  <rect x="450" y="600" width="150" height="24" rx="3" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+  <text x="525" y="616" text-anchor="middle" font-size="10" fill="#2c3e50">Store VectorImageData</text>
+  <text x="615" y="616" font-size="9" fill="#888">10</text>
+
+  <line x1="525" y1="624" x2="315" y2="630" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="390" y="627" font-size="9" fill="#27ae60">Image::Vector(VectorImage)</text>
+
+  <!-- 13. Make fragments -->
+  <rect x="245" y="640" width="140" height="24" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+  <text x="315" y="656" text-anchor="middle" font-size="10" fill="#2c3e50">make_fragments()</text>
+  <text x="400" y="656" font-size="9" fill="#888">11</text>
+
+  <!-- 14. Request rasterization -->
+  <rect x="245" y="676" width="140" height="40" rx="3" fill="#fde8e8" stroke="#e74c3c" stroke-width="1"/>
+  <text x="315" y="693" text-anchor="middle" font-size="10" fill="#c0392b">rasterize_vector</text>
+  <text x="315" y="707" text-anchor="middle" font-size="10" fill="#c0392b">_image()</text>
+  <text x="400" y="707" font-size="9" fill="#888">12</text>
+
+  <line x1="315" y1="716" x2="525" y2="722" stroke="#e74c3c" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="400" y="719" font-size="9" fill="#e74c3c">rasterize(id, size)</text>
+
+  <!-- 15. Spawn thread pool -->
+  <rect x="450" y="730" width="150" height="24" rx="3" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+  <text x="525" y="746" text-anchor="middle" font-size="10" fill="#2c3e50">Spawn thread task</text>
+  <text x="615" y="746" font-size="9" fill="#888">13</text>
+
+  <line x1="525" y1="754" x2="730" y2="760" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrow-orange)"/>
+
+  <!-- 16. Thread pool work -->
+  <rect x="660" y="770" width="140" height="55" rx="3" fill="#fef5e7" stroke="#e67e22" stroke-width="1"/>
+  <text x="730" y="787" text-anchor="middle" font-size="10" fill="#2c3e50">tiny_skia::Pixmap</text>
+  <text x="730" y="801" text-anchor="middle" font-size="10" fill="#2c3e50">resvg::render()</text>
+  <text x="730" y="815" text-anchor="middle" font-size="10" fill="#2c3e50">key_cache enqueue</text>
+  <text x="815" y="815" font-size="9" fill="#888">14</text>
+
+  <line x1="730" y1="825" x2="930" y2="832" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <text x="810" y="830" font-size="9" fill="#e67e22">add_image(ImageKey)</text>
+
+  <!-- 17. GPU upload -->
+  <rect x="860" y="842" width="140" height="30" rx="3" fill="#f0e6f6" stroke="#8e44ad" stroke-width="1"/>
+  <text x="930" y="858" text-anchor="middle" font-size="10" fill="#2c3e50">GPU Texture Upload</text>
+  <text x="870" y="870" font-size="8" fill="#8e44ad">PushImage</text>
+  <text x="1015" y="858" font-size="9" fill="#888">15</text>
+
+  <line x1="930" y1="872" x2="930" y2="880" stroke="#8e44ad" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Legend -->
+  <rect x="40" y="888" width="960" height="1" fill="#ccc"/>
+  <rect x="40" y="896" width="190" height="18" rx="3" fill="#eaf2f8" stroke="#2980b9" stroke-width="1"/>
+  <text x="135" y="909" text-anchor="middle" font-size="9" fill="#2c3e50">Script-thread action</text>
+  <rect x="240" y="896" width="190" height="18" rx="3" fill="#e8f8f5" stroke="#16a085" stroke-width="1"/>
+  <text x="335" y="909" text-anchor="middle" font-size="9" fill="#2c3e50">Layout-thread action</text>
+  <rect x="440" y="896" width="190" height="18" rx="3" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+  <text x="535" y="909" text-anchor="middle" font-size="9" fill="#2c3e50">Image Cache action</text>
+  <rect x="640" y="896" width="190" height="18" rx="3" fill="#fef5e7" stroke="#e67e22" stroke-width="1"/>
+  <text x="735" y="909" text-anchor="middle" font-size="9" fill="#2c3e50">Thread pool action</text>
+  <rect x="840" y="896" width="170" height="18" rx="3" fill="#f0e6f6" stroke="#8e44ad" stroke-width="1"/>
+  <text x="925" y="909" text-anchor="middle" font-size="9" fill="#2c3e50">WebRender/GPU action</text>
+</svg>

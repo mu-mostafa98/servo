@@ -1,0 +1,196 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 940" font-family="Consolas, monospace" font-size="12">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#2c3e50"/></marker>
+    <marker id="arrow-dn" viewBox="0 0 10 10" refX="5" refY="9" markerWidth="7" markerHeight="5" orient="auto"><path d="M0,0 L5,10 L10,0 Z" fill="#2c3e50"/></marker>
+    <filter id="shadow"><feDropShadow dx="1" dy="1" stdDeviation="1.5" flood-opacity="0.15"/></filter>
+  </defs>
+
+  <!-- Title -->
+  <text x="600" y="28" text-anchor="middle" font-size="17" font-weight="bold" fill="#2c3e50">Image vs SVG Processing Pipeline - All Stages</text>
+  <text x="600" y="46" text-anchor="middle" font-size="11" fill="#7f8c8d">Shared -&gt; Divergent -&gt; Reconverged - SVG reuses the image pipeline after rasterization</text>
+
+  <!-- SHARED SECTION -->
+  <rect x="40" y="65" width="1120" height="190" rx="6" fill="#eaf2f8" stroke="#2980b9" stroke-width="1.5" opacity="0.15"/>
+  <rect x="520" y="72" width="160" height="18" rx="3" fill="#2980b9"/>
+  <text x="600" y="85" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">SHARED - Both paths</text>
+
+  <!-- SH1: HTML Parser -->
+  <rect x="250" y="105" width="700" height="48" rx="4" fill="#fff" stroke="#2980b9" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="250" y="105" width="700" height="22" rx="4" fill="#2980b9"/>
+  <circle cx="264" cy="115" r="7" fill="#fff" opacity="0.3"/>
+  <text x="264" y="119" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">1</text>
+  <text x="600" y="121" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">HTML Parser - DOM Element Creation</text>
+  <text x="260" y="142" font-size="9" fill="#555">&lt;img src="url"&gt; -&gt; HTMLImageElement  |  &lt;svg&gt;...&lt;/svg&gt; -&gt; SVGSVGElement</text>
+  <line x1="600" y1="153" x2="600" y2="168" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- SH2: Style Resolution -->
+  <rect x="250" y="173" width="700" height="48" rx="4" fill="#fff" stroke="#2980b9" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="250" y="173" width="700" height="22" rx="4" fill="#1a5276"/>
+  <circle cx="264" cy="183" r="7" fill="#fff" opacity="0.3"/>
+  <text x="264" y="187" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">2</text>
+  <text x="600" y="189" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Style Resolution - Stylo CSS Engine</text>
+  <text x="260" y="210" font-size="9" fill="#555">Computes display type, sizing properties, object-fit for replaced elements</text>
+
+  <!-- Split fork arrow -->
+  <path d="M 600 221 L 600 228" fill="none" stroke="#2c3e50" stroke-width="2"/>
+  <path d="M 310 228 L 600 228 L 890 228" fill="none" stroke="#2c3e50" stroke-width="2"/>
+  <path d="M 310 228 L 310 235" fill="none" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 890 228 L 890 235" fill="none" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- DIVERGENT SECTION -->
+  <rect x="40" y="238" width="545" height="370" rx="6" fill="#e8f8f5" stroke="#2980b9" stroke-width="1.5" opacity="0.08"/>
+  <rect x="595" y="238" width="565" height="370" rx="6" fill="#fef5e7" stroke="#e67e22" stroke-width="1.5" opacity="0.08"/>
+
+  <rect x="100" y="245" width="170" height="18" rx="3" fill="#2980b9"/>
+  <text x="185" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">RASTER PATH</text>
+  <rect x="910" y="245" width="170" height="18" rx="3" fill="#e67e22"/>
+  <text x="995" y="258" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">SVG PATH</text>
+
+  <!-- ==================== RASTER SIDE ==================== -->
+
+  <!-- R3: Layout Dispatch -->
+  <rect x="70" y="275" width="480" height="45" rx="4" fill="#fff" stroke="#2980b9" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="70" y="275" width="480" height="20" rx="4" fill="#2980b9"/>
+  <circle cx="83" cy="284" r="6" fill="#fff" opacity="0.3"/>
+  <text x="83" y="288" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">3</text>
+  <text x="310" y="289" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Layout Dispatch</text>
+  <text x="80" y="308" font-size="9" fill="#555">ReplacedContentKind::Image(ImageInfo)</text>
+  <line x1="310" y1="320" x2="310" y2="335" stroke="#2980b9" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- R4: ImageCache Fetch + Decode -->
+  <rect x="70" y="340" width="480" height="50" rx="4" fill="#fff" stroke="#27ae60" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="70" y="340" width="480" height="20" rx="4" fill="#27ae60"/>
+  <circle cx="83" cy="349" r="6" fill="#fff" opacity="0.3"/>
+  <text x="83" y="353" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">4</text>
+  <text x="310" y="354" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">ImageCache - Fetch &amp; Decode</text>
+  <text x="80" y="374" font-size="9" fill="#555">Network fetch -&gt; PNG/JPEG/GIF/WEBP decode -&gt; RasterImage { bytes, metadata }</text>
+  <text x="80" y="386" font-size="9" fill="#555">KeyCache assigns WebRenderImageKey</text>
+  <line x1="310" y1="390" x2="310" y2="410" stroke="#27ae60" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- R5: ImageKey Assigned (NEW) -->
+  <rect x="70" y="415" width="480" height="45" rx="4" fill="#fff" stroke="#1abc9c" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="70" y="415" width="480" height="20" rx="4" fill="#1abc9c"/>
+  <circle cx="83" cy="424" r="6" fill="#fff" opacity="0.3"/>
+  <text x="83" y="428" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">5</text>
+  <text x="310" y="429" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">ImageKey - WebRender Handle Ready</text>
+  <text x="80" y="448" font-size="9" fill="#555">RasterImage.id = Some(WebRenderImageKey) - ready for display list</text>
+
+  <!-- Raster wait arrow (SVG-side stages execute) -->
+  <path d="M 310 460 L 310 600" fill="none" stroke="#1abc9c" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="320" y="530" font-size="8" fill="#1abc9c">waiting for render pipeline</text>
+
+  <!-- ==================== SVG SIDE ==================== -->
+
+  <!-- S3: Layout 1st Pass -->
+  <rect x="620" y="275" width="490" height="45" rx="4" fill="#fff" stroke="#e67e22" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="620" y="275" width="490" height="20" rx="4" fill="#e67e22"/>
+  <circle cx="633" cy="284" r="6" fill="#fff" opacity="0.3"/>
+  <text x="633" y="288" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">3</text>
+  <text x="865" y="289" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Layout - 1st Pass</text>
+  <text x="630" y="308" font-size="9" fill="#555">SVGElementData { source: None } -&gt; queue_svg_element_for_serialization()</text>
+  <line x1="865" y1="320" x2="865" y2="333" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- S4: Serialize DOM (SVG-only) -->
+  <rect x="620" y="338" width="490" height="42" rx="4" fill="#fff" stroke="#e74c3c" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="620" y="338" width="490" height="20" rx="4" fill="#e74c3c"/>
+  <circle cx="633" cy="347" r="6" fill="#fff" opacity="0.3"/>
+  <text x="633" y="351" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">4</text>
+  <text x="865" y="352" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">[!] Script - Serialize Subtree</text>
+  <text x="630" y="370" font-size="9" fill="#e74c3c">SVG-only: serialize_and_cache_subtree() -&gt; XML -&gt; base64 -&gt; data URL</text>
+  <line x1="865" y1="380" x2="865" y2="392" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- S5: Layout 2nd Pass (SVG-only) -->
+  <rect x="620" y="397" width="490" height="42" rx="4" fill="#fff" stroke="#e74c3c" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="620" y="397" width="490" height="20" rx="4" fill="#e74c3c"/>
+  <circle cx="633" cy="406" r="6" fill="#fff" opacity="0.3"/>
+  <text x="633" y="410" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">5</text>
+  <text x="865" y="411" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">[!] Layout - 2nd Pass</text>
+  <text x="630" y="429" font-size="9" fill="#e74c3c">SVG-only: SVGElementData { source: Some(data_url) } -&gt; proceed to cache</text>
+  <line x1="865" y1="439" x2="865" y2="451" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- S6: ImageCache Parse SVG -->
+  <rect x="620" y="456" width="490" height="42" rx="4" fill="#fff" stroke="#e67e22" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="620" y="456" width="490" height="20" rx="4" fill="#d35400"/>
+  <circle cx="633" cy="465" r="6" fill="#fff" opacity="0.3"/>
+  <text x="633" y="469" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">6</text>
+  <text x="865" y="470" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">ImageCache - Parse SVG Tree</text>
+  <text x="630" y="488" font-size="9" fill="#555">usvg::Tree::from_data(bytes) -&gt; VectorImageData { svg_tree, cors_status }</text>
+  <line x1="865" y1="498" x2="865" y2="510" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- S7: ThreadPool Rasterize (SVG-only) -->
+  <rect x="620" y="515" width="490" height="42" rx="4" fill="#fff" stroke="#e74c3c" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="620" y="515" width="490" height="20" rx="4" fill="#e74c3c"/>
+  <circle cx="633" cy="524" r="6" fill="#fff" opacity="0.3"/>
+  <text x="633" y="528" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">7</text>
+  <text x="865" y="529" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">[!] ThreadPool - CPU Rasterize</text>
+  <text x="630" y="547" font-size="9" fill="#e74c3c">SVG-only: Pixmap -&gt; resvg::render(&amp;tree) -&gt; RasterImage { bytes, metadata }</text>
+  <line x1="865" y1="557" x2="865" y2="569" stroke="#e67e22" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- S8: Complete Load (NEW) -->
+  <rect x="620" y="574" width="490" height="45" rx="4" fill="#fff" stroke="#e74c3c" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="620" y="574" width="490" height="20" rx="4" fill="#e74c3c"/>
+  <circle cx="633" cy="583" r="6" fill="#fff" opacity="0.3"/>
+  <text x="633" y="587" text-anchor="middle" font-size="8" font-weight="bold" fill="#fff">8</text>
+  <text x="865" y="588" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">[!] Complete Load - ImageKey + Notify</text>
+  <text x="630" y="607" font-size="9" fill="#e74c3c">SVG-only: load_image_with_keycache() -&gt; complete_load_svg() -&gt; notify listeners</text>
+  <text x="630" y="617" font-size="9" fill="#555">ImageFragment gets ImageKey -&gt; ready for display</text>
+
+  <!-- Extra steps bracket -->
+  <rect x="595" y="275" width="16" height="344" rx="2" fill="#e74c3c" opacity="0.10"/>
+  <text x="603" y="455" text-anchor="middle" font-size="8" fill="#e74c3c" transform="rotate(-90, 603, 455)">4 EXTRA STEPS vs RASTER (Serialize, 2nd Layout, CPU Render, Complete Load)</text>
+
+  <!-- CONVERGENCE ARROWS -->
+  <path d="M 310 600 L 310 618 L 600 618 L 600 635" fill="none" stroke="#1abc9c" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <path d="M 865 619 L 865 627 L 600 627 L 600 635" fill="none" stroke="#e74c3c" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <rect x="350" y="608" width="120" height="14" rx="3" fill="#f4f6f7" stroke="#8e44ad" stroke-width="0.5"/>
+  <text x="410" y="619" text-anchor="middle" font-size="8" font-weight="bold" fill="#8e44ad">RasterImage ready</text>
+
+  <!-- RECONVERGED SECTION -->
+  <rect x="40" y="635" width="1120" height="210" rx="6" fill="#f4ecf7" stroke="#8e44ad" stroke-width="1.5" opacity="0.12"/>
+  <rect x="510" y="642" width="180" height="18" rx="3" fill="#8e44ad"/>
+  <text x="600" y="655" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">RECONVERGED - Identical</text>
+
+  <!-- M9: Fragment Tree (was M1) -->
+  <rect x="250" y="665" width="700" height="50" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="250" y="665" width="700" height="22" rx="4" fill="#8e44ad"/>
+  <circle cx="264" cy="675" r="7" fill="#fff" opacity="0.3"/>
+  <text x="264" y="679" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">9</text>
+  <text x="600" y="681" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Fragment Tree - ImageFragment</text>
+  <text x="260" y="703" font-size="9" fill="#555">make_fragments() -&gt; Fragment::Image(ArcRefCell&lt;ImageFragment&gt;)</text>
+  <text x="260" y="713" font-size="9" fill="#555">{ image_key: Option&lt;ImageKey&gt;, clip, showing_broken_image_icon }</text>
+  <line x1="600" y1="715" x2="600" y2="730" stroke="#8e44ad" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- M10: Display List (was M2) -->
+  <rect x="250" y="735" width="700" height="45" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="250" y="735" width="700" height="22" rx="4" fill="#6c3483"/>
+  <circle cx="264" cy="745" r="7" fill="#fff" opacity="0.3"/>
+  <text x="264" y="749" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">10</text>
+  <text x="600" y="751" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">Display List - push_image()</text>
+  <text x="260" y="770" font-size="9" fill="#555">push_image(image_key, clip_rect, bounds) -&gt; DisplayItem::Image</text>
+  <line x1="600" y1="780" x2="600" y2="795" stroke="#8e44ad" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- M11: WebRender (was M3) -->
+  <rect x="250" y="800" width="700" height="45" rx="4" fill="#fff" stroke="#8e44ad" stroke-width="2" filter="url(#shadow)"/>
+  <rect x="250" y="800" width="700" height="22" rx="4" fill="#6c3483"/>
+  <circle cx="264" cy="810" r="7" fill="#fff" opacity="0.3"/>
+  <text x="264" y="814" text-anchor="middle" font-size="9" font-weight="bold" fill="#fff">11</text>
+  <text x="600" y="816" text-anchor="middle" font-size="10" font-weight="bold" fill="#fff">WebRender - GPU Compositing</text>
+  <text x="260" y="835" font-size="9" fill="#555">Compositing -&gt; GPU shaders -&gt; framebuffer -&gt; screen pixels</text>
+
+  <!-- Legend -->
+  <rect x="30" y="870" width="1140" height="1" fill="#ccc"/>
+  <rect x="50" y="885" width="12" height="10" fill="#2980b9"/>
+  <text x="68" y="895" font-size="9" fill="#555">Shared stage (both)</text>
+  <rect x="210" y="885" width="12" height="10" fill="#2980b9"/>
+  <text x="228" y="895" font-size="9" fill="#555">Raster stage</text>
+  <rect x="360" y="885" width="12" height="10" fill="#e67e22"/>
+  <text x="378" y="895" font-size="9" fill="#555">SVG stage</text>
+  <rect x="500" y="885" width="12" height="10" fill="#e74c3c"/>
+  <text x="518" y="895" font-size="9" fill="#555">SVG-only extra step</text>
+  <rect x="680" y="885" width="12" height="10" fill="#8e44ad"/>
+  <text x="698" y="895" font-size="9" fill="#555">Reconverged (identical)</text>
+
+  <text x="50" y="920" font-size="9" fill="#7f8c8d">Raster: 7 stages total. SVG: 11 stages total (+57%) - 4 extra steps due to serialization, reflow, and CPU rasterization.</text>
+  <text x="50" y="932" font-size="9" fill="#7f8c8d">After reconvergence at ImageFragment, both paths produce identical DisplayItem::Image for WebRender.</text>
+</svg>
