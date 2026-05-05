@@ -482,12 +482,18 @@ struct ImageCacheStore {
 impl ImageCacheStore {
     /// Finishes loading the image by setting the WebRenderImageKey and calling `compete_load` or `complete_load_svg`.
     fn set_key_and_finish_load(&mut self, pending_image: PendingKey, image_key: WebRenderImageKey) {
+        eprintln!("[SVG_TRACE_STAGE_7] set_key_and_finish_load() image_key={:?} variant={:?}", image_key,
+            match pending_image {
+                PendingKey::RasterImage(_) => "RasterImage",
+                PendingKey::Svg(_) => "Svg",
+            });
         match pending_image {
             PendingKey::RasterImage((pending_id, mut raster_image)) => {
                 set_webrender_image_key(&self.paint_api, &mut raster_image, image_key);
                 self.complete_load(pending_id, LoadResult::LoadedRasterImage(raster_image));
             },
             PendingKey::Svg((pending_id, mut raster_image, requested_size)) => {
+                eprintln!("[SVG_TRACE_STAGE_7] set_key_and_finish_load() SVG variant, pending_id={:?} requested_size={:?}", pending_id, requested_size);
                 set_webrender_image_key(&self.paint_api, &mut raster_image, image_key);
                 self.complete_load_svg(raster_image, pending_id, requested_size);
             },
@@ -572,10 +578,13 @@ impl ImageCacheStore {
         pending_image_id: PendingImageId,
         requested_size: DeviceIntSize,
     ) {
+        eprintln!("[SVG_TRACE_STAGE_5] complete_load_svg() ENTER pending_image_id={:?} requested_size={:?} rasterized_size={:?}x{:?}",
+            pending_image_id, requested_size, rasterized_image.metadata.width, rasterized_image.metadata.height);
         let listeners = {
             self.rasterized_vector_images
                 .get_mut(&(pending_image_id, requested_size))
                 .map(|task| {
+                    eprintln!("[SVG_TRACE_STAGE_5] complete_load_svg() found {} listener(s)", task.listeners.len());
                     task.result = Some(rasterized_image);
                     std::mem::take(&mut task.listeners)
                 })
@@ -583,6 +592,7 @@ impl ImageCacheStore {
         };
 
         for (pipeline_id, callback) in listeners {
+            eprintln!("[SVG_TRACE_STAGE_5] complete_load_svg() notifying pipeline_id={:?}", pipeline_id);
             callback(ImageCacheResponseMessage::VectorImageRasterizationComplete(
                 RasterizationCompleteResponse {
                     pipeline_id,
@@ -591,11 +601,14 @@ impl ImageCacheStore {
                 },
             ));
         }
+        eprintln!("[SVG_TRACE_STAGE_5] complete_load_svg() EXIT");
     }
 
     /// The rest of complete load. This requires that images have a valid `WebRenderImageKey`.
     fn complete_load(&mut self, key: LoadKey, load_result: LoadResult) {
         debug!("Completed decoding for {:?}", load_result);
+        eprintln!("[SVG_TRACE_STAGE_5] complete_load() ENTER key={:?} is_vector={}",
+            key, matches!(load_result, LoadResult::LoadedVectorImage(_)));
         let pending_load = match self.pending_loads.remove(&key) {
             Some(load) => load,
             None => return,
@@ -604,11 +617,16 @@ impl ImageCacheStore {
         let image_response = match load_result {
             LoadResult::LoadedRasterImage(raster_image) => {
                 assert!(raster_image.id.is_some());
+                eprintln!("[SVG_TRACE_STAGE_5] complete_load() RasterImage size={:?}x{:?}",
+                    raster_image.metadata.width, raster_image.metadata.height);
                 ImageResponse::Loaded(Image::Raster(Arc::new(raster_image)), url.unwrap())
             },
             LoadResult::LoadedVectorImage(vector_image) => {
+                eprintln!("[SVG_TRACE_STAGE_5] complete_load() VectorImage detected, inserting into vector_images");
                 self.vector_images.insert(key, vector_image.clone());
                 let natural_dimensions = vector_image.svg_tree.size().to_int_size();
+                eprintln!("[SVG_TRACE_STAGE_5] complete_load() VectorImage natural_dimensions={:?}x{:?}",
+                    natural_dimensions.width(), natural_dimensions.height());
                 let metadata = ImageMetadata {
                     width: natural_dimensions.width(),
                     height: natural_dimensions.height(),
@@ -970,11 +988,16 @@ impl ImageCache for ImageCacheImpl {
         requested_size: DeviceIntSize,
         svg_id: Option<String>,
     ) -> Option<RasterImage> {
+        eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() ENTER image_id={:?} requested_size={:?}x{:?} svg_id={:?}",
+            image_id, requested_size.width, requested_size.height, svg_id);
         let mut store = self.store.lock();
         let Some(vector_image) = store.vector_images.get(&image_id).cloned() else {
             warn!("Unknown image id {image_id:?} requested for rasterization");
+            eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() UNKNOWN image_id, returning None");
             return None;
         };
+        eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() found vector_image, usvg tree size={:?}",
+            vector_image.svg_tree.size());
 
         // This early return relies on the fact that the result of image rasterization cannot
         // ever be `None`. If that were the case we would need to check whether the entry
@@ -984,6 +1007,7 @@ impl ImageCache for ImageCacheImpl {
             .entry((image_id, requested_size))
             .or_default();
         if let Some(result) = entry.result.as_ref() {
+            eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() CACHED result, returning early");
             return Some(result.clone());
         }
 
@@ -1008,8 +1032,12 @@ impl ImageCache for ImageCacheImpl {
         }
 
         let store = self.store.clone();
+        eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() spawning thread pool task...");
         self.thread_pool.spawn(move || {
             let natural_size = vector_image.svg_tree.size().to_int_size();
+            eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() spawned task: natural_size={:?}x{:?} requested={:?}x{:?}",
+                natural_size.width(), natural_size.height(),
+                requested_size.width, requested_size.height);
             let tinyskia_requested_size = {
                 let width = requested_size
                     .width
@@ -1055,14 +1083,20 @@ impl ImageCache for ImageCacheImpl {
                 is_opaque: false,
             };
 
+            eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() rasterized {}x{} -> {} bytes",
+                tinyskia_requested_size.width(), tinyskia_requested_size.height(),
+                rasterized_image.bytes.len());
+
             let mut store = store.lock();
             store.load_image_with_keycache(PendingKey::Svg((
                 image_id,
                 rasterized_image,
                 requested_size,
             )));
+            eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() spawned task: load_image_with_keycache done");
         });
 
+        eprintln!("[SVG_TRACE_STAGE_6] rasterize_vector_image() returning None (async rasterization)");
         None
     }
 

@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 1480" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#555" /></marker>
+    <marker id="arrR" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#D9534F" /></marker>
+    <marker id="arrG" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#50B86C" /></marker>
+    <linearGradient id="gStart" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E6A23C" /><stop offset="100%" stop-color="#D4891E" /></linearGradient>
+    <linearGradient id="gP" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF3E0" /><stop offset="100%" stop-color="#FFE0B2" /></linearGradient>
+    <linearGradient id="gD" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF8E1" /><stop offset="100%" stop-color="#FFECB3" /></linearGradient>
+    <linearGradient id="gRet" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8F5E9" /><stop offset="100%" stop-color="#C8E6C9" /></linearGradient>
+    <linearGradient id="gProc" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF8E1" /><stop offset="100%" stop-color="#FFE0B2" /></linearGradient>
+    <linearGradient id="gBadgeP2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E6A23C" /><stop offset="100%" stop-color="#D4891E" /></linearGradient>
+  </defs>
+
+  <rect width="900" height="1480" fill="#FAFBFC" />
+
+  <!-- Title -->
+  <rect x="0" y="0" width="900" height="50" fill="#E6A23C" />
+  <text x="450" y="30" fill="#FFF" font-size="15" font-weight="bold" text-anchor="middle">serialize_and_cache_subtree() - Flowchart</text>
+  <text x="450" y="70" fill="#888" font-size="11" text-anchor="middle">Script Thread - Stage 4 - SVG Subtree Serialization &amp; Cache</text>
+  <text x="450" y="84" fill="#E6A23C" font-size="10" font-weight="bold" text-anchor="middle">Pass 2 (P2): Serialization Pass — Triggered by Layout Queue</text>
+  <text x="450" y="97" fill="#888" font-size="9" text-anchor="middle">Called from script after layout queues SVGSVGElement for serialization in P1</text>
+
+  <!-- ENTRY -->
+  <rect x="250" y="115" width="400" height="42" rx="21" fill="url(#gStart)" />
+  <text x="450" y="142" fill="#FFF" font-size="12" font-weight="bold" text-anchor="middle">serialize_and_cache_subtree()</text>
+  <path d="M450,157 v18" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+  <rect x="660" y="115" width="24" height="14" rx="3" fill="url(#gBadgeP2)" opacity="0.85" />
+  <text x="672" y="125" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+
+  <!-- Setup temp JSContext -->
+  <rect x="150" y="188" width="600" height="50" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <rect x="720" y="192" width="24" height="14" rx="3" fill="url(#gBadgeP2)" opacity="0.85" />
+  <text x="732" y="202" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+  <text x="450" y="208" fill="#333" font-size="11" font-weight="bold">Setup Temp JSContext</text>
+  <text x="450" y="224" fill="#666" font-size="10">unsafe { script_runtime::temp_cx() }</text>
+  <path d="M450,238 v15" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Process use elements -->
+  <rect x="150" y="266" width="600" height="65" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <rect x="720" y="270" width="24" height="14" rx="3" fill="url(#gBadgeP2)" opacity="0.85" />
+  <text x="732" y="280" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+  <text x="450" y="288" fill="#333" font-size="11" font-weight="bold">Process &lt;use&gt; Elements</text>
+  <text x="450" y="304" fill="#666" font-size="10">For each &lt;use&gt; in subtree: resolve href → clone referenced node</text>
+  <text x="450" y="320" fill="#666" font-size="10">→ collect cloned nodes for cleanup</text>
+  <path d="M450,331 v15" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Serialize subtree -->
+  <rect x="150" y="359" width="600" height="55" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <rect x="720" y="363" width="24" height="14" rx="3" fill="url(#gBadgeP2)" opacity="0.85" />
+  <text x="732" y="373" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+  <text x="450" y="380" fill="#333" font-size="11" font-weight="bold">XML Serialize Subtree</text>
+  <text x="450" y="396" fill="#666" font-size="10">self.upcast::&lt;Node&gt;().xml_serialize(TraversalScope::IncludeNode)</text>
+  <text x="450" y="408" fill="#999" font-size="9">Includes all children + cloned use elements</text>
+  <path d="M450,414 v15" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Cleanup cloned nodes -->
+  <rect x="150" y="442" width="600" height="50" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <rect x="720" y="446" width="24" height="14" rx="3" fill="url(#gBadgeP2)" opacity="0.85" />
+  <text x="732" y="456" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+  <text x="450" y="462" fill="#333" font-size="11" font-weight="bold">Cleanup Cloned Nodes</text>
+  <text x="450" y="478" fill="#666" font-size="10">RemoveChild() for each cloned use element</text>
+  <path d="M450,492 v15" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Serialization result check -->
+  <polygon points="450,555 580,520 450,485 320,520" fill="url(#gD)" stroke="#E6A23C" stroke-width="1.5" />
+  <text x="450" y="516" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">serialize_result</text>
+  <text x="450" y="532" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">Ok?</text>
+
+  <!-- Err branch -->
+  <path d="M320,520 L120,520 L120,600 L200,600" fill="none" stroke="#D9534F" stroke-width="1.5" marker-end="url(#arrR)" />
+  <text x="200" y="513" fill="#D9534F" font-size="10" font-weight="bold">Err</text>
+  <rect x="200" y="600" width="220" height="50" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <text x="310" y="622" fill="#333" font-size="11" font-weight="bold">Cache Error Result</text>
+  <text x="310" y="638" fill="#666" font-size="10">cached_serialized_data_url = Some(Err(()))</text>
+  <path d="M310,650 L310,680 L290,680 L290,700" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Ok branch -->
+  <path d="M580,520 L770,520 L770,600 L680,600" fill="none" stroke="#50B86C" stroke-width="1.5" marker-end="url(#arrG)" />
+  <text x="680" y="513" fill="#50B86C" font-size="10" font-weight="bold">Ok</text>
+
+  <!-- Base64 encode -->
+  <rect x="580" y="600" width="250" height="50" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <text x="705" y="622" fill="#333" font-size="11" font-weight="bold">Base64 Encode XML</text>
+  <text x="705" y="638" fill="#666" font-size="10">base64::STANDARD.encode(xml_source)</text>
+  <path d="M705,650 L705,680 L450,680" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Merge then Create data URL -->
+  <path d="M290,700 L290,720 L450,720" fill="none" stroke="#555" stroke-width="1.5" />
+  <path d="M450,680 L450,720 L450,720" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="150" y="720" width="600" height="50" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <rect x="720" y="724" width="24" height="14" rx="3" fill="url(#gBadgeP2)" opacity="0.85" />
+  <text x="732" y="734" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+  <text x="450" y="740" fill="#333" font-size="11" font-weight="bold">Create Data URL</text>
+  <text x="450" y="756" fill="#666" font-size="10">"data:image/svg+xml;base64," + encoded_source</text>
+  <path d="M450,770 v15" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Parse URL -->
+  <polygon points="450,835 580,800 450,765 320,800" fill="url(#gD)" stroke="#E6A23C" stroke-width="1.5" />
+  <text x="450" y="796" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">ServoUrl::parse()</text>
+  <text x="450" y="812" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">Ok?</text>
+
+  <!-- Parse Err -->
+  <path d="M320,800 L120,800 L120,870 L200,870" fill="none" stroke="#D9534F" stroke-width="1.5" marker-end="url(#arrR)" />
+  <text x="200" y="793" fill="#D9534F" font-size="10" font-weight="bold">Err</text>
+  <rect x="200" y="870" width="220" height="42" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <text x="310" y="890" fill="#333" font-size="11" font-weight="bold">Log Error</text>
+  <text x="310" y="904" fill="#666" font-size="10">error!("Unable to parse...")</text>
+  <path d="M310,912 L310,940 L450,940" fill="none" stroke="#555" stroke-width="1.5" />
+
+  <!-- Parse Ok -->
+  <path d="M580,800 L770,800 L770,870 L680,870" fill="none" stroke="#50B86C" stroke-width="1.5" marker-end="url(#arrG)" />
+  <text x="680" y="793" fill="#50B86C" font-size="10" font-weight="bold">Ok</text>
+  <rect x="580" y="870" width="260" height="50" rx="6" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+  <text x="710" y="892" fill="#333" font-size="11" font-weight="bold">Cache Serialized URL</text>
+  <text x="710" y="908" fill="#666" font-size="10">cached_serialized_data_url = Some(Ok(url))</text>
+  <path d="M710,920 L710,940 L450,940" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- RETURN -->
+  <rect x="250" y="955" width="400" height="42" rx="21" fill="url(#gRet)" stroke="#50B86C" stroke-width="2" />
+  <text x="450" y="981" fill="#2E7D32" font-size="13" font-weight="bold" text-anchor="middle">RETURN (cache populated)</text>
+
+  <!-- FOOTER: diagram of what happens next -->
+  <rect x="50" y="1030" width="800" height="100" rx="6" fill="#FFF" stroke="#DDD" stroke-width="1" />
+  <text x="450" y="1052" fill="#333" font-size="12" font-weight="bold" text-anchor="middle">After Serialization — What Happens Next</text>
+
+  <rect x="70" y="1065" width="240" height="50" rx="4" fill="#FFF3E0" stroke="#E6A23C" stroke-width="1" />
+  <text x="190" y="1083" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">P2 • Script Thread</text>
+  <text x="190" y="1098" fill="#555" font-size="9" text-anchor="middle">serialize_and_cache_subtree()</text>
+  <text x="190" y="1109" fill="#999" font-size="8" text-anchor="middle">stores data: URL in cache</text>
+
+  <path d="M310,1090 L340,1090" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="340" y="1065" width="240" height="50" rx="4" fill="#F3E5F5" stroke="#C45DE6" stroke-width="1" />
+  <text x="460" y="1083" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">P3 • Layout Thread</text>
+  <text x="460" y="1098" fill="#555" font-size="9" text-anchor="middle">svg_kind_size() re-entry</text>
+  <text x="460" y="1109" fill="#999" font-size="8" text-anchor="middle">source=Some(url), not cached</text>
+
+  <path d="M580,1090 L610,1090" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="610" y="1065" width="220" height="50" rx="4" fill="#E8F5E9" stroke="#50B86C" stroke-width="1" />
+  <text x="720" y="1083" fill="#2E7D32" font-size="10" font-weight="bold" text-anchor="middle">P4 • Layout Thread</text>
+  <text x="720" y="1098" fill="#555" font-size="9" text-anchor="middle">svg_kind_size() re-entry</text>
+  <text x="720" y="1109" fill="#999" font-size="8" text-anchor="middle">source=Some(url), cached</text>
+
+  <!-- LEGEND -->
+  <g transform="translate(50, 1150)">
+    <rect width="800" height="140" rx="6" fill="#FFF" stroke="#DDD" stroke-width="1" />
+    <text x="400" y="18" fill="#333" font-size="11" font-weight="bold" text-anchor="middle">Key</text>
+
+    <rect x="20" y="35" width="70" height="18" rx="9" fill="url(#gStart)" />
+    <text x="105" y="49" fill="#555" font-size="10">Entry / Exit</text>
+
+    <rect x="20" y="57" width="70" height="18" rx="3" fill="url(#gD)" stroke="#E6A23C" stroke-width="1" />
+    <text x="105" y="71" fill="#555" font-size="10">Decision / Branch</text>
+
+    <rect x="20" y="79" width="70" height="18" rx="3" fill="url(#gP)" stroke="#CCC" stroke-width="1" />
+    <text x="105" y="93" fill="#555" font-size="10">Process Step</text>
+
+    <rect x="320" y="35" width="24" height="14" rx="3" fill="url(#gBadgeP2)" opacity="0.85" />
+    <text x="332" y="45" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+    <text x="355" y="47" fill="#555" font-size="10">Pass 2 — Serialization (Script Thread)</text>
+
+    <line x1="320" y1="65" x2="360" y2="65" stroke="#50B86C" stroke-width="2" />
+    <text x="370" y="69" fill="#555" font-size="10">Yes / Ok branch</text>
+
+    <line x1="320" y1="85" x2="360" y2="85" stroke="#D9534F" stroke-width="2" />
+    <text x="370" y="89" fill="#555" font-size="10">No / Err branch</text>
+
+    <rect x="600" y="35" width="80" height="18" rx="4" fill="#FFF3E0" stroke="#E6A23C" stroke-width="1" />
+    <text x="695" y="49" fill="#555" font-size="10">SVG data url</text>
+
+    <rect x="600" y="57" width="80" height="18" rx="4" fill="#F5F5F5" stroke="#999" stroke-width="1" />
+    <text x="695" y="71" fill="#555" font-size="10">Cache slot</text>
+  </g>
+
+  <rect x="50" y="1300" width="800" height="60" rx="4" fill="#FFF8E1" stroke="#E6A23C" stroke-width="0.5" />
+  <text x="450" y="1318" fill="#333" font-size="10" font-weight="bold" text-anchor="middle">Stage 4 — Serialization Pass (P2)</text>
+  <text x="450" y="1335" fill="#555" font-size="9" text-anchor="middle">Triggered via queue_svg_element_for_serialization() during P1 layout</text>
+  <text x="450" y="1348" fill="#555" font-size="9" text-anchor="middle">Stores base64-encoded data: URL so layout can reference it via Image Cache</text>
+
+  <text x="450" y="1400" fill="#999" font-size="9" text-anchor="middle">All SVG_TRACE_STAGE_4 eprintln! calls originate from this function</text>
+</svg>

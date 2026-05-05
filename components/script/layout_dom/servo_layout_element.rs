@@ -10,7 +10,7 @@ use std::hash::Hash;
 
 use html5ever::{LocalName, Namespace, local_name, ns};
 use layout_api::{
-    LayoutDataTrait, LayoutElement, LayoutNode, LayoutNodeType, PseudoElementChain, StyleData,
+    LayoutDataTrait, LayoutElement, LayoutNode, LayoutNodeType, PseudoElementChain, StyleData, LayoutElementType
 };
 use servo_arc::Arc;
 use style::attr::AttrValue;
@@ -161,6 +161,13 @@ impl<'dom> LayoutElement<'dom> for ServoLayoutElement<'dom> {
     }
 
     fn style(&self, context: &SharedStyleContext) -> Arc<ComputedValues> {
+        let is_svg = matches!(
+            self.type_id(),
+            Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
+        );
+        if is_svg {
+            eprintln!("[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start");
+        }
         let get_style_for_pseudo_element =
             |data: &ElementDataRef<'_>,
              base_style: &Arc<ComputedValues>,

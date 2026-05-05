@@ -111,8 +111,7 @@ Layout Thread                          Script Thread
 ─────────────                          ────────────
 svg_kind_size()
   └─ source=None
-       └─ queue_svg_element_
-            for_serialization(node)
+       └─ queue_svg_element_for_serialization(node)
                  │
                  │  (mutex boundary)
                  ▼

@@ -136,6 +136,13 @@ fn traverse_element<'dom>(
     context: &LayoutContext,
     handler: &mut impl TraversalHandler<'dom>,
 ) {
+    let is_svg = matches!(
+        element.type_id(),
+        Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
+    );
+    if is_svg {
+        eprintln!("[SVG_TRACE_STAGE_2.1] layout::dom_traversal::traverse_element() Start");
+    }
     let style = element.style(&context.style_context);
     let info = NodeAndStyleInfo::new(element, style);
 
@@ -164,6 +171,9 @@ fn traverse_element<'dom>(
             let box_slot = element.box_slot();
             handler.handle_element(&info, display, contents, box_slot);
         },
+    }
+    if is_svg {
+        eprintln!("[SVG_TRACE_STAGE_2.1] layout::dom_traversal::traverse_element() End");
     }
 }
 
@@ -251,7 +261,17 @@ impl Contents {
     }
 
     pub(crate) fn for_element(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Self {
+        let is_svg = matches!(
+            node.type_id(),
+            Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
+        );
+        if is_svg {
+            eprintln!("[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() Start");
+        }
         if let Some(replaced) = ReplacedContents::for_element(node, context) {
+            if is_svg {
+                eprintln!("[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() End1");
+            }
             return Self::Replaced(replaced);
         }
         let is_widget = matches!(

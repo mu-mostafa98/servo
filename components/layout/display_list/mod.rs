@@ -677,6 +677,8 @@ impl Fragment {
             },
             Fragment::AbsoluteOrFixedPositioned(_) | Fragment::Positioning(_) => {},
             Fragment::Image(image) => {
+                eprintln!("[SVG_TRACE_STAGE_9] DisplayList build Fragment::Image rect={:?} image_key={:?}",
+                    image.borrow().base.rect, image.borrow().image_key);
                 let image = image.borrow();
                 let style = image.base.style();
                 match style.get_inherited_box().visibility {
@@ -1504,6 +1506,7 @@ impl<'a> BuilderForBoxFragment<'a> {
                     );
                 },
                 Ok(ResolvedImage::Image { image, size }) => {
+                    eprintln!("[SVG_TRACE_STAGE_9] DisplayList background SVG image size={:?}x{:?}", size.width, size.height);
                     // FIXME: https://drafts.csswg.org/css-images-4/#the-image-resolution
                     let dppx = 1.0;
                     let intrinsic =
@@ -1753,6 +1756,7 @@ impl<'a> BuilderForBoxFragment<'a> {
         {
             Err(_) => return false,
             Ok(ResolvedImage::Image { image, size }) => {
+                eprintln!("[SVG_TRACE_STAGE_9] DisplayList border-image SVG image size={:?}x{:?}", size.width, size.height);
                 let image_key = match image {
                     CachedImage::Raster(raster_image) => raster_image.id,
                     CachedImage::Vector(vector_image) => {

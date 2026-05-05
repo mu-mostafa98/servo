@@ -1,0 +1,804 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 5400" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#555" /></marker>
+    <marker id="arrR" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#D9534F" /></marker>
+    <marker id="arrG" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#50B86C" /></marker>
+    <marker id="arrP" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#C45DE6" /></marker>
+    <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12" /></filter>
+    <linearGradient id="gP1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4A90D9" /><stop offset="100%" stop-color="#357ABD" /></linearGradient>
+    <linearGradient id="gP2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E6A23C" /><stop offset="100%" stop-color="#D4891E" /></linearGradient>
+    <linearGradient id="gP3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C45DE6" /><stop offset="100%" stop-color="#A843D0" /></linearGradient>
+    <linearGradient id="gP4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#50B86C" /><stop offset="100%" stop-color="#3D9A56" /></linearGradient>
+    <linearGradient id="gScript" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E3F2FD" /><stop offset="100%" stop-color="#BBDEFB" /></linearGradient>
+    <linearGradient id="gLayout" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3E5F5" /><stop offset="100%" stop-color="#E1BEE7" /></linearGradient>
+    <linearGradient id="gImgCache" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF3E0" /><stop offset="100%" stop-color="#FFE0B2" /></linearGradient>
+  </defs>
+
+  <rect width="1400" height="5400" fill="#FAFBFC" />
+
+  <!-- TITLE -->
+  <rect x="0" y="0" width="1400" height="60" fill="#333" />
+  <text x="700" y="24" fill="#FFF" font-size="18" font-weight="bold" text-anchor="middle">SVG Rendering Pipeline — Complete Stage Overview with Class Hierarchy</text>
+  <text x="700" y="46" fill="#AAA" font-size="11" text-anchor="middle">Thread Swimlanes • Passes (P1–P4) • Key Functions • Purpose per Pass • What Values Exist • Class Hierarchy</text>
+
+  <!-- Thread column headers -->
+  <rect x="40" y="80" width="180" height="30" rx="4" fill="#555" />
+  <text x="130" y="100" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Stage / Pass</text>
+  <rect x="240" y="80" width="340" height="30" rx="4" fill="#4A90D9" />
+  <text x="410" y="100" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Script Thread</text>
+  <rect x="600" y="80" width="380" height="30" rx="4" fill="#C45DE6" />
+  <text x="790" y="100" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Layout Thread</text>
+  <rect x="1000" y="80" width="360" height="30" rx="4" fill="#E6A23C" />
+  <text x="1180" y="100" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Image Cache Thread</text>
+  <line x1="40" y1="118" x2="1360" y2="118" stroke="#CCC" stroke-width="1" />
+
+  <!-- ================================================================ -->
+  <!-- STAGE 1 — DOM Construction (Script) + Style Computation (Layout) -->
+  <!-- ================================================================ -->
+  <rect x="50" y="130" width="160" height="60" rx="6" fill="url(#gP1)" filter="url(#sh)" />
+  <text x="130" y="152" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Stage 1</text>
+  <text x="130" y="168" fill="#FFF" font-size="9" text-anchor="middle">DOM + Style</text>
+  <text x="130" y="182" fill="#DDD" font-size="8" text-anchor="middle">Pre-Pass</text>
+
+  <rect x="240" y="130" width="340" height="90" rx="6" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1.5" filter="url(#sh)" />
+  <text x="410" y="148" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">1.1–1.6: HTML Parser → DOM Construction</text>
+  <text x="410" y="164" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Build SVG DOM tree with uuid; parse &amp; store width/height</text>
+  <text x="410" y="180" fill="#555" font-size="9" text-anchor="middle">create_element() → ns!(svg) → SVGSVGElement::new()</text>
+  <text x="410" y="196" fill="#555" font-size="9" text-anchor="middle">parse_plain_attribute() → InsertBefore()</text>
+  <text x="410" y="212" fill="#888" font-size="9" text-anchor="middle">▸ Values: uuid, cached_serialized_data_url=None, width/height→LengthPercentage</text>
+
+  <text x="590" y="170" fill="#999" font-size="9" font-style="italic" text-anchor="middle">DOM tree</text>
+  <path d="M580,175 L600,175" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="600" y="130" width="380" height="90" rx="6" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1.5" filter="url(#sh)" />
+  <text x="790" y="148" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">1.7: Style Computation (CSS Cascade)</text>
+  <text x="790" y="164" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Compute display, width, height via Stylo for each element</text>
+  <text x="790" y="180" fill="#555" font-size="9" text-anchor="middle">restyle_and_build_trees() → traverse_dom()</text>
+  <text x="790" y="196" fill="#555" font-size="9" text-anchor="middle">ServoDangerousStyleElement::match_element()</text>
+  <text x="790" y="212" fill="#888" font-size="9" text-anchor="middle">▸ Cached until mutation: ElementData.styles = Arc&lt;ComputedValues&gt;</text>
+
+  <text x="400" y="245" fill="#4A90D9" font-size="9" font-weight="bold" text-anchor="middle">DOM with styled ComputedValues</text>
+  <path d="M410,223 L410,260" fill="none" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- ================================================================ -->
+  <!-- STAGE 2 — Layout Traversal & Replaced Content -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="238" x2="1360" y2="238" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="270" width="160" height="70" rx="6" fill="url(#gP1)" filter="url(#sh)" />
+  <text x="130" y="292" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Stage 2</text>
+  <text x="130" y="308" fill="#FFF" font-size="9" text-anchor="middle">Layout</text>
+  <text x="130" y="322" fill="#DDD" font-size="8" text-anchor="middle">P1 (Pass 1)</text>
+
+  <rect x="600" y="270" width="380" height="110" rx="6" fill="url(#gLayout)" stroke="#4A90D9" stroke-width="1.5" filter="url(#sh)" />
+  <rect x="950" y="274" width="24" height="14" rx="3" fill="#4A90D9" opacity="0.85" />
+  <text x="962" y="284" fill="#FFF" font-size="8" text-anchor="middle">P1</text>
+  <text x="790" y="290" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">2.1: traverse_element() — DOM Traversal</text>
+  <text x="790" y="306" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Classify each element's display; dispatch SVG as Replaced</text>
+  <text x="790" y="324" fill="#555" font-size="9" text-anchor="middle">Display::from(computed display) → None / Contents / GeneratingBox</text>
+  <text x="790" y="340" fill="#555" font-size="9" text-anchor="middle">Contents::for_element() → Replaced → SVGElementKind</text>
+  <text x="790" y="356" fill="#555" font-size="9" text-anchor="middle">Recurse children → handle_element() for box generation</text>
+  <text x="790" y="374" fill="#888" font-size="9" text-anchor="middle">▸ Values: ReplacedContentKind::SVGElement { vector_image: None, has_viewbox }</text>
+
+  <path d="M790,380 L790,398" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="600" y="402" width="380" height="107" rx="6" fill="url(#gLayout)" stroke="#4A90D9" stroke-width="1.5" />
+  <rect x="950" y="406" width="24" height="14" rx="3" fill="#4A90D9" opacity="0.85" />
+  <text x="962" y="416" fill="#FFF" font-size="8" text-anchor="middle">P1</text>
+  <text x="790" y="420" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">2.6: svg_kind_size() — P1 (first layout)</text>
+  <text x="790" y="436" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Compute natural dimensions; queue SVG for P2 serialization</text>
+  <text x="790" y="454" fill="#555" font-size="9" text-anchor="middle">Parse width/height → ratio → NaturalSizes { width:200, height:200, ratio:1.0 }</text>
+  <text x="790" y="470" fill="#D9534F" font-size="9" text-anchor="middle">source=None → queue_svg_element_for_serialization()</text>
+  <text x="790" y="486" fill="#888" font-size="9" text-anchor="middle">▸ Values: vector_image=None, NaturalSizes(200×200), no Fragment::Image</text>
+
+  <path d="M240,450 L240,530 L410,530" fill="none" stroke="#4A90D9" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="6,3" />
+  <text x="300" y="477" fill="#4A90D9" font-size="9" font-weight="bold">P1 → P2 bridge</text>
+  <text x="280" y="492" fill="#999" font-size="8">queue_svg_element</text>
+  <text x="280" y="504" fill="#999" font-size="8">_for_serialization()</text>
+
+  <!-- ================================================================ -->
+  <!-- STAGE 3 — Serialization Dispatch -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="520" x2="1360" y2="520" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="540" width="160" height="55" rx="6" fill="url(#gP2)" filter="url(#sh)" />
+  <text x="130" y="560" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Stage 3</text>
+  <text x="130" y="575" fill="#FFF" font-size="9" text-anchor="middle">Dispatch</text>
+  <text x="130" y="588" fill="#DDD" font-size="8" text-anchor="middle">P1→P2 Bridge</text>
+
+  <rect x="240" y="540" width="340" height="70" rx="6" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1.5" filter="url(#sh)" />
+  <text x="410" y="558" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">3: Serialization Dispatch (P1→P2)</text>
+  <text x="410" y="574" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Bridge layout → script: pick up queued SVGs to serialize</text>
+  <text x="410" y="592" fill="#555" font-size="9" text-anchor="middle">handle_pending_svg_elements_for_serialization()</text>
+  <text x="410" y="606" fill="#888" font-size="9" text-anchor="middle">▸ Values: Script picks up queued SVG, calls serialize_and_cache_subtree()</text>
+
+  <path d="M580,575 L600,575" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- ================================================================ -->
+  <!-- STAGE 4 — Serialization (Script) -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="625" x2="1360" y2="625" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="645" width="160" height="60" rx="6" fill="url(#gP2)" filter="url(#sh)" />
+  <text x="130" y="665" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Stage 4</text>
+  <text x="130" y="680" fill="#FFF" font-size="9" text-anchor="middle">Serialization</text>
+  <text x="130" y="695" fill="#DDD" font-size="8" text-anchor="middle">P2 (Pass 2)</text>
+
+  <rect x="240" y="645" width="340" height="110" rx="6" fill="url(#gScript)" stroke="#E6A23C" stroke-width="2" filter="url(#sh)" />
+  <rect x="550" y="649" width="24" height="14" rx="3" fill="url(#gP2)" opacity="0.85" />
+  <text x="562" y="659" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+  <text x="410" y="667" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">4: serialize_and_cache_subtree()</text>
+  <text x="410" y="683" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Serialize SVG subtree → base64 data URL; cache for layout</text>
+  <text x="410" y="701" fill="#555" font-size="9" text-anchor="middle">process_use_elements() → xml_serialize()</text>
+  <text x="410" y="717" fill="#555" font-size="9" text-anchor="middle">base64::encode → data:image/svg+xml;base64,...</text>
+  <text x="410" y="733" fill="#555" font-size="9" text-anchor="middle">ServoUrl::parse() → cached_serialized_data_url = Some(Ok(url))</text>
+  <text x="410" y="751" fill="#888" font-size="9" text-anchor="middle">▸ Values: data: URL cached in SVGSVGElement, dirty flag set → reflow</text>
+
+  <text x="410" y="780" fill="#E6A23C" font-size="9" font-weight="bold" text-anchor="middle">data: URL cached</text>
+  <path d="M410,758 L410,805" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" stroke-dasharray="6,3" />
+
+  <!-- ================================================================ -->
+  <!-- STAGE 5 — Cache Wait (P3) -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="780" x2="1360" y2="780" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="805" width="160" height="70" rx="6" fill="url(#gP3)" filter="url(#sh)" />
+  <text x="130" y="825" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Stage 5</text>
+  <text x="130" y="840" fill="#FFF" font-size="9" text-anchor="middle">Cache Wait</text>
+  <text x="130" y="855" fill="#DDD" font-size="8" text-anchor="middle">P3 (Pass 3)</text>
+
+  <rect x="600" y="805" width="380" height="110" rx="6" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1.5" filter="url(#sh)" />
+  <rect x="950" y="809" width="24" height="14" rx="3" fill="url(#gP3)" opacity="0.85" />
+  <text x="962" y="819" fill="#FFF" font-size="8" text-anchor="middle">P3</text>
+  <text x="790" y="825" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">5: svg_kind_size() — P3 (cache wait re-entry)</text>
+  <text x="790" y="841" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Request image from cache with data URL; miss → retry later</text>
+  <text x="790" y="859" fill="#555" font-size="9" text-anchor="middle">source=Some(url) → get_cached_image_for_url()</text>
+  <text x="790" y="875" fill="#D9534F" font-size="9" text-anchor="middle">image cache: Err/Pending → vector_image = None</text>
+  <text x="790" y="891" fill="#888" font-size="9" text-anchor="middle">▸ Values: source=url exists but not in cache → no Fragment → reflow</text>
+
+  <path d="M980,860 L1000,860" fill="none" stroke="#C45DE6" stroke-width="1.5" marker-end="url(#arrP)" />
+  <text x="990" y="853" fill="#C45DE6" font-size="8" font-weight="bold" text-anchor="middle">request</text>
+
+  <rect x="1000" y="805" width="360" height="80" rx="6" fill="url(#gImgCache)" stroke="#C45DE6" stroke-width="1" />
+  <text x="1180" y="825" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">VectorImage inserted at Stage 5</text>
+  <text x="1180" y="843" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Store decoded VectorImage from data URL in image cache</text>
+  <text x="1180" y="861" fill="#555" font-size="9" text-anchor="middle">complete_load(): VectorImage { id: PendingImageId(1), 200×200 }</text>
+  <text x="1180" y="879" fill="#555" font-size="9" text-anchor="middle">svg_id → image_id mapping stored</text>
+
+  <!-- ================================================================ -->
+  <!-- STAGE 6 — Rasterization (P4) -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="900" x2="1360" y2="900" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="920" width="160" height="70" rx="6" fill="url(#gP4)" filter="url(#sh)" />
+  <text x="130" y="940" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Stage 6</text>
+  <text x="130" y="955" fill="#FFF" font-size="9" text-anchor="middle">Rasterization</text>
+  <text x="130" y="970" fill="#DDD" font-size="8" text-anchor="middle">P4 (Pass 4)</text>
+
+  <rect x="1000" y="920" width="360" height="125" rx="6" fill="url(#gImgCache)" stroke="#50B86C" stroke-width="2" filter="url(#sh)" />
+  <rect x="1330" y="924" width="24" height="14" rx="3" fill="url(#gP4)" opacity="0.85" />
+  <text x="1342" y="934" fill="#FFF" font-size="8" text-anchor="middle">P4</text>
+  <text x="1180" y="940" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">6: rasterize_vector_image() — P4</text>
+  <text x="1180" y="956" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Decode SVG XML → rasterize → pixel buffer for rendering</text>
+  <text x="1180" y="974" fill="#555" font-size="9" text-anchor="middle">Lock store → get usvg Tree → check rasterized cache (miss)</text>
+  <text x="1180" y="990" fill="#555" font-size="9" text-anchor="middle">Thread pool: resvg::render() → tiny_skia::Pixmap(200×200)</text>
+  <text x="1180" y="1006" fill="#555" font-size="9" text-anchor="middle">RasterImage { 200×200, RGBA8, 160000 bytes } → keycache</text>
+  <text x="1180" y="1022" fill="#888" font-size="9" text-anchor="middle">▸ Values: RasterImage cached at (image_id, size). Returns None (async).</text>
+  <text x="1180" y="1038" fill="#888" font-size="9" text-anchor="middle">▸ On re-entry: rasterized_cache HIT → returns Some(RasterImage)</text>
+
+  <path d="M1000,980 L980,980" fill="none" stroke="#50B86C" stroke-width="1.5" marker-end="url(#arrG)" stroke-dasharray="6,3" />
+  <text x="900" y="975" fill="#50B86C" font-size="9" font-weight="bold" text-anchor="middle">rasterized image stored</text>
+
+  <!-- ================================================================ -->
+  <!-- STAGE 7 — Image Cache Response (P4) -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="1060" x2="1360" y2="1060" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="1080" width="160" height="60" rx="6" fill="url(#gP4)" filter="url(#sh)" />
+  <text x="130" y="1100" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Stage 7</text>
+  <text x="130" y="1115" fill="#FFF" font-size="9" text-anchor="middle">Cache Response</text>
+  <text x="130" y="1130" fill="#DDD" font-size="8" text-anchor="middle">P4</text>
+
+  <rect x="600" y="1080" width="380" height="85" rx="6" fill="url(#gLayout)" stroke="#50B86C" stroke-width="1.5" />
+  <rect x="950" y="1084" width="24" height="14" rx="3" fill="url(#gP4)" opacity="0.85" />
+  <text x="962" y="1094" fill="#FFF" font-size="8" text-anchor="middle">P4</text>
+  <text x="790" y="1100" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">7: svg_kind_size() — P4 (cached re-entry)</text>
+  <text x="790" y="1116" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Retrieve cached VectorImage; produce image for fragment</text>
+  <text x="790" y="1134" fill="#555" font-size="9" text-anchor="middle">source=Some(url) → get_cached_image_for_url() → DataAvailable</text>
+  <text x="790" y="1150" fill="#50B86C" font-size="9" font-weight="bold" text-anchor="middle">▸ Values: vector_image = Some(VectorImage) with svg_id!</text>
+
+  <path d="M790,1165 L790,1185" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- ================================================================ -->
+  <!-- STAGE 8 — Fragment Construction (P4) -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="1175" x2="1360" y2="1175" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="1195" width="160" height="70" rx="6" fill="url(#gP4)" filter="url(#sh)" />
+  <text x="130" y="1215" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Stage 8</text>
+  <text x="130" y="1230" fill="#FFF" font-size="9" text-anchor="middle">Display List</text>
+  <text x="130" y="1245" fill="#DDD" font-size="8" text-anchor="middle">P4</text>
+
+  <rect x="600" y="1195" width="380" height="100" rx="6" fill="url(#gLayout)" stroke="#50B86C" stroke-width="2" filter="url(#sh)" />
+  <rect x="950" y="1199" width="24" height="14" rx="3" fill="url(#gP4)" opacity="0.85" />
+  <text x="962" y="1209" fill="#FFF" font-size="8" text-anchor="middle">P4</text>
+  <text x="790" y="1215" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">8: make_fragments() → SVGElement path</text>
+  <text x="790" y="1231" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Build Fragment::Image with image_key; final display list</text>
+  <text x="790" y="1249" fill="#555" font-size="9" text-anchor="middle">vector_image.is_some=true → check has_viewbox → set base.rect</text>
+  <text x="790" y="1265" fill="#555" font-size="9" text-anchor="middle">rasterize_vector_image() → image_key → Fragment::Image</text>
+  <text x="790" y="1281" fill="#888" font-size="9" text-anchor="middle">▸ Values: Fragment::Image { rect:200×200, image_key } → Display List</text>
+
+  <!-- RETRY LOOP -->
+  <rect x="100" y="1320" width="1200" height="50" rx="6" fill="#FFF8E1" stroke="#E6A23C" stroke-width="1" filter="url(#sh)" />
+  <text x="700" y="1340" fill="#E65100" font-size="11" font-weight="bold" text-anchor="middle">Multi-Pass Retry Loop</text>
+  <text x="700" y="1358" fill="#555" font-size="9" text-anchor="middle">P1 → (queue) → P2 (serialize) → reflow → P3 (source=url, cached_image=None → no Fragment) → reflow → ... → P4 (cached_image=Some(Vector) → rasterize → Fragment::Image)</text>
+  <text x="700" y="1368" fill="#999" font-size="8" text-anchor="middle">svg_kind_size() is the central function: it runs in P1/P3/P4 and behaves differently based on source + cached_image values</text>
+
+  <!-- ================================================================ -->
+  <!-- KEY VALUES TABLE — What exists at each pass -->
+  <!-- ================================================================ -->
+  <rect x="100" y="1395" width="1200" height="195" rx="6" fill="#FFF" stroke="#DDD" stroke-width="1" filter="url(#sh)" />
+  <text x="700" y="1417" fill="#333" font-size="12" font-weight="bold" text-anchor="middle">Key Values Through the Pipeline — What Exists at Each Pass</text>
+
+  <rect x="120" y="1430" width="140" height="22" rx="3" fill="#4A90D9" />
+  <text x="190" y="1446" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Pass</text>
+  <rect x="270" y="1430" width="90" height="22" rx="3" fill="#4A90D9" />
+  <text x="315" y="1446" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Thread</text>
+  <rect x="370" y="1430" width="140" height="22" rx="3" fill="#4A90D9" />
+  <text x="440" y="1446" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Function</text>
+  <rect x="520" y="1430" width="760" height="22" rx="3" fill="#4A90D9" />
+  <text x="900" y="1446" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Important Values</text>
+
+  <!-- Row 1: Pre-pass -->
+  <rect x="120" y="1455" width="140" height="24" rx="2" fill="#E3F2FD" />
+  <text x="190" y="1472" fill="#1565C0" font-size="9" font-weight="bold" text-anchor="middle">Pre-Pass</text>
+  <rect x="270" y="1455" width="90" height="24" rx="2" fill="#E3F2FD" />
+  <text x="315" y="1472" fill="#555" font-size="9" text-anchor="middle">Script</text>
+  <rect x="370" y="1455" width="140" height="24" rx="2" fill="#E3F2FD" />
+  <text x="440" y="1472" fill="#555" font-size="9" text-anchor="middle">SVGSVGElement::new()</text>
+  <rect x="520" y="1455" width="760" height="24" rx="2" fill="#E3F2FD" />
+  <text x="900" y="1472" fill="#555" font-size="9" text-anchor="middle">uuid✅, cached_serialized_data_url=None✅, width/height→LengthPercentage✅, viewBox="0 0 200 200"✅</text>
+
+  <!-- Row 2: Pre-pass style -->
+  <rect x="120" y="1482" width="140" height="24" rx="2" fill="#F3E5F5" />
+  <text x="190" y="1499" fill="#6A1B9A" font-size="9" font-weight="bold" text-anchor="middle">Pre-Pass</text>
+  <rect x="270" y="1482" width="90" height="24" rx="2" fill="#F3E5F5" />
+  <text x="315" y="1499" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="370" y="1482" width="140" height="24" rx="2" fill="#F3E5F5" />
+  <text x="440" y="1499" fill="#555" font-size="9" text-anchor="middle">traverse_dom()</text>
+  <rect x="520" y="1482" width="760" height="24" rx="2" fill="#F3E5F5" />
+  <text x="900" y="1499" fill="#555" font-size="9" text-anchor="middle">ElementData.styles=Arc&lt;ComputedValues&gt;✅ (display:inline, width/height resolved), cached until mutation</text>
+
+  <!-- Row 3: P1 -->
+  <rect x="120" y="1509" width="140" height="24" rx="2" fill="#E8EAF6" />
+  <text x="190" y="1526" fill="#1565C0" font-size="9" font-weight="bold" text-anchor="middle">P1 (Pass 1)</text>
+  <rect x="270" y="1509" width="90" height="24" rx="2" fill="#E8EAF6" />
+  <text x="315" y="1526" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="370" y="1509" width="140" height="24" rx="2" fill="#E8EAF6" />
+  <text x="440" y="1526" fill="#555" font-size="9" text-anchor="middle">svg_kind_size() P1</text>
+  <rect x="520" y="1509" width="760" height="24" rx="2" fill="#E8EAF6" />
+  <text x="900" y="1526" fill="#555" font-size="9" text-anchor="middle">source=None✅, vector_image=None✅, NaturalSizes(200×200,1.0)✅→QUEUED for serialization</text>
+
+  <!-- Row 4: P2 -->
+  <rect x="120" y="1536" width="140" height="24" rx="2" fill="#FFF3E0" />
+  <text x="190" y="1553" fill="#E65100" font-size="9" font-weight="bold" text-anchor="middle">P2 (Pass 2)</text>
+  <rect x="270" y="1536" width="90" height="24" rx="2" fill="#FFF3E0" />
+  <text x="315" y="1553" fill="#555" font-size="9" text-anchor="middle">Script</text>
+  <rect x="370" y="1536" width="140" height="24" rx="2" fill="#FFF3E0" />
+  <text x="440" y="1553" fill="#555" font-size="9" text-anchor="middle">serialize_and_cache()</text>
+  <rect x="520" y="1536" width="760" height="24" rx="2" fill="#FFF3E0" />
+  <text x="900" y="1553" fill="#555" font-size="9" text-anchor="middle">cached_serialized_data_url=Some(Ok(data:...))✅→dirty flag→triggers reflow</text>
+
+  <!-- Row 5: P3 -->
+  <rect x="120" y="1563" width="140" height="24" rx="2" fill="#F3E5F5" />
+  <text x="190" y="1580" fill="#6A1B9A" font-size="9" font-weight="bold" text-anchor="middle">P3 (Pass 3)</text>
+  <rect x="270" y="1563" width="90" height="24" rx="2" fill="#F3E5F5" />
+  <text x="315" y="1580" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="370" y="1563" width="140" height="24" rx="2" fill="#F3E5F5" />
+  <text x="440" y="1580" fill="#555" font-size="9" text-anchor="middle">svg_kind_size() P3</text>
+  <rect x="520" y="1563" width="760" height="24" rx="2" fill="#F3E5F5" />
+  <text x="900" y="1580" fill="#555" font-size="9" text-anchor="middle">source=Some(url)✅, cached_image=Err/Pending❌, vector_image=None❌→no Fragment (retry)</text>
+
+  <!-- Row 6: P4 before raster -->
+  <rect x="120" y="1590" width="140" height="24" rx="2" fill="#E8F5E9" />
+  <text x="190" y="1607" fill="#2E7D32" font-size="9" font-weight="bold" text-anchor="middle">P4 (Pass 4)</text>
+  <rect x="270" y="1590" width="90" height="24" rx="2" fill="#E8F5E9" />
+  <text x="315" y="1607" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="370" y="1590" width="140" height="24" rx="2" fill="#E8F5E9" />
+  <text x="440" y="1607" fill="#555" font-size="9" text-anchor="middle">svg_kind_size() P4</text>
+  <rect x="520" y="1590" width="760" height="24" rx="2" fill="#E8F5E9" />
+  <text x="900" y="1607" fill="#555" font-size="9" text-anchor="middle">source=Some(url)✅, cached_image=Some(Vector)✅, vector_image=Some(VectorImage)✅→svg_id set</text>
+
+  <!-- Row 7: P4 make_fragments -->
+  <rect x="120" y="1617" width="140" height="24" rx="2" fill="#E8F5E9" />
+  <text x="190" y="1634" fill="#2E7D32" font-size="9" font-weight="bold" text-anchor="middle">P4 (Pass 4)</text>
+  <rect x="270" y="1617" width="90" height="24" rx="2" fill="#E8F5E9" />
+  <text x="315" y="1634" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="370" y="1617" width="140" height="24" rx="2" fill="#E8F5E9" />
+  <text x="440" y="1634" fill="#555" font-size="9" text-anchor="middle">make_fragments()</text>
+  <rect x="520" y="1617" width="760" height="24" rx="2" fill="#E8F5E9" />
+  <text x="900" y="1634" fill="#555" font-size="9" text-anchor="middle">vector_image=Some✅, base.rect=200×200✅, image_key✅→Fragment::Image✅→DISPLAY LIST</text>
+
+  <!-- Row 8: P4 rasterize -->
+  <rect x="120" y="1644" width="140" height="24" rx="2" fill="#FFF8E1" />
+  <text x="190" y="1661" fill="#E65100" font-size="9" font-weight="bold" text-anchor="middle">P4 (Pass 4)</text>
+  <rect x="270" y="1644" width="90" height="24" rx="2" fill="#FFF8E1" />
+  <text x="315" y="1661" fill="#555" font-size="9" text-anchor="middle">ImgCache</text>
+  <rect x="370" y="1644" width="140" height="24" rx="2" fill="#FFF8E1" />
+  <text x="440" y="1661" fill="#555" font-size="9" text-anchor="middle">rasterize_vector()</text>
+  <rect x="520" y="1644" width="760" height="24" rx="2" fill="#FFF8E1" />
+  <text x="900" y="1661" fill="#555" font-size="9" text-anchor="middle">RasterImage{200×200,RGBA8,160000B}✅→keycache✅→on re-entry: cached HIT→image_key</text>
+
+  <!-- LEGEND -->
+  <rect x="100" y="1695" width="1200" height="120" rx="6" fill="#FFF" stroke="#DDD" stroke-width="1" />
+  <text x="700" y="1715" fill="#333" font-size="12" font-weight="bold" text-anchor="middle">Legend — Stage Color Reference</text>
+
+  <rect x="120" y="1730" width="24" height="14" rx="3" fill="#4A90D9" />
+  <text x="155" y="1742" fill="#555" font-size="10">P1 (Pass 1) — First layout, DOM → style → replaced content dispatch. source=None, queues serialization.</text>
+  <rect x="120" y="1750" width="24" height="14" rx="3" fill="#E6A23C" />
+  <text x="155" y="1762" fill="#555" font-size="10">P2 (Pass 2) — SVG subtree serialization in Script thread. Produces data: URL in cache.</text>
+  <rect x="120" y="1770" width="24" height="14" rx="3" fill="#C45DE6" />
+  <text x="155" y="1782" fill="#555" font-size="10">P3 (Pass 3) — Cache wait: source=url but not in image cache → no Fragment, triggers reflow.</text>
+  <rect x="120" y="1790" width="24" height="14" rx="3" fill="#50B86C" />
+  <text x="155" y="1802" fill="#555" font-size="10">P4 (Pass 4) — Final: vector_image available → rasterize → Fragment::Image → painted on screen.</text>
+
+  <rect x="650" y="1730" width="24" height="14" rx="3" fill="#E3F2FD" stroke="#4A90D9" stroke-width="1" />
+  <text x="685" y="1742" fill="#555" font-size="10">Script thread swimlane</text>
+  <rect x="650" y="1750" width="24" height="14" rx="3" fill="#F3E5F5" stroke="#C45DE6" stroke-width="1" />
+  <text x="685" y="1762" fill="#555" font-size="10">Layout thread swimlane</text>
+  <rect x="650" y="1770" width="24" height="14" rx="3" fill="#FFF3E0" stroke="#E6A23C" stroke-width="1" />
+  <text x="685" y="1782" fill="#555" font-size="10">Image Cache thread swimlane</text>
+  <!-- ================================================================ -->
+  <!-- SECTION 13 — Class Hierarchy & Details -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="1840" x2="1360" y2="1840" stroke="#DDD" stroke-width="0.5" />
+
+  <rect x="40" y="1850" width="1320" height="36" rx="4" fill="#333" filter="url(#sh)" />
+  <text x="700" y="1873" fill="#FFF" font-size="14" font-weight="bold" text-anchor="middle">Class Hierarchy &amp; Details — Inheritance Tree · Field Details · Thread Boundaries · Cache Invalidation</text>
+
+  <!-- 13.1 Inheritance Tree -->
+  <text x="80" y="1910" fill="#333" font-size="12" font-weight="bold">13.1 Inheritance Tree</text>
+  <text x="80" y="1925" fill="#888" font-size="9">The full DOM inheritance chain for SVGSVGElement. All DOM classes live in components/script/dom/svg/.</text>
+
+  <!-- Node box -->
+  <rect x="590" y="1940" width="220" height="55" rx="6" fill="#E3F2FD" stroke="#4A90D9" stroke-width="1.5" filter="url(#sh)" />
+  <text x="700" y="1958" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">Node</text>
+  <text x="700" y="1974" fill="#555" font-size="8" text-anchor="middle">owner_doc · parent_node · child_list</text>
+  <text x="700" y="1986" fill="#555" font-size="8" text-anchor="middle">node_data · damage</text>
+  <line x1="700" y1="1995" x2="700" y2="2015" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Element box -->
+  <rect x="590" y="2018" width="220" height="55" rx="6" fill="#E3F2FD" stroke="#4A90D9" stroke-width="1.5" />
+  <text x="700" y="2036" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">Element</text>
+  <text x="700" y="2052" fill="#555" font-size="8" text-anchor="middle">local_name · namespace</text>
+  <text x="700" y="2064" fill="#555" font-size="8" text-anchor="middle">attrs · attr_values</text>
+  <line x1="700" y1="2073" x2="700" y2="2093" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- SVGElement box -->
+  <rect x="590" y="2096" width="220" height="55" rx="6" fill="#E3F2FD" stroke="#4A90D9" stroke-width="1.5" />
+  <text x="700" y="2114" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">SVGElement</text>
+  <text x="700" y="2130" fill="#555" font-size="8" text-anchor="middle">element: Element (inherited)</text>
+  <text x="700" y="2142" fill="#555" font-size="8" text-anchor="middle">style_decl: CSSStyleDeclaration</text>
+  <line x1="700" y1="2151" x2="700" y2="2171" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- SVGGraphicsElement box -->
+  <rect x="570" y="2174" width="260" height="55" rx="6" fill="#E3F2FD" stroke="#4A90D9" stroke-width="1.5" />
+  <text x="700" y="2192" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">SVGGraphicsElement</text>
+  <text x="700" y="2208" fill="#555" font-size="8" text-anchor="middle">svgelement: SVGElement (inherited)</text>
+  <text x="700" y="2220" fill="#888" font-size="8" text-anchor="middle">(base for all renderable SVG elements)</text>
+  <line x1="700" y1="2229" x2="700" y2="2249" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- SVGSVGElement box (highlighted) -->
+  <rect x="560" y="2252" width="280" height="65" rx="6" fill="#E8F5E9" stroke="#2E7D32" stroke-width="2" filter="url(#sh)" />
+  <text x="700" y="2270" fill="#2E7D32" font-size="10" font-weight="bold" text-anchor="middle">SVGSVGElement ★ central class</text>
+  <text x="700" y="2286" fill="#555" font-size="8" text-anchor="middle">svggraphicselement: SVGGraphicsElement</text>
+  <text x="700" y="2298" fill="#555" font-size="8" text-anchor="middle">uuid: String</text>
+  <text x="700" y="2310" fill="#555" font-size="8" text-anchor="middle">cached_serialized_data_url: DomRefCell&lt;Option&lt;Result&lt;ServoUrl, ()&gt;&gt;&gt;</text>
+
+  <!-- 13.2 DOM Classes (Script Thread) -->
+  <rect x="70" y="2345" width="1260" height="24" rx="3" fill="#4A90D9" />
+  <text x="90" y="2362" fill="#FFF" font-size="10" font-weight="bold">13.2 DOM Classes — Script Thread (managed by SpiderMonkey GC, #[dom_struct])</text>
+
+  <rect x="70" y="2380" width="1260" height="24" rx="2" fill="#1565C0" />
+  <text x="90" y="2397" fill="#FFF" font-size="9" font-weight="bold">Class</text>
+  <text x="280" y="2397" fill="#FFF" font-size="9" font-weight="bold">Key Fields</text>
+  <text x="1100" y="2397" fill="#FFF" font-size="9" font-weight="bold">Stages</text>
+
+  <!-- Row 1: Node -->
+  <rect x="70" y="2408" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="2425" fill="#333" font-size="9" font-weight="bold">Node</text>
+  <text x="280" y="2425" fill="#555" font-size="9">owner_doc: Dom&lt;Document&gt;, parent_node: DomRefCell&lt;Option&lt;Dom&lt;Node&gt;&gt;&gt;, child_list, damage</text>
+  <text x="1100" y="2425" fill="#888" font-size="9">All</text>
+
+  <!-- Row 2: Element -->
+  <rect x="70" y="2436" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="2453" fill="#333" font-size="9" font-weight="bold">Element</text>
+  <text x="280" y="2453" fill="#555" font-size="9">local_name: LocalName, namespace: Namespace, attrs: DomRefCell&lt;Vec&lt;Dom&lt;Attr&gt;&gt;&gt;, attr_values</text>
+  <text x="1100" y="2453" fill="#888" font-size="9">All</text>
+
+  <!-- Row 3: SVGElement -->
+  <rect x="70" y="2464" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="2481" fill="#333" font-size="9" font-weight="bold">SVGElement</text>
+  <text x="280" y="2481" fill="#555" font-size="9">element: Element (inherited), style_decl: MutNullableDom&lt;CSSStyleDeclaration&gt;</text>
+  <text x="1100" y="2481" fill="#888" font-size="9">1</text>
+
+  <!-- Row 4: SVGGraphicsElement -->
+  <rect x="70" y="2492" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="2509" fill="#333" font-size="9" font-weight="bold">SVGGraphicsElement</text>
+  <text x="280" y="2509" fill="#555" font-size="9">svgelement: SVGElement (inherited) — base for all renderable SVG elements</text>
+  <text x="1100" y="2509" fill="#888" font-size="9">1</text>
+
+  <!-- Row 5: SVGSVGElement -->
+  <rect x="70" y="2520" width="1260" height="24" rx="2" fill="#E8F5E9" />
+  <text x="90" y="2537" fill="#2E7D32" font-size="9" font-weight="bold">SVGSVGElement</text>
+  <text x="280" y="2537" fill="#555" font-size="9">uuid: String, cached_serialized_data_url: DomRefCell&lt;Option&lt;Result&lt;ServoUrl, ()&gt;&gt;&gt;</text>
+  <text x="1100" y="2537" fill="#888" font-size="9">1,2,4,5+</text>
+
+  <!-- 13.3 Layout Classes (Layout Thread) -->
+  <rect x="70" y="2570" width="1260" height="24" rx="3" fill="#C45DE6" />
+  <text x="90" y="2587" fill="#FFF" font-size="10" font-weight="bold">13.3 Layout Classes — Layout Thread (read-only borrows from DOM or local layout types)</text>
+
+  <rect x="70" y="2605" width="1260" height="24" rx="2" fill="#6A1B9A" />
+  <text x="90" y="2622" fill="#FFF" font-size="9" font-weight="bold">Class</text>
+  <text x="280" y="2622" fill="#FFF" font-size="9" font-weight="bold">Key Fields</text>
+  <text x="1100" y="2622" fill="#FFF" font-size="9" font-weight="bold">Stages</text>
+
+  <!-- Row 1: SVGElementData -->
+  <rect x="70" y="2633" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="2650" fill="#333" font-size="9" font-weight="bold">SVGElementData&lt;&apos;dom&gt;</text>
+  <text x="280" y="2650" fill="#555" font-size="9">svg_id: String, source: Option&lt;Result&lt;ServoUrl, ()&gt;&gt;, width/height: AttrValue, view_box: AttrValue</text>
+  <text x="1100" y="2650" fill="#888" font-size="9">2,5,7</text>
+
+  <!-- Row 2: NaturalSizes -->
+  <rect x="70" y="2661" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="2678" fill="#333" font-size="9" font-weight="bold">NaturalSizes</text>
+  <text x="280" y="2678" fill="#555" font-size="9">width: Au, height: Au, ratio: f32 — e.g. Au(12000), Au(12000), 1.0</text>
+  <text x="1100" y="2678" fill="#888" font-size="9">2</text>
+
+  <!-- Row 3: ReplacedContentKind -->
+  <rect x="70" y="2689" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="2706" fill="#333" font-size="9" font-weight="bold">ReplacedContentKind</text>
+  <text x="280" y="2706" fill="#555" font-size="9">SVGElement { vector_image: Option&lt;ReplacedVectorImage&gt;, has_viewbox: bool }</text>
+  <text x="1100" y="2706" fill="#888" font-size="9">2,5,7,8</text>
+
+  <!-- Row 4: ReplacedVectorImage -->
+  <rect x="70" y="2717" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="2734" fill="#333" font-size="9" font-weight="bold">ReplacedVectorImage</text>
+  <text x="280" y="2734" fill="#555" font-size="9">id: PendingImageId, metadata: ImageMetadata, svg_id: String</text>
+  <text x="1100" y="2734" fill="#888" font-size="9">7,8</text>
+
+  <!-- Row 5: Fragment::Image -->
+  <rect x="70" y="2745" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="2762" fill="#333" font-size="9" font-weight="bold">Fragment::Image</text>
+  <text x="280" y="2762" fill="#555" font-size="9">base: BaseFragment, image_key: Option&lt;WebRenderImageKey&gt;, image_rendering</text>
+  <text x="1100" y="2762" fill="#888" font-size="9">8</text>
+
+  <!-- Row 6: BaseFragment -->
+  <rect x="70" y="2773" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="2790" fill="#333" font-size="9" font-weight="bold">BaseFragment</text>
+  <text x="280" y="2790" fill="#555" font-size="9">rect: PhysicalRect&lt;Au&gt;, clip: PhysicalRect&lt;Au&gt;, style: ServoArc&lt;ComputedValues&gt;</text>
+  <text x="1100" y="2790" fill="#888" font-size="9">8</text>
+
+  <!-- 13.4 Image Cache Classes -->
+  <rect x="70" y="2825" width="1260" height="24" rx="3" fill="#E6A23C" />
+  <text x="90" y="2842" fill="#FFF" font-size="10" font-weight="bold">13.4 Image Cache Classes — Image Cache Thread (shared via Arc, Send/Sync)</text>
+
+  <rect x="70" y="2860" width="1260" height="24" rx="2" fill="#D4891E" />
+  <text x="90" y="2877" fill="#FFF" font-size="9" font-weight="bold">Class</text>
+  <text x="280" y="2877" fill="#FFF" font-size="9" font-weight="bold">Key Fields</text>
+  <text x="1100" y="2877" fill="#FFF" font-size="9" font-weight="bold">Stages</text>
+
+  <!-- Row 1: PendingImageId -->
+  <rect x="70" y="2888" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="2905" fill="#333" font-size="9" font-weight="bold">PendingImageId</text>
+  <text x="280" y="2905" fill="#555" font-size="9">id: u32 — opaque counter, increments from 1. e.g. PendingImageId(1)</text>
+  <text x="1100" y="2905" fill="#888" font-size="9">5,6,7</text>
+
+  <!-- Row 2: ImageResource -->
+  <rect x="70" y="2916" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="2933" fill="#333" font-size="9" font-weight="bold">ImageResource</text>
+  <text x="280" y="2933" fill="#555" font-size="9">Pending(id) | DataAvailable(Arc&lt;ImageResourceData&gt;) | LoadError | NotRequested</text>
+  <text x="1100" y="2933" fill="#888" font-size="9">5,7</text>
+
+  <!-- Row 3: LoadedVectorImage -->
+  <rect x="70" y="2944" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="2961" fill="#333" font-size="9" font-weight="bold">LoadedVectorImage</text>
+  <text x="280" y="2961" fill="#555" font-size="9">svg_tree: usvg::Tree, metadata: ImageMetadata, svg_id: Option&lt;String&gt;</text>
+  <text x="1100" y="2961" fill="#888" font-size="9">5,7</text>
+
+  <!-- Row 4: RasterImage -->
+  <rect x="70" y="2972" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="2989" fill="#333" font-size="9" font-weight="bold">RasterImage</text>
+  <text x="280" y="2989" fill="#555" font-size="9">metadata: ImageMetadata, format: PixelFormat, bytes: Arc&lt;[u8]&gt;, id: Option&lt;WebRenderImageKey&gt;</text>
+  <text x="1100" y="2989" fill="#888" font-size="9">6</text>
+
+  <!-- Row 5: ImageKey -->
+  <rect x="70" y="3000" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3017" fill="#333" font-size="9" font-weight="bold">ImageKey</text>
+  <text x="280" y="3017" fill="#555" font-size="9">namespace: IdNamespace, id: u32 — e.g. ImageKey(IdNamespace(1), 91)</text>
+  <text x="1100" y="3017" fill="#888" font-size="9">6,8</text>
+
+  <!-- 13.5 Key Relationships Between Classes -->
+  <rect x="70" y="3050" width="1260" height="24" rx="3" fill="#555" />
+  <text x="90" y="3067" fill="#FFF" font-size="10" font-weight="bold">13.5 Key Relationships Between Classes — How Data Flows Across Thread Boundaries</text>
+
+  <!-- Script box -->
+  <rect x="80" y="3090" width="370" height="170" rx="6" fill="#E3F2FD" stroke="#4A90D9" stroke-width="1" />
+  <text x="265" y="3110" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">Script Thread</text>
+  <text x="100" y="3130" fill="#333" font-size="9" font-weight="bold">SVGSVGElement</text>
+  <text x="100" y="3145" fill="#555" font-size="8">├── uuid: String</text>
+  <text x="100" y="3158" fill="#555" font-size="8">├── cached_serialized_data_url</text>
+  <text x="100" y="3171" fill="#555" font-size="8">│   : Option&lt;Result&lt;ServoUrl&gt;&gt;</text>
+  <text x="100" y="3187" fill="#555" font-size="8">├── width/height (via Element.attrs)</text>
+  <text x="100" y="3200" fill="#555" font-size="8">└── viewBox (via Element.attrs)</text>
+
+  <line x1="450" y1="3090" x2="450" y2="3260" stroke="#C45DE6" stroke-width="1" stroke-dasharray="4,3" />
+  <line x1="450" y1="3175" x2="490" y2="3175" stroke="#C45DE6" stroke-width="1.5" marker-end="url(#arrP)" />
+  <text x="470" y="3140" fill="#C45DE6" font-size="8" font-weight="bold" text-anchor="middle" transform="rotate(-90,470,3140)">LayoutDom borrow</text>
+
+  <!-- Layout box -->
+  <rect x="490" y="3090" width="370" height="170" rx="6" fill="#F3E5F5" stroke="#C45DE6" stroke-width="1" />
+  <text x="675" y="3110" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">Layout Thread</text>
+  <text x="510" y="3130" fill="#333" font-size="9" font-weight="bold">SVGElementData</text>
+  <text x="510" y="3145" fill="#555" font-size="8">├── svg_id: String</text>
+  <text x="510" y="3158" fill="#555" font-size="8">├── source: Option&lt;ServoUrl&gt;</text>
+  <text x="510" y="3171" fill="#555" font-size="8">├── width/height: &amp;AttrValue</text>
+  <text x="510" y="3184" fill="#555" font-size="8">└── view_box: &amp;AttrValue</text>
+  <text x="510" y="3202" fill="#333" font-size="9" font-weight="bold">ReplacedContentKind</text>
+  <text x="510" y="3217" fill="#555" font-size="8">└── SVGElement { vector_image, has_viewbox }</text>
+  <text x="510" y="3235" fill="#333" font-size="9" font-weight="bold">Fragment::Image</text>
+  <text x="510" y="3250" fill="#555" font-size="8">└── image_key: Option&lt;ImageKey&gt;</text>
+
+  <line x1="860" y1="3175" x2="900" y2="3175" stroke="#E6A23C" stroke-width="1.5" marker-end="url(#arr)" />
+  <text x="880" y="3168" fill="#E6A23C" font-size="8" font-weight="bold" text-anchor="middle">Arc&lt;&gt;</text>
+
+  <!-- Image Cache box -->
+  <rect x="900" y="3090" width="370" height="170" rx="6" fill="#FFF3E0" stroke="#E6A23C" stroke-width="1" />
+  <text x="1085" y="3110" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">Image Cache Thread</text>
+  <text x="920" y="3130" fill="#333" font-size="9" font-weight="bold">PendingImageId(1)</text>
+  <text x="920" y="3148" fill="#333" font-size="9" font-weight="bold">ImageResource</text>
+  <text x="920" y="3163" fill="#555" font-size="8">└── Pending | DataAvailable</text>
+  <text x="920" y="3181" fill="#333" font-size="9" font-weight="bold">LoadedVectorImage</text>
+  <text x="920" y="3196" fill="#555" font-size="8">├── svg_tree: usvg::Tree</text>
+  <text x="920" y="3209" fill="#555" font-size="8">├── metadata: 200×200</text>
+  <text x="920" y="3222" fill="#555" font-size="8">└── svg_id: &quot;uuid&quot;</text>
+  <text x="920" y="3240" fill="#333" font-size="9" font-weight="bold">RasterImage</text>
+  <text x="920" y="3255" fill="#555" font-size="8">└── bytes: 160KB RGBA, id → ImageKey</text>
+
+  <!-- 13.6 Thread Boundary Crossings -->
+  <rect x="70" y="3290" width="1260" height="24" rx="3" fill="#555" />
+  <text x="90" y="3307" fill="#FFF" font-size="10" font-weight="bold">13.6 Thread Boundary Crossings — Data Flow Between Threads</text>
+
+  <rect x="70" y="3325" width="1260" height="24" rx="2" fill="#333" />
+  <text x="90" y="3342" fill="#FFF" font-size="9" font-weight="bold">Data</text>
+  <text x="320" y="3342" fill="#FFF" font-size="9" font-weight="bold">From → To</text>
+  <text x="580" y="3342" fill="#FFF" font-size="9" font-weight="bold">Mechanism</text>
+  <text x="1000" y="3342" fill="#FFF" font-size="9" font-weight="bold">When</text>
+
+  <rect x="70" y="3353" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3370" fill="#333" font-size="9">uuid, attrs</text>
+  <text x="320" y="3370" fill="#555" font-size="9">Script → Layout</text>
+  <text x="580" y="3370" fill="#555" font-size="9">LayoutDom&lt;&apos;dom, SVGSVGElement&gt; — unsafe borrow</text>
+  <text x="1000" y="3370" fill="#888" font-size="9">2,5,7</text>
+
+  <rect x="70" y="3381" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="3398" fill="#333" font-size="9">cached_data_url</text>
+  <text x="320" y="3398" fill="#555" font-size="9">Script (write) → Layout (read)</text>
+  <text x="580" y="3398" fill="#555" font-size="9">LayoutDom borrow, #[no_trace] cell for GC safety</text>
+  <text x="1000" y="3398" fill="#888" font-size="9">2(None),5/7(Some)</text>
+
+  <rect x="70" y="3409" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3426" fill="#333" font-size="9">SVG UUID queue</text>
+  <text x="320" y="3426" fill="#555" font-size="9">Layout → Script</text>
+  <text x="580" y="3426" fill="#555" font-size="9">pending_svg_uuids: Vec&lt;String&gt; on LayoutThread</text>
+  <text x="1000" y="3426" fill="#888" font-size="9">3 (dispatch)</text>
+
+  <rect x="70" y="3437" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="3454" fill="#333" font-size="9">VectorImage</text>
+  <text x="320" y="3454" fill="#555" font-size="9">Image Cache → Layout</text>
+  <text x="580" y="3454" fill="#555" font-size="9">Arc&lt;ImageResource&gt; from get_cached_image_for_url()</text>
+  <text x="1000" y="3454" fill="#888" font-size="9">5(async),7(ready)</text>
+
+  <rect x="70" y="3465" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3482" fill="#333" font-size="9">RasterImage</text>
+  <text x="320" y="3482" fill="#555" font-size="9">Image Cache → Layout</text>
+  <text x="580" y="3482" fill="#555" font-size="9">rasterize_vector_image() return value</text>
+  <text x="1000" y="3482" fill="#888" font-size="9">6 (re-entry)</text>
+
+  <rect x="70" y="3493" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="3510" fill="#333" font-size="9">ImageKey</text>
+  <text x="320" y="3510" fill="#555" font-size="9">Image Cache → Layout</text>
+  <text x="580" y="3510" fill="#555" font-size="9">Carried inside RasterImage.id</text>
+  <text x="1000" y="3510" fill="#888" font-size="9">6(assign),8(consume)</text>
+
+  <rect x="70" y="3521" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3538" fill="#333" font-size="9">Reflow notifications</text>
+  <text x="320" y="3538" fill="#555" font-size="9">Any → Layout</text>
+  <text x="580" y="3538" fill="#555" font-size="9">ScriptThread::notify() / cache callbacks → PendingRestyles</text>
+  <text x="1000" y="3538" fill="#888" font-size="9">Pass transitions</text>
+
+  <!-- ================================================================ -->
+  <!-- SECTION 14 — Thread & Ownership Model -->
+  <!-- ================================================================ -->
+  <rect x="40" y="3575" width="1320" height="36" rx="4" fill="#333" filter="url(#sh)" />
+  <text x="700" y="3598" fill="#FFF" font-size="14" font-weight="bold" text-anchor="middle">Thread &amp; Ownership Model — Object Lifetime · Thread Safety · Layout Borrow Model</text>
+
+  <text x="80" y="3635" fill="#333" font-size="11" font-weight="bold">14.1 Object Lifetime &amp; Thread Safety</text>
+  <text x="80" y="3650" fill="#888" font-size="9">How each class is created, owned, and shared across threads.</text>
+
+  <rect x="70" y="3665" width="1260" height="24" rx="2" fill="#333" />
+  <text x="90" y="3682" fill="#FFF" font-size="9" font-weight="bold">Class</text>
+  <text x="280" y="3682" fill="#FFF" font-size="9" font-weight="bold">Created In</text>
+  <text x="470" y="3682" fill="#FFF" font-size="9" font-weight="bold">Owned By</text>
+  <text x="660" y="3682" fill="#FFF" font-size="9" font-weight="bold">Thread Safety</text>
+  <text x="900" y="3682" fill="#FFF" font-size="9" font-weight="bold">GC</text>
+  <text x="1050" y="3682" fill="#FFF" font-size="9" font-weight="bold">Notes</text>
+
+  <rect x="70" y="3693" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3710" fill="#333" font-size="9">SVGSVGElement</text>
+  <text x="280" y="3710" fill="#555" font-size="9">Script</text>
+  <text x="470" y="3710" fill="#555" font-size="9">Script DOM</text>
+  <text x="660" y="3710" fill="#555" font-size="9">!Send/Sync</text>
+  <text x="900" y="3710" fill="#555" font-size="9">#[dom_struct]</text>
+  <text x="1050" y="3710" fill="#888" font-size="8">Layout borrow via LayoutDom</text>
+
+  <rect x="70" y="3721" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="3738" fill="#333" font-size="9">SVGElementData</text>
+  <text x="280" y="3738" fill="#555" font-size="9">Layout</text>
+  <text x="470" y="3738" fill="#555" font-size="9">Layout (stack)</text>
+  <text x="660" y="3738" fill="#555" font-size="9">&apos;dom borrow</text>
+  <text x="900" y="3738" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3738" fill="#888" font-size="8">Borrowed from script DOM</text>
+
+  <rect x="70" y="3749" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3766" fill="#333" font-size="9">ReplacedContentKind</text>
+  <text x="280" y="3766" fill="#555" font-size="9">Layout</text>
+  <text x="470" y="3766" fill="#555" font-size="9">Layout (stack)</text>
+  <text x="660" y="3766" fill="#555" font-size="9">Local</text>
+  <text x="900" y="3766" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3766" fill="#888" font-size="8">Created per layout pass</text>
+
+  <rect x="70" y="3777" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="3794" fill="#333" font-size="9">NaturalSizes</text>
+  <text x="280" y="3794" fill="#555" font-size="9">Layout</text>
+  <text x="470" y="3794" fill="#555" font-size="9">Layout (stack)</text>
+  <text x="660" y="3794" fill="#555" font-size="9">Local</text>
+  <text x="900" y="3794" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3794" fill="#888" font-size="8">Computed in svg_kind_size</text>
+
+  <rect x="70" y="3805" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3822" fill="#333" font-size="9">ReplacedVectorImage</text>
+  <text x="280" y="3822" fill="#555" font-size="9">Layout</text>
+  <text x="470" y="3822" fill="#555" font-size="9">Layout (stack)</text>
+  <text x="660" y="3822" fill="#555" font-size="9">Local</text>
+  <text x="900" y="3822" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3822" fill="#888" font-size="8">From Arc&lt;ImageResource&gt;</text>
+
+  <rect x="70" y="3833" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="3850" fill="#333" font-size="9">Fragment</text>
+  <text x="280" y="3850" fill="#555" font-size="9">Layout</text>
+  <text x="470" y="3850" fill="#555" font-size="9">Fragment tree</text>
+  <text x="660" y="3850" fill="#555" font-size="9">Send</text>
+  <text x="900" y="3850" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3850" fill="#888" font-size="8">Sent to WR as display list</text>
+
+  <rect x="70" y="3861" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3878" fill="#333" font-size="9">PendingImageId</text>
+  <text x="280" y="3878" fill="#555" font-size="9">ImgCache</text>
+  <text x="470" y="3878" fill="#555" font-size="9">Shared</text>
+  <text x="660" y="3878" fill="#555" font-size="9">Copy</text>
+  <text x="900" y="3878" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3878" fill="#888" font-size="8">Used in map lookups</text>
+
+  <rect x="70" y="3889" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="3906" fill="#333" font-size="9">VectorImage</text>
+  <text x="280" y="3906" fill="#555" font-size="9">ImgCache</text>
+  <text x="470" y="3906" fill="#555" font-size="9">ImgCache store</text>
+  <text x="660" y="3906" fill="#555" font-size="9">Send/Sync</text>
+  <text x="900" y="3906" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3906" fill="#888" font-size="8">Via Arc</text>
+
+  <rect x="70" y="3917" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="3934" fill="#333" font-size="9">RasterImage</text>
+  <text x="280" y="3934" fill="#555" font-size="9">ImgCache</text>
+  <text x="470" y="3934" fill="#555" font-size="9">Rasterized cache</text>
+  <text x="660" y="3934" fill="#555" font-size="9">Send/Sync</text>
+  <text x="900" y="3934" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3934" fill="#888" font-size="8">Via Arc</text>
+
+  <rect x="70" y="3945" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="3962" fill="#333" font-size="9">ImageKey</text>
+  <text x="280" y="3962" fill="#555" font-size="9">WebRender</text>
+  <text x="470" y="3962" fill="#555" font-size="9">WR internal</text>
+  <text x="660" y="3962" fill="#555" font-size="9">Copy</text>
+  <text x="900" y="3962" fill="#555" font-size="9">No</text>
+  <text x="1050" y="3962" fill="#888" font-size="8">Opaque handle</text>
+
+  <!-- ================================================================ -->
+  <!-- SECTION 15 — Cache Invalidation Reference -->
+  <!-- ================================================================ -->
+  <rect x="40" y="4005" width="1320" height="36" rx="4" fill="#333" filter="url(#sh)" />
+  <text x="700" y="4028" fill="#FFF" font-size="14" font-weight="bold" text-anchor="middle">Cache Invalidation Reference — What Triggers Eviction · Damage Flags · Pass Transitions</text>
+
+  <text x="80" y="4065" fill="#333" font-size="11" font-weight="bold">15.1 Invalidation Events</text>
+  <text x="80" y="4080" fill="#888" font-size="9">What cached values exist, where they live, and what invalidates them.</text>
+
+  <rect x="70" y="4095" width="1260" height="24" rx="2" fill="#333" />
+  <text x="90" y="4112" fill="#FFF" font-size="9" font-weight="bold">Cached Value</text>
+  <text x="320" y="4112" fill="#FFF" font-size="9" font-weight="bold">Location</text>
+  <text x="530" y="4112" fill="#FFF" font-size="9" font-weight="bold">Invalidated By</text>
+  <text x="900" y="4112" fill="#FFF" font-size="9" font-weight="bold">Effect</text>
+
+  <rect x="70" y="4123" width="1260" height="28" rx="2" fill="#F8F9FA" />
+  <text x="90" y="4130" fill="#333" font-size="8" font-weight="bold">cached_serialized</text>
+  <text x="90" y="4142" fill="#333" font-size="8" font-weight="bold">_data_url</text>
+  <text x="320" y="4142" fill="#555" font-size="8">SVGSVGElement</text>
+  <text x="530" y="4142" fill="#555" font-size="8">attribute_mutated() / children_changed() / unbind_from_tree()</text>
+  <text x="900" y="4142" fill="#555" font-size="8">Sets to None → re-serialize on P2</text>
+
+  <rect x="70" y="4155" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="4172" fill="#333" font-size="8" font-weight="bold">ElementData.styles</text>
+  <text x="320" y="4172" fill="#555" font-size="8">Per-element</text>
+  <text x="530" y="4172" fill="#555" font-size="8">NodeDamage::Style (CSS change, inline style)</text>
+  <text x="900" y="4172" fill="#555" font-size="8">Restyle on next layout</text>
+
+  <rect x="70" y="4183" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="4200" fill="#333" font-size="8" font-weight="bold">RasterImage</text>
+  <text x="320" y="4200" fill="#555" font-size="8">ImgCache (image_id, size)</text>
+  <text x="530" y="4200" fill="#555" font-size="8">Not explicitly invalidated (session lifetime)</text>
+  <text x="900" y="4200" fill="#555" font-size="8">Persists for session</text>
+
+  <rect x="70" y="4211" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="4228" fill="#333" font-size="8" font-weight="bold">VectorImage</text>
+  <text x="320" y="4228" fill="#555" font-size="8">ImgCache vector_images map</text>
+  <text x="530" y="4228" fill="#555" font-size="8">evict_rasterized_image(&amp;uuid) on unbind_from_tree()</text>
+  <text x="900" y="4228" fill="#555" font-size="8">Removes vector + rasterized</text>
+
+  <text x="80" y="4270" fill="#333" font-size="11" font-weight="bold">15.2 Reflow Triggers Summary</text>
+
+  <rect x="70" y="4285" width="1260" height="24" rx="2" fill="#333" />
+  <text x="90" y="4302" fill="#FFF" font-size="9" font-weight="bold">Event</text>
+  <text x="500" y="4302" fill="#FFF" font-size="9" font-weight="bold">Damage Flag</text>
+  <text x="900" y="4302" fill="#FFF" font-size="9" font-weight="bold">Pass Triggered</text>
+
+  <rect x="70" y="4313" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="4330" fill="#333" font-size="9">DOM node inserted</text>
+  <text x="500" y="4330" fill="#555" font-size="9">NodeDamage::Node</text>
+  <text x="900" y="4330" fill="#888" font-size="9">P1</text>
+
+  <rect x="70" y="4341" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="4358" fill="#333" font-size="9">Attribute changed</text>
+  <text x="500" y="4358" fill="#555" font-size="9">NodeDamage::Other</text>
+  <text x="900" y="4358" fill="#888" font-size="9">Reserialize → P2</text>
+
+  <rect x="70" y="4369" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="4386" fill="#333" font-size="9">Children changed</text>
+  <text x="500" y="4386" fill="#555" font-size="9">NodeDamage::Other</text>
+  <text x="900" y="4386" fill="#888" font-size="9">Reserialize → P2</text>
+
+  <rect x="70" y="4397" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="4414" fill="#333" font-size="9">Style changed</text>
+  <text x="500" y="4414" fill="#555" font-size="9">NodeDamage::Style</text>
+  <text x="900" y="4414" fill="#888" font-size="9">Restyle + P1</text>
+
+  <rect x="70" y="4425" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="4442" fill="#333" font-size="9">P1: serialization queued</text>
+  <text x="500" y="4442" fill="#555" font-size="9">(post-reflow hook)</text>
+  <text x="900" y="4442" fill="#888" font-size="9">P2</text>
+
+  <rect x="70" y="4453" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="4470" fill="#333" font-size="9">P2: data URL cached</text>
+  <text x="500" y="4470" fill="#555" font-size="9">NodeDamage::Other</text>
+  <text x="900" y="4470" fill="#888" font-size="9">P3</text>
+
+  <rect x="70" y="4481" width="1260" height="24" rx="2" fill="#F8F9FA" />
+  <text x="90" y="4498" fill="#333" font-size="9">P3: VectorImage loaded</text>
+  <text x="500" y="4498" fill="#555" font-size="9">(cache notification)</text>
+  <text x="900" y="4498" fill="#888" font-size="9">P4</text>
+
+  <rect x="70" y="4509" width="1260" height="24" rx="2" fill="#FFF" />
+  <text x="90" y="4526" fill="#333" font-size="9">P4: RasterImage keycached</text>
+  <text x="500" y="4526" fill="#555" font-size="9">(cache notification)</text>
+  <text x="900" y="4526" fill="#888" font-size="9">P4 re-entry</text>
+
+</svg>

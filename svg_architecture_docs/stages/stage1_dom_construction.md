@@ -1,7 +1,7 @@
 # Stage 1 — DOM Construction
 
-> **Thread:** HTML Parser → Script (DOM)
-> **Also known as:** Element creation from HTML token
+> **Thread:** HTML Parser → Script (DOM) → Layout Thread (Style Computation)
+> **Also known as:** Element creation from HTML token + CSS cascade resolution
 > **Key files:**
 > - [components/script/dom/create.rs](../../components/script/dom/create.rs)
 > - [components/script/dom/servoparser/mod.rs](../../components/script/dom/servoparser/mod.rs)
@@ -11,6 +11,7 @@
 > - [components/script/dom/svg/svggraphicselement.rs](../../components/script/dom/svg/svggraphicselement.rs)
 > - [components/script/dom/element/element.rs](../../components/script/dom/element/element.rs)
 > - [components/script/dom/node/node.rs](../../components/script/dom/node/node.rs)
+> - [components/layout/layout_impl.rs](../../components/layout/layout_impl.rs)
 
 ---
 
@@ -18,7 +19,11 @@
 
 Stage 1 converts the `<svg>` tag in the HTML source into a fully constructed `SVGSVGElement` DOM node, inserted into the document tree with all its attributes. This happens as part of the normal HTML parsing process — Servo reuses the standard `html5ever` tree builder for SVG elements.
 
-Unlike later stages, there is **nothing SVG-specific** about how this works. The same parser infrastructure that creates `<div>`, `<img>`, or `<table>` also creates `<svg>`. The only difference is the namespace dispatch: elements in the SVG namespace (`ns!(svg)`) go through a different creation function.
+Stage 1 is split into two phases across two threads:
+- **Sub-stages 1.1–1.6** (Script thread): HTML parsing, element creation, attribute initialization, tree insertion
+- **Sub-stage 1.7** (Layout thread): CSS cascade resolution — computes `ComputedValues` for every element in the dirty subtree
+
+Unlike later stages, DOM construction is **nothing SVG-specific**. The same parser infrastructure that creates `<div>`, `<img>`, or `<table>` also creates `<svg>`. The only difference is the namespace dispatch: elements in the SVG namespace (`ns!(svg)`) go through a different creation function. Style computation is also generic — SVG elements are styled the same way as HTML elements (selector matching, cascade, `ComputedValues` resolution).
 
 ---
 
@@ -459,11 +464,87 @@ Once per created element. The SVG element itself is inserted once. Its child `<c
 
 ---
 
-## Sub-stage 1.7 — Post-Creation (what happens *after* Stage 1)
+## Sub-stage 1.7 — Style Computation (CSS Cascade & Resolved Values)
+
+**Where:** [layout_impl.rs:1073-1170](../../components/layout/layout_impl.rs#L1073-L1170) — `restyle_and_build_trees()`
+**Thread:** Layout Thread (style system, via Stylo)
+**Also known as:** Style recalc, cascade resolution, `RecalcStyle` traversal
+
+This is the bridge between raw DOM elements and styled layout nodes. After the SVG element is inserted into the DOM tree (Stage 1.6), the layout thread computes its **resolved CSS styles** — the `ComputedValues` that Stage 2 reads via `ServoLayoutElement::style()`.
+
+### How it works
+
+Style computation happens as part of the **restyle** phase of layout. When a reflow is triggered, `handle_reflow()` calls `restyle_and_build_trees()`:
+
+```
+handle_reflow()          [layout_impl.rs:944]
+  └── restyle_and_build_trees()   [layout_impl.rs:1073]
+        ├── prepare_stylist_for_reflow()   [layout_impl.rs:1020]
+        │     └── process_style() — handle stylesheet invalidations
+        │
+        ├── RecalcStyle::new() — traversal setup
+        ├── RecalcStyle::pre_traverse() — prepare dirty root
+        │
+        └── driver::traverse_dom() ← ACTUAL STYLE COMPUTATION
+              │
+              For each dirty element:
+              ├── ServoDangerousStyleElement::match_element()
+              │     → selector matching against Stylist
+              │     → CSS cascade (author, user, UA rules)
+              │     → ComputedValues resolution
+              │
+              └── ServoDangerousStyleElement::cascade_element()
+                    → store computed style in ElementData.styles
+```
+
+**Key entry point:** `traverse_dom()` at [layout_impl.rs:1169](../../components/layout/layout_impl.rs#L1169) performs a DOM traversal from the dirty root and calls into the style system (Stylo) for each element. This is where `ComputedValues` are actually computed.
+
+### What gets resolved for SVG elements
+
+For `SVGSVGElement`, the style system resolves CSS properties that affect layout and rendering:
+
+| CSS Property | How It's Used | Impact on SVG |
+|---|---|---|
+| `display` | `Display::from()` in Stage 2.1 | Determines if SVG generates a box (`GeneratingBox`) or is hidden (`None`) or is `Contents` |
+| `width`, `height` | Read via `style()` in `svg_kind_size()` | Used for natural size computation (though SVG's `width`/`height` attributes take priority) |
+| `fill`, `stroke`, `opacity` | Passed to `resvg` | Affect rendering of SVG shapes |
+| `overflow` | Fragment construction | Clipping behavior |
+| `transform` | Layout positioning | Translation, scaling of SVG element |
+
+### Caching behavior
+
+**Style values are cached.** The computed styles (`ComputedValues`) are stored in the element's `ElementData.styles` field and persist until:
+- A CSS stylesheet changes (`stylesheets_changed` flag)
+- The element's attributes change (triggers `RestyleHint::restyle_subtree()`)
+- The element is removed from the DOM and re-inserted
+
+During subsequent layout passes (P3/P4), if no style-affecting changes occurred, `restyle_and_build_trees()` returns early (line 1083, `return Default::default()` when there's no restyle data), and the existing `ComputedValues` are reused. This is why multiple calls to `ServoLayoutElement::style()` all return the **same** `Arc<ComputedValues>` — they're just cloning a reference to the cached result.
+
+#### Debugging this sub-stage
+
+**Trace points:**
+- `[SVG_TRACE_STAGE_1.7]` — printed after style traversal completes in `restyle_and_build_trees()`
+
+**Breakpoints:**
+- [layout_impl.rs:1149](../../components/layout/layout_impl.rs#L1149) — start of style traversal (before `traverse_dom`)
+- [layout_impl.rs:1169](../../components/layout/layout_impl.rs#L1169) — `traverse_dom()` executes the style computation
+- [layout_impl.rs:1081-1084](../../components/layout/layout_impl.rs#L1081-L1084) — early return when no restyle needed (cache hit)
+
+**SVG identification:**
+Style computation happens for ALL elements in the dirty subtree, not just SVG. The SVG element is styled alongside `<html>`, `<body>`, `<div>`, etc. To filter for SVG: after the traversal, check `ServoLayoutElement::type_id() == Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))`.
+
+**Call frequency:**
+- Full style computation: **once** on first layout, or whenever stylesheets/attributes change
+- No-op (cached): every subsequent layout pass that has no style changes
+- The `Arc<ComputedValues>.clone()` reads in later stages cost nothing — they're just reference count bumps
+
+---
+
+## Sub-stage 1.8 — Post-Creation (what happens *after* the SVG element is in the DOM)
 
 Once the SVG element is in the DOM tree, several things happen automatically as part of the normal page load cycle:
 
-1. **Style resolution** (Style thread/Stylo): The element gets its `ComputedValues` computed via the CSS cascade — this is what Stage 2 reads.
+1. **Style computation** (Stage 1.7, Layout thread): The element gets its `ComputedValues` computed via the CSS cascade — this is what Stage 2 reads.
 
 2. **Layout** (Layout thread): The layout traversal encounters the node and determines it's replaced content — this enters Stage 2.
 
@@ -557,8 +638,12 @@ All three are methods on `SVGSVGElement`, so they ONLY fire for the root `<svg>`
               Node flags: IS_IN_A_DOCUMENT_TREE | IS_CONNECTED
                     │
                     ▼
+              ──→ Stage 1.7 — Style Computation
+              (restyle_and_build_trees → traverse_dom → ComputedValues)
+                    │
+                    ▼
               ──→ Stage 2
-              (style resolution on next layout traversal)
+              (layout traversal reads cached ComputedValues)
 ```
 
 ---
@@ -574,6 +659,7 @@ All three are methods on `SVGSVGElement`, so they ONLY fire for the root `<svg>`
 | 1.4-i | Inheritance init | [svgsvgelement.rs:50](components/script/dom/svg/svgsvgelement.rs#L50) | `uuid = "9c7b6a3d-2f44-4e80-b2f5-8d5c9c3b1e8a"`, `cached_serialized_data_url = DomRefCell(None)` |
 | 1.4-ii | JS reflection | [svgsvgelement.rs:70](components/script/dom/svg/svgsvgelement.rs#L70) | Returns `DomRoot<SVGSVGElement>` with pointer to heap-allocated struct |
 | 1.5 | Attribute parsing | [svgsvgelement.rs:221](components/script/dom/svg/svgsvgelement.rs#L221) | `name = "width"` → returns `AttrValue::LengthPercentage("200", Ok(Length(CSSPixelLength(200.0))))` |
+| 1.7 | Style computation | [layout_impl.rs:1169](../../components/layout/layout_impl.rs#L1169) | `traverse_dom()` — style traversal from dirty root, computes `ComputedValues` for all elements |
 
 ### Key Variables to Track
 
@@ -604,11 +690,14 @@ EventTarget
 
 ### Important: What Stage 1 Does NOT Do
 
-Stage 1 is purely about DOM construction. It does **not**:
-- Resolve any CSS or compute styles (that's Stage 2)
+Stage 1 covers DOM construction and style computation. It does **not**:
 - Serialize the SVG subtree to a data URL (that's Stage 4)
 - Interact with the image cache (that's Stages 5+)
-- Do any layout or rendering (that's Stages 8+)
+- Do any layout or rendering (that's Stages 2+)
 - Set up `SVGElementData.source` for layout (the field stays `None` — it will be populated in Stage 4)
 
-The entire Stage 1 runs on the **Script thread's HTML parser** and produces a fully functional `SVGSVGElement` in the DOM tree, ready for styling and layout.
+Stage 1 runs across two threads:
+- **Sub-stages 1.1–1.6**: Script thread's HTML parser — DOM construction
+- **Sub-stage 1.7**: Layout thread's style system (Stylo) — CSS cascade & ComputedValues resolution
+
+After Stage 1, the SVG element exists in the DOM with fully resolved styles, ready for layout traversal.

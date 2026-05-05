@@ -6,7 +6,7 @@ use app_units::{Au, MAX_AU};
 use data_url::DataUrl;
 use embedder_traits::ViewportDetails;
 use euclid::{Scale, Size2D};
-use layout_api::{IFrameSize, LayoutElement, LayoutImageDestination, LayoutNode, SVGElementData};
+use layout_api::{IFrameSize, LayoutElement, LayoutImageDestination, LayoutNode, SVGElementData, LayoutNodeType, LayoutElementType};
 use malloc_size_of_derive::MallocSizeOf;
 use net_traits::image_cache::{Image, ImageOrMetadataAvailable, VectorImage};
 use script::layout_dom::ServoLayoutNode;
@@ -150,6 +150,13 @@ pub(crate) enum ReplacedContentKind {
 
 impl ReplacedContents {
     pub fn for_element(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {
+        let is_svg = matches!(
+            node.type_id(),
+            Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
+        );
+        if is_svg {
+            eprintln!("[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start");
+        }
         if let Some(ref data_attribute_string) = node.as_typeless_object_with_data_attribute() {
             if let Some(url) = try_to_parse_image_data_url(data_attribute_string) {
                 return Self::from_image_url(
@@ -226,6 +233,13 @@ impl ReplacedContents {
         context: &LayoutContext,
         node: ServoLayoutNode<'_>,
     ) -> (ReplacedContentKind, NaturalSizes) {
+        // let is_svg = matches!(
+        //     node.type_id(),
+        //     Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
+        // );
+        // if is_svg {
+            eprintln!("[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start");
+        // }
         let rule_cache_conditions = &mut RuleCacheConditions::default();
 
         let parent_style = node.style(&context.style_context);
@@ -271,6 +285,11 @@ impl ReplacedContents {
             ratio,
         };
 
+        eprintln!(
+            "[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=({:?}, {:?}, {:?})",
+            natural_size.width, natural_size.height, natural_size.ratio
+        );
+
         let svg_source = match svg_data.source {
             None => {
                 // The SVGSVGElement is not yet serialized, so we add it to a list
@@ -285,6 +304,8 @@ impl ReplacedContents {
             Some(svg_source_result) => svg_source_result.ok(),
         };
 
+        eprintln!("[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source={:?}", svg_source);
+
         let cached_image = svg_source.and_then(|svg_source| {
             context
                 .image_resolver
@@ -296,6 +317,8 @@ impl ReplacedContents {
                 .ok()
         });
 
+        eprintln!("[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image={:?}", cached_image);
+
         let vector_image = cached_image.map(|image| match image {
             Image::Vector(mut vector_image) => {
                 vector_image.svg_id = Some(svg_data.svg_id);
@@ -303,6 +326,12 @@ impl ReplacedContents {
             },
             _ => unreachable!("SVG element can't contain a raster image."),
         });
+        eprintln!(
+            "[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image={})",
+            if vector_image.is_some() { "SOME" } else { "NONE" }
+        );
+
+        eprintln!("[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End");
 
         (
             ReplacedContentKind::SVGElement {
@@ -576,9 +605,13 @@ impl ReplacedContents {
                 vector_image,
                 has_viewbox,
             } => {
+                eprintln!("[SVG_TRACE_STAGE_8] make_fragments() SVGElement arm, vector_image.is_some={}", vector_image.is_some());
                 let Some(vector_image) = vector_image else {
                     return vec![];
                 };
+
+                eprintln!("[SVG_TRACE_STAGE_8] make_fragments() SVGElement metadata={:?}x{:?} has_viewbox={}",
+                    vector_image.metadata.width, vector_image.metadata.height, has_viewbox);
 
                 if !has_viewbox {
                     base.rect = PhysicalSize::new(

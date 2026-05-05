@@ -102,6 +102,16 @@ fn create_svg_element(
 ) -> DomRoot<Element> {
     assert_eq!(name.ns, ns!(svg));
 
+    let element_type = match name.local {
+        local_name!("image") => "SVGImageElement",
+        local_name!("svg") => "SVGSVGElement",
+        _ => "SVGElement",
+    };
+    eprintln!(
+        "[SVG_TRACE_STAGE_1] script::dom::create::create_svg_element() name.local={:?} → creating {}",
+        name.local, element_type
+    );
+
     macro_rules! make(
         ($ctor:ident) => ({
             let obj = $ctor::new(cx, name.local, prefix, document, proto);
@@ -449,7 +459,13 @@ pub(crate) fn create_element(
     let prefix = name.prefix.clone();
     match name.ns {
         ns!(html) => create_html_element(cx, name, prefix, is, document, creator, mode, proto),
-        ns!(svg) => create_svg_element(cx, name, prefix, document, proto),
+        ns!(svg) => {
+            eprintln!(
+                "[SVG_TRACE_STAGE_1.2] script::dom::create::create_element() ns!(svg) dispatch, local={:?}",
+                name.local
+            );
+            create_svg_element(cx, name, prefix, document, proto)
+        },
         _ => Element::new(cx, name.local, name.ns, prefix, document, proto),
     }
 }

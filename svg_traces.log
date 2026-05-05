@@ -1,0 +1,141 @@
+[SVG_TRACE_STAGE_1.2] script::dom::create::create_element() ns!(svg) dispatch, local=Atom('svg' type=inline)
+[SVG_TRACE_STAGE_1] script::dom::create::create_svg_element() name.local=Atom('svg' type=inline) → creating SVGSVGElement
+[SVG_TRACE_STAGE_1.4] script::dom::svg::svgsvgelement::SVGSVGElement::new() constructing SVGSVGElement
+[SVG_TRACE_STAGE_1.5] script::dom::svg::svgsvgelement::SVGSVGElement::parse_plain_attribute() width=200 → LengthPercentage
+[SVG_TRACE_STAGE_1.5] script::dom::svg::svgsvgelement::SVGSVGElement::parse_plain_attribute() height=200 → LengthPercentage
+[SVG_TRACE_STAGE_1.2] script::dom::create::create_element() ns!(svg) dispatch, local=Atom('circle' type=inline)
+[SVG_TRACE_STAGE_1] script::dom::create::create_svg_element() name.local=Atom('circle' type=inline) → creating SVGElement
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="None" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_1.7] layout::layout_impl::restyle_and_build_trees() style traversal complete for dirty_root=OpaqueNode(59367309689248)
+[SVG_TRACE_STAGE_2.1] layout::dom_traversal::traverse_element() Start
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() Start
+[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="None" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=(Some(200px), Some(200px), Some(1.0))
+[SVG_TRACE_STAGE_2.2.2.1.1.2] queue_svg_element_for_serialization() node=OpaqueNode(59367309689728)
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source=None
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image=None
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image=NONE)
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() End1
+[SVG_TRACE_STAGE_2.1] layout::dom_traversal::traverse_element() End
+[SVG_TRACE_STAGE_8] make_fragments() SVGElement arm, vector_image.is_some=false
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() Start
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() processing SVG node, about to serialize
+[SVG_TRACE_STAGE_4] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() Start
+[SVG_TRACE_STAGE_4] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() xml_source=<svg xmlns="http://www.w3.org/2000/svg" width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <circle xmlns="http://www.w3.org/2000/svg" cx="100" cy="100" r="50" fill="blue"></circle>
+    </svg>
+[SVG_TRACE_STAGE_4] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() self.cached_serialized_data_url=Some(Ok("data:image/svg+xml;base64,PHN2ZyB4bWxucz... (2287a30ac84d1f03)"))
+[SVG_TRACE_STAGE_4] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() End
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() SVG serialized, dirty flag set → triggers next reflow
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() End
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_1.7] layout::layout_impl::restyle_and_build_trees() style traversal complete for dirty_root=OpaqueNode(59367309689728)
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() Start
+[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=(Some(200px), Some(200px), Some(1.0))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source=Some("data:image/svg+xml;base64,PHN2ZyB4bWxucz... (2287a30ac84d1f03)")
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image=None
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image=NONE)
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() End1
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() Start
+[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=(Some(200px), Some(200px), Some(1.0))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source=Some("data:image/svg+xml;base64,PHN2ZyB4bWxucz... (2287a30ac84d1f03)")
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image=None
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image=NONE)
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() End1
+[SVG_TRACE_STAGE_8] make_fragments() SVGElement arm, vector_image.is_some=false
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() Start
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() End
+[SVG_TRACE_STAGE_5] complete_load() ENTER key=PendingImageId(1) is_vector=true
+[SVG_TRACE_STAGE_5] complete_load() VectorImage detected, inserting into vector_images
+[SVG_TRACE_STAGE_5] complete_load() VectorImage natural_dimensions=200x200
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_1.7] layout::layout_impl::restyle_and_build_trees() style traversal complete for dirty_root=OpaqueNode(59367309689728)
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() Start
+[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=(Some(200px), Some(200px), Some(1.0))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source=Some("data:image/svg+xml;base64,PHN2ZyB4bWxucz... (2287a30ac84d1f03)")
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image=Some(Vector(VectorImage { id: PendingImageId(1), svg_id: None, metadata: ImageMetadata { width: 200, height: 200 }, cors_status: Safe }))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image=SOME)
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() End1
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() Start
+[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=(Some(200px), Some(200px), Some(1.0))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source=Some("data:image/svg+xml;base64,PHN2ZyB4bWxucz... (2287a30ac84d1f03)")
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image=Some(Vector(VectorImage { id: PendingImageId(1), svg_id: None, metadata: ImageMetadata { width: 200, height: 200 }, cors_status: Safe }))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image=SOME)
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() End1
+[SVG_TRACE_STAGE_8] make_fragments() SVGElement arm, vector_image.is_some=true
+[SVG_TRACE_STAGE_8] make_fragments() SVGElement metadata=200x200 has_viewbox=true
+[SVG_TRACE_STAGE_6] rasterize_vector_image() ENTER image_id=PendingImageId(1) requested_size=200x200 svg_id=Some("0427058e-31b1-40df-8fd5-c5daffbfa0f9")
+[SVG_TRACE_STAGE_6] rasterize_vector_image() found vector_image, usvg tree size=Size { width: NonZeroPositiveF32(FiniteF32(200.0)), height: NonZeroPositiveF32(FiniteF32(200.0)) }
+[SVG_TRACE_STAGE_6] rasterize_vector_image() spawning thread pool task...
+[SVG_TRACE_STAGE_6] rasterize_vector_image() returning None (async rasterization)
+[SVG_TRACE_STAGE_6] rasterize_vector_image() spawned task: natural_size=200x200 requested=200x200
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() Start
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() End
+[SVG_TRACE_STAGE_6] rasterize_vector_image() rasterized 200x200 -> 160000 bytes
+[SVG_TRACE_STAGE_6] rasterize_vector_image() spawned task: load_image_with_keycache done
+[SVG_TRACE_STAGE_7] set_key_and_finish_load() image_key=ImageKey(IdNamespace(1), 90) variant="Svg"
+[SVG_TRACE_STAGE_7] set_key_and_finish_load() SVG variant, pending_id=PendingImageId(1) requested_size=200x200
+[SVG_TRACE_STAGE_5] complete_load_svg() ENTER pending_image_id=PendingImageId(1) requested_size=200x200 rasterized_size=200x200
+[SVG_TRACE_STAGE_5] complete_load_svg() found 1 listener(s)
+[SVG_TRACE_STAGE_5] complete_load_svg() notifying pipeline_id=(1,1)
+[SVG_TRACE_STAGE_5] complete_load_svg() EXIT
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_1.7] layout::layout_impl::restyle_and_build_trees() style traversal complete for dirty_root=OpaqueNode(59367309689728)
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() Start
+[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=(Some(200px), Some(200px), Some(1.0))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source=Some("data:image/svg+xml;base64,PHN2ZyB4bWxucz... (2287a30ac84d1f03)")
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image=Some(Vector(VectorImage { id: PendingImageId(1), svg_id: None, metadata: ImageMetadata { width: 200, height: 200 }, cors_status: Safe }))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image=SOME)
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() End1
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() Start
+[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start
+[SVG_TRACE_STAGE_2.0] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source="Some(Ok(url))" width=Some("Some") height=Some("Some") view_box=Some
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start
+[SVG_TRACE_STAGE_2.1.1] script::layout_dom::servo_layout_element::ServoLayoutElement::style() Start
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=(Some(200px), Some(200px), Some(1.0))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source=Some("data:image/svg+xml;base64,PHN2ZyB4bWxucz... (2287a30ac84d1f03)")
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image=Some(Vector(VectorImage { id: PendingImageId(1), svg_id: None, metadata: ImageMetadata { width: 200, height: 200 }, cors_status: Safe }))
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image=SOME)
+[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End
+[SVG_TRACE_STAGE_2.1.2] layout::dom_traversal::Contents::for_element() End1
+[SVG_TRACE_STAGE_8] make_fragments() SVGElement arm, vector_image.is_some=true
+[SVG_TRACE_STAGE_8] make_fragments() SVGElement metadata=200x200 has_viewbox=true
+[SVG_TRACE_STAGE_6] rasterize_vector_image() ENTER image_id=PendingImageId(1) requested_size=200x200 svg_id=Some("0427058e-31b1-40df-8fd5-c5daffbfa0f9")
+[SVG_TRACE_STAGE_6] rasterize_vector_image() found vector_image, usvg tree size=Size { width: NonZeroPositiveF32(FiniteF32(200.0)), height: NonZeroPositiveF32(FiniteF32(200.0)) }
+[SVG_TRACE_STAGE_6] rasterize_vector_image() CACHED result, returning early
+[SVG_TRACE_STAGE_9] DisplayList build Fragment::Image rect=Rect(200pxx200px at (0px, 0px)) image_key=Some(ImageKey(IdNamespace(1), 90))
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() Start
+[SVG_TRACE_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() End

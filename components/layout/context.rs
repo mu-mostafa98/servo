@@ -238,6 +238,10 @@ impl ImageResolver {
     }
 
     pub(crate) fn queue_svg_element_for_serialization(&self, element: ServoLayoutNode<'_>) {
+        eprintln!(
+            "[SVG_TRACE_STAGE_2.2.2.1.1.2] queue_svg_element_for_serialization() node={:?}",
+            element.opaque()
+        );
         self.pending_svg_elements_for_serialization
             .lock()
             .push(element.opaque().into())
