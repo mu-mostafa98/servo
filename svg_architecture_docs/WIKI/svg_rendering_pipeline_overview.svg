@@ -1,0 +1,350 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1400 2100" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#555" /></marker>
+    <marker id="arrB" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#4A90D9" /></marker>
+    <marker id="arrO" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#E6A23C" /></marker>
+    <marker id="arrP" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#C45DE6" /></marker>
+    <marker id="arrG" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#50B86C" /></marker>
+    <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12" /></filter>
+    <linearGradient id="gPre" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#607D8B" /><stop offset="100%" stop-color="#455A64" /></linearGradient>
+    <linearGradient id="gP1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#4A90D9" /><stop offset="100%" stop-color="#357ABD" /></linearGradient>
+    <linearGradient id="gBridge1" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E6A23C" /><stop offset="100%" stop-color="#D4891E" /></linearGradient>
+    <linearGradient id="gP2" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#C45DE6" /><stop offset="100%" stop-color="#A843D0" /></linearGradient>
+    <linearGradient id="gP3" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#50B86C" /><stop offset="100%" stop-color="#3D9A56" /></linearGradient>
+    <linearGradient id="gP4" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2E7D32" /><stop offset="100%" stop-color="#1B5E20" /></linearGradient>
+    <linearGradient id="gScript" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E3F2FD" /><stop offset="100%" stop-color="#BBDEFB" /></linearGradient>
+    <linearGradient id="gLayout" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3E5F5" /><stop offset="100%" stop-color="#E1BEE7" /></linearGradient>
+    <linearGradient id="gImgCache" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#FFF3E0" /><stop offset="100%" stop-color="#FFE0B2" /></linearGradient>
+  </defs>
+
+  <rect width="1400" height="2100" fill="#FAFBFC" />
+
+  <!-- TITLE -->
+  <rect x="0" y="0" width="1400" height="60" fill="#333" />
+  <text x="700" y="24" fill="#FFF" font-size="18" font-weight="bold" text-anchor="middle">SVG Rendering Pipeline — Pass-Based Organization</text>
+  <text x="700" y="46" fill="#AAA" font-size="11" text-anchor="middle">4 Rendering Updates · 8 Sections · 3 Bridges · 3 Thread Swimlanes</text>
+
+  <!-- Thread column headers -->
+  <rect x="40" y="80" width="180" height="30" rx="4" fill="#555" />
+  <text x="130" y="100" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Pass / Section</text>
+  <rect x="240" y="80" width="340" height="30" rx="4" fill="#4A90D9" />
+  <text x="410" y="100" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Script Thread</text>
+  <rect x="600" y="80" width="380" height="30" rx="4" fill="#C45DE6" />
+  <text x="790" y="100" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Layout Thread</text>
+  <rect x="1000" y="80" width="360" height="30" rx="4" fill="#E6A23C" />
+  <text x="1180" y="100" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Image Cache Thread</text>
+  <line x1="40" y1="118" x2="1360" y2="118" stroke="#CCC" stroke-width="1" />
+
+  <!-- ================================================================ -->
+  <!-- PRE-PASS — Stage 1: DOM + Style -->
+  <!-- ================================================================ -->
+  <rect x="50" y="135" width="160" height="55" rx="6" fill="url(#gPre)" filter="url(#sh)" />
+  <text x="130" y="155" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Pre-pass</text>
+  <text x="130" y="170" fill="#DDD" font-size="9" text-anchor="middle">Stage 1</text>
+  <text x="130" y="183" fill="#DDD" font-size="8" text-anchor="middle">DOM + Style</text>
+
+  <rect x="240" y="135" width="340" height="85" rx="6" fill="url(#gScript)" stroke="#607D8B" stroke-width="1.5" filter="url(#sh)" />
+  <text x="410" y="153" fill="#37474F" font-size="10" font-weight="bold" text-anchor="middle">1.1–1.6: HTML Parser → DOM Construction</text>
+  <text x="410" y="169" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Build SVG DOM tree with uuid; parse width/height</text>
+  <text x="410" y="185" fill="#555" font-size="9" text-anchor="middle">create_element() → SVGSVGElement::new()</text>
+  <text x="410" y="199" fill="#555" font-size="9" text-anchor="middle">parse_plain_attribute() → InsertBefore()</text>
+  <text x="410" y="213" fill="#888" font-size="9" text-anchor="middle">▸ uuid✅, cached=None✅, width/height→LengthPercentage✅</text>
+
+  <rect x="600" y="135" width="380" height="85" rx="6" fill="url(#gLayout)" stroke="#607D8B" stroke-width="1.5" filter="url(#sh)" />
+  <text x="790" y="153" fill="#37474F" font-size="10" font-weight="bold" text-anchor="middle">1.7: Style Computation (CSS Cascade)</text>
+  <text x="790" y="169" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Compute display, width, height via Stylo</text>
+  <text x="790" y="185" fill="#555" font-size="9" text-anchor="middle">traverse_dom() → match_element()</text>
+  <text x="790" y="199" fill="#555" font-size="9" text-anchor="middle">Arc&lt;ComputedValues&gt; { display:inline, width:200px }</text>
+  <text x="790" y="213" fill="#888" font-size="9" text-anchor="middle">▸ Cached until mutation: styles = Arc&lt;ComputedValues&gt;✅</text>
+
+  <text x="400" y="245" fill="#607D8B" font-size="9" font-weight="bold" text-anchor="middle">DOM tree with styled ComputedValues</text>
+  <path d="M410,223 L410,260" fill="none" stroke="#607D8B" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- ================================================================ -->
+  <!-- PASS 1 — Stage 2: Layout source=None -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="248" x2="1360" y2="248" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="270" width="160" height="55" rx="6" fill="url(#gP1)" filter="url(#sh)" />
+  <text x="130" y="290" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Pass 1</text>
+  <text x="130" y="305" fill="#DDD" font-size="9" text-anchor="middle">Stage 2</text>
+  <text x="130" y="318" fill="#DDD" font-size="8" text-anchor="middle">Rendering Update 1</text>
+
+  <rect x="600" y="270" width="380" height="105" rx="6" fill="url(#gLayout)" stroke="#4A90D9" stroke-width="2" filter="url(#sh)" />
+  <rect x="950" y="274" width="24" height="14" rx="3" fill="#4A90D9" opacity="0.85" />
+  <text x="962" y="284" fill="#FFF" font-size="8" text-anchor="middle">P1</text>
+  <text x="790" y="292" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">2: svg_kind_size() — source=None</text>
+  <text x="790" y="308" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Compute natural sizes; queue SVG for serialization</text>
+  <text x="790" y="326" fill="#555" font-size="9" text-anchor="middle">SVGElementData::data() → reads source=None</text>
+  <text x="790" y="342" fill="#D9534F" font-size="9" text-anchor="middle">source=None → queue_svg_element_for_serialization()</text>
+  <text x="790" y="358" fill="#555" font-size="9" text-anchor="middle">NaturalSizes { width:Au(12000), height:Au(12000), ratio:1.0 }</text>
+  <text x="790" y="372" fill="#888" font-size="9" text-anchor="middle">▸ Returns: SVGElement { vector_image: None } → no Fragment</text>
+
+  <!-- Bridge arrow: Layout → Script -->
+  <path d="M600,320 L580,320" fill="none" stroke="#E6A23C" stroke-width="1.5" stroke-dasharray="6,3" />
+  <circle cx="575" cy="320" r="3" fill="#E6A23C" />
+
+  <!-- ================================================================ -->
+  <!-- BRIDGE 1→2 — Stage 3+4: Serialization -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="388" x2="1360" y2="388" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="405" width="160" height="55" rx="6" fill="url(#gBridge1)" filter="url(#sh)" />
+  <text x="130" y="425" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Bridge 1→2</text>
+  <text x="130" y="440" fill="#DDD" font-size="9" text-anchor="middle">Stage 3+4</text>
+  <text x="130" y="453" fill="#DDD" font-size="8" text-anchor="middle">Post-Reflow</text>
+
+  <rect x="240" y="405" width="340" height="110" rx="6" fill="url(#gScript)" stroke="#E6A23C" stroke-width="2" filter="url(#sh)" />
+  <rect x="550" y="409" width="24" height="14" rx="3" fill="url(#gBridge1)" opacity="0.85" />
+  <text x="562" y="419" fill="#FFF" font-size="8" text-anchor="middle">B1</text>
+  <text x="410" y="427" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">3+4: Post-Reflow Serialization</text>
+  <text x="410" y="443" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Serialize SVG → base64 data URL; cache for layout</text>
+  <text x="410" y="461" fill="#555" font-size="9" text-anchor="middle">handle_pending_images_post_reflow()</text>
+  <text x="410" y="477" fill="#555" font-size="9" text-anchor="middle">  ├── serialize_and_cache_subtree() → xml → base64 → data:URL</text>
+  <text x="410" y="493" fill="#D9534F" font-size="9" text-anchor="middle">  └── dirty(NodeDamage::Other) → triggers Pass 2 reflow</text>
+  <text x="410" y="509" fill="#888" font-size="9" text-anchor="middle">▸ cached_serialized_data_url = Some(Ok(data:...))✅</text>
+
+  <path d="M410,518 L410,545" fill="none" stroke="#E6A23C" stroke-width="1.5" marker-end="url(#arrO)" />
+  <text x="430" y="535" fill="#E6A23C" font-size="8" font-weight="bold">dirty flag → reflow</text>
+
+  <!-- ================================================================ -->
+  <!-- PASS 2 — Stage 5: Cache Wait -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="530" x2="1360" y2="530" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="555" width="160" height="55" rx="6" fill="url(#gP2)" filter="url(#sh)" />
+  <text x="130" y="575" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Pass 2</text>
+  <text x="130" y="590" fill="#DDD" font-size="9" text-anchor="middle">Stage 5</text>
+  <text x="130" y="603" fill="#DDD" font-size="8" text-anchor="middle">Rendering Update 2</text>
+
+  <rect x="600" y="555" width="380" height="105" rx="6" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1.5" filter="url(#sh)" />
+  <rect x="950" y="559" width="24" height="14" rx="3" fill="url(#gP2)" opacity="0.85" />
+  <text x="962" y="569" fill="#FFF" font-size="8" text-anchor="middle">P2</text>
+  <text x="790" y="577" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">5: svg_kind_size() — cache=Pending</text>
+  <text x="790" y="593" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Data URL exists; image cache hasn't loaded yet</text>
+  <text x="790" y="611" fill="#555" font-size="9" text-anchor="middle">source=Some(url) → get_cached_image_for_url()</text>
+  <text x="790" y="627" fill="#D9534F" font-size="9" text-anchor="middle">Result: Err(Pending(PendingImageId(1)))</text>
+  <text x="790" y="643" fill="#555" font-size="9" text-anchor="middle">vector_image=None → no Fragment::Image</text>
+  <text x="790" y="657" fill="#888" font-size="9" text-anchor="middle">▸ source=Some(url)✅, cached=Pending❌, vector=None❌</text>
+
+  <path d="M980,605 L1000,605" fill="none" stroke="#C45DE6" stroke-width="1.5" marker-end="url(#arrP)" />
+  <text x="990" y="598" fill="#C45DE6" font-size="8" font-weight="bold" text-anchor="middle">load</text>
+
+  <rect x="1000" y="555" width="360" height="80" rx="6" fill="url(#gImgCache)" stroke="#C45DE6" stroke-width="1.5" />
+  <text x="1180" y="575" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">Async: VectorImage Load</text>
+  <text x="1180" y="593" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Fetch data URL → parse usvg::Tree</text>
+  <text x="1180" y="611" fill="#555" font-size="9" text-anchor="middle">complete_load(): VectorImage { id: PendingImageId(1), 200×200 }</text>
+  <text x="1180" y="629" fill="#555" font-size="9" text-anchor="middle">svg_id → image_id mapping stored</text>
+
+  <!-- ================================================================ -->
+  <!-- BRIDGE 2→3 — VectorImage Loaded -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="650" x2="1360" y2="650" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="670" width="160" height="40" rx="6" fill="url(#gP2)" opacity="0.6" />
+  <text x="130" y="685" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Bridge 2→3</text>
+  <text x="130" y="698" fill="#DDD" font-size="8" text-anchor="middle">Notification</text>
+
+  <path d="M1180,638 L1180,720" fill="none" stroke="#C45DE6" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrP)" />
+  <text x="1100" y="670" fill="#C45DE6" font-size="8" font-weight="bold">VectorImage loaded</text>
+  <text x="1100" y="682" fill="#C45DE6" font-size="8">→ notification</text>
+  <text x="1100" y="694" fill="#C45DE6" font-size="8">→ schedule next RU</text>
+
+  <!-- ================================================================ -->
+  <!-- PASS 3 — Stage 5+6: Vector Available + Rasterization -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="715" x2="1360" y2="715" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="735" width="160" height="55" rx="6" fill="url(#gP3)" filter="url(#sh)" />
+  <text x="130" y="755" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Pass 3</text>
+  <text x="130" y="770" fill="#DDD" font-size="9" text-anchor="middle">Stage 5+6</text>
+  <text x="130" y="783" fill="#DDD" font-size="8" text-anchor="middle">Rendering Update 3</text>
+
+  <rect x="600" y="735" width="380" height="105" rx="6" fill="url(#gLayout)" stroke="#50B86C" stroke-width="1.5" filter="url(#sh)" />
+  <rect x="950" y="739" width="24" height="14" rx="3" fill="url(#gP3)" opacity="0.85" />
+  <text x="962" y="749" fill="#FFF" font-size="8" text-anchor="middle">P3</text>
+  <text x="790" y="757" fill="#2E7D32" font-size="10" font-weight="bold" text-anchor="middle">5 re-entry: svg_kind_size() — DataAvailable</text>
+  <text x="790" y="773" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: VectorImage loaded → get from cache</text>
+  <text x="790" y="791" fill="#555" font-size="9" text-anchor="middle">source=Some(url) → DataAvailable(VectorImage)</text>
+  <text x="790" y="807" fill="#50B86C" font-size="9" font-weight="bold" text-anchor="middle">vector_image = Some(ReplacedVectorImage) ✅</text>
+  <text x="790" y="823" fill="#555" font-size="9" text-anchor="middle">make_fragments: calls rasterize_vector_image() → miss (async)</text>
+  <text x="790" y="837" fill="#888" font-size="9" text-anchor="middle">▸ vector_image=Some✅, rasterized=miss❌, no Fragment yet</text>
+
+  <path d="M980,785 L1000,785" fill="none" stroke="#50B86C" stroke-width="1.5" marker-end="url(#arrG)" />
+  <text x="990" y="778" fill="#50B86C" font-size="8" font-weight="bold" text-anchor="middle">rasterize</text>
+
+  <rect x="1000" y="735" width="360" height="80" rx="6" fill="url(#gImgCache)" stroke="#50B86C" stroke-width="1.5" />
+  <text x="1180" y="755" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">6: rasterize_vector_image()</text>
+  <text x="1180" y="773" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: resvg::render() → pixel buffer → RasterImage</text>
+  <text x="1180" y="791" fill="#555" font-size="9" text-anchor="middle">Thread pool: tiny_skia::Pixmap(200×200) → RasterImage</text>
+  <text x="1180" y="809" fill="#555" font-size="9" text-anchor="middle">RasterImage {200×200, RGBA8, 160KB, ImageKey(1,91)}</text>
+
+  <!-- ================================================================ -->
+  <!-- BRIDGE 3→4 — Rasterization Complete -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="830" x2="1360" y2="830" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="850" width="160" height="40" rx="6" fill="url(#gP3)" opacity="0.6" />
+  <text x="130" y="865" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Bridge 3→4</text>
+  <text x="130" y="878" fill="#DDD" font-size="8" text-anchor="middle">Notification</text>
+
+  <path d="M1180,818 L1180,905" fill="none" stroke="#50B86C" stroke-width="1.5" stroke-dasharray="6,3" marker-end="url(#arrG)" />
+  <text x="1100" y="850" fill="#50B86C" font-size="8" font-weight="bold">Rasterization done</text>
+  <text x="1100" y="862" fill="#50B86C" font-size="8">→ RasterImage cached</text>
+  <text x="1100" y="874" fill="#50B86C" font-size="8">→ schedule next RU</text>
+
+  <!-- ================================================================ -->
+  <!-- PASS 4 — Stage 7+8: Fragment::Image → Display List -->
+  <!-- ================================================================ -->
+  <line x1="40" y1="895" x2="1360" y2="895" stroke="#DDD" stroke-width="0.5" stroke-dasharray="4,4" />
+
+  <rect x="50" y="915" width="160" height="55" rx="6" fill="url(#gP4)" filter="url(#sh)" />
+  <text x="130" y="935" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">Pass 4</text>
+  <text x="130" y="950" fill="#DDD" font-size="9" text-anchor="middle">Stage 7+8</text>
+  <text x="130" y="963" fill="#DDD" font-size="8" text-anchor="middle">Rendering Update 4</text>
+
+  <rect x="600" y="915" width="380" height="100" rx="6" fill="url(#gLayout)" stroke="#2E7D32" stroke-width="2" filter="url(#sh)" />
+  <rect x="950" y="919" width="24" height="14" rx="3" fill="url(#gP4)" opacity="0.85" />
+  <text x="962" y="929" fill="#FFF" font-size="8" text-anchor="middle">P4</text>
+  <text x="790" y="937" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">7+8: make_fragments() → Fragment::Image</text>
+  <text x="790" y="953" fill="#01579B" font-size="9" text-anchor="middle">▸ Purpose: Rasterized HIT → ImageKey → Display List</text>
+  <text x="790" y="971" fill="#555" font-size="9" text-anchor="middle">vector_image=Some → rasterize_vector_image() → HIT</text>
+  <text x="790" y="987" fill="#50B86C" font-size="9" font-weight="bold" text-anchor="middle">Fragment::Image { image_key: Some(ImageKey(1,91)), rect: 200×200 }</text>
+  <text x="790" y="1003" fill="#555" font-size="9" text-anchor="middle">push_image(ImageKey(1,91), rect) → Display List → GPU</text>
+  <text x="790" y="1013" fill="#888" font-size="9" text-anchor="middle">▸ ✅ SVG visible on screen — pipeline stable</text>
+
+  <!-- DONE marker -->
+  <rect x="620" y="1030" width="340" height="28" rx="14" fill="#2E7D32" opacity="0.9" />
+  <text x="790" y="1049" fill="#FFF" font-size="11" font-weight="bold" text-anchor="middle">✓ PIPELINE COMPLETE — Blue circle rendered on screen</text>
+
+  <!-- ================================================================ -->
+  <!-- KEY VALUES TABLE -->
+  <!-- ================================================================ -->
+  <rect x="70" y="1080" width="1260" height="295" rx="6" fill="#FFF" stroke="#DDD" stroke-width="1" filter="url(#sh)" />
+  <text x="700" y="1102" fill="#333" font-size="12" font-weight="bold" text-anchor="middle">Key Values Through the Pipeline</text>
+
+  <rect x="90" y="1115" width="140" height="22" rx="3" fill="#555" />
+  <text x="160" y="1131" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Section</text>
+  <rect x="240" y="1115" width="100" height="22" rx="3" fill="#555" />
+  <text x="290" y="1131" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Thread</text>
+  <rect x="350" y="1115" width="130" height="22" rx="3" fill="#555" />
+  <text x="415" y="1131" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Key Function</text>
+  <rect x="490" y="1115" width="820" height="22" rx="3" fill="#555" />
+  <text x="900" y="1131" fill="#FFF" font-size="9" font-weight="bold" text-anchor="middle">Important Values</text>
+
+  <!-- Pre-pass row -->
+  <rect x="90" y="1140" width="140" height="26" rx="2" fill="#ECEFF1" />
+  <text x="160" y="1158" fill="#37474F" font-size="9" font-weight="bold" text-anchor="middle">Pre-pass</text>
+  <rect x="240" y="1140" width="100" height="26" rx="2" fill="#ECEFF1" />
+  <text x="290" y="1158" fill="#555" font-size="9" text-anchor="middle">Script</text>
+  <rect x="350" y="1140" width="130" height="26" rx="2" fill="#ECEFF1" />
+  <text x="415" y="1158" fill="#555" font-size="9" text-anchor="middle">SVGSVGElement::new()</text>
+  <rect x="490" y="1140" width="820" height="26" rx="2" fill="#ECEFF1" />
+  <text x="900" y="1158" fill="#555" font-size="9" text-anchor="middle">uuid✅, cached_serialized=None✅, width/height→LengthPercentage✅, viewBox="0 0 200 200"✅</text>
+
+  <!-- Pre-pass style row -->
+  <rect x="90" y="1169" width="140" height="26" rx="2" fill="#F3E5F5" />
+  <text x="160" y="1187" fill="#6A1B9A" font-size="9" font-weight="bold" text-anchor="middle">Pre-pass</text>
+  <rect x="240" y="1169" width="100" height="26" rx="2" fill="#F3E5F5" />
+  <text x="290" y="1187" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="350" y="1169" width="130" height="26" rx="2" fill="#F3E5F5" />
+  <text x="415" y="1187" fill="#555" font-size="9" text-anchor="middle">traverse_dom()</text>
+  <rect x="490" y="1169" width="820" height="26" rx="2" fill="#F3E5F5" />
+  <text x="900" y="1187" fill="#555" font-size="9" text-anchor="middle">ElementData.styles=Arc&lt;ComputedValues&gt;✅ (display:inline, width/height:200px)</text>
+
+  <!-- Pass 1 row -->
+  <rect x="90" y="1198" width="140" height="26" rx="2" fill="#E3F2FD" />
+  <text x="160" y="1216" fill="#1565C0" font-size="9" font-weight="bold" text-anchor="middle">Pass 1</text>
+  <rect x="240" y="1198" width="100" height="26" rx="2" fill="#E3F2FD" />
+  <text x="290" y="1216" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="350" y="1198" width="130" height="26" rx="2" fill="#E3F2FD" />
+  <text x="415" y="1216" fill="#555" font-size="9" text-anchor="middle">svg_kind_size()</text>
+  <rect x="490" y="1198" width="820" height="26" rx="2" fill="#E3F2FD" />
+  <text x="900" y="1216" fill="#555" font-size="9" text-anchor="middle">source=None✅, vector_image=None✅, NaturalSizes(200×200,1.0)✅ → QUEUED for serialization</text>
+
+  <!-- Bridge 1→2 row -->
+  <rect x="90" y="1227" width="140" height="26" rx="2" fill="#FFF3E0" />
+  <text x="160" y="1245" fill="#E65100" font-size="9" font-weight="bold" text-anchor="middle">Bridge 1→2</text>
+  <rect x="240" y="1227" width="100" height="26" rx="2" fill="#FFF3E0" />
+  <text x="290" y="1245" fill="#555" font-size="9" text-anchor="middle">Script</text>
+  <rect x="350" y="1227" width="130" height="26" rx="2" fill="#FFF3E0" />
+  <text x="415" y="1245" fill="#555" font-size="9" text-anchor="middle">serialize_and_cache()</text>
+  <rect x="490" y="1227" width="820" height="26" rx="2" fill="#FFF3E0" />
+  <text x="900" y="1245" fill="#555" font-size="9" text-anchor="middle">cached_serialized=Some(Ok(data:...))✅ → dirty(NodeDamage::Other) → triggers Pass 2</text>
+
+  <!-- Pass 2 row -->
+  <rect x="90" y="1256" width="140" height="26" rx="2" fill="#F3E5F5" />
+  <text x="160" y="1274" fill="#6A1B9A" font-size="9" font-weight="bold" text-anchor="middle">Pass 2</text>
+  <rect x="240" y="1256" width="100" height="26" rx="2" fill="#F3E5F5" />
+  <text x="290" y="1274" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="350" y="1256" width="130" height="26" rx="2" fill="#F3E5F5" />
+  <text x="415" y="1274" fill="#555" font-size="9" text-anchor="middle">svg_kind_size()</text>
+  <rect x="490" y="1256" width="820" height="26" rx="2" fill="#F3E5F5" />
+  <text x="900" y="1274" fill="#555" font-size="9" text-anchor="middle">source=Some(url)✅, cached=Err(Pending(PendingImageId(1)))❌, vector=None❌ → no Fragment</text>
+
+  <!-- Pass 2 Image Cache row -->
+  <rect x="90" y="1285" width="140" height="26" rx="2" fill="#FFF3E0" />
+  <text x="160" y="1303" fill="#E65100" font-size="9" font-weight="bold" text-anchor="middle">Pass 2</text>
+  <rect x="240" y="1285" width="100" height="26" rx="2" fill="#FFF3E0" />
+  <text x="290" y="1303" fill="#555" font-size="9" text-anchor="middle">ImgCache</text>
+  <rect x="350" y="1285" width="130" height="26" rx="2" fill="#FFF3E0" />
+  <text x="415" y="1303" fill="#555" font-size="9" text-anchor="middle">complete_load()</text>
+  <rect x="490" y="1285" width="820" height="26" rx="2" fill="#FFF3E0" />
+  <text x="900" y="1303" fill="#555" font-size="9" text-anchor="middle">VectorImage{usvg::Tree, 200×200, svg_id}✅ → stored in vector_images map</text>
+
+  <!-- Pass 3 row -->
+  <rect x="90" y="1314" width="140" height="26" rx="2" fill="#E8F5E9" />
+  <text x="160" y="1332" fill="#2E7D32" font-size="9" font-weight="bold" text-anchor="middle">Pass 3</text>
+  <rect x="240" y="1314" width="100" height="26" rx="2" fill="#E8F5E9" />
+  <text x="290" y="1332" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="350" y="1314" width="130" height="26" rx="2" fill="#E8F5E9" />
+  <text x="415" y="1332" fill="#555" font-size="9" text-anchor="middle">svg_kind_size()</text>
+  <rect x="490" y="1314" width="820" height="26" rx="2" fill="#E8F5E9" />
+  <text x="900" y="1332" fill="#555" font-size="9" text-anchor="middle">source=Some(url)✅, cached=DataAvailable✅, vector_image=Some✅ → rasterize:miss → no Fragment</text>
+
+  <!-- Pass 3 raster row -->
+  <rect x="90" y="1343" width="140" height="26" rx="2" fill="#FFF8E1" />
+  <text x="160" y="1361" fill="#E65100" font-size="9" font-weight="bold" text-anchor="middle">Pass 3</text>
+  <rect x="240" y="1343" width="100" height="26" rx="2" fill="#FFF8E1" />
+  <text x="290" y="1361" fill="#555" font-size="9" text-anchor="middle">ImgCache</text>
+  <rect x="350" y="1343" width="130" height="26" rx="2" fill="#FFF8E1" />
+  <text x="415" y="1361" fill="#555" font-size="9" text-anchor="middle">rasterize_vector()</text>
+  <rect x="490" y="1343" width="820" height="26" rx="2" fill="#FFF8E1" />
+  <text x="900" y="1361" fill="#555" font-size="9" text-anchor="middle">RasterImage{200×200, RGBA8, 160KB, ImageKey(1,91)}✅ → keycache stored</text>
+
+  <!-- Pass 4 row -->
+  <rect x="90" y="1372" width="140" height="26" rx="2" fill="#E8F5E9" />
+  <text x="160" y="1390" fill="#2E7D32" font-size="9" font-weight="bold" text-anchor="middle">Pass 4</text>
+  <rect x="240" y="1372" width="100" height="26" rx="2" fill="#E8F5E9" />
+  <text x="290" y="1390" fill="#555" font-size="9" text-anchor="middle">Layout</text>
+  <rect x="350" y="1372" width="130" height="26" rx="2" fill="#E8F5E9" />
+  <text x="415" y="1390" fill="#555" font-size="9" text-anchor="middle">make_fragments()</text>
+  <rect x="490" y="1372" width="820" height="26" rx="2" fill="#E8F5E9" />
+  <text x="900" y="1390" fill="#555" font-size="9" text-anchor="middle">vector_image=Some✅, rasterize:HIT→ImageKey(1,91)✅ → Fragment::Image✅ → DISPLAY LIST ✅</text>
+
+  <!-- ================================================================ -->
+  <!-- LEGEND -->
+  <!-- ================================================================ -->
+  <rect x="70" y="1400" width="1260" height="120" rx="6" fill="#FFF" stroke="#DDD" stroke-width="1" />
+  <text x="700" y="1420" fill="#333" font-size="12" font-weight="bold" text-anchor="middle">Legend — Section Color Reference</text>
+
+  <rect x="90" y="1440" width="24" height="14" rx="3" fill="#607D8B" />
+  <text x="125" y="1452" fill="#555" font-size="10">Pre-pass — Stage 1: DOM construction + style computation (initial setup)</text>
+  <rect x="90" y="1460" width="24" height="14" rx="3" fill="#4A90D9" />
+  <text x="125" y="1472" fill="#555" font-size="10">Pass 1 — Stage 2: First layout, source=None → queue for serialization</text>
+  <rect x="90" y="1480" width="24" height="14" rx="3" fill="#E6A23C" />
+  <text x="125" y="1492" fill="#555" font-size="10">Bridge 1→2 — Stage 3+4: Post-reflow serialization (not a separate layout pass)</text>
+  <rect x="90" y="1500" width="24" height="14" rx="3" fill="#C45DE6" />
+  <text x="125" y="1512" fill="#555" font-size="10">Pass 2 — Stage 5: Data URL exists, cache Pending → async VectorImage load</text>
+
+  <rect x="660" y="1440" width="24" height="14" rx="3" fill="#50B86C" />
+  <text x="695" y="1452" fill="#555" font-size="10">Pass 3 — Stage 5+6: VectorImage available → rasterization request</text>
+  <rect x="660" y="1460" width="24" height="14" rx="3" fill="#2E7D32" />
+  <text x="695" y="1472" fill="#555" font-size="10">Pass 4 — Stage 7+8: rasterized HIT → Fragment::Image → display list</text>
+  <rect x="660" y="1480" width="24" height="14" rx="3" fill="#E3F2FD" stroke="#4A90D9" stroke-width="1" />
+  <text x="695" y="1492" fill="#555" font-size="10">Script thread swimlane</text>
+  <rect x="660" y="1500" width="24" height="14" rx="3" fill="#F3E5F5" stroke="#C45DE6" stroke-width="1" />
+  <text x="695" y="1512" fill="#555" font-size="10">Layout thread swimlane</text>
+  <rect x="660" y="1520" width="24" height="14" rx="3" fill="#FFF3E0" stroke="#E6A23C" stroke-width="1" />
+  <text x="695" y="1532" fill="#555" font-size="10">Image Cache thread swimlane</text>
+</svg>

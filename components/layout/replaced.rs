@@ -155,7 +155,7 @@ impl ReplacedContents {
             Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
         );
         if is_svg {
-            eprintln!("[SVG_TRACE_STAGE_2.1.2.1] layout::replaced::ReplacedContents::for_element() Start");
+            eprintln!("[SVG_TRACE_PASS_X_STAGE_X] layout::replaced::ReplacedContents::for_element() Start");
         }
         if let Some(ref data_attribute_string) = node.as_typeless_object_with_data_attribute() {
             if let Some(url) = try_to_parse_image_data_url(data_attribute_string) {
@@ -238,7 +238,7 @@ impl ReplacedContents {
         //     Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
         // );
         // if is_svg {
-            eprintln!("[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() Start");
+            eprintln!("[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() Start");
         // }
         let rule_cache_conditions = &mut RuleCacheConditions::default();
 
@@ -286,7 +286,7 @@ impl ReplacedContents {
         };
 
         eprintln!(
-            "[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - natural_size=({:?}, {:?}, {:?})",
+            "[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() - natural_size=({:?}, {:?}, {:?})",
             natural_size.width, natural_size.height, natural_size.ratio
         );
 
@@ -304,7 +304,7 @@ impl ReplacedContents {
             Some(svg_source_result) => svg_source_result.ok(),
         };
 
-        eprintln!("[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - svg_source={:?}", svg_source);
+        eprintln!("[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() - svg_source={:?}", svg_source);
 
         let cached_image = svg_source.and_then(|svg_source| {
             context
@@ -317,7 +317,7 @@ impl ReplacedContents {
                 .ok()
         });
 
-        eprintln!("[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - cached_image={:?}", cached_image);
+        eprintln!("[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() - cached_image={:?}", cached_image);
 
         let vector_image = cached_image.map(|image| match image {
             Image::Vector(mut vector_image) => {
@@ -327,11 +327,11 @@ impl ReplacedContents {
             _ => unreachable!("SVG element can't contain a raster image."),
         });
         eprintln!(
-            "[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() - vector_image={})",
+            "[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() - vector_image={})",
             if vector_image.is_some() { "SOME" } else { "NONE" }
         );
 
-        eprintln!("[SVG_TRACE_STAGE_2.2.2.1.1] svg_kind_size() End");
+        eprintln!("[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() End");
 
         (
             ReplacedContentKind::SVGElement {

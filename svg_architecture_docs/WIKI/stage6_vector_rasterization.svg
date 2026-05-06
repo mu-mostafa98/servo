@@ -1,0 +1,130 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 830" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#555" /></marker>
+    <marker id="arrB" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#4A90D9" /></marker>
+    <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12" /></filter>
+    <linearGradient id="gLayout" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3E5F5" /><stop offset="100%" stop-color="#E1BEE7" /></linearGradient>
+    <linearGradient id="gCache" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8F5E9" /><stop offset="100%" stop-color="#C8E6C9" /></linearGradient>
+  </defs>
+
+  <rect width="1100" height="830" fill="#FAFBFC" />
+
+  <!-- TITLE -->
+  <rect x="0" y="0" width="1100" height="50" fill="#1565C0" />
+  <text x="550" y="20" fill="#FFF" font-size="15" font-weight="bold" text-anchor="middle">Stage 6: VectorImage Available + Rasterization (Pass 3)</text>
+  <text x="550" y="38" fill="#DDD" font-size="10" text-anchor="middle">Rendering Update 3  ·  Layout Thread + Image Cache  ·  DataAvailable → vector_image=Some → Rasterize</text>
+
+  <!-- Column headers -->
+  <rect x="30" y="65" width="500" height="26" rx="4" fill="#C45DE6" />
+  <text x="280" y="83" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Layout Thread — Re-entry with DataAvailable</text>
+  <rect x="560" y="65" width="510" height="26" rx="4" fill="#43A047" />
+  <text x="815" y="83" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Image Cache Thread — Rasterization Pipeline</text>
+
+  <!-- Layout column -->
+
+  <rect x="50" y="105" width="460" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" filter="url(#sh)" />
+  <text x="280" y="122" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">Rendering Update 3 → reflow()</text>
+  <text x="280" y="138" fill="#555" font-size="9" text-anchor="middle">Triggered by image cache notification → schedule timer → update_the_rendering()</text>
+  <text x="280" y="152" fill="#555" font-size="9" text-anchor="middle">svg_kind_size() called for the third time</text>
+  <path d="M280,160 L280,183" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="186" width="460" height="65" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="280" y="203" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">svg_kind_size() → get_cached_image_for_url()</text>
+  <text x="280" y="219" fill="#50B86C" font-size="9" font-weight="bold">Returns: Ok(Arc::new(DataAvailable(VectorImage{...})))</text>
+  <text x="280" y="235" fill="#555" font-size="9" text-anchor="middle">source=Some(url) → cache lookup → this time DataAvailable!</text>
+  <text x="280" y="249" fill="#555" font-size="9" text-anchor="middle">VectorImage loaded with PendingImageId(1), metadata 200×200</text>
+  <path d="M280,251 L280,274" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="277" width="460" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="280" y="294" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">vector_image = Some(ReplacedVectorImage)</text>
+  <text x="280" y="310" fill="#50B86C" font-size="9" font-weight="bold">ReplacedVectorImage { id: PendingImageId(1), metadata: 200×200, ... }</text>
+  <text x="280" y="324" fill="#555" font-size="9" text-anchor="middle">svg_kind_size returns SVGElement { vector_image: Some(...), has_viewbox: true }</text>
+  <path d="M280,332 L280,355" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="358" width="460" height="65" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="280" y="375" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">make_fragments() — Prepare Fragment Construction</text>
+  <text x="280" y="391" fill="#555" font-size="9" text-anchor="middle">Receives SVGElement(Some(vector_image))</text>
+  <text x="280" y="407" fill="#555" font-size="9" text-anchor="middle">base.rect set from metadata: Au(12000) × Au(12000)</text>
+  <text x="280" y="421" fill="#D9534F" font-size="9" font-weight="bold">Calls rasterize_vector_image(PendingImageId(1), (200,200))</text>
+  <path d="M280,423 L280,446" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="449" width="460" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="280" y="466" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">rasterize_vector_image() → Cache MISS</text>
+  <text x="280" y="482" fill="#D9534F" font-size="9" font-weight="bold">Keycache miss for (PendingImageId(1), (200,200))</text>
+  <text x="280" y="496" fill="#555" font-size="9" text-anchor="middle">Returns None → no image_key → no Fragment::Image yet</text>
+
+  <!-- Cross-thread: rasterization request -->
+  <path d="M510,476 L560,476" fill="none" stroke="#607D8B" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrB)" />
+  <text x="535" y="466" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">Rasterization</text>
+  <text x="535" y="488" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">request</text>
+
+  <!-- Image Cache column -->
+
+  <rect x="570" y="105" width="490" height="55" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" filter="url(#sh)" />
+  <text x="815" y="122" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">rasterize_vector_image() Entry</text>
+  <text x="815" y="138" fill="#555" font-size="9" text-anchor="middle">Image cache receives rasterize request for PendingImageId(1)</text>
+  <text x="815" y="152" fill="#555" font-size="9" text-anchor="middle">Requested size: 200×200 pixels</text>
+  <path d="M815,160 L815,183" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="186" width="490" height="55" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="203" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">Check rasterized keycache → MISS</text>
+  <text x="815" y="219" fill="#D9534F" font-size="9" font-weight="bold">No cached RasterImage for (PendingImageId(1), (200,200))</text>
+  <text x="815" y="233" fill="#555" font-size="9" text-anchor="middle">Spawns thread pool task for async rasterization</text>
+  <path d="M815,241 L815,264" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="267" width="490" height="55" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="284" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">Thread Pool: tiny_skia::Pixmap::new(200, 200)</text>
+  <text x="815" y="300" fill="#555" font-size="9" text-anchor="middle">Allocates 200 × 200 × 4 bytes = 160,000 RGBA pixels</text>
+  <text x="815" y="314" fill="#555" font-size="9" text-anchor="middle">Blank canvas ready for rendering</text>
+  <path d="M815,322 L815,345" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="348" width="490" height="65" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="365" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">resvg::render(&amp;svg_tree, Transform::default(), &amp;mut pixmap)</text>
+  <text x="815" y="381" fill="#555" font-size="9" text-anchor="middle">resvg renders SVG vector tree into pixel buffer</text>
+  <text x="815" y="397" fill="#555" font-size="9" text-anchor="middle">Draws filled blue circle at (100,100) with r=50</text>
+  <text x="815" y="411" fill="#888" font-size="9" text-anchor="middle">Circle covers ~7,854 pixels of the 40,000-pixel canvas</text>
+  <path d="M815,413 L815,436" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="439" width="490" height="65" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="456" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">Store RasterImage in Keycache</text>
+  <text x="815" y="472" fill="#50B86C" font-size="9" font-weight="bold">RasterImage { metadata: 200×200, format: RGBA8, </text>
+  <text x="815" y="488" fill="#50B86C" font-size="9" font-weight="bold">  bytes: Arc&lt;[160,000 RGBA bytes]&gt;, id: Some(ImageKey(1, 91)) }</text>
+  <text x="815" y="502" fill="#555" font-size="9" text-anchor="middle">keycache[(PendingImageId(1), (200,200))] = RasterImage</text>
+
+  <!-- Fire notification -->
+  <path d="M815,504 L815,524" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="527" width="490" height="45" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="544" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">Rasterization Complete → Notify Script Thread</text>
+  <text x="815" y="560" fill="#555" font-size="9" text-anchor="middle">image_cache_sender.send(response) → schedule Pass 4</text>
+
+  <!-- Cross-thread: notification back -->
+  <path d="M570,550 L510,550" fill="none" stroke="#607D8B" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrB)" />
+  <text x="540" y="540" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">Notification</text>
+  <text x="540" y="562" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">→ Pass 4</text>
+
+  <!-- VALUES SUMMARY -->
+  <rect x="50" y="590" width="1000" height="205" rx="6" fill="#FFF8E1" stroke="#E6A23C" stroke-width="1" filter="url(#sh)" />
+  <text x="550" y="612" fill="#E65100" font-size="11" font-weight="bold" text-anchor="middle">Concrete Values After Stage 6 (Pass 3)</text>
+
+  <text x="80" y="635" fill="#333" font-size="10" font-weight="bold">svg_kind_size() Output {</text>
+  <text x="100" y="653" fill="#555" font-size="9">get_cached_image_for_url() → Ok(Arc::new(ImageResource::DataAvailable(VectorImage {</text>
+  <text x="120" y="669" fill="#555" font-size="9">id: PendingImageId(1), metadata: ImageMetadata { width: 200, height: 200 },</text>
+  <text x="120" y="685" fill="#555" font-size="9">svg_tree: usvg::Tree { ... }, svg_id: Some("b3c8d2f4-...")</text>
+  <text x="100" y="701" fill="#555" font-size="9">}))</text>
+  <text x="100" y="719" fill="#555" font-size="9">ReplacedContentKind::SVGElement { vector_image: Some(ReplacedVectorImage { id: PendingImageId(1) }), has_viewbox: true }</text>
+
+  <text x="80" y="745" fill="#333" font-size="10" font-weight="bold">make_fragments() / rasterize_vector_image() {</text>
+  <text x="100" y="763" fill="#555" font-size="9">base.rect: PhysicalRect { origin: (Au(0), Au(0)), size: (Au(12000), Au(12000)) }</text>
+  <text x="100" y="781" fill="#D9534F" font-size="9" font-weight="bold">rasterize_vector_image() → None (cache miss — async rasterization started)</text>
+
+  <rect x="560" y="635" width="470" height="150" rx="4" fill="#E8F5E9" stroke="#50B86C" stroke-width="1" />
+  <text x="795" y="652" fill="#2E7D32" font-size="10" font-weight="bold" text-anchor="middle">Image Cache Async Rasterization</text>
+  <text x="795" y="670" fill="#555" font-size="9" text-anchor="middle">Thread pool task runs in background:</text>
+  <text x="795" y="688" fill="#555" font-size="9" text-anchor="middle">1. tiny_skia::Pixmap::new(200, 200)</text>
+  <text x="795" y="704" fill="#555" font-size="9" text-anchor="middle">2. resvg::render() → draws blue circle</text>
+  <text x="795" y="720" fill="#555" font-size="9" text-anchor="middle">3. RasterImage stored in keycache</text>
+  <text x="795" y="738" fill="#555" font-size="9" text-anchor="middle">4. ImageKey(IdNamespace(1), 91) assigned</text>
+  <text x="795" y="756" fill="#555" font-size="9" text-anchor="middle">5. Notification → Pass 4 scheduled</text>
+  <text x="795" y="774" fill="#888" font-size="9" text-anchor="middle">Pipeline state: 3 of 4 rendering updates complete</text>
+</svg>

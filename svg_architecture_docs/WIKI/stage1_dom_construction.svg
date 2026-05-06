@@ -1,0 +1,98 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 800" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#555" /></marker>
+    <marker id="arrB" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#4A90D9" /></marker>
+    <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12" /></filter>
+    <linearGradient id="gScript" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E3F2FD" /><stop offset="100%" stop-color="#BBDEFB" /></linearGradient>
+    <linearGradient id="gLayout" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3E5F5" /><stop offset="100%" stop-color="#E1BEE7" /></linearGradient>
+  </defs>
+
+  <rect width="1100" height="800" fill="#FAFBFC" />
+
+  <!-- TITLE -->
+  <rect x="0" y="0" width="1100" height="50" fill="#607D8B" />
+  <text x="550" y="20" fill="#FFF" font-size="15" font-weight="bold" text-anchor="middle">Stage 1: DOM Construction &amp; Style Computation</text>
+  <text x="550" y="38" fill="#DDD" font-size="10" text-anchor="middle">Pre-pass  ·  Script Thread  →  Layout Thread  ·  1.1–1.6 → 1.7</text>
+
+  <!-- Column headers -->
+  <rect x="30" y="65" width="500" height="26" rx="4" fill="#4A90D9" />
+  <text x="280" y="83" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Script Thread — HTML Parser &amp; DOM</text>
+  <rect x="560" y="65" width="510" height="26" rx="4" fill="#C45DE6" />
+  <text x="815" y="83" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Layout Thread — Style Computation (Stylo)</text>
+
+  <!-- Script column boxes -->
+  <rect x="50" y="105" width="460" height="45" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" filter="url(#sh)" />
+  <text x="280" y="122" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">HTML5 Tokenizer → start-tag &lt;svg&gt; in ns!(svg)</text>
+  <text x="280" y="138" fill="#555" font-size="9" text-anchor="middle">QualName { ns: "http://www.w3.org/2000/svg", local: "svg" }</text>
+  <path d="M280,150 L280,170" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="173" width="460" height="45" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="280" y="190" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">create_element() → namespace dispatch</text>
+  <text x="280" y="206" fill="#555" font-size="9" text-anchor="middle">ns!(svg) → create_svg_element()</text>
+  <path d="M280,218 L280,238" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="241" width="460" height="55" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="280" y="258" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">SVGSVGElement::new() → new_inherited()</text>
+  <text x="280" y="274" fill="#555" font-size="9" text-anchor="middle">uuid = Uuid::new_v4().to_string()  →  "b3c8d2f4-..."</text>
+  <text x="280" y="288" fill="#D9534F" font-size="9" font-weight="bold">cached_serialized_data_url = DomRefCell::new(None)</text>
+  <path d="M280,296 L280,316" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="319" width="460" height="45" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="280" y="336" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">parse_plain_attribute() — CSS Parser</text>
+  <text x="280" y="352" fill="#555" font-size="9" text-anchor="middle">width="200" → LengthPercentage::Length(Px(200.0))</text>
+  <path d="M280,364 L280,384" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="387" width="460" height="45" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="280" y="404" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">InsertBefore() → DOM Tree Attachment</text>
+  <text x="280" y="420" fill="#555" font-size="9" text-anchor="middle">&lt;svg&gt; inserted under &lt;body&gt; in document tree</text>
+
+  <!-- Cross-thread arrow -->
+  <path d="M510,410 L560,410" fill="none" stroke="#607D8B" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrB)" />
+  <text x="535" y="400" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">DOM tree</text>
+  <text x="535" y="425" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">passed to</text>
+  <text x="535" y="440" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">layout</text>
+
+  <!-- Layout column boxes -->
+  <rect x="570" y="105" width="490" height="45" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" filter="url(#sh)" />
+  <text x="815" y="122" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">handle_reflow() → restyle_and_build_trees()</text>
+  <text x="815" y="138" fill="#555" font-size="9" text-anchor="middle">Triggered by PendingRestyles from DOM changes</text>
+  <path d="M815,150 L815,173" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="176" width="490" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="815" y="193" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">traverse_dom() — Walk DOM, resolve styles</text>
+  <text x="815" y="209" fill="#555" font-size="9" text-anchor="middle">For each element: read ElementData, apply CSS cascade</text>
+  <text x="815" y="223" fill="#555" font-size="9" text-anchor="middle">Parallel Stylo CSS engine resolves selectors</text>
+  <path d="M815,231 L815,254" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="257" width="490" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="815" y="274" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">ServoDangerousStyleElement::match_element()</text>
+  <text x="815" y="290" fill="#555" font-size="9" text-anchor="middle">CSS selector matching → ComputedValues produced</text>
+  <text x="815" y="304" fill="#555" font-size="9" text-anchor="middle">Presentational hints from attributes (width/height → CSS)</text>
+  <path d="M815,312 L815,335" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="338" width="490" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="815" y="355" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">Arc&lt;ComputedValues&gt; stored in ElementData</text>
+  <text x="815" y="371" fill="#50B86C" font-size="9" font-weight="bold">display: inline, width: 200px, height: 200px</text>
+  <text x="815" y="385" fill="#888" font-size="9">Cached until mutation (Arc::clone on subsequent passes)</text>
+
+  <!-- VALUES SUMMARY -->
+  <rect x="50" y="460" width="1000" height="145" rx="6" fill="#FFF8E1" stroke="#E6A23C" stroke-width="1" filter="url(#sh)" />
+  <text x="550" y="482" fill="#E65100" font-size="11" font-weight="bold" text-anchor="middle">Concrete Values After Stage 1</text>
+
+  <text x="80" y="505" fill="#333" font-size="10" font-weight="bold">SVGSVGElement {</text>
+  <text x="100" y="523" fill="#555" font-size="9">uuid: "b3c8d2f4-1e5a-4d7c-9b0a-6f2e3d1c8a7b",                       // Uuid::new_v4()</text>
+  <text x="100" y="541" fill="#555" font-size="9">cached_serialized_data_url: DomRefCell::new( None ),               // not serialized yet</text>
+  <text x="100" y="559" fill="#555" font-size="9">width: AttrValue::LengthPercentage("200", Some(Px(200.0))),       // parsed from attribute</text>
+  <text x="100" y="577" fill="#555" font-size="9">height: AttrValue::LengthPercentage("200", Some(Px(200.0))),      // parsed from attribute</text>
+  <text x="100" y="595" fill="#555" font-size="9">viewBox: AttrValue::String("0 0 200 200"),                        // stored as string</text>
+  <text x="80" y="613" fill="#333" font-size="10" font-weight="bold">}</text>
+
+  <rect x="560" y="505" width="470" height="45" rx="4" fill="#E8F5E9" stroke="#50B86C" stroke-width="1" />
+  <text x="795" y="522" fill="#2E7D32" font-size="10" font-weight="bold" text-anchor="middle">ElementData.styles = Arc&lt;ComputedValues&gt;</text>
+  <text x="795" y="540" fill="#555" font-size="9" text-anchor="middle">display: inline, width: 200px, height: 200px</text>
+
+  <!-- Legend -->
+  <rect x="560" y="560" width="470" height="40" rx="4" fill="#FFEBEE" stroke="#D9534F" stroke-width="1" />
+  <text x="795" y="577" fill="#D9534F" font-size="10" font-weight="bold" text-anchor="middle">⚠ Key: cached_serialized_data_url = None</text>
+  <text x="795" y="593" fill="#555" font-size="9" text-anchor="middle">This drives the entire multi-pass pipeline — serialization needed</text>
+</svg>

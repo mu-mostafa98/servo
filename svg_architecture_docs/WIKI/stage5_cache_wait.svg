@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 800" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#555" /></marker>
+    <marker id="arrB" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#4A90D9" /></marker>
+    <marker id="arrG" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#50B86C" /></marker>
+    <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12" /></filter>
+    <linearGradient id="gLayout" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3E5F5" /><stop offset="100%" stop-color="#E1BEE7" /></linearGradient>
+    <linearGradient id="gCache" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E8F5E9" /><stop offset="100%" stop-color="#C8E6C9" /></linearGradient>
+  </defs>
+
+  <rect width="1100" height="800" fill="#FAFBFC" />
+
+  <!-- TITLE -->
+  <rect x="0" y="0" width="1100" height="50" fill="#2E7D32" />
+  <text x="550" y="20" fill="#FFF" font-size="15" font-weight="bold" text-anchor="middle">Stage 5: Image Cache Wait (Pass 2)</text>
+  <text x="550" y="38" fill="#DDD" font-size="10" text-anchor="middle">Rendering Update 2  ·  Layout Thread + Image Cache Thread  ·  Source=Some → Pending</text>
+
+  <!-- Column headers -->
+  <rect x="30" y="65" width="500" height="26" rx="4" fill="#C45DE6" />
+  <text x="280" y="83" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Layout Thread — svg_kind_size() Cache Query</text>
+  <rect x="560" y="65" width="510" height="26" rx="4" fill="#43A047" />
+  <text x="815" y="83" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Image Cache Thread — Async VectorImage Load</text>
+
+  <!-- Layout column boxes -->
+
+  <rect x="50" y="105" width="460" height="45" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" filter="url(#sh)" />
+  <text x="280" y="122" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">Rendering Update 2 → reflow() → style restyle</text>
+  <text x="280" y="138" fill="#555" font-size="9" text-anchor="middle">dirty(NodeDamage::Other) → needs_rendering_update() → schedule timer → reflow</text>
+  <path d="M280,150 L280,173" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="176" width="460" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="280" y="193" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">SVGElementData::data() → source=Some(Ok(url))</text>
+  <text x="280" y="209" fill="#50B86C" font-size="9" font-weight="bold">cached_serialized_data_url = Some(Ok(ServoUrl("data:image/svg+xml;base64,...")))</text>
+  <text x="280" y="223" fill="#555" font-size="9" text-anchor="middle">Data URL now available — svg_kind_size() takes new branch</text>
+  <path d="M280,231 L280,254" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="257" width="460" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="280" y="274" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">svg_kind_size() → get_cached_image_for_url(data_url)</text>
+  <text x="280" y="290" fill="#555" font-size="9" text-anchor="middle">Layout queries image cache by data URL</text>
+  <text x="280" y="304" fill="#D9534F" font-size="9" font-weight="bold">Cache returns: Err(ImageCacheErr::Pending(PendingImageId(1)))</text>
+  <path d="M280,312 L280,335" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="50" y="338" width="460" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="280" y="355" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">Pending → vector_image = None</text>
+  <text x="280" y="371" fill="#555" font-size="9" text-anchor="middle">source=Some(url) but cached_image is Err → vector_image stays None</text>
+  <text x="280" y="385" fill="#D9534F" font-size="9" font-weight="bold">→ No Fragment::Image produced (make_fragments returns vec![])</text>
+
+  <!-- Cross-thread arrow: PendingImageId assigned -->
+  <path d="M510,290 L560,290" fill="none" stroke="#607D8B" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrB)" />
+  <text x="535" y="278" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">Cache query</text>
+  <text x="535" y="305" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">PendingImageId(1)</text>
+
+  <!-- Image Cache column -->
+
+  <rect x="570" y="105" width="490" height="55" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" filter="url(#sh)" />
+  <text x="815" y="122" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">service_thread() — Fetch Data URL</text>
+  <text x="815" y="138" fill="#555" font-size="9" text-anchor="middle">Background thread processes image load request</text>
+  <text x="815" y="152" fill="#555" font-size="9" text-anchor="middle">Fetches data:image/svg+xml;base64,... URL</text>
+  <path d="M815,160 L815,183" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="186" width="490" height="55" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="203" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">Decode base64 → XML bytes</text>
+  <text x="815" y="219" fill="#555" font-size="9" text-anchor="middle">Base64 decoded → raw SVG XML bytes</text>
+  <text x="815" y="233" fill="#555" font-size="9" text-anchor="middle">~231 bytes of XML: &lt;svg&gt;...&lt;circle .../&gt;&lt;/svg&gt;</text>
+  <path d="M815,241 L815,264" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="267" width="490" height="55" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="284" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">usvg::Tree::from_xml() → Parse SVG Tree</text>
+  <text x="815" y="300" fill="#555" font-size="9" text-anchor="middle">XML parsed into usvg SVG tree data structure</text>
+  <text x="815" y="314" fill="#555" font-size="9" text-anchor="middle">&lt;svg&gt; root + &lt;circle&gt; child with cx, cy, r, fill attributes</text>
+  <path d="M815,322 L815,345" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="348" width="490" height="65" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="365" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">complete_load() — Store as LoadedVectorImage</text>
+  <text x="815" y="381" fill="#555" font-size="9" text-anchor="middle">Stores in vector_images HashMap by PendingImageId(1)</text>
+  <text x="815" y="397" fill="#50B86C" font-size="9" font-weight="bold">vector_images: HashMap&lt;PendingImageId, LoadedVectorImage&gt;</text>
+  <text x="815" y="411" fill="#555" font-size="9" text-anchor="middle">svg_to_image_id: "b3c8d2f4-..." → PendingImageId(1)</text>
+
+  <!-- Fire notification -->
+  <path d="M815,413 L815,440" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="570" y="443" width="490" height="45" rx="5" fill="url(#gCache)" stroke="#43A047" stroke-width="1" />
+  <text x="815" y="460" fill="#1B5E20" font-size="10" font-weight="bold" text-anchor="middle">Fire Notification → Script Thread</text>
+  <text x="815" y="476" fill="#555" font-size="9" text-anchor="middle">pending_layout_image_notification() → schedule next rendering update</text>
+
+  <!-- Cross-thread arrow: notification -->
+  <path d="M570,466 L510,466" fill="none" stroke="#607D8B" stroke-width="2" stroke-dasharray="6,3" marker-end="url(#arrB)" />
+  <text x="540" y="456" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">Notification</text>
+  <text x="540" y="478" fill="#607D8B" font-size="8" font-weight="bold" text-anchor="middle">→ Pass 3</text>
+
+  <!-- VALUES SUMMARY -->
+  <rect x="50" y="505" width="1000" height="145" rx="6" fill="#FFF8E1" stroke="#E6A23C" stroke-width="1" filter="url(#sh)" />
+  <text x="550" y="527" fill="#E65100" font-size="11" font-weight="bold" text-anchor="middle">Concrete Values After Stage 5 (Pass 2)</text>
+
+  <text x="80" y="550" fill="#333" font-size="10" font-weight="bold">Layout Thread — svg_kind_size() result {</text>
+  <text x="100" y="568" fill="#555" font-size="9">SVGElementData.source: Some(Ok(ServoUrl("data:image/svg+xml;base64,...")))</text>
+  <text x="100" y="586" fill="#D9534F" font-size="9" font-weight="bold">get_cached_image_for_url() → Err(ImageCacheErr::Pending(PendingImageId(1)))</text>
+  <text x="100" y="604" fill="#555" font-size="9">ReplacedContentKind::SVGElement { vector_image: None, has_viewbox: true }</text>
+  <text x="100" y="622" fill="#555" font-size="9">→ No Fragment::Image — make_fragments() returns empty vec</text>
+
+  <text x="80" y="648" fill="#333" font-size="10" font-weight="bold">Image Cache Thread — After complete_load() {</text>
+
+  <rect x="560" y="550" width="470" height="90" rx="4" fill="#E8F5E9" stroke="#50B86C" stroke-width="1" />
+  <text x="795" y="567" fill="#2E7D32" font-size="10" font-weight="bold" text-anchor="middle">Image Cache State After Load</text>
+  <text x="795" y="585" fill="#555" font-size="9" text-anchor="middle">vector_images: {</text>
+  <text x="795" y="603" fill="#555" font-size="9" text-anchor="middle">  PendingImageId(1) → LoadedVectorImage {</text>
+  <text x="795" y="621" fill="#555" font-size="9" text-anchor="middle">    svg_tree: usvg::Tree, metadata: {200, 200}</text>
+  <text x="795" y="637" fill="#555" font-size="9" text-anchor="middle">  }}</text>
+</svg>

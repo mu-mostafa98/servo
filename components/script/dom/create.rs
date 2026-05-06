@@ -108,7 +108,7 @@ fn create_svg_element(
         _ => "SVGElement",
     };
     eprintln!(
-        "[SVG_TRACE_STAGE_1] script::dom::create::create_svg_element() name.local={:?} → creating {}",
+        "[SVG_TRACE_PRE_PASS_STAGE_1] script::dom::create::create_svg_element() name.local={:?} → creating {}",
         name.local, element_type
     );
 
@@ -461,7 +461,7 @@ pub(crate) fn create_element(
         ns!(html) => create_html_element(cx, name, prefix, is, document, creator, mode, proto),
         ns!(svg) => {
             eprintln!(
-                "[SVG_TRACE_STAGE_1.2] script::dom::create::create_element() ns!(svg) dispatch, local={:?}",
+                "[SVG_TRACE_PRE_PASS_STAGE_1] script::dom::create::create_element() ns!(svg) dispatch, local={:?}",
                 name.local
             );
             create_svg_element(cx, name, prefix, document, proto)

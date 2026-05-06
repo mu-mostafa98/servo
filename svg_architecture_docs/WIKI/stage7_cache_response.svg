@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 620" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#555" /></marker>
+    <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12" /></filter>
+    <linearGradient id="gLayout" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F3E5F5" /><stop offset="100%" stop-color="#E1BEE7" /></linearGradient>
+  </defs>
+
+  <rect width="1100" height="620" fill="#FAFBFC" />
+
+  <!-- TITLE -->
+  <rect x="0" y="0" width="1100" height="50" fill="#1565C0" />
+  <text x="550" y="20" fill="#FFF" font-size="15" font-weight="bold" text-anchor="middle">Stage 7: Cache Response — RasterImage Available (Pass 4)</text>
+  <text x="550" y="38" fill="#DDD" font-size="10" text-anchor="middle">Rendering Update 4  ·  Layout Thread  ·  Identical to Pass 3 from svg_kind_size() view</text>
+
+  <!-- Column header -->
+  <rect x="300" y="65" width="500" height="26" rx="4" fill="#C45DE6" />
+  <text x="550" y="83" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Layout Thread — Same Path as Pass 3, But Raster Cache Now Populated</text>
+
+  <!-- Context box -->
+  <rect x="100" y="105" width="900" height="45" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="1" filter="url(#sh)" />
+  <text x="550" y="122" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">Context: Pass 4 — Triggered by Rasterization Complete Notification</text>
+  <text x="550" y="138" fill="#555" font-size="9" text-anchor="middle">Fourth rendering update. Same entry point: update_the_rendering() → reflow(). svg_kind_size() produces same result as Pass 3.</text>
+  <path d="M550,150 L550,173" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 1 -->
+  <rect x="320" y="176" width="460" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="550" y="193" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">svg_kind_size() — Same Result as Pass 3</text>
+  <text x="550" y="209" fill="#50B86C" font-size="9" font-weight="bold">source=Some(url) → DataAvailable(VectorImage) → vector_image=Some</text>
+  <text x="550" y="223" fill="#888" font-size="9" text-anchor="middle">No difference — the VectorImage is still cached from Pass 3</text>
+  <path d="M550,231 L550,254" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 2 -->
+  <rect x="320" y="257" width="460" height="45" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="550" y="274" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">ReplacedContentKind::SVGElement { vector_image: Some(...), has_viewbox: true }</text>
+  <text x="550" y="290" fill="#888" font-size="9" text-anchor="middle">Identical to Pass 3 — passed to make_fragments()</text>
+  <path d="M550,298 L550,318" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 3 -->
+  <rect x="320" y="321" width="460" height="55" rx="5" fill="url(#gLayout)" stroke="#C45DE6" stroke-width="1" />
+  <text x="550" y="338" fill="#6A1B9A" font-size="10" font-weight="bold" text-anchor="middle">make_fragments() receives vector_image = Some(...)</text>
+  <text x="550" y="354" fill="#555" font-size="9" text-anchor="middle">base.rect = PhysicalRect { (Au(0), Au(0)), (Au(12000), Au(12000)) }</text>
+  <text x="550" y="368" fill="#D9534F" font-size="9" font-weight="bold">Calls rasterize_vector_image(PendingImageId(1), (200,200))</text>
+
+  <!-- VALUES SUMMARY -->
+  <rect x="50" y="400" width="1000" height="185" rx="6" fill="#FFF8E1" stroke="#E6A23C" stroke-width="1" filter="url(#sh)" />
+  <text x="550" y="422" fill="#E65100" font-size="11" font-weight="bold" text-anchor="middle">Concrete Values After Stage 7 (Pass 4 — Same svg_kind_size Result)</text>
+
+  <text x="80" y="445" fill="#333" font-size="10" font-weight="bold">svg_kind_size() → Identical to Pass 3 {</text>
+  <text x="100" y="463" fill="#555" font-size="9">get_cached_image_for_url() → Ok(Arc::new(DataAvailable(VectorImage {</text>
+  <text x="120" y="479" fill="#555" font-size="9">id: PendingImageId(1), metadata: ImageMetadata { width: 200, height: 200 },</text>
+  <text x="120" y="495" fill="#555" font-size="9">svg_tree: usvg::Tree, svg_id: Some("b3c8d2f4-...")</text>
+  <text x="100" y="511" fill="#555" font-size="9">})))</text>
+  <text x="100" y="529" fill="#555" font-size="9">vector_image: Some(ReplacedVectorImage { id: PendingImageId(1), metadata: 200×200, svg_id: "b3c8d2f4-..." })</text>
+  <text x="100" y="547" fill="#555" font-size="9">ReplacedContentKind::SVGElement { vector_image: Some(...), has_viewbox: true }</text>
+
+  <rect x="560" y="445" width="470" height="130" rx="4" fill="#FFEBEE" stroke="#D9534F" width="1" />
+  <text x="795" y="462" fill="#D9534F" font-size="10" font-weight="bold" text-anchor="middle">⚠ Key: Same as Pass 3 — So What Changed?</text>
+  <text x="795" y="480" fill="#555" font-size="9" text-anchor="middle">svg_kind_size() is identical to Pass 3.</text>
+  <text x="795" y="498" fill="#555" font-size="9" text-anchor="middle">But the keycache now has the RasterImage!</text>
+  <text x="795" y="516" fill="#555" font-size="9" text-anchor="middle">keycache[(PendingImageId(1), (200,200))] = RasterImage</text>
+  <text x="795" y="534" fill="#555" font-size="9" text-anchor="middle">When make_fragments() calls rasterize_vector_image(),</text>
+  <text x="795" y="552" fill="#555" font-size="9" text-anchor="middle">this time it will HIT instead of MISS.</text>
+  <text x="795" y="570" fill="#555" font-size="9" text-anchor="middle">→ See Stage 8 for the fragment construction result.</text>
+</svg>
