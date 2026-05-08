@@ -403,28 +403,32 @@ Image Cache Thread                    Script Thread
 
 ---
 
-## Pass 3 — Layout: VectorImage Available + Rasterization
+## Pass 3 — Layout: Vector Cache Hit + Rasterization Request
 
 **Rendering Update:** 3
 **Trigger:** Image cache notification → `needs_rendering_update()` → `update_the_rendering()` re-enters
 **Threads:** Layout Thread + Image Cache Thread
 **`svg_kind_size()` behavior:** `source=Some(url)` → `DataAvailable` → `vector_image=Some` → `make_fragments()` calls `rasterize_vector_image()`
 
-### Stage 4 Re-entry: Vector Cache Hit
+### Stage 5: Vector Cache Hit + Rasterization Request
 
-**Purpose:** The image cache now has the VectorImage loaded. `svg_kind_size()` gets `DataAvailable` → `vector_image = Some`.
+**Purpose:** The image cache now has the VectorImage loaded. `svg_kind_size()` gets `DataAvailable` → `vector_image = Some`. Then `make_fragments()` calls `rasterize_vector_image()` → cache miss → async rasterization started.
 
 **Key functions:**
 
-| Function | Purpose |
-|----------|---------|
-| `svg_kind_size()` | `source=Some(url)` → `get_cached_image_for_url()` → `Ok(DataAvailable(...))` |
-| `get_cached_image_for_url()` | Returns `DataAvailable` with the `Arc<VectorImage>` |
+| Function | File | Purpose |
+|----------|------|---------|
+| `svg_kind_size()` | `replaced.rs` | `source=Some(url)` → `get_cached_image_for_url()` → `Ok(DataAvailable(...))` |
+| `get_cached_image_for_url()` | `layout/context.rs` | Returns `DataAvailable` with the `Arc<VectorImage>` |
+| `make_fragments()` | `components/layout/replaced.rs` | Constructs `Fragment::Image` from `SVGElement(Some(vector_image))` |
+| `rasterize_vector_image()` | Image cache | Checks rasterized cache; on miss, starts async rasterization; returns `None` |
 
-**Concrete values:**
+**Sub-stages:**
+
+**5.1 — Vector Cache Hit:** `svg_kind_size()` reads `source=Some(url)` → cache returns `DataAvailable(VectorImage{...})` → `vector_image = Some(ReplacedVectorImage)`.
 
 ```rust
-// get_cached_image_for_url() now returns DataAvailable:
+// get_cached_image_for_url() returns DataAvailable:
 Ok(Arc::new(ImageResource::DataAvailable(VectorImage {
     id: PendingImageId(1),
     metadata: ImageMetadata { width: 200, height: 200 },
@@ -433,76 +437,24 @@ Ok(Arc::new(ImageResource::DataAvailable(VectorImage {
 })))
 
 // vector_image is Some:
-let vector_image: Option<ReplacedVectorImage> = Some(ReplacedVectorImage {
-    id: PendingImageId(1),
-    metadata: ImageMetadata { width: 200, height: 200 },
-    svg_id: "b3c8d2f4-1e5a-4d7c-9b0a-6f2e3d1c8a7b".to_owned(),
-});
+ReplacedVectorImage { id: PendingImageId(1), metadata: { 200, 200 }, svg_id: "b3c8d2f4-..." }
 
 // svg_kind_size returns:
-ReplacedContentKind::SVGElement {
-    vector_image: Some(ReplacedVectorImage { /* ... */ }),
-    has_viewbox: true,
-}
+ReplacedContentKind::SVGElement { vector_image: Some(...), has_viewbox: true }
 ```
 
-### Stage 5: Rasterization Request
+**5.2 — Rasterization Request:** `make_fragments()` receives `SVGElement(Some(vector_image))`. Sets `base.rect` from metadata (`Au(12000) × Au(12000)`). Calls `rasterize_vector_image(PendingImageId(1), (200,200))` → **cache miss**.
 
-**Purpose:** `make_fragments()` has a `vector_image` — it calls `rasterize_vector_image()` to produce a pixel buffer. First call → cache miss → async rasterization started.
-
-**Key functions:**
-
-| Function | File | Purpose |
-|----------|------|---------|
-| `make_fragments()` | `components/layout/replaced.rs` | Constructs `Fragment::Image` from `SVGElement(Some(vector_image))` |
-| `rasterize_vector_image()` | Image cache | Checks rasterized cache; on miss, starts async rasterization; returns `None` |
-
-**Operations:**
-1. `make_fragments()` receives `vector_image = Some(...)`
-2. Checks `has_viewbox = true` → sets `base.rect` from metadata dimensions
-3. Calls `rasterize_vector_image(PendingImageId(1), (200,200))`
-4. Image cache checks rasterized cache → **miss** (not rasterized yet)
-5. Spawns thread pool task: `resvg::render()` → `tiny_skia::Pixmap(200×200)` → `RasterImage`
-6. Returns `None` to layout (async work in progress)
-7. Post-reflow: `handle_pending_images_post_reflow()` registers a rasterization completion listener
-
-**Concrete values — rasterization processing (async, on Image Cache thread):**
+1. Image cache checks rasterized cache → miss (not rasterized yet)
+2. Spawns thread pool task: `resvg::render()` → `tiny_skia::Pixmap(200×200)` → `RasterImage`
+3. Returns `None` to layout (async work in progress)
+4. Post-reflow: registers a rasterization completion listener
 
 ```rust
-// Thread pool task:
-let mut pixmap = tiny_skia::Pixmap::new(200, 200).unwrap();
-// pixmap: 200 × 200 × 4 bytes = 160,000 RGBA pixels
-
-resvg::render(&svg_tree, tiny_skia::Transform::default(), &mut pixmap.as_mut());
-
-// Result stored in rasterized cache:
-RasterImage {
-    metadata: ImageMetadata { width: 200, height: 200 },
-    format: PixelFormat::RGBA8,
-    bytes: Arc::new([/* 160,000 bytes of RGBA blue circle */]),
-    id: Some(ImageKey(IdNamespace(1), 91)),  // assigned by load_image_with_keycache()
-}
-
-// Keycache entry:
-cache[(PendingImageId(1), (200,200))] = RasterImage { /* ... */ }
-```
-
-**Concrete values — make_fragments output (first call, miss):**
-
-```rust
-let kind = ReplacedContentKind::SVGElement(Some(vector_image));
-
-// base.rect set from metadata:
-base.rect = PhysicalRect {
-    origin: PhysicalPoint { x: Au(0), y: Au(0) },
-    size: PhysicalSize { width: Au(12000), height: Au(12000) },
-};
-
 // rasterize_vector_image() returns None (async miss):
 let result: Option<RasterImage> = None;
 
-// → No image_key available yet
-// → Fragment::Image may not be produced, or produced without image_key
+// → No image_key → no Fragment::Image yet
 ```
 
 ### Pass 3 Summary
@@ -510,10 +462,10 @@ let result: Option<RasterImage> = None;
 | Attribute | Value |
 |-----------|-------|
 | **Trigger** | VectorImage loaded notification |
-| **`svg_kind_size()`** | Runs: `source=Some(url)` → cache returns `DataAvailable` → `vector_image=Some` |
-| **`make_fragments()`** | Calls `rasterize_vector_image()` → **miss** → returns `None` |
-| **Fragment produced?** | ❌ Not yet — async rasterization in progress |
-| **Async work started** | `resvg::render()` → `RasterImage` stored in keycache |
+| **Stage 5** | Vector Cache Hit (DataAvailable → `vector_image=Some`) + Rasterization Request (cache miss) |
+| **`rasterize_vector_image()`** | **Miss** → returns `None` (async work in progress) |
+| **Fragment produced?** | ❌ Not yet — rasterization in progress |
+| **Async work started** | `resvg::render()` → `tiny_skia::Pixmap` → `RasterImage` stored in keycache |
 
 ---
 
@@ -543,7 +495,7 @@ Image Cache Thread                    Script Thread
 
 ---
 
-## Pass 4 — Layout: Fragment::Image → Display List
+## Pass 4 — Layout: Raster Cache Hit + Fragment::Image
 
 **Rendering Update:** 4
 **Trigger:** Rasterization completion notification → `needs_rendering_update()` → `update_the_rendering()`
@@ -551,23 +503,18 @@ Image Cache Thread                    Script Thread
 **`svg_kind_size()` behavior:** Same as Pass 3 — `source=Some(url)` → `vector_image=Some`
 **`make_fragments()` behavior:** `rasterize_vector_image()` → **cache HIT** → `RasterImage` with `ImageKey` → `Fragment::Image`
 
-### Stage 6: Cache Response (no-op same as Pass 3)
+### Stage 6: Raster Cache Hit + Fragment::Image
 
-**Purpose:** Layout re-enters; `svg_kind_size()` produces the same result as Pass 3 (the VectorImage is still in the cache). No difference from Pass 3 from `svg_kind_size()`'s perspective.
-
-**Concrete values:** Identical to Pass 3's Stage 4.
-
-### Stage 7: Fragment Construction
-
-**Purpose:** `make_fragments()` receives `vector_image = Some(...)` and calls `rasterize_vector_image()` — this time the rasterized cache **hits** → `RasterImage` with `ImageKey` returned → `Fragment::Image` constructed → display list complete.
+**Purpose:** `svg_kind_size()` produces the same result as Pass 3 (`vector_image=Some`). But this time `rasterize_vector_image()` **hits** the rasterized cache → `RasterImage` with `ImageKey` returned → `Fragment::Image` constructed → display list complete.
 
 **Key functions:**
 
-| Function | File | Line | Purpose |
-|----------|------|------|---------|
-| `make_fragments()` | `replaced.rs` | — | Constructs `Fragment::Image` from `SVGElement(Some(vector_image))` |
-| `rasterize_vector_image()` | Image cache | — | Second call → **cache HIT** → returns `Some(RasterImage)` |
-| `push_image()` | Display list builder | — | Adds image to WebRender display list |
+| Function | File | Purpose |
+|----------|------|---------|
+| `svg_kind_size()` | `replaced.rs` | Same as Pass 3 — `DataAvailable` → `vector_image=Some` |
+| `make_fragments()` | `replaced.rs` | Constructs `Fragment::Image` from `SVGElement(Some(vector_image))` |
+| `rasterize_vector_image()` | Image cache | Second call → **cache HIT** → returns `Some(RasterImage { id: Some(ImageKey(1, 91)) })` |
+| `push_image()` | Display list builder | Adds image to WebRender display list |
 
 **Operations:**
 1. `make_fragments()` receives `ReplacedContentKind::SVGElement(Some(vector_image))`
@@ -581,15 +528,6 @@ Image Cache Thread                    Script Thread
 **Concrete values:**
 
 ```rust
-// make_fragments() receives vector_image=Some:
-let kind = ReplacedContentKind::SVGElement(Some(vector_image));
-
-// base.rect:
-base.rect = PhysicalRect {
-    origin: PhysicalPoint { x: Au(0), y: Au(0) },
-    size: PhysicalSize { width: Au(12000), height: Au(12000) },
-};
-
 // rasterize_vector_image() — second call → CACHE HIT:
 Some(RasterImage {
     metadata: ImageMetadata { width: 200, height: 200 },
@@ -598,39 +536,25 @@ Some(RasterImage {
     id: Some(ImageKey(IdNamespace(1), 91)),  // ← ImageKey assigned!
 })
 
-// Extracted image_key:
-let image_key = Some(ImageKey(IdNamespace(1), 91));
-
-// Final Fragment::Image:
+// Extracted image_key → Fragment::Image:
 Fragment::Image {
     base: BaseFragment {
-        rect: PhysicalRect {
-            x: Au(0), y: Au(0),
-            width: Au(12000), height: Au(12000),
-        },
-        clip: PhysicalRect {
-            x: Au(0), y: Au(0),
-            width: Au(12000), height: Au(12000),
-        },
+        rect: PhysicalRect { x: Au(0), y: Au(0), width: Au(12000), height: Au(12000) },
+        clip: PhysicalRect { x: Au(0), y: Au(0), width: Au(12000), height: Au(12000) },
         style: Arc::clone(&computed_values),
-        // ...
     },
     image_key: Some(ImageKey(IdNamespace(1), 91)),
     image_rendering: ImageRendering::Auto,
     showing_broken_image_icon: false,
 }
 
-// Display list → WebRender:
+// Display list → WebRender → GPU renders a 200×200 blue circle:
 display_list.push_image(
     ClipId::root(),
-    LayoutRect::new(
-        LayoutPoint { x: 0.0, y: 0.0 },
-        LayoutSize { width: 200.0, height: 200.0 },
-    ),
+    LayoutRect::new(LayoutPoint { x: 0.0, y: 0.0 }, LayoutSize { width: 200.0, height: 200.0 }),
     ImageKey(IdNamespace(1), 91),
     ImageRendering::Auto,
 );
-// → GPU renders a 200×200 blue circle
 ```
 
 ### Pass 4 Summary
@@ -638,8 +562,7 @@ display_list.push_image(
 | Attribute | Value |
 |-----------|-------|
 | **Trigger** | Rasterization complete notification |
-| **`svg_kind_size()`** | Runs: same as Pass 3 (`vector_image=Some`) |
-| **`make_fragments()`** | `rasterize_vector_image()` → **cache HIT** → `Some(RasterImage)` |
+| **Stage 6** | Raster Cache Hit + Fragment::Image constructed |
 | **Fragment produced?** | ✅ Yes — `Fragment::Image { image_key: Some(ImageKey(1, 91)), rect: 200×200 }` |
 | **Pipeline state** | ✅ Complete — blue circle rendered on screen |
 
@@ -677,14 +600,14 @@ Initial DOM Ready
     │       ├─ svg_kind_size(source=Some, cache=Pending)
     │       └─ [image cache: VectorImage loaded]
     │
-    ├─ [cache notification] ──── PASS 3
+    ├─ [cache notification] ──── PASS 3 (Stage 5)
     │   └─ reflow()
     │       ├─ svg_kind_size(source=Some, cache=DataAvailable)
     │       │   → vector_image=Some
     │       └─ make_fragments()
     │           └─ rasterize_vector_image() → MISS → async
     │
-    ├─ [rasterization done] ──── PASS 4
+    ├─ [rasterization done] ──── PASS 4 (Stage 6)
     │   └─ reflow()
     │       ├─ svg_kind_size(source=Some, vector_image=Some)
     │       └─ make_fragments()

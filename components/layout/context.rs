@@ -187,7 +187,7 @@ impl ImageResolver {
         if let Some(cached_image) = self.resolved_images_cache.read().get(&url) {
             return cached_image.clone();
         }
-
+        
         let result = self.get_or_request_image_or_meta(node, url.clone(), destination);
         match result {
             LayoutImageCacheResult::DataAvailable(img_or_meta) => match img_or_meta {
@@ -195,7 +195,7 @@ impl ImageResolver {
                     if let Some(image) = image.as_raster_image() {
                         self.handle_animated_image(node, image);
                     }
-
+                    
                     let mut resolved_images_cache = self.resolved_images_cache.write();
                     resolved_images_cache.insert(url, Ok(image.clone()));
                     Ok(image)
@@ -204,7 +204,10 @@ impl ImageResolver {
                     Result::Err(ResolveImageError::OnlyMetadata)
                 },
             },
-            LayoutImageCacheResult::Pending => Result::Err(ResolveImageError::ImagePending),
+            LayoutImageCacheResult::Pending => {
+                eprintln!("[SVG_TRACE_PASS_2_STAGE_4] layout::context::ImageResolver::get_cached_image_for_url()");
+                Result::Err(ResolveImageError::ImagePending)
+            },
             LayoutImageCacheResult::LoadError => {
                 let error = Err(ResolveImageError::LoadError);
                 self.resolved_images_cache
@@ -222,6 +225,7 @@ impl ImageResolver {
         node: OpaqueNode,
         svg_id: Option<String>,
     ) -> Option<RasterImage> {
+        eprintln!("[SVG_TRACE_PASS_3_STAGE_5] layout::context::ImageResolver::rasterize_vector_image()");
         let result = self
             .image_cache
             .rasterize_vector_image(image_id, size, svg_id);

@@ -3524,7 +3524,7 @@ impl Window {
         pending_rasterization_images: Vec<PendingRasterizationImage>,
         pending_svg_element_for_serialization: Vec<UntrustedNodeAddress>,
     ) {
-        eprintln!("[SVG_TRACE_Bridge_1_2_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() Start");
+        eprintln!("[SVG_TRACE---------------] script::dom::window::Window::handle_pending_images_post_reflow() Start");
         let pipeline_id = self.pipeline_id();
         for image in pending_images {
             let id = image.id;
@@ -3580,13 +3580,12 @@ impl Window {
         }
 
         for node in pending_svg_element_for_serialization.into_iter() {
-            eprintln!("[SVG_TRACE_Bridge_1_2_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() Start for SVG Element");
             let node = unsafe { from_untrusted_node_address(node) };
             let svg = node.downcast::<SVGSVGElement>().unwrap();
             svg.serialize_and_cache_subtree();
             node.dirty(NodeDamage::Other);
-            eprintln!("[SVG_TRACE_Bridge_1_2_STAGE_3] script::dom::window::Window::handle_pending_images_post_reflow() End for SVG Element");
         }
+        eprintln!("[SVG_TRACE---------------] script::dom::window::Window::handle_pending_images_post_reflow() End");
     }
 
     /// <https://html.spec.whatwg.org/multipage/#sticky-activation>

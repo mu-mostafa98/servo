@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 860" font-family="Segoe UI, Arial, Helvetica, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="8" refX="10" refY="4" orient="auto"><path d="M0,0 L10,4 L0,8" fill="#555" /></marker>
+    <filter id="sh"><feDropShadow dx="1" dy="2" stdDeviation="2" flood-color="#000000" flood-opacity="0.12" /></filter>
+    <linearGradient id="gScript" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E3F2FD" /><stop offset="100%" stop-color="#BBDEFB" /></linearGradient>
+  </defs>
+
+  <rect width="1100" height="860" fill="#FAFBFC" />
+
+  <!-- TITLE -->
+  <rect x="0" y="0" width="1100" height="50" fill="#F57C00" />
+  <text x="550" y="20" fill="#FFF" font-size="15" font-weight="bold" text-anchor="middle">Stage 3: SVG Serialization (Pass 1 — Post-Reflow)</text>
+  <text x="550" y="38" fill="#DDD" font-size="10" text-anchor="middle">Post-Reflow Hook  ·  Script Thread  ·  Dispatch → Serialize → Cache → Dirty</text>
+
+  <!-- Column header -->
+  <rect x="300" y="65" width="500" height="26" rx="4" fill="#4A90D9" />
+  <text x="550" y="83" fill="#FFF" font-size="10" font-weight="bold" text-anchor="middle">Script Thread — Post-Reflow Serialization Pipeline</text>
+
+  <!-- Context box -->
+  <rect x="100" y="105" width="900" height="45" rx="6" fill="#FFF3E0" stroke="#F57C00" stroke-width="1" filter="url(#sh)" />
+  <text x="550" y="122" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">Sub-stage 3.1 — Dispatch</text>
+  <text x="550" y="138" fill="#555" font-size="9" text-anchor="middle">Runs inside Window::reflow() after layout.borrow_mut().reflow(reflow) returns — svg_kind_size() already ran (Pass 1)</text>
+  <path d="M550,150 L550,173" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 1: handle_pending_images_post_reflow -->
+  <rect x="320" y="176" width="460" height="55" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" filter="url(#sh)" />
+  <text x="550" y="193" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">handle_pending_images_post_reflow()</text>
+  <text x="550" y="209" fill="#555" font-size="9" text-anchor="middle">window.rs:3521 — Post-reflow hook drains pending list</text>
+  <text x="550" y="223" fill="#888" font-size="9" text-anchor="middle">pending_svg_elements_for_serialization: [UntrustedNodeAddress(0x...)]</text>
+  <path d="M550,231 L550,254" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 2: Dispatch -->
+  <rect x="320" y="257" width="460" height="55" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="550" y="274" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">For each: serialize_and_cache_subtree(node)</text>
+  <text x="550" y="290" fill="#555" font-size="9" text-anchor="middle">Converts UntrustedNodeAddress → &amp;SVGSVGElement</text>
+  <text x="550" y="304" fill="#888" font-size="9" text-anchor="middle">Dispatches to sub-stage 3.2 serialize_and_cache_subtree()</text>
+  <path d="M550,312 L550,340" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Sub-stage 3.2 header -->
+  <rect x="100" y="340" width="900" height="30" rx="4" fill="#FFF3E0" stroke="#F57C00" stroke-width="1" />
+  <text x="550" y="360" fill="#E65100" font-size="10" font-weight="bold" text-anchor="middle">Sub-stage 3.2 — Serialize &amp; Cache (serialize_and_cache_subtree())</text>
+  <path d="M550,370 L550,390" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 3: process_use_elements -->
+  <rect x="320" y="393" width="460" height="45" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="550" y="410" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">process_use_elements() — Clone &lt;use&gt; Subtrees</text>
+  <text x="550" y="426" fill="#888" font-size="9" text-anchor="middle">Test case: no &lt;use&gt; elements → no-op</text>
+  <path d="M550,438 L550,458" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 4: xml_serialize -->
+  <rect x="320" y="461" width="460" height="65" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="550" y="478" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">xml_serialize(TraversalScope::IncludeNode)</text>
+  <text x="550" y="494" fill="#555" font-size="9" text-anchor="middle">Walks DOM subtree → produces XML string (~231 bytes)</text>
+  <text x="550" y="510" fill="#50B86C" font-size="9" font-weight="bold">"&lt;svg xmlns=...&gt;&lt;circle cx=100 cy=100 r=50 fill=blue/&gt;&lt;/svg&gt;"</text>
+  <text x="550" y="524" fill="#888" font-size="9" text-anchor="middle">xml5ever / Node impl — standard XML serialization</text>
+  <path d="M550,526 L550,549" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 5: base64 -->
+  <rect x="320" y="552" width="460" height="55" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="550" y="569" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">base64::engine::general_purpose::STANDARD.encode()</text>
+  <text x="550" y="585" fill="#555" font-size="9" text-anchor="middle">Encodes XML bytes to base64 (~334 chars)</text>
+  <text x="550" y="599" fill="#888" font-size="9" text-anchor="middle">"PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmci..."</text>
+  <path d="M550,607 L550,630" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 6: data URL -->
+  <rect x="320" y="633" width="460" height="55" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="550" y="650" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">ServoUrl::parse("data:image/svg+xml;base64,...")</text>
+  <text x="550" y="666" fill="#555" font-size="9" text-anchor="middle">Wraps base64 as data URL → stores on SVGSVGElement</text>
+  <text x="550" y="680" fill="#50B86C" font-size="9" font-weight="bold">cached_serialized_data_url = Some(Ok(ServoUrl("data:...")))</text>
+  <path d="M550,688 L550,711" fill="none" stroke="#555" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- Box 7: cleanup + dirty -->
+  <rect x="320" y="714" width="460" height="45" rx="5" fill="url(#gScript)" stroke="#4A90D9" stroke-width="1" />
+  <text x="550" y="731" fill="#1565C0" font-size="10" font-weight="bold" text-anchor="middle">cleanup_cloned_nodes() → dirty(NodeDamage::Other)</text>
+  <text x="550" y="747" fill="#D9534F" font-size="9" font-weight="bold">→ needs_rendering_update() = true → schedule timer → Pass 2</text>
+
+  <!-- VALUES SUMMARY -->
+  <rect x="50" y="775" width="1000" height="75" rx="6" fill="#FFF8E1" stroke="#E6A23C" stroke-width="1" filter="url(#sh)" />
+  <text x="550" y="795" fill="#E65100" font-size="11" font-weight="bold" text-anchor="middle">Concrete Values After Stage 3 (Pass 1 — Post-Reflow Serialization)</text>
+
+  <text x="80" y="817" fill="#555" font-size="9">cached_serialized_data_url: None → Some(Ok(ServoUrl("data:image/svg+xml;base64,PHN2ZyB4bWxucz0i...")))</text>
+  <text x="80" y="835" fill="#555" font-size="9">source: None → Some(Ok(url)) · dirty(NodeDamage::Other) set · next pass: Pass 2 (Stage 4: Image Cache Wait)</text>
+</svg>

@@ -173,7 +173,7 @@ fn traverse_element<'dom>(
         },
     }
     if is_svg {
-        eprintln!("[SVG_TRACE_.1] layout::dom_traversal::traverse_element() End");
+        eprintln!("[SVG_TRACE_PASS_1_STAGE_2] layout::dom_traversal::traverse_element() End");
     }
 }
 
@@ -266,11 +266,11 @@ impl Contents {
             Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
         );
         if is_svg {
-            eprintln!("[SVG_TRACE_PASS_X_STAGE_X] layout::dom_traversal::Contents::for_element() Start");
+            eprintln!("[SVG_TRACE---------------] layout::dom_traversal::Contents::for_element() Start");
         }
         if let Some(replaced) = ReplacedContents::for_element(node, context) {
             if is_svg {
-                eprintln!("[SVG_TRACE_PASS_X_STAGE_X] layout::dom_traversal::Contents::for_element() End1");
+                eprintln!("[SVG_TRACE---------------] layout::dom_traversal::Contents::for_element() End1");
             }
             return Self::Replaced(replaced);
         }

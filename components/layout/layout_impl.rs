@@ -1168,7 +1168,7 @@ impl LayoutThread {
 
             dirty_root = driver::traverse_dom(&recalc_style_traversal, token, rayon_pool).as_node();
             eprintln!(
-                "[SVG_TRACE_PRE_PASS_STAGE_1] layout::layout_impl::restyle_and_build_trees() style traversal complete for dirty_root={:?}",
+                "[SVG_TRACE---------------] layout::layout_impl::restyle_and_build_trees() style traversal complete for dirty_root={:?}",
                 dirty_root.opaque()
             );
         }

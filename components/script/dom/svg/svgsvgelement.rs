@@ -79,7 +79,7 @@ impl SVGSVGElement {
 
     #[expect(unsafe_code)]
     pub(crate) fn serialize_and_cache_subtree(&self) {
-        eprintln!("[SVG_TRACE_Bridge_1_2_STAGE_4] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() Start");
+        eprintln!("[SVG_TRACE_PASS_1_STAGE_3] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() Start");
         // TODO: https://github.com/servo/servo/issues/43142
         let mut cx = unsafe { script_bindings::script_runtime::temp_cx() };
         let cx = &mut cx;
@@ -97,7 +97,6 @@ impl SVGSVGElement {
         };
 
         let xml_source: String = xml_source.into();
-        eprintln!("[SVG_TRACE_Bridge_1_2_STAGE_4] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() xml_source={}", xml_source);
         let base64_encoded_source = base64::engine::general_purpose::STANDARD.encode(&xml_source);
         let data_url = format!("data:image/svg+xml;base64,{}", base64_encoded_source);
         match ServoUrl::parse(&data_url) {
@@ -108,11 +107,12 @@ impl SVGSVGElement {
                 error!("Unable to parse serialized SVG data url: {error}");
             },
         };
-        eprintln!("[SVG_TRACE_Bridge_1_2_STAGE_4] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() self.cached_serialized_data_url={:?}", self.cached_serialized_data_url.borrow());
-        eprintln!("[SVG_TRACE_Bridge_1_2_STAGE_4] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() End");
+        eprintln!("[SVG_TRACE_PASS_1_STAGE_3] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() self.cached_serialized_data_url={:?}", self.cached_serialized_data_url.borrow());
+        eprintln!("[SVG_TRACE_PASS_1_STAGE_3] script::dom::svg::svgsvgelement::SVGSVGElement::serialize_and_cache_subtree() End");
     }
 
     fn process_use_elements(&self, cx: &mut JSContext) -> Vec<DomRoot<Node>> {
+        eprintln!("[SVG_TRACE_PASS_1_STAGE_3] script::dom::svg::svgsvgelement::SVGSVGElement::process_use_elements()");
         let mut cloned_nodes = Vec::new();
         let root_node = self.upcast::<Node>();
 
@@ -192,7 +192,7 @@ impl<'dom> LayoutDom<'dom, SVGSVGElement> {
                 .clone()
         };
         eprintln!(
-            "[SVG_TRACE_PASS_X_STAGE_X] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source={:?} width={:?} height={:?} view_box={}",
+            "[SVG_TRACE---------------] script::dom::svg::svgsvgelement::data() -> create SVGElementData for layout, source={:?} width={:?} height={:?} view_box={}",
             match &source {
                 None => "None",
                 Some(Ok(_u)) => "Some(Ok(url))",

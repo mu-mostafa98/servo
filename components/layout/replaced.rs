@@ -155,7 +155,7 @@ impl ReplacedContents {
             Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
         );
         if is_svg {
-            eprintln!("[SVG_TRACE_PASS_X_STAGE_X] layout::replaced::ReplacedContents::for_element() Start");
+            eprintln!("[SVG_TRACE---------------] layout::replaced::ReplacedContents::for_element() Start");
         }
         if let Some(ref data_attribute_string) = node.as_typeless_object_with_data_attribute() {
             if let Some(url) = try_to_parse_image_data_url(data_attribute_string) {
@@ -233,13 +233,7 @@ impl ReplacedContents {
         context: &LayoutContext,
         node: ServoLayoutNode<'_>,
     ) -> (ReplacedContentKind, NaturalSizes) {
-        // let is_svg = matches!(
-        //     node.type_id(),
-        //     Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
-        // );
-        // if is_svg {
-            eprintln!("[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() Start");
-        // }
+        eprintln!("[SVG_TRACE---------------] layout::replaced::ReplacedContents::svg_kind_size() Start");
         let rule_cache_conditions = &mut RuleCacheConditions::default();
 
         let parent_style = node.style(&context.style_context);
@@ -286,7 +280,7 @@ impl ReplacedContents {
         };
 
         eprintln!(
-            "[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() - natural_size=({:?}, {:?}, {:?})",
+            "[SVG_TRACE---------------] svg_kind_size() - natural_size=({:?}, {:?}, {:?})",
             natural_size.width, natural_size.height, natural_size.ratio
         );
 
@@ -304,8 +298,6 @@ impl ReplacedContents {
             Some(svg_source_result) => svg_source_result.ok(),
         };
 
-        eprintln!("[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() - svg_source={:?}", svg_source);
-
         let cached_image = svg_source.and_then(|svg_source| {
             context
                 .image_resolver
@@ -317,7 +309,7 @@ impl ReplacedContents {
                 .ok()
         });
 
-        eprintln!("[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() - cached_image={:?}", cached_image);
+        eprintln!("[SVG_TRACE---------------] layout::replaced::ReplacedContents::svg_kind_size() - cached_image={:?}", cached_image);
 
         let vector_image = cached_image.map(|image| match image {
             Image::Vector(mut vector_image) => {
@@ -326,12 +318,9 @@ impl ReplacedContents {
             },
             _ => unreachable!("SVG element can't contain a raster image."),
         });
-        eprintln!(
-            "[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() - vector_image={})",
-            if vector_image.is_some() { "SOME" } else { "NONE" }
-        );
+        eprintln!("[SVG_TRACE---------------] layout::replaced::ReplacedContents::svg_kind_size() - vector_image={:?}", vector_image);
 
-        eprintln!("[SVG_TRACE_PASS_X_STAGE_X] svg_kind_size() End");
+        eprintln!("[SVG_TRACE---------------] layout::replaced::ReplacedContents::svg_kind_size() End");
 
         (
             ReplacedContentKind::SVGElement {
@@ -605,13 +594,10 @@ impl ReplacedContents {
                 vector_image,
                 has_viewbox,
             } => {
-                eprintln!("[SVG_TRACE_STAGE_8] make_fragments() SVGElement arm, vector_image.is_some={}", vector_image.is_some());
+                eprintln!("[SVG_TRACE---------------] layout::replaced::ReplacedContents::make_fragments() Start");
                 let Some(vector_image) = vector_image else {
                     return vec![];
                 };
-
-                eprintln!("[SVG_TRACE_STAGE_8] make_fragments() SVGElement metadata={:?}x{:?} has_viewbox={}",
-                    vector_image.metadata.width, vector_image.metadata.height, has_viewbox);
 
                 if !has_viewbox {
                     base.rect = PhysicalSize::new(
@@ -636,7 +622,7 @@ impl ReplacedContents {
                 );
 
                 let tag = self.base_fragment_info.tag.unwrap();
-                layout_context
+                let result = layout_context
                     .image_resolver
                     .rasterize_vector_image(
                         vector_image.id,
@@ -655,7 +641,9 @@ impl ReplacedContents {
                         }))
                     })
                     .into_iter()
-                    .collect()
+                    .collect();
+                eprintln!("[SVG_TRACE---------------] layout::replaced::ReplacedContents::make_fragments() End");
+                result
             },
             ReplacedContentKind::Audio => vec![],
         }

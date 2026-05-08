@@ -3799,6 +3799,7 @@ impl Node {
         &self,
         traversal_scope: xml_serialize::TraversalScope,
     ) -> Fallible<DOMString> {
+        eprintln!("[SVG_TRACE_PASS_1_STAGE_3] script::dom::node::node::Node::xml_serialize() use xml5ever::serialize::serialize()");
         let mut writer = vec![];
         xml_serialize::serialize(
             &mut writer,
