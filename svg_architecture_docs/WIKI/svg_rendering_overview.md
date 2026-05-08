@@ -41,6 +41,26 @@ The entire pipeline is driven by 4 sequential `update_the_rendering()` → `refl
 | HTML document | Network / file load |
 | CSS stylesheets | Document / UA defaults |
 
+**Call hierarchy:**
+```
+HTML Parser → create_element(ns!(svg), "svg")
+  → SVGElement::new()
+    → SVGSVGElement::new_inherited()
+      → SVGSVGElement {
+            uuid: Uuid::new_v4(),
+            cached_serialized_data_url: DomRefCell::new(None),
+            width: AttrValue::LengthPercentage("200", Some(Px(200.0))),
+            height: AttrValue::LengthPercentage("200", Some(Px(200.0))),
+            view_box: AttrValue::String("0 0 200 200"),
+        }
+```
+
+**Important Data Structures:**
+
+- **`SVGSVGElement`** — The DOM node type representing `<svg>`. Holds parsed attributes (`width`, `height`, `viewBox`) and a serialization cache cell. Lives on the Script Thread; layout accesses it via unsafe `LayoutDom` borrow.
+- **`cached_serialized_data_url: DomRefCell<Option<Result<ServoUrl>>>`** — A mutable DOM cell that stores the serialized data URL once produced. Initially `None`. Updated in Stage 3.
+- **`ElementData.styles: Arc<ComputedValues>`** — The computed CSS values (produced by Stylo). Contains resolved `display`, `width`, `height` used by layout for sizing.
+
 **Key functions:**
 
 | Function | Location | Role |
@@ -69,6 +89,13 @@ The entire pipeline is driven by 4 sequential `update_the_rendering()` → `refl
 |-------|--------|
 | `cached_serialized_data_url: None` | Stage 1 — not serialized yet |
 | `uuid`, `width`, `height`, `viewBox` | Stage 1 — parsed attributes |
+
+**Important Data Structures:**
+
+- **`SVGElementData`** — A snapshot of SVG DOM data, constructed for the layout thread via unsafe `LayoutDom` borrow. Contains `svg_id` (uuid string), `source` (the data URL or None), and parsed `width`/`height`/`view_box`.
+- **`ReplacedContentKind::SVGElement`** — An enum variant classifying the SVG as replaced content. Holds `vector_image: Option<ReplacedVectorImage>` (the loaded SVG image, initially None) and `has_viewbox: bool` (whether a `viewBox` attribute was present).
+- **`NaturalSizes`** — Computed natural dimensions from CSS/attributes: `width: Au`, `height: Au`, `aspect_ratio: f32`. Au (AppUnit) = 1/60 of a CSS pixel. So 200px = Au(12000).
+- **`pending_svg_elements_for_serialization: Vec<UntrustedNodeAddress>`** — A `Mutex`-protected list of SVG node addresses queued for post-reflow serialization. Populated by `queue_svg_element_for_serialization()`.
 
 **Key functions:**
 
@@ -111,6 +138,11 @@ source: None => {
 | `pending_svg_elements_for_serialization` | Stage 2 — queue populated |
 | SVG DOM subtree (`<svg>` + `<circle>`) | Stage 1 — built and styled |
 
+**Important Data Structures:**
+
+- **`ServoUrl`** — Servo's wrapper around a parsed URL. For SVG serialization it holds the `data:image/svg+xml;base64,...` URI that encodes the entire SVG subtree as an inline resource.
+- **`NodeDamage::Other`** — A DOM node dirty flag indicating that the node needs re-layout (but style is unchanged). Setting this flag causes `needs_rendering_update()` to return `true`, scheduling the next rendering pass.
+
 **Key functions:**
 
 | Function | Location | Role |
@@ -119,8 +151,8 @@ source: None => {
 | **`serialize_and_cache_subtree()`** | **`script/dom/svg/svgsvgelement.rs`** | **Top-level serialization orchestrator** |
 | `process_use_elements()` | `script/dom/svg/svgsvgelement.rs` | Clones `<use>`-referenced subtrees before serialization |
 | `cleanup_cloned_nodes()` | `script/dom/svg/svgsvgelement.rs` | Removes temporary `<use>` clones after serialization |
-| `xml_serialize()` | `xml5ever` (third-party) | Walks DOM subtree → produces XML string (~231 bytes) |
-| `base64::engine::general_purpose::STANDARD.encode()` | `base64` crate (third-party) | Encodes XML bytes → base64 (~334 chars) |
+| `xml_serialize()` | `xml5ever` (third-party) | Walks DOM subtree → produces XML string (bytes) |
+| `base64::engine::general_purpose::STANDARD.encode()` | `base64` crate (third-party) | Encodes XML bytes → base64 (chars) |
 | `ServoUrl::parse()` | `servo_url` crate | Wraps base64 as `data:image/svg+xml;base64,...` |
 
 **Sequence:**
@@ -159,6 +191,12 @@ dirty(NodeDamage::Other) → schedules Pass 2
 |-------|--------|
 | `cached_serialized_data_url: Some(Ok(url))` | Stage 3 — data URL cached |
 | `source: Some(Ok(ServoUrl("data:...")))` | Stage 3 — now available for cache lookup |
+
+**Important Data Structures:**
+
+- **`PendingImageId(u64)`** — A handle representing an in-flight image load. Assigned by the image cache when the data URL is first queried but not yet loaded. Used as a key to track the pending load across passes.
+- **`ImageCacheErr::Pending(PendingImageId)`** — The cache response indicating the image is being loaded asynchronously. The layout thread receives this and knows no `VectorImage` is available yet.
+- **`LoadedVectorImage`** — The loaded SVG data stored in the image cache. Contains a parsed `usvg::Tree`, `ImageMetadata { width, height }`, and the original `svg_id` for mapping back to the DOM element.
 
 **Key functions:**
 
@@ -227,6 +265,13 @@ vector_images: {
 | `VectorImage` stored by `PendingImageId(1)` | Bridge 2→3 — async load complete |
 | `cached_serialized_data_url: Some(Ok(url))` | Stage 3 — unchanged |
 
+**Important Data Structures:**
+
+- **`VectorImage`** (cache-side) — The loaded SVG stored in the image cache. Contains `id: PendingImageId`, `metadata: ImageMetadata`, `svg_tree: usvg::Tree` (the parsed SVG), and `svg_id` for DOM mapping.
+- **`ReplacedVectorImage`** (layout-side) — A lightweight reference to the loaded vector image, carried in `ReplacedContentKind::SVGElement.vector_image`. Contains `id: PendingImageId` and `metadata: ImageMetadata`. Layout uses `id` to request rasterization.
+- **`RasterImage`** — The rasterized pixel buffer produced by `resvg::render()`. Contains `metadata: ImageMetadata`, `format: PixelFormat::RGBA8`, `bytes: Arc<[u8]>` (raw RGBA pixels), and `id: Option<ImageKey>` (set after GPU texture upload).
+- **`ImageKey(IdNamespace, u32)`** — WebRender's handle for a GPU-stored texture. Assigned after rasterization completes. Used in display list commands to reference the image.
+
 **Key functions:**
 
 | Function | Location | Role |
@@ -294,6 +339,11 @@ rasterized_vector_images: {
 |-------|--------|
 | `RasterImage` in `rasterized_vector_images` keycache | Bridge 3→4 — async rasterization complete |
 | `vector_image: Some(ReplacedVectorImage)` | Stage 5 — unchanged |
+
+**Important Data Structures:**
+
+- **`Fragment::Image`** (a.k.a. `ImageFragment`) — A layout fragment that represents a rasterized image to be painted. Contains `image_key: Option<ImageKey>` (reference to GPU texture), `base: BaseFragment` (position, clip, style), and flags like `showing_broken_image_icon`. This is the output that the display list builder consumes.
+- **`DisplayList`** — An ordered list of rendering commands sent to WebRender. Each entry is a `DisplayItem` (like `push_image()`). WebRender processes this list to issue GPU draw calls. The final display list for our SVG contains a single `push_image()` command with the `ImageKey`.
 
 **Key functions:**
 
