@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Known Limitations — Examples</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    padding: 40px;
+  }
+  h1 { margin-bottom: 4px; color: #333; font-size: 22px; }
+  .subtitle { color: #888; margin-bottom: 30px; font-size: 13px; }
+
+  .case {
+    background: white;
+    border-radius: 8px;
+    margin-bottom: 28px;
+    padding: 24px;
+    border-left: 4px solid #ccc;
+  }
+  .case h2 {
+    font-size: 17px;
+    margin-bottom: 12px;
+    color: #333;
+  }
+  .case .num {
+    font-size: 11px;
+    color: #999;
+    font-weight: 600;
+    display: block;
+    margin-bottom: 2px;
+  }
+
+  .example {
+    border: 1px solid #e0e0e0;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    overflow: hidden;
+  }
+  .example:last-child { margin-bottom: 0; }
+  .example-body {
+    padding: 16px;
+  }
+  .example-body svg {
+    border: 1px dashed #ddd;
+    background: #fafafa;
+    max-width: 100%;
+    display: block;
+  }
+  .example-body .caption {
+    font-size: 12px;
+    color: #666;
+    line-height: 1.5;
+    font-family: 'Consolas', 'Courier New', monospace;
+    background: #f8f8f8;
+    padding: 6px 10px;
+    border-radius: 3px;
+    margin-top: 8px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+  .example-body .expect {
+    font-size: 12px;
+    color: #1565C0;
+    padding: 4px 0;
+  }
+  .example-body .actual {
+    font-size: 12px;
+    color: #c62828;
+    padding: 2px 0 0 0;
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid #e0e0e0;
+    margin: 16px 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>SVG Known Limitations — Test Cases</h1>
+<p class="subtitle">Examples that fail under Servo's current serialize-as-image approach. Open in Chrome to see expected behavior, then compare with Servo.</p>
+
+<!-- ====================================================================== -->
+<!-- CASE 1 -->
+<!-- ====================================================================== -->
+<div class="case" style="border-left-color: #c62828;">
+  <span class="num">Case 1</span>
+  <h2>CSS doesn't cross the SVG boundary</h2>
+
+  <div class="example">
+    <div class="example-body">
+      <div style="fill: green;">
+        <svg width="400" height="35">
+          <text x="10" y="24" font-family="Arial" font-size="18">This text should be green (inherits fill from parent div)</text>
+        </svg>
+      </div>
+      <div class="expect">Expected: Text is green because fill:green on the parent div cascades into the SVG.</div>
+      <div class="actual">Servo: Text is black. The serialization severs CSS inheritance from parent document.</div>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-body">
+      <div style="color: red; font-family: Arial;">
+        <svg width="400" height="35">
+          <text x="10" y="24" font-size="18" fill="currentColor">This text should be red (currentColor)</text>
+        </svg>
+      </div>
+      <div class="expect">Expected: Text is red — currentColor resolves to parent's color value.</div>
+      <div class="actual">Servo: Text is black. currentColor can't resolve across the serialization boundary.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CASE 2 -->
+<!-- ====================================================================== -->
+<div class="case" style="border-left-color: #e65100;">
+  <span class="num">Case 2</span>
+  <h2>Web fonts can't be used</h2>
+
+  <div class="example">
+    <div class="example-body">
+      <svg width="500" height="70">
+        <style>
+          @import url('https://fonts.googleapis.com/css2?family=Saira+Stencil:wght@400;700&display=swap');
+          .web-font { font-family: 'Saira Stencil', serif; }
+        </style>
+        <text x="10" y="30" class="web-font" font-size="28">Web Font — Saira Stencil</text>
+        <text x="10" y="55" font-family="Arial" font-size="12" fill="#999">↑ Should render in "Saira Stencil" distinctive display font</text>
+      </svg>
+      <div class="expect">Expected: Top text renders in Saira Stencil web font.</div>
+      <div class="actual">Servo: Falls back to default serif. Web font @import is never fetched by usvg.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CASE 3 -->
+<!-- ====================================================================== -->
+<div class="case" style="border-left-color: #f9a825;">
+  <span class="num">Case 3</span>
+  <h2>Pixel-level error when SVG is transformed</h2>
+
+  <div class="example">
+    <div class="example-body">
+      <table style="border-collapse: collapse; width: 100%;">
+        <tr>
+          <td style="padding: 8px; vertical-align: top; width: 33%;">
+            <div style="font-size: 12px; color: #555; margin-bottom: 6px;">Natural size (10×10):</div>
+            <svg width="10" height="10" viewBox="0 0 10 10">
+              <circle cx="5" cy="5" r="5" fill="green"></circle>
+            </svg>
+          </td>
+          <td style="padding: 8px; vertical-align: top; width: 33%;">
+            <div style="font-size: 12px; color: #555; margin-bottom: 6px;">Scaled 4× via CSS:</div>
+            <div style="transform: scale(4); transform-origin: top left;">
+              <svg width="10" height="10" viewBox="0 0 10 10">
+                <circle cx="5" cy="5" r="5" fill="green"></circle>
+              </svg>
+            </div>
+          </td>
+          <td style="padding: 8px; vertical-align: top; width: 33%;">
+            <div style="font-size: 12px; color: #555; margin-bottom: 6px;">Native 40×40 (reference):</div>
+            <svg width="40" height="40" viewBox="0 0 40 40">
+              <circle cx="20" cy="20" r="20" fill="green"></circle>
+            </svg>
+          </td>
+        </tr>
+      </table>
+      <div class="expect">Expected: Middle circle is as crisp as the right one (native 40×40 vector).</div>
+      <div class="actual">Servo: Middle circle is pixelated — rasterized at 10×10 then GPU-scaled to 40×40.</div>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-body">
+      <div style="transform: scale(3); transform-origin: top left;">
+        <svg width="16" height="16" viewBox="0 0 16 16">
+          <circle cx="8" cy="8" r="7" fill="none" stroke="#2E7D32" stroke-width="2"/>
+          <path d="M5,8 L11,8 M8,5 L8,11" stroke="#2E7D32" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div class="caption">16×16 circle with cross, scaled 3× via CSS transform</div>
+      <div class="expect">Expected: Crisp vector rendering at any scale.</div>
+      <div class="actual">Servo: Pixelated — fixed 16×16 rasterization scaled up.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CASE 4 -->
+<!-- ====================================================================== -->
+<div class="case" style="border-left-color: #1565C0;">
+  <span class="num">Case 4</span>
+  <h2>Animations don't work</h2>
+
+  <div class="example">
+    <div class="example-body">
+      <svg width="200" height="110" viewBox="0 0 200 110">
+        <circle cx="100" cy="50" r="30" fill="#1565C0">
+          <animate attributeName="r" from="30" to="50" dur="2s" repeatCount="indefinite"/>
+          <animate attributeName="fill" values="#1565C0;#E65100;#1565C0" dur="3s" repeatCount="indefinite"/>
+        </circle>
+        <text x="100" y="95" text-anchor="middle" font-family="Arial" font-size="11" fill="#999">
+          Circle should pulse and change color
+        </text>
+      </svg>
+      <div class="expect">Expected: Circle pulses r=30→r=50, cycles blue→orange→blue.</div>
+      <div class="actual">Servo: Static. No animation tick occurs in the image-cache pipeline.</div>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-body">
+      <svg width="200" height="110" viewBox="0 0 200 110">
+        <g>
+          <animateTransform attributeName="transform" type="rotate" from="0 100 55" to="360 100 55" dur="4s" repeatCount="indefinite"/>
+          <rect x="85" y="5" width="30" height="100" rx="5" fill="#E65100" opacity="0.8"/>
+          <rect x="50" y="40" width="100" height="30" rx="5" fill="#E65100" opacity="0.8"/>
+          <circle cx="100" cy="55" r="22" fill="#FFF"/>
+        </g>
+      </svg>
+      <div class="expect">Expected: Gear rotates continuously via animateTransform.</div>
+      <div class="actual">Servo: Static. No animation evaluation.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CASE 5 -->
+<!-- ====================================================================== -->
+<div class="case" style="border-left-color: #6A1B9A;">
+  <span class="num">Case 5</span>
+  <h2>&lt;foreignObject&gt; doesn't work</h2>
+
+  <div class="example">
+    <div class="example-body">
+      <svg width="400" height="130" viewBox="0 0 400 130">
+        <rect x="0" y="0" width="400" height="130" fill="#f5f5f5" rx="6"/>
+        <text x="15" y="22" font-family="Arial" font-size="13" font-weight="bold" fill="#333">SVG with embedded HTML via foreignObject:</text>
+        <foreignObject x="15" y="30" width="370" height="85">
+          <div xmlns="http://www.w3.org/1999/xhtml" style="background: white; border: 2px solid #6A1B9A; border-radius: 6px; padding: 10px; font-family: Arial, sans-serif;">
+            <p style="margin: 0 0 4px 0; font-weight: bold; color: #6A1B9A;">Hello from HTML!</p>
+            <p style="margin: 0; color: #333; font-size: 13px;">This HTML content is embedded inside SVG.</p>
+          </div>
+        </foreignObject>
+      </svg>
+      <div class="expect">Expected: A styled HTML card with purple border appears inside the SVG.</div>
+      <div class="actual">Servo: Empty — foreignObject is stripped by usvg during parsing.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CASE 6 -->
+<!-- ====================================================================== -->
+<div class="case" style="border-left-color: #00838F;">
+  <span class="num">Case 6</span>
+  <h2>Scripting inside SVG doesn't work</h2>
+
+  <div class="example">
+    <div class="example-body">
+      <svg width="400" height="90" viewBox="0 0 400 90">
+        <rect x="0" y="0" width="400" height="90" fill="#e0f7fa" rx="6"/>
+        <circle cx="60" cy="45" r="25" fill="#00838F" id="demoCircle"/>
+        <text x="100" y="40" font-family="Arial" font-size="13" fill="#333">Text updated by script:</text>
+        <text x="100" y="60" font-family="Arial" font-size="13" fill="#888" id="dynamicText">Waiting for script...</text>
+        <script type="text/javascript">
+          document.getElementById('dynamicText').textContent = 'Script executed successfully!';
+          document.getElementById('demoCircle').setAttribute('fill', '#E65100');
+        </script>
+      </svg>
+      <div class="expect">Expected: Text reads "Script executed successfully!" and circle is orange.</div>
+      <div class="actual">Servo: Text stays "Waiting for script..." and circle is teal. Script never runs.</div>
+    </div>
+  </div>
+
+  <div class="example">
+    <div class="example-body">
+      <svg width="400" height="150" viewBox="0 0 400 150">
+        <rect x="0" y="0" width="400" height="150" fill="#f3e5f5" rx="6"/>
+        <text x="15" y="25" font-family="Arial" font-size="13" fill="#6A1B9A">Bar chart generated by SVG script:</text>
+        <g id="chartContainer"/>
+        <script type="text/javascript">
+          var data = [45, 78, 32, 91, 55, 67];
+          var colors = ['#1565C0','#E65100','#2E7D32','#6A1B9A','#00838F','#F9A825'];
+          var g = document.getElementById('chartContainer');
+          data.forEach(function(v, i) {
+            var r = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+            r.setAttribute('x', 20 + i * 58);
+            r.setAttribute('y', 120 - v);
+            r.setAttribute('width', 42);
+            r.setAttribute('height', v);
+            r.setAttribute('fill', colors[i]);
+            r.setAttribute('rx', '3');
+            g.appendChild(r);
+            var t = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+            t.setAttribute('x', 41 + i * 58);
+            t.setAttribute('y', 138);
+            t.setAttribute('text-anchor', 'middle');
+            t.setAttribute('font-size', '11');
+            t.setAttribute('fill', '#555');
+            t.setAttribute('font-family', 'Arial');
+            t.textContent = v;
+            g.appendChild(t);
+          });
+        </script>
+      </svg>
+      <div class="expect">Expected: Six colored bars with value labels generated by JavaScript.</div>
+      <div class="actual">Servo: Empty — script-driven DOM creation never executes.</div>
+    </div>
+  </div>
+</div>
+
+<hr>
+
+<p style="font-size: 12px; color: #999;">See <code>svg_architecture_docs/WIKI/svg_known_limitations.md</code> for root cause analysis. See <code>svg_architecture_docs/WIKI/svg_engine_design.md</code> for the proposed native engine fix.</p>
+
+</body>
+</html>

@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SVG Primer — Interactive Examples</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', Arial, Helvetica, sans-serif;
+    background: #f5f5f5;
+    color: #333;
+    padding: 40px;
+  }
+  h1 { margin-bottom: 8px; color: #1a237e; }
+  .subtitle { color: #666; margin-bottom: 32px; font-size: 14px; }
+
+  .chapter {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    margin-bottom: 32px;
+    padding: 28px;
+    border-left: 5px solid #1a237e;
+  }
+  .chapter h2 {
+    color: #1a237e;
+    font-size: 20px;
+    margin-bottom: 6px;
+  }
+  .chapter .desc {
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  .example {
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+  }
+  .example:last-child { margin-bottom: 0; }
+  .example-header {
+    background: #fafafa;
+    padding: 12px 16px;
+    border-bottom: 1px solid #e0e0e0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .example-header h3 {
+    font-size: 14px;
+    color: #333;
+    font-weight: 600;
+  }
+  .example-header .badge {
+    font-size: 11px;
+    background: #e8eaf6;
+    color: #3f51b5;
+    padding: 2px 10px;
+    border-radius: 10px;
+    font-weight: 500;
+  }
+  .example-body {
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+  .example-body svg {
+    border: 1px dashed #ccc;
+    background: #fafafa;
+    max-width: 100%;
+  }
+  .example-body .caption {
+    font-size: 13px;
+    color: #555;
+    line-height: 1.5;
+    font-family: 'Consolas', 'Courier New', monospace;
+    background: #f5f5f5;
+    padding: 8px 12px;
+    border-radius: 4px;
+    white-space: pre-wrap;
+    overflow-x: auto;
+  }
+  .example-body .note {
+    font-size: 13px;
+    color: #888;
+    font-style: italic;
+    margin-top: -4px;
+  }
+
+  .side-by-side {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .side-by-side > div {
+    flex: 1;
+    min-width: 280px;
+  }
+  .side-by-side svg {
+    width: 100%;
+  }
+
+  @media (max-width: 768px) {
+    body { padding: 16px; }
+    .chapter { padding: 16px; }
+  }
+</style>
+</head>
+<body>
+
+<h1>SVG Primer — Interactive Examples</h1>
+<p class="subtitle">Open in Chrome. Inspect elements with DevTools. Each example corresponds to <code>svg_primer_for_engine.md</code></p>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 1 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #1565C0;">
+<h2>Chapter 1 — SVG Document Structure</h2>
+<p class="desc">The three categories of SVG elements: renderable, container, and non-renderable references.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>1.1 Basic Shapes</h3>
+    <span class="badge">§1 Renderable</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="140" viewBox="0 0 500 140">
+      <rect x="10" y="10" width="50" height="50" rx="8" fill="#1565C0"/>
+      <circle cx="110" cy="35" r="30" fill="#E65100"/>
+      <ellipse cx="200" cy="35" rx="40" ry="20" fill="#2E7D32"/>
+      <line x1="290" y1="10" x2="340" y2="60" stroke="#6A1B9A" stroke-width="4"/>
+      <polyline points="370,10 390,30 420,15 440,60" fill="none" stroke="#C62828" stroke-width="3"/>
+      <polygon points="10,80 50,120 30,130 10,110" fill="#F57C00"/>
+      <path d="M100,120 L130,80 L160,120 L140,130 L120,110 L100,130 Z" fill="#00897B"/>
+      <text x="230" y="115" font-family="Arial" font-size="28" fill="#333">Hello SVG</text>
+    </svg>
+    <div class="caption">&lt;rect&gt; &lt;circle&gt; &lt;ellipse&gt; &lt;line&gt; &lt;polyline&gt; &lt;polygon&gt; &lt;path&gt; &lt;text&gt;</div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>1.2 Containers &amp; References</h3>
+    <span class="badge">§1 Container + Reference</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="180" viewBox="0 0 500 180">
+      <defs>
+        <linearGradient id="grad1" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#1565C0"/>
+          <stop offset="100%" stop-color="#E65100"/>
+        </linearGradient>
+        <radialGradient id="grad2" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#2E7D32"/>
+          <stop offset="100%" stop-color="#00695C"/>
+        </radialGradient>
+      </defs>
+
+      <rect x="10" y="10" width="100" height="100" rx="10" fill="url(#grad1)"/>
+      <circle cx="190" cy="60" r="50" fill="url(#grad2)"/>
+
+      <g transform="translate(280, 20)">
+        <rect x="0" y="0" width="60" height="60" rx="6" fill="#6A1B9A" opacity="0.6"/>
+        <circle cx="60" cy="60" r="30" fill="#C62828" opacity="0.6"/>
+      </g>
+
+      <text x="15" y="155" font-size="12" fill="#888">linearGradient</text>
+      <text x="145" y="155" font-size="12" fill="#888">radialGradient</text>
+      <text x="295" y="155" font-size="12" fill="#888">&lt;g&gt; group with transform + opacity</text>
+    </svg>
+    <div class="caption">&lt;defs&gt; → &lt;linearGradient&gt; / &lt;radialGradient&gt; referenced by url(#id)  ·  &lt;g&gt; groups children with inherited attributes</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 2 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #E65100;">
+<h2>Chapter 2 — Coordinate System Model</h2>
+<p class="desc">The most important SVG concept. viewBox, preserveAspectRatio, nested viewports, and transforms.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>2.1 viewBox Mapping</h3>
+    <span class="badge">§2 viewBox</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">No viewBox — raw 200×200</p>
+        <svg width="200" height="200" style="background:#f0f0f0;">
+          <rect x="0" y="0" width="100" height="100" fill="#1565C0" opacity="0.7"/>
+          <circle cx="150" cy="150" r="40" fill="#E65100" opacity="0.7"/>
+        </svg>
+        <div class="caption">&lt;svg width="200" height="200"&gt; — user unit = 1 CSS pixel</div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">viewBox="0 0 100 100" — 2× scale</p>
+        <svg width="200" height="200" viewBox="0 0 100 100" style="background:#f0f0f0;">
+          <rect x="0" y="0" width="50" height="50" fill="#1565C0" opacity="0.7"/>
+          <circle cx="75" cy="75" r="20" fill="#E65100" opacity="0.7"/>
+        </svg>
+        <div class="caption">&lt;svg viewBox="0 0 100 100"&gt; — 100×100 mapped to 200×200 → 2× scale</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>2.2 preserveAspectRatio</h3>
+    <span class="badge">§2 preserveAspectRatio</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">xMidYMid meet (default)</p>
+        <svg width="200" height="100" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid meet" style="background:#f0f0f0;">
+          <rect x="0" y="0" width="100" height="100" fill="#1565C0" opacity="0.5"/>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#E65100" stroke-width="8"/>
+        </svg>
+        <div class="caption">Scale to fit: 100×100 scales by min(2,1)=1×, centered</div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">xMinYMin slice</p>
+        <svg width="200" height="100" viewBox="0 0 100 100" preserveAspectRatio="xMinYMin slice" style="background:#f0f0f0;">
+          <rect x="0" y="0" width="100" height="100" fill="#2E7D32" opacity="0.5"/>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#E65100" stroke-width="8"/>
+        </svg>
+        <div class="caption">Scale to fill: 100×100 scales by max(2,1)=2×, cropped</div>
+      </div>
+    </div>
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">xMinYMin meet</p>
+        <svg width="200" height="100" viewBox="0 0 100 100" preserveAspectRatio="xMinYMin meet" style="background:#f0f0f0;">
+          <rect x="0" y="0" width="100" height="100" fill="#6A1B9A" opacity="0.4"/>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#E65100" stroke-width="8"/>
+        </svg>
+        <div class="caption">Align top-left, scale to fit</div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">none (stretch)</p>
+        <svg width="200" height="100" viewBox="0 0 100 100" preserveAspectRatio="none" style="background:#f0f0f0;">
+          <rect x="0" y="0" width="100" height="100" fill="#C62828" opacity="0.4"/>
+          <circle cx="50" cy="50" r="40" fill="none" stroke="#E65100" stroke-width="8"/>
+        </svg>
+        <div class="caption">Stretch to fill — aspect ratio NOT preserved, circle becomes ellipse</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>2.3 Nested Viewports (&lt;svg&gt; inside &lt;svg&gt;)</h3>
+    <span class="badge">§2 Nested Viewports</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="250" viewBox="0 0 500 250" style="background:#f0f0f0;">
+      <rect x="0" y="0" width="500" height="250" fill="#e3f2fd" stroke="#1565C0" stroke-width="1"/>
+      <circle cx="250" cy="125" r="100" fill="none" stroke="#1565C0" stroke-width="2" stroke-dasharray="4,4"/>
+      <text x="250" y="20" font-size="14" fill="#1565C0" text-anchor="middle" font-weight="bold">Outer SVG (500×250)</text>
+
+      <svg x="70" y="50" width="150" height="150" viewBox="0 0 30 30" style="border:1px solid #E65100;">
+        <rect x="0" y="0" width="30" height="30" fill="#E65100" opacity="0.3"/>
+        <circle cx="15" cy="15" r="10" fill="none" stroke="#E65100" stroke-width="2"/>
+        <text x="15" y="18" font-size="6" fill="#E65100" text-anchor="middle">30×30 → 150×150 (5×)</text>
+      </svg>
+
+      <svg x="280" y="50" width="150" height="150" viewBox="0 0 60 60" style="border:1px solid #2E7D32;">
+        <rect x="0" y="0" width="60" height="60" fill="#2E7D32" opacity="0.2"/>
+        <circle cx="30" cy="30" r="20" fill="none" stroke="#2E7D32" stroke-width="2"/>
+        <text x="30" y="33" font-size="7" fill="#2E7D32" text-anchor="middle">60×60 → 150×150 (2.5×)</text>
+      </svg>
+    </svg>
+    <div class="caption">Each nested &lt;svg&gt; creates an independent viewport with its own viewBox scaling. Dashed circle shows outer SVG center.</div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>2.4 The transform Attribute</h3>
+    <span class="badge">§2 Transform</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="200" viewBox="0 0 500 200" style="background:#f0f0f0;">
+      <!-- Reference grid -->
+      <line x1="0" y1="100" x2="500" y2="100" stroke="#ddd" stroke-width="1"/>
+      <line x1="250" y1="0" x2="250" y2="200" stroke="#ddd" stroke-width="1"/>
+      <text x="250" y="195" font-size="11" fill="#999" text-anchor="middle">Reference grid: center at (250,100), each square = 40×40</text>
+
+      <rect x="10" y="10" width="40" height="40" fill="#1565C0" opacity="0.3"/>
+      <text x="10" y="62" font-size="10" fill="#1565C0">translate(10,10)</text>
+
+      <g transform="translate(90, 10)">
+        <rect x="0" y="0" width="40" height="40" fill="#E65100" opacity="0.3"/>
+        <text x="0" y="52" font-size="10" fill="#E65100">translate+rotate(45)</text>
+      </g>
+
+      <g transform="translate(190, 10) rotate(45)">
+        <rect x="0" y="0" width="40" height="40" fill="#2E7D32" opacity="0.3"/>
+      </g>
+
+      <g transform="translate(290, 10) scale(1.5)">
+        <rect x="0" y="0" width="40" height="40" fill="#6A1B9A" opacity="0.3"/>
+        <text x="0" y="52" font-size="10" fill="#6A1B9A">scale(1.5)</text>
+      </g>
+
+      <g transform="translate(10, 100) skewX(20)">
+        <rect x="0" y="0" width="40" height="40" fill="#C62828" opacity="0.3"/>
+        <text x="0" y="52" font-size="10" fill="#C62828">skewX(20)</text>
+      </g>
+
+      <g transform="translate(130, 100) matrix(1,0.5,0,1,0,0)">
+        <rect x="0" y="0" width="40" height="40" fill="#00897B" opacity="0.3"/>
+        <text x="0" y="52" font-size="10" fill="#00897B">matrix(1,0.5,0,1,0,0)</text>
+      </g>
+    </svg>
+    <div class="caption">Left-to-right: translate, rotate(45), scale(1.5), skewX(20), matrix(). Transforms are right-to-left in composition order.</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 3 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #2E7D32;">
+<h2>Chapter 3 — Paint Servers</h2>
+<p class="desc">Fill and stroke are not just colors — they can reference gradients, patterns, and other paint servers via url(#id).</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>3.1 Solid Color vs. Gradient Fill</h3>
+    <span class="badge">§3 Paint Servers</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Solid fill="red"</p>
+        <svg width="180" height="80" style="background:#f0f0f0;">
+          <circle cx="90" cy="40" r="30" fill="#E53935"/>
+        </svg>
+        <div class="caption">Simple — no resolution needed</div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Gradient fill="url(#g)"</p>
+        <svg width="180" height="80" style="background:#f0f0f0;">
+          <defs>
+            <linearGradient id="g3_1" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1565C0"/>
+              <stop offset="50%" stop-color="#E65100"/>
+              <stop offset="100%" stop-color="#2E7D32"/>
+            </linearGradient>
+          </defs>
+          <circle cx="90" cy="40" r="30" fill="url(#g3_1)"/>
+        </svg>
+        <div class="caption">Engine must resolve url(#g3_1) to a gradient definition</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>3.2 Gradient Coordinate Modes</h3>
+    <span class="badge">§3 objectBoundingBox vs. userSpaceOnUse</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">objectBoundingBox (default)</p>
+        <svg width="200" height="130" style="background:#f0f0f0;">
+          <defs>
+            <linearGradient id="g_bbox" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="#1565C0"/>
+              <stop offset="100%" stop-color="#E65100"/>
+            </linearGradient>
+          </defs>
+          <rect x="30" y="10" width="60" height="80" fill="url(#g_bbox)" rx="4"/>
+          <rect x="110" y="25" width="40" height="50" fill="url(#g_bbox)" rx="4"/>
+        </svg>
+        <div class="caption">Gradient fits each element's bounding box. Different positions, different gradient.</div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">userSpaceOnUse</p>
+        <svg width="200" height="130" style="background:#f0f0f0;">
+          <defs>
+            <linearGradient id="g_uso" x1="0" y1="0" x2="200" y2="130" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#1565C0"/>
+              <stop offset="100%" stop-color="#E65100"/>
+            </linearGradient>
+          </defs>
+          <rect x="30" y="10" width="60" height="80" fill="url(#g_uso)" rx="4"/>
+          <rect x="110" y="25" width="40" height="50" fill="url(#g_uso)" rx="4"/>
+        </svg>
+        <div class="caption">Gradient uses absolute coordinates. Both elements see the same gradient region.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>3.3 Paint Server Reference Chain</h3>
+    <span class="badge">§3 The Reference Problem</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="120" viewBox="0 0 500 120" style="background:#f0f0f0;">
+      <defs>
+        <linearGradient id="g_base" x1="0" y1="0" x2="1" y2="0">
+          <stop offset="0%" stop-color="#1565C0"/>
+          <stop offset="50%" stop-color="#2E7D32"/>
+          <stop offset="100%" stop-color="#E65100"/>
+        </linearGradient>
+        <pattern id="p_stripe" width="20" height="20" patternUnits="userSpaceOnUse">
+          <rect width="20" height="20" fill="url(#g_base)"/>
+          <line x1="0" y1="0" x2="20" y2="20" stroke="white" stroke-width="2"/>
+        </pattern>
+      </defs>
+      <rect x="20" y="20" width="200" height="80" rx="8" fill="url(#g_base)"/>
+      <rect x="260" y="20" width="200" height="80" rx="8" fill="url(#p_stripe)"/>
+      <text x="120" y="110" font-size="11" fill="#555" text-anchor="middle">fill="url(#g_base)" → linearGradient</text>
+      <text x="360" y="110" font-size="11" fill="#555" text-anchor="middle">fill="url(#p_stripe)" → pattern → url(#g_base) → gradient</text>
+    </svg>
+    <div class="caption">Paint servers can reference other paint servers. Your engine must resolve chains recursively.</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 4 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #6A1B9A;">
+<h2>Chapter 4 — Rendering Tree vs. DOM Tree</h2>
+<p class="desc">Not all DOM elements become rendering tree nodes. Painter's algorithm: elements draw in DOM order.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>4.1 Painter's Algorithm — DOM Order</h3>
+    <span class="badge">§4 Draw Order</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">First-to-last DOM order</p>
+        <svg width="200" height="200" style="background:#f0f0f0;">
+          <circle cx="80" cy="80" r="60" fill="#1565C0" opacity="0.6"/>
+          <circle cx="120" cy="120" r="60" fill="#E65100" opacity="0.6"/>
+          <text x="100" y="195" font-size="11" fill="#555" text-anchor="middle">Blue drawn first, orange on top</text>
+        </svg>
+        <div class="caption">Blue at (80,80) — drawn first. Orange at (120,120) — drawn on top, covers intersection.</div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Reversed DOM order</p>
+        <svg width="200" height="200" style="background:#f0f0f0;">
+          <circle cx="120" cy="120" r="60" fill="#E65100" opacity="0.6"/>
+          <circle cx="80" cy="80" r="60" fill="#1565C0" opacity="0.6"/>
+          <text x="100" y="195" font-size="11" fill="#555" text-anchor="middle">Orange drawn first, blue on top</text>
+        </svg>
+        <div class="caption">Orange at (120,120) drawn first. Blue at (80,80) drawn on top — different intersection.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>4.2 display:none vs. visibility:hidden</h3>
+    <span class="badge">§4 Rendering Tree</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="120" style="background:#f0f0f0;">
+      <rect x="20" y="20" width="80" height="80" fill="#1565C0" rx="4"/>
+      <rect x="120" y="20" width="80" height="80" fill="#E65100" rx="4" display="none"/>
+      <rect x="220" y="20" width="80" height="80" fill="#2E7D32" rx="4" visibility="hidden"/>
+      <rect x="320" y="20" width="80" height="80" fill="#6A1B9A" rx="4"/>
+
+      <text x="60" y="115" font-size="10" fill="#555" text-anchor="middle">Visible</text>
+      <text x="160" y="115" font-size="10" fill="#555" text-anchor="middle">display:none</text>
+      <text x="260" y="115" font-size="10" fill="#555" text-anchor="middle">visibility:hidden</text>
+      <text x="360" y="115" font-size="10" fill="#555" text-anchor="middle">Visible</text>
+    </svg>
+    <div class="caption">display:none → removed from rendering tree (not rendered, not in layout). visibility:hidden → in rendering tree but not painted (still affects bounding boxes).</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 5 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #C62828;">
+<h2>Chapter 5 — The &lt;use&gt; Element</h2>
+<p class="desc">SVG's element cloning mechanism. Creates a shadow tree copy with attribute overrides.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>5.1 Basic &lt;use&gt;</h3>
+    <span class="badge">§5 Element Reuse</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="140" style="background:#f0f0f0;">
+      <defs>
+        <circle id="star" cx="0" cy="0" r="20" fill="#1565C0" stroke="#0d47a1" stroke-width="2"/>
+        <rect id="box" x="0" y="0" width="40" height="40" rx="4" fill="#E65100"/>
+      </defs>
+
+      <text x="20" y="25" font-size="11" fill="#333" font-weight="600">Original:</text>
+      <use href="#star" x="40" y="60"/>
+      <use href="#box" x="80" y="40"/>
+
+      <text x="180" y="25" font-size="11" fill="#333" font-weight="600">Reused with different positions:</text>
+      <use href="#star" x="200" y="80"/>
+      <use href="#star" x="250" y="50"/>
+      <use href="#star" x="300" y="100"/>
+
+      <use href="#box" x="360" y="30"/>
+      <use href="#box" x="410" y="70"/>
+
+      <text x="250" y="130" font-size="11" fill="#888" text-anchor="middle">&lt;use href="#star" /&gt; clones the circle at each x,y position</text>
+    </svg>
+    <div class="caption">&lt;use&gt; clones the referenced element and positions it at the given x,y. The clone is in a shadow tree — it behaves like a copy but the styling can be overridden.</div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>5.2 Attribute Overriding on &lt;use&gt;</h3>
+    <span class="badge">§5 Attribute Override</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="120" style="background:#f0f0f0;">
+      <defs>
+        <rect id="base_rect" x="0" y="0" width="60" height="60" rx="6" fill="#1565C0" stroke="#0d47a1" stroke-width="3"/>
+      </defs>
+
+      <use href="#base_rect" x="20" y="20"/>
+      <use href="#base_rect" x="110" y="20" fill="#E65100"/>
+      <use href="#base_rect" x="200" y="20" fill="#2E7D32" stroke="#1b5e20" stroke-width="5"/>
+      <use href="#base_rect" x="290" y="20" fill="#6A1B9A" opacity="0.6"/>
+      <use href="#base_rect" x="380" y="20" fill="#C62828" transform="rotate(15, 410, 50)"/>
+
+      <text x="250" y="108" font-size="11" fill="#555" text-anchor="middle">Attributes on &lt;use&gt; (fill, stroke, opacity, transform) override the cloned element's attributes</text>
+    </svg>
+    <div class="caption">The &lt;use&gt; element's attributes override the cloned element's matching attributes. fill="green" on &lt;use&gt; replaces fill="blue" from the &lt;defs&gt; definition. transform applies to the entire cloned subtree.</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 6 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #00897B;">
+<h2>Chapter 6 — Fills, Strokes, and Markers</h2>
+<p class="desc">Each renderable element produces up to three draw operations: fill, stroke, markers.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>6.1 Fill with fill-rule</h3>
+    <span class="badge">§6 Fill</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">fill-rule="nonzero" (default)</p>
+        <svg width="180" height="150" style="background:#f0f0f0;">
+          <path d="M50,10 L10,90 L90,90 Z M50,30 L30,70 L70,70 Z"
+                fill="#1565C0" fill-rule="nonzero"/>
+          <text x="90" y="130" font-size="10" fill="#555" text-anchor="middle">nonzero — inner hole</text>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">fill-rule="evenodd"</p>
+        <svg width="180" height="150" style="background:#f0f0f0;">
+          <path d="M50,10 L10,90 L90,90 Z M50,30 L30,70 L70,70 Z"
+                fill="#E65100" fill-rule="evenodd"/>
+          <text x="90" y="130" font-size="10" fill="#555" text-anchor="middle">evenodd — different winding</text>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">fill-opacity</p>
+        <svg width="180" height="150" style="background:#f0f0f0;">
+          <rect x="20" y="10" width="80" height="80" fill="#2E7D32" fill-opacity="0.3"/>
+          <rect x="50" y="30" width="80" height="80" fill="#E65100" fill-opacity="0.5"/>
+          <text x="90" y="130" font-size="10" fill="#555" text-anchor="middle">fill-opacity blends with parent</text>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>6.2 Stroke Parameters</h3>
+    <span class="badge">§6 Stroke</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">linecap: butt / round / square</p>
+        <svg width="200" height="140" style="background:#f0f0f0;">
+          <line x1="30" y1="30" x2="170" y2="30" stroke="#1565C0" stroke-width="20" stroke-linecap="butt"/>
+          <line x1="30" y1="70" x2="170" y2="70" stroke="#E65100" stroke-width="20" stroke-linecap="round"/>
+          <line x1="30" y1="110" x2="170" y2="110" stroke="#2E7D32" stroke-width="20" stroke-linecap="square"/>
+          <line x1="30" y1="0" x2="30" y2="140" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+          <line x1="170" y1="0" x2="170" y2="140" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+          <text x="185" y="30" font-size="9" fill="#555">butt</text>
+          <text x="185" y="70" font-size="9" fill="#555">round</text>
+          <text x="185" y="110" font-size="9" fill="#555">square</text>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">linejoin: miter / round / bevel</p>
+        <svg width="200" height="140" style="background:#f0f0f0;">
+          <polyline points="20,60 50,10 80,60" fill="none" stroke="#1565C0" stroke-width="12" stroke-linejoin="miter"/>
+          <polyline points="100,60 130,10 160,60" fill="none" stroke="#E65100" stroke-width="12" stroke-linejoin="round"/>
+          <polyline points="180,60 210,10 240,60" fill="none" stroke="#2E7D32" stroke-width="12" stroke-linejoin="bevel"/>
+          <text x="50" y="95" font-size="9" fill="#555" text-anchor="middle">miter</text>
+          <text x="130" y="95" font-size="9" fill="#555" text-anchor="middle">round</text>
+          <text x="210" y="95" font-size="9" fill="#555" text-anchor="middle">bevel</text>
+        </svg>
+      </div>
+    </div>
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">stroke-dasharray</p>
+        <svg width="200" height="120" style="background:#f0f0f0;">
+          <line x1="20" y1="20" x2="180" y2="20" stroke="#1565C0" stroke-width="6" stroke-dasharray="10,5"/>
+          <line x1="20" y1="50" x2="180" y2="50" stroke="#E65100" stroke-width="6" stroke-dasharray="20,10,5,10"/>
+          <line x1="20" y1="80" x2="180" y2="80" stroke="#2E7D32" stroke-width="6" stroke-dasharray="2"/>
+          <text x="10" y="22" font-size="9" fill="#555">10,5</text>
+          <text x="10" y="52" font-size="9" fill="#555">20,10,5,10</text>
+          <text x="10" y="82" font-size="9" fill="#555">2</text>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Combined: fill + stroke + opacity</p>
+        <svg width="200" height="120" style="background:#f0f0f0;">
+          <circle cx="60" cy="60" r="40" fill="#1565C0" fill-opacity="0.3"
+                  stroke="#E65100" stroke-width="8" stroke-opacity="0.8"/>
+          <rect x="120" y="20" width="60" height="60" rx="8"
+                fill="#2E7D32" fill-opacity="0.4"
+                stroke="#6A1B9A" stroke-width="6" stroke-dasharray="6,4"/>
+        </svg>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>6.3 Markers</h3>
+    <span class="badge">§6 Markers</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="120" viewBox="0 0 500 120" style="background:#f0f0f0;">
+      <defs>
+        <marker id="arrowhead" viewBox="0 0 10 10" refX="8" refY="5"
+                markerWidth="8" markerHeight="8" orient="auto">
+          <path d="M0,0 L10,5 L0,10 Z" fill="#C62828"/>
+        </marker>
+        <marker id="dot" viewBox="0 0 10 10" refX="5" refY="5"
+                markerWidth="6" markerHeight="6" orient="auto">
+          <circle cx="5" cy="5" r="4" fill="#1565C0"/>
+        </marker>
+      </defs>
+
+      <line x1="40" y1="60" x2="200" y2="60" stroke="#333" stroke-width="2"
+            marker-start="url(#dot)" marker-end="url(#arrowhead)"/>
+
+      <path d="M240,60 Q300,20 360,60 Q400,90 460,60"
+            fill="none" stroke="#333" stroke-width="2"
+            marker-start="url(#dot)" marker-mid="url(#dot)" marker-end="url(#arrowhead)"/>
+
+      <text x="120" y="100" font-size="10" fill="#555" text-anchor="middle">marker-start + marker-end</text>
+      <text x="350" y="100" font-size="10" fill="#555" text-anchor="middle">marker-start + marker-mid + marker-end on path</text>
+    </svg>
+    <div class="caption">Markers are positioned and oriented at path vertices. orient="auto" rotates them to match the path direction.</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 7 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #F57C00;">
+<h2>Chapter 7 — SVG Text</h2>
+<p class="desc">Text rendering requires font loading, shaping, and glyph positioning.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>7.1 Basic Text with &lt;tspan&gt;</h3>
+    <span class="badge">§7 Text</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="200" style="background:#f0f0f0;">
+      <text x="20" y="30" font-family="Arial" font-size="20" fill="#333">Simple text with font-size 20</text>
+
+      <text x="20" y="60" font-family="Georgia" font-size="24" font-weight="bold" fill="#1565C0">
+        Bold Georgia <tspan fill="#E65100">24px</tspan>
+      </text>
+
+      <text x="20" y="95" font-family="Arial" font-size="16" fill="#333">
+        Mixed:
+        <tspan font-weight="bold" fill="#C62828">bold red</tspan>
+        <tspan font-style="italic" fill="#2E7D32"> italic green</tspan>
+        <tspan font-size="22" fill="#6A1B9A"> big purple</tspan>
+      </text>
+
+      <text x="20" y="140" font-family="Arial" font-size="14" fill="#555">
+        text-anchor:
+      </text>
+      <text x="200" y="140" font-family="Arial" font-size="14" fill="#1565C0" text-anchor="start">start</text>
+      <text x="200" y="160" font-family="Arial" font-size="14" fill="#E65100" text-anchor="middle">middle</text>
+      <text x="200" y="180" font-family="Arial" font-size="14" fill="#2E7D32" text-anchor="end">end</text>
+
+      <line x1="200" y1="130" x2="200" y2="190" stroke="#999" stroke-width="0.5" stroke-dasharray="2,2"/>
+      <text x="205" y="190" font-size="10" fill="#999">Reference line at x=200</text>
+    </svg>
+    <div class="caption">&lt;text&gt; positions text with x,y. &lt;tspan&gt; children apply local formatting. text-anchor controls horizontal alignment (start/middle/end at the x coordinate).</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 8 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #333;">
+<h2>Chapter 8 — Clipping, Masking, and Filters</h2>
+<p class="desc">Offscreen render surfaces: clipPath, mask, and filter pipelines.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>8.1 clipPath</h3>
+    <span class="badge">§8 Clip Path</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">No clip</p>
+        <svg width="180" height="150" style="background:#f0f0f0;">
+          <rect x="20" y="20" width="80" height="80" rx="8" fill="#1565C0"/>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Clipped to circle</p>
+        <svg width="180" height="150" style="background:#f0f0f0;">
+          <defs>
+            <clipPath id="cp_circle">
+              <circle cx="60" cy="60" r="45"/>
+            </clipPath>
+          </defs>
+          <rect x="20" y="20" width="80" height="80" rx="8" fill="#E65100" clip-path="url(#cp_circle)"/>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Complex clip path</p>
+        <svg width="180" height="150" style="background:#f0f0f0;">
+          <defs>
+            <clipPath id="cp_star">
+              <polygon points="60,10 75,40 110,45 85,70 90,105 60,85 30,105 35,70 10,45 45,40"/>
+            </clipPath>
+          </defs>
+          <rect x="10" y="10" width="100" height="100" fill="#2E7D32" clip-path="url(#cp_star)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="caption">clip-path="url(#id)" clips the element's rendering to the path defined in &lt;clipPath&gt;. The clip shape uses the same coordinate system.</div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>8.2 Mask</h3>
+    <span class="badge">§8 Mask</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Luminance mask</p>
+        <svg width="200" height="150" style="background:#f0f0f0;">
+          <defs>
+            <linearGradient id="mask_grad" x1="0" y1="0" x2="1" y2="1">
+              <stop offset="0%" stop-color="white"/>
+              <stop offset="100%" stop-color="black"/>
+            </linearGradient>
+            <mask id="fade_mask">
+              <rect x="0" y="0" width="150" height="150" fill="url(#mask_grad)"/>
+            </mask>
+          </defs>
+          <circle cx="75" cy="75" r="60" fill="#E65100"/>
+          <text x="20" y="20" font-size="40" font-family="Arial" font-weight="bold" fill="#1565C0"
+                mask="url(#fade_mask)">SVG</text>
+        </svg>
+        <div class="caption">Mask uses luminance: white = opaque, black = transparent, gray = semi-transparent</div>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Mask with shapes</p>
+        <svg width="200" height="150" style="background:#f0f0f0;">
+          <defs>
+            <mask id="shape_mask">
+              <rect x="0" y="0" width="150" height="150" fill="black"/>
+              <circle cx="75" cy="75" r="45" fill="white"/>
+              <rect x="50" y="50" width="50" height="50" fill="black"/>
+            </mask>
+          </defs>
+          <rect x="0" y="0" width="150" height="150" fill="#1565C0"/>
+          <text x="20" y="95" font-size="36" font-family="Arial" font-weight="bold" fill="#FFF"
+                mask="url(#shape_mask)">SVG</text>
+        </svg>
+        <div class="caption">Black in mask = hidden, white = visible. Multiple shapes create complex masks.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>8.3 Filter Effects</h3>
+    <span class="badge">§8 Filter</span>
+  </div>
+  <div class="example-body">
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">feGaussianBlur</p>
+        <svg width="180" height="120" style="background:#f0f0f0;">
+          <defs>
+            <filter id="blur">
+              <feGaussianBlur stdDeviation="3"/>
+            </filter>
+          </defs>
+          <rect x="20" y="20" width="60" height="60" rx="8" fill="#1565C0" filter="url(#blur)"/>
+          <rect x="90" y="20" width="60" height="60" rx="8" fill="#E65100" filter="url(#blur)" opacity="0.8"/>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">feDropShadow</p>
+        <svg width="180" height="120" style="background:#f0f0f0;">
+          <defs>
+            <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+              <feDropShadow dx="3" dy="4" stdDeviation="3" flood-color="#000" flood-opacity="0.4"/>
+            </filter>
+          </defs>
+          <rect x="30" y="20" width="60" height="60" rx="8" fill="#2E7D32" filter="url(#shadow)"/>
+          <circle cx="140" cy="50" r="30" fill="#6A1B9A" filter="url(#shadow)"/>
+        </svg>
+      </div>
+    </div>
+    <div class="side-by-side">
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">feColorMatrix (grayscale)</p>
+        <svg width="180" height="120" style="background:#f0f0f0;">
+          <defs>
+            <filter id="gray">
+              <feColorMatrix type="saturate" values="0"/>
+            </filter>
+          </defs>
+          <circle cx="60" cy="50" r="40" fill="#E65100" filter="url(#gray)"/>
+          <rect x="100" y="15" width="60" height="60" fill="#1565C0" filter="url(#gray)"/>
+        </svg>
+      </div>
+      <div>
+        <p style="font-size:13px;font-weight:600;margin-bottom:6px;">Filter chain (blur + color)</p>
+        <svg width="180" height="120" style="background:#f0f0f0;">
+          <defs>
+            <filter id="chain">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="b"/>
+              <feColorMatrix in="b" type="saturate" values="0.3" result="c"/>
+              <feMerge>
+                <feMergeNode in="c"/>
+                <feMergeNode in="SourceGraphic"/>
+              </feMerge>
+            </filter>
+          </defs>
+          <text x="20" y="55" font-size="36" font-family="Arial" font-weight="bold" fill="#C62828" filter="url(#chain)">SVG</text>
+        </svg>
+      </div>
+    </div>
+    <div class="caption">Filters are a pipeline of primitives. Input → feGaussianBlur → feColorMatrix → feMerge → Output. Each primitive processes a pixel buffer. SourceGraphic is the element's own rendering.</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 9 -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #E91E63;">
+<h2>Chapter 9 — SMIL Animation</h2>
+<p class="desc">SVG's built-in animation system. Time-varying attribute overrides that drive re-render.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>9.1 &lt;animate&gt; — Scalar Attributes</h3>
+    <span class="badge">§9 Animation</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="150" style="background:#f0f0f0;">
+      <text x="250" y="20" font-size="13" fill="#555" text-anchor="middle">Pulsing circle — cx animates from 50→250→50 over 4s, repeat indefinitely</text>
+
+      <circle cy="80" r="20" fill="#1565C0">
+        <animate attributeName="cx" values="50;250;50" dur="4s" repeatCount="indefinite"/>
+      </circle>
+
+      <circle cy="80" r="20" fill="#E65100">
+        <animate attributeName="cx" values="50;250;50" dur="4s" repeatCount="indefinite" begin="1s"/>
+      </circle>
+
+      <circle cy="120" r="10" fill="#2E7D32">
+        <animate attributeName="cx" values="50;250;50" dur="3s" repeatCount="indefinite"/>
+        <animate attributeName="r" values="10;25;10" dur="3s" repeatCount="indefinite"/>
+      </circle>
+    </svg>
+    <div class="caption">&lt;animate attributeName="cx" values="50;250;50" dur="4s"&gt; — interpolates cx from 50 to 250 and back over 4 seconds. Multiple animations on one element (cx + r). begin="1s" staggers start time.</div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>9.2 &lt;animateTransform&gt;</h3>
+    <span class="badge">§9 Transform Animation</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="200" style="background:#f0f0f0;">
+      <text x="250" y="30" font-size="13" fill="#555" text-anchor="middle">Rotating squares with animateTransform</text>
+
+      <rect x="10" y="50" width="40" height="40" fill="#1565C0" opacity="0.7">
+        <animateTransform attributeName="transform" type="rotate"
+          from="0 30 70" to="360 30 70" dur="3s" repeatCount="indefinite"/>
+      </rect>
+
+      <rect x="100" y="50" width="40" height="40" fill="#E65100" opacity="0.7">
+        <animateTransform attributeName="transform" type="rotate"
+          from="0 120 70" to="360 120 70" dur="2s" repeatCount="indefinite"/>
+      </rect>
+
+      <g>
+        <animateTransform attributeName="transform" type="translate"
+          values="0,0;100,0;0,0" dur="4s" repeatCount="indefinite"/>
+        <rect x="200" y="50" width="40" height="40" fill="#2E7D32" opacity="0.7">
+          <animateTransform attributeName="transform" type="rotate"
+            from="0 220 70" to="360 220 70" dur="2s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <text x="250" y="150" font-size="13" fill="#888" text-anchor="middle">
+        animateTransform type="rotate" | type="translate" | Chained: group translates + element rotates
+      </text>
+    </svg>
+    <div class="caption">animateTransform overrides the element's transform attribute. type="rotate" rotates around a center point. When applied to &lt;g&gt;, all children move together. Chained animations: group translates while child rotates.</div>
+  </div>
+</div>
+
+<div class="example">
+  <div class="example-header">
+    <h3>9.3 &lt;set&gt; and Color Animation</h3>
+    <span class="badge">§9 set + Color</span>
+  </div>
+  <div class="example-body">
+    <svg width="500" height="130" style="background:#f0f0f0;">
+      <text x="250" y="20" font-size="13" fill="#555" text-anchor="middle">&lt;set&gt; toggles visibility — &lt;animate&gt; interpolates fill color</text>
+
+      <rect x="30" y="35" width="60" height="60" rx="6" fill="#1565C0">
+        <animate attributeName="fill" values="#1565C0;#E65100;#2E7D32;#1565C0" dur="6s" repeatCount="indefinite"/>
+      </rect>
+
+      <circle cx="150" cy="65" r="30" fill="#6A1B9A">
+        <animate attributeName="fill" values="#6A1B9A;#C62828;#F57C00;#6A1B9A" dur="4s" repeatCount="indefinite"/>
+        <animate attributeName="opacity" values="1;0.3;1" dur="2s" repeatCount="indefinite"/>
+      </circle>
+
+      <g>
+        <rect x="230" y="35" width="60" height="60" rx="6" fill="#00897B">
+          <animate attributeName="rx" values="6;30;6" dur="3s" repeatCount="indefinite"/>
+          <animate attributeName="width" values="60;80;60" dur="3s" repeatCount="indefinite"/>
+        </rect>
+      </g>
+
+      <text x="370" y="55" font-size="16" font-family="Arial" font-weight="bold" fill="#333">
+        Blink
+        <animate attributeName="opacity" values="1;1;0;0" keyTimes="0;0.4;0.5;1" dur="2s" repeatCount="indefinite"/>
+      </text>
+
+      <line x1="370" y1="65" x2="430" y2="65" stroke="#999" stroke-width="0.5"/>
+      <text x="370" y="105" font-size="10" fill="#888">Blinking text: opacity keyTimes animation</text>
+    </svg>
+    <div class="caption">&lt;animate&gt; can interpolate colors (fill), numbers (rx, width), and opacity. &lt;set&gt; (not shown here) instantly sets a value without interpolation. keyTimes controls exact timing — values go 1→1→0→0 to create a blink pattern.</div>
+  </div>
+</div>
+</div>
+
+<!-- ====================================================================== -->
+<!-- CHAPTER 10 — Summary Pipeline -->
+<!-- ====================================================================== -->
+<div class="chapter" style="border-left-color: #455A64;">
+<h2>Chapter 10 — Full Pipeline Demo</h2>
+<p class="desc">A complete SVG combining multiple concepts: viewBox, transforms, paint servers, clipping, and text.</p>
+
+<div class="example">
+  <div class="example-header">
+    <h3>10.1 Everything Together</h3>
+    <span class="badge">§10 Full Pipeline</span>
+  </div>
+  <div class="example-body">
+    <svg width="600" height="400" viewBox="0 0 600 400" style="background:#fafafa;">
+      <!-- Background gradient -->
+      <defs>
+        <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#1a237e"/>
+          <stop offset="100%" stop-color="#42a5f5"/>
+        </linearGradient>
+        <radialGradient id="sun" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stop-color="#ffee58"/>
+          <stop offset="100%" stop-color="#ff8f00"/>
+        </radialGradient>
+        <linearGradient id="ground" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stop-color="#4caf50"/>
+          <stop offset="100%" stop-color="#1b5e20"/>
+        </linearGradient>
+        <filter id="glow">
+          <feGaussianBlur stdDeviation="4" result="b"/>
+          <feMerge>
+            <feMergeNode in="b"/>
+            <feMergeNode in="SourceGraphic"/>
+          </feMerge>
+        </filter>
+        <clipPath id="house_clip">
+          <polygon points="200,250 300,180 400,250"/>
+        </clipPath>
+      </defs>
+
+      <!-- Sky -->
+      <rect x="0" y="0" width="600" height="400" fill="url(#sky)"/>
+
+      <!-- Sun with glow filter -->
+      <circle cx="500" cy="80" r="40" fill="url(#sun)" filter="url(#glow)"/>
+
+      <!-- Ground -->
+      <rect x="0" y="300" width="600" height="100" fill="url(#ground)"/>
+
+      <!-- House (group with transform) -->
+      <g transform="translate(0, 0)">
+        <!-- Wall -->
+        <rect x="180" y="230" width="140" height="100" rx="2" fill="#fff3e0" stroke="#8d6e63" stroke-width="3"/>
+        <!-- Roof (clipped triangle) -->
+        <polygon points="200,250 300,180 400,250" fill="#c62828" stroke="#b71c1c" stroke-width="2"/>
+        <!-- Door -->
+        <rect x="225" y="280" width="30" height="50" rx="2" fill="#5d4037" stroke="#3e2723" stroke-width="2"/>
+        <circle cx="250" cy="305" r="3" fill="#ffd54f"/>
+        <!-- Window -->
+        <rect x="270" y="260" width="30" height="30" rx="2" fill="#bbdefb" stroke="#3e2723" stroke-width="2"/>
+      </g>
+
+      <!-- Tree (use element reuse) -->
+      <defs>
+        <g id="tree">
+          <rect x="-4" y="0" width="8" height="40" fill="#5d4037"/>
+          <circle cx="0" cy="-15" r="25" fill="#2e7d32"/>
+          <circle cx="0" cy="-35" r="20" fill="#388e3c"/>
+        </g>
+      </defs>
+      <use href="#tree" x="100" y="260"/>
+      <use href="#tree" x="130" y="270" transform="scale(0.8) translate(30, 65)"/>
+      <use href="#tree" x="480" y="260"/>
+      <use href="#tree" x="510" y="275" transform="scale(0.7) translate(220, 110)"/>
+
+      <!-- Text -->
+      <text x="300" y="370" font-family="Arial" font-size="18" fill="white" text-anchor="middle" font-weight="bold" filter="url(#glow)">
+        SVG Engine — Full Pipeline
+        <animate attributeName="opacity" values="1;0.6;1" dur="2s" repeatCount="indefinite"/>
+      </text>
+    </svg>
+    <div class="caption">
+      This scene combines: viewBox scaling, linear/radial gradients (sky, sun, ground), filter with feGaussianBlur + feMerge (glow), clipPath (not visible — used on roof), &lt;g&gt; transforms, &lt;defs&gt; + &lt;use&gt; (trees), text, and animation.
+    </div>
+  </div>
+</div>
+</div>
+
+</body>
+</html>

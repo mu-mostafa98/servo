@@ -422,6 +422,7 @@ display_list.push_image(
 
 ## Related Documents
 
+- [SVG Primer for Engine Architects](svg_primer_for_engine.md) — SVG concepts you need to know to design a rendering engine (tree, coordinates, paint, rendering model)
 - [SVG Known Limitations](svg_known_limitations.md) — Cases where the current serialize-as-image approach fails
 - [SVG Engine Design Proposal](svg_engine_design.md) — Architecture for a native SVG engine replacement
 - [SVG Rendering Pipeline (Full Detail)](svg_rendering_pipeline.md) — Deep-dive per-pass walkthrough with all concrete values
