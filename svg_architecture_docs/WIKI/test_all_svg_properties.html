@@ -1,0 +1,56 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="950">
+
+    <text x="10" y="20" font-size="16" font-weight="bold" fill="black">=== INHERITABLE (struct = inherited_svg) ===</text>
+
+    <!-- Fill family -->
+    <text x="10" y="45" font-weight="bold">Fill family:</text>
+    <rect x="10" y="55" width="50" height="50" style="fill: green; fill-opacity: 0.5" />
+    <rect x="70" y="55" width="50" height="50" style="fill: blue; fill-rule: evenodd" />
+
+    <!-- Stroke family -->
+    <text x="10" y="135" font-weight="bold">Stroke family:</text>
+    <rect x="10" y="145" width="80" height="50" style="fill: green; stroke: red; stroke-width: 4" />
+    <rect x="100" y="145" width="80" height="50" style="fill: green; stroke: blue; stroke-opacity: 0.3" />
+    <line x1="10" y1="215" x2="150" y2="215" style="stroke: black; stroke-linecap: round; stroke-width: 6" />
+    <line x1="10" y1="235" x2="150" y2="235" style="stroke: black; stroke-linejoin: round; stroke-width: 6" />
+    <line x1="10" y1="255" x2="150" y2="255" style="stroke: black; stroke-miterlimit: 4; stroke-width: 6" />
+    <line x1="10" y1="275" x2="150" y2="275" style="stroke: black; stroke-dasharray: 5,5; stroke-width: 3" />
+    <line x1="10" y1="295" x2="150" y2="295" style="stroke: black; stroke-dashoffset: 10; stroke-width: 3" />
+
+    <!-- Marker family -->
+    <text x="10" y="335" font-weight="bold">Marker family:</text>
+    <text x="10" y="355">marker-end, marker-mid, marker-start (need defs)</text>
+
+    <!-- Paint-order -->
+    <text x="10" y="395" font-weight="bold">Paint-order:</text>
+    <text x="10" y="415" style="paint-order: stroke">Text with paint-order</text>
+
+    <!-- Text anchor -->
+    <text x="10" y="455" font-weight="bold">Text-anchor:</text>
+    <text x="100" y="475" style="text-anchor: end">End-anchored text</text>
+
+    <!-- Color-interpolation -->
+    <text x="10" y="515" font-weight="bold">Color-interpolation:</text>
+    <rect x="10" y="525" width="50" height="50" style="fill: green; color-interpolation: sRGB" />
+
+    <!-- Shape-rendering -->
+    <text x="10" y="605" font-weight="bold">Shape-rendering:</text>
+    <rect x="10" y="615" width="50" height="50" style="fill: green; shape-rendering: crispEdges" />
+
+    <!-- Clip-rule -->
+    <text x="10" y="695" font-weight="bold">Clip-rule:</text>
+    <text x="10" y="715">clip-rule (applied via clip-path)</text>
+
+    <text x="10" y="755" font-size="16" font-weight="bold" fill="black">=== NON-INHERITABLE (struct = svg) ===</text>
+
+    <!-- cx, cy, r, rx, ry, x, y — geometry -->
+    <text x="10" y="780">cx/cy/r: circle geometry</text>
+    <circle cx="80" cy="800" r="20" style="fill: green" />
+    <text x="10" y="830">rx/ry: rect geometry</text>
+    <rect x="60" y="840" width="50" height="50" rx="10" ry="10" style="fill: blue" />
+
+    <!-- flood-color, flood-opacity -->
+    <text x="10" y="910" font-weight="bold">FeFlood:</text>
+    <text x="10" y="930">flood-color, flood-opacity (used with filters)</text>
+
+</svg>

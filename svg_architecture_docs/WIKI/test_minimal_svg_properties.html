@@ -1,0 +1,81 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="1100">
+  <defs>
+    <marker id="m" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+      <circle cx="5" cy="5" r="3" fill="red"/>
+    </marker>
+    <linearGradient id="g">
+      <stop offset="0%" style="stop-color: blue; stop-opacity: 0.5"/>
+      <stop offset="100%" style="stop-color: red; stop-opacity: 0.8"/>
+    </linearGradient>
+    <filter id="f1" style="color-interpolation-filters: sRGB">
+      <feFlood style="flood-color: green; flood-opacity: 0.3"/>
+    </filter>
+    <filter id="f2">
+      <feDiffuseLighting style="lighting-color: yellow"/>
+    </filter>
+    <mask id="mask1" style="mask-type: alpha">
+      <rect width="200" height="200" fill="white"/>
+    </mask>
+    <clipPath id="cp">
+      <rect width="100" height="100"/>
+    </clipPath>
+  </defs>
+
+  <text x="10" y="20" font-size="16" font-weight="bold" fill="black">=== INHERITABLE (struct = inherited_svg) ===</text>
+
+  <!-- Fill properties -->
+  <text x="10" y="45" font-weight="bold">Fill:</text>
+  <rect x="10" y="55" width="100" height="50" style="fill: green; fill-opacity: 0.8; fill-rule: nonzero" />
+
+  <!-- Stroke properties -->
+  <text x="10" y="125" font-weight="bold">Stroke:</text>
+  <rect x="10" y="135" width="100" height="50" style="fill: green; stroke: red; stroke-width: 4; stroke-opacity: 0.9; stroke-linecap: round; stroke-linejoin: round; stroke-miterlimit: 4; stroke-dasharray: 5,3; stroke-dashoffset: 2" />
+
+  <!-- Marker properties -->
+  <text x="10" y="215" font-weight="bold">Markers:</text>
+  <path d="M 10 230 L 100 230 L 100 260" style="fill: none; stroke: blue; stroke-width: 2; marker-start: url(#m); marker-mid: url(#m); marker-end: url(#m)" />
+
+  <!-- Paint-order + Text-anchor -->
+  <text x="10" y="300" font-weight="bold">Paint-order / Text-anchor:</text>
+  <text x="10" y="320" style="text-anchor: start; paint-order: stroke; fill: black; stroke: yellow; stroke-width: 1; font-size: 16">Styled SVG Text</text>
+
+  <!-- Color-interpolation -->
+  <text x="10" y="360" font-weight="bold">Color-interpolation:</text>
+  <rect x="10" y="370" width="100" height="40" style="fill: green; color-interpolation: sRGB" />
+
+  <!-- Shape-rendering -->
+  <text x="10" y="430" font-weight="bold">Shape-rendering:</text>
+  <rect x="10" y="440" width="100" height="40" style="fill: green; shape-rendering: crispEdges" />
+
+  <!-- Clip-rule -->
+  <text x="10" y="500" font-weight="bold">Clip-rule:</text>
+  <rect x="10" y="510" width="100" height="40" style="fill: green; clip-rule: nonzero" />
+
+  <!--=============================================================-->
+  <text x="10" y="580" font-size="16" font-weight="bold" fill="black">=== NON-INHERITABLE (struct = svg) ===</text>
+
+  <!-- Geometry -->
+  <text x="10" y="605" font-weight="bold">Geometry (cx, cy, r):</text>
+  <circle style="cx: 80px; cy: 650px; r: 30px; fill: orange" />
+
+  <text x="10" y="695" font-weight="bold">Geometry (x, y, rx, ry):</text>
+  <rect width="100" height="50" style="fill: blue; x: 10px; y: 705px; rx: 8px; ry: 8px" />
+
+  <text x="10" y="775" font-weight="bold">Path (d):</text>
+  <path style="d: path('M 10 790 L 60 790 L 35 820 Z'); fill: none; stroke: purple; stroke-width: 2" />
+
+  <!-- Vector-effect -->
+  <text x="10" y="860" font-weight="bold">Vector-effect:</text>
+  <rect x="10" y="870" width="100" height="40" style="fill: green; vector-effect: non-scaling-stroke; stroke: red; stroke-width: 2" />
+
+  <!-- Color-interpolation-filters (on filter), Flood (on feFlood), Lighting (on feDiffuseLighting),
+       Stop (on stop) — tested via defs above -->
+
+  <!-- Clip-path -->
+  <text x="10" y="940" font-weight="bold">Clip-path:</text>
+  <rect x="10" y="950" width="100" height="50" style="fill: green; clip-path: url(#cp)" />
+
+  <!-- Mask properties -->
+  <text x="10" y="1020" font-weight="bold">Mask (all mask-* properties):</text>
+  <rect x="10" y="1030" width="100" height="50" style="fill: green; mask-image: url(#mask1); mask-mode: alpha; mask-clip: border-box; mask-origin: border-box; mask-composite: add; mask-position-x: 0%; mask-position-y: 0%; mask-repeat: repeat; mask-size: auto" />
+</svg>
