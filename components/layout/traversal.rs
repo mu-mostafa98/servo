@@ -122,6 +122,7 @@ where
                      \x20                display={:?} overflow_x={:?} overflow_y={:?}\n\
                      \x20 inherited_text: text_rendering={:?} color={:?}\n\
                      \x20                word_spacing={:?} letter_spacing={:?}\n\
+                     \x20                white_space_collapse={:?} text_wrap_mode={:?}\n\
                      \x20 text:          unicode_bidi={:?} text_decoration_line={:?}\n\
                      \x20                text_overflow={:?}\n\
                      \x20 font:          font_family={:?} font_size={:?}\n\
@@ -154,6 +155,7 @@ where
                     box_.display, box_.overflow_x, box_.overflow_y,
                     inherited_text.text_rendering, inherited_text.color,
                     inherited_text.word_spacing, inherited_text.letter_spacing,
+                    inherited_text.white_space_collapse, inherited_text.text_wrap_mode,
                     text_style.unicode_bidi, text_style.text_decoration_line,
                     text_style.text_overflow,
                     font.font_family, font.font_size,
