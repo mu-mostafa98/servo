@@ -300,6 +300,8 @@ impl ReplacedContents {
             _ => unreachable!("SVG element can't contain a raster image."),
         });
 
+        Self::svg_engine_process(node, context);
+
         (
             ReplacedContentKind::SVGElement {
                 vector_image,
@@ -307,6 +309,68 @@ impl ReplacedContents {
             },
             natural_size,
         )
+    }
+
+    /// Temporary SVG engine: walks the styled SVG subtree and prints each
+    /// element with its computed styles for pipeline verification.
+    fn svg_engine_process(node: ServoLayoutNode<'_>, context: &LayoutContext) {
+        Self::svg_engine_process_inner(node, context, 0);
+    }
+
+    fn svg_engine_process_inner(
+        node: ServoLayoutNode<'_>,
+        context: &LayoutContext,
+        depth: usize,
+    ) {
+        if let Some(element) = node.as_element() {
+            let style = node.style(&context.style_context);
+            let isvg = style.get_inherited_svg();
+            let svg = style.get_svg();
+            let effects = style.get_effects();
+            let inherited_box = style.get_inherited_box();
+            let box_ = style.get_box();
+            let inherited_text = style.get_inherited_text();
+            let text_style = style.get_text();
+            let font = style.get_font();
+            let inherited_ui = style.get_inherited_ui();
+            let position = style.get_position();
+            let indent = "  ".repeat(depth);
+            let _ = std::fs::OpenOptions::new()
+                .create(true)
+                .append(true)
+                .open("D:\\Projects\\servo\\svg_engine.log")
+                .and_then(|mut f| {
+                    use std::io::Write;
+                    writeln!(
+                        f,
+                        "{indent}<{}>\n\
+                         {indent}  inherited_svg: {:?}\n\
+                         {indent}  svg:           {:?}\n\
+                         {indent}  effects:       {:?}\n\
+                         {indent}  inherited_box: {:?}\n\
+                         {indent}  box:           {:?}\n\
+                         {indent}  inherited_text: {:?}\n\
+                         {indent}  text:          {:?}\n\
+                         {indent}  font:          {:?}\n\
+                         {indent}  inherited_ui:  {:?}\n\
+                         {indent}  position:      {:?}",
+                        element.local_name(),
+                        isvg,
+                        svg,
+                        effects,
+                        inherited_box,
+                        box_,
+                        inherited_text,
+                        text_style,
+                        font,
+                        inherited_ui,
+                        position,
+                    )
+                });
+        }
+        for child in node.flat_tree_children() {
+            Self::svg_engine_process_inner(child, context, depth + 1);
+        }
     }
 
     fn from_content_property(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {

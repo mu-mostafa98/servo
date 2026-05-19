@@ -59,14 +59,11 @@
             <stop offset="0%" style="stop-color: red" />
             <stop offset="100%" style="stop-color: green" />
         </linearGradient>
-        <filter id="f1"><feGaussianBlur stdDeviation="6" /></filter>
-        <filter id="f2" style="color-interpolation-filters: sRGB"><feGaussianBlur stdDeviation="6" /></filter>
 
     </defs>
-              
-    
-    <rect x="50" y="120" width="200" height="120" style="fill: url(#g1); filter: url(#f1);" />
-    <rect x="350" y="120" width="200" height="120" style="fill: url(#g2); filter: url(#f2); shape-rendering: crispEdges;" />
+
+    <rect x="50" y="120" width="200" height="120" style="fill: url(#g1); filter: blur(6px);" />
+    <rect x="350" y="120" width="200" height="120" style="fill: url(#g2); filter: blur(6px); shape-rendering: crispEdges;" />
 
     <g transform="scale(2, 1)">
         <line x1="10" y1="20" x2="140" y2="20"
@@ -80,4 +77,4 @@
 </svg>
 
 
-<!-- Not tested yet: color-interpolation, color-interpolation-filters and vector-effect  -->
+<!-- Not overridden: color-interpolation, color-interpolation-filters (set on defs only) -->
