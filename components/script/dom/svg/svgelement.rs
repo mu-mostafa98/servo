@@ -101,6 +101,56 @@ impl VirtualMethods for SVGElement {
             }
         }
     }
+
+    fn attribute_affects_presentational_hints(&self, attr: AttrRef<'_>) -> bool {
+        // InheritedSVG presentation attributes.
+        match attr.local_name() {
+            &local_name!("clip-rule") |
+            &local_name!("color-interpolation") |
+            &local_name!("color-interpolation-filters") |
+            &local_name!("fill") |
+            &local_name!("fill-opacity") |
+            &local_name!("fill-rule") |
+            &local_name!("marker-end") |
+            &local_name!("marker-mid") |
+            &local_name!("marker-start") |
+            &local_name!("paint-order") |
+            &local_name!("shape-rendering") |
+            &local_name!("stroke") |
+            &local_name!("stroke-dasharray") |
+            &local_name!("stroke-dashoffset") |
+            &local_name!("stroke-linecap") |
+            &local_name!("stroke-linejoin") |
+            &local_name!("stroke-miterlimit") |
+            &local_name!("stroke-opacity") |
+            &local_name!("stroke-width") |
+            &local_name!("text-anchor") |
+            // SVG struct (non-inherited) presentation attributes.
+            &local_name!("cx") |
+            &local_name!("cy") |
+            &local_name!("r") |
+            &local_name!("rx") |
+            &local_name!("ry") |
+            &local_name!("x") |
+            &local_name!("y") |
+            &local_name!("d") |
+            &local_name!("vector-effect") |
+            &local_name!("clip-path") |
+            &local_name!("flood-color") |
+            &local_name!("flood-opacity") |
+            &local_name!("lighting-color") |
+            &local_name!("stop-color") |
+            &local_name!("stop-opacity") |
+            &local_name!("mask-type") |
+            // CSS properties used as SVG presentation attributes.
+            &local_name!("width") |
+            &local_name!("height") => true,
+            _ => self
+                .super_type()
+                .unwrap()
+                .attribute_affects_presentational_hints(attr),
+        }
+    }
 }
 
 impl SVGElementMethods<crate::DomTypeHolder> for SVGElement {

@@ -13,7 +13,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::{fmt, mem};
 
 use app_units::Au;
-use cssparser::match_ignore_ascii_case;
+use cssparser::{Parser, ParserInput, match_ignore_ascii_case};
 use devtools_traits::{AttrInfo, DomMutation, ScriptToDevtoolsControlMsg};
 use dom_struct::dom_struct;
 use euclid::Rect;
@@ -48,14 +48,15 @@ use style::rule_tree::{CascadeLevel, CascadeOrigin};
 use style::selector_parser::{RestyleDamage, SelectorParser, Snapshot};
 use style::shared_lock::Locked;
 use style::stylesheets::layer_rule::LayerOrder;
-use style::stylesheets::{CssRuleType, UrlExtraData};
+use style::parser::ParserContext;
+use style::stylesheets::{CssRuleType, Origin, UrlExtraData};
 use style::values::computed::Overflow;
 use style::values::generics::NonNegative;
 use style::values::generics::position::PreferredRatio;
 use style::values::generics::ratio::Ratio;
 use style::values::{AtomIdent, CSSFloat, GenericAtomIdent, computed, specified};
 use style::{ArcSlice, CaseSensitivityExt, dom_apis, thread_state};
-use style_traits::CSSPixel;
+use style_traits::{CSSPixel, ParsingMode};
 use stylo_atoms::Atom;
 use stylo_dom::ElementState;
 use xml5ever::serialize::TraversalScope::{
@@ -155,6 +156,7 @@ use crate::dom::raredata::ElementRareData;
 use crate::dom::scrolling_box::{ScrollAxisState, ScrollingBox};
 use crate::dom::servoparser::ServoParser;
 use crate::dom::shadowroot::{IsUserAgentWidget, ShadowRoot};
+use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 use crate::dom::text::Text;
 use crate::dom::trustedtypes::trustedhtml::TrustedHTML;
@@ -1344,6 +1346,101 @@ impl<'dom> LayoutDom<'dom, Element> {
                     specified::Size::LengthPercentage(NonNegative(height.clone())),
                 ));
             }
+        }
+
+        // SVG presentation attributes as presentational hints (InheritedSVG).
+        // https://www.w3.org/TR/SVG2/painting.html
+        if self.downcast::<SVGElement>().is_some() {
+            let url_data = UrlExtraData(document.document_url().get_arc());
+            let context = ParserContext::new(
+                Origin::Author,
+                &url_data,
+                Some(CssRuleType::Style),
+                ParsingMode::empty(),
+                document.quirks_mode(),
+                Default::default(),
+                None,
+                None,
+                Default::default(),
+            );
+
+            macro_rules! svg_presentation_attr {
+                ($longhand:ident, $attr:tt) => {
+                    if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!($attr)) {
+                        let mut input = ParserInput::new(val);
+                        let mut parser = Parser::new(&mut input);
+                        if let Ok(decl) = longhands::$longhand::parse_declared(&context, &mut parser) {
+                            push(decl);
+                        }
+                    }
+                };
+            }
+
+            svg_presentation_attr!(clip_rule, "clip-rule");
+            svg_presentation_attr!(fill_rule, "fill-rule");
+            svg_presentation_attr!(fill, "fill");
+            svg_presentation_attr!(fill_opacity, "fill-opacity");
+            svg_presentation_attr!(stroke, "stroke");
+            svg_presentation_attr!(stroke_dasharray, "stroke-dasharray");
+            svg_presentation_attr!(stroke_dashoffset, "stroke-dashoffset");
+            svg_presentation_attr!(stroke_linecap, "stroke-linecap");
+            svg_presentation_attr!(stroke_linejoin, "stroke-linejoin");
+            svg_presentation_attr!(stroke_miterlimit, "stroke-miterlimit");
+            svg_presentation_attr!(stroke_opacity, "stroke-opacity");
+            svg_presentation_attr!(stroke_width, "stroke-width");
+            svg_presentation_attr!(text_anchor, "text-anchor");
+            svg_presentation_attr!(color_interpolation, "color-interpolation");
+            svg_presentation_attr!(color_interpolation_filters, "color-interpolation-filters");
+            svg_presentation_attr!(shape_rendering, "shape-rendering");
+            svg_presentation_attr!(marker_start, "marker-start");
+            svg_presentation_attr!(marker_mid, "marker-mid");
+            svg_presentation_attr!(marker_end, "marker-end");
+            svg_presentation_attr!(paint_order, "paint-order");
+
+            // SVG struct (non-inherited) presentation attributes.
+            // https://www.w3.org/TR/SVG2/geometry.html
+            // SVG length attributes accept unitless numbers (e.g. cx="250"),
+            // but CSS <length-percentage> requires units. Preprocess bare numbers.
+            fn svg_length_attr_val(val: &str) -> std::borrow::Cow<'_, str> {
+                if val.chars().all(|c| c.is_ascii_digit() || c == '.' || c == '-') && !val.is_empty() {
+                    std::borrow::Cow::Owned(format!("{}px", val))
+                } else {
+                    std::borrow::Cow::Borrowed(val)
+                }
+            }
+            macro_rules! svg_length_attr {
+                ($longhand:ident, $attr:tt) => {
+                    if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!($attr)) {
+                        let val = svg_length_attr_val(val);
+                        let mut input = ParserInput::new(&*val);
+                        let mut parser = Parser::new(&mut input);
+                        if let Ok(decl) = longhands::$longhand::parse_declared(&context, &mut parser) {
+                            push(decl);
+                        }
+                    }
+                };
+            }
+            svg_length_attr!(cx, "cx");
+            svg_length_attr!(cy, "cy");
+            svg_length_attr!(r, "r");
+            svg_length_attr!(rx, "rx");
+            svg_length_attr!(ry, "ry");
+            svg_length_attr!(x, "x");
+            svg_length_attr!(y, "y");
+            svg_presentation_attr!(d, "d");
+            svg_presentation_attr!(vector_effect, "vector-effect");
+            svg_presentation_attr!(clip_path, "clip-path");
+            // https://www.w3.org/TR/SVG2/pservers.html
+            svg_presentation_attr!(flood_color, "flood-color");
+            svg_presentation_attr!(flood_opacity, "flood-opacity");
+            svg_presentation_attr!(lighting_color, "lighting-color");
+            svg_presentation_attr!(stop_color, "stop-color");
+            svg_presentation_attr!(stop_opacity, "stop-opacity");
+            // https://drafts.fxtf.org/css-masking/#mask-type
+            svg_presentation_attr!(mask_type, "mask-type");
+            // https://www.w3.org/TR/SVG2/geometry.html#WidthHeight
+            svg_length_attr!(width, "width");
+            svg_length_attr!(height, "height");
         }
 
         // Aspect ratio when providing both width and height.
