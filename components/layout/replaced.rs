@@ -342,7 +342,32 @@ impl ReplacedContents {
                 .open("D:\\Projects\\servo\\svg_engine.log")
                 .and_then(|mut f| {
                     use std::io::Write;
-                    let d_attr = element.attribute_as_str(&ns!(), &local_name!("d"));
+                    let attrs_debug = {
+                        let names: &[&str] = &[
+                            "fill", "fill-opacity", "fill-rule", "clip-rule",
+                            "stroke", "stroke-width", "stroke-dasharray", "stroke-dashoffset",
+                            "stroke-linecap", "stroke-linejoin", "stroke-miterlimit", "stroke-opacity",
+                            "marker-start", "marker-mid", "marker-end",
+                            "clip-path", "color-interpolation", "color-interpolation-filters",
+                            "paint-order", "shape-rendering", "text-anchor",
+                            "vector-effect", "d", "cx", "cy", "r", "rx", "ry", "x", "y",
+                            "flood-color", "flood-opacity", "lighting-color", "stop-color", "stop-opacity",
+                            "mask-type",
+                            "opacity", "color", "visibility", "pointer-events",
+                            "image-rendering", "text-rendering",
+                            "font-family", "font-style", "font-weight", "font-size",
+                            "letter-spacing", "word-spacing",
+                            "direction", "unicode-bidi", "writing-mode",
+                            "width", "height",
+                        ];
+                        use html5ever::LocalName;
+                        let mut s = String::from("attrs (DOM):");
+                        for name in names {
+                            let val = element.attribute_as_str(&ns!(), &LocalName::from(*name));
+                            s.push_str(&format!(" {}={:?}", name, val));
+                        }
+                        s
+                    };
                     writeln!(
                         f,
                         "{indent}<{}>\n\
@@ -356,7 +381,7 @@ impl ReplacedContents {
                          {indent}  font:          {:?}\n\
                          {indent}  inherited_ui:  {:?}\n\
                          {indent}  position:      {:?}\n\
-                         {indent}  attrs (DOM):   d={:?}",
+                         {indent}  {}",
                         element.local_name(),
                         isvg,
                         svg,
@@ -368,7 +393,7 @@ impl ReplacedContents {
                         font,
                         inherited_ui,
                         position,
-                        d_attr,
+                        attrs_debug,
                     )
                 });
         }

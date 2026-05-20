@@ -1430,6 +1430,29 @@ impl<'dom> LayoutDom<'dom, Element> {
 
             svg_presentation_attr!(mask_type, "mask-type");
 
+            // General visual properties
+            svg_presentation_attr!(opacity, "opacity");
+            svg_presentation_attr!(color, "color");
+            svg_presentation_attr!(visibility, "visibility");
+            svg_presentation_attr!(pointer_events, "pointer-events");
+
+            // Rendering hints
+            svg_presentation_attr!(image_rendering, "image-rendering");
+            svg_presentation_attr!(text_rendering, "text-rendering");
+
+            // Text / Font properties
+            svg_presentation_attr!(font_family, "font-family");
+            svg_presentation_attr!(font_style, "font-style");
+            svg_presentation_attr!(font_weight, "font-weight");
+            svg_presentation_attr!(font_size, "font-size", length);
+            svg_presentation_attr!(letter_spacing, "letter-spacing", length);
+            svg_presentation_attr!(word_spacing, "word-spacing", length);
+
+            // Writing / Bidi properties
+            svg_presentation_attr!(direction, "direction");
+            svg_presentation_attr!(unicode_bidi, "unicode-bidi");
+            svg_presentation_attr!(writing_mode, "writing-mode");
+
             svg_presentation_attr!(cx, "cx", length);
             svg_presentation_attr!(cy, "cy", length);
             svg_presentation_attr!(r, "r", length);

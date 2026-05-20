@@ -97,6 +97,41 @@
 |-----------|---------------------|---------------------|-------|
 | `mask-type` | Enabled | Added | SVG struct |
 
+### General Visual Properties
+
+| Attribute | Stylo (CSS property) | Presentational Hint | Notes |
+|-----------|---------------------|---------------------|-------|
+| `opacity` | — (standard CSS) | Added | Effects struct |
+| `color` | — (standard CSS) | Added | InheritedText struct |
+| `visibility` | — (standard CSS) | Added | InheritedBox struct |
+| `pointer-events` | — (standard CSS) | Added | InheritedUI struct |
+
+### Rendering Hints
+
+| Attribute | Stylo (CSS property) | Presentational Hint | Notes |
+|-----------|---------------------|---------------------|-------|
+| `image-rendering` | — (standard CSS) | Added | InheritedBox struct |
+| `text-rendering` | — (standard CSS) | Added | InheritedText struct |
+
+### Text / Font Properties
+
+| Attribute | Stylo (CSS property) | Presentational Hint | Notes |
+|-----------|---------------------|---------------------|-------|
+| `font-family` | — (standard CSS) | Added | Font struct |
+| `font-style` | — (standard CSS) | Added | Font struct |
+| `font-weight` | — (standard CSS) | Added | Font struct |
+| `font-size` | — (standard CSS) | Added (length) | Font struct; bare numbers → `px` |
+| `letter-spacing` | — (standard CSS) | Added (length) | InheritedText struct |
+| `word-spacing` | — (standard CSS) | Added (length) | InheritedText struct |
+
+### Writing / Bidi Properties
+
+| Attribute | Stylo (CSS property) | Presentational Hint | Notes |
+|-----------|---------------------|---------------------|-------|
+| `direction` | — (standard CSS) | Added | InheritedBox struct |
+| `unicode-bidi` | — (standard CSS) | Added | InheritedBox struct |
+| `writing-mode` | — (standard CSS) | Added | InheritedBox struct |
+
 ### Geometry Lengths
 
 | Attribute | Stylo (CSS property) | Presentational Hint | Notes |

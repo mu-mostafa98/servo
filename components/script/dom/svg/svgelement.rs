@@ -143,6 +143,29 @@ impl VirtualMethods for SVGElement {
 
             &local_name!("mask-type") |
 
+            // General visual properties
+            &local_name!("opacity") |
+            &local_name!("color") |
+            &local_name!("visibility") |
+            &local_name!("pointer-events") |
+
+            // Rendering hints
+            &local_name!("image-rendering") |
+            &local_name!("text-rendering") |
+
+            // Text / Font properties
+            &local_name!("font-family") |
+            &local_name!("font-style") |
+            &local_name!("font-weight") |
+            &local_name!("font-size") |
+            &local_name!("letter-spacing") |
+            &local_name!("word-spacing") |
+
+            // Writing / Bidi properties
+            &local_name!("direction") |
+            &local_name!("unicode-bidi") |
+            &local_name!("writing-mode") |
+
             &local_name!("cx") |
             &local_name!("cy") |
             &local_name!("r") |
