@@ -1348,8 +1348,6 @@ impl<'dom> LayoutDom<'dom, Element> {
             }
         }
 
-        // SVG presentation attributes as presentational hints (InheritedSVG).
-        // https://www.w3.org/TR/SVG2/painting.html
         if self.downcast::<SVGElement>().is_some() {
             let url_data = UrlExtraData(document.document_url().get_arc());
             let context = ParserContext::new(
@@ -1364,22 +1362,39 @@ impl<'dom> LayoutDom<'dom, Element> {
                 Default::default(),
             );
 
+            fn svg_length_attr_val(val: &str) -> std::borrow::Cow<'_, str> {
+                if val.chars().all(|c| c.is_ascii_digit() || c == '.' || c == '-') && !val.is_empty() {
+                    std::borrow::Cow::Owned(format!("{}px", val))
+                } else {
+                    std::borrow::Cow::Borrowed(val)
+                }
+            }
+
             macro_rules! svg_presentation_attr {
                 ($longhand:ident, $attr:tt) => {
                     if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!($attr)) {
-                        let mut input = ParserInput::new(val);
-                        let mut parser = Parser::new(&mut input);
-                        if let Ok(decl) = longhands::$longhand::parse_declared(&context, &mut parser) {
-                            push(decl);
-                        }
+                        svg_presentation_attr!(@parse $longhand, val);
+                    }
+                };
+                ($longhand:ident, $attr:tt, length) => {
+                    if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!($attr)) {
+                        let val = svg_length_attr_val(val);
+                        svg_presentation_attr!(@parse $longhand, val);
+                    }
+                };
+                (@parse $longhand:ident, $val:expr) => {
+                    let mut input = ParserInput::new(&*$val);
+                    let mut parser = Parser::new(&mut input);
+                    if let Ok(decl) = longhands::$longhand::parse_declared(&context, &mut parser) {
+                        push(decl);
                     }
                 };
             }
 
-            svg_presentation_attr!(clip_rule, "clip-rule");
             svg_presentation_attr!(fill_rule, "fill-rule");
             svg_presentation_attr!(fill, "fill");
             svg_presentation_attr!(fill_opacity, "fill-opacity");
+            
             svg_presentation_attr!(stroke, "stroke");
             svg_presentation_attr!(stroke_dasharray, "stroke-dasharray");
             svg_presentation_attr!(stroke_dashoffset, "stroke-dashoffset");
@@ -1388,59 +1403,45 @@ impl<'dom> LayoutDom<'dom, Element> {
             svg_presentation_attr!(stroke_miterlimit, "stroke-miterlimit");
             svg_presentation_attr!(stroke_opacity, "stroke-opacity");
             svg_presentation_attr!(stroke_width, "stroke-width");
-            svg_presentation_attr!(text_anchor, "text-anchor");
-            svg_presentation_attr!(color_interpolation, "color-interpolation");
-            svg_presentation_attr!(color_interpolation_filters, "color-interpolation-filters");
-            svg_presentation_attr!(shape_rendering, "shape-rendering");
+            
             svg_presentation_attr!(marker_start, "marker-start");
             svg_presentation_attr!(marker_mid, "marker-mid");
             svg_presentation_attr!(marker_end, "marker-end");
-            svg_presentation_attr!(paint_order, "paint-order");
 
-            // SVG struct (non-inherited) presentation attributes.
-            // https://www.w3.org/TR/SVG2/geometry.html
-            // SVG length attributes accept unitless numbers (e.g. cx="250"),
-            // but CSS <length-percentage> requires units. Preprocess bare numbers.
-            fn svg_length_attr_val(val: &str) -> std::borrow::Cow<'_, str> {
-                if val.chars().all(|c| c.is_ascii_digit() || c == '.' || c == '-') && !val.is_empty() {
-                    std::borrow::Cow::Owned(format!("{}px", val))
-                } else {
-                    std::borrow::Cow::Borrowed(val)
-                }
-            }
-            macro_rules! svg_length_attr {
-                ($longhand:ident, $attr:tt) => {
-                    if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!($attr)) {
-                        let val = svg_length_attr_val(val);
-                        let mut input = ParserInput::new(&*val);
-                        let mut parser = Parser::new(&mut input);
-                        if let Ok(decl) = longhands::$longhand::parse_declared(&context, &mut parser) {
-                            push(decl);
-                        }
-                    }
-                };
-            }
-            svg_length_attr!(cx, "cx");
-            svg_length_attr!(cy, "cy");
-            svg_length_attr!(r, "r");
-            svg_length_attr!(rx, "rx");
-            svg_length_attr!(ry, "ry");
-            svg_length_attr!(x, "x");
-            svg_length_attr!(y, "y");
-            svg_presentation_attr!(d, "d");
-            svg_presentation_attr!(vector_effect, "vector-effect");
+            svg_presentation_attr!(clip_rule, "clip-rule");
             svg_presentation_attr!(clip_path, "clip-path");
-            // https://www.w3.org/TR/SVG2/pservers.html
+
+            svg_presentation_attr!(color_interpolation, "color-interpolation");
+            svg_presentation_attr!(color_interpolation_filters, "color-interpolation-filters");
+
+            svg_presentation_attr!(paint_order, "paint-order");
+            svg_presentation_attr!(shape_rendering, "shape-rendering");
+
+            svg_presentation_attr!(text_anchor, "text-anchor");
+
+            svg_presentation_attr!(vector_effect, "vector-effect");
+
             svg_presentation_attr!(flood_color, "flood-color");
             svg_presentation_attr!(flood_opacity, "flood-opacity");
             svg_presentation_attr!(lighting_color, "lighting-color");
+
             svg_presentation_attr!(stop_color, "stop-color");
             svg_presentation_attr!(stop_opacity, "stop-opacity");
-            // https://drafts.fxtf.org/css-masking/#mask-type
+
             svg_presentation_attr!(mask_type, "mask-type");
-            // https://www.w3.org/TR/SVG2/geometry.html#WidthHeight
-            svg_length_attr!(width, "width");
-            svg_length_attr!(height, "height");
+
+            svg_presentation_attr!(cx, "cx", length);
+            svg_presentation_attr!(cy, "cy", length);
+            svg_presentation_attr!(r, "r", length);
+
+            svg_presentation_attr!(rx, "rx", length);
+            svg_presentation_attr!(ry, "ry", length);
+
+            svg_presentation_attr!(x, "x", length);
+            svg_presentation_attr!(y, "y", length);
+
+            svg_presentation_attr!(width, "width", length);
+            svg_presentation_attr!(height, "height", length);
         }
 
         // Aspect ratio when providing both width and height.

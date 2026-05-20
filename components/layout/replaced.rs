@@ -27,6 +27,7 @@ use style::values::computed::image::Image as ComputedImage;
 use style::values::computed::{Content, Context, ToComputedValue};
 use style::values::generics::counters::{GenericContentItem, GenericContentItems};
 use url::Url;
+use html5ever::ns;
 use web_atoms::local_name;
 use webrender_api::ImageKey;
 
@@ -341,6 +342,7 @@ impl ReplacedContents {
                 .open("D:\\Projects\\servo\\svg_engine.log")
                 .and_then(|mut f| {
                     use std::io::Write;
+                    let d_attr = element.attribute_as_str(&ns!(), &local_name!("d"));
                     writeln!(
                         f,
                         "{indent}<{}>\n\
@@ -353,7 +355,8 @@ impl ReplacedContents {
                          {indent}  text:          {:?}\n\
                          {indent}  font:          {:?}\n\
                          {indent}  inherited_ui:  {:?}\n\
-                         {indent}  position:      {:?}",
+                         {indent}  position:      {:?}\n\
+                         {indent}  attrs (DOM):   d={:?}",
                         element.local_name(),
                         isvg,
                         svg,
@@ -365,6 +368,7 @@ impl ReplacedContents {
                         font,
                         inherited_ui,
                         position,
+                        d_attr,
                     )
                 });
         }
