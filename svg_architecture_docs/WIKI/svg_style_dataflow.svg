@@ -1,0 +1,169 @@
+<svg width="1400" height="1540" xmlns="http://www.w3.org/2000/svg" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#64748b" />
+    </marker>
+    <marker id="arr-blue" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#2563eb" />
+    </marker>
+    <marker id="arr-green" markerWidth="10" markerHeight="7" refX="9" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#16a34a" />
+    </marker>
+    <filter id="shad" x="-4" y="-4" width="8" height="8">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#0f172a" flood-opacity="0.08" />
+    </filter>
+  </defs>
+
+  <rect width="1400" height="1540" fill="#f8fafc" />
+
+  <!-- HEADER -->
+  <text x="700" y="42" text-anchor="middle" font-size="26" font-weight="800" fill="#0f172a" letter-spacing="-0.5">SVG Style Processing — Two Dataflow Paths</text>
+  <text x="700" y="66" text-anchor="middle" font-size="15" font-weight="500" fill="#64748b">From source HTML &amp; attributes to computed style in Servo's rendering engine</text>
+
+  <line x1="200" y1="82" x2="1200" y2="82" stroke="#e2e8f0" stroke-width="1" />
+
+  <!-- LEGEND -->
+  <rect x="430" y="96" width="540" height="32" rx="6" fill="white" filter="url(#shad)" />
+  <rect x="446" y="107" width="14" height="10" rx="2" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" />
+  <text x="466" y="117" font-size="12" fill="#334155">CSS Inline path</text>
+  <rect x="576" y="107" width="14" height="10" rx="2" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" />
+  <text x="596" y="117" font-size="12" fill="#334155">Presentation attr path</text>
+  <rect x="740" y="107" width="14" height="10" rx="2" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" />
+  <text x="760" y="117" font-size="12" fill="#334155">Shared</text>
+
+  <!-- ================ ① SOURCE HTML ================ -->
+  <rect x="400" y="148" width="600" height="56" rx="8" fill="#fff7ed" stroke="#d97706" stroke-width="2" filter="url(#shad)" />
+  <text x="700" y="170" text-anchor="middle" font-size="15" font-weight="800" fill="#9a3412">1. Source HTML</text>
+  <text x="700" y="192" text-anchor="middle" font-size="13" fill="#475569" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">&lt;rect style="fill:red; stroke:blue;" fill="red" cx="10"/&gt;</text>
+  <line x1="700" y1="204" x2="700" y2="240" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- ================ ② HTML PARSER ================ -->
+  <rect x="400" y="240" width="600" height="56" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" filter="url(#shad)" />
+  <text x="700" y="262" text-anchor="middle" font-size="15" font-weight="800" fill="#92400e">2. HTML Parser (Servo)</text>
+  <text x="700" y="284" text-anchor="middle" font-size="13" fill="#475569">Extracts all attributes — splits into <tspan font-weight="700">CSS inline</tspan> and <tspan font-weight="700">SVG attr</tspan> streams</text>
+
+  <!-- Split arrows -->
+  <line x1="420" y1="296" x2="420" y2="318" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)" />
+  <line x1="980" y1="296" x2="980" y2="318" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr-green)" />
+
+  <!-- LANE HEADERS -->
+  <rect x="90" y="318" width="560" height="26" rx="4" fill="#dbeafe" opacity="0.6" />
+  <text x="370" y="336" text-anchor="middle" font-size="12" font-weight="800" fill="#1e40af" letter-spacing="1.5">CSS INLINE STYLE PATH</text>
+  <rect x="750" y="318" width="560" height="26" rx="4" fill="#dcfce7" opacity="0.6" />
+  <text x="1030" y="336" text-anchor="middle" font-size="12" font-weight="800" fill="#166534" letter-spacing="1.5">PRESENTATION ATTRIBUTE PATH</text>
+
+  <!-- ======================================================================= -->
+  <!-- LEFT LANE → CSS INLINE -->
+  <!-- ======================================================================= -->
+
+  <!-- ③a -->
+  <rect x="90" y="350" width="560" height="90" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#shad)" />
+  <text x="370" y="373" text-anchor="middle" font-size="15" font-weight="800" fill="#1e40af">3a. Gets <tspan font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">style</tspan> Attribute Value</text>
+  <text x="370" y="398" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">element.get_attr_val_for_layout(&amp;ns!(), &amp;local_name!("style"))</text>
+  <text x="370" y="421" text-anchor="middle" font-size="13" fill="#475569">Retrieves the raw CSS string from the element's <tspan font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">style</tspan> attribute</text>
+  <line x1="370" y1="440" x2="370" y2="480" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)" />
+
+  <!-- ④a -->
+  <rect x="90" y="480" width="560" height="90" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#shad)" />
+  <text x="370" y="503" text-anchor="middle" font-size="15" font-weight="800" fill="#1e40af">4a. Parse Inline CSS Declarations</text>
+  <text x="370" y="528" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">stylo::properties::parse_property_declarations(&amp;context, &amp;mut parser)</text>
+  <text x="370" y="551" text-anchor="middle" font-size="13" fill="#475569">Tokenizes CSS string into a structured, ordered set of declarations</text>
+  <line x1="370" y1="570" x2="370" y2="610" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)" />
+
+  <!-- ⑤a -->
+  <rect x="90" y="610" width="560" height="90" rx="8" fill="#dbeafe" stroke="#2563eb" stroke-width="1.5" filter="url(#shad)" />
+  <text x="370" y="633" text-anchor="middle" font-size="15" font-weight="800" fill="#1e40af">5a. Inline CSS DeclarationBlock</text>
+  <text x="370" y="658" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">DeclarationBlock { css_origin: AuthorInline }</text>
+  <text x="370" y="681" text-anchor="middle" font-size="13" fill="#475569">Ready for cascade — these declarations have the <tspan font-weight="700">highest specificity</tspan></text>
+
+  <!-- ======================================================================= -->
+  <!-- RIGHT LANE → PRESENTATION ATTRIBUTES -->
+  <!-- ======================================================================= -->
+
+  <!-- ③b -->
+  <rect x="750" y="350" width="560" height="90" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shad)" />
+  <text x="1030" y="373" text-anchor="middle" font-size="15" font-weight="800" fill="#166534">3b. Collect Presentation Hints</text>
+  <text x="1030" y="398" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">impl PresentationalHints for SVGElement  // components/script/dom/element/element.rs</text>
+  <text x="1030" y="421" text-anchor="middle" font-size="13" fill="#475569">Called by the cascade — bridges SVG HTML attributes into the CSS declaration system</text>
+  <line x1="1030" y1="440" x2="1030" y2="480" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr-green)" />
+
+  <!-- ④b -->
+  <rect x="750" y="480" width="560" height="90" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shad)" />
+  <text x="1030" y="503" text-anchor="middle" font-size="15" font-weight="800" fill="#166534">4b. Match Attributes by Name</text>
+  <text x="1030" y="528" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">match attr.local_name() { "fill" =&gt; svg_presentation_attr!(fill), "cx" =&gt; ..., /* 52 total */ }</text>
+  <text x="1030" y="551" text-anchor="middle" font-size="13" fill="#475569">Dispatches each SVG attribute to its registered longhand parser</text>
+  <line x1="1030" y1="570" x2="1030" y2="610" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr-green)" />
+
+  <!-- ⑤b -->
+  <rect x="750" y="610" width="560" height="90" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shad)" />
+  <text x="1030" y="633" text-anchor="middle" font-size="15" font-weight="800" fill="#166534">5b. Parse Individual Attribute Values</text>
+  <text x="1030" y="658" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">longhands::fill::parse_declared(&amp;context, &amp;mut parser)  // one per registered attribute</text>
+  <text x="1030" y="681" text-anchor="middle" font-size="13" fill="#475569">Each SVG attribute parsed independently into a single CSS declaration</text>
+  <line x1="1030" y1="700" x2="1030" y2="735" stroke="#16a34a" stroke-width="1.5" marker-end="url(#arr-green)" />
+
+  <!-- ⑥b -->
+  <rect x="750" y="735" width="560" height="90" rx="8" fill="#dcfce7" stroke="#16a34a" stroke-width="1.5" filter="url(#shad)" />
+  <text x="1030" y="758" text-anchor="middle" font-size="15" font-weight="800" fill="#166534">6b. Presentation Hint Declarations</text>
+  <text x="1030" y="783" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">Vec&lt;ApplicableDeclaration&gt; { css_origin: Author, specificity: presentational_hint }</text>
+  <text x="1030" y="806" text-anchor="middle" font-size="13" fill="#475569">Ready for cascade — these declarations have <tspan font-weight="700">lower specificity</tspan> than inline</text>
+
+  <!-- ================ MERGE POINT ================ -->
+  <line x1="370" y1="700" x2="370" y2="825" stroke="#2563eb" stroke-width="1.5" marker-end="url(#arr-blue)" />
+  <line x1="370" y1="825" x2="1030" y2="825" stroke="#94a3b8" stroke-width="1.5" />
+  <line x1="700" y1="825" x2="700" y2="865" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <rect x="580" y="812" width="240" height="22" rx="11" fill="#f1f5f9" stroke="#cbd5e1" />
+  <text x="700" y="828" text-anchor="middle" font-size="11" fill="#475569">Both paths converge in the cascade</text>
+
+  <!-- ================ ⑦ CASCADE ================ -->
+  <rect x="300" y="865" width="800" height="90" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" filter="url(#shad)" />
+  <text x="700" y="888" text-anchor="middle" font-size="15" font-weight="800" fill="#92400e">7. CSS Cascade (stylo)</text>
+  <text x="700" y="913" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">cascade() — resolves winning value per property by origin &amp; specificity</text>
+  <text x="700" y="936" text-anchor="middle" font-size="13" fill="#475569"><tspan font-weight="700">Inline</tspan> (AuthorInline) beats <tspan font-weight="700">presentational hint</tspan> (Author) when both declare the same property</text>
+  <line x1="700" y1="955" x2="700" y2="995" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- ================ ⑧ STYLE RESOLUTION ================ -->
+  <rect x="300" y="995" width="800" height="90" rx="8" fill="#fef3c7" stroke="#d97706" stroke-width="1.5" filter="url(#shad)" />
+  <text x="700" y="1018" text-anchor="middle" font-size="15" font-weight="800" fill="#92400e">8. Resolve Computed Values</text>
+  <text x="700" y="1043" text-anchor="middle" font-size="13" fill="#1e293b" font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">resolve() — converts relative/percentage values to absolute computed values</text>
+  <text x="700" y="1066" text-anchor="middle" font-size="13" fill="#475569">Finalizes values for all 11 CSS style structs per element (inherited + non-inherited)</text>
+  <line x1="700" y1="1085" x2="700" y2="1125" stroke="#64748b" stroke-width="1.5" marker-end="url(#arr)" />
+
+  <!-- ================ ⑨ COMPUTED STYLE ================ -->
+  <rect x="300" y="1125" width="800" height="90" rx="8" fill="#e0f2fe" stroke="#0284c7" stroke-width="2" filter="url(#shad)" />
+  <text x="700" y="1148" text-anchor="middle" font-size="15" font-weight="800" fill="#075985">9. Computed Style</text>
+  <text x="700" y="1173" text-anchor="middle" font-size="13" fill="#475569">Fully resolved per-element style — every property has its final computed value</text>
+  <text x="700" y="1196" text-anchor="middle" font-size="13" fill="#475569">Consumed by the <tspan font-weight="700">layout engine</tspan> (positioning) and <tspan font-weight="700">paint system</tspan> (rendering)</text>
+
+  <!-- ================ BOTTOM INFO BOXES ================ -->
+  <rect x="160" y="1260" width="480" height="240" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#shad)" />
+  <text x="400" y="1284" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">Key Differences</text>
+  <line x1="180" y1="1294" x2="620" y2="1294" stroke="#e2e8f0" stroke-width="1" />
+
+  <circle cx="192" cy="1324" r="5" fill="#2563eb" />
+  <text x="208" y="1328" font-size="13" fill="#334155"><tspan font-weight="700" fill="#1e40af">CSS Inline</tspan>: one <tspan font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">style</tspan> attribute, batch-parsed by the CSS parser</text>
+
+  <circle cx="192" cy="1366" r="5" fill="#16a34a" />
+  <text x="208" y="1370" font-size="13" fill="#334155"><tspan font-weight="700" fill="#166534">Presentation attr</tspan>: each attribute individually matched &amp; parsed</text>
+
+  <circle cx="192" cy="1408" r="5" fill="#d97706" />
+  <text x="208" y="1412" font-size="13" fill="#334155"><tspan font-weight="700">Cascade priority</tspan>: inline style wins over presentational hint</text>
+
+  <circle cx="192" cy="1450" r="5" fill="#d97706" />
+  <text x="208" y="1454" font-size="13" fill="#334155"><tspan font-weight="700">Key file</tspan>: <tspan font-family="'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace">element.rs</tspan> — bridges SVG attributes into CSS</text>
+
+  <rect x="680" y="1260" width="560" height="240" rx="8" fill="white" stroke="#e2e8f0" stroke-width="1" filter="url(#shad)" />
+  <text x="960" y="1284" text-anchor="middle" font-size="15" font-weight="800" fill="#0f172a">The 11 CSS Style Structs per Element</text>
+  <line x1="700" y1="1294" x2="1220" y2="1294" stroke="#e2e8f0" stroke-width="1" />
+
+  <text x="700" y="1324" font-size="13" fill="#334155">1. inherited_svg (20 props) — fill, stroke, markers, paint-order, ...</text>
+  <text x="700" y="1342" font-size="13" fill="#334155">2. svg (15 props) — geometry (cx, cy, r, x, y), vector-effect, clip-path, ...</text>
+  <text x="700" y="1360" font-size="13" fill="#334155">3. position (9 props) — width, height, min/max sizing, aspect-ratio, z-index</text>
+  <text x="700" y="1378" font-size="13" fill="#334155">4. effects (4 props) — opacity, filter, mix-blend-mode, box-shadow</text>
+  <text x="700" y="1396" font-size="13" fill="#334155">5. inherited_box (4 props) — direction, writing-mode, visibility, image-rendering</text>
+  <text x="700" y="1414" font-size="13" fill="#334155">6. box (9 props) — transform, display, overflow, isolation, baselines</text>
+  <text x="700" y="1432" font-size="13" fill="#334155">7. inherited_text (13 props) — color, spacing, alignment, wrapping, white-space</text>
+  <text x="700" y="1450" font-size="13" fill="#334155">8. text (5 props) — unicode-bidi, text-decoration, text-overflow</text>
+  <text x="700" y="1468" font-size="13" fill="#334155">9. font (8 props) — family, style, weight, size, stretch, kerning, variant</text>
+  <text x="700" y="1486" font-size="13" fill="#334155">10. inherited_ui (4 props) — pointer-events, cursor, caret-color, color-scheme</text>
+</svg>
