@@ -1,0 +1,223 @@
+<html>
+<head>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 20px; background: #f8f9fa; }
+  h2 { color: #1a1a2e; border-bottom: 3px solid #1a1a2e; padding-bottom: 8px; }
+  h3 { color: #16213e; margin: 30px 0 10px; padding: 8px 12px; background: #e9ecef; border-radius: 6px; }
+  h3 span { font-weight: normal; font-size: 14px; color: #555; float: right; }
+  table { border-collapse: collapse; margin: 6px 0; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  td { padding: 6px 12px; border: 1px solid #dee2e6; font-family: monospace; font-size: 13px; white-space: nowrap; }
+  td:first-child { background: #e9ecef; font-weight: bold; color: #495057; font-family: system-ui; }
+  svg { background: white; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+</style>
+</head>
+<body>
+<h2>SVG Style Struct Debug Test</h2>
+
+<h3>inherited_svg <span>→ inherited_svg:</span></h3>
+<table>
+  <tr><td>Fill</td><td>fill</td><td>fill-opacity</td><td>fill-rule</td></tr>
+  <tr><td>Clip Rule</td><td>clip-rule</td></tr>
+  <tr><td>Stroke</td><td>stroke</td><td>stroke-width</td><td>stroke-dasharray</td><td>stroke-dashoffset</td><td>stroke-linecap</td><td>stroke-linejoin</td><td>stroke-miterlimit</td><td>stroke-opacity</td></tr>
+  <tr><td>Markers</td><td>marker-start</td><td>marker-mid</td><td>marker-end</td></tr>
+  <tr><td>Rendering</td><td>paint-order</td><td>shape-rendering</td></tr>
+  <tr><td>Color</td><td>color-interpolation</td><td>color-interpolation-filters</td></tr>
+  <tr><td>Text</td><td>text-anchor</td></tr>
+</table>
+<svg width="700" height="300" xmlns="http://www.w3.org/2000/svg"
+     style="
+              fill: green; fill-opacity: 1; fill-rule: nonzero;
+              
+              clip-rule: nonzero;
+
+              stroke: red; stroke-width: 4; stroke-dasharray: none; stroke-dashoffset: 0;
+              stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4; stroke-opacity: 1;
+
+              marker: none;
+
+              paint-order: normal; shape-rendering: auto;
+              color-interpolation: linearRGB; color-interpolation-filters: linearRGB;
+              text-anchor: middle;
+            ">
+
+       <defs>
+              <marker id="red-circle" markerWidth="4" markerHeight="4" refX="2" refY="2">
+                     <circle cx="2" cy="2" r="3" style="fill: red" />
+              </marker>
+              <marker id="green-circle" markerWidth="4" markerHeight="4" refX="2" refY="2">
+                     <circle cx="2" cy="2" r="3" style="fill: green" />
+              </marker>
+              <marker id="blue-circle" markerWidth="4" markerHeight="4" refX="2" refY="2">
+                     <circle cx="2" cy="2" r="3" style="fill: blue" />
+              </marker>
+       </defs>
+
+       <polyline points="120,50 64,226 216,118 24,118 176,226" />
+
+       <polyline points="420,50 364,226 516,118 324,118 476,226"
+              style="
+                     fill: red; fill-opacity: 0.4; fill-rule: evenodd;
+                     
+                     clip-rule: evenodd;
+
+                     stroke: green; stroke-width: 8; stroke-dasharray: 10,5; stroke-dashoffset: 3;
+                     stroke-linecap: round; stroke-linejoin: round; stroke-miterlimit: 2; stroke-opacity: 0.6;
+
+                     marker-start: url(#red-circle); marker-mid: url(#green-circle); marker-end: url(#blue-circle);
+
+                     paint-order: stroke fill; shape-rendering: crispEdges;
+                     color-interpolation: sRGB; color-interpolation-filters: sRGB;
+                     text-anchor: start;" />
+</svg>
+
+<h3>svg <span>→ svg:</span></h3>
+<table>
+  <tr><td>Geometry</td><td>cx</td><td>cy</td><td>r</td><td>rx</td><td>ry</td><td>x</td><td>y</td></tr>
+  <tr><td>Path / Clip</td><td>d</td><td>clip-path</td><td>vector-effect</td></tr>
+  <tr><td>Filter</td><td>flood-color</td><td>flood-opacity</td><td>lighting-color</td></tr>
+  <tr><td>Gradient</td><td>stop-color</td><td>stop-opacity</td></tr>
+  <tr><td>Mask</td><td>mask-type</td></tr>
+</table>
+<svg style="fill: teal;" width="600" height="250" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <clipPath id="cp">
+            <circle style="cx: 80px; cy: 75px; r: 60px;" />
+        </clipPath>
+        <filter id="f">
+            <feFlood style="flood-color: yellow; flood-opacity: 0.4;" width="100%" height="100%" />
+            <feDiffuseLighting style="lighting-color: lime;">
+                <fePointDistant />
+            </feDiffuseLighting>
+        </filter>
+        <mask id="mk" style="mask-type: luminance;">
+            <rect x="0" y="0" width="600" height="150" fill="white" />
+        </mask>
+        <linearGradient id="g" style="color-interpolation: sRGB;">
+            <stop offset="0%" style="stop-color: red; stop-opacity: 1;" />
+            <stop offset="100%" style="stop-color: blue; stop-opacity: 0.5;" />
+        </linearGradient>
+    </defs>
+    <circle style="cx: 80px; cy: 75px; r: 60px; fill: url(#g); clip-path: url(#cp);" />
+    <rect style="x: 200px; y: 30px; width: 100px; height: 90px; rx: 10px; ry: 10px; fill: url(#g);" />
+    <path d="M 380 20 L 480 20 L 430 110 Z" fill="url(#g)" />
+    <g transform="scale(1.5, 1)">
+        <line x1="10" y1="200" x2="90" y2="200" style="stroke: red; stroke-width: 4; vector-effect: non-scaling-stroke;" />
+        <line x1="10" y1="220" x2="90" y2="220" style="stroke: blue; stroke-width: 4;" />
+    </g>
+</svg>
+
+<h3>position <span>→ position:</span></h3>
+<table>
+  <tr><td>Dimensions</td><td>width</td><td>height</td></tr>
+  <tr><td>Sizing</td><td>min-width</td><td>max-width</td><td>min-height</td><td>max-height</td></tr>
+  <tr><td>Object</td><td>object-fit</td><td>object-position</td></tr>
+  <tr><td>Aspect</td><td>aspect-ratio</td></tr>
+  <tr><td>Stacking</td><td>z-index</td></tr>
+  <tr><td>Box</td><td>box-sizing</td></tr>
+</table>
+<svg xmlns="http://www.w3.org/2000/svg" fill="navy" style="object-fit: fill; object-position: 50% 50%; aspect-ratio: auto;">
+    <rect style="x: 20px; y: 10px; width: 80px; height: 40px; min-width: 100px; max-width: 200px; min-height: 40px; max-height: 60px; box-sizing: border-box; z-index: 1;" />
+</svg>
+
+<h3>effects <span>→ effects:</span></h3>
+<table>
+  <tr><td>Opacity</td><td>opacity</td></tr>
+  <tr><td>Filter</td><td>filter</td></tr>
+  <tr><td>Blending</td><td>mix-blend-mode</td></tr>
+  <tr><td>Shadow</td><td>box-shadow</td></tr>
+</table>
+<svg width="400" height="80" xmlns="http://www.w3.org/2000/svg" style="fill: navy;">
+    <rect x="20" y="15" width="360" height="50" fill="red" style="opacity: 0.5; filter: blur(2px); box-shadow: 4px 4px 4px rgba(0,0,0,0.5); mix-blend-mode: multiply;" />
+</svg>
+
+<h3>inherited_box <span>→ inherited_box:</span></h3>
+<table>
+  <tr><td>Layout</td><td>direction</td><td>writing-mode</td></tr>
+  <tr><td>Visual</td><td>visibility</td><td>image-rendering</td></tr>
+  <tr><td>Baseline</td><td>dominant-baseline</td></tr>
+</table>
+<svg width="620" height="200" xmlns="http://www.w3.org/2000/svg" fill="green" font-size="18"
+     style="visibility: visible; direction: ltr; writing-mode: horizontal-tb; image-rendering: auto; dominant-baseline: auto;">
+    <text x="30" y="30">Inherited (defaults)</text>
+    <rect x="220" y="10" width="100" height="36" fill="purple" style="image-rendering: pixelated;" />
+    <text x="350" y="30" style="visibility: hidden;">Hidden</text>
+    <text x="460" y="100" style="direction: rtl; dominant-baseline: hanging; writing-mode: vertical-rl;">V-RL+Hang</text>
+</svg>
+
+<h3>box <span>→ box:</span></h3>
+<table>
+  <tr><td>Transform</td><td>transform</td></tr>
+  <tr><td>Individual Transforms</td><td>rotate</td><td>scale</td><td>translate</td></tr>
+  <tr><td>Display</td><td>display</td></tr>
+  <tr><td>Overflow</td><td>overflow</td></tr>
+  <tr><td>Isolation</td><td>isolation</td></tr>
+  <tr><td>Baseline</td><td>alignment-baseline</td><td>baseline-shift</td></tr>
+</table>
+<svg width="520" height="120" xmlns="http://www.w3.org/2000/svg" fill="navy" font-size="16"
+     style="display: inline; overflow: visible; isolation: auto;">
+    <rect x="20" y="30" width="120" height="50" fill="red" style="translate: 10px 0; rotate: 8deg; scale: 1.1; transform: skewX(3deg); overflow: hidden; isolation: isolate;" />
+    <rect x="220" y="30" width="80" height="50" fill="green" style="display: none;" />
+    <text x="360" y="80" style="alignment-baseline: middle; baseline-shift: 5px;">Baseline</text>
+</svg>
+
+<h3>inherited_text <span>→ inherited_text:</span></h3>
+<table>
+  <tr><td>Color</td><td>color</td></tr>
+  <tr><td>Spacing</td><td>letter-spacing</td><td>word-spacing</td></tr>
+  <tr><td>Rendering</td><td>text-rendering</td></tr>
+  <tr><td>Alignment</td><td>text-align</td></tr>
+  <tr><td>Transform</td><td>text-transform</td></tr>
+  <tr><td>Shadow</td><td>text-shadow</td></tr>
+  <tr><td>Wrapping</td><td>word-break</td><td>overflow-wrap</td></tr>
+  <tr><td>White Space</td><td>white-space</td></tr>
+  <tr><td>Indent</td><td>text-indent</td></tr>
+  <tr><td>Line Break</td><td>line-break</td></tr>
+  <tr><td>Tab Size</td><td>tab-size</td></tr>
+</table>
+<svg width="700" height="120" xmlns="http://www.w3.org/2000/svg" fill="black" font-size="18"
+     style="color: blue; letter-spacing: 2px; word-spacing: 3px; text-rendering: auto; text-align: start; text-transform: none; text-shadow: none; word-break: normal; overflow-wrap: normal; white-space: normal; text-indent: 0; line-break: auto; tab-size: 8;">
+    <text x="30" y="35" fill="currentColor">Inherited (defaults)</text>
+    <text x="250" y="75" fill="currentColor" style="color: maroon; letter-spacing: 0; word-spacing: 0; text-rendering: optimizeLegibility; text-align: end; text-transform: uppercase; text-shadow: 1px 1px 1px red; word-break: break-all; overflow-wrap: break-word; white-space: pre; text-indent: 10px; line-break: loose; tab-size: 4;">Overided all</text>
+</svg>
+
+<h3>text <span>→ text:</span></h3>
+<table>
+  <tr><td>Bidi</td><td>unicode-bidi</td></tr>
+  <tr><td>Decoration</td><td>text-decoration-line</td><td>text-decoration-color</td><td>text-decoration-style</td></tr>
+  <tr><td>Overflow</td><td>text-overflow</td></tr>
+</table>
+<svg width="800" height="120" xmlns="http://www.w3.org/2000/svg" fill="black" font-size="18">
+    <text x="30" y="40">Default</text>
+    <text x="250" y="40" style="unicode-bidi: bidi-override; text-decoration: underline overline blue wavy; text-overflow: ellipsis;">Override</text>
+</svg>
+
+<h3>font <span>→ font:</span></h3>
+<table>
+  <tr><td>Font</td><td>font-family</td><td>font-style</td><td>font-weight</td><td>font-size</td></tr>
+  <tr><td>Stretch</td><td>font-stretch</td></tr>
+  <tr><td>Line Height</td><td>line-height</td></tr>
+  <tr><td>Kerning</td><td>font-kerning</td></tr>
+  <tr><td>Variant</td><td>font-variant-caps</td></tr>
+  <tr><td>Optical</td><td>font-optical-sizing</td></tr>
+</table>
+<svg width="700" height="120" xmlns="http://www.w3.org/2000/svg" fill="black"
+     style="font-family: serif; font-size: 18px; font-style: italic; font-weight: bold; font-stretch: normal; line-height: normal; font-kerning: auto; font-variant-caps: normal; font-optical-sizing: auto;">
+    <text x="30" y="35">Inherited</text>
+    <text x="30" y="75" style="font-family: sans-serif; font-size: 14px; font-style: normal; font-weight: normal; font-stretch: condensed; line-height: 1.5; font-kerning: none; font-variant-caps: small-caps; font-optical-sizing: none;">Overided</text>
+</svg>
+
+<h3>inherited_ui <span>→ inherited_ui:</span></h3>
+<table>
+  <tr><td>Pointer</td><td>pointer-events</td></tr>
+  <tr><td>Cursor</td><td>cursor</td></tr>
+  <tr><td>Caret</td><td>caret-color</td></tr>
+  <tr><td>Scheme</td><td>color-scheme</td></tr>
+</table>
+<svg width="500" height="80" xmlns="http://www.w3.org/2000/svg" fill="green" font-size="18"
+     style="pointer-events: auto; cursor: auto; caret-color: auto; color-scheme: normal;">
+    <text x="30" y="35">Inherited (defaults)</text>
+    <text x="30" y="65" style="pointer-events: none; cursor: pointer; caret-color: red; color-scheme: dark;">Overided all</text>
+</svg>
+
+</body>
+</html>
