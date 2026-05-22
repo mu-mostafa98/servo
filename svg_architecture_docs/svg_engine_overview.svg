@@ -1,0 +1,511 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 2350" font-family="'Segoe UI', 'SF Pro Display', -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="1200" y2="0">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <linearGradient id="accentLine" x1="0" y1="0" x2="1200" y2="0">
+      <stop offset="0%" stop-color="#e94560"/>
+      <stop offset="50%" stop-color="#0f3460"/>
+      <stop offset="100%" stop-color="#e94560"/>
+    </linearGradient>
+    <linearGradient id="sectionHeader" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f3460"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="entryBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#2c3e50"/>
+      <stop offset="100%" stop-color="#1a252f"/>
+    </linearGradient>
+    <linearGradient id="engineBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8f4f8"/>
+      <stop offset="100%" stop-color="#d1ecf1"/>
+    </linearGradient>
+    <linearGradient id="integrationBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef9e7"/>
+      <stop offset="100%" stop-color="#fdebd0"/>
+    </linearGradient>
+    <linearGradient id="styloBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8daef"/>
+      <stop offset="100%" stop-color="#d2b4de"/>
+    </linearGradient>
+    <linearGradient id="subBoxLight" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fdf2e9"/>
+      <stop offset="100%" stop-color="#fae5d3"/>
+    </linearGradient>
+    <linearGradient id="wrBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d5f5e3"/>
+      <stop offset="100%" stop-color="#abebc6"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.10)"/>
+    </filter>
+    <filter id="shadowDeep" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(0,0,0,0.15)"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0f3460"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#1a7a3a"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="2350" fill="#f4f6f9"/>
+
+  <!-- ===== TITLE HEADER ===== -->
+  <rect width="1200" height="100" fill="url(#headerGrad)"/>
+  <rect y="100" width="1200" height="4" fill="url(#accentLine)"/>
+  <text x="60" y="48" font-size="28" font-weight="700" fill="#ffffff">Servo SVG Engine — Architecture Overview</text>
+  <text x="60" y="78" font-size="15" fill="#a0aec0">Full Engine Crate (components/layout/svg-engine/)</text>
+  <rect x="940" y="28" width="200" height="36" rx="18" fill="#e94560" opacity="0.9"/>
+  <text x="1040" y="51" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">DESIGN PHASE</text>
+
+  <!-- ================================================================ -->
+  <!-- SECTION 1: FILE STRUCTURE -->
+  <!-- ================================================================ -->
+
+  <rect x="60" y="130" width="30" height="30" rx="6" fill="url(#sectionHeader)"/>
+  <text x="78" y="150" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="105" y="153" font-size="20" font-weight="700" fill="#1a1a2e">File Structure</text>
+
+  <!-- ===== ENGINE CRATE ===== -->
+  <rect x="60" y="180" width="1080" height="490" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="60" y="180" width="1080" height="46" rx="12" fill="url(#engineBox)"/>
+  <rect x="60" y="214" width="1080" height="12" fill="url(#engineBox)"/>
+  <text x="80" y="209" font-size="15" font-weight="700" fill="#0c5460">📦 Engine Crate</text>
+  <text x="1080" y="209" font-size="12" fill="#6c757d" text-anchor="end">components/layout/svg-engine/</text>
+
+  <g font-size="13" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">
+    <text x="100" y="252" fill="#2d3748" font-weight="700" font-size="14" font-family="'Segoe UI', sans-serif">components/layout/svg-engine/</text>
+
+    <text x="106" y="276" fill="#adb5bd">│</text>
+    <line x1="106" y1="276" x2="130" y2="276" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="276" fill="#e94560">●</text>
+    <text x="134" y="276" fill="#495057">Cargo.toml</text>
+    <text x="320" y="276" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Dependencies: webrender_api, kurbo, euclid, app_units, log</text>
+
+    <text x="106" y="300" fill="#adb5bd">│</text>
+    <line x1="106" y1="300" x2="130" y2="300" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="300" fill="#0f3460">📁</text>
+    <text x="134" y="300" fill="#2d3748" font-weight="600">src/</text>
+
+    <text x="106" y="324" fill="#adb5bd">│</text>
+    <text x="142" y="324" fill="#adb5bd">│</text>
+    <line x1="142" y1="324" x2="166" y2="324" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="324" fill="#adb5bd">│</text>
+    <text x="126" y="324" fill="#e94560">●</text>
+    <text x="170" y="324" fill="#495057">lib.rs</text>
+    <text x="340" y="324" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">SvgEngine struct — main entry point, stateless rendering API</text>
+
+    <text x="106" y="348" fill="#adb5bd">│</text>
+    <text x="142" y="348" fill="#adb5bd">│</text>
+    <line x1="142" y1="348" x2="166" y2="348" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="348" fill="#adb5bd">│</text>
+    <text x="126" y="348" fill="#f39c12">📂</text>
+    <text x="170" y="348" fill="#495057">parser/</text>
+    <text x="340" y="348" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Attribute string parsers — no Servo dependencies</text>
+
+    <text x="106" y="372" fill="#adb5bd">│</text>
+    <text x="142" y="372" fill="#adb5bd">│</text>
+    <text x="178" y="372" fill="#adb5bd">│</text>
+    <line x1="178" y1="372" x2="202" y2="372" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="372" fill="#adb5bd">│</text>
+    <text x="126" y="372" fill="#adb5bd">│</text>
+    <text x="162" y="372" fill="#e94560">●</text>
+    <text x="206" y="372" fill="#495057">mod.rs</text>
+    <text x="380" y="372" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Re-exports sub-parser modules</text>
+
+    <text x="106" y="396" fill="#adb5bd">│</text>
+    <text x="142" y="396" fill="#adb5bd">│</text>
+    <text x="178" y="396" fill="#adb5bd">│</text>
+    <line x1="178" y1="396" x2="202" y2="396" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="396" fill="#adb5bd">│</text>
+    <text x="126" y="396" fill="#adb5bd">│</text>
+    <text x="162" y="396" fill="#e94560">●</text>
+    <text x="206" y="396" fill="#495057">path.rs</text>
+    <text x="380" y="396" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Handle path geometry from SVG attributes</text>
+
+    <text x="106" y="420" fill="#adb5bd">│</text>
+    <text x="142" y="420" fill="#adb5bd">│</text>
+    <text x="178" y="420" fill="#adb5bd">│</text>
+    <line x1="178" y1="420" x2="202" y2="420" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="420" fill="#adb5bd">│</text>
+    <text x="126" y="420" fill="#adb5bd">│</text>
+    <text x="162" y="420" fill="#e94560">●</text>
+    <text x="206" y="420" fill="#495057">points.rs</text>
+    <text x="380" y="420" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Handle coordinate list parsing from SVG attributes</text>
+
+    <text x="106" y="444" fill="#adb5bd">│</text>
+    <text x="142" y="444" fill="#adb5bd">│</text>
+    <text x="178" y="444" fill="#adb5bd">│</text>
+    <line x1="178" y1="444" x2="202" y2="444" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="444" fill="#adb5bd">│</text>
+    <text x="126" y="444" fill="#adb5bd">│</text>
+    <text x="162" y="444" fill="#e94560">●</text>
+    <text x="206" y="444" fill="#495057">lengths.rs</text>
+    <text x="380" y="444" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Handle dimensional value parsing with CSS units</text>
+
+    <text x="106" y="468" fill="#adb5bd">│</text>
+    <text x="142" y="468" fill="#adb5bd">│</text>
+    <text x="178" y="468" fill="#adb5bd">│</text>
+    <line x1="178" y1="468" x2="202" y2="468" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="468" fill="#adb5bd">│</text>
+    <text x="126" y="468" fill="#adb5bd">│</text>
+    <text x="162" y="468" fill="#e94560">●</text>
+    <text x="206" y="468" fill="#495057">transform.rs</text>
+    <text x="380" y="468" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Handle transform attribute parsing</text>
+
+    <text x="106" y="492" fill="#adb5bd">│</text>
+    <text x="142" y="492" fill="#adb5bd">│</text>
+    <line x1="142" y1="492" x2="166" y2="492" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="492" fill="#adb5bd">│</text>
+    <text x="126" y="492" fill="#e94560">●</text>
+    <text x="170" y="492" fill="#495057">shapes.rs</text>
+    <text x="340" y="492" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">SvgTag enum, ParsedGeometry, SvgRenderInput types</text>
+
+    <text x="106" y="516" fill="#adb5bd">│</text>
+    <text x="142" y="516" fill="#adb5bd">│</text>
+    <line x1="142" y1="516" x2="166" y2="516" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="516" fill="#adb5bd">│</text>
+    <text x="126" y="516" fill="#e94560">●</text>
+    <text x="170" y="516" fill="#495057">render.rs</text>
+    <text x="340" y="516" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">SvgEngine::render_element() — stateless per-frame dispatch</text>
+
+    <text x="106" y="540" fill="#adb5bd">│</text>
+    <text x="142" y="540" fill="#adb5bd">│</text>
+    <line x1="142" y1="540" x2="166" y2="540" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="540" fill="#adb5bd">│</text>
+    <text x="126" y="540" fill="#e94560">●</text>
+    <text x="170" y="540" fill="#495057">paint.rs</text>
+    <text x="340" y="540" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Convert shape + style → WebRender display items, vector only</text>
+
+    <text x="106" y="564" fill="#adb5bd">│</text>
+    <text x="142" y="564" fill="#adb5bd">│</text>
+    <line x1="142" y1="564" x2="166" y2="564" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="564" fill="#adb5bd">│</text>
+    <text x="126" y="564" fill="#e94560">●</text>
+    <text x="170" y="564" fill="#495057">context.rs</text>
+    <text x="340" y="564" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Transform stack, clip stack, opacity stack management</text>
+
+    <text x="106" y="588" fill="#adb5bd">│</text>
+    <text x="142" y="588" fill="#adb5bd">│</text>
+    <line x1="142" y1="588" x2="166" y2="588" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="588" fill="#adb5bd">│</text>
+    <text x="126" y="588" fill="#e94560">●</text>
+    <text x="170" y="588" fill="#495057">gradient.rs</text>
+    <text x="340" y="588" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Convert SVG gradients → WebRender gradient data</text>
+
+    <text x="106" y="612" fill="#adb5bd">│</text>
+    <text x="142" y="612" fill="#adb5bd">│</text>
+    <line x1="142" y1="612" x2="166" y2="612" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="612" fill="#adb5bd">│</text>
+    <text x="126" y="612" fill="#e94560">●</text>
+    <text x="170" y="612" fill="#495057">clip.rs</text>
+    <text x="340" y="612" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Convert clipPath → WebRender ClipChain</text>
+
+    <text x="106" y="636" fill="#adb5bd">│</text>
+    <text x="142" y="636" fill="#adb5bd">│</text>
+    <line x1="142" y1="636" x2="166" y2="636" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="636" fill="#adb5bd">│</text>
+    <text x="126" y="636" fill="#e94560">●</text>
+    <text x="170" y="636" fill="#495057">text.rs</text>
+    <text x="340" y="636" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">SVG text layout and positioning</text>
+  </g>
+
+  <!-- ===== INTEGRATION LAYER ===== -->
+  <rect x="60" y="690" width="1080" height="270" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="60" y="690" width="1080" height="46" rx="12" fill="url(#integrationBox)"/>
+  <rect x="60" y="724" width="1080" height="12" fill="url(#integrationBox)"/>
+  <text x="80" y="719" font-size="15" font-weight="700" fill="#7d6608">⚡ Integration Layer</text>
+  <text x="1080" y="719" font-size="12" fill="#6c757d" text-anchor="end">components/layout/svg/</text>
+
+  <g font-size="13" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">
+    <text x="100" y="758" fill="#2d3748" font-weight="700" font-size="14" font-family="'Segoe UI', sans-serif">components/layout/svg/</text>
+
+    <text x="106" y="796" fill="#adb5bd">│</text>
+    <line x1="106" y1="796" x2="130" y2="796" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="796" fill="#e94560">●</text>
+    <text x="134" y="796" fill="#495057">mod.rs</text>
+    <text x="320" y="796" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Module organization and public API surface</text>
+
+    <text x="106" y="820" fill="#adb5bd">│</text>
+    <line x1="106" y1="820" x2="130" y2="820" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="820" fill="#f39c12">📄</text>
+    <text x="134" y="820" fill="#495057">integration.rs</text>
+    <text x="320" y="820" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Bridge between Servo layout and SVG engine</text>
+
+    <text x="106" y="844" fill="#adb5bd">│</text>
+    <text x="142" y="844" fill="#adb5bd">│</text>
+    <line x1="142" y1="844" x2="166" y2="844" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="844" fill="#adb5bd">│</text>
+    <text x="126" y="844" fill="#e94560">●</text>
+    <text x="170" y="844" fill="#495057">extract_style()</text>
+    <text x="340" y="844" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Convert Stylo ComputedValues → FillParams, StrokeParams</text>
+
+    <text x="106" y="868" fill="#adb5bd">│</text>
+    <text x="142" y="868" fill="#adb5bd">│</text>
+    <line x1="142" y1="868" x2="166" y2="868" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="868" fill="#adb5bd">│</text>
+    <text x="126" y="868" fill="#e94560">●</text>
+    <text x="170" y="868" fill="#495057">resolve_references()</text>
+    <text x="340" y="868" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Resolve url(#id) without DOM cloning</text>
+
+    <text x="106" y="892" fill="#adb5bd">│</text>
+    <text x="142" y="892" fill="#adb5bd">│</text>
+    <line x1="142" y1="892" x2="166" y2="892" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="892" fill="#adb5bd">│</text>
+    <text x="126" y="892" fill="#e94560">●</text>
+    <text x="170" y="892" fill="#495057">compute_viewbox()</text>
+    <text x="340" y="892" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Calculate viewBox + preserveAspectRatio transforms</text>
+
+    <text x="106" y="916" fill="#adb5bd">│</text>
+    <text x="142" y="916" fill="#adb5bd">│</text>
+    <line x1="142" y1="916" x2="166" y2="916" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="916" fill="#adb5bd">│</text>
+    <text x="126" y="916" fill="#e94560">●</text>
+    <text x="170" y="916" fill="#495057">traverse_svg_tree()</text>
+    <text x="340" y="916" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Walk SVG DOM and dispatch rendering per element</text>
+
+    <text x="106" y="940" fill="#adb5bd">│</text>
+    <text x="142" y="940" fill="#adb5bd">│</text>
+    <line x1="142" y1="940" x2="166" y2="940" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="940" fill="#adb5bd">│</text>
+    <text x="126" y="940" fill="#e94560">●</text>
+    <text x="170" y="940" fill="#495057">shape_svg_text()</text>
+    <text x="340" y="940" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Render text using Servo font system</text>
+  </g>
+
+  <!-- ================================================================ -->
+  <!-- SECTION 2: DATAFLOW PIPELINE -->
+  <!-- ================================================================ -->
+
+  <rect x="60" y="985" width="30" height="30" rx="6" fill="url(#sectionHeader)"/>
+  <text x="78" y="1005" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="105" y="1008" font-size="20" font-weight="700" fill="#1a1a2e">Dataflow Pipeline</text>
+
+  <g transform="translate(60, 1040)">
+
+    <!-- ===== STAGE 0: Stylo CSS Engine (before entry point) ===== -->
+    <rect x="0" y="0" width="1080" height="75" rx="10" fill="url(#styloBox)" filter="url(#shadowDeep)" stroke="#9b59b6" stroke-width="1.5"/>
+    <rect x="0" y="0" width="10" height="75" rx="4" fill="#9b59b6"/>
+    <rect x="0" y="0" width="1080" height="30" rx="10" fill="#e8daef" stroke="#9b59b6" stroke-width="1.5"/>
+    <rect x="10" y="0" width="1070" height="30" rx="0" fill="#e8daef"/>
+    <text x="25" y="20" font-size="12" font-weight="700" fill="#6c3483">Stylo CSS Engine — Computes per-element styles (style resolution phase)</text>
+
+    <text x="40" y="48" font-size="11" fill="#6c3483" font-weight="600">Computes per element: Fill + Stroke + Opacity · Transform · Clip-path · Fonts · Animations · CSS inheritance</text>
+    <text x="40" y="66" font-size="11" fill="#6c3483" font-weight="600">Produces: ServoArc&lt;ComputedValues&gt; on every DOM node</text>
+
+    <!-- Arrow: Stylo → Stage 1 -->
+    <line x1="540" y1="75" x2="540" y2="110" stroke="#9b59b6" stroke-width="2.5" marker-end="url(#arrowBlue)" stroke-dasharray="5,3"/>
+    <text x="560" y="100" font-size="11" fill="#6c3483">ComputedValues on DOM nodes</text>
+
+    <!-- ===== STAGE 1: Entry Point (make_fragments) ===== -->
+    <rect x="0" y="115" width="1080" height="150" rx="10" fill="#ffffff" filter="url(#shadowDeep)" stroke="#1a252f" stroke-width="1.5"/>
+    <rect x="0" y="115" width="10" height="150" rx="4" fill="#2c3e50"/>
+    <rect x="0" y="115" width="1080" height="30" rx="10" fill="url(#entryBox)"/>
+    <rect x="0" y="133" width="1080" height="12" fill="url(#entryBox)"/>
+    <text x="25" y="135" font-size="12" font-weight="700" fill="#ffffff">🚀 Entry Point — Delegates SVG rendering to the integration layer</text>
+
+    <rect x="30" y="152" width="1020" height="118" rx="5" fill="#1a252f" opacity="0.06"/>
+    <text x="38" y="166" font-size="10" fill="#495057" font-weight="600">replaced.rs :: ReplacedContents::make_fragments()</text>
+    <text x="38" y="181" font-size="10.5" fill="#495057">Delegates to traverse_svg_tree(node, &amp;layout_context, &amp;mut wr) with DOM root, styles + viewport, and DisplayListBuilder.</text>
+    <text x="42" y="210" font-size="10" fill="#2c3e50" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">svg::integration::traverse_svg_tree(</text>
+    <text x="52" y="224" font-size="10" fill="#2c3e50" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">node,              // ServoLayoutNode (SVG root)</text>
+    <text x="52" y="238" font-size="10" fill="#2c3e50" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">&amp;layout_context,  // Stylo computed values + viewport</text>
+    <text x="52" y="252" font-size="10" fill="#2c3e50" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">&amp;mut wr,          // WebRender DisplayListBuilder</text>
+    <text x="42" y="266" font-size="10" fill="#2c3e50" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">)</text>
+
+    <!-- Arrow: Stage 1 → Stage 2 -->
+    <line x1="540" y1="265" x2="540" y2="295" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <text x="560" y="286" font-size="11" fill="#495057">node + layout_context + DisplayListBuilder</text>
+
+    <!-- ===== STAGE 2: Integration Layer ===== -->
+    <rect x="0" y="305" width="1080" height="230" rx="10" fill="url(#integrationBox)" filter="url(#shadowDeep)" stroke="#e67e22" stroke-width="1.5"/>
+    <rect x="0" y="305" width="10" height="230" rx="4" fill="#e67e22"/>
+    <rect x="0" y="305" width="1080" height="34" rx="10" fill="#fef9e7" stroke="#e67e22" stroke-width="1.5"/>
+    <rect x="10" y="305" width="1070" height="34" rx="0" fill="#fef9e7"/>
+    <text x="25" y="327" font-size="13" font-weight="700" fill="#7d6608">Integration Layer :: traverse_svg_tree()</text>
+
+    <!-- Sub-stage 2a + 2b (side by side) -->
+    <rect x="20" y="349" width="510" height="38" rx="6" fill="#ffffff" stroke="#f0e5c9" stroke-width="1"/>
+    <text x="275" y="367" font-size="11" font-weight="600" fill="#7d6608" text-anchor="middle">2a. Parse viewBox + preserveAspectRatio → initial transform</text>
+    <text x="275" y="381" font-size="10" fill="#6c757d" text-anchor="middle">Determines how SVG coordinates map to layout space</text>
+
+    <line x1="530" y1="368" x2="550" y2="368" stroke="#e67e22" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+    <rect x="555" y="349" width="505" height="38" rx="6" fill="#ffffff" stroke="#f0e5c9" stroke-width="1"/>
+    <text x="807" y="367" font-size="11" font-weight="600" fill="#7d6608" text-anchor="middle">2b. Collect Defs</text>
+    <text x="807" y="381" font-size="10" fill="#6c757d" text-anchor="middle">Gather gradients, clip paths, markers into a reference map</text>
+
+    <!-- Sub-stage 2c: Walk DOM Tree (per-element) -->
+    <rect x="20" y="397" width="1040" height="70" rx="6" fill="#ffffff" stroke="#fdebd0" stroke-width="1.5"/>
+    <text x="540" y="415" font-size="11" font-weight="600" fill="#7d6608" text-anchor="middle">2c. Walk DOM Tree — Per-Element Processing Loop</text>
+
+    <!-- Per-element pipeline (horizontal chain) -->
+    <rect x="25" y="425" width="155" height="18" rx="4" fill="#e8daef" stroke="#d2b4de" stroke-width="1"/>
+    <text x="102" y="437" font-size="9" fill="#6c3483" text-anchor="middle" font-weight="600">Get ComputedValues</text>
+
+    <text x="182" y="437" font-size="10" fill="#adb5bd">→</text>
+
+    <rect x="190" y="425" width="145" height="18" rx="4" fill="#e8daef" stroke="#d2b4de" stroke-width="1"/>
+    <text x="262" y="437" font-size="9" fill="#6c3483" text-anchor="middle" font-weight="600">Extract style fields</text>
+
+    <text x="337" y="437" font-size="10" fill="#adb5bd">→</text>
+
+    <rect x="345" y="425" width="120" height="18" rx="4" fill="#e8daef" stroke="#d2b4de" stroke-width="1"/>
+    <text x="405" y="437" font-size="9" fill="#6c3483" text-anchor="middle" font-weight="600">Parse geometry</text>
+
+    <text x="467" y="437" font-size="10" fill="#adb5bd">→</text>
+
+    <rect x="475" y="425" width="140" height="18" rx="4" fill="#e8daef" stroke="#d2b4de" stroke-width="1"/>
+    <text x="545" y="437" font-size="9" fill="#6c3483" text-anchor="middle" font-weight="600">Resolve refs (url)</text>
+
+    <text x="617" y="437" font-size="10" fill="#adb5bd">→</text>
+
+    <rect x="625" y="425" width="145" height="18" rx="4" fill="#e8daef" stroke="#d2b4de" stroke-width="1"/>
+    <text x="697" y="437" font-size="9" fill="#6c3483" text-anchor="middle" font-weight="600">Build SvgRenderInput</text>
+
+    <text x="772" y="437" font-size="10" fill="#adb5bd">→</text>
+
+    <rect x="780" y="423" width="135" height="22" rx="4" fill="#e94560"/>
+    <text x="847" y="437" font-size="9" fill="#ffffff" text-anchor="middle" font-weight="600">Call render_element()</text>
+
+    <text x="925" y="437" font-size="10" fill="#adb5bd">→</text>
+
+    <rect x="935" y="423" width="115" height="22" rx="4" fill="#27ae60"/>
+    <text x="992" y="437" font-size="9" fill="#ffffff" text-anchor="middle" font-weight="600">WR display item</text>
+
+    <!-- Sub-stage 2d: Resolve References -->
+    <rect x="20" y="479" width="1040" height="42" rx="6" fill="#ffffff" stroke="#f0e5c9" stroke-width="1"/>
+    <text x="540" y="495" font-size="11" font-weight="600" fill="#7d6608" text-anchor="middle">2d. Resolve url(#id) References (for &lt;use&gt;, clip-path, fill="url(#...)" )</text>
+    <text x="540" y="513" font-size="10" fill="#6c757d" text-anchor="middle">Two-pass: collect defs (2b) → resolve on render — no DOM cloning</text>
+
+    <!-- Arrow: Stage 2 → Stage 3 -->
+    <line x1="540" y1="535" x2="540" y2="570" stroke="#0f3460" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <rect x="395" y="547" width="290" height="16" rx="4" fill="#0f3460" opacity="0.08"/>
+    <text x="540" y="559" font-size="11" fill="#0f3460" text-anchor="middle" font-weight="600">SvgRenderInput struct per element</text>
+
+    <!-- ===== STAGE 3: Engine Crate ===== -->
+    <rect x="0" y="575" width="1080" height="330" rx="10" fill="url(#engineBox)" filter="url(#shadowDeep)" stroke="#17a2b8" stroke-width="1.5"/>
+    <rect x="0" y="575" width="10" height="330" rx="4" fill="#17a2b8"/>
+    <rect x="0" y="575" width="1080" height="34" rx="10" fill="#e8f4f8" stroke="#17a2b8" stroke-width="1.5"/>
+    <rect x="10" y="575" width="1070" height="34" rx="0" fill="#e8f4f8"/>
+    <text x="25" y="597" font-size="13" font-weight="700" fill="#0c5460">svg-engine Crate :: render_element(input, ctx)</text>
+
+    <!-- Renderer pipeline panel -->
+    <rect x="20" y="618" width="1040" height="277" rx="6" fill="#ffffff" stroke="#b8daff" stroke-width="1"/>
+    <text x="35" y="636" font-size="11" font-weight="600" fill="#0c5460">Renderer Pipeline — sequential per-element per-frame execution</text>
+
+    <!-- Step 1: Resolve Transform -->
+    <rect x="35" y="650" width="1010" height="42" rx="4" fill="#f8fbff" stroke="#b8daff" stroke-width="1"/>
+    <rect x="35" y="650" width="4" height="42" rx="2" fill="#17a2b8"/>
+    <circle cx="52" cy="671" r="7" fill="#17a2b8"/>
+    <text x="52" y="674" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+    <text x="68" y="665" font-size="11" fill="#0c5460" font-weight="600">Resolve Transform</text>
+    <text x="68" y="678" font-size="9.5" fill="#6c757d">Full transform matrix = context transform stack &#215; element's own transform matrix</text>
+    <text x="68" y="690" font-size="9.5" fill="#6c757d">Parses translate/rotate/scale/skew/matrix() from SVG attribute, applies viewBox mapping</text>
+    <line x1="540" y1="692" x2="540" y2="698" stroke="#17a2b8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+    <!-- Step 2: Push Reference Frame -->
+    <rect x="35" y="700" width="1010" height="42" rx="4" fill="#f8fbff" stroke="#b8daff" stroke-width="1"/>
+    <rect x="35" y="700" width="4" height="42" rx="2" fill="#17a2b8"/>
+    <circle cx="52" cy="721" r="7" fill="#17a2b8"/>
+    <text x="52" y="724" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+    <text x="68" y="715" font-size="11" fill="#0c5460" font-weight="600">Push Reference Frame</text>
+    <text x="68" y="728" font-size="9.5" fill="#6c757d">Create WebRender spatial node — independent coordinate system for transformed subtrees</text>
+    <text x="68" y="740" font-size="9.5" fill="#6c757d">Registers spatial node ID in WR scene; child elements render relative to this reference frame</text>
+    <line x1="540" y1="742" x2="540" y2="748" stroke="#17a2b8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+    <!-- Step 3: Push Stacking Context -->
+    <rect x="35" y="750" width="1010" height="42" rx="4" fill="#f8fbff" stroke="#b8daff" stroke-width="1"/>
+    <rect x="35" y="750" width="4" height="42" rx="2" fill="#17a2b8"/>
+    <circle cx="52" cy="771" r="7" fill="#17a2b8"/>
+    <text x="52" y="774" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+    <text x="68" y="765" font-size="11" fill="#0c5460" font-weight="600">Push Stacking Context</text>
+    <text x="68" y="778" font-size="9.5" fill="#6c757d">Off-screen render-then-composite boundary for opacity &lt; 1.0, mix-blend-mode, and filters</text>
+    <text x="68" y="790" font-size="9.5" fill="#6c757d">Nests per DOM hierarchy; each push/pop creates a WR render task boundary</text>
+    <line x1="540" y1="792" x2="540" y2="798" stroke="#17a2b8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+    <!-- Step 4: Apply Clip Chain -->
+    <rect x="35" y="800" width="1010" height="42" rx="4" fill="#f8fbff" stroke="#b8daff" stroke-width="1"/>
+    <rect x="35" y="800" width="4" height="42" rx="2" fill="#17a2b8"/>
+    <circle cx="52" cy="821" r="7" fill="#17a2b8"/>
+    <text x="52" y="824" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">4</text>
+    <text x="68" y="815" font-size="11" fill="#0c5460" font-weight="600">Apply Clip Chain</text>
+    <text x="68" y="828" font-size="9.5" fill="#6c757d">Convert clip-path (basic shapes + url(#id)) and SVG &lt;mask&gt; into WR ClipChain primitives</text>
+    <text x="68" y="840" font-size="9.5" fill="#6c757d">GPU-accelerated intersection clipping — composed of multiple clip regions per element</text>
+    <line x1="540" y1="842" x2="540" y2="848" stroke="#17a2b8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+    <!-- Step 5: Dispatch to WebRender -->
+    <rect x="35" y="850" width="1010" height="42" rx="4" fill="#f0faf0" stroke="#27ae60" stroke-width="1"/>
+    <rect x="35" y="850" width="4" height="42" rx="2" fill="#27ae60"/>
+    <circle cx="52" cy="871" r="7" fill="#27ae60"/>
+    <text x="52" y="874" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">5</text>
+    <text x="68" y="865" font-size="11" fill="#1a7a3a" font-weight="600">Dispatch to WebRender</text>
+    <text x="68" y="878" font-size="9.5" fill="#6c757d">Match SvgTag enum &#8594; push WR display item (rect, gradient, text) or create ClipChain</text>
+    <text x="68" y="890" font-size="9.5" fill="#6c757d">Rect/Circle/Ellipse &#8594; push_rect · Path &#8594; kurbo flatten + fill mesh · Text &#8594; push_text · Image &#8594; push_image · Use &#8594; resolve ref</text>
+
+
+    <!-- Arrow: Stage 3 &#8594; Stage 4 -->
+    <line x1="540" y1="905" x2="540" y2="940" stroke="#1a7a3a" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+    <text x="560" y="930" font-size="11" fill="#1a7a3a" font-weight="600">WR DisplayListBuilder calls (push_rect, push_gradient, push_text...)</text>
+
+    <!-- ===== STAGE 4: WebRender Compositor ===== -->
+    <rect x="0" y="945" width="1080" height="65" rx="10" fill="url(#wrBox)" filter="url(#shadowDeep)" stroke="#27ae60" stroke-width="1.5"/>
+    <rect x="0" y="945" width="10" height="65" rx="4" fill="#27ae60"/>
+    <text x="25" y="967" font-size="13" font-weight="700" fill="#1a7a3a">WebRender Compositor</text>
+    <text x="1070" y="967" font-size="11" text-anchor="end" fill="#1a7a3a" font-weight="600">LAYER 4</text>
+
+    <text x="40" y="992" font-size="12" fill="#1e8449">Vector rendering pipeline · Per-item hit testing · GPU compositing</text>
+    <text x="40" y="1007" font-size="12" fill="#1e8449">Native clipping · Gradient fills · Reference frame transforms</text>
+
+  </g>
+
+  <!-- ================================================================ -->
+  <!-- SECTION 3: ANIMATION FLOW -->
+  <!-- ================================================================ -->
+
+  <rect x="60" y="2075" width="30" height="30" rx="6" fill="url(#sectionHeader)"/>
+  <text x="78" y="2095" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="105" y="2098" font-size="20" font-weight="700" fill="#1a1a2e">Animation — No Extra Work Required</text>
+
+  <rect x="60" y="2110" width="1080" height="130" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+
+  <!-- Frame 1 -->
+  <rect x="90" y="2130" width="450" height="90" rx="8" fill="#e8f4f8" stroke="#17a2b8" stroke-width="1.5"/>
+  <text x="315" y="2155" font-size="14" font-weight="700" fill="#0c5460" text-anchor="middle">Frame 1 (before animation)</text>
+  <rect x="110" y="2164" width="120" height="24" rx="4" fill="#e8daef"/>
+  <text x="170" y="2180" font-size="11" fill="#6c3483" text-anchor="middle">Stylo: fill = red</text>
+  <rect x="250" y="2164" width="120" height="24" rx="4" fill="#fef9e7"/>
+  <text x="310" y="2180" font-size="11" fill="#7d6608" text-anchor="middle">Integration: build input</text>
+  <rect x="390" y="2164" width="120" height="24" rx="4" fill="#d5f5e3"/>
+  <text x="450" y="2180" font-size="11" fill="#1a7a3a" text-anchor="middle">Engine: push_rect(red)</text>
+
+  <!-- Arrow right -->
+  <line x1="540" y1="2175" x2="570" y2="2175" stroke="#e94560" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+  <text x="562" y="2160" font-size="11" fill="#e94560" text-anchor="middle">next</text>
+  <text x="562" y="2172" font-size="11" fill="#e94560" text-anchor="middle">frame</text>
+
+  <!-- Frame 2 -->
+  <rect x="585" y="2130" width="520" height="90" rx="8" fill="#fef9e7" stroke="#e94560" stroke-width="1.5"/>
+  <text x="845" y="2155" font-size="14" font-weight="700" fill="#e94560" text-anchor="middle">Frame 2 (animated)</text>
+  <rect x="605" y="2164" width="130" height="24" rx="4" fill="#e8daef"/>
+  <text x="670" y="2180" font-size="11" fill="#6c3483" text-anchor="middle">Stylo recomputes: fill = blue</text>
+  <rect x="750" y="2164" width="130" height="24" rx="4" fill="#fef9e7"/>
+  <text x="815" y="2180" font-size="11" fill="#7d6608" text-anchor="middle">Integration: new input</text>
+  <rect x="895" y="2164" width="130" height="24" rx="4" fill="#d5f5e3"/>
+  <text x="960" y="2180" font-size="11" fill="#1a7a3a" text-anchor="middle">Engine: push_rect(blue)</text>
+
+  <!-- Key insight -->
+  <rect x="90" y="2230" width="1020" height="34" rx="6" fill="#1a1a2e" opacity="0.05"/>
+  <text x="600" y="2252" font-size="13" fill="#495057" text-anchor="middle" font-weight="500">
+    ✦ Stateless engine renders fresh each frame — no cache invalidation, no serialization, no full re-render ✦
+  </text>
+
+  <!-- Footer -->
+  <rect x="0" y="2275" width="1200" height="40" fill="url(#headerGrad)" opacity="0.9"/>
+  <text x="600" y="2300" font-size="12" fill="#a0aec0" text-anchor="middle">Servo SVG Engine — Architecture Overview · Full Engine Crate · components/layout/svg-engine/</text>
+
+</svg>
