@@ -28,6 +28,7 @@ mod positioned;
 mod query;
 mod quotes;
 mod replaced;
+pub mod svg_engine;
 mod sizing;
 mod style_ext;
 pub mod table;

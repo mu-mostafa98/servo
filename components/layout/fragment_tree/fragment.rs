@@ -26,6 +26,7 @@ use crate::cell::ArcRefCell;
 use crate::flow::inline::line::TextRunOffsets;
 use crate::geom::{LogicalSides, PhysicalPoint, PhysicalRect};
 use crate::style_ext::ComputedValuesExt;
+use crate::svg_engine::shapes::SvgRenderInput;
 
 #[derive(Clone, MallocSizeOf)]
 pub(crate) enum Fragment {
@@ -48,6 +49,7 @@ pub(crate) enum Fragment {
     Text(ArcRefCell<TextFragment>),
     Image(ArcRefCell<ImageFragment>),
     IFrame(ArcRefCell<IFrameFragment>),
+    Svg(ArcRefCell<SvgFragment>),
 }
 
 #[derive(Clone, MallocSizeOf)]
@@ -97,6 +99,13 @@ pub(crate) struct IFrameFragment {
     pub pipeline_id: PipelineId,
 }
 
+#[derive(MallocSizeOf)]
+pub(crate) struct SvgFragment {
+    pub base: BaseFragment,
+    #[ignore_malloc_size_of = "kurbo BezPath does not implement MallocSizeOf"]
+    pub scene: Arc<Vec<SvgRenderInput>>,
+}
+
 impl Fragment {
     pub fn base<'a>(&'a self) -> Option<AtomicRef<'a, BaseFragment>> {
         Some(match self {
@@ -112,6 +121,9 @@ impl Fragment {
                 AtomicRef::map(fragment.borrow(), |fragment| &fragment.base)
             },
             Fragment::IFrame(fragment) => {
+                AtomicRef::map(fragment.borrow(), |fragment| &fragment.base)
+            },
+            Fragment::Svg(fragment) => {
                 AtomicRef::map(fragment.borrow(), |fragment| &fragment.base)
             },
             Fragment::Float(fragment) => {
@@ -136,6 +148,9 @@ impl Fragment {
                 AtomicRefMut::map(fragment.borrow_mut(), |fragment| &mut fragment.base)
             },
             Fragment::IFrame(fragment) => {
+                AtomicRefMut::map(fragment.borrow_mut(), |fragment| &mut fragment.base)
+            },
+            Fragment::Svg(fragment) => {
                 AtomicRefMut::map(fragment.borrow_mut(), |fragment| &mut fragment.base)
             },
             Fragment::Float(fragment) => {
@@ -163,6 +178,7 @@ impl Fragment {
             Fragment::Text(_) => {},
             Fragment::Image(_) => {},
             Fragment::IFrame(_) => {},
+            Fragment::Svg(_) => {},
         }
     }
 
@@ -185,6 +201,10 @@ impl Fragment {
             Fragment::Text(fragment) => fragment.borrow().print(tree),
             Fragment::Image(fragment) => fragment.borrow().print(tree),
             Fragment::IFrame(fragment) => fragment.borrow().print(tree),
+            Fragment::Svg(fragment) => tree.add_item(format!(
+                "Svg scene with {} inputs",
+                fragment.borrow().scene.len()
+            )),
         }
     }
 
@@ -207,7 +227,8 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositioned(_) |
             Fragment::Text(..) |
             Fragment::Image(..) |
-            Fragment::IFrame(..) => self.base().map(|base| base.rect).unwrap_or_default(),
+            Fragment::IFrame(..) |
+            Fragment::Svg(..) => self.base().map(|base| base.rect).unwrap_or_default(),
         }
     }
 
@@ -258,7 +279,7 @@ impl Fragment {
             // rectangle should include that.
             Fragment::Positioning(fragment) => Some(fragment.borrow().base.rect),
             Fragment::AbsoluteOrFixedPositioned(_) => None,
-            Fragment::Text(..) | Fragment::Image(..) | Fragment::IFrame(..) => {
+            Fragment::Text(..) | Fragment::Image(..) | Fragment::IFrame(..) | Fragment::Svg(..) => {
                 Some(self.base()?.rect)
             },
         }
@@ -278,7 +299,8 @@ impl Fragment {
             Fragment::Text(_) |
             Fragment::AbsoluteOrFixedPositioned(_) |
             Fragment::Image(_) |
-            Fragment::IFrame(_) => None,
+            Fragment::IFrame(_) |
+            Fragment::Svg(_) => None,
         }
     }
 

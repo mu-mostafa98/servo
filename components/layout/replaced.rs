@@ -3,10 +3,13 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 
+use std::sync::Arc;
+
 use app_units::{Au, MAX_AU};
 use data_url::DataUrl;
 use embedder_traits::ViewportDetails;
 use euclid::{Scale, Size2D};
+use html5ever::LocalName;
 use layout_api::{IFrameSize, LayoutElement, LayoutImageDestination, LayoutNode, SVGElementData};
 use malloc_size_of_derive::MallocSizeOf;
 use net_traits::image_cache::{Image, ImageOrMetadataAvailable, VectorImage};
@@ -33,6 +36,7 @@ use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
 use crate::fragment_tree::{
     BaseFragment, BaseFragmentInfo, CollapsedBlockMargins, Fragment, IFrameFragment, ImageFragment,
+    SvgFragment,
 };
 use crate::geom::{LogicalVec2, PhysicalPoint, PhysicalRect, PhysicalSize};
 use crate::layout_box_base::{IndependentFormattingContextLayoutResult, LayoutBoxBase};
@@ -142,6 +146,8 @@ pub(crate) enum ReplacedContentKind {
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
+        #[ignore_malloc_size_of = "Arc does not implement MallocSizeOf"]
+        scene: Option<Arc<Vec<crate::svg_engine::shapes::SvgRenderInput>>>,
     },
     Audio,
 }
@@ -223,10 +229,10 @@ impl ReplacedContents {
         context: &LayoutContext,
         node: ServoLayoutNode<'_>,
     ) -> (ReplacedContentKind, NaturalSizes) {
-        // Log the styled DOM tree for this SVG element
-        Self::svg_engine_process(node, context);
+        // Build the SVG scene from the DOM tree
+        let scene = Self::build_svg_scene(node, context);
 
-        // Return fake values — no caching/serialization needed for engine testing
+        // Return hardcoded 300×150 natural size for now
         let natural_size = NaturalSizes {
             width: Some(Au::from_px(300)),
             height: Some(Au::from_px(150)),
@@ -237,9 +243,63 @@ impl ReplacedContents {
             ReplacedContentKind::SVGElement {
                 vector_image: None,
                 has_viewbox: false,
+                scene: Some(Arc::new(scene)),
             },
             natural_size,
         )
+    }
+
+    fn build_svg_scene(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Vec<crate::svg_engine::shapes::SvgRenderInput> {
+        let mut inputs = Vec::new();
+        Self::collect_svg_render_inputs(node, context, &mut inputs);
+        inputs
+    }
+
+    fn collect_svg_render_inputs(
+        node: ServoLayoutNode<'_>,
+        context: &LayoutContext,
+        inputs: &mut Vec<crate::svg_engine::shapes::SvgRenderInput>,
+    ) {
+        use crate::svg_engine::shapes::SvgTag;
+
+        let Some(element) = node.as_element() else { return };
+        let tag = SvgTag::from_str(&element.local_name());
+
+        if tag.is_basic_shape() {
+            let style = node.style(&context.style_context);
+
+            let geometry = crate::svg_engine::paint::extract_geometry(tag, &|name| {
+                element.attribute_as_str(&ns!(), &LocalName::from(name)).map(|s| s.to_owned())
+            });
+
+            let fill = crate::svg_engine::paint::extract_fill_params(&style);
+            let stroke = crate::svg_engine::paint::extract_stroke_params(&style);
+            let opacity = crate::svg_engine::paint::extract_opacity(&style);
+
+            let transform = element
+                .attribute_as_str(&ns!(), &LocalName::from("transform"))
+                .and_then(crate::svg_engine::transform::parse_transform);
+
+            let clip_path = element
+                .attribute_as_str(&ns!(), &LocalName::from("clip-path"))
+                .map(|s| s.to_string());
+
+            inputs.push(crate::svg_engine::shapes::SvgRenderInput {
+                tag,
+                geometry,
+                fill,
+                stroke,
+                transform,
+                clip_path,
+                opacity,
+            });
+        }
+
+        if tag.is_container() || tag == SvgTag::Svg {
+            for child in node.flat_tree_children() {
+                Self::collect_svg_render_inputs(child, context, inputs);
+            }
+        }
     }
 
     fn svg_engine_process(node: ServoLayoutNode<'_>, context: &LayoutContext) {
@@ -591,7 +651,19 @@ impl ReplacedContents {
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
+                scene,
             } => {
+                // Try native SVG engine scene first
+                if let Some(scene) = scene {
+                    if !scene.is_empty() {
+                        return vec![Fragment::Svg(ArcRefCell::new(SvgFragment {
+                            base: base.clone(),
+                            scene: scene.clone(),
+                        }))];
+                    }
+                }
+
+                // Fall back to bitmap rasterization path
                 let Some(vector_image) = vector_image else {
                     return vec![];
                 };
