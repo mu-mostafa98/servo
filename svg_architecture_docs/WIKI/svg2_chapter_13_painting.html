@@ -1,0 +1,80 @@
+<h1><a href="https://www.w3.org/TR/SVG2/painting.html">SVG 2 — Chapter 13: Painting</a></h1>
+
+<svg width="700" height="300" xmlns="http://www.w3.org/2000/svg"
+     style="
+              fill: green; fill-opacity: 1; fill-rule: nonzero;
+              
+              stroke: red; stroke-width: 4; stroke-opacity: 1;
+              stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 4;
+              stroke-dasharray: none; stroke-dashoffset: 0;
+
+              marker: none;
+            "> 
+
+       <defs>
+              <marker id="red-circle" markerWidth="4" markerHeight="4" refX="2" refY="2">
+                     <circle cx="2" cy="2" r="3" style="fill: red" />
+              </marker>
+              <marker id="green-circle" markerWidth="4" markerHeight="4" refX="2" refY="2">
+                     <circle cx="2" cy="2" r="3" style="fill: green" />
+              </marker>
+              <marker id="blue-circle" markerWidth="4" markerHeight="4" refX="2" refY="2">
+                     <circle cx="2" cy="2" r="3" style="fill: blue" />
+              </marker>
+       </defs>
+
+       <polyline points="120,50 64,226 216,118 24,118 176,226" />
+
+       <polyline points="420,50 364,226 516,118 324,118 476,226"
+              style="
+                     fill: red; fill-opacity: 0.4; fill-rule: evenodd;
+
+                     stroke: green; stroke-width: 8; stroke-opacity: 0.6;
+                     stroke-linecap: round; stroke-linejoin: round; stroke-miterlimit: 2;
+                     stroke-dasharray: 10,5; stroke-dashoffset: 3;  
+
+                     marker-start: url(#red-circle); marker-mid: url(#green-circle); marker-end: url(#blue-circle);" />
+</svg>
+
+<svg width="700" height="500" xmlns="http://www.w3.org/2000/svg"
+     style="
+              fill: green;
+              font-size: 80;
+
+              paint-order: normal;
+              text-anchor: end;
+              text-rendering: auto;
+              color-interpolation: auto;
+              color-interpolation-filters: auto;
+              shape-rendering: auto;
+              opacity: 0.9;
+       ">
+
+    <defs>
+        <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" style="stop-color: red" />
+            <stop offset="100%" style="stop-color: green" />
+        </linearGradient>
+        <linearGradient id="g2" x1="0%" y1="0%" x2="100%" y2="0%" style="color-interpolation: linearRGB">
+            <stop offset="0%" style="stop-color: red" />
+            <stop offset="100%" style="stop-color: green" />
+        </linearGradient>
+
+    </defs>
+
+    <rect x="50" y="120" width="200" height="120" style="fill: url(#g1); filter: blur(6px);" />
+    <rect x="350" y="120" width="200" height="120" style="fill: url(#g2); filter: blur(6px); shape-rendering: crispEdges;" />
+
+    <g transform="scale(2, 1)">
+        <line x1="10" y1="20" x2="140" y2="20"
+              style="stroke: red; stroke-width: 4; vector-effect: non-scaling-stroke" />
+        <line x1="10" y1="60" x2="140" y2="60"
+              style="stroke: blue; stroke-width: 4" />
+    </g>
+
+       <text x="300" y="400">Inherited</text>
+       <text x="300" y="470" style="text-anchor: start; text-rendering: geometricPrecision; opacity: 0.4; paint-order: stroke;">Overided</text>
+</svg>
+
+
+<!-- Not overridden: color-interpolation, color-interpolation-filters (set on defs only) -->

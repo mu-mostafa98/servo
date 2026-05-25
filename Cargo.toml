@@ -2,6 +2,7 @@
 resolver = "2"
 members = [
     "components/media/examples",
+    "components/svg_engine",
     "components/xpath",
     "ports/servoshell",
     "tests/unit/*",
@@ -346,6 +347,7 @@ servo-media-player = { version = "=0.2.0", path = "components/media/player" }
 servo-media-streams = { version = "=0.2.0", path = "components/media/streams" }
 servo-media-traits = { version = "=0.2.0", path = "components/media/traits" }
 servo-media-webrtc = { version = "=0.2.0", path = "components/media/webrtc" }
+svg_engine = { package = "servo-svg-engine", version = "=0.2.0", path = "components/svg_engine" }
 servo-tracing = { version = "=0.2.0", path = "components/servo_tracing" }
 servo-url = { version = "=0.2.0", path = "components/url" }
 servo-wakelock = { version = "=0.2.0", path = "components/wakelock" }
@@ -445,15 +447,15 @@ codegen-units = 1
 #
 # Or for Stylo:
 #
-# [patch."https://github.com/servo/stylo"]
-# selectors = { path = "../stylo/selectors" }
-# servo_arc = { path = "../stylo/servo_arc" }
-# stylo = { path = "../stylo/style" }
-# stylo_atoms = { path = "../stylo/stylo_atoms" }
-# stylo_dom = { path = "../stylo/stylo_dom" }
-# stylo_malloc_size_of = { path = "../stylo/malloc_size_of" }
-# stylo_static_prefs = { path = "../stylo/stylo_static_prefs" }
-# stylo_traits = { path = "../stylo/style_traits" }
+[patch."https://github.com/servo/stylo"]
+selectors = { path = "../stylo/selectors" }
+servo_arc = { path = "../stylo/servo_arc" }
+stylo = { path = "../stylo/style" }
+stylo_atoms = { path = "../stylo/stylo_atoms" }
+stylo_dom = { path = "../stylo/stylo_dom" }
+stylo_malloc_size_of = { path = "../stylo/malloc_size_of" }
+stylo_static_prefs = { path = "../stylo/stylo_static_prefs" }
+stylo_traits = { path = "../stylo/style_traits" }
 #
 # Or for another Git dependency:
 #

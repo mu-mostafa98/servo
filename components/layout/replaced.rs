@@ -4,39 +4,36 @@
 
 use std::sync::Arc;
 
-use app_units::{Au, MAX_AU};
+use app_units::Au;
 use data_url::DataUrl;
 use embedder_traits::ViewportDetails;
 use euclid::{Scale, Size2D};
-use layout_api::{IFrameSize, LayoutElement, LayoutImageDestination, LayoutNode, SVGElementData};
+use layout_api::{IFrameSize, LayoutElement, LayoutImageDestination, LayoutNode};
 use malloc_size_of_derive::MallocSizeOf;
-use net_traits::image_cache::{Image, ImageOrMetadataAvailable, VectorImage};
+use net_traits::image_cache::{Image, ImageOrMetadataAvailable};
 use net_traits::request::InternalRequest;
 use script::layout_dom::ServoLayoutNode;
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
 use servo_url::ServoUrl;
 use style::Zero;
-use style::attr::AttrValue;
 use style::computed_values::object_fit::T as ObjectFit;
 use style::logical_geometry::{Direction, WritingMode};
-use style::properties::{ComputedValues, StyleBuilder};
-use style::rule_cache::RuleCacheConditions;
-use style::rule_tree::RuleCascadeFlags;
+use style::properties::ComputedValues;
 use style::servo::url::ComputedUrl;
-use style::stylesheets::container_rule::ContainerSizeQuery;
 use style::values::CSSFloat;
 use style::values::computed::image::Image as ComputedImage;
-use style::values::computed::{Content, Context, ToComputedValue};
+use style::values::computed::Content;
 use style::values::generics::counters::{GenericContentItem, GenericContentItems};
 use url::Url;
-use web_atoms::local_name;
+use web_atoms::{local_name, ns, LocalName};
 use webrender_api::ImageKey;
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
 use crate::fragment_tree::{
     BaseFragment, BaseFragmentInfo, CollapsedBlockMargins, Fragment, IFrameFragment, ImageFragment,
+    SvgFragment,
 };
 use crate::geom::{LogicalVec2, PhysicalPoint, PhysicalRect, PhysicalSize};
 use crate::layout_box_base::{IndependentFormattingContextLayoutResult, LayoutBoxBase};
@@ -44,6 +41,7 @@ use crate::sizing::{
     ComputeInlineContentSizes, InlineContentSizesResult, LazySize, SizeConstraint,
 };
 use crate::style_ext::{AspectRatio, Clamp, ComputedValuesExt, LayoutStyle};
+use svg_engine::{SvgRenderInput, SvgTag};
 use crate::{ConstraintSpace, ContainingBlock};
 
 #[derive(Debug, MallocSizeOf)]
@@ -144,8 +142,8 @@ pub(crate) enum ReplacedContentKind {
     Canvas(CanvasInfo),
     Video(VideoInfo),
     SVGElement {
-        vector_image: Option<VectorImage>,
-        has_viewbox: bool,
+        #[ignore_malloc_size_of = "Arc does not implement MallocSizeOf"]
+        scene: Option<Arc<Vec<SvgRenderInput>>>,
     },
     Audio,
 }
@@ -183,8 +181,8 @@ impl ReplacedContents {
                     natural_size_in_dots
                         .map_or_else(NaturalSizes::empty, NaturalSizes::from_natural_size_in_dots),
                 )
-            } else if let Some(svg_data) = node.as_svg() {
-                Self::svg_kind_size(svg_data, context, node)
+            } else if node.as_svg().is_some() {
+                Self::svg_kind_size(context, node)
             } else if node
                 .as_html_element()
                 .is_some_and(|element| element.local_name() == &local_name!("audio"))
@@ -220,96 +218,76 @@ impl ReplacedContents {
     }
 
     fn svg_kind_size(
-        svg_data: SVGElementData,
         context: &LayoutContext,
         node: ServoLayoutNode<'_>,
     ) -> (ReplacedContentKind, NaturalSizes) {
-        let rule_cache_conditions = &mut RuleCacheConditions::default();
-
-        let parent_style = node.style(&context.style_context);
-        let style_builder = StyleBuilder::new(
-            context.style_context.stylist.device(),
-            Some(context.style_context.stylist),
-            Some(&parent_style),
-            None,
-            None,
-            false,
-        );
-
-        let to_computed_context = Context::new(
-            style_builder,
-            context.style_context.quirks_mode(),
-            rule_cache_conditions,
-            ContainerSizeQuery::none(),
-            RuleCascadeFlags::empty(),
-        );
-
-        let attr_to_computed = |attr_val: &AttrValue| {
-            if let AttrValue::LengthPercentage(_, length_percentage) = attr_val {
-                length_percentage
-                    .to_computed_value(&to_computed_context)?
-                    .to_length()
-            } else {
-                None
-            }
-        };
-        let width = svg_data.width.and_then(attr_to_computed);
-        let height = svg_data.height.and_then(attr_to_computed);
-
-        let ratio = match (width, height) {
-            (Some(width), Some(height)) if !width.is_zero() && !height.is_zero() => {
-                Some(width.px() / height.px())
-            },
-            _ => svg_data.ratio_from_view_box(),
-        };
+        let scene = Self::build_svg_scene(node, context);
 
         let natural_size = NaturalSizes {
-            width: width.map(|w| Au::from_f32_px(w.px())),
-            height: height.map(|h| Au::from_f32_px(h.px())),
-            ratio,
+            width: Some(Au::from_px(300)),
+            height: Some(Au::from_px(150)),
+            ratio: None,
         };
-
-        let svg_source = match svg_data.source {
-            None => {
-                // The SVGSVGElement is not yet serialized, so we add it to a list
-                // and hand it over to script to peform the serialization.
-                context
-                    .image_resolver
-                    .queue_svg_element_for_serialization(node);
-                None
-            },
-            // If `svg_source_result` is `Err()`, it means that the previous attempt
-            // had errored, then don't attempt to serialize again.
-            Some(svg_source_result) => svg_source_result.ok(),
-        };
-
-        let cached_image = svg_source.and_then(|svg_source| {
-            context
-                .image_resolver
-                .get_cached_image_for_url(
-                    node.opaque(),
-                    svg_source,
-                    LayoutImageDestination::BoxTreeConstruction,
-                    InternalRequest::Yes,
-                )
-                .ok()
-        });
-
-        let vector_image = cached_image.map(|image| match image {
-            Image::Vector(mut vector_image) => {
-                vector_image.svg_id = Some(svg_data.svg_id);
-                vector_image
-            },
-            _ => unreachable!("SVG element can't contain a raster image."),
-        });
 
         (
             ReplacedContentKind::SVGElement {
-                vector_image,
-                has_viewbox: svg_data.view_box.is_some(),
+                scene: Some(Arc::new(scene)),
             },
             natural_size,
         )
+    }
+
+    fn build_svg_scene(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Vec<SvgRenderInput> {
+        let mut inputs = Vec::new();
+        Self::collect_svg_render_inputs(node, context, &mut inputs);
+        inputs
+    }
+
+    fn collect_svg_render_inputs(
+        node: ServoLayoutNode<'_>,
+        context: &LayoutContext,
+        inputs: &mut Vec<SvgRenderInput>,
+    ) {
+
+        let Some(element) = node.as_element() else { return };
+        let tag = SvgTag::from_str(&element.local_name());
+
+        if tag.is_basic_shape() {
+            let style = node.style(&context.style_context);
+
+            let get_attr = |name: &str| {
+                element
+                    .attribute_as_str(&ns!(), &LocalName::from(name))
+                    .map(|s| s.to_owned())
+            };
+
+            let geometry = svg_engine::extract_geometry(tag, &get_attr);
+            let fill = svg_engine::extract_fill_params(&style);
+            let stroke = svg_engine::extract_stroke_params(&style);
+            let opacity = svg_engine::extract_opacity(&style);
+
+            let transform = element
+                .attribute_as_str(&ns!(), &LocalName::from("transform"))
+                .and_then(svg_engine::parse_transform);
+
+            let clip_path = element
+                .attribute_as_str(&ns!(), &LocalName::from("clip-path"))
+                .map(|s| s.to_string());
+
+            inputs.push(SvgRenderInput {
+                tag,
+                geometry,
+                fill,
+                stroke,
+                transform,
+                clip_path,
+                opacity,
+            });
+        }
+
+        for child in node.dom_children() {
+            Self::collect_svg_render_inputs(child, context, inputs);
+        }
     }
 
     fn from_content_property(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {
@@ -571,60 +549,16 @@ impl ReplacedContents {
                     url: None,
                 }))]
             },
-            ReplacedContentKind::SVGElement {
-                vector_image,
-                has_viewbox,
-            } => {
-                let Some(vector_image) = vector_image else {
-                    return vec![];
-                };
-
-                if !has_viewbox {
-                    base.set_rect(
-                        PhysicalSize::new(
-                            vector_image
-                                .metadata
-                                .width
-                                .try_into()
-                                .map_or(MAX_AU, Au::from_px),
-                            vector_image
-                                .metadata
-                                .height
-                                .try_into()
-                                .map_or(MAX_AU, Au::from_px),
-                        )
-                        .into(),
-                    );
-                }
-
-                let scale = layout_context.style_context.device_pixel_ratio();
-                let content_size = base.rect().size;
-                let raster_size = Size2D::new(
-                    content_size.width.scale_by(scale.0).to_px(),
-                    content_size.height.scale_by(scale.0).to_px(),
-                );
-
-                let tag = self.base_fragment_info.tag.unwrap();
-                layout_context
-                    .image_resolver
-                    .rasterize_vector_image(
-                        vector_image.id,
-                        raster_size,
-                        tag.node,
-                        vector_image.svg_id.clone(),
-                    )
-                    .and_then(|image| image.id)
-                    .map(|image_key| {
-                        Fragment::Image(Arc::new(ImageFragment {
+            ReplacedContentKind::SVGElement { scene } => {
+                if let Some(scene) = scene {
+                    if !scene.is_empty() {
+                        return vec![Fragment::Svg(Arc::new(SvgFragment {
                             base,
-                            clip,
-                            image_key: Some(image_key),
-                            showing_broken_image_icon: false,
-                            url: None,
-                        }))
-                    })
-                    .into_iter()
-                    .collect()
+                            scene: scene.clone(),
+                        }))];
+                    }
+                }
+                vec![]
             },
             ReplacedContentKind::Audio => vec![],
         }

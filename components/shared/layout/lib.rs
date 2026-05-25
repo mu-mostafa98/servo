@@ -57,7 +57,6 @@ use servo_base::id::{BrowsingContextId, PipelineId, WebViewId};
 use servo_url::{ImmutableOrigin, ServoUrl};
 use style::Atom;
 use style::animation::DocumentAnimationSet;
-use style::attr::{AttrValue, parse_integer, parse_unsigned_integer};
 use style::context::QuirksMode;
 use style::data::ElementDataWrapper;
 use style::device::Device;
@@ -66,7 +65,6 @@ use style::invalidation::element::restyle_hints::RestyleHint;
 use style::properties::style_structs::Font;
 use style::properties::{ComputedValues, PropertyId};
 use style::selector_parser::{PseudoElement, RestyleDamage, Snapshot};
-use style::str::char_is_whitespace;
 use style::stylesheets::{DocumentStyleSheet, Stylesheet};
 use style::stylist::Stylist;
 #[cfg(debug_assertions)]
@@ -154,36 +152,6 @@ pub struct HTMLCanvasData {
     pub image_key: Option<ImageKey>,
     pub width: u32,
     pub height: u32,
-}
-
-pub struct SVGElementData<'dom> {
-    /// The SVG's XML source represented as a base64 encoded `data:` url.
-    pub source: Option<Result<ServoUrl, ()>>,
-    pub width: Option<&'dom AttrValue>,
-    pub height: Option<&'dom AttrValue>,
-    pub svg_id: String,
-    pub view_box: Option<&'dom AttrValue>,
-}
-
-impl SVGElementData<'_> {
-    pub fn ratio_from_view_box(&self) -> Option<f32> {
-        let mut iter = self.view_box?.chars();
-        let _min_x = parse_integer(&mut iter).ok()?;
-        let _min_y = parse_integer(&mut iter).ok()?;
-
-        let width = parse_unsigned_integer(&mut iter).ok()?;
-        if width == 0 {
-            return None;
-        }
-
-        let height = parse_unsigned_integer(&mut iter).ok()?;
-        if height == 0 {
-            return None;
-        }
-
-        let mut iter = iter.skip_while(|c| char_is_whitespace(*c));
-        iter.next().is_none().then(|| width as f32 / height as f32)
-    }
 }
 
 /// The address of a node known to be valid. These are sent from script to layout.
@@ -616,10 +584,6 @@ pub struct ReflowResult {
     pub pending_images: Vec<PendingImage>,
     /// The list of vector images that were encountered that still need to be rasterized.
     pub pending_rasterization_images: Vec<PendingRasterizationImage>,
-    /// The list of `SVGSVGElement`s encountered in the DOM that need to be serialized.
-    /// This is needed to support inline SVGs as the serialization needs to happen on
-    /// the script thread.
-    pub pending_svg_elements_for_serialization: Vec<UntrustedNodeAddress>,
     /// The list of iframes in this layout and their sizes, used in order
     /// to communicate them with the Constellation and also the `Window`
     /// element of their content pages. Returning None if incremental reflow

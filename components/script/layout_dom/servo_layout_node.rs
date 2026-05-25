@@ -10,7 +10,7 @@ use std::fmt;
 
 use layout_api::{
     GenericLayoutData, HTMLCanvasData, HTMLMediaData, LayoutDataTrait, LayoutElement, LayoutNode,
-    LayoutNodeType, PseudoElementChain, SVGElementData, SharedSelection, TrustedNodeAddress,
+    LayoutNodeType, PseudoElementChain, SharedSelection, TrustedNodeAddress,
 };
 use net_traits::image_cache::Image;
 use pixels::ImageMetadata;
@@ -273,7 +273,7 @@ impl<'dom> LayoutNode<'dom> for ServoLayoutNode<'dom> {
         self.node.media_data()
     }
 
-    fn svg_data(&self) -> Option<SVGElementData<'dom>> {
+    fn svg_data(&self) -> Option<()> {
         self.node.svg_data()
     }
 

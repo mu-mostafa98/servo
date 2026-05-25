@@ -22,7 +22,7 @@ use crate::layout_dom::{DangerousStyleNodeOf, LayoutElementOf, LayoutNodeOf};
 use crate::pseudo_element_chain::PseudoElementChain;
 use crate::{
     GenericLayoutData, HTMLCanvasData, HTMLMediaData, LayoutDataTrait, LayoutDomTypeBundle,
-    LayoutNodeType, SVGElementData, SharedSelection,
+    LayoutNodeType, SharedSelection,
 };
 
 /// A trait that exposes a DOM nodes to layout. Implementors of this trait must abide by certain
@@ -187,8 +187,8 @@ pub trait LayoutNode<'dom>: Copy + Debug + NodeInfo + Send + Sync {
     /// Return the [`HTMLCanvas`] data for this node, if it is a canvas.
     fn canvas_data(&self) -> Option<HTMLCanvasData>;
 
-    /// Return the [`SVGElementData`] for this node, if it is an SVG subtree.
-    fn svg_data(&self) -> Option<SVGElementData<'dom>>;
+    /// Return `Some(())` if this is an SVG subtree root.
+    fn svg_data(&self) -> Option<()>;
 
     /// Return the [`HTMLMediaData`] for this node, if it is a media element.
     fn media_data(&self) -> Option<HTMLMediaData>;

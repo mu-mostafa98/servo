@@ -1,0 +1,419 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1900" font-family="'Segoe UI', 'SF Pro Display', -apple-system, sans-serif">
+  <defs>
+    <linearGradient id="headerGrad" x1="0" y1="0" x2="1200" y2="0">
+      <stop offset="0%" stop-color="#1a1a2e"/>
+      <stop offset="100%" stop-color="#16213e"/>
+    </linearGradient>
+    <linearGradient id="accentLine" x1="0" y1="0" x2="1200" y2="0">
+      <stop offset="0%" stop-color="#27ae60"/>
+      <stop offset="50%" stop-color="#0f3460"/>
+      <stop offset="100%" stop-color="#27ae60"/>
+    </linearGradient>
+    <linearGradient id="sectionHeader" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f3460"/>
+      <stop offset="100%" stop-color="#1a1a2e"/>
+    </linearGradient>
+    <linearGradient id="engineBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8f4f8"/>
+      <stop offset="100%" stop-color="#d1ecf1"/>
+    </linearGradient>
+    <linearGradient id="layoutBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fef9e7"/>
+      <stop offset="100%" stop-color="#fdebd0"/>
+    </linearGradient>
+    <linearGradient id="scriptBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#e8daef"/>
+      <stop offset="100%" stop-color="#d2b4de"/>
+    </linearGradient>
+    <linearGradient id="sharedBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#d5f5e3"/>
+      <stop offset="100%" stop-color="#abebc6"/>
+    </linearGradient>
+    <linearGradient id="styloBox" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#fdf2e9"/>
+      <stop offset="100%" stop-color="#fae5d3"/>
+    </linearGradient>
+    <filter id="shadow" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="rgba(0,0,0,0.10)"/>
+    </filter>
+    <filter id="shadowDeep" x="-2%" y="-2%" width="104%" height="104%">
+      <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="rgba(0,0,0,0.15)"/>
+    </filter>
+    <marker id="arrowBlue" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#0f3460"/>
+    </marker>
+    <marker id="arrowGreen" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+      <polygon points="0 0, 10 3.5, 0 7" fill="#27ae60"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="1900" fill="#f4f6f9"/>
+
+  <!-- ===== TITLE HEADER ===== -->
+  <rect width="1200" height="100" fill="url(#headerGrad)"/>
+  <rect y="100" width="1200" height="4" fill="url(#accentLine)"/>
+  <text x="60" y="48" font-size="28" font-weight="700" fill="#ffffff">Servo SVG Engine — Architecture Overview</text>
+  <text x="60" y="78" font-size="15" fill="#a0aec0">Phase 1 Complete — components/svg_engine/</text>
+  <rect x="940" y="28" width="200" height="36" rx="18" fill="#27ae60" opacity="0.9"/>
+  <text x="1040" y="51" font-size="13" font-weight="600" fill="#fff" text-anchor="middle">PHASE 1 ✓ COMPLETE</text>
+
+  <!-- ================================================================ -->
+  <!-- SECTION 1: FILE STRUCTURE -->
+  <!-- ================================================================ -->
+
+  <rect x="60" y="130" width="30" height="30" rx="6" fill="url(#sectionHeader)"/>
+  <text x="78" y="150" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">1</text>
+  <text x="105" y="153" font-size="20" font-weight="700" fill="#1a1a2e">File Structure</text>
+
+  <!-- ===== SVG ENGINE ===== -->
+  <rect x="60" y="180" width="1080" height="400" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="60" y="180" width="1080" height="46" rx="12" fill="url(#engineBox)"/>
+  <rect x="60" y="214" width="1080" height="12" fill="url(#engineBox)"/>
+  <text x="80" y="209" font-size="15" font-weight="700" fill="#0c5460">📦 SVG Engine</text>
+  <text x="1080" y="209" font-size="12" fill="#6c757d" text-anchor="end">components/svg_engine/</text>
+
+  <g font-size="13" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">
+    <text x="100" y="252" fill="#2d3748" font-weight="700" font-size="14" font-family="'Segoe UI', sans-serif">components/svg_engine/src/</text>
+
+    <text x="106" y="276" fill="#adb5bd">│</text>
+    <line x1="106" y1="276" x2="130" y2="276" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="276" fill="#e94560">●</text>
+    <text x="134" y="276" fill="#495057">lib.rs</text>
+    <text x="320" y="276" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Crate root — private modules, pub re-exports</text>
+
+    <text x="106" y="300" fill="#adb5bd">│</text>
+    <line x1="106" y1="300" x2="130" y2="300" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="300" fill="#e94560">●</text>
+    <text x="134" y="300" fill="#495057">shapes.rs</text>
+    <text x="320" y="300" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">SvgTag, ParsedGeometry, FillParams, StrokeParams, SvgRenderInput</text>
+
+    <text x="106" y="324" fill="#adb5bd">│</text>
+    <line x1="106" y1="324" x2="130" y2="324" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="324" fill="#e94560">●</text>
+    <text x="134" y="324" fill="#495057">paint.rs</text>
+    <text x="320" y="324" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Style extraction: Stylo ComputedValues → FillParams, StrokeParams</text>
+
+    <text x="106" y="348" fill="#adb5bd">│</text>
+    <line x1="106" y1="348" x2="130" y2="348" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="348" fill="#e94560">●</text>
+    <text x="134" y="348" fill="#495057">render.rs</text>
+    <text x="320" y="348" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">WebRender display item generation: render_svg_element()</text>
+
+    <text x="106" y="372" fill="#adb5bd">│</text>
+    <line x1="106" y1="372" x2="130" y2="372" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="372" fill="#e94560">●</text>
+    <text x="134" y="372" fill="#495057">lengths.rs</text>
+    <text x="320" y="372" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">SVG length parser: SvgLength::Px, SvgLength::Percent</text>
+
+    <text x="106" y="396" fill="#adb5bd">│</text>
+    <line x1="106" y1="396" x2="130" y2="396" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="396" fill="#e94560">●</text>
+    <text x="134" y="396" fill="#495057">path.rs</text>
+    <text x="320" y="396" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Path "d" attribute parser (parsed, rendering in Phase 2)</text>
+
+    <text x="106" y="420" fill="#adb5bd">│</text>
+    <line x1="106" y1="420" x2="130" y2="420" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="420" fill="#e94560">●</text>
+    <text x="134" y="420" fill="#495057">points.rs</text>
+    <text x="320" y="420" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Polyline/polygon points parser (parsed, rendering in Phase 2)</text>
+
+    <text x="106" y="444" fill="#adb5bd">│</text>
+    <line x1="106" y1="444" x2="130" y2="444" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="444" fill="#e94560">●</text>
+    <text x="134" y="444" fill="#495057">transform.rs</text>
+    <text x="320" y="444" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Transform attribute parser (parsed, transform stack in Phase 3)</text>
+
+    <!-- Future files -->
+    <text x="106" y="476" fill="#adb5bd">│</text>
+    <line x1="106" y1="476" x2="130" y2="476" stroke="#adb5bd" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="90" y="476" fill="#f39c12">○</text>
+    <text x="134" y="476" fill="#adb5bd" font-style="italic">context.rs</text>
+    <text x="320" y="476" fill="#adb5bd" font-size="11" font-family="'Segoe UI', sans-serif" font-style="italic">Transform stack, clip stack — Phase 3</text>
+
+    <text x="106" y="500" fill="#adb5bd">│</text>
+    <line x1="106" y1="500" x2="130" y2="500" stroke="#adb5bd" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="90" y="500" fill="#f39c12">○</text>
+    <text x="134" y="500" fill="#adb5bd" font-style="italic">gradient.rs</text>
+    <text x="320" y="500" fill="#adb5bd" font-size="11" font-family="'Segoe UI', sans-serif" font-style="italic">WebRender gradient integration — Phase 6</text>
+
+    <text x="106" y="524" fill="#adb5bd">│</text>
+    <line x1="106" y1="524" x2="130" y2="524" stroke="#adb5bd" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="90" y="524" fill="#f39c12">○</text>
+    <text x="134" y="524" fill="#adb5bd" font-style="italic">clip.rs / text.rs</text>
+    <text x="320" y="524" fill="#adb5bd" font-size="11" font-family="'Segoe UI', sans-serif" font-style="italic">Clip paths / SVG text — Phase 5 / Phase 4</text>
+
+    <text x="106" y="548" fill="#adb5bd">│</text>
+    <line x1="106" y1="548" x2="130" y2="548" stroke="#adb5bd" stroke-width="1.5" stroke-dasharray="3,2"/>
+    <text x="90" y="548" fill="#f39c12">○</text>
+    <text x="134" y="548" fill="#adb5bd" font-style="italic">raster.rs</text>
+    <text x="320" y="548" fill="#adb5bd" font-size="11" font-family="'Segoe UI', sans-serif" font-style="italic">Software rasterization fallback for paths — Phase 2</text>
+  </g>
+
+  <!-- ===== LAYOUT INTEGRATION ===== -->
+  <rect x="60" y="600" width="520" height="195" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="60" y="600" width="520" height="46" rx="12" fill="url(#layoutBox)"/>
+  <rect x="60" y="634" width="520" height="12" fill="url(#layoutBox)"/>
+  <text x="80" y="629" font-size="15" font-weight="700" fill="#7d6608">⚡ Layout Integration</text>
+  <text x="560" y="629" font-size="12" fill="#6c757d" text-anchor="end">components/layout/</text>
+
+  <g font-size="13" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">
+    <text x="100" y="668" fill="#2d3748" font-weight="700" font-size="14" font-family="'Segoe UI', sans-serif">components/layout/</text>
+
+    <text x="106" y="692" fill="#adb5bd">│</text>
+    <line x1="106" y1="692" x2="130" y2="692" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="692" fill="#e94560">●</text>
+    <text x="134" y="692" fill="#495057">replaced.rs</text>
+    <text x="320" y="692" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Scene building: build_svg_scene(), ReplacedContentKind</text>
+
+    <text x="106" y="716" fill="#adb5bd">│</text>
+    <line x1="106" y1="716" x2="130" y2="716" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="716" fill="#e94560">●</text>
+    <text x="134" y="716" fill="#495057">fragment_tree/fragment.rs</text>
+    <text x="320" y="716" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">SvgFragment struct, Fragment::Svg variant</text>
+
+    <text x="106" y="740" fill="#adb5bd">│</text>
+    <line x1="106" y1="740" x2="130" y2="740" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="740" fill="#e94560">●</text>
+    <text x="134" y="740" fill="#495057">display_list/mod.rs</text>
+    <text x="320" y="740" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Fragment::Svg → render_svg_element() dispatch</text>
+
+    <text x="106" y="764" fill="#adb5bd">│</text>
+    <line x1="106" y1="764" x2="130" y2="764" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="764" fill="#e94560">●</text>
+    <text x="134" y="764" fill="#495057">dom.rs</text>
+    <text x="320" y="764" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">NodeExt::as_svg() → Option&lt;()&gt; SVG root detection</text>
+
+    <text x="106" y="788" fill="#adb5bd">│</text>
+    <line x1="106" y1="788" x2="130" y2="788" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="90" y="788" fill="#e94560">●</text>
+    <text x="134" y="788" fill="#495057">context.rs</text>
+    <text x="320" y="788" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">ImageResolver — cleaned, serialization removed</text>
+  </g>
+
+  <!-- ===== SCRIPT INTEGRATION ===== -->
+  <rect x="620" y="600" width="520" height="195" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="620" y="600" width="520" height="46" rx="12" fill="url(#scriptBox)"/>
+  <rect x="620" y="634" width="520" height="12" fill="url(#scriptBox)"/>
+  <text x="640" y="629" font-size="15" font-weight="700" fill="#6c3483">📜 Script / DOM Integration</text>
+  <text x="1120" y="629" font-size="12" fill="#6c757d" text-anchor="end">components/script/ + shared/layout/</text>
+
+  <g font-size="13" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">
+    <text x="660" y="668" fill="#2d3748" font-weight="700" font-size="14" font-family="'Segoe UI', sans-serif">components/script/dom/</text>
+
+    <text x="666" y="692" fill="#adb5bd">│</text>
+    <line x1="666" y1="692" x2="690" y2="692" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="650" y="692" fill="#e94560">●</text>
+    <text x="694" y="692" fill="#495057">element/element.rs</text>
+    <text x="880" y="692" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">50 SVG presentation hints</text>
+
+    <text x="666" y="716" fill="#adb5bd">│</text>
+    <line x1="666" y1="716" x2="690" y2="716" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="650" y="716" fill="#e94560">●</text>
+    <text x="694" y="716" fill="#495057">svg/svgelement.rs</text>
+    <text x="880" y="716" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">attribute_affects_presentational_hints()</text>
+
+    <text x="666" y="740" fill="#adb5bd">│</text>
+    <line x1="666" y1="740" x2="690" y2="740" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="650" y="740" fill="#e94560">●</text>
+    <text x="694" y="740" fill="#495057">svg/svgsvgelement.rs</text>
+    <text x="880" y="740" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">Cleaned — old serialization removed</text>
+
+    <text x="666" y="764" fill="#adb5bd">│</text>
+    <line x1="666" y1="764" x2="690" y2="764" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="650" y="764" fill="#e94560">●</text>
+    <text x="694" y="764" fill="#495057">node/node.rs</text>
+    <text x="880" y="764" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">svg_data() → Option&lt;()&gt; marker</text>
+
+    <text x="666" y="788" fill="#adb5bd">│</text>
+    <line x1="666" y1="788" x2="690" y2="788" stroke="#adb5bd" stroke-width="1.5"/>
+    <text x="650" y="788" fill="#e94560">●</text>
+    <text x="694" y="788" fill="#495057">layout_dom/servo_layout_node.rs</text>
+    <text x="880" y="788" fill="#868e96" font-size="11" font-family="'Segoe UI', sans-serif">LayoutNode bridge</text>
+  </g>
+
+  <!-- ================================================================ -->
+  <!-- SECTION 2: DATAFLOW PIPELINE -->
+  <!-- ================================================================ -->
+
+  <rect x="60" y="820" width="30" height="30" rx="6" fill="url(#sectionHeader)"/>
+  <text x="78" y="840" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">2</text>
+  <text x="105" y="843" font-size="20" font-weight="700" fill="#1a1a2e">Dataflow Pipeline</text>
+
+  <g transform="translate(60, 875)">
+
+    <!-- ===== STAGE 0: Stylo CSS Engine ===== -->
+    <rect x="0" y="0" width="1080" height="75" rx="10" fill="url(#styloBox)" filter="url(#shadowDeep)" stroke="#e67e22" stroke-width="1.5"/>
+    <rect x="0" y="0" width="10" height="75" rx="4" fill="#e67e22"/>
+    <rect x="0" y="0" width="1080" height="30" rx="10" fill="#fdf2e9" stroke="#e67e22" stroke-width="1.5"/>
+    <rect x="10" y="0" width="1070" height="30" rx="0" fill="#fdf2e9"/>
+    <text x="25" y="20" font-size="12" font-weight="700" fill="#7d6608">Stylo CSS Engine — Computes per-element styles</text>
+
+    <text x="40" y="48" font-size="11" fill="#7d6608" font-weight="600">Computes per element: InheritedSVG (fill, stroke, opacity) · SVG (cx, cy, r, rx, ry, x, y) · CSS inheritance</text>
+    <text x="40" y="66" font-size="11" fill="#7d6608" font-weight="600">Produces: ServoArc&lt;ComputedValues&gt; on every DOM node</text>
+
+    <!-- Arrow -->
+    <line x1="540" y1="75" x2="540" y2="110" stroke="#e67e22" stroke-width="2.5" marker-end="url(#arrowBlue)" stroke-dasharray="5,3"/>
+    <text x="560" y="100" font-size="11" fill="#7d6608">ComputedValues on DOM nodes</text>
+
+    <!-- ===== STAGE 1: Scene Building (replaced.rs) ===== -->
+    <rect x="0" y="115" width="1080" height="155" rx="10" fill="#ffffff" filter="url(#shadowDeep)" stroke="#1a252f" stroke-width="1.5"/>
+    <rect x="0" y="115" width="10" height="155" rx="4" fill="#2c3e50"/>
+    <rect x="0" y="115" width="1080" height="30" rx="10" fill="url(#layoutBox)"/>
+    <rect x="0" y="133" width="1080" height="12" fill="url(#layoutBox)"/>
+    <text x="25" y="135" font-size="12" font-weight="700" fill="#7d6608">Stage 1 — Scene Building (replaced.rs)</text>
+
+    <rect x="20" y="155" width="1040" height="100" rx="6" fill="#1a252f" opacity="0.04"/>
+    <text x="35" y="172" font-size="11" fill="#495057" font-weight="600">svg_kind_size() detects &lt;svg&gt; → calls build_svg_scene()</text>
+
+    <text x="40" y="192" font-size="10" fill="#495057" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">for child in node.flat_tree_children():</text>
+    <text x="52" y="206" font-size="10" fill="#495057" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">tag = match_tag(child)      // SvgTag::Rect, Circle, Ellipse...</text>
+    <text x="52" y="220" font-size="10" fill="#495057" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">style = node.style(ctx)     // ComputedValues from Stylo</text>
+    <text x="52" y="234" font-size="10" fill="#495057" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">geometry = extract_geometry(element, tag)  // ParsedGeometry</text>
+    <text x="52" y="248" font-size="10" fill="#495057" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">fill = extract_fill_params(style)  // FillParams from InheritedSVG</text>
+
+    <!-- Arrow -->
+    <line x1="540" y1="270" x2="540" y2="300" stroke="#2c3e50" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <rect x="430" y="278" width="220" height="16" rx="4" fill="#2c3e50" opacity="0.08"/>
+    <text x="540" y="290" font-size="11" fill="#2c3e50" text-anchor="middle" font-weight="600">Vec&lt;SvgRenderInput&gt; in Arc</text>
+
+    <!-- ===== STAGE 2: Fragment Creation ===== -->
+    <rect x="0" y="310" width="1080" height="100" rx="10" fill="#ffffff" filter="url(#shadowDeep)" stroke="#1a252f" stroke-width="1.5"/>
+    <rect x="0" y="310" width="10" height="100" rx="4" fill="#2c3e50"/>
+    <rect x="0" y="310" width="1080" height="30" rx="10" fill="url(#layoutBox)"/>
+    <rect x="0" y="328" width="1080" height="12" fill="url(#layoutBox)"/>
+    <text x="25" y="330" font-size="12" font-weight="700" fill="#7d6608">Stage 2 — Fragment Creation / Display List Building</text>
+
+    <text x="40" y="358" font-size="11" fill="#495057" font-weight="600">make_fragments()</text>
+    <text x="40" y="376" font-size="10" fill="#495057" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">ReplacedContentKind::SVGElement { scene } → Fragment::Svg(Arc&lt;SvgFragment&gt;)</text>
+    <text x="40" y="394" font-size="10" fill="#495057" font-family="'Cascadia Code', 'Fira Code', 'Consolas', monospace">Fragment::Svg → render_svg_element(&amp;scene, rect, spatial_id, clip_chain, wr)</text>
+
+    <!-- Arrow -->
+    <line x1="540" y1="410" x2="540" y2="440" stroke="#0f3460" stroke-width="2.5" marker-end="url(#arrowBlue)"/>
+    <rect x="430" y="420" width="220" height="16" rx="4" fill="#0f3460" opacity="0.08"/>
+    <text x="540" y="432" font-size="11" fill="#0f3460" text-anchor="middle" font-weight="600">SvgRenderInput per element</text>
+
+    <!-- ===== STAGE 3: svg_engine Render ===== -->
+    <rect x="0" y="450" width="1080" height="290" rx="10" fill="url(#engineBox)" filter="url(#shadowDeep)" stroke="#17a2b8" stroke-width="1.5"/>
+    <rect x="0" y="450" width="10" height="290" rx="4" fill="#17a2b8"/>
+    <rect x="0" y="450" width="1080" height="34" rx="10" fill="#e8f4f8" stroke="#17a2b8" stroke-width="1.5"/>
+    <rect x="10" y="450" width="1070" height="34" rx="0" fill="#e8f4f8"/>
+    <text x="25" y="472" font-size="13" font-weight="700" fill="#0c5460">svg_engine :: render_svg_element() — Per-element dispatch</text>
+
+    <rect x="20" y="495" width="1040" height="235" rx="6" fill="#ffffff" stroke="#b8daff" stroke-width="1"/>
+
+    <!-- Step 1: Resolve Geometry -->
+    <rect x="35" y="510" width="1010" height="38" rx="4" fill="#f8fbff" stroke="#b8daff" stroke-width="1"/>
+    <rect x="35" y="510" width="4" height="38" rx="2" fill="#17a2b8"/>
+    <circle cx="52" cy="529" r="7" fill="#17a2b8"/>
+    <text x="52" y="532" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">1</text>
+    <text x="68" y="523" font-size="11" fill="#0c5460" font-weight="600">Resolve Geometry</text>
+    <text x="68" y="538" font-size="10" fill="#6c757d">resolve_geometry(geom, viewport_size) → ResolvedGeometry { rect: LayoutRect, radii: BorderRadius }</text>
+    <line x1="540" y1="548" x2="540" y2="566" stroke="#b8daff" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+    <!-- Step 2: Dispatch by Tag -->
+    <rect x="35" y="568" width="1010" height="85" rx="4" fill="#f8fbff" stroke="#b8daff" stroke-width="1"/>
+    <rect x="35" y="568" width="4" height="85" rx="2" fill="#17a2b8"/>
+    <circle cx="52" cy="610" r="7" fill="#17a2b8"/>
+    <text x="52" y="613" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">2</text>
+    <text x="68" y="590" font-size="11" fill="#0c5460" font-weight="600">Dispatch by Tag</text>
+
+    <!-- Shape dispatch boxes (horizontal row) -->
+    <rect x="45" y="604" width="150" height="22" rx="4" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+    <text x="120" y="619" font-size="9" fill="#1a7a3a" text-anchor="middle" font-weight="600">Rect → push_rect</text>
+
+    <rect x="205" y="604" width="160" height="22" rx="4" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+    <text x="285" y="619" font-size="9" fill="#1a7a3a" text-anchor="middle" font-weight="600">Circle → rect + clip</text>
+
+    <rect x="375" y="604" width="170" height="22" rx="4" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+    <text x="460" y="619" font-size="9" fill="#1a7a3a" text-anchor="middle" font-weight="600">Ellipse → rect + clip</text>
+
+    <rect x="555" y="604" width="150" height="22" rx="4" fill="#d5f5e3" stroke="#27ae60" stroke-width="1"/>
+    <text x="630" y="619" font-size="9" fill="#1a7a3a" text-anchor="middle" font-weight="600">Line → push_border</text>
+
+    <rect x="715" y="604" width="150" height="22" rx="4" fill="#fdf2e9" stroke="#e67e22" stroke-width="1"/>
+    <text x="790" y="619" font-size="9" fill="#7d6608" text-anchor="middle" font-weight="600">Path → skip (P2)</text>
+
+    <text x="68" y="647" font-size="10" fill="#6c757d">Stroke paths: push_border for rects · Ring clip (outer Clip + inner ClipOut) for circles/ellipses</text>
+    <line x1="540" y1="653" x2="540" y2="670" stroke="#17a2b8" stroke-width="2" marker-end="url(#arrowBlue)"/>
+
+    <!-- Step 3: Push to WebRender -->
+    <rect x="35" y="672" width="1010" height="45" rx="4" fill="#f0faf0" stroke="#27ae60" stroke-width="1"/>
+    <rect x="35" y="672" width="4" height="45" rx="2" fill="#27ae60"/>
+    <circle cx="52" cy="694" r="7" fill="#27ae60"/>
+    <text x="52" y="697" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">3</text>
+    <text x="68" y="688" font-size="11" fill="#1a7a3a" font-weight="600">Push to WebRender</text>
+    <text x="68" y="704" font-size="10" fill="#6c757d">wr.push_rect() / wr.push_border() / wr.define_clip_rounded_rect() / wr.define_clip_chain()</text>
+
+    <!-- Arrow -->
+    <line x1="540" y1="740" x2="540" y2="770" stroke="#27ae60" stroke-width="2.5" marker-end="url(#arrowGreen)"/>
+    <text x="560" y="762" font-size="11" fill="#27ae60" font-weight="600">WebRender DisplayListBuilder calls</text>
+
+    <!-- ===== STAGE 4: WebRender ===== -->
+    <rect x="0" y="775" width="1080" height="65" rx="10" fill="url(#sharedBox)" filter="url(#shadowDeep)" stroke="#27ae60" stroke-width="1.5"/>
+    <rect x="0" y="775" width="10" height="65" rx="4" fill="#27ae60"/>
+    <text x="25" y="797" font-size="13" font-weight="700" fill="#1a7a3a">WebRender — GPU Vector Rendering</text>
+
+    <text x="40" y="822" font-size="12" fill="#1e8449">Vector display items (push_rect, push_border, define_clip) · Per-item hit testing · GPU compositing</text>
+    <text x="40" y="837" font-size="12" fill="#1e8449">Resolution-independent · No bitmap scaling · Vector output at any zoom level</text>
+
+  </g>
+
+  <!-- ================================================================ -->
+  <!-- SECTION 3: RENDERING STRATEGY -->
+  <!-- ================================================================ -->
+
+  <rect x="60" y="1830" width="30" height="30" rx="6" fill="url(#sectionHeader)"/>
+  <text x="78" y="1850" font-size="13" font-weight="700" fill="#fff" text-anchor="middle">3</text>
+  <text x="105" y="1853" font-size="20" font-weight="700" fill="#1a1a2e">WebRender Primitive Mapping</text>
+
+  <rect x="60" y="1865" width="1080" height="130" rx="12" fill="#ffffff" filter="url(#shadow)"/>
+  <text x="80" y="1892" font-size="13" fill="#495057" font-weight="600">Phase 1 shapes and their WebRender primitives:</text>
+
+  <g transform="translate(80, 1905)">
+    <!-- Table header -->
+    <rect x="0" y="0" width="240" height="24" rx="4" fill="#1a1a2e"/>
+    <text x="120" y="16" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">SVG Shape</text>
+    <rect x="250" y="0" width="400" height="24" rx="4" fill="#1a1a2e"/>
+    <text x="450" y="16" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">WebRender Primitive</text>
+    <rect x="660" y="0" width="400" height="24" rx="4" fill="#1a1a2e"/>
+    <text x="860" y="16" font-size="11" fill="#fff" text-anchor="middle" font-weight="600">Method</text>
+
+    <!-- Row 1 -->
+    <rect x="0" y="26" width="240" height="20" rx="2" fill="#f8fbff"/>
+    <text x="120" y="40" font-size="11" fill="#495057" text-anchor="middle">Rect (fill)</text>
+    <rect x="250" y="26" width="400" height="20" rx="2" fill="#f8fbff"/>
+    <text x="450" y="40" font-size="11" fill="#495057" text-anchor="middle">push_rect()</text>
+    <rect x="660" y="26" width="400" height="20" rx="2" fill="#f8fbff"/>
+    <text x="860" y="40" font-size="11" fill="#27ae60" text-anchor="middle">Native WebRender rect</text>
+
+    <!-- Row 2 -->
+    <rect x="0" y="48" width="240" height="20" rx="2" fill="#ffffff"/>
+    <text x="120" y="62" font-size="11" fill="#495057" text-anchor="middle">Rect (stroke)</text>
+    <rect x="250" y="48" width="400" height="20" rx="2" fill="#ffffff"/>
+    <text x="450" y="62" font-size="11" fill="#495057" text-anchor="middle">push_border() with BorderStyle::Solid</text>
+    <rect x="660" y="48" width="400" height="20" rx="2" fill="#ffffff"/>
+    <text x="860" y="62" font-size="11" fill="#27ae60" text-anchor="middle">Native WebRender border</text>
+
+    <!-- Row 3 -->
+    <rect x="0" y="70" width="240" height="20" rx="2" fill="#f8fbff"/>
+    <text x="120" y="84" font-size="11" fill="#495057" text-anchor="middle">Circle / Ellipse (fill)</text>
+    <rect x="250" y="70" width="400" height="20" rx="2" fill="#f8fbff"/>
+    <text x="450" y="84" font-size="11" fill="#495057" text-anchor="middle">define_clip_rounded_rect() + push_rect()</text>
+    <rect x="660" y="70" width="400" height="20" rx="2" fill="#f8fbff"/>
+    <text x="860" y="84" font-size="11" fill="#f39c12" text-anchor="middle">Rounded-rect clip approximation</text>
+
+    <!-- Row 4 -->
+    <rect x="0" y="92" width="240" height="20" rx="2" fill="#ffffff"/>
+    <text x="120" y="106" font-size="11" fill="#495057" text-anchor="middle">Circle / Ellipse (stroke)</text>
+    <rect x="250" y="92" width="400" height="20" rx="2" fill="#ffffff"/>
+    <text x="450" y="106" font-size="11" fill="#495057" text-anchor="middle">Ring clip (outer Clip + inner ClipOut) + border</text>
+    <rect x="660" y="92" width="400" height="20" rx="2" fill="#ffffff"/>
+    <text x="860" y="106" font-size="11" fill="#f39c12" text-anchor="middle">Dual-clip ring approximation</text>
+  </g>
+
+  <!-- Footer -->
+  <rect x="0" y="1860" width="1200" height="40" fill="url(#headerGrad)" opacity="0.9"/>
+  <text x="600" y="1885" font-size="12" fill="#a0aec0" text-anchor="middle">Servo SVG Engine — Architecture Overview · Phase 1 Complete · components/svg_engine/</text>
+
+</svg>

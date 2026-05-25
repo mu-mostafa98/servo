@@ -26,6 +26,7 @@ use crate::flow::inline::line::TextRunOffsets;
 use crate::geom::{LogicalSides, PhysicalPoint, PhysicalRect};
 use crate::layout_impl::LayoutThread;
 use crate::style_ext::ComputedValuesExt;
+use svg_engine::SvgRenderInput;
 
 #[derive(Clone, MallocSizeOf)]
 pub(crate) enum Fragment {
@@ -48,6 +49,7 @@ pub(crate) enum Fragment {
     Text(#[conditional_malloc_size_of] Arc<TextFragment>),
     Image(#[conditional_malloc_size_of] Arc<ImageFragment>),
     IFrame(#[conditional_malloc_size_of] Arc<IFrameFragment>),
+    Svg(#[conditional_malloc_size_of] Arc<SvgFragment>),
 }
 
 #[derive(Clone, MallocSizeOf)]
@@ -97,6 +99,13 @@ pub(crate) struct IFrameFragment {
     pub pipeline_id: PipelineId,
 }
 
+#[derive(MallocSizeOf)]
+pub(crate) struct SvgFragment {
+    pub base: BaseFragment,
+    #[ignore_malloc_size_of = "Arc does not implement MallocSizeOf"]
+    pub scene: Arc<Vec<SvgRenderInput>>,
+}
+
 impl Fragment {
     pub fn base(&self) -> Option<&BaseFragment> {
         Some(match self {
@@ -106,6 +115,7 @@ impl Fragment {
             Fragment::Positioning(fragment) => &fragment.base,
             Fragment::Image(fragment) => &fragment.base,
             Fragment::IFrame(fragment) => &fragment.base,
+            Fragment::Svg(fragment) => &fragment.base,
             Fragment::Float(fragment) => &fragment.base,
         })
     }
@@ -121,7 +131,8 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositioned(..) |
             Fragment::Text(..) |
             Fragment::Image(..) |
-            Fragment::IFrame(..) => {},
+            Fragment::IFrame(..) |
+            Fragment::Svg(..) => {},
         }
     }
 
@@ -144,6 +155,10 @@ impl Fragment {
             Fragment::Text(fragment) => fragment.print(tree),
             Fragment::Image(fragment) => fragment.print(tree),
             Fragment::IFrame(fragment) => fragment.print(tree),
+            Fragment::Svg(fragment) => tree.add_item(format!(
+                "Svg scene with {} inputs",
+                fragment.scene.len()
+            )),
         }
     }
 
@@ -177,7 +192,8 @@ impl Fragment {
             Fragment::AbsoluteOrFixedPositioned(_) |
             Fragment::Text(..) |
             Fragment::Image(..) |
-            Fragment::IFrame(..) => self.base().map(|base| base.rect()).unwrap_or_default(),
+            Fragment::IFrame(..) |
+            Fragment::Svg(..) => self.base().map(|base| base.rect()).unwrap_or_default(),
         }
     }
 
@@ -206,7 +222,7 @@ impl Fragment {
             // rectangle should include that.
             Fragment::Positioning(fragment) => Some(fragment.base.rect()),
             Fragment::AbsoluteOrFixedPositioned(_) => None,
-            Fragment::Text(..) | Fragment::Image(..) | Fragment::IFrame(..) => {
+            Fragment::Text(..) | Fragment::Image(..) | Fragment::IFrame(..) | Fragment::Svg(..) => {
                 Some(self.base()?.rect())
             },
         }
@@ -238,7 +254,8 @@ impl Fragment {
             Fragment::Text(_) |
             Fragment::AbsoluteOrFixedPositioned(_) |
             Fragment::Image(_) |
-            Fragment::IFrame(_) => None,
+            Fragment::IFrame(_) |
+            Fragment::Svg(_) => None,
         }
     }
 

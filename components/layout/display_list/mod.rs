@@ -773,6 +773,35 @@ impl Fragment {
                     Visibility::Collapse => (),
                 }
             },
+            Fragment::Svg(svg_fragment) => {
+                let style = svg_fragment.base.style();
+                match style.get_inherited_box().visibility {
+                    Visibility::Visible => {
+                        let rect = svg_fragment
+                            .base
+                            .rect()
+                            .translate(containing_block.origin.to_vector())
+                            .to_webrender();
+                        let spatial_id = builder.spatial_id(builder.current_scroll_node_id);
+                        let clip_chain_id = builder.clip_chain_id(builder.current_clip_id);
+
+                        svg_engine::render_svg_element(
+                            &svg_fragment.scene,
+                            rect,
+                            spatial_id,
+                            clip_chain_id,
+                            builder.wr(),
+                        );
+
+                        builder.check_if_paintable(
+                            rect,
+                            rect,
+                            style.clone_opacity(),
+                        );
+                    },
+                    Visibility::Hidden | Visibility::Collapse => {},
+                }
+            },
             Fragment::Text(text) => match text.base.style().get_inherited_box().visibility {
                 Visibility::Visible => self.build_display_list_for_text_fragment(
                     text,

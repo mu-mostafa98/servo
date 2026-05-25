@@ -29,7 +29,7 @@ use js::rust::HandleObject;
 use keyboard_types::Modifiers;
 use layout_api::{
     AxesOverflow, BoxAreaType, CSSPixelRectVec, GenericLayoutData, HTMLCanvasData, HTMLMediaData,
-    LayoutElementType, LayoutNodeType, NodeRenderingType, PhysicalSides, SVGElementData,
+    LayoutElementType, LayoutNodeType, NodeRenderingType, PhysicalSides,
     SharedSelection, TrustedNodeAddress, with_layout_state,
 };
 use libc::{self, c_void, uintptr_t};
@@ -2380,8 +2380,8 @@ impl<'dom> LayoutDom<'dom, Node> {
             .map(|media| media.data())
     }
 
-    pub(crate) fn svg_data(self) -> Option<SVGElementData<'dom>> {
-        self.downcast::<SVGSVGElement>().map(|svg| svg.data())
+    pub(crate) fn svg_data(self) -> Option<()> {
+        self.downcast::<SVGSVGElement>().map(|_| ())
     }
 
     pub(crate) fn iframe_browsing_context_id(self) -> Option<BrowsingContextId> {

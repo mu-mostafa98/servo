@@ -7,7 +7,7 @@ use std::marker::PhantomData;
 use atomic_refcell::{AtomicRef, AtomicRefCell, AtomicRefMut};
 use layout_api::{
     GenericLayoutDataTrait, LayoutDataTrait, LayoutElement, LayoutElementType, LayoutNode,
-    LayoutNodeType as ScriptLayoutNodeType, NodeRenderingType, SVGElementData,
+    LayoutNodeType as ScriptLayoutNodeType, NodeRenderingType,
 };
 use malloc_size_of_derive::MallocSizeOf;
 use script::layout_dom::ServoLayoutNode;
@@ -330,7 +330,7 @@ pub(crate) trait NodeExt<'dom> {
     fn as_canvas(&self) -> Option<(CanvasInfo, PhysicalSize<f64>)>;
     fn as_iframe(&self) -> Option<IFrameInfo>;
     fn as_video(&self) -> Option<(VideoInfo, Option<PhysicalSize<f64>>)>;
-    fn as_svg(&self) -> Option<SVGElementData<'dom>>;
+    fn as_svg(&self) -> Option<()>;
     fn as_typeless_object_with_data_attribute(&self) -> Option<String>;
 
     fn ensure_inner_layout_data(&self) -> AtomicRefMut<'dom, InnerDOMLayoutData>;
@@ -400,7 +400,7 @@ impl<'dom> NodeExt<'dom> for ServoLayoutNode<'dom> {
         ))
     }
 
-    fn as_svg(&self) -> Option<SVGElementData<'dom>> {
+    fn as_svg(&self) -> Option<()> {
         self.svg_data()
     }
 

@@ -1,0 +1,50 @@
+<html>
+<head>
+<style>
+  body { font-family: system-ui, sans-serif; margin: 20px; background: #f8f9fa; }
+  h2 { color: #1a1a2e; border-bottom: 3px solid #1a1a2e; padding-bottom: 8px; }
+  table { border-collapse: collapse; margin: 6px 0 20px; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.08); }
+  td { padding: 6px 12px; border: 1px solid #dee2e6; font-family: monospace; font-size: 13px; }
+  td:first-child { background: #e9ecef; font-weight: bold; font-family: system-ui; }
+  svg { background: white; border: 1px solid #dee2e6; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); margin-bottom: 20px; }
+</style>
+</head>
+<body>
+<h2>SVG Shapes Test — All 7 Shapes</h2>
+
+<table>
+  <tr><td>1</td><td>&lt;rect&gt;</td></tr>
+  <tr><td>2</td><td>&lt;circle&gt;</td></tr>
+  <tr><td>3</td><td>&lt;ellipse&gt;</td></tr>
+  <tr><td>4</td><td>&lt;line&gt;</td></tr>
+  <tr><td>5</td><td>&lt;polyline&gt;</td></tr>
+  <tr><td>6</td><td>&lt;polygon&gt;</td></tr>
+  <tr><td>7</td><td>&lt;path&gt;</td></tr>
+</table>
+
+<svg width="760" height="580" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="black" stroke-width="2">
+  <!-- 1. rect -->
+  <rect x="30" y="30" width="80" height="60" fill="coral" />
+
+  <!-- 2. circle -->
+  <circle cx="160" cy="60" r="40" fill="steelblue" />
+
+  <!-- 3. ellipse -->
+  <ellipse cx="270" cy="60" rx="50" ry="30" fill="seagreen" />
+
+  <!-- 4. line -->
+  <line x1="30" y1="160" x2="130" y2="200" stroke="darkorange" stroke-width="6" />
+
+  <!-- 5. polyline -->
+  <polyline points="200,150 240,220 280,160 320,210" fill="gold" stroke="saddlebrown" stroke-width="3" />
+
+  <!-- 6. polygon -->
+  <polygon points="400,150 440,220 500,210 480,160" fill="mediumpurple" stroke="indigo" stroke-width="3" />
+
+  <!-- 7. path -->
+  <path d="M 30 280 Q 80 230 130 280 T 230 280" stroke="crimson" stroke-width="4" fill="none" />
+  <path d="M 30 350 L 80 290 L 130 350 Z" fill="teal" opacity="0.8" />
+</svg>
+
+</body>
+</html>
