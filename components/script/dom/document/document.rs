@@ -3423,6 +3423,10 @@ impl<'dom> LayoutDom<'dom, Document> {
         let matching_elements = id_map.get(id).map(Vec::as_slice).unwrap_or_default();
         unsafe { LayoutDom::to_layout_slice(matching_elements) }
     }
+
+    pub(crate) fn document_url(self) -> ServoUrl {
+        unsafe { self.unsafe_get().url.borrow_for_layout() }.clone()
+    }
 }
 
 // https://html.spec.whatwg.org/multipage/#is-a-registrable-domain-suffix-of-or-is-equal-to

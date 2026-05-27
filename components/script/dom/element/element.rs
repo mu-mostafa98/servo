@@ -14,6 +14,7 @@ use std::{fmt, mem};
 
 use app_units::Au;
 use cssparser::match_ignore_ascii_case;
+use cssparser::{Parser, ParserInput};
 use devtools_traits::{AttrInfo, DomMutation, ScriptToDevtoolsControlMsg};
 use dom_struct::dom_struct;
 use euclid::Rect;
@@ -37,6 +38,7 @@ use style::applicable_declarations::ApplicableDeclarationBlock;
 use style::attr::{AttrIdentifier, AttrValue, LengthOrPercentageOrAuto};
 use style::context::QuirksMode;
 use style::invalidation::element::restyle_hints::RestyleHint;
+use style::parser::ParserContext;
 use style::properties::longhands::{
     self, background_image, border_spacing, color, font_family, font_size,
 };
@@ -47,15 +49,14 @@ use style::properties::{
 use style::rule_tree::{CascadeLevel, CascadeOrigin};
 use style::selector_parser::{RestyleDamage, SelectorParser, Snapshot};
 use style::shared_lock::Locked;
-use style::stylesheets::layer_rule::LayerOrder;
-use style::stylesheets::{CssRuleType, UrlExtraData};
+use style::stylesheets::{layer_rule::LayerOrder, CssRuleType, Origin, UrlExtraData};
 use style::values::computed::Overflow;
 use style::values::generics::NonNegative;
 use style::values::generics::position::PreferredRatio;
 use style::values::generics::ratio::Ratio;
 use style::values::{AtomIdent, CSSFloat, GenericAtomIdent, computed, specified};
 use style::{ArcSlice, CaseSensitivityExt, dom_apis, thread_state};
-use style_traits::CSSPixel;
+use style_traits::{CSSPixel, ParsingMode};
 use stylo_atoms::Atom;
 use stylo_dom::ElementState;
 use xml5ever::serialize::TraversalScope::{
@@ -157,6 +158,7 @@ use crate::dom::sanitizer::Sanitizer;
 use crate::dom::scrolling_box::{ScrollAxisState, ScrollingBox};
 use crate::dom::servoparser::ServoParser;
 use crate::dom::shadowroot::{IsUserAgentWidget, ShadowRoot};
+use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 use crate::dom::text::Text;
 use crate::dom::trustedtypes::trustedhtml::TrustedHTML;
@@ -1338,18 +1340,109 @@ impl<'dom> LayoutDom<'dom, Element> {
             },
         }
 
-        if let Some(this) = self.downcast::<SVGSVGElement>() {
-            let data = this.data();
-            if let Some(width) = data.width.and_then(AttrValue::as_length_percentage) {
+        if self.downcast::<SVGSVGElement>().is_some() {
+            if let Some(width) = self
+                .get_attr_for_layout(&ns!(), &local_name!("width"))
+                .and_then(AttrValue::as_length_percentage)
+            {
                 push(PropertyDeclaration::Width(
                     specified::Size::LengthPercentage(NonNegative(width.clone())),
                 ));
             }
-            if let Some(height) = data.height.and_then(AttrValue::as_length_percentage) {
+            if let Some(height) = self
+                .get_attr_for_layout(&ns!(), &local_name!("height"))
+                .and_then(AttrValue::as_length_percentage)
+            {
                 push(PropertyDeclaration::Height(
                     specified::Size::LengthPercentage(NonNegative(height.clone())),
                 ));
             }
+        }
+
+        // SVG presentation attributes as CSS property declarations.
+        if self.downcast::<SVGElement>().is_some() {
+            let url_data = UrlExtraData(document.document_url().get_arc());
+            let svg_parsing_mode =
+                ParsingMode::ALLOW_UNITLESS_LENGTH | ParsingMode::ALLOW_ALL_NUMERIC_VALUES;
+            let parser_context = ParserContext::new(
+                Origin::Author,
+                &url_data,
+                Some(CssRuleType::Style),
+                svg_parsing_mode,
+                document.quirks_mode(),
+                Default::default(),
+                None,
+                None,
+                Default::default(),
+            );
+
+            macro_rules! svg_attr {
+                ($attr:tt => $property:ident) => {
+                    if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!($attr)) {
+                        let mut input = ParserInput::new(val);
+                        let mut parser = Parser::new(&mut input);
+                        if let Ok(decl) = parser.parse_entirely(|p| {
+                            style::properties::longhands::$property::parse_declared(
+                                &parser_context, p,
+                            )
+                        }) {
+                            push(decl);
+                        }
+                    }
+                };
+            }
+
+            svg_attr!("fill" => fill);
+            svg_attr!("fill-opacity" => fill_opacity);
+            svg_attr!("fill-rule" => fill_rule);
+            svg_attr!("stroke" => stroke);
+            svg_attr!("stroke-width" => stroke_width);
+            svg_attr!("stroke-linecap" => stroke_linecap);
+            svg_attr!("stroke-linejoin" => stroke_linejoin);
+            svg_attr!("stroke-dasharray" => stroke_dasharray);
+            svg_attr!("stroke-dashoffset" => stroke_dashoffset);
+            svg_attr!("stroke-miterlimit" => stroke_miterlimit);
+            svg_attr!("stroke-opacity" => stroke_opacity);
+            svg_attr!("clip-rule" => clip_rule);
+            svg_attr!("color-interpolation" => color_interpolation);
+            svg_attr!("color-interpolation-filters" => color_interpolation_filters);
+            svg_attr!("shape-rendering" => shape_rendering);
+            svg_attr!("text-anchor" => text_anchor);
+            svg_attr!("clip-path" => clip_path);
+            svg_attr!("opacity" => opacity);
+            svg_attr!("color" => color);
+            svg_attr!("visibility" => visibility);
+            svg_attr!("pointer-events" => pointer_events);
+            svg_attr!("image-rendering" => image_rendering);
+            svg_attr!("text-rendering" => text_rendering);
+            svg_attr!("font-family" => font_family);
+            svg_attr!("font-style" => font_style);
+            svg_attr!("font-weight" => font_weight);
+            svg_attr!("font-size" => font_size);
+            svg_attr!("letter-spacing" => letter_spacing);
+            svg_attr!("word-spacing" => word_spacing);
+            svg_attr!("direction" => direction);
+            svg_attr!("unicode-bidi" => unicode_bidi);
+            svg_attr!("writing-mode" => writing_mode);
+            svg_attr!("cx" => cx);
+            svg_attr!("cy" => cy);
+            svg_attr!("r" => r);
+            svg_attr!("rx" => rx);
+            svg_attr!("ry" => ry);
+            svg_attr!("x" => x);
+            svg_attr!("y" => y);
+            svg_attr!("d" => d);
+            svg_attr!("vector-effect" => vector_effect);
+            svg_attr!("marker-start" => marker_start);
+            svg_attr!("marker-mid" => marker_mid);
+            svg_attr!("marker-end" => marker_end);
+            svg_attr!("paint-order" => paint_order);
+            svg_attr!("stop-color" => stop_color);
+            svg_attr!("stop-opacity" => stop_opacity);
+            svg_attr!("flood-color" => flood_color);
+            svg_attr!("flood-opacity" => flood_opacity);
+            svg_attr!("lighting-color" => lighting_color);
+            svg_attr!("mask-type" => mask_type);
         }
 
         // Aspect ratio when providing both width and height.
