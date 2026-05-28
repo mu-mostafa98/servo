@@ -7,7 +7,8 @@ use webrender_api::ColorF;
 
 use crate::lengths::SvgLength;
 use crate::shapes::{
-    FillParams, ParsedGeometry, StrokeParams, SvgLineCap, SvgLineJoin, SvgTag,
+    FillParams, FillRule, Geometry, NodeEffects, RenderHints, StrokeParams, SvgLineCap,
+    SvgLineJoin, SvgTag, VectorEffect, Visibility,
 };
 use crate::{path, points};
 
@@ -19,7 +20,11 @@ pub fn extract_fill_params(style: &ComputedValues) -> FillParams {
         SVGOpacity::Opacity(o) => o,
         _ => 1.0,
     };
-    FillParams { color, opacity }
+    let fill_rule = match style.get_inherited_svg().clip_rule {
+        style::computed_values::clip_rule::T::Nonzero => FillRule::NonZero,
+        style::computed_values::clip_rule::T::Evenodd => FillRule::EvenOdd,
+    };
+    FillParams { color, opacity, fill_rule }
 }
 
 /// Extract stroke parameters from computed style.
@@ -101,56 +106,91 @@ pub fn extract_opacity(style: &ComputedValues) -> f32 {
     style.get_effects().opacity
 }
 
+/// Extract rendering hints from computed style.
+pub fn extract_render_hints(_style: &ComputedValues) -> RenderHints {
+    // TODO: Extract vector_effect from style once the property is exposed
+    // on the appropriate style struct (SVG or InheritedSVG).
+    RenderHints::default()
+}
+
+/// Extract visibility from computed style.
+pub fn extract_visibility(style: &ComputedValues) -> Visibility {
+    use style::computed_values::visibility::T as VisibilityStyle;
+    match style.get_inherited_box().visibility {
+        VisibilityStyle::Visible => Visibility::Visible,
+        VisibilityStyle::Hidden => Visibility::Hidden,
+        VisibilityStyle::Collapse => Visibility::Collapse,
+    }
+}
+
+/// Extract node effects (transform, clip-path, mask) from DOM attributes.
+pub fn extract_effects(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Box<NodeEffects>> {
+    let transform = get_attr("transform")
+        .and_then(|s| crate::transform::parse_transform(&s));
+
+    let clip_path = get_attr("clip-path")
+        .map(|s| s.to_string());
+
+    let mask = get_attr("mask")
+        .map(|s| s.to_string());
+
+    if transform.is_some() || clip_path.is_some() || mask.is_some() {
+        Some(Box::new(NodeEffects { transform, clip_path, mask }))
+    } else {
+        None
+    }
+}
+
 /// Extract geometry for a given SVG tag by reading DOM attributes.
-pub fn extract_geometry(tag: SvgTag, get_attr: &dyn Fn(&str) -> Option<String>) -> ParsedGeometry {
+pub fn extract_geometry(tag: &SvgTag, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Box<Geometry>> {
     match tag {
-        SvgTag::Rect => ParsedGeometry::Rect {
+        SvgTag::Shape(Geometry::Rect { .. }) => Some(Box::new(Geometry::Rect {
             x: get_attr("x").and_then(|s| SvgLength::parse(&s)),
             y: get_attr("y").and_then(|s| SvgLength::parse(&s)),
             width: get_attr("width").and_then(|s| SvgLength::parse(&s)),
             height: get_attr("height").and_then(|s| SvgLength::parse(&s)),
             rx: get_attr("rx").and_then(|s| SvgLength::parse(&s)),
             ry: get_attr("ry").and_then(|s| SvgLength::parse(&s)),
-        },
-        SvgTag::Circle => ParsedGeometry::Circle {
+        })),
+        SvgTag::Shape(Geometry::Circle { .. }) => Some(Box::new(Geometry::Circle {
             cx: get_attr("cx").and_then(|s| SvgLength::parse(&s)),
             cy: get_attr("cy").and_then(|s| SvgLength::parse(&s)),
             r: get_attr("r").and_then(|s| SvgLength::parse(&s)),
-        },
-        SvgTag::Ellipse => ParsedGeometry::Ellipse {
+        })),
+        SvgTag::Shape(Geometry::Ellipse { .. }) => Some(Box::new(Geometry::Ellipse {
             cx: get_attr("cx").and_then(|s| SvgLength::parse(&s)),
             cy: get_attr("cy").and_then(|s| SvgLength::parse(&s)),
             rx: get_attr("rx").and_then(|s| SvgLength::parse(&s)),
             ry: get_attr("ry").and_then(|s| SvgLength::parse(&s)),
-        },
-        SvgTag::Line => ParsedGeometry::Line {
+        })),
+        SvgTag::Shape(Geometry::Line { .. }) => Some(Box::new(Geometry::Line {
             x1: get_attr("x1").and_then(|s| SvgLength::parse(&s)),
             y1: get_attr("y1").and_then(|s| SvgLength::parse(&s)),
             x2: get_attr("x2").and_then(|s| SvgLength::parse(&s)),
             y2: get_attr("y2").and_then(|s| SvgLength::parse(&s)),
-        },
-        SvgTag::Polygon => {
+        })),
+        SvgTag::Shape(Geometry::Polygon { .. }) => {
             let pts = get_attr("points").and_then(|s| points::parse_points(&s));
             match pts {
-                Some(p) => ParsedGeometry::Polygon { points: p },
-                None => ParsedGeometry::None,
+                Some(p) => Some(Box::new(Geometry::Polygon { points: p })),
+                None => None,
             }
         },
-        SvgTag::Polyline => {
+        SvgTag::Shape(Geometry::Polyline { .. }) => {
             let pts = get_attr("points").and_then(|s| points::parse_points(&s));
             match pts {
-                Some(p) => ParsedGeometry::Polyline { points: p },
-                None => ParsedGeometry::None,
+                Some(p) => Some(Box::new(Geometry::Polyline { points: p })),
+                None => None,
             }
         },
-        SvgTag::Path => {
+        SvgTag::Shape(Geometry::Path { .. }) => {
             let p = get_attr("d").and_then(|s| path::parse_path(&s));
             match p {
-                Some(p) => ParsedGeometry::Path { path: p },
-                None => ParsedGeometry::None,
+                Some(p) => Some(Box::new(Geometry::Path { path: p })),
+                None => None,
             }
         },
-        _ => ParsedGeometry::None,
+        _ => None,
     }
 }
 

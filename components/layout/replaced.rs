@@ -261,26 +261,18 @@ impl ReplacedContents {
                     .map(|s| s.to_owned())
             };
 
-            let geometry = svg_engine::extract_geometry(tag, &get_attr);
+            let geometry = svg_engine::extract_geometry(&tag, &get_attr);
             let fill = svg_engine::extract_fill_params(&style);
             let stroke = svg_engine::extract_stroke_params(&style);
             let opacity = svg_engine::extract_opacity(&style);
-
-            let transform = element
-                .attribute_as_str(&ns!(), &LocalName::from("transform"))
-                .and_then(svg_engine::parse_transform);
-
-            let clip_path = element
-                .attribute_as_str(&ns!(), &LocalName::from("clip-path"))
-                .map(|s| s.to_string());
+            let effects = svg_engine::extract_effects(&get_attr);
 
             inputs.push(SvgRenderInput {
                 tag,
                 geometry,
                 fill,
                 stroke,
-                transform,
-                clip_path,
+                effects,
                 opacity,
             });
         }

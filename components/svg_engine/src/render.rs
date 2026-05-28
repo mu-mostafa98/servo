@@ -5,8 +5,7 @@ use webrender_api::{
     units::{LayoutPoint, LayoutRect, LayoutSideOffsets, LayoutSize},
 };
 
-use crate::lengths::SvgLength;
-use crate::shapes::{ParsedGeometry, SvgRenderInput, SvgTag};
+use crate::shapes::{Geometry, SvgRenderInput, SvgTag};
 
 /// Render a complete SVG scene (list of render inputs) into the WebRender display list.
 pub fn render_svg_element(
@@ -32,11 +31,21 @@ fn render_one(
     parent_clip_chain_id: ClipChainId,
     wr: &mut webrender_api::DisplayListBuilder,
 ) {
+    let Some(geom) = input.extract_geometry() else { return };
+
     match input.tag {
-        SvgTag::Rect => render_rect(&input.geometry, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr),
-        SvgTag::Circle => render_circle(&input.geometry, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr),
-        SvgTag::Ellipse => render_ellipse(&input.geometry, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr),
-        SvgTag::Line => render_line(&input.geometry, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr),
+        SvgTag::Shape(Geometry::Rect { .. }) => {
+            render_rect(geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        },
+        SvgTag::Shape(Geometry::Circle { .. }) => {
+            render_circle(geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        },
+        SvgTag::Shape(Geometry::Ellipse { .. }) => {
+            render_ellipse(geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        },
+        SvgTag::Shape(Geometry::Line { .. }) => {
+            render_line(geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        },
         // Path, Polyline, Polygon — no native WR primitive, skip for Phase 1
         _ => {}
     }
@@ -60,12 +69,12 @@ struct ResolvedLine {
     x1: f32, y1: f32, x2: f32, y2: f32,
 }
 
-fn resolve_len(v: &Option<SvgLength>, ref_len: f32, default: f32) -> f32 {
+fn resolve_len(v: &Option<crate::lengths::SvgLength>, ref_len: f32, default: f32) -> f32 {
     v.as_ref().map(|l| l.resolve(ref_len)).unwrap_or(default)
 }
 
-fn resolve_rect(geom: &ParsedGeometry, viewport: LayoutSize) -> Option<ResolvedRect> {
-    if let ParsedGeometry::Rect { x, y, width, height, rx, ry } = geom {
+fn resolve_rect(geom: &Geometry, viewport: LayoutSize) -> Option<ResolvedRect> {
+    if let Geometry::Rect { x, y, width, height, rx, ry } = geom {
         let w = resolve_len(width, viewport.width, viewport.width);
         let h = resolve_len(height, viewport.height, viewport.height);
         if w <= 0.0 || h <= 0.0 {
@@ -83,8 +92,8 @@ fn resolve_rect(geom: &ParsedGeometry, viewport: LayoutSize) -> Option<ResolvedR
     }
 }
 
-fn resolve_circle(geom: &ParsedGeometry, viewport: LayoutSize) -> Option<ResolvedCircle> {
-    if let ParsedGeometry::Circle { cx, cy, r } = geom {
+fn resolve_circle(geom: &Geometry, viewport: LayoutSize) -> Option<ResolvedCircle> {
+    if let Geometry::Circle { cx, cy, r } = geom {
         let r = resolve_len(r, viewport.width.min(viewport.height), 0.0);
         if r <= 0.0 {
             return None;
@@ -99,8 +108,8 @@ fn resolve_circle(geom: &ParsedGeometry, viewport: LayoutSize) -> Option<Resolve
     }
 }
 
-fn resolve_ellipse(geom: &ParsedGeometry, viewport: LayoutSize) -> Option<ResolvedEllipse> {
-    if let ParsedGeometry::Ellipse { cx, cy, rx, ry } = geom {
+fn resolve_ellipse(geom: &Geometry, viewport: LayoutSize) -> Option<ResolvedEllipse> {
+    if let Geometry::Ellipse { cx, cy, rx, ry } = geom {
         let rx = resolve_len(rx, viewport.width, 0.0);
         let ry = resolve_len(ry, viewport.height, 0.0);
         if rx <= 0.0 || ry <= 0.0 {
@@ -116,8 +125,8 @@ fn resolve_ellipse(geom: &ParsedGeometry, viewport: LayoutSize) -> Option<Resolv
     }
 }
 
-fn resolve_line(geom: &ParsedGeometry, viewport: LayoutSize) -> Option<ResolvedLine> {
-    if let ParsedGeometry::Line { x1, y1, x2, y2 } = geom {
+fn resolve_line(geom: &Geometry, viewport: LayoutSize) -> Option<ResolvedLine> {
+    if let Geometry::Line { x1, y1, x2, y2 } = geom {
         Some(ResolvedLine {
             x1: resolve_len(x1, viewport.width, 0.0),
             y1: resolve_len(y1, viewport.height, 0.0),
@@ -163,7 +172,7 @@ fn make_clip_chain(
 // ── Shape renderers ──────────────────────────────────────────────────
 
 fn render_rect(
-    geom: &ParsedGeometry,
+    geom: &Geometry,
     input: &SvgRenderInput,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
@@ -237,7 +246,7 @@ fn render_rect(
 }
 
 fn render_circle(
-    geom: &ParsedGeometry,
+    geom: &Geometry,
     input: &SvgRenderInput,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
@@ -254,7 +263,7 @@ fn render_circle(
 }
 
 fn render_ellipse(
-    geom: &ParsedGeometry,
+    geom: &Geometry,
     input: &SvgRenderInput,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
@@ -330,7 +339,7 @@ fn render_ellipse_common(
 }
 
 fn render_line(
-    geom: &ParsedGeometry,
+    geom: &Geometry,
     input: &SvgRenderInput,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
