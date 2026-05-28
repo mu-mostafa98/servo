@@ -1,6 +1,7 @@
 use webrender_api::{
     BorderDetails, BorderRadius, BorderSide, BorderStyle, ClipChainId, ClipMode,
-    CommonItemProperties, ComplexClipRegion, NormalBorder, PrimitiveFlags, SpatialId,
+    CommonItemProperties, ComplexClipRegion, NormalBorder, PrimitiveFlags, PropertyBinding,
+    ReferenceFrameKind, SpatialId, SpatialTreeItemKey, TransformStyle,
     units::{LayoutPoint, LayoutRect, LayoutSideOffsets, LayoutSize},
 };
 
@@ -291,7 +292,7 @@ fn render_ellipse_common(
         wr.push_rect(&common, bounds, fc);
     }
 
-    // Stroke — ring clip approach
+    // Stroke via border (cleaner than ring clip — native AA)
     if input.stroke.width > 0.0 {
         if let Some(stroke_color) = &input.stroke.color {
             let mut sc = *stroke_color;
@@ -300,53 +301,30 @@ fn render_ellipse_common(
                 return;
             }
 
-            let outer_rx = rx + input.stroke.width / 2.0;
-            let outer_ry = ry + input.stroke.width / 2.0;
+            let sw = input.stroke.width.max(0.001);
+            let outer_rx = rx + sw / 2.0;
+            let outer_ry = ry + sw / 2.0;
             let outer_size = LayoutSize::new(outer_rx * 2.0, outer_ry * 2.0);
             let outer_bounds = LayoutRect::from_origin_and_size(
                 LayoutPoint::new(center.x - outer_rx, center.y - outer_ry),
                 outer_size,
             );
-            let inner_rx = (rx - input.stroke.width / 2.0).max(0.0);
-            let inner_ry = (ry - input.stroke.width / 2.0).max(0.0);
 
-            if inner_rx <= 0.0 || inner_ry <= 0.0 {
-                // Stroke is wider than radius — just fill the whole shape
-                let clip_chain = make_clip_chain(
-                    spatial_id, outer_bounds,
-                    BorderRadius::uniform_size(LayoutSize::new(outer_rx, outer_ry)),
-                    ClipMode::Clip, parent_clip_chain_id, wr,
-                );
-                let common = make_common(outer_bounds, spatial_id, clip_chain);
-                wr.push_rect(&common, outer_bounds, sc);
-                return;
-            }
-
-            // Outer clip (inside the outer ellipse) + Inner clip (outside inner ellipse) = ring
-            let outer_clip_id = wr.define_clip_rounded_rect(
-                spatial_id,
-                ComplexClipRegion {
-                    rect: outer_bounds,
-                    radii: BorderRadius::uniform_size(LayoutSize::new(outer_rx, outer_ry)),
-                    mode: ClipMode::Clip,
-                },
+            let border_side = BorderSide { color: sc, style: BorderStyle::Solid };
+            let common = make_common(outer_bounds, spatial_id, parent_clip_chain_id);
+            wr.push_border(
+                &common,
+                outer_bounds,
+                LayoutSideOffsets::new_all_same(sw),
+                BorderDetails::Normal(NormalBorder {
+                    left: border_side,
+                    right: border_side,
+                    top: border_side,
+                    bottom: border_side,
+                    radius: BorderRadius::uniform_size(LayoutSize::new(outer_rx, outer_ry)),
+                    do_aa: true,
+                }),
             );
-            let inner_clip_id = wr.define_clip_rounded_rect(
-                spatial_id,
-                ComplexClipRegion {
-                    rect: outer_bounds,
-                    radii: BorderRadius::uniform_size(LayoutSize::new(inner_rx, inner_ry)),
-                    mode: ClipMode::ClipOut,
-                },
-            );
-            let parent = if parent_clip_chain_id == ClipChainId::INVALID {
-                None
-            } else {
-                Some(parent_clip_chain_id)
-            };
-            let ring_chain = wr.define_clip_chain(parent, [outer_clip_id, inner_clip_id]);
-            let common = make_common(outer_bounds, spatial_id, ring_chain);
-            wr.push_rect(&common, outer_bounds, sc);
         }
     }
 }
@@ -398,17 +376,38 @@ fn render_line(
         let common = make_common(bounds, spatial_id, parent_clip_chain_id);
         wr.push_rect(&common, bounds, sc);
     } else {
-        // Diagonal line — approximate with a thin rotated rect
-        // Fallback: just draw a rect covering the bounding box
-        let min_x = x1.min(x2);
-        let min_y = y1.min(y2);
-        let max_x = x1.max(x2);
-        let max_y = y1.max(y2);
-        let bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(min_x, min_y),
-            LayoutSize::new(max_x - min_x, (max_y - min_y).max(input.stroke.width)),
+        // Diagonal line — rotated rect via reference frame
+        let dx = x2 - x1;
+        let dy = y2 - y1;
+        let len = (dx * dx + dy * dy).sqrt();
+        let angle = dy.atan2(dx);
+        let mx = (x1 + x2) / 2.0;
+        let my = (y1 + y2) / 2.0;
+
+        use std::sync::atomic::{AtomicU64, Ordering};
+        use webrender_api::euclid::{Angle, Transform3D};
+        static SVG_LINE_KEY: AtomicU64 = AtomicU64::new(1);
+        let key = SVG_LINE_KEY.fetch_add(1, Ordering::Relaxed);
+        let transform = Transform3D::rotation(0.0, 0.0, 1.0, Angle::radians(angle));
+        let line_spatial_id = wr.push_reference_frame(
+            LayoutPoint::new(mx, my),
+            spatial_id,
+            TransformStyle::Flat,
+            PropertyBinding::Value(transform),
+            ReferenceFrameKind::Transform {
+                is_2d_scale_translation: false,
+                should_snap: false,
+                paired_with_perspective: false,
+            },
+            SpatialTreeItemKey::new(0, key),
         );
-        let common = make_common(bounds, spatial_id, parent_clip_chain_id);
-        wr.push_rect(&common, bounds, sc);
+
+        let line_bounds = LayoutRect::from_origin_and_size(
+            LayoutPoint::new(-len / 2.0, -half_w),
+            LayoutSize::new(len, input.stroke.width),
+        );
+        let common = make_common(line_bounds, line_spatial_id, parent_clip_chain_id);
+        wr.push_rect(&common, line_bounds, sc);
+        wr.pop_reference_frame();
     }
 }
