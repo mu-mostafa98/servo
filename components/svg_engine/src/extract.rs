@@ -6,9 +6,10 @@ use style::values::computed::svg::{
 use webrender_api::ColorF;
 
 use crate::lengths::SvgLength;
-use crate::shapes::{
-    FillParams, FillRule, Geometry, NodeEffects, RenderHints, StrokeParams, SvgLineCap,
-    SvgLineJoin, SvgTag, VectorEffect, Visibility,
+use crate::shapes::{Geometry, SvgTag};
+use crate::styles::{
+    FillParams, FillRule, NodeEffects, RenderHints, StrokeParams, SvgLineCap, SvgLineJoin,
+    VectorEffect, Visibility,
 };
 use crate::{path, points};
 
