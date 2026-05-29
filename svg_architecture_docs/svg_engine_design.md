@@ -66,19 +66,12 @@ struct SvgRenderTree {
 
 ### 2.2 SvgRenderNode
 
-`SvgRenderNode` represents a single element instance in the rendering tree. Nodes form a recursive tree structure through the `children` field. Each node stores only the data intrinsic to its element — element type, geometry, fill, and stroke parameters.
+`SvgRenderNode` represents a single element instance in the rendering tree. Nodes form a recursive tree structure through the `children` field. Each node stores only the data intrinsic to its element — element type, a bundled `NodeStyles` struct with all rendering parameters, and child nodes.
 
 ```
 struct SvgRenderNode {
     tag: SvgTag,
-    effects: NodeEffects or null,
-    fill: FillParams,
-    stroke: StrokeParams,
-    hints: RenderHints,
-    opacity: float,
-    visibility: Visibility,
-    display: Display,
-    paint_order: PaintOrder,
+    styles: NodeStyles,
     children: list of SvgRenderNode,
 }
 ```
@@ -86,14 +79,7 @@ struct SvgRenderNode {
 | Field | Type | Description |
 |---|---|---|
 | `tag` | `SvgTag` | Element type discriminant — for shapes, carries the geometry data inline |
-| `effects` | `NodeEffects or null` | Per-element transform, clip-path, and mask; `null` when none are set |
-| `fill` | `FillParams` | Fill color, opacity, and fill rule |
-| `stroke` | `StrokeParams` | Stroke color, width, opacity, linecap, linejoin, dash parameters |
-| `hints` | `RenderHints` | Vector effect and rendering quality flags |
-| `opacity` | `float` | Object opacity for this element (0.0–1.0) |
-| `visibility` | `Visibility` | Whether this element is painted; element remains in rendering tree even when hidden |
-| `display` | `Display` | Whether this element is rendered; `none` skips rendering, but element remains available for `url(#id)` resolution |
-| `paint_order` | `PaintOrder` | Order of fill, stroke, and markers painting operations |
+| `styles` | `NodeStyles` | Bundled rendering parameters — fill, stroke, effects, opacity, hints, visibility, display, and paint order (see Section 3.6) |
 | `children` | `list of SvgRenderNode` | Child nodes in the rendering tree |
 
 ### 2.3 RenderState
@@ -281,6 +267,36 @@ struct NodeEffects {
 
 These three properties are stored as per-element source values rather than being resolved by the style system because they require tree-walk accumulation. The `transform` attribute on a `<g>` element must be composed with child transforms. The `clip-path` and `mask` properties reference definitions by `url(#id)`, resolved during rendering rather than style computation.
 
+### 3.6 NodeStyles
+
+`NodeStyles` bundles all per-element rendering parameters into a single struct carried by each `SvgRenderNode`. This includes paint properties (fill, stroke), rendering hints, opacity, visibility, display mode, paint order, and effects (transform, clip-path, mask).
+
+```
+struct NodeStyles {
+    fill: FillParams,
+    stroke: StrokeParams,
+    hints: RenderHints,
+    opacity: float,
+    visibility: Visibility,
+    display: Display,
+    paint_order: PaintOrder,
+    effects: NodeEffects or null,
+}
+```
+
+| Field | Type | Description |
+|---|---|---|
+| `fill` | `FillParams` | Fill color, opacity, and fill rule |
+| `stroke` | `StrokeParams` | Stroke color, width, opacity, linecap, linejoin, dash parameters |
+| `hints` | `RenderHints` | Vector effect and rendering quality flags |
+| `opacity` | `float` | Object opacity for this element (0.0–1.0) |
+| `visibility` | `Visibility` | Whether this element is painted; element remains in rendering tree even when hidden |
+| `display` | `Display` | Whether this element is rendered; `none` skips rendering, but element remains available for `url(#id)` resolution |
+| `paint_order` | `PaintOrder` | Order of fill, stroke, and markers painting operations |
+| `effects` | `NodeEffects or null` | Per-element transform, clip-path, and mask (Section 3.5); `null` when none are set |
+
+The `effects` field is kept as a separate inner struct (`NodeEffects`) rather than being flattened into `NodeStyles`. This separation reflects their different role during tree traversal: effects (transform, clip-path, mask) are pushed onto and popped from `RenderState` as the tree walker enters and exits containers, while paint properties (fill, stroke) are consumed directly by each node's render function.
+
 ## 4. Architecture Overview
 
 The SVG engine is organized around a core tree-walk loop that traverses the rendering tree, resolves geometry values, manages inherited render state, and dispatches display commands. The architecture separates concerns into four layers, each with a single responsibility.
@@ -365,6 +381,8 @@ match tag {
     _                                → silently skipped (Enhancement/Future)
 }
 ```
+
+Within the shape renderers, `render_circle` delegates to `render_ellipse` by constructing an `Ellipse` geometry with equal radii (`rx = ry = r`). This avoids duplicating the ellipse fill/stroke logic and reflects the geometric relationship that a circle is an ellipse with uniform radius. The dispatch function routes both Circle and Ellipse variants to separate entry points — the delegation is an internal detail of `render_circle`.
 
 ### 4.4 Extensibility
 
