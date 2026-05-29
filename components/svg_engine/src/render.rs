@@ -254,12 +254,16 @@ fn render_circle(
     parent_clip_chain_id: ClipChainId,
     wr: &mut webrender_api::DisplayListBuilder,
 ) {
-    let Some(resolved) = resolve_circle(geom, viewport) else { return };
-    render_ellipse_common(
-        LayoutPoint::new(svg_origin.x + resolved.cx, svg_origin.y + resolved.cy),
-        resolved.r, resolved.r,
-        input, spatial_id, parent_clip_chain_id, wr,
-    );
+    // Circle IS an ellipse with equal radii — delegate to render_ellipse.
+    if let Geometry::Circle { cx, cy, r } = geom {
+        let ellipse_geom = Geometry::Ellipse {
+            cx: *cx,
+            cy: *cy,
+            rx: *r,
+            ry: *r,
+        };
+        render_ellipse(&ellipse_geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+    }
 }
 
 fn render_ellipse(
@@ -272,25 +276,10 @@ fn render_ellipse(
     wr: &mut webrender_api::DisplayListBuilder,
 ) {
     let Some(resolved) = resolve_ellipse(geom, viewport) else { return };
-    render_ellipse_common(
-        LayoutPoint::new(svg_origin.x + resolved.cx, svg_origin.y + resolved.cy),
-        resolved.rx, resolved.ry,
-        input, spatial_id, parent_clip_chain_id, wr,
-    );
-}
-
-fn render_ellipse_common(
-    center: LayoutPoint,
-    rx: f32,
-    ry: f32,
-    input: &SvgRenderInput,
-    spatial_id: SpatialId,
-    parent_clip_chain_id: ClipChainId,
-    wr: &mut webrender_api::DisplayListBuilder,
-) {
-    let size = LayoutSize::new(rx * 2.0, ry * 2.0);
-    let bounds = LayoutRect::from_origin_and_size(LayoutPoint::new(center.x - rx, center.y - ry), size);
-    let radii = BorderRadius::uniform_size(LayoutSize::new(rx, ry));
+    let center = LayoutPoint::new(svg_origin.x + resolved.cx, svg_origin.y + resolved.cy);
+    let size = LayoutSize::new(resolved.rx * 2.0, resolved.ry * 2.0);
+    let bounds = LayoutRect::from_origin_and_size(LayoutPoint::new(center.x - resolved.rx, center.y - resolved.ry), size);
+    let radii = BorderRadius::uniform_size(LayoutSize::new(resolved.rx, resolved.ry));
 
     // Fill
     if let Some(fill_color) = &input.fill.color {
@@ -301,7 +290,7 @@ fn render_ellipse_common(
         wr.push_rect(&common, bounds, fc);
     }
 
-    // Stroke via border (cleaner than ring clip — native AA)
+    // Stroke via border
     if input.stroke.width > 0.0 {
         if let Some(stroke_color) = &input.stroke.color {
             let mut sc = *stroke_color;
@@ -311,8 +300,8 @@ fn render_ellipse_common(
             }
 
             let sw = input.stroke.width.max(0.001);
-            let outer_rx = rx + sw / 2.0;
-            let outer_ry = ry + sw / 2.0;
+            let outer_rx = resolved.rx + sw / 2.0;
+            let outer_ry = resolved.ry + sw / 2.0;
             let outer_size = LayoutSize::new(outer_rx * 2.0, outer_ry * 2.0);
             let outer_bounds = LayoutRect::from_origin_and_size(
                 LayoutPoint::new(center.x - outer_rx, center.y - outer_ry),
