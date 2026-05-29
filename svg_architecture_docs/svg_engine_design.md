@@ -299,7 +299,7 @@ The `effects` field is kept as a separate inner struct (`NodeEffects`) rather th
 
 ## 4. Architecture Overview
 
-The SVG engine is organized around a core tree-walk loop that traverses the rendering tree, resolves geometry values, manages inherited render state, and dispatches display commands. The architecture separates concerns into four layers, each with a single responsibility.
+The SVG engine is organized around a core tree-walk loop that traverses the rendering tree, resolves geometry values, manages inherited render state, and dispatches display commands. The architecture separates concerns into four layers.
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -330,12 +330,12 @@ The tree walker is the central loop of the engine. It receives an `SvgRenderTree
 
 ```
 walk_node(node, render_state):
-    apply node.effects → render_state    // push transform, clip, mask
+    apply node.styles.effects → render_state    // push transform, clip, mask
     resolve node.geometry → concrete values
     dispatch node.tag → render function
     for each child:
         walk_node(child, render_state)
-    revert node.effects → render_state   // pop
+    revert node.styles.effects → render_state   // pop
 
 walk_tree(tree):
     walk_node(tree.root, RenderState::default())
@@ -383,6 +383,8 @@ match tag {
 ```
 
 Within the shape renderers, `render_circle` delegates to `render_ellipse` by constructing an `Ellipse` geometry with equal radii (`rx = ry = r`). This avoids duplicating the ellipse fill/stroke logic and reflects the geometric relationship that a circle is an ellipse with uniform radius. The dispatch function routes both Circle and Ellipse variants to separate entry points — the delegation is an internal detail of `render_circle`.
+
+Note: `render_path`, `render_polyline`, and `render_polygon` are listed in the dispatch table as the intended targets but are not yet implemented (Phase 2). The current dispatch skips these variants with a no-op. The same extensibility pattern in Section 4.4 applies when they are added.
 
 ### 4.4 Extensibility
 
