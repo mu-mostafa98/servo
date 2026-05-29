@@ -2,9 +2,7 @@ use kurbo::{BezPath, Point as KurboPoint};
 use malloc_size_of_derive::MallocSizeOf;
 
 use crate::lengths::SvgLength;
-use crate::styles::{
-    FillParams, NodeEffects, PaintOrder, RenderHints, StrokeParams, Visibility, Display,
-};
+use crate::styles::{FillParams, NodeEffects, NodeStyles, StrokeParams};
 
 // ── SvgTag hierarchy ─────────────────────────────────────────────
 
@@ -140,14 +138,7 @@ pub enum PaintServerTag {
 #[derive(Debug, Clone, MallocSizeOf)]
 pub struct SvgRenderNode {
     pub tag: SvgTag,
-    pub effects: Option<Box<NodeEffects>>,
-    pub fill: FillParams,
-    pub stroke: StrokeParams,
-    pub hints: RenderHints,
-    pub opacity: f32,
-    pub visibility: Visibility,
-    pub display: Display,
-    pub paint_order: PaintOrder,
+    pub styles: NodeStyles,
     pub children: Vec<SvgRenderNode>,
 }
 
@@ -155,14 +146,7 @@ impl SvgRenderNode {
     pub fn new(tag: SvgTag) -> Self {
         Self {
             tag,
-            effects: None,
-            fill: FillParams::default(),
-            stroke: StrokeParams::default(),
-            hints: RenderHints::default(),
-            opacity: 1.0,
-            visibility: Visibility::default(),
-            display: Display::default(),
-            paint_order: PaintOrder::default(),
+            styles: NodeStyles::default(),
             children: Vec::new(),
         }
     }

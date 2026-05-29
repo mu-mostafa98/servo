@@ -148,3 +148,36 @@ pub struct NodeEffects {
     pub clip_path: Option<String>,
     pub mask: Option<String>,
 }
+
+// ── NodeStyles ────────────────────────────────────────────────────
+
+/// Bundled set of all style properties carried by a render node.
+/// This is the single source of truth for per-node rendering parameters,
+/// including effects (transform, clip, mask) which are accumulated into
+/// RenderState during tree walk.
+#[derive(Debug, Clone, MallocSizeOf)]
+pub struct NodeStyles {
+    pub fill: FillParams,
+    pub stroke: StrokeParams,
+    pub hints: RenderHints,
+    pub opacity: f32,
+    pub visibility: Visibility,
+    pub display: Display,
+    pub paint_order: PaintOrder,
+    pub effects: Option<Box<NodeEffects>>,
+}
+
+impl Default for NodeStyles {
+    fn default() -> Self {
+        Self {
+            fill: FillParams::default(),
+            stroke: StrokeParams::default(),
+            hints: RenderHints::default(),
+            opacity: 1.0,
+            visibility: Visibility::default(),
+            display: Display::default(),
+            paint_order: PaintOrder::default(),
+            effects: None,
+        }
+    }
+}
