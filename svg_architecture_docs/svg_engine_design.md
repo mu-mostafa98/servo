@@ -48,7 +48,13 @@ The SVG engine occupies a defined position in the rendering pipeline, acting as 
 
 The data model is organized as a rendering tree that mirrors the hierarchical structure of SVG elements. Each node in the tree stores only what is unique to its element, while inherited state (transform, clip path, mask) is tracked externally during tree traversal.
 
-### 2.1 SvgRenderTree
+### 2.1 Class Diagram
+
+A diagram showing the relationships between the core data classes will be inserted here.
+
+<!-- TODO: Replace with hosted image URL — ![Class Diagram](https://example.com/path/to/svg_engine_class_diagram.png) -->
+
+### 2.2 SvgRenderTree
 
 `SvgRenderTree` is the top-level container for a single SVG document fragment. It holds the root of the rendering tree and viewport information derived from the element's attributes and the `viewBox`.
 
@@ -64,7 +70,7 @@ struct SvgRenderTree {
 | `root` | `SvgRenderNode` | Root of the rendering tree, corresponding to the outermost `<svg>` element |
 | `viewport` | `ViewportInfo` | Resolved viewport dimensions from `width`, `height`, and `viewBox` attributes |
 
-### 2.2 SvgRenderNode
+### 2.3 SvgRenderNode
 
 `SvgRenderNode` represents a single element instance in the rendering tree. Nodes form a recursive tree structure through the `children` field. Each node stores only the data intrinsic to its element — element type, a bundled `NodeStyles` struct with all rendering parameters, and child nodes.
 
@@ -82,7 +88,7 @@ struct SvgRenderNode {
 | `styles` | `NodeStyles` | Bundled rendering parameters — fill, stroke, effects, opacity, hints, visibility, display, and paint order (see Section 3.6) |
 | `children` | `list of SvgRenderNode` | Child nodes in the rendering tree |
 
-### 2.3 RenderState
+### 2.4 RenderState
 
 Inherited rendering parameters (transform, clip path, mask) are not stored on individual nodes. Instead, they are accumulated in a `RenderState` struct that the renderer maintains as it walks the tree. When the renderer enters a container node (such as `<g>` or `<svg>`), it pushes the node's effect onto the render state. When it exits, it pops the previous state.
 
