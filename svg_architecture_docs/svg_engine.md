@@ -56,14 +56,6 @@ walk_tree(tree):
     walk_node(tree.root, RenderState::default())
 ```
 
-For container nodes, the walker:
-1. Pushes the container's `transform` (if any) onto `RenderState.current_transform`
-3. Pushes the container's `clip-path` and `mask` onto the corresponding state fields
-2. Recursively walks children with the updated state
-2. Pops all changes when exiting the container
-
-For shape nodes, the walker resolves geometry and dispatches to the matching render function. The current `RenderState` values are passed through to each render call.
-
 ## 3. Data Model
 
 The data model is organized as a rendering tree that mirrors the hierarchical structure of SVG elements. Each node in the tree stores only what is unique to its element, while inherited state (transform, clip path, mask) is tracked externally during tree traversal.
@@ -103,7 +95,7 @@ struct SvgRenderNode {
 | Field | Type | Description |
 |---|---|---|
 | `tag` | `SvgTag` | Element type discriminant — for shapes, carries the geometry data inline |
-| `styles` | `NodeStyles` | Bundled rendering parameters — fill, stroke, effects, opacity, hints, visibility, display, and paint order (see Section 2.6) |
+| `styles` | `NodeStyles` | Bundled rendering parameters — fill, stroke, effects, opacity, hints, visibility, display, and paint order |
 | `children` | `list of SvgRenderNode` | Child nodes in the rendering tree |
 
 ## 4. Crate Structure
