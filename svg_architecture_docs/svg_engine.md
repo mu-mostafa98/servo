@@ -117,22 +117,20 @@ svg_engine/
 └── Cargo.toml          Crate manifest
 ```
 
-## 5. Development Timeline
+## 5. Development Phases
 
-**Start date**: Jun 1, 2026 (Monday)  
-**End date**: Jul 10, 2026 (Friday)  
 **Total**: 30 working days (Mon–Fri)
 
 ---
 
-| Phase | Duration | Dates |
-|-------|----------|-------|
-| **Phase 1** — Stylo PR + Presentation Attributes + Core Shapes (rect, circle, ellipse, line) | 5 days | Jun 1 (Mon) → Jun 5 (Fri) |
-| **Phase 2** — Path, Polygon, Polyline | 5 days | Jun 8 (Mon) → Jun 12 (Fri) |
-| **Phase 3** — Groups, Transforms, viewBox | 5 days | Jun 15 (Mon) → Jun 19 (Fri) |
-| **Phase 4** — SVG Text | 5 days | Jun 22 (Mon) → Jun 26 (Fri) |
-| **Phase 5** — ClipPath, Mask | 5 days | Jun 29 (Mon) → Jul 3 (Fri) |
-| **Phase 6** — Gradients & Filters | 5 days | Jul 6 (Mon) → Jul 10 (Fri) |
+| Phase | Duration |
+|-------|----------|
+| **Phase 1** — Stylo PR + Presentation Attributes + Core Shapes (rect, circle, ellipse, line) | 5 days |
+| **Phase 2** — Path, Polygon, Polyline | 5 days |
+| **Phase 3** — Groups, Transforms, viewBox | 5 days |
+| **Phase 4** — SVG Text | 5 days |
+| **Phase 5** — ClipPath, Mask | 5 days |
+| **Phase 6** — Gradients & Filters | 5 days |
 
 ---
 
