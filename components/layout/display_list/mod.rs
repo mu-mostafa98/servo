@@ -786,7 +786,7 @@ impl Fragment {
                         let clip_chain_id = builder.clip_chain_id(builder.current_clip_id);
 
                         svg_engine::render_svg_element(
-                            &svg_fragment.scene,
+                            &svg_fragment.tree,
                             rect,
                             spatial_id,
                             clip_chain_id,

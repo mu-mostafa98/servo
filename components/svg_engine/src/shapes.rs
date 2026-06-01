@@ -2,7 +2,7 @@ use kurbo::{BezPath, Point as KurboPoint};
 use malloc_size_of_derive::MallocSizeOf;
 
 use crate::lengths::SvgLength;
-use crate::styles::{FillParams, NodeEffects, NodeStyles, StrokeParams};
+use crate::styles::NodeStyles;
 
 // ── SvgTag hierarchy ─────────────────────────────────────────────
 
@@ -170,32 +170,3 @@ pub struct SvgRenderTree {
     pub viewport: ViewportInfo,
 }
 
-// ── Legacy alias (used by layout integration during transition) ────
-
-/// Flat input for direct rendering (Phase 1). Will be replaced by SvgRenderTree walk.
-#[derive(Debug, Clone, MallocSizeOf)]
-pub struct SvgRenderInput {
-    pub tag: SvgTag,
-    pub geometry: Option<Box<Geometry>>,
-    pub fill: FillParams,
-    pub stroke: StrokeParams,
-    pub effects: Option<Box<NodeEffects>>,
-    pub opacity: f32,
-}
-
-impl SvgRenderInput {
-    pub fn new(tag: SvgTag) -> Self {
-        Self {
-            tag,
-            geometry: None,
-            fill: FillParams::default(),
-            stroke: StrokeParams::default(),
-            effects: None,
-            opacity: 1.0,
-        }
-    }
-
-    pub fn extract_geometry(&self) -> Option<&Geometry> {
-        self.geometry.as_deref()
-    }
-}

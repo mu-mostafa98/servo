@@ -8,13 +8,32 @@ use webrender_api::ColorF;
 use crate::lengths::SvgLength;
 use crate::shapes::{Geometry, SvgTag};
 use crate::styles::{
-    FillParams, FillRule, NodeEffects, RenderHints, StrokeParams, SvgLineCap, SvgLineJoin,
-    VectorEffect, Visibility,
+    FillParams, FillRule, NodeEffects, NodeStyles, RenderHints, StrokeParams, SvgLineCap,
+    SvgLineJoin, Visibility,
 };
 use crate::{path, points};
 
+/// Extract all style parameters into a single NodeStyles struct.
+/// This is the public entry point — the caller gets a complete styles bundle
+/// without needing to call individual extractors.
+pub fn extract_styles(
+    style: &ComputedValues,
+    get_attr: &dyn Fn(&str) -> Option<String>,
+) -> NodeStyles {
+    NodeStyles {
+        fill: extract_fill_params(style),
+        stroke: extract_stroke_params(style),
+        hints: extract_render_hints(style),
+        opacity: extract_opacity(style),
+        visibility: extract_visibility(style),
+        display: crate::styles::Display::Inline,
+        paint_order: crate::styles::PaintOrder::FillStroke,
+        effects: extract_effects(get_attr),
+    }
+}
+
 /// Extract fill parameters from computed style.
-pub fn extract_fill_params(style: &ComputedValues) -> FillParams {
+fn extract_fill_params(style: &ComputedValues) -> FillParams {
     let isvg = style.get_inherited_svg();
     let color = resolve_svg_paint(&isvg.fill, style);
     let opacity = match isvg.fill_opacity {
@@ -29,7 +48,7 @@ pub fn extract_fill_params(style: &ComputedValues) -> FillParams {
 }
 
 /// Extract stroke parameters from computed style.
-pub fn extract_stroke_params(style: &ComputedValues) -> StrokeParams {
+fn extract_stroke_params(style: &ComputedValues) -> StrokeParams {
     use style::computed_values::stroke_linecap::T as LineCapStyle;
     use style::computed_values::stroke_linejoin::T as LineJoinStyle;
 
@@ -103,19 +122,19 @@ pub fn extract_stroke_params(style: &ComputedValues) -> StrokeParams {
 }
 
 /// Extract opacity from computed effects.
-pub fn extract_opacity(style: &ComputedValues) -> f32 {
+fn extract_opacity(style: &ComputedValues) -> f32 {
     style.get_effects().opacity
 }
 
 /// Extract rendering hints from computed style.
-pub fn extract_render_hints(_style: &ComputedValues) -> RenderHints {
+fn extract_render_hints(_style: &ComputedValues) -> RenderHints {
     // TODO: Extract vector_effect from style once the property is exposed
     // on the appropriate style struct (SVG or InheritedSVG).
     RenderHints::default()
 }
 
 /// Extract visibility from computed style.
-pub fn extract_visibility(style: &ComputedValues) -> Visibility {
+fn extract_visibility(style: &ComputedValues) -> Visibility {
     use style::computed_values::visibility::T as VisibilityStyle;
     match style.get_inherited_box().visibility {
         VisibilityStyle::Visible => Visibility::Visible,
@@ -125,7 +144,7 @@ pub fn extract_visibility(style: &ComputedValues) -> Visibility {
 }
 
 /// Extract node effects (transform, clip-path, mask) from DOM attributes.
-pub fn extract_effects(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Box<NodeEffects>> {
+fn extract_effects(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Box<NodeEffects>> {
     let transform = get_attr("transform")
         .and_then(|s| crate::transform::parse_transform(&s));
 

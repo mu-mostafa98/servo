@@ -22,13 +22,13 @@ The SVG engine occupies a defined position in the rendering pipeline, acting as 
 
 ### Boundaries
 
-- **Layout Integration** — provides fully resolved computed styles from Servo's style system (Stylo). All style values have been computed and cascaded before reaching this layer.
+- **Layout Integration** — provides fully resolved computed styles from Servo's style system (Stylo). Iterates the DOM tree to build an `SvgRenderTree`, using helper functions from the SVG engine to extract styles and geometry from Stylo `ComputedValues` and DOM attributes.
 - **svg_engine** — owns the rendering tree and the complete render pipeline. Has no direct access to the DOM or style system. All input arrives as typed data structures.
 - **WebRender** — receives only display primitives. The engine never inspects WebRender internals or manages GPU resources directly.
 
 ## 2. Architecture Overview
 
-The SVG engine is organized around a core tree-walk loop that traverses the rendering tree, resolves geometry values, manages inherited render state, and dispatches display commands. The architecture separates concerns into four layers.
+The SVG engine is organized around a core tree-walk loop that traverses the rendering tree, resolves geometry values, manages inherited render state, and dispatches display commands. The architecture separates concerns into four layers:
 
 ### Architecture
 
@@ -38,23 +38,23 @@ The SVG engine is organized around a core tree-walk loop that traverses the rend
 
 The tree walker is the central loop of the engine. It receives an `SvgRenderTree` and processes nodes in depth-first order:
 
-### walk_node Flowchart
-
-![walk_node Flowchart](svg-engine-tree-walker.jpg)
-
-### Logic
+### Pseudocode
 ```
-walk_node(node, render_state):
+render_node(node, render_state):
     apply node.styles.effects → render_state    // push transform, clip, mask
     resolve node.geometry → concrete values
     dispatch node.tag → render function
     for each child:
-        walk_node(child, render_state)
+        render_node(child, render_state)
     revert node.styles.effects → render_state   // pop
 
-walk_tree(tree):
-    walk_node(tree.root, RenderState::default())
+render_svg_element(tree):
+    render_node(tree.root, RenderState::default())
 ```
+
+### render_node Flowchart
+
+![render_node Flowchart](svg-engine-tree-walker.jpg)
 
 ## 3. Data Model
 
@@ -62,7 +62,7 @@ The data model is organized as a rendering tree that mirrors the hierarchical st
 
 ### Class Diagram
 
-![Class Diagram](svg-engine-class-digrame.jpg)
+![Class Diagram](svg-engine-class-diagram.jpg)
 
 ### SvgRenderTree
 
@@ -106,7 +106,7 @@ The `svg_engine` crate (`components/svg_engine/`) is organized into focused modu
 svg_engine/
 ├── src/
 |   ├── lib.rs          Crate root — module declarations, public re-exports
-│   ├── extract.rs      Extract params from Stylo ComputedValues + DOM attributes
+│   ├── extract.rs      Bridge layer — public extract_styles() and extract_geometry() convert Stylo types to engine types
 │   ├── lengths.rs      SvgLength type — pixel and percentage resolution
 │   ├── path.rs         SVG path data (d attribute) parser
 │   ├── points.rs       SVG points attribute parser
@@ -114,25 +114,25 @@ svg_engine/
 │   ├── shapes.rs       Element types (SvgTag, Geometry), tree types (SvgRenderNode, SvgRenderTree)
 │   ├── styles.rs       Style parameter types (FillParams, StrokeParams, NodeStyles, etc.)
 │   └── transform.rs    SVG transform attribute parser
-└── Cargo.toml
+└── Cargo.toml          Crate manifest
 ```
 
 ## 5. Development Timeline
 
-**Start date**: May 26, 2026 (Tuesday)  
-**End date**: Jul 22, 2026 (Wednesday)  
-**Total**: 42 working days (Mon–Fri)
+**Start date**: Jun 1, 2026 (Monday)  
+**End date**: Jul 10, 2026 (Friday)  
+**Total**: 30 working days (Mon–Fri)
 
 ---
 
 | Phase | Duration | Dates |
 |-------|----------|-------|
-| **Phase 1** — Core Shapes (rect, circle, ellipse, line) | 7 days | May 26 (Tue) → Jun 3 (Wed) |
-| **Phase 2** — Path, Polygon, Polyline | 7 days | Jun 4 (Thu) → Jun 12 (Fri) |
-| **Phase 3** — Groups, Transforms, viewBox | 7 days | Jun 15 (Mon) → Jun 23 (Tue) |
-| **Phase 4** — SVG Text | 7 days | Jun 24 (Wed) → Jul 2 (Thu) |
-| **Phase 5** — ClipPath, Mask | 7 days | Jul 3 (Fri) → Jul 13 (Mon) |
-| **Phase 6** — Gradients & Filters | 7 days | Jul 14 (Tue) → Jul 22 (Wed) |
+| **Phase 1** — Stylo PR + Presentation Attributes + Core Shapes (rect, circle, ellipse, line) | 5 days | Jun 1 (Mon) → Jun 5 (Fri) |
+| **Phase 2** — Path, Polygon, Polyline | 5 days | Jun 8 (Mon) → Jun 12 (Fri) |
+| **Phase 3** — Groups, Transforms, viewBox | 5 days | Jun 15 (Mon) → Jun 19 (Fri) |
+| **Phase 4** — SVG Text | 5 days | Jun 22 (Mon) → Jun 26 (Fri) |
+| **Phase 5** — ClipPath, Mask | 5 days | Jun 29 (Mon) → Jul 3 (Fri) |
+| **Phase 6** — Gradients & Filters | 5 days | Jul 6 (Mon) → Jul 10 (Fri) |
 
 ---
 

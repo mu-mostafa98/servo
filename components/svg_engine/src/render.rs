@@ -5,11 +5,26 @@ use webrender_api::{
     units::{LayoutPoint, LayoutRect, LayoutSideOffsets, LayoutSize},
 };
 
-use crate::shapes::{Geometry, SvgRenderInput, SvgTag};
+use crate::shapes::{Geometry, SvgRenderNode, SvgRenderTree, SvgTag};
+use crate::styles::NodeStyles;
 
-/// Render a complete SVG scene (list of render inputs) into the WebRender display list.
+// ── Render state ─────────────────────────────────────────────────────
+
+/// Accumulated rendering state pushed/popped during tree walk.
+/// Phase 2+ will track transform, clip, mask here.
+pub struct RenderState {}
+
+impl Default for RenderState {
+    fn default() -> Self {
+        Self {}
+    }
+}
+
+// ── Entry point ──────────────────────────────────────────────────────
+
+/// Render an SVG render tree into the WebRender display list.
 pub fn render_svg_element(
-    scene: &[SvgRenderInput],
+    tree: &SvgRenderTree,
     viewport_bounds: LayoutRect,
     spatial_id: SpatialId,
     parent_clip_chain_id: ClipChainId,
@@ -18,36 +33,73 @@ pub fn render_svg_element(
     let viewport_size = LayoutSize::new(viewport_bounds.width(), viewport_bounds.height());
     let origin = viewport_bounds.min;
 
-    for input in scene {
-        render_one(input, &origin, viewport_size, spatial_id, parent_clip_chain_id, wr);
-    }
+    let mut render_state = RenderState::default();
+    render_node(
+        &tree.root,
+        &mut render_state,
+        &origin,
+        viewport_size,
+        spatial_id,
+        parent_clip_chain_id,
+        wr,
+    );
 }
 
-fn render_one(
-    input: &SvgRenderInput,
+// ── Tree walker ──────────────────────────────────────────────────────
+
+/// Recursive tree walk — processes a node and its children depth-first.
+fn render_node(
+    node: &SvgRenderNode,
+    render_state: &mut RenderState,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
     spatial_id: SpatialId,
     parent_clip_chain_id: ClipChainId,
     wr: &mut webrender_api::DisplayListBuilder,
 ) {
-    let Some(geom) = input.extract_geometry() else { return };
+    // Phase 2+: apply node.styles.effects (transform, clip, mask) → push render_state
 
-    match input.tag {
-        SvgTag::Shape(Geometry::Rect { .. }) => {
-            render_rect(geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+    match &node.tag {
+        SvgTag::Shape(geom) => {
+            render_shape(geom, &node.styles, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
         },
-        SvgTag::Shape(Geometry::Circle { .. }) => {
-            render_circle(geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        // Container nodes, Defs, Text, etc. — no self-rendering in Phase 1
+        _ => {},
+    }
+
+    for child in &node.children {
+        render_node(child, render_state, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+    }
+
+    // Phase 2+: revert render_state
+}
+
+// ── Shape dispatcher ─────────────────────────────────────────────────
+
+fn render_shape(
+    geom: &Geometry,
+    styles: &NodeStyles,
+    svg_origin: &LayoutPoint,
+    viewport: LayoutSize,
+    spatial_id: SpatialId,
+    parent_clip_chain_id: ClipChainId,
+    wr: &mut webrender_api::DisplayListBuilder,
+) {
+    match geom {
+        Geometry::Rect { .. } => {
+            render_rect(geom, styles, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
         },
-        SvgTag::Shape(Geometry::Ellipse { .. }) => {
-            render_ellipse(geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        Geometry::Circle { .. } => {
+            render_circle(geom, styles, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
         },
-        SvgTag::Shape(Geometry::Line { .. }) => {
-            render_line(geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        Geometry::Ellipse { .. } => {
+            render_ellipse(geom, styles, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        },
+        Geometry::Line { .. } => {
+            render_line(geom, styles, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
         },
         // Path, Polyline, Polygon — no native WR primitive, skip for Phase 1
-        _ => {}
+        _ => {},
     }
 }
 
@@ -173,7 +225,7 @@ fn make_clip_chain(
 
 fn render_rect(
     geom: &Geometry,
-    input: &SvgRenderInput,
+    styles: &NodeStyles,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
     spatial_id: SpatialId,
@@ -188,7 +240,7 @@ fn render_rect(
     let has_r = resolved.rx > 0.0 || resolved.ry > 0.0;
 
     // Fill
-    if let (Some(fill_color), true) = (&input.fill.color, input.fill.opacity > 0.0) {
+    if let (Some(fill_color), true) = (&styles.fill.color, styles.fill.opacity > 0.0) {
         let fill_chain = if has_r {
             let rx = resolved.rx.max(1.0);
             let ry = resolved.ry.max(1.0);
@@ -198,22 +250,22 @@ fn render_rect(
             parent_clip_chain_id
         };
         let mut fill_color = *fill_color;
-        fill_color.a *= input.fill.opacity;
+        fill_color.a *= styles.fill.opacity;
         let common = make_common(bounds, spatial_id, fill_chain);
         wr.push_rect(&common, bounds, fill_color);
     }
 
     // Stroke via border
-    if let (stroke, true) = (&input.stroke, input.stroke.width > 0.0 && input.stroke.color.is_some()) {
-        let stroke_color = stroke.color.unwrap();
-        if stroke_color.a <= 0.0 || stroke.opacity <= 0.0 {
+    if styles.stroke.width > 0.0 && styles.stroke.color.is_some() {
+        let stroke_color = styles.stroke.color.unwrap();
+        if stroke_color.a <= 0.0 || styles.stroke.opacity <= 0.0 {
             return;
         }
         let mut sc = stroke_color;
-        sc.a *= stroke.opacity;
+        sc.a *= styles.stroke.opacity;
 
         let border_side = BorderSide { color: sc, style: BorderStyle::Solid };
-        let border_width = stroke.width.max(0.001);
+        let border_width = styles.stroke.width.max(0.001);
         let half_border = border_width / 2.0;
 
         // Expand bounds slightly so the border is centered on the rect edge
@@ -247,7 +299,7 @@ fn render_rect(
 
 fn render_circle(
     geom: &Geometry,
-    input: &SvgRenderInput,
+    styles: &NodeStyles,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
     spatial_id: SpatialId,
@@ -262,13 +314,13 @@ fn render_circle(
             rx: *r,
             ry: *r,
         };
-        render_ellipse(&ellipse_geom, input, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
+        render_ellipse(&ellipse_geom, styles, svg_origin, viewport, spatial_id, parent_clip_chain_id, wr);
     }
 }
 
 fn render_ellipse(
     geom: &Geometry,
-    input: &SvgRenderInput,
+    styles: &NodeStyles,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
     spatial_id: SpatialId,
@@ -282,24 +334,24 @@ fn render_ellipse(
     let radii = BorderRadius::uniform_size(LayoutSize::new(resolved.rx, resolved.ry));
 
     // Fill
-    if let Some(fill_color) = &input.fill.color {
+    if let Some(fill_color) = &styles.fill.color {
         let mut fc = *fill_color;
-        fc.a *= input.fill.opacity;
+        fc.a *= styles.fill.opacity;
         let clip_chain = make_clip_chain(spatial_id, bounds, radii, ClipMode::Clip, parent_clip_chain_id, wr);
         let common = make_common(bounds, spatial_id, clip_chain);
         wr.push_rect(&common, bounds, fc);
     }
 
     // Stroke via border
-    if input.stroke.width > 0.0 {
-        if let Some(stroke_color) = &input.stroke.color {
+    if styles.stroke.width > 0.0 {
+        if let Some(stroke_color) = &styles.stroke.color {
             let mut sc = *stroke_color;
-            sc.a *= input.stroke.opacity;
+            sc.a *= styles.stroke.opacity;
             if sc.a <= 0.0 {
                 return;
             }
 
-            let sw = input.stroke.width.max(0.001);
+            let sw = styles.stroke.width.max(0.001);
             let outer_rx = resolved.rx + sw / 2.0;
             let outer_ry = resolved.ry + sw / 2.0;
             let outer_size = LayoutSize::new(outer_rx * 2.0, outer_ry * 2.0);
@@ -329,7 +381,7 @@ fn render_ellipse(
 
 fn render_line(
     geom: &Geometry,
-    input: &SvgRenderInput,
+    styles: &NodeStyles,
     svg_origin: &LayoutPoint,
     viewport: LayoutSize,
     spatial_id: SpatialId,
@@ -338,20 +390,20 @@ fn render_line(
 ) {
     let Some(resolved) = resolve_line(geom, viewport) else { return };
 
-    let Some(stroke_color) = &input.stroke.color else { return };
-    if input.stroke.width <= 0.0 {
+    let Some(stroke_color) = &styles.stroke.color else { return };
+    if styles.stroke.width <= 0.0 {
         return;
     }
 
     let mut sc = *stroke_color;
-    sc.a *= input.stroke.opacity;
+    sc.a *= styles.stroke.opacity;
 
     let x1 = svg_origin.x + resolved.x1;
     let y1 = svg_origin.y + resolved.y1;
     let x2 = svg_origin.x + resolved.x2;
     let y2 = svg_origin.y + resolved.y2;
 
-    let half_w = (input.stroke.width / 2.0).max(0.5);
+    let half_w = (styles.stroke.width / 2.0).max(0.5);
 
     if (x1 - x2).abs() < 0.001 && (y1 - y2).abs() < 0.001 {
         return; // zero-length line
@@ -361,7 +413,7 @@ fn render_line(
         // Vertical line — thin rect
         let bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(x1 - half_w, y1.min(y2)),
-            LayoutSize::new(input.stroke.width, (y1 - y2).abs()),
+            LayoutSize::new(styles.stroke.width, (y1 - y2).abs()),
         );
         let common = make_common(bounds, spatial_id, parent_clip_chain_id);
         wr.push_rect(&common, bounds, sc);
@@ -369,7 +421,7 @@ fn render_line(
         // Horizontal line — thin rect
         let bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(x1.min(x2), y1 - half_w),
-            LayoutSize::new((x1 - x2).abs(), input.stroke.width),
+            LayoutSize::new((x1 - x2).abs(), styles.stroke.width),
         );
         let common = make_common(bounds, spatial_id, parent_clip_chain_id);
         wr.push_rect(&common, bounds, sc);
@@ -402,7 +454,7 @@ fn render_line(
 
         let line_bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(-len / 2.0, -half_w),
-            LayoutSize::new(len, input.stroke.width),
+            LayoutSize::new(len, styles.stroke.width),
         );
         let common = make_common(line_bounds, line_spatial_id, parent_clip_chain_id);
         wr.push_rect(&common, line_bounds, sc);

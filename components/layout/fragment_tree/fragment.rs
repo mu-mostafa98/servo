@@ -26,7 +26,7 @@ use crate::flow::inline::line::TextRunOffsets;
 use crate::geom::{LogicalSides, PhysicalPoint, PhysicalRect};
 use crate::layout_impl::LayoutThread;
 use crate::style_ext::ComputedValuesExt;
-use svg_engine::SvgRenderInput;
+use svg_engine::SvgRenderTree;
 
 #[derive(Clone, MallocSizeOf)]
 pub(crate) enum Fragment {
@@ -103,7 +103,7 @@ pub(crate) struct IFrameFragment {
 pub(crate) struct SvgFragment {
     pub base: BaseFragment,
     #[ignore_malloc_size_of = "Arc does not implement MallocSizeOf"]
-    pub scene: Arc<Vec<SvgRenderInput>>,
+    pub tree: Arc<SvgRenderTree>,
 }
 
 impl Fragment {
@@ -156,8 +156,8 @@ impl Fragment {
             Fragment::Image(fragment) => fragment.print(tree),
             Fragment::IFrame(fragment) => fragment.print(tree),
             Fragment::Svg(fragment) => tree.add_item(format!(
-                "Svg scene with {} inputs",
-                fragment.scene.len()
+                "Svg tree (root: {:?})",
+                fragment.tree.root.tag
             )),
         }
     }

@@ -41,7 +41,7 @@ use crate::sizing::{
     ComputeInlineContentSizes, InlineContentSizesResult, LazySize, SizeConstraint,
 };
 use crate::style_ext::{AspectRatio, Clamp, ComputedValuesExt, LayoutStyle};
-use svg_engine::{SvgRenderInput, SvgTag};
+use svg_engine::{SvgRenderNode, SvgRenderTree, SvgTag, ViewportInfo};
 use crate::{ConstraintSpace, ContainingBlock};
 
 #[derive(Debug, MallocSizeOf)]
@@ -143,7 +143,7 @@ pub(crate) enum ReplacedContentKind {
     Video(VideoInfo),
     SVGElement {
         #[ignore_malloc_size_of = "Arc does not implement MallocSizeOf"]
-        scene: Option<Arc<Vec<SvgRenderInput>>>,
+        tree: Option<Arc<SvgRenderTree>>,
     },
     Audio,
 }
@@ -221,7 +221,7 @@ impl ReplacedContents {
         context: &LayoutContext,
         node: ServoLayoutNode<'_>,
     ) -> (ReplacedContentKind, NaturalSizes) {
-        let scene = Self::build_svg_scene(node, context);
+        let tree = Self::build_svg_tree(node, context);
 
         let natural_size = NaturalSizes {
             width: Some(Au::from_px(300)),
@@ -231,55 +231,73 @@ impl ReplacedContents {
 
         (
             ReplacedContentKind::SVGElement {
-                scene: Some(Arc::new(scene)),
+                tree: Some(Arc::new(tree)),
             },
             natural_size,
         )
     }
 
-    fn build_svg_scene(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Vec<SvgRenderInput> {
-        let mut inputs = Vec::new();
-        Self::collect_svg_render_inputs(node, context, &mut inputs);
-        inputs
+    fn build_svg_tree(node: ServoLayoutNode<'_>, context: &LayoutContext) -> SvgRenderTree {
+        let root = Self::build_svg_node(node, context);
+
+        // Extract width/height from the root <svg> element attributes
+        let (vw, vh) = if let Some(element) = node.as_element() {
+            let el = element;
+            (
+                el.attribute_as_str(&ns!(), &LocalName::from("width"))
+                    .and_then(|s| svg_engine::SvgLength::parse(s))
+                    .map(|l| l.resolve(300.0))
+                    .unwrap_or(300.0),
+                el.attribute_as_str(&ns!(), &LocalName::from("height"))
+                    .and_then(|s| svg_engine::SvgLength::parse(s))
+                    .map(|l| l.resolve(150.0))
+                    .unwrap_or(150.0),
+            )
+        } else {
+            (300.0, 150.0)
+        };
+
+        SvgRenderTree {
+            root,
+            viewport: ViewportInfo {
+                width: vw,
+                height: vh,
+            },
+        }
     }
 
-    fn collect_svg_render_inputs(
-        node: ServoLayoutNode<'_>,
-        context: &LayoutContext,
-        inputs: &mut Vec<SvgRenderInput>,
-    ) {
+    fn build_svg_node(node: ServoLayoutNode<'_>, context: &LayoutContext) -> SvgRenderNode {
+        let Some(element) = node.as_element() else {
+            return SvgRenderNode::new(SvgTag::Unknown);
+        };
 
-        let Some(element) = node.as_element() else { return };
         let tag = SvgTag::from_str(&element.local_name());
+        let style = node.style(&context.style_context);
 
+        let get_attr = |name: &str| {
+            element
+                .attribute_as_str(&ns!(), &LocalName::from(name))
+                .map(|s| s.to_owned())
+        };
+
+        let mut svg_node = SvgRenderNode::new(tag.clone());
+
+        // Extract all styles and effects in a single call
+        svg_node.styles = svg_engine::extract_styles(&style, &get_attr);
+
+        // For shapes, replace placeholder geometry with actual attribute values
         if tag.is_basic_shape() {
-            let style = node.style(&context.style_context);
-
-            let get_attr = |name: &str| {
-                element
-                    .attribute_as_str(&ns!(), &LocalName::from(name))
-                    .map(|s| s.to_owned())
-            };
-
-            let geometry = svg_engine::extract_geometry(&tag, &get_attr);
-            let fill = svg_engine::extract_fill_params(&style);
-            let stroke = svg_engine::extract_stroke_params(&style);
-            let opacity = svg_engine::extract_opacity(&style);
-            let effects = svg_engine::extract_effects(&get_attr);
-
-            inputs.push(SvgRenderInput {
-                tag,
-                geometry,
-                fill,
-                stroke,
-                effects,
-                opacity,
-            });
+            if let Some(geom) = svg_engine::extract_geometry(&tag, &get_attr) {
+                svg_node.tag = SvgTag::Shape(*geom);
+            }
         }
 
+        // Recurse into children to build the full render tree
         for child in node.dom_children() {
-            Self::collect_svg_render_inputs(child, context, inputs);
+            svg_node.children.push(Self::build_svg_node(child, context));
         }
+
+        svg_node
     }
 
     fn from_content_property(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {
@@ -541,14 +559,12 @@ impl ReplacedContents {
                     url: None,
                 }))]
             },
-            ReplacedContentKind::SVGElement { scene } => {
-                if let Some(scene) = scene {
-                    if !scene.is_empty() {
-                        return vec![Fragment::Svg(Arc::new(SvgFragment {
-                            base,
-                            scene: scene.clone(),
-                        }))];
-                    }
+            ReplacedContentKind::SVGElement { tree } => {
+                if let Some(tree) = tree {
+                    return vec![Fragment::Svg(Arc::new(SvgFragment {
+                        base,
+                        tree: tree.clone(),
+                    }))];
                 }
                 vec![]
             },
