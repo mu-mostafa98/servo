@@ -100,6 +100,73 @@ impl VirtualMethods for SVGElement {
             }
         }
     }
+
+    fn attribute_affects_presentational_hints(&self, attr: AttrRef<'_>) -> bool {
+        matches!(attr.local_name(),
+            &local_name!("fill") |
+            &local_name!("fill-opacity") |
+            &local_name!("fill-rule") |
+
+            &local_name!("stroke") |
+            &local_name!("stroke-width") |
+            &local_name!("stroke-linecap") |
+            &local_name!("stroke-linejoin") |
+            &local_name!("stroke-dasharray") |
+            &local_name!("stroke-dashoffset") |
+            &local_name!("stroke-miterlimit") |
+            &local_name!("stroke-opacity") |
+
+            &local_name!("clip-rule") |
+            &local_name!("clip-path") |
+
+            &local_name!("color-interpolation") |
+            &local_name!("color-interpolation-filters") |
+
+            &local_name!("text-anchor") |
+            &local_name!("text-rendering") |
+            &local_name!("font-family") |
+            &local_name!("font-style") |
+            &local_name!("font-weight") |
+            &local_name!("font-size") |
+            &local_name!("letter-spacing") |
+            &local_name!("word-spacing") |
+            &local_name!("direction") |
+            &local_name!("unicode-bidi") |
+            &local_name!("writing-mode") |
+            &local_name!("dominant-baseline") |
+
+            &local_name!("marker-start") |
+            &local_name!("marker-mid") |
+            &local_name!("marker-end") |
+
+            &local_name!("stop-color") |
+            &local_name!("stop-opacity") |
+            
+            &local_name!("flood-color") |
+            &local_name!("flood-opacity") |
+
+            &local_name!("shape-rendering") |
+            &local_name!("opacity") |
+            &local_name!("color") |
+            &local_name!("visibility") |
+            &local_name!("pointer-events") |
+            &local_name!("image-rendering") |
+            &local_name!("vector-effect") |
+            &local_name!("paint-order") |
+            &local_name!("lighting-color") |
+            &local_name!("mask-type") |
+            &local_name!("mask") |
+            
+            &local_name!("cx") |
+            &local_name!("cy") |
+            &local_name!("r") |
+            &local_name!("rx") |
+            &local_name!("ry") |
+            &local_name!("x") |
+            &local_name!("y") |
+            &local_name!("d")
+        ) || self.super_type().unwrap().attribute_affects_presentational_hints(attr)
+    }
 }
 
 impl SVGElementMethods<crate::DomTypeHolder> for SVGElement {

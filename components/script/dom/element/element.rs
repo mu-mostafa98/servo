@@ -13,7 +13,7 @@ use std::sync::atomic::{AtomicUsize, Ordering};
 use std::{fmt, mem};
 
 use app_units::Au;
-use cssparser::match_ignore_ascii_case;
+use cssparser::{match_ignore_ascii_case, Parser, ParserInput};
 use devtools_traits::{AttrInfo, DomMutation, ScriptToDevtoolsControlMsg};
 use dom_struct::dom_struct;
 use euclid::Rect;
@@ -37,6 +37,7 @@ use style::applicable_declarations::ApplicableDeclarationBlock;
 use style::attr::{AttrIdentifier, AttrValue, LengthOrPercentageOrAuto};
 use style::context::QuirksMode;
 use style::invalidation::element::restyle_hints::RestyleHint;
+use style::parser::ParserContext;
 use style::properties::longhands::{
     self, background_image, border_spacing, color, font_family, font_size,
 };
@@ -48,14 +49,14 @@ use style::rule_tree::{CascadeLevel, CascadeOrigin};
 use style::selector_parser::{RestyleDamage, SelectorParser, Snapshot};
 use style::shared_lock::Locked;
 use style::stylesheets::layer_rule::LayerOrder;
-use style::stylesheets::{CssRuleType, UrlExtraData};
+use style::stylesheets::{CssRuleType, Origin, UrlExtraData};
 use style::values::computed::Overflow;
 use style::values::generics::NonNegative;
 use style::values::generics::position::PreferredRatio;
 use style::values::generics::ratio::Ratio;
 use style::values::{AtomIdent, CSSFloat, GenericAtomIdent, computed, specified};
 use style::{ArcSlice, CaseSensitivityExt, dom_apis, thread_state};
-use style_traits::CSSPixel;
+use style_traits::{CSSPixel, ParsingMode};
 use stylo_atoms::Atom;
 use stylo_dom::ElementState;
 use xml5ever::serialize::TraversalScope::{
@@ -163,6 +164,7 @@ use crate::dom::scrolling_box::{ScrollAxisState, ScrollingBox};
 use crate::dom::servoparser::ServoParser;
 use crate::dom::shadowroot::{IsUserAgentWidget, ShadowRoot};
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
+use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::text::Text;
 use crate::dom::trustedtypes::trustedhtml::TrustedHTML;
 use crate::dom::trustedtypes::trustedtypepolicyfactory::TrustedTypePolicyFactory;
@@ -1343,18 +1345,123 @@ impl<'dom> LayoutDom<'dom, Element> {
             },
         }
 
-        if let Some(this) = self.downcast::<SVGSVGElement>() {
-            let data = this.data();
-            if let Some(width) = data.width.and_then(AttrValue::as_length_percentage) {
+        if self.downcast::<SVGSVGElement>().is_some() {
+            if let Some(width) = self.get_attr_for_layout(&ns!(), &local_name!("width"))
+                .and_then(AttrValue::as_length_percentage) {
                 push(PropertyDeclaration::Width(
                     specified::Size::LengthPercentage(NonNegative(width.clone())),
                 ));
             }
-            if let Some(height) = data.height.and_then(AttrValue::as_length_percentage) {
+            if let Some(height) = self.get_attr_for_layout(&ns!(), &local_name!("height"))
+                .and_then(AttrValue::as_length_percentage) {
                 push(PropertyDeclaration::Height(
                     specified::Size::LengthPercentage(NonNegative(height.clone())),
                 ));
             }
+        }
+
+        if self.downcast::<SVGElement>().is_some() {
+            let url_data = UrlExtraData(document.document_url().get_arc());
+            let parsing_mode =  ParsingMode::ALLOW_UNITLESS_LENGTH | ParsingMode::ALLOW_ALL_NUMERIC_VALUES;
+            let parser_context = ParserContext::new(
+                Origin::Author,
+                &url_data,
+                Some(CssRuleType::Style),
+                parsing_mode,
+                document.quirks_mode(),
+                Default::default(),
+                None,
+                None,
+                Default::default()
+            );
+
+            macro_rules! attr_to_css_decl {
+                ($attr_name:tt => $css_property:ident) => {
+                    if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!($attr_name)) {
+                        let mut input = ParserInput::new(val);
+                        let mut parser = Parser::new(&mut input);
+                        if let Ok(decl) = parser.parse_entirely(|p| {
+                            style::properties::longhands::$css_property::parse_declared(&parser_context, p)
+                        }) {
+                            push(decl);
+                        }
+                    }
+                };
+            }
+
+            attr_to_css_decl!("fill" => fill);
+            attr_to_css_decl!("fill-opacity" => fill_opacity);
+            attr_to_css_decl!("fill-rule" => fill_rule);
+
+            attr_to_css_decl!("stroke" => stroke);
+            attr_to_css_decl!("stroke-width" => stroke_width);
+            attr_to_css_decl!("stroke-linecap" => stroke_linecap);
+            attr_to_css_decl!("stroke-linejoin" => stroke_linejoin);
+            attr_to_css_decl!("stroke-dasharray" => stroke_dasharray);
+            attr_to_css_decl!("stroke-dashoffset" => stroke_dashoffset);
+            attr_to_css_decl!("stroke-miterlimit" => stroke_miterlimit);
+            attr_to_css_decl!("stroke-opacity" => stroke_opacity);
+
+            attr_to_css_decl!("clip-rule" => clip_rule);
+            attr_to_css_decl!("clip-path" => clip_path);
+
+            attr_to_css_decl!("color-interpolation" => color_interpolation);
+            attr_to_css_decl!("color-interpolation-filters" => color_interpolation_filters);
+
+            attr_to_css_decl!("text-anchor" => text_anchor);
+            attr_to_css_decl!("text-rendering" => text_rendering);
+            attr_to_css_decl!("font-family" => font_family);
+            attr_to_css_decl!("font-style" => font_style);
+            attr_to_css_decl!("font-weight" => font_weight);
+            attr_to_css_decl!("font-size" => font_size);
+            attr_to_css_decl!("letter-spacing" => letter_spacing);
+            attr_to_css_decl!("word-spacing" => word_spacing);
+            attr_to_css_decl!("direction" => direction);
+            attr_to_css_decl!("unicode-bidi" => unicode_bidi);
+            attr_to_css_decl!("writing-mode" => writing_mode);
+            attr_to_css_decl!("dominant-baseline" => dominant_baseline);
+
+            attr_to_css_decl!("marker-start" => marker_start);
+            attr_to_css_decl!("marker-mid" => marker_mid);
+            attr_to_css_decl!("marker-end" => marker_end);
+
+            attr_to_css_decl!("stop-color" => stop_color);
+            attr_to_css_decl!("stop-opacity" => stop_opacity);
+            
+            attr_to_css_decl!("flood-color" => flood_color);
+            attr_to_css_decl!("flood-opacity" => flood_opacity);
+
+            attr_to_css_decl!("shape-rendering" => shape_rendering);
+            attr_to_css_decl!("opacity" => opacity);
+            attr_to_css_decl!("color" => color);
+            attr_to_css_decl!("visibility" => visibility);
+            attr_to_css_decl!("pointer-events" => pointer_events);
+            attr_to_css_decl!("image-rendering" => image_rendering);
+            attr_to_css_decl!("vector-effect" => vector_effect);
+            attr_to_css_decl!("paint-order" => paint_order);
+            attr_to_css_decl!("lighting-color" => lighting_color);
+            attr_to_css_decl!("mask-type" => mask_type);
+            attr_to_css_decl!("mask" => mask_image);
+
+            attr_to_css_decl!("cx" => cx);
+            attr_to_css_decl!("cy" => cy);
+            attr_to_css_decl!("r" => r);
+            attr_to_css_decl!("rx" => rx);
+            attr_to_css_decl!("ry" => ry);
+            attr_to_css_decl!("x" => x);
+            attr_to_css_decl!("y" => y);
+            
+            if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!("d")) {
+                let path_value = format!("path(\"{}\")", val);
+                let mut input = ParserInput::new(&path_value);
+                let mut parser = Parser::new(&mut input);
+                if let Ok(decl) = parser.parse_entirely(|p| {
+                    style::properties::longhands::d::parse_declared(&parser_context, p)
+                }) {
+                    push(decl);
+                }
+            }
+
         }
 
         // Aspect ratio when providing both width and height.
