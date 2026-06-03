@@ -1413,6 +1413,7 @@ impl<'dom> LayoutDom<'dom, Element> {
             attr_to_css_decl!("font-family" => font_family);
             attr_to_css_decl!("font-style" => font_style);
             attr_to_css_decl!("font-weight" => font_weight);
+            attr_to_css_decl!("font-stretch" => font_stretch);
             attr_to_css_decl!("font-size" => font_size);
             attr_to_css_decl!("letter-spacing" => letter_spacing);
             attr_to_css_decl!("word-spacing" => word_spacing);
@@ -1420,6 +1421,8 @@ impl<'dom> LayoutDom<'dom, Element> {
             attr_to_css_decl!("unicode-bidi" => unicode_bidi);
             attr_to_css_decl!("writing-mode" => writing_mode);
             attr_to_css_decl!("dominant-baseline" => dominant_baseline);
+            attr_to_css_decl!("alignment-baseline" => alignment_baseline);
+            attr_to_css_decl!("baseline-shift" => baseline_shift);
 
             attr_to_css_decl!("marker-start" => marker_start);
             attr_to_css_decl!("marker-mid" => marker_mid);
@@ -1439,10 +1442,16 @@ impl<'dom> LayoutDom<'dom, Element> {
             attr_to_css_decl!("image-rendering" => image_rendering);
             attr_to_css_decl!("vector-effect" => vector_effect);
             attr_to_css_decl!("paint-order" => paint_order);
+            attr_to_css_decl!("transform-origin" => transform_origin);
             attr_to_css_decl!("lighting-color" => lighting_color);
             attr_to_css_decl!("mask-type" => mask_type);
             attr_to_css_decl!("mask" => mask_image);
+            attr_to_css_decl!("filter" => filter);
+            attr_to_css_decl!("cursor" => cursor);
+            attr_to_css_decl!("display" => display);
 
+            attr_to_css_decl!("height" => height);
+            attr_to_css_decl!("width" => width);
             attr_to_css_decl!("cx" => cx);
             attr_to_css_decl!("cy" => cy);
             attr_to_css_decl!("r" => r);
@@ -1457,6 +1466,16 @@ impl<'dom> LayoutDom<'dom, Element> {
                 let mut parser = Parser::new(&mut input);
                 if let Ok(decl) = parser.parse_entirely(|p| {
                     style::properties::longhands::d::parse_declared(&parser_context, p)
+                }) {
+                    push(decl);
+                }
+            }
+
+            if let Some(val) = self.get_attr_val_for_layout(&ns!(), &html5ever::LocalName::from("text-overflow")) {
+                let mut input = ParserInput::new(val);
+                let mut parser = Parser::new(&mut input);
+                if let Ok(decl) = parser.parse_entirely(|p| {
+                    style::properties::longhands::text_overflow::parse_declared(&parser_context, p)
                 }) {
                     push(decl);
                 }

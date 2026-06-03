@@ -127,6 +127,7 @@ impl VirtualMethods for SVGElement {
             &local_name!("font-family") |
             &local_name!("font-style") |
             &local_name!("font-weight") |
+            &local_name!("font-stretch") |
             &local_name!("font-size") |
             &local_name!("letter-spacing") |
             &local_name!("word-spacing") |
@@ -134,6 +135,8 @@ impl VirtualMethods for SVGElement {
             &local_name!("unicode-bidi") |
             &local_name!("writing-mode") |
             &local_name!("dominant-baseline") |
+            &local_name!("alignment-baseline") |
+            &local_name!("baseline-shift") |
 
             &local_name!("marker-start") |
             &local_name!("marker-mid") |
@@ -153,10 +156,16 @@ impl VirtualMethods for SVGElement {
             &local_name!("image-rendering") |
             &local_name!("vector-effect") |
             &local_name!("paint-order") |
+            &local_name!("transform-origin") |
             &local_name!("lighting-color") |
             &local_name!("mask-type") |
             &local_name!("mask") |
-            
+            &local_name!("filter") |
+            &local_name!("cursor") |
+            &local_name!("display") |
+
+            &local_name!("height") |
+            &local_name!("width") |
             &local_name!("cx") |
             &local_name!("cy") |
             &local_name!("r") |
@@ -165,7 +174,8 @@ impl VirtualMethods for SVGElement {
             &local_name!("x") |
             &local_name!("y") |
             &local_name!("d")
-        ) || self.super_type().unwrap().attribute_affects_presentational_hints(attr)
+        ) || attr.local_name() == &html5ever::LocalName::from("text-overflow")
+            || self.super_type().unwrap().attribute_affects_presentational_hints(attr)
     }
 }
 
