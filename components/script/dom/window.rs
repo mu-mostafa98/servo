@@ -21,6 +21,7 @@ use content_security_policy::Violation;
 use content_security_policy::sandboxing_directive::SandboxingFlagSet;
 use crossbeam_channel::{Sender, unbounded};
 use cssparser::SourceLocation;
+use html5ever::ns;
 use devtools_traits::{ScriptToDevtoolsControlMsg, TimelineMarker, TimelineMarkerType};
 use dom_struct::dom_struct;
 use embedder_traits::user_contents::UserScript;
@@ -4009,7 +4010,7 @@ fn is_named_element_with_name_attribute(elem: &Element) -> bool {
 }
 
 fn is_named_element_with_id_attribute(elem: &Element) -> bool {
-    elem.is_html_element()
+    elem.is_html_element() || *elem.namespace() == ns!(svg)
 }
 
 #[expect(unsafe_code)]
