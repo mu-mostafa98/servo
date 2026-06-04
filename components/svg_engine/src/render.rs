@@ -1,0 +1,52 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+use webrender_api::{
+    DisplayListBuilder,
+    units::LayoutPoint,
+};
+
+use crate::render_tree::*;
+use crate::shapes::*;
+use crate::styles::NodeStyle;
+
+use crate::renderers;
+
+
+pub fn render_svg_tree(
+    tree: &SvgRenderTree,
+    svg_origin: &LayoutPoint,
+    wr: &mut DisplayListBuilder,
+){
+    render_node(&tree.root, svg_origin, wr);
+}
+
+fn render_node(
+    node : &SvgRenderNode,
+    svg_origin: &LayoutPoint,
+    wr: &mut DisplayListBuilder,
+){
+    if let SvgTag::Shape(shape) = &node.tag {
+        render_dispatch(shape, &node.style, svg_origin, wr);
+    }
+
+    for child in &node.children {
+        render_node(child, svg_origin, wr);
+    }
+}
+
+fn render_dispatch(
+    shape: &Shape,
+    style: &NodeStyle,
+    svg_origin: &LayoutPoint,
+    wr: &mut DisplayListBuilder,
+) {
+    match shape {
+        Shape::Rect(rect) => renderers::render_rect(rect, style, svg_origin, wr),
+        _ => {
+            eprintln!("Unsupported shape type: {:?}", shape);
+        }
+    }
+}
+
