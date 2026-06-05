@@ -9,6 +9,7 @@ use kurbo::{BezPath, Point};
 
 // ------------------- Geometry ------------------
 
+#[derive(Debug)]
 pub enum Shape {
     Rect(Rectangle),
     Circle(Circle),
