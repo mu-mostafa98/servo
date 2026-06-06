@@ -1472,7 +1472,7 @@ impl<'dom> LayoutDom<'dom, Element> {
                 attr_to_css_decl!("y" => y);
                 attr_to_css_decl!("width" => width);
                 attr_to_css_decl!("height" => height);
-            } else if *name == *local_name!("foreignObject") || *name == *local_name!("image") {
+            } else if *name == *local_name!("foreignObject") || *name == *local_name!("image") || *name == *local_name!("use") {
                 attr_to_css_decl!("x" => x);
                 attr_to_css_decl!("y" => y);
                 attr_to_css_decl!("width" => width);
