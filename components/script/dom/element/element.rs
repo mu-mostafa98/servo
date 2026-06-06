@@ -1389,7 +1389,13 @@ impl<'dom> LayoutDom<'dom, Element> {
                 };
             }
 
-            attr_to_css_decl!("fill" => fill);
+            let name = self.local_name();
+            if name.as_ref() != "animate" &&
+                name.as_ref() != "animateMotion" &&
+                name.as_ref() != "animateTransform" &&
+                name.as_ref() != "set" {
+                attr_to_css_decl!("fill" => fill);
+            }
             attr_to_css_decl!("fill-opacity" => fill_opacity);
             attr_to_css_decl!("fill-rule" => fill_rule);
 
@@ -1430,7 +1436,7 @@ impl<'dom> LayoutDom<'dom, Element> {
 
             attr_to_css_decl!("stop-color" => stop_color);
             attr_to_css_decl!("stop-opacity" => stop_opacity);
-            
+
             attr_to_css_decl!("flood-color" => flood_color);
             attr_to_css_decl!("flood-opacity" => flood_opacity);
 
@@ -1450,24 +1456,37 @@ impl<'dom> LayoutDom<'dom, Element> {
             attr_to_css_decl!("cursor" => cursor);
             attr_to_css_decl!("display" => display);
 
-            attr_to_css_decl!("height" => height);
-            attr_to_css_decl!("width" => width);
-            attr_to_css_decl!("cx" => cx);
-            attr_to_css_decl!("cy" => cy);
-            attr_to_css_decl!("r" => r);
-            attr_to_css_decl!("rx" => rx);
-            attr_to_css_decl!("ry" => ry);
-            attr_to_css_decl!("x" => x);
-            attr_to_css_decl!("y" => y);
-            
-            if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!("d")) {
-                let path_value = format!("path(\"{}\")", val);
-                let mut input = ParserInput::new(&path_value);
-                let mut parser = Parser::new(&mut input);
-                if let Ok(decl) = parser.parse_entirely(|p| {
-                    style::properties::longhands::d::parse_declared(&parser_context, p)
-                }) {
-                    push(decl);
+            if *name == *local_name!("circle") {
+                attr_to_css_decl!("r" => r);
+                attr_to_css_decl!("cx" => cx);
+                attr_to_css_decl!("cy" => cy);
+            } else if *name == *local_name!("ellipse") {
+                attr_to_css_decl!("rx" => rx);
+                attr_to_css_decl!("ry" => ry);
+                attr_to_css_decl!("cx" => cx);
+                attr_to_css_decl!("cy" => cy);
+            } else if *name == *local_name!("rect") {
+                attr_to_css_decl!("rx" => rx);
+                attr_to_css_decl!("ry" => ry);
+                attr_to_css_decl!("x" => x);
+                attr_to_css_decl!("y" => y);
+                attr_to_css_decl!("width" => width);
+                attr_to_css_decl!("height" => height);
+            } else if *name == *local_name!("foreignObject") || *name == *local_name!("image") {
+                attr_to_css_decl!("x" => x);
+                attr_to_css_decl!("y" => y);
+                attr_to_css_decl!("width" => width);
+                attr_to_css_decl!("height" => height);
+            } else if *name == *local_name!("path") {
+                if let Some(val) = self.get_attr_val_for_layout(&ns!(), &local_name!("d")) {
+                    let path_value = format!("path(\"{}\")", val);
+                    let mut input = ParserInput::new(&path_value);
+                    let mut parser = Parser::new(&mut input);
+                    if let Ok(decl) = parser.parse_entirely(|p| {
+                        style::properties::longhands::d::parse_declared(&parser_context, p)
+                    }) {
+                        push(decl);
+                    }
                 }
             }
 

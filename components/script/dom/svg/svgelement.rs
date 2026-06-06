@@ -144,7 +144,7 @@ impl VirtualMethods for SVGElement {
 
             &local_name!("stop-color") |
             &local_name!("stop-opacity") |
-            
+
             &local_name!("flood-color") |
             &local_name!("flood-opacity") |
 
