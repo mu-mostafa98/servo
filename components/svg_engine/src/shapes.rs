@@ -20,6 +20,7 @@ pub enum Shape {
     Path(Path),
 }
 
+#[derive(Debug)]
 pub struct Rectangle {
     pub x: f32,
     pub y: f32,
@@ -29,12 +30,14 @@ pub struct Rectangle {
     pub ry: Option<f32>,
 }
 
+#[derive(Debug)]
 pub struct Circle {
     pub cx: f32,
     pub cy: f32,
     pub r: f32,
 }
 
+#[derive(Debug)]
 pub struct Ellipse {
     pub cx: f32,
     pub cy: f32,
@@ -42,6 +45,7 @@ pub struct Ellipse {
     pub ry: f32,
 }
 
+#[derive(Debug)]
 pub struct Line {
     pub x1: f32,
     pub y1: f32,
@@ -49,14 +53,17 @@ pub struct Line {
     pub y2: f32,
 }
 
+#[derive(Debug)]
 pub struct Polyline {
     pub points: Vec<Point>,
 }
 
+#[derive(Debug)]
 pub struct Polygon {
     pub points: Vec<Point>,
 }
 
+#[derive(Debug)]
 pub struct Path {
     pub path: BezPath, // The 'd' attribute content
 }

@@ -4,10 +4,11 @@
 
 mod shapes;
 mod styles;
-mod render_tree;
+pub mod render_tree;
 
-mod extract;
-mod render;
+pub mod extract;
+pub mod render;
 mod renderers;
 
 pub use extract::extract_node_style;
+pub use render::render_svg_tree;

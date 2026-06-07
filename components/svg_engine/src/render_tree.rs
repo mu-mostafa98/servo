@@ -5,11 +5,13 @@
 use crate::shapes::Shape;
 use crate::styles::NodeStyle;
 
+#[derive(Debug)]
 pub struct SvgRenderTree {
     pub root: SvgRenderNode,
     pub viewport: ViewportInfo,
 }
 
+#[derive(Debug)]
 pub struct SvgRenderNode {
     pub id: Option<String>,
     pub tag: SvgTag,
@@ -17,16 +19,19 @@ pub struct SvgRenderNode {
     pub children: Vec<SvgRenderNode>,
 }
 
+#[derive(Debug)]
 pub enum SvgTag {
     Shape(Shape),
     Container(Container),
 }
 
+#[derive(Debug)]
 pub enum Container {
     Group,
     Svg,
 }
 
+#[derive(Debug)]
 pub struct ViewportInfo {
     pub width: f32,
     pub height: f32,

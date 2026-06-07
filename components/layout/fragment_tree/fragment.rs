@@ -16,6 +16,7 @@ use servo_url::ServoUrl;
 use style::Zero;
 use style_traits::CSSPixel;
 use webrender_api::{FontInstanceKey, ImageKey};
+use svg_engine::render_tree::SvgRenderTree;
 
 use super::{
     BaseFragment, BoxFragment, ContainingBlockManager, HoistedSharedFragment, PositioningFragment,
@@ -112,6 +113,8 @@ pub(crate) struct ImageFragment {
     pub image_key: Option<ImageKey>,
     pub showing_broken_image_icon: bool,
     pub url: Option<ServoUrl>,
+    #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
+    pub svg_render_tree: Option<Arc<SvgRenderTree>>,
 }
 
 #[derive(MallocSizeOf)]

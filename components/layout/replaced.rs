@@ -33,6 +33,11 @@ use url::Url;
 use web_atoms::local_name;
 use webrender_api::ImageKey;
 
+use web_atoms::ns;
+use html5ever::LocalName;
+use svg_engine::extract::{extract_node_style, extract_tag};
+use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo};
+
 use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
 use crate::fragment_tree::{
@@ -146,6 +151,8 @@ pub(crate) enum ReplacedContentKind {
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
+        #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
+        render_tree: Option<Arc<SvgRenderTree>>,
     },
     Audio,
 }
@@ -224,6 +231,22 @@ impl ReplacedContents {
         context: &LayoutContext,
         node: ServoLayoutNode<'_>,
     ) -> (ReplacedContentKind, NaturalSizes) {
+        if servo_config::pref!(layout_svg_engine_enabled) {
+            let render_tree = Self::build_svg_render_tree(node, context);
+            return (
+                ReplacedContentKind::SVGElement {
+                    vector_image: None,
+                    has_viewbox: svg_data.view_box.is_some(),
+                    render_tree,
+                },
+                NaturalSizes {
+                    width: None,
+                    height: None,
+                    ratio: None,
+                },
+            );
+        }
+
         let rule_cache_conditions = &mut RuleCacheConditions::default();
 
         let parent_style = node.style(&context.style_context);
@@ -307,9 +330,48 @@ impl ReplacedContents {
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox: svg_data.view_box.is_some(),
+                render_tree: None,
             },
             natural_size,
         )
+    }
+
+    fn build_svg_render_tree(
+        node: ServoLayoutNode<'_>,
+        context: &LayoutContext,
+    ) -> Option<Arc<SvgRenderTree>> {
+        let root = Self::build_svg_render_node(node, context)?;
+        Some(Arc::new(SvgRenderTree {
+            root,
+            viewport: ViewportInfo { width: 300.0, height: 150.0 }
+        }))
+    }
+
+    fn build_svg_render_node(
+        node: ServoLayoutNode<'_>,
+        context: &LayoutContext,
+    ) -> Option<SvgRenderNode> {
+        let element = node.as_element()?;
+        let name = element.local_name().as_ref();
+        let computed = element.style(&context.style_context);
+        let get_attr = |attr: &str| {
+            element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
+        };
+
+        let tag = extract_tag(name, &get_attr)?;
+        let style = extract_node_style(&computed);
+
+        let children = node.dom_children()
+            .filter_map(|child| Self::build_svg_render_node(child, context))
+            .collect();
+
+        Some(SvgRenderNode {
+            id: element.attribute_as_str(&ns!(), &local_name!("id"))
+                .map(|s| s.to_string()),
+            tag,
+            style,
+            children,
+        })
     }
 
     fn from_content_property(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {
@@ -519,6 +581,7 @@ impl ReplacedContents {
                         image_key: Some(image_key),
                         showing_broken_image_icon: image_info.showing_broken_image_icon,
                         url: image_info.url.clone(),
+                        svg_render_tree: None,
                     }))
                 })
                 .into_iter()
@@ -530,6 +593,7 @@ impl ReplacedContents {
                     image_key: video_info.image_key,
                     showing_broken_image_icon: false,
                     url: None,
+                    svg_render_tree: None,
                 }))]
             },
             ReplacedContentKind::IFrame(iframe) => {
@@ -569,12 +633,28 @@ impl ReplacedContents {
                     image_key: Some(image_key),
                     showing_broken_image_icon: false,
                     url: None,
+                    svg_render_tree: None,
                 }))]
             },
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
+                ..
             } => {
+                if servo_config::pref!(layout_svg_engine_enabled) {
+                    if let ReplacedContentKind::SVGElement { render_tree: Some(tree), .. } = &self.kind {
+                        return vec![Fragment::Image(Arc::new(ImageFragment {
+                            base,
+                            clip,
+                            image_key: None,
+                            showing_broken_image_icon: false,
+                            url: None,
+                            svg_render_tree: Some(tree.clone()),
+                        }))];
+                    }
+                    return vec![];
+                }
+
                 let Some(vector_image) = vector_image else {
                     return vec![];
                 };
@@ -621,6 +701,7 @@ impl ReplacedContents {
                             image_key: Some(image_key),
                             showing_broken_image_icon: false,
                             url: None,
+                            svg_render_tree: None,
                         }))
                     })
                     .into_iter()

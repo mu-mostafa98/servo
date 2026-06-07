@@ -55,12 +55,12 @@ fn resolve_svg_paint(svg_paint: &SVGPaint, computed_values: &ComputedValues) -> 
     }
 }
 
-pub fn extract_shape(tag: &SvgTag, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
-    match tag {
-        SvgTag::Shape(Shape::Rect(_)) => extract_rect(get_attr).map(Shape::Rect),
+pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<SvgTag> {
+    match name {
+        "rect" => extract_rect(get_attr).map(|s| SvgTag::Shape(Shape::Rect(s))),
         _ => None,
     }
-}   
+}
 
 fn extract_rect(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Rectangle> {
     Some(Rectangle {

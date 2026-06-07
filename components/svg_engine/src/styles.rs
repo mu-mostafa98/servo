@@ -10,6 +10,7 @@ use euclid::Transform2D;
 
 // ----------------- Node Style ------------------
 
+#[derive(Debug)]
 pub struct NodeStyle {
     // pub opacity: f32,
     // pub visibility: Visibility,
@@ -20,12 +21,14 @@ pub struct NodeStyle {
     // pub effects: NodeEffects,
 }
 
+#[derive(Debug)]
 pub enum Visibility {
     Visible,
     Hidden,
     Collapse,
 }
 
+#[derive(Debug)]
 pub enum Display {
     Inline,
     Block,
@@ -33,13 +36,14 @@ pub enum Display {
 }
 
 // ----------------- Fill ------------------
+#[derive(Debug)]
 pub struct  FillParams{
     pub color: Option<ColorF>,
     pub opacity: f32,
     pub fill_rule: FillRule,
 }
 
-
+#[derive(Debug)]
 pub enum FillRule {
     NonZero,
     EvenOdd,
@@ -47,6 +51,7 @@ pub enum FillRule {
 
 // ----------------- Stroke ------------------
 
+#[derive(Debug)]
 pub struct StrokeParams {
     pub color: Option<ColorF>,
     pub opacity: f32,
@@ -58,12 +63,14 @@ pub struct StrokeParams {
     pub dash_offset: f32,
 }
 
+#[derive(Debug)]
 pub enum LineCap {
     Butt,
     Round,
     Square,
 }
 
+#[derive(Debug)]
 pub enum LineJoin {
     Miter,
     Round,
@@ -73,6 +80,7 @@ pub enum LineJoin {
 // ----------------- Render Hints ------------------
 
 
+#[derive(Debug)]
 pub struct RenderHints {
     pub vector_effect: Option<VectorEffect>,
     pub color_rendering: Option<ColorRendering>,
@@ -83,24 +91,28 @@ pub struct RenderHints {
     pub paint_order: Option<PaintOrder>,
 }
 
+#[derive(Debug)]
 pub enum VectorEffect {
     None,
     NonScalingStroke,
 }
 
 
+#[derive(Debug)]
 pub enum ColorRendering {
     Auto,
     OptimizeSpeed,
     OptimizeQuality,
 }
 
+#[derive(Debug)]
 pub enum ColorInterpolation {
     Auto,
     SRGB,
     LinearRGB,
 }
 
+#[derive(Debug)]
 pub enum ShapeRendering {
     Auto,
     OptimizeSpeed,
@@ -108,6 +120,7 @@ pub enum ShapeRendering {
     GeometricPrecision,
 }
 
+#[derive(Debug)]
 pub enum TextRendering {
     Auto,
     OptimizeSpeed,
@@ -115,17 +128,20 @@ pub enum TextRendering {
     GeometricPrecision,
 }
 
+#[derive(Debug)]
 pub enum ImageRendering {
     Auto,
     OptimizeSpeed,
     OptimizeQuality,
 }
 
+#[derive(Debug)]
 pub enum PaintOrder {
     Normal, // Default: fill, stroke, markers
 }
 
 // ----------------- Node Effects ------------------
+#[derive(Debug)]
 pub struct NodeEffects {
     pub transform: Option<Transform2D<f32, (), ()>>,
     pub clip_path: Option<String>,
