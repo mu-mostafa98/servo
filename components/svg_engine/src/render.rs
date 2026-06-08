@@ -51,6 +51,7 @@ fn render_dispatch(
     match shape {
         Shape::Rect(rect) => renderers::render_rect(rect, style, svg_origin, spatial_id, clip_chain_id, wr),
         Shape::Ellipse(ellipse) => renderers::render_ellipse(ellipse, style, svg_origin, spatial_id, clip_chain_id, wr),
+        Shape::Circle(circle) => renderers::render_circle(circle, style, svg_origin, spatial_id, clip_chain_id, wr),
         _ => {
             eprintln!("Unsupported shape type: {:?}", shape);
         }
