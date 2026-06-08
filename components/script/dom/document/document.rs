@@ -3464,7 +3464,7 @@ impl<'dom> LayoutDom<'dom, Document> {
         unsafe { LayoutDom::to_layout_slice(matching_elements) }
     }
 
-    pub(crate) fn document_url(self) -> ServoUrl {
+    pub(crate) fn url_for_layout(self) -> ServoUrl {
         unsafe { self.unsafe_get().url.borrow_for_layout() }.clone()
     }
 }
