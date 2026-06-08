@@ -1,6 +1,6 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use style::properties::ComputedValues;
 use style::values::computed::svg:: {SVGPaint, SVGOpacity, SVGPaintKind};
@@ -57,7 +57,10 @@ fn resolve_svg_paint(svg_paint: &SVGPaint, computed_values: &ComputedValues) -> 
 
 pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<SvgTag> {
     match name {
+        "svg" => Some(SvgTag::Container(Container::Svg)),
+        "g" => Some(SvgTag::Container(Container::Group)),
         "rect" => extract_rect(get_attr).map(|s| SvgTag::Shape(Shape::Rect(s))),
+        "ellipse" => extract_ellipse(get_attr).map(|s| SvgTag::Shape(Shape::Ellipse(s))),
         _ => None,
     }
 }
@@ -76,4 +79,13 @@ fn extract_rect(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Rectangle> 
 fn parse_length(attr: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<f32> {
     let value = get_attr(attr)?;
     value.trim_end_matches("px").trim().parse::<f32>().ok()
+}
+
+fn extract_ellipse(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Ellipse> {
+    Some(Ellipse {
+        cx: parse_length("cx", get_attr)?,
+        cy: parse_length("cy", get_attr)?,
+        rx: parse_length("rx", get_attr)?,
+        ry: parse_length("ry", get_attr)?,
+    })
 }
