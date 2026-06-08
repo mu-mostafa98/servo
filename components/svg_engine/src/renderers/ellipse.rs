@@ -5,8 +5,10 @@
 use webrender_api::{
     DisplayListBuilder, ClipChainId, SpatialId,
     CommonItemProperties, SpaceAndClipInfo,
+    BorderSide, BorderStyle,
+    BorderDetails, NormalBorder,
     BorderRadius, ClipMode, ComplexClipRegion,
-    units::{LayoutPoint, LayoutRect, LayoutSize}
+    units::{LayoutPoint, LayoutRect, LayoutSize, LayoutSideOffsets}
 };
 
 use crate::shapes::Ellipse;
@@ -33,7 +35,8 @@ pub fn render_ellipse(
     );
 
     if let Some(fill) = &style.fill {
-        if let Some(color) = fill.color {
+        if let Some(mut color) = fill.color {
+            color.a *= fill.opacity;
             let clip_id = wr.define_clip_rounded_rect(
                 spatial_id,
                 ComplexClipRegion {
@@ -63,6 +66,33 @@ pub fn render_ellipse(
                 SpaceAndClipInfo { spatial_id, clip_chain_id: ellipse_clip_chain_id },
             );
             wr.push_rect(&common, bounds, color);
+        }
+    }
+
+    if let Some(stroke) = &style.stroke {
+        if let Some(mut color) = stroke.color {
+            color.a *= stroke.opacity;
+            let radii = BorderRadius {
+                top_left: LayoutSize::new(ellipse.rx, ellipse.ry),
+                top_right: LayoutSize::new(ellipse.rx, ellipse.ry),
+                bottom_left: LayoutSize::new(ellipse.rx, ellipse.ry),
+                bottom_right: LayoutSize::new(ellipse.rx, ellipse.ry),
+            };
+            let widths = LayoutSideOffsets::new_all_same(stroke.width);
+            let border_side = BorderSide { color, style: BorderStyle::Solid };
+            let details = BorderDetails::Normal(NormalBorder {
+                left: border_side.clone(),
+                right: border_side.clone(),
+                top: border_side.clone(),
+                bottom: border_side,
+                radius: radii,
+                do_aa: true,
+            });
+            let common = CommonItemProperties::new(
+                bounds,
+                SpaceAndClipInfo{ spatial_id, clip_chain_id }
+            );
+            wr.push_border(&common, bounds, widths, details);
         }
     }
 }

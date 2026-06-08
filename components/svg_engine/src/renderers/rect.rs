@@ -4,8 +4,9 @@
 
 use webrender_api::{
     DisplayListBuilder, ClipChainId, SpatialId,
-    CommonItemProperties, SpaceAndClipInfo,
-    units::{LayoutPoint, LayoutRect, LayoutSize}
+    CommonItemProperties, SpaceAndClipInfo, BorderSide, BorderStyle,
+    BorderDetails, NormalBorder, BorderRadius,
+    units::{LayoutPoint, LayoutRect, LayoutSize, LayoutSideOffsets}
 };
 
 use crate::shapes::Rectangle;
@@ -25,12 +26,34 @@ pub fn render_rect(
     );
 
     if let Some(fill) = &style.fill {
-        if let Some(color) = fill.color {
+        if let Some(mut color) = fill.color {
+            color.a *= fill.opacity;
             let common = CommonItemProperties::new(
                 bounds,
                 SpaceAndClipInfo{ spatial_id, clip_chain_id }
             );
             wr.push_rect(&common, bounds, color);
+        }
+    }
+
+    if let Some(stroke) = &style.stroke {
+        if let Some(mut color) = stroke.color {
+            color.a *= stroke.opacity;
+            let widths = LayoutSideOffsets::new_all_same(stroke.width);
+            let border_side = BorderSide { color, style: BorderStyle::Solid };
+            let details = BorderDetails::Normal(NormalBorder {
+                left: border_side.clone(),
+                right: border_side.clone(),
+                top: border_side.clone(),
+                bottom: border_side,
+                radius: BorderRadius::zero(),
+                do_aa: true,
+            });
+            let common = CommonItemProperties::new(
+                bounds,
+                SpaceAndClipInfo{ spatial_id, clip_chain_id }
+            );
+            wr.push_border(&common, bounds, widths, details);
         }
     }
 }

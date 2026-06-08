@@ -16,7 +16,7 @@ pub struct NodeStyle {
     // pub visibility: Visibility,
     // pub display: Display,
     pub fill: Option<FillParams>,
-    // pub stroke: Option<StrokeParams>,
+    pub stroke: Option<StrokeParams>,
     // pub render_hints: RenderHints,
     // pub effects: NodeEffects,
 }

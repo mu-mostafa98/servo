@@ -3,7 +3,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use style::properties::ComputedValues;
-use style::values::computed::svg:: {SVGPaint, SVGOpacity, SVGPaintKind};
+use style::values::computed::svg::{SVGPaint, SVGOpacity, SVGPaintKind, SVGStrokeDashArray };
+use style::values::generics::svg::SVGLength;
 use style::color::ColorSpace;
 use webrender_api::ColorF;
 
@@ -13,13 +14,14 @@ use crate::shapes::*;
 
 pub fn extract_node_style(computed_values: &ComputedValues) -> NodeStyle {
     NodeStyle{
-        fill: Some(extract_fill_params(computed_values)),
+        fill: extract_fill_params(computed_values),
+        stroke: extract_stroke_params(computed_values),
     }
-    
+
 }
 
-pub fn extract_fill_params(computed_values: &ComputedValues) -> FillParams {
-    
+pub fn extract_fill_params(computed_values: &ComputedValues) -> Option<FillParams> {
+
     let inhirited_svg = computed_values.get_inherited_svg();
     let color = resolve_svg_paint(&inhirited_svg.fill, computed_values);
     let opacity = match inhirited_svg.fill_opacity {
@@ -30,11 +32,16 @@ pub fn extract_fill_params(computed_values: &ComputedValues) -> FillParams {
         style::computed_values::fill_rule::T::Nonzero => FillRule::NonZero,
         style::computed_values::fill_rule::T::Evenodd => FillRule::EvenOdd,
     };
-    FillParams {
+
+    if color.is_none() {
+        return None;
+    }
+
+    Some(FillParams {
         color,
         opacity,
         fill_rule,
-    }
+    })
 }
 
 fn resolve_svg_paint(svg_paint: &SVGPaint, computed_values: &ComputedValues) -> Option<ColorF> {
@@ -53,6 +60,69 @@ fn resolve_svg_paint(svg_paint: &SVGPaint, computed_values: &ComputedValues) -> 
         SVGPaintKind::None => None,
         _ => None,
     }
+}
+
+pub fn extract_stroke_params(computed_values: &ComputedValues) -> Option<StrokeParams> {
+    let inhirited_svg = computed_values.get_inherited_svg();
+    let color = resolve_svg_paint(&inhirited_svg.stroke, computed_values);
+    let opacity = match inhirited_svg.stroke_opacity {
+        SVGOpacity::Opacity(opacity) => opacity,
+        _ => 1.0,
+    };
+
+    let width = match &inhirited_svg.stroke_width {
+        SVGLength::LengthPercentage(nn_lp) => {
+            nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0)
+        },
+        _ => 1.0,
+    };
+
+    let line_cap = match inhirited_svg.stroke_linecap {
+        style::computed_values::stroke_linecap::T::Butt => LineCap::Butt,
+        style::computed_values::stroke_linecap::T::Round => LineCap::Round,
+        style::computed_values::stroke_linecap::T::Square => LineCap::Square,
+    };
+
+    let line_join = match inhirited_svg.stroke_linejoin {
+        style::computed_values::stroke_linejoin::T::Miter => LineJoin::Miter,
+        style::computed_values::stroke_linejoin::T::Round => LineJoin::Round,
+        style::computed_values::stroke_linejoin::T::Bevel => LineJoin::Bevel,
+    };
+
+    let miter_limit = inhirited_svg.stroke_miterlimit.0;
+
+    let dash_array = match &inhirited_svg.stroke_dasharray {
+        SVGStrokeDashArray::Values(values) => {
+            if values.is_empty() {
+                None
+            } else {
+                Some(values.iter().map(|v| v.0.to_length().map(|l| l.px()).unwrap_or(0.0)).collect())
+            }
+        },
+        _ => None,
+    };
+
+    let dash_offset = match &inhirited_svg.stroke_dashoffset {
+        SVGLength::LengthPercentage(lp) => {
+            lp.to_length().map(|l| l.px()).unwrap_or(0.0)
+        },
+        _ => 0.0,
+    };
+
+    if color.is_none() || width <= 0.0 {
+        return None;
+    }
+
+    Some(StrokeParams {
+        color,
+        opacity,
+        width,
+        line_cap,
+        line_join,
+        miter_limit,
+        dash_array,
+        dash_offset,
+    })
 }
 
 pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<SvgTag> {
