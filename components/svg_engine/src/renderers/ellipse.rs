@@ -2,17 +2,12 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use webrender_api::{
-    DisplayListBuilder, ClipChainId, SpatialId,
-    CommonItemProperties, SpaceAndClipInfo,
-    BorderSide, BorderStyle,
-    BorderDetails, NormalBorder,
-    BorderRadius, ClipMode, ComplexClipRegion,
-    units::{LayoutPoint, LayoutRect, LayoutSize, LayoutSideOffsets}
-};
+use webrender_api::{ DisplayListBuilder, ClipChainId, SpatialId, units::LayoutPoint };
 
-use crate::shapes::Ellipse;
+use crate::shapes::{ Ellipse, Rectangle };
 use crate::styles::*;
+
+use super::rect::render_rect;
 
 pub fn render_ellipse(
     ellipse: &Ellipse,
@@ -26,73 +21,13 @@ pub fn render_ellipse(
         return;
     }
 
-    let bounds = LayoutRect::from_origin_and_size(
-        LayoutPoint::new(
-            svg_origin.x + ellipse.cx - ellipse.rx,
-            svg_origin.y + ellipse.cy - ellipse.ry,
-        ),
-        LayoutSize::new(ellipse.rx * 2.0, ellipse.ry * 2.0),
-    );
-
-    if let Some(fill) = &style.fill {
-        if let Some(mut color) = fill.color {
-            color.a *= fill.opacity;
-            let clip_id = wr.define_clip_rounded_rect(
-                spatial_id,
-                ComplexClipRegion {
-                    rect: bounds,
-                    radii: BorderRadius {
-                        top_left: LayoutSize::new(ellipse.rx, ellipse.ry),
-                        top_right: LayoutSize::new(ellipse.rx, ellipse.ry),
-                        bottom_left: LayoutSize::new(ellipse.rx, ellipse.ry),
-                        bottom_right: LayoutSize::new(ellipse.rx, ellipse.ry),
-                    },
-                    mode: ClipMode::Clip,
-                },
-            );
-
-            let parent = match clip_chain_id {
-                ClipChainId::INVALID => None,
-                id => Some(id),
-            };
-
-            let ellipse_clip_chain_id = wr.define_clip_chain(
-                parent,
-                [clip_id],
-            );     
-
-            let common = CommonItemProperties::new(
-                bounds,
-                SpaceAndClipInfo { spatial_id, clip_chain_id: ellipse_clip_chain_id },
-            );
-            wr.push_rect(&common, bounds, color);
-        }
-    }
-
-    if let Some(stroke) = &style.stroke {
-        if let Some(mut color) = stroke.color {
-            color.a *= stroke.opacity;
-            let radii = BorderRadius {
-                top_left: LayoutSize::new(ellipse.rx, ellipse.ry),
-                top_right: LayoutSize::new(ellipse.rx, ellipse.ry),
-                bottom_left: LayoutSize::new(ellipse.rx, ellipse.ry),
-                bottom_right: LayoutSize::new(ellipse.rx, ellipse.ry),
-            };
-            let widths = LayoutSideOffsets::new_all_same(stroke.width);
-            let border_side = BorderSide { color, style: BorderStyle::Solid };
-            let details = BorderDetails::Normal(NormalBorder {
-                left: border_side.clone(),
-                right: border_side.clone(),
-                top: border_side.clone(),
-                bottom: border_side,
-                radius: radii,
-                do_aa: true,
-            });
-            let common = CommonItemProperties::new(
-                bounds,
-                SpaceAndClipInfo{ spatial_id, clip_chain_id }
-            );
-            wr.push_border(&common, bounds, widths, details);
-        }
-    }
+    let rect = Rectangle {
+        x: ellipse.cx - ellipse.rx,
+        y: ellipse.cy - ellipse.ry,
+        width: ellipse.rx * 2.0,
+        height: ellipse.ry * 2.0,
+        rx: Some(ellipse.rx),
+        ry: Some(ellipse.ry),
+    };
+    render_rect(&rect, style, svg_origin, spatial_id, clip_chain_id, wr);
 }

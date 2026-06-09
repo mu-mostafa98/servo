@@ -5,7 +5,7 @@
 use webrender_api::{
     DisplayListBuilder, ClipChainId, SpatialId,
     CommonItemProperties, SpaceAndClipInfo, BorderSide, BorderStyle,
-    BorderDetails, NormalBorder, BorderRadius,
+    BorderDetails, NormalBorder, BorderRadius, ClipMode, ComplexClipRegion,
     units::{LayoutPoint, LayoutRect, LayoutSize, LayoutSideOffsets}
 };
 
@@ -25,14 +25,51 @@ pub fn render_rect(
         LayoutSize::new(rect.width, rect.height),
     );
 
+    let rx = rect.rx
+        .or(rect.ry)
+        .unwrap_or(0.0)
+        .clamp(0.0, rect.width / 2.0);
+    let ry = rect.ry
+        .or(rect.rx)
+        .unwrap_or(0.0)
+        .clamp(0.0, rect.height / 2.0);
+
+    let has_radius = rx > 0.0 || ry > 0.0;
+
     if let Some(fill) = &style.fill {
         if let Some(mut color) = fill.color {
             color.a *= fill.opacity;
-            let common = CommonItemProperties::new(
-                bounds,
-                SpaceAndClipInfo{ spatial_id, clip_chain_id }
-            );
-            wr.push_rect(&common, bounds, color);
+            if has_radius {
+                let clip_id = wr.define_clip_rounded_rect(
+                    spatial_id,
+                    ComplexClipRegion {
+                        rect: bounds,
+                        radii: BorderRadius {
+                            top_left: LayoutSize::new(rx, ry),
+                            top_right: LayoutSize::new(rx, ry),
+                            bottom_left: LayoutSize::new(rx, ry),
+                            bottom_right: LayoutSize::new(rx, ry),
+                        },
+                        mode: ClipMode::Clip,
+                    },
+                );
+                let parent = match clip_chain_id {
+                    ClipChainId::INVALID => None,
+                    id => Some(id),
+                };
+                let rounded_clip_chain_id = wr.define_clip_chain(parent, [clip_id]);
+                let common = CommonItemProperties::new(
+                    bounds,
+                    SpaceAndClipInfo { spatial_id, clip_chain_id: rounded_clip_chain_id },
+                );
+                wr.push_rect(&common, bounds, color);
+            } else {
+                let common = CommonItemProperties::new(
+                    bounds,
+                    SpaceAndClipInfo{ spatial_id, clip_chain_id }
+                );
+                wr.push_rect(&common, bounds, color);
+            }
         }
     }
 
@@ -46,7 +83,12 @@ pub fn render_rect(
                 right: border_side.clone(),
                 top: border_side.clone(),
                 bottom: border_side,
-                radius: BorderRadius::zero(),
+                radius: BorderRadius {
+                    top_left: LayoutSize::new(rx, ry),
+                    top_right: LayoutSize::new(rx, ry),
+                    bottom_left: LayoutSize::new(rx, ry),
+                    bottom_right: LayoutSize::new(rx, ry),
+                },
                 do_aa: true,
             });
             let common = CommonItemProperties::new(
