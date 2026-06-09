@@ -132,6 +132,7 @@ pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Opt
         "rect" => extract_rect(get_attr).map(|s| SvgTag::Shape(Shape::Rect(s))),
         "ellipse" => extract_ellipse(get_attr).map(|s| SvgTag::Shape(Shape::Ellipse(s))),
         "circle" => extract_circle(get_attr).map(|s| SvgTag::Shape(Shape::Circle(s))),
+        "line" => extract_line(get_attr).map(|s| SvgTag::Shape(Shape::Line(s))),
         _ => None,
     }
 }
@@ -166,5 +167,14 @@ fn extract_circle(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Circle> {
         cx: parse_length("cx", get_attr)?,
         cy: parse_length("cy", get_attr)?,
         r: parse_length("r", get_attr)?,
+    })
+}
+
+fn extract_line(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Line> {
+    Some(Line {
+        x1: parse_length("x1", get_attr)?,
+        y1: parse_length("y1", get_attr)?,
+        x2: parse_length("x2", get_attr)?,
+        y2: parse_length("y2", get_attr)?,
     })
 }
