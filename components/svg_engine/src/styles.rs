@@ -43,7 +43,7 @@ pub struct  FillParams{
     pub fill_rule: FillRule,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum FillRule {
     NonZero,
     EvenOdd,
@@ -63,14 +63,14 @@ pub struct StrokeParams {
     pub dash_offset: f32,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum LineCap {
     Butt,
     Round,
     Square,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum LineJoin {
     Miter,
     Round,

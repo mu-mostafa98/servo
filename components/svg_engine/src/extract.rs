@@ -2,6 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+use kurbo::Point;
 use style::properties::ComputedValues;
 use style::values::computed::svg::{SVGPaint, SVGOpacity, SVGPaintKind, SVGStrokeDashArray };
 use style::values::generics::svg::SVGLength;
@@ -133,6 +134,8 @@ pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Opt
         "ellipse" => extract_ellipse(get_attr).map(|s| SvgTag::Shape(Shape::Ellipse(s))),
         "circle" => extract_circle(get_attr).map(|s| SvgTag::Shape(Shape::Circle(s))),
         "line" => extract_line(get_attr).map(|s| SvgTag::Shape(Shape::Line(s))),
+        "polyline" => parse_points(get_attr).map(|pts| SvgTag::Shape(Shape::Polyline(Polyline { points: pts }))),
+        "polygon" => parse_points(get_attr).map(|pts| SvgTag::Shape(Shape::Polygon(Polygon { points: pts }))),
         _ => None,
     }
 }
@@ -177,4 +180,31 @@ fn extract_line(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Line> {
         x2: parse_length("x2", get_attr)?,
         y2: parse_length("y2", get_attr)?,
     })
+}
+
+/// Shared parser for the `points` attribute used by both `<polyline>` and `<polygon>`.
+///
+/// Accepts formats like:
+/// - `"10,20 30,40 50,60"`
+/// - `"10 20 30 40 50 60"`
+/// - `"10.5,20.3 30.7,40.1"`
+/// Returns `None` if fewer than 2 points are found.
+fn parse_points(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Vec<Point>> {
+    let value = get_attr("points")?;
+    let coords: Vec<f64> = value
+        .split(|c: char| c == ',' || c.is_whitespace())
+        .filter(|s| !s.is_empty())
+        .filter_map(|s| s.parse::<f64>().ok())
+        .collect();
+
+    let points: Vec<Point> = coords
+        .chunks(2)
+        .filter_map(|chunk| {
+            let x = *chunk.first()?;
+            let y = *chunk.get(1)?;
+            Some(Point::new(x, y))
+        })
+        .collect();
+
+    if points.len() < 2 { None } else { Some(points) }
 }
