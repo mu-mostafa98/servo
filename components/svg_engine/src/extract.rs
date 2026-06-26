@@ -2,7 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use kurbo::Point;
+use kurbo::{BezPath, Point};
 use style::properties::ComputedValues;
 use style::values::computed::svg::{SVGPaint, SVGOpacity, SVGPaintKind, SVGStrokeDashArray };
 use style::values::generics::svg::SVGLength;
@@ -136,6 +136,7 @@ pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Opt
         "line" => extract_line(get_attr).map(|s| SvgTag::Shape(Shape::Line(s))),
         "polyline" => parse_points(get_attr).map(|pts| SvgTag::Shape(Shape::Polyline(Polyline { points: pts }))),
         "polygon" => parse_points(get_attr).map(|pts| SvgTag::Shape(Shape::Polygon(Polygon { points: pts }))),
+        "path" => parse_path(get_attr).map(|path| SvgTag::Shape(Shape::Path(Path { path }))),
         _ => None,
     }
 }
@@ -207,4 +208,9 @@ fn parse_points(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Vec<Point>>
         .collect();
 
     if points.len() < 2 { None } else { Some(points) }
+}
+
+fn parse_path(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<BezPath> {
+    let value = get_attr("d")?;
+    BezPath::from_svg(&value).ok()
 }
