@@ -1,0 +1,5480 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/canvas/backend.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 108,
+      "nonEmptyLines": 102,
+      "classes": [
+        {
+          "name": "GenericDrawTarget",
+          "startLine": 17,
+          "endLine": 102,
+          "methods": [
+            "new",
+            "create_similar_draw_target",
+            "clear_rect",
+            "copy_surface",
+            "create_source_surface_from_data",
+            "draw_surface",
+            "draw_surface_with_shadow",
+            "fill",
+            "fill_text",
+            "fill_rect",
+            "get_size",
+            "pop_clip",
+            "push_clip",
+            "push_clip_rect",
+            "stroke",
+            "stroke_text",
+            "stroke_rect",
+            "surface",
+            "image_descriptor_and_serializable_data",
+            "snapshot"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Convert",
+          "startLine": 106,
+          "endLine": 108,
+          "methods": [
+            "convert"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "GenericDrawTarget",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "Convert",
+          "line": 106,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/canvas/canvas_data.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 504,
+      "nonEmptyLines": 459,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 40,
+          "params": [
+            "size",
+            "paint_api"
+          ]
+        },
+        {
+          "name": "set_image_key",
+          "startLine": 42,
+          "endLine": 49,
+          "params": [
+            "image_key"
+          ]
+        },
+        {
+          "name": "draw_image",
+          "startLine": 52,
+          "endLine": 98,
+          "params": [
+            "snapshot",
+            "dest_rect",
+            "source_rect",
+            "smoothing_enabled",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_text",
+          "startLine": 100,
+          "endLine": 120,
+          "params": [
+            "text_bounds",
+            "text_runs",
+            "fill_or_stroke_style",
+            "_shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_text",
+          "startLine": 122,
+          "endLine": 147,
+          "params": [
+            "text_bounds",
+            "text_runs",
+            "fill_or_stroke_style",
+            "line_options",
+            "_shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_rect",
+          "startLine": 149,
+          "endLine": 184,
+          "params": [
+            "rect",
+            "style",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "clear_rect",
+          "startLine": 186,
+          "endLine": 188,
+          "params": [
+            "rect",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_rect",
+          "startLine": 190,
+          "endLine": 236,
+          "params": [
+            "rect",
+            "style",
+            "line_options",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_path",
+          "startLine": 238,
+          "endLine": 262,
+          "params": [
+            "path",
+            "fill_rule",
+            "style",
+            "_shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_path",
+          "startLine": 264,
+          "endLine": 288,
+          "params": [
+            "path",
+            "style",
+            "line_options",
+            "_shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "clip_path",
+          "startLine": 290,
+          "endLine": 297,
+          "params": [
+            "path",
+            "fill_rule",
+            "transform"
+          ]
+        },
+        {
+          "name": "recreate",
+          "startLine": 300,
+          "endLine": 311,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "update_image_rendering",
+          "startLine": 314,
+          "endLine": 327,
+          "params": [
+            "canvas_epoch"
+          ]
+        },
+        {
+          "name": "put_image_data",
+          "startLine": 330,
+          "endLine": 341,
+          "params": [
+            "snapshot",
+            "rect"
+          ]
+        },
+        {
+          "name": "create_draw_target_for_shadow",
+          "startLine": 343,
+          "endLine": 348,
+          "params": [
+            "source_rect"
+          ]
+        },
+        {
+          "name": "draw_with_shadow",
+          "startLine": 350,
+          "endLine": 375,
+          "params": [
+            "rect",
+            "shadow_options",
+            "composition_options",
+            "transform",
+            "draw_shadow_source"
+          ]
+        },
+        {
+          "name": "maybe_bound_shape_with_pattern",
+          "startLine": 379,
+          "endLine": 409,
+          "params": [
+            "style",
+            "composition_options",
+            "path_bound_box",
+            "transform",
+            "draw_shape"
+          ]
+        },
+        {
+          "name": "read_pixels",
+          "startLine": 415,
+          "endLine": 431,
+          "params": [
+            "read_rect"
+          ]
+        },
+        {
+          "name": "pop_clips",
+          "startLine": 433,
+          "endLine": 437,
+          "params": [
+            "clips"
+          ]
+        },
+        {
+          "name": "drop",
+          "startLine": 441,
+          "endLine": 445,
+          "params": []
+        },
+        {
+          "name": "write_image",
+          "startLine": 455,
+          "endLine": 491,
+          "params": [
+            "draw_target",
+            "snapshot",
+            "dest_rect",
+            "smoothing_enabled",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "ceil",
+          "startLine": 498,
+          "endLine": 503,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "Filter",
+          "startLine": 19,
+          "endLine": 22,
+          "methods": [],
+          "properties": [
+            "Bilinear",
+            "Nearest"
+          ]
+        },
+        {
+          "name": "CanvasData",
+          "startLine": 24,
+          "endLine": 28,
+          "methods": [],
+          "properties": [
+            "draw_target",
+            "paint_api",
+            "image_key"
+          ]
+        },
+        {
+          "name": "RectToi32",
+          "startLine": 493,
+          "endLine": 495,
+          "methods": [
+            "ceil"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Filter",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "CanvasData",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "set_image_key",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "draw_image",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "fill_text",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "stroke_text",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "fill_rect",
+          "line": 149,
+          "isDefault": false
+        },
+        {
+          "name": "clear_rect",
+          "line": 186,
+          "isDefault": false
+        },
+        {
+          "name": "stroke_rect",
+          "line": 190,
+          "isDefault": false
+        },
+        {
+          "name": "fill_path",
+          "line": 238,
+          "isDefault": false
+        },
+        {
+          "name": "stroke_path",
+          "line": 264,
+          "isDefault": false
+        },
+        {
+          "name": "clip_path",
+          "line": 290,
+          "isDefault": false
+        },
+        {
+          "name": "recreate",
+          "line": 300,
+          "isDefault": false
+        },
+        {
+          "name": "update_image_rendering",
+          "line": 314,
+          "isDefault": false
+        },
+        {
+          "name": "put_image_data",
+          "line": 330,
+          "isDefault": false
+        },
+        {
+          "name": "read_pixels",
+          "line": 415,
+          "isDefault": false
+        },
+        {
+          "name": "pop_clips",
+          "line": 433,
+          "isDefault": false
+        },
+        {
+          "name": "RectToi32",
+          "line": 493,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "DrawTarget::new",
+          "lineNumber": 36
+        },
+        {
+          "caller": "new",
+          "callee": "size.max(MIN_WR_IMAGE_SIZE).cast",
+          "lineNumber": 36
+        },
+        {
+          "caller": "new",
+          "callee": "size.max",
+          "lineNumber": 36
+        },
+        {
+          "caller": "set_image_key",
+          "callee": "self.draw_target.image_descriptor_and_serializable_data",
+          "lineNumber": 43
+        },
+        {
+          "caller": "set_image_key",
+          "callee": "self.paint_api.add_image",
+          "lineNumber": 44
+        },
+        {
+          "caller": "set_image_key",
+          "callee": "self.image_key.replace",
+          "lineNumber": 46
+        },
+        {
+          "caller": "set_image_key",
+          "callee": "self.paint_api.delete_image",
+          "lineNumber": 47
+        },
+        {
+          "caller": "draw_image",
+          "callee": "source_rect.ceil",
+          "lineNumber": 63
+        },
+        {
+          "caller": "draw_image",
+          "callee": "Rect::from_size(snapshot.size().to_f64()).contains_rect",
+          "lineNumber": 65
+        },
+        {
+          "caller": "draw_image",
+          "callee": "Rect::from_size",
+          "lineNumber": 65
+        },
+        {
+          "caller": "draw_image",
+          "callee": "snapshot.size().to_f64",
+          "lineNumber": 65
+        },
+        {
+          "caller": "draw_image",
+          "callee": "snapshot.size",
+          "lineNumber": 65
+        },
+        {
+          "caller": "draw_image",
+          "callee": "snapshot.get_rect",
+          "lineNumber": 66
+        },
+        {
+          "caller": "draw_image",
+          "callee": "source_rect.to_u32",
+          "lineNumber": 66
+        },
+        {
+          "caller": "draw_image",
+          "callee": "write_image::<DrawTarget>",
+          "lineNumber": 72
+        },
+        {
+          "caller": "draw_image",
+          "callee": "shadow_options.need_to_draw_shadow",
+          "lineNumber": 82
+        },
+        {
+          "caller": "draw_image",
+          "callee": "Rect::new",
+          "lineNumber": 83
+        },
+        {
+          "caller": "draw_image",
+          "callee": "Point2D::new",
+          "lineNumber": 84
+        },
+        {
+          "caller": "draw_image",
+          "callee": "Size2D::new",
+          "lineNumber": 85
+        },
+        {
+          "caller": "draw_image",
+          "callee": "self.draw_with_shadow",
+          "lineNumber": 88
+        },
+        {
+          "caller": "draw_image",
+          "callee": "writer",
+          "lineNumber": 96
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self.maybe_bound_shape_with_pattern",
+          "lineNumber": 109
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                    .draw_target.fill_text",
+          "lineNumber": 115
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self.maybe_bound_shape_with_pattern",
+          "lineNumber": 132
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_.draw_target.stroke_text",
+          "lineNumber": 138
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "style.is_zero_size_gradient",
+          "lineNumber": 157
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "shadow_options.need_to_draw_shadow",
+          "lineNumber": 161
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self.draw_with_shadow",
+          "lineNumber": 162
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "new_draw_target.fill_rect",
+          "lineNumber": 168
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self.maybe_bound_shape_with_pattern",
+          "lineNumber": 172
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "rect.cast",
+          "lineNumber": 175
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self_\n                        .draw_target.fill_rect",
+          "lineNumber": 178
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.draw_target.clear_rect",
+          "lineNumber": 187
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "style.is_zero_size_gradient",
+          "lineNumber": 199
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "shadow_options.need_to_draw_shadow",
+          "lineNumber": 203
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self.draw_with_shadow",
+          "lineNumber": 204
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "new_draw_target.stroke_rect",
+          "lineNumber": 210
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self.maybe_bound_shape_with_pattern",
+          "lineNumber": 220
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "rect.cast",
+          "lineNumber": 223
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self_.draw_target.stroke_rect",
+          "lineNumber": 226
+        },
+        {
+          "caller": "fill_path",
+          "callee": "style.is_zero_size_gradient",
+          "lineNumber": 247
+        },
+        {
+          "caller": "fill_path",
+          "callee": "self.maybe_bound_shape_with_pattern",
+          "lineNumber": 251
+        },
+        {
+          "caller": "fill_path",
+          "callee": "path.bounding_box",
+          "lineNumber": 254
+        },
+        {
+          "caller": "fill_path",
+          "callee": "self_\n                    .draw_target.fill",
+          "lineNumber": 257
+        },
+        {
+          "caller": "stroke_path",
+          "callee": "style.is_zero_size_gradient",
+          "lineNumber": 273
+        },
+        {
+          "caller": "stroke_path",
+          "callee": "self.maybe_bound_shape_with_pattern",
+          "lineNumber": 277
+        },
+        {
+          "caller": "stroke_path",
+          "callee": "path.bounding_box",
+          "lineNumber": 280
+        },
+        {
+          "caller": "stroke_path",
+          "callee": "self_\n                    .draw_target.stroke",
+          "lineNumber": 283
+        },
+        {
+          "caller": "clip_path",
+          "callee": "self.draw_target.push_clip",
+          "lineNumber": 296
+        },
+        {
+          "caller": "recreate",
+          "callee": "size\n            .unwrap_or_else(|| self.draw_target.get_size().to_u64()).max",
+          "lineNumber": 301
+        },
+        {
+          "caller": "recreate",
+          "callee": "size.unwrap_or_else",
+          "lineNumber": 301
+        },
+        {
+          "caller": "recreate",
+          "callee": "self.draw_target.get_size().to_u64",
+          "lineNumber": 302
+        },
+        {
+          "caller": "recreate",
+          "callee": "self.draw_target.get_size",
+          "lineNumber": 302
+        },
+        {
+          "caller": "recreate",
+          "callee": "self\n            .draw_target.create_similar_draw_target",
+          "lineNumber": 306
+        },
+        {
+          "caller": "recreate",
+          "callee": "Size2D::new(size.width, size.height).cast",
+          "lineNumber": 308
+        },
+        {
+          "caller": "recreate",
+          "callee": "Size2D::new",
+          "lineNumber": 308
+        },
+        {
+          "caller": "recreate",
+          "callee": "self.update_image_rendering",
+          "lineNumber": 310
+        },
+        {
+          "caller": "update_image_rendering",
+          "callee": "profile_traits::trace_span!(\"image_descriptor_and_serializable_data\").entered",
+          "lineNumber": 321
+        },
+        {
+          "caller": "update_image_rendering",
+          "callee": "self.draw_target.image_descriptor_and_serializable_data",
+          "lineNumber": 322
+        },
+        {
+          "caller": "update_image_rendering",
+          "callee": "self.paint_api.update_image",
+          "lineNumber": 325
+        },
+        {
+          "caller": "put_image_data",
+          "callee": "self\n            .draw_target\n            .create_source_surface_from_data(snapshot).unwrap",
+          "lineNumber": 332
+        },
+        {
+          "caller": "put_image_data",
+          "callee": "self\n            .draw_target.create_source_surface_from_data",
+          "lineNumber": 332
+        },
+        {
+          "caller": "put_image_data",
+          "callee": "self.draw_target.copy_surface",
+          "lineNumber": 336
+        },
+        {
+          "caller": "put_image_data",
+          "callee": "Rect::from_size",
+          "lineNumber": 338
+        },
+        {
+          "caller": "put_image_data",
+          "callee": "rect.size.to_i32",
+          "lineNumber": 338
+        },
+        {
+          "caller": "put_image_data",
+          "callee": "rect.origin.to_i32",
+          "lineNumber": 339
+        },
+        {
+          "caller": "create_draw_target_for_shadow",
+          "callee": "self.draw_target.create_similar_draw_target",
+          "lineNumber": 344
+        },
+        {
+          "caller": "create_draw_target_for_shadow",
+          "callee": "Size2D::new",
+          "lineNumber": 344
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "transform.outer_transformed_rect",
+          "lineNumber": 360
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "rect.cast",
+          "lineNumber": 360
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "self.create_draw_target_for_shadow",
+          "lineNumber": 362
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "shadow_src_rect.cast",
+          "lineNumber": 362
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "transform.then",
+          "lineNumber": 363
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "Transform2D::identity().pre_translate",
+          "lineNumber": 364
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "Transform2D::identity",
+          "lineNumber": 364
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "shadow_src_rect.origin.to_vector",
+          "lineNumber": 364
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "draw_shadow_source",
+          "lineNumber": 365
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "self.draw_target.draw_surface_with_shadow",
+          "lineNumber": 366
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "new_draw_target.surface",
+          "lineNumber": 367
+        },
+        {
+          "caller": "draw_with_shadow",
+          "callee": "Point2D::new",
+          "lineNumber": 368
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "style.x_bound",
+          "lineNumber": 389
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "style.y_bound",
+          "lineNumber": 390
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "x_bound.is_none",
+          "lineNumber": 395
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "y_bound.is_none",
+          "lineNumber": 395
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "draw_shape",
+          "lineNumber": 397
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "Rect::from_size(Size2D::new(\n            x_bound.unwrap_or(path_bound_box.size.width.ceil() as u32),\n            y_bound.unwrap_or(path_bound_box.size.height.ceil() as u32),\n        )).cast",
+          "lineNumber": 400
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "Rect::from_size",
+          "lineNumber": 400
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "Size2D::new",
+          "lineNumber": 400
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "x_bound.unwrap_or",
+          "lineNumber": 401
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "path_bound_box.size.width.ceil",
+          "lineNumber": 401
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "y_bound.unwrap_or",
+          "lineNumber": 402
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "path_bound_box.size.height.ceil",
+          "lineNumber": 402
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "transform.outer_transformed_rect",
+          "lineNumber": 405
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "self.draw_target.push_clip_rect",
+          "lineNumber": 406
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "rect.cast",
+          "lineNumber": 406
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "draw_shape",
+          "lineNumber": 407
+        },
+        {
+          "caller": "maybe_bound_shape_with_pattern",
+          "callee": "self.draw_target.pop_clip",
+          "lineNumber": 408
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "self.draw_target.get_size().cast",
+          "lineNumber": 416
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "self.draw_target.get_size",
+          "lineNumber": 416
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "Rect::from_size",
+          "lineNumber": 419
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "canvas_rect\n                .intersection(&read_rect).is_none_or",
+          "lineNumber": 420
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "canvas_rect.intersection",
+          "lineNumber": 420
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "rect.is_empty",
+          "lineNumber": 422
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "Snapshot::empty",
+          "lineNumber": 424
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "self.draw_target.snapshot().get_rect",
+          "lineNumber": 426
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "self.draw_target.snapshot",
+          "lineNumber": 426
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "self.draw_target.snapshot",
+          "lineNumber": 429
+        },
+        {
+          "caller": "pop_clips",
+          "callee": "self.draw_target.pop_clip",
+          "lineNumber": 435
+        },
+        {
+          "caller": "drop",
+          "callee": "self.paint_api.delete_image",
+          "lineNumber": 443
+        },
+        {
+          "caller": "write_image",
+          "callee": "snapshot.size().is_empty",
+          "lineNumber": 463
+        },
+        {
+          "caller": "write_image",
+          "callee": "snapshot.size",
+          "lineNumber": 463
+        },
+        {
+          "caller": "write_image",
+          "callee": "Rect::new",
+          "lineNumber": 467
+        },
+        {
+          "caller": "write_image",
+          "callee": "Point2D::zero",
+          "lineNumber": 467
+        },
+        {
+          "caller": "write_image",
+          "callee": "snapshot.size().cast",
+          "lineNumber": 467
+        },
+        {
+          "caller": "write_image",
+          "callee": "snapshot.size",
+          "lineNumber": 467
+        },
+        {
+          "caller": "write_image",
+          "callee": "draw_target\n        .create_source_surface_from_data(snapshot).unwrap",
+          "lineNumber": 479
+        },
+        {
+          "caller": "write_image",
+          "callee": "draw_target.create_source_surface_from_data",
+          "lineNumber": 479
+        },
+        {
+          "caller": "write_image",
+          "callee": "draw_target.draw_surface",
+          "lineNumber": 483
+        },
+        {
+          "caller": "ceil",
+          "callee": "Rect::new",
+          "lineNumber": 499
+        },
+        {
+          "caller": "ceil",
+          "callee": "Point2D::new",
+          "lineNumber": 500
+        },
+        {
+          "caller": "ceil",
+          "callee": "self.origin.x.ceil",
+          "lineNumber": 500
+        },
+        {
+          "caller": "ceil",
+          "callee": "self.origin.y.ceil",
+          "lineNumber": 500
+        },
+        {
+          "caller": "ceil",
+          "callee": "Size2D::new",
+          "lineNumber": 501
+        },
+        {
+          "caller": "ceil",
+          "callee": "self.size.width.ceil",
+          "lineNumber": 501
+        },
+        {
+          "caller": "ceil",
+          "callee": "self.size.height.ceil",
+          "lineNumber": 501
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 19,
+        "functionCount": 22,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "components/canvas/canvas_paint_thread.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 593,
+      "nonEmptyLines": 564,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 29,
+          "endLine": 35,
+          "params": [
+            "paint_api"
+          ]
+        },
+        {
+          "name": "start",
+          "startLine": 39,
+          "endLine": 89,
+          "params": [
+            "paint_api"
+          ]
+        },
+        {
+          "name": "create_canvas",
+          "startLine": 92,
+          "endLine": 100,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "process_command",
+          "startLine": 106,
+          "endLine": 299,
+          "params": [
+            "message",
+            "canvas_id"
+          ]
+        },
+        {
+          "name": "canvas",
+          "startLine": 301,
+          "endLine": 303,
+          "params": [
+            "canvas_id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 313,
+          "endLine": 322,
+          "params": [
+            "size",
+            "paint_api"
+          ]
+        },
+        {
+          "name": "set_image_key",
+          "startLine": 324,
+          "endLine": 330,
+          "params": [
+            "image_key"
+          ]
+        },
+        {
+          "name": "pop_clips",
+          "startLine": 332,
+          "endLine": 338,
+          "params": [
+            "clips"
+          ]
+        },
+        {
+          "name": "stroke_text",
+          "startLine": 340,
+          "endLine": 371,
+          "params": [
+            "text_bounds",
+            "text_runs",
+            "fill_or_stroke_style",
+            "line_options",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_text",
+          "startLine": 373,
+          "endLine": 401,
+          "params": [
+            "text_bounds",
+            "text_runs",
+            "fill_or_stroke_style",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_rect",
+          "startLine": 403,
+          "endLine": 420,
+          "params": [
+            "rect",
+            "style",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_rect",
+          "startLine": 422,
+          "endLine": 450,
+          "params": [
+            "rect",
+            "style",
+            "line_options",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_path",
+          "startLine": 452,
+          "endLine": 480,
+          "params": [
+            "path",
+            "fill_rule",
+            "style",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_path",
+          "startLine": 482,
+          "endLine": 510,
+          "params": [
+            "path",
+            "style",
+            "line_options",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "clear_rect",
+          "startLine": 512,
+          "endLine": 518,
+          "params": [
+            "rect",
+            "transform"
+          ]
+        },
+        {
+          "name": "draw_image",
+          "startLine": 521,
+          "endLine": 552,
+          "params": [
+            "snapshot",
+            "dest_rect",
+            "source_rect",
+            "smoothing_enabled",
+            "shadow_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "read_pixels",
+          "startLine": 554,
+          "endLine": 560,
+          "params": [
+            "read_rect"
+          ]
+        },
+        {
+          "name": "clip_path",
+          "startLine": 562,
+          "endLine": 568,
+          "params": [
+            "path",
+            "fill_rule",
+            "transform"
+          ]
+        },
+        {
+          "name": "put_image_data",
+          "startLine": 570,
+          "endLine": 576,
+          "params": [
+            "snapshot",
+            "rect"
+          ]
+        },
+        {
+          "name": "update_image_rendering",
+          "startLine": 578,
+          "endLine": 584,
+          "params": [
+            "canvas_epoch"
+          ]
+        },
+        {
+          "name": "recreate",
+          "startLine": 586,
+          "endLine": 592,
+          "params": [
+            "size"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "CanvasPaintThread",
+          "startLine": 22,
+          "endLine": 26,
+          "methods": [
+            "new",
+            "start",
+            "create_canvas",
+            "process_command",
+            "canvas"
+          ],
+          "properties": [
+            "canvases",
+            "next_canvas_id",
+            "paint_api"
+          ]
+        },
+        {
+          "name": "Canvas",
+          "startLine": 306,
+          "endLine": 310,
+          "methods": [
+            "new",
+            "set_image_key",
+            "pop_clips",
+            "stroke_text",
+            "fill_text",
+            "fill_rect",
+            "stroke_rect",
+            "fill_path",
+            "stroke_path",
+            "clear_rect",
+            "draw_image",
+            "read_pixels",
+            "clip_path",
+            "put_image_data",
+            "update_image_rendering",
+            "recreate"
+          ],
+          "properties": [
+            "Vello",
+            "VelloCPU"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CanvasPaintThread",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "start",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "create_canvas",
+          "line": 92,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "FxHashMap::default",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "CanvasId",
+          "lineNumber": 32
+        },
+        {
+          "caller": "start",
+          "callee": "generic_channel::channel::<CanvasMsg>().unwrap",
+          "lineNumber": 42
+        },
+        {
+          "caller": "start",
+          "callee": "generic_channel::channel::<CanvasMsg>",
+          "lineNumber": 42
+        },
+        {
+          "caller": "start",
+          "callee": "ipc_receiver.route_preserving_errors",
+          "lineNumber": 43
+        },
+        {
+          "caller": "start",
+          "callee": "unbounded",
+          "lineNumber": 44
+        },
+        {
+          "caller": "start",
+          "callee": "thread::Builder::new()\n            .name(\"Canvas\".to_owned())\n            .spawn(move || {\n                let mut canvas_paint_thread = CanvasPaintThread::new(\n                    paint_api);\n                loop {\n                    select! {\n                        recv(msg_receiver) -> msg => {\n                            match msg {\n                                Ok(Ok((canvas_id, command))) => {\n                                    canvas_paint_thread.process_command(command, canvas_id);\n                                },\n                                Ok(Err(e)) => {\n                                    warn!(\"CanvasPaintThread message deserialization error: {e:?}\");\n                                }\n                                Err(_disconnected) => {\n                                    warn!(\"CanvasMsg receiver disconnected\");\n                                    break;\n                                },\n                            }\n                        }\n                        recv(create_receiver) -> msg => {\n                            match msg {\n                                Ok(ConstellationCanvasMsg::Create { sender: creator, size }) => {\n                                    if let Err(error) = creator.send(canvas_paint_thread.create_canvas(size)) {\n                                        warn!(\"Create canvas response failed ({error})\");\n                                    }\n                                },\n                                Ok(ConstellationCanvasMsg::Exit(exit_sender)) => {\n                                    let _ = exit_sender.send(());\n                                    break;\n                                },\n                                Err(e) => {\n                                    warn!(\"Error on CanvasPaintThread receive ({})\", e);\n                                    break;\n                                },\n                            }\n                        }\n                    }\n                }\n            }).expect",
+          "lineNumber": 45
+        },
+        {
+          "caller": "start",
+          "callee": "thread::Builder::new()\n            .name(\"Canvas\".to_owned()).spawn",
+          "lineNumber": 45
+        },
+        {
+          "caller": "start",
+          "callee": "thread::Builder::new().name",
+          "lineNumber": 45
+        },
+        {
+          "caller": "start",
+          "callee": "thread::Builder::new",
+          "lineNumber": 45
+        },
+        {
+          "caller": "start",
+          "callee": "\"Canvas\".to_owned",
+          "lineNumber": 46
+        },
+        {
+          "caller": "start",
+          "callee": "CanvasPaintThread::new",
+          "lineNumber": 48
+        },
+        {
+          "caller": "create_canvas",
+          "callee": "Canvas::new",
+          "lineNumber": 96
+        },
+        {
+          "caller": "create_canvas",
+          "callee": "self.paint_api.clone",
+          "lineNumber": 96
+        },
+        {
+          "caller": "create_canvas",
+          "callee": "self.canvases.insert",
+          "lineNumber": 97
+        },
+        {
+          "caller": "create_canvas",
+          "callee": "Some",
+          "lineNumber": 99
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).recreate",
+          "lineNumber": 108
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 108
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvases.remove",
+          "lineNumber": 110
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).set_image_key",
+          "lineNumber": 113
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 113
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).fill_text",
+          "lineNumber": 123
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 123
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).stroke_text",
+          "lineNumber": 141
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 141
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).fill_rect",
+          "lineNumber": 158
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 158
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).stroke_rect",
+          "lineNumber": 174
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 174
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).clear_rect",
+          "lineNumber": 184
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 184
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).fill_path",
+          "lineNumber": 194
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 194
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).stroke_path",
+          "lineNumber": 211
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 211
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).clip_path",
+          "lineNumber": 221
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 221
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).draw_image",
+          "lineNumber": 232
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 232
+        },
+        {
+          "caller": "process_command",
+          "callee": "snapshot.to_owned",
+          "lineNumber": 233
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).draw_image",
+          "lineNumber": 248
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 248
+        },
+        {
+          "caller": "process_command",
+          "callee": "Snapshot::cleared",
+          "lineNumber": 249
+        },
+        {
+          "caller": "process_command",
+          "callee": "self\n                    .canvas(canvas_id).read_pixels",
+          "lineNumber": 266
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 266
+        },
+        {
+          "caller": "process_command",
+          "callee": "Some",
+          "lineNumber": 268
+        },
+        {
+          "caller": "process_command",
+          "callee": "source_rect.to_u32",
+          "lineNumber": 268
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(other_canvas_id).draw_image",
+          "lineNumber": 269
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 269
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).read_pixels",
+          "lineNumber": 280
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 280
+        },
+        {
+          "caller": "process_command",
+          "callee": "sender.send",
+          "lineNumber": 281
+        },
+        {
+          "caller": "process_command",
+          "callee": "snapshot.to_shared",
+          "lineNumber": 281
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).put_image_data",
+          "lineNumber": 286
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 286
+        },
+        {
+          "caller": "process_command",
+          "callee": "snapshot.to_owned",
+          "lineNumber": 287
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).update_image_rendering",
+          "lineNumber": 290
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 290
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas(canvas_id).pop_clips",
+          "lineNumber": 292
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.canvas",
+          "lineNumber": 292
+        },
+        {
+          "caller": "process_command",
+          "callee": "self.process_command",
+          "lineNumber": 295
+        },
+        {
+          "caller": "canvas",
+          "callee": "self.canvases.get_mut(&canvas_id).expect",
+          "lineNumber": 302
+        },
+        {
+          "caller": "canvas",
+          "callee": "self.canvases.get_mut",
+          "lineNumber": 302
+        },
+        {
+          "caller": "new",
+          "callee": "servo_config::pref!(dom_canvas_backend)\n            .to_lowercase().as_str",
+          "lineNumber": 314
+        },
+        {
+          "caller": "new",
+          "callee": "servo_config::pref!(dom_canvas_backend).to_lowercase",
+          "lineNumber": 314
+        },
+        {
+          "caller": "new",
+          "callee": "Some",
+          "lineNumber": 319
+        },
+        {
+          "caller": "new",
+          "callee": "Self::Vello",
+          "lineNumber": 319
+        },
+        {
+          "caller": "new",
+          "callee": "CanvasData::new",
+          "lineNumber": 319
+        },
+        {
+          "caller": "new",
+          "callee": "Some",
+          "lineNumber": 320
+        },
+        {
+          "caller": "new",
+          "callee": "Self::VelloCPU",
+          "lineNumber": 320
+        },
+        {
+          "caller": "new",
+          "callee": "CanvasData::new",
+          "lineNumber": 320
+        },
+        {
+          "caller": "set_image_key",
+          "callee": "canvas_data.set_image_key",
+          "lineNumber": 327
+        },
+        {
+          "caller": "set_image_key",
+          "callee": "canvas_data.set_image_key",
+          "lineNumber": 328
+        },
+        {
+          "caller": "pop_clips",
+          "callee": "canvas_data.pop_clips",
+          "lineNumber": 335
+        },
+        {
+          "caller": "pop_clips",
+          "callee": "canvas_data.pop_clips",
+          "lineNumber": 336
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "canvas_data.stroke_text",
+          "lineNumber": 352
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "canvas_data.stroke_text",
+          "lineNumber": 361
+        },
+        {
+          "caller": "fill_text",
+          "callee": "canvas_data.fill_text",
+          "lineNumber": 384
+        },
+        {
+          "caller": "fill_text",
+          "callee": "canvas_data.fill_text",
+          "lineNumber": 392
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "canvas_data.fill_rect",
+          "lineNumber": 414
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "canvas_data.fill_rect",
+          "lineNumber": 417
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "canvas_data.stroke_rect",
+          "lineNumber": 433
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "canvas_data.stroke_rect",
+          "lineNumber": 441
+        },
+        {
+          "caller": "fill_path",
+          "callee": "canvas_data.fill_path",
+          "lineNumber": 463
+        },
+        {
+          "caller": "fill_path",
+          "callee": "canvas_data.fill_path",
+          "lineNumber": 471
+        },
+        {
+          "caller": "stroke_path",
+          "callee": "canvas_data.stroke_path",
+          "lineNumber": 493
+        },
+        {
+          "caller": "stroke_path",
+          "callee": "canvas_data.stroke_path",
+          "lineNumber": 501
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "canvas_data.clear_rect",
+          "lineNumber": 515
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "canvas_data.clear_rect",
+          "lineNumber": 516
+        },
+        {
+          "caller": "draw_image",
+          "callee": "canvas_data.draw_image",
+          "lineNumber": 533
+        },
+        {
+          "caller": "draw_image",
+          "callee": "canvas_data.draw_image",
+          "lineNumber": 542
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "canvas_data.read_pixels",
+          "lineNumber": 557
+        },
+        {
+          "caller": "read_pixels",
+          "callee": "canvas_data.read_pixels",
+          "lineNumber": 558
+        },
+        {
+          "caller": "clip_path",
+          "callee": "canvas_data.clip_path",
+          "lineNumber": 565
+        },
+        {
+          "caller": "clip_path",
+          "callee": "canvas_data.clip_path",
+          "lineNumber": 566
+        },
+        {
+          "caller": "put_image_data",
+          "callee": "canvas_data.put_image_data",
+          "lineNumber": 573
+        },
+        {
+          "caller": "put_image_data",
+          "callee": "canvas_data.put_image_data",
+          "lineNumber": 574
+        },
+        {
+          "caller": "update_image_rendering",
+          "callee": "canvas_data.update_image_rendering",
+          "lineNumber": 581
+        },
+        {
+          "caller": "update_image_rendering",
+          "callee": "canvas_data.update_image_rendering",
+          "lineNumber": 582
+        },
+        {
+          "caller": "recreate",
+          "callee": "canvas_data.recreate",
+          "lineNumber": 589
+        },
+        {
+          "caller": "recreate",
+          "callee": "canvas_data.recreate",
+          "lineNumber": 590
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 21,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/canvas/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 14,
+      "nonEmptyLines": 12,
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/canvas/peniko_conversions.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 241,
+      "nonEmptyLines": 223,
+      "functions": [
+        {
+          "name": "convert",
+          "startLine": 14,
+          "endLine": 17,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 21,
+          "endLine": 27,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 31,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 41,
+          "endLine": 49,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 53,
+          "endLine": 60,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 64,
+          "endLine": 79,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 83,
+          "endLine": 101,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 105,
+          "endLine": 123,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 127,
+          "endLine": 132,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 136,
+          "endLine": 142,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 146,
+          "endLine": 196,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 200,
+          "endLine": 202,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 206,
+          "endLine": 211,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 215,
+          "endLine": 222,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 226,
+          "endLine": 231,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 235,
+          "endLine": 240,
+          "params": []
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "convert",
+          "callee": "peniko::FontData::new",
+          "lineNumber": 16
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Blob::new",
+          "lineNumber": 16
+        },
+        {
+          "caller": "convert",
+          "callee": "Arc::new",
+          "lineNumber": 16
+        },
+        {
+          "caller": "convert",
+          "callee": "self.into_srgb_legacy",
+          "lineNumber": 42
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Color::new",
+          "lineNumber": 43
+        },
+        {
+          "caller": "convert",
+          "callee": "composition_style.convert().into",
+          "lineNumber": 56
+        },
+        {
+          "caller": "convert",
+          "callee": "composition_style.convert",
+          "lineNumber": 56
+        },
+        {
+          "caller": "convert",
+          "callee": "blending_style.convert().into",
+          "lineNumber": 58
+        },
+        {
+          "caller": "convert",
+          "callee": "blending_style.convert",
+          "lineNumber": 58
+        },
+        {
+          "caller": "convert",
+          "callee": "join_style.convert",
+          "lineNumber": 116
+        },
+        {
+          "caller": "convert",
+          "callee": "cap_style.convert",
+          "lineNumber": 118
+        },
+        {
+          "caller": "convert",
+          "callee": "cap_style.convert",
+          "lineNumber": 119
+        },
+        {
+          "caller": "convert",
+          "callee": "dash.iter().map(|x| *x as f64).collect",
+          "lineNumber": 120
+        },
+        {
+          "caller": "convert",
+          "callee": "dash.iter().map",
+          "lineNumber": 120
+        },
+        {
+          "caller": "convert",
+          "callee": "dash.iter",
+          "lineNumber": 120
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Brush::Solid",
+          "lineNumber": 149
+        },
+        {
+          "caller": "convert",
+          "callee": "absolute_color.convert",
+          "lineNumber": 149
+        },
+        {
+          "caller": "convert",
+          "callee": "kurbo::Point::new",
+          "lineNumber": 151
+        },
+        {
+          "caller": "convert",
+          "callee": "kurbo::Point::new",
+          "lineNumber": 152
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Gradient::new_linear",
+          "lineNumber": 153
+        },
+        {
+          "caller": "convert",
+          "callee": "style.stops.convert",
+          "lineNumber": 154
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Brush::Gradient",
+          "lineNumber": 155
+        },
+        {
+          "caller": "convert",
+          "callee": "kurbo::Point::new",
+          "lineNumber": 158
+        },
+        {
+          "caller": "convert",
+          "callee": "kurbo::Point::new",
+          "lineNumber": 159
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Gradient::new_two_point_radial",
+          "lineNumber": 160
+        },
+        {
+          "caller": "convert",
+          "callee": "style.stops.convert",
+          "lineNumber": 166
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Brush::Gradient",
+          "lineNumber": 167
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Brush::Image",
+          "lineNumber": 171
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Blob::from",
+          "lineNumber": 173
+        },
+        {
+          "caller": "convert",
+          "callee": "Vec::from",
+          "lineNumber": 173
+        },
+        {
+          "caller": "convert",
+          "callee": "snapshot.data",
+          "lineNumber": 173
+        },
+        {
+          "caller": "convert",
+          "callee": "snapshot.format().convert",
+          "lineNumber": 174
+        },
+        {
+          "caller": "convert",
+          "callee": "snapshot.format",
+          "lineNumber": 174
+        },
+        {
+          "caller": "convert",
+          "callee": "snapshot.alpha_mode().alpha().convert",
+          "lineNumber": 177
+        },
+        {
+          "caller": "convert",
+          "callee": "snapshot.alpha_mode().alpha",
+          "lineNumber": 177
+        },
+        {
+          "caller": "convert",
+          "callee": "snapshot.alpha_mode",
+          "lineNumber": 177
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::color::DynamicColor::from_alpha_color",
+          "lineNumber": 201
+        },
+        {
+          "caller": "convert",
+          "callee": "self.convert",
+          "lineNumber": 201
+        },
+        {
+          "caller": "convert",
+          "callee": "self.color.convert",
+          "lineNumber": 209
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::ColorStops",
+          "lineNumber": 216
+        },
+        {
+          "caller": "convert",
+          "callee": "self.into_iter().map(|item| item.convert()).collect",
+          "lineNumber": 216
+        },
+        {
+          "caller": "convert",
+          "callee": "self.into_iter().map",
+          "lineNumber": 216
+        },
+        {
+          "caller": "convert",
+          "callee": "self.into_iter",
+          "lineNumber": 216
+        },
+        {
+          "caller": "convert",
+          "callee": "item.convert",
+          "lineNumber": 216
+        },
+        {
+          "caller": "convert",
+          "callee": "stops\n            .0.sort_by",
+          "lineNumber": 218
+        },
+        {
+          "caller": "convert",
+          "callee": "a.offset.partial_cmp(&b.offset).unwrap",
+          "lineNumber": 220
+        },
+        {
+          "caller": "convert",
+          "callee": "a.offset.partial_cmp",
+          "lineNumber": 220
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 16,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/canvas/vello_backend.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 761,
+      "nonEmptyLines": 712,
+      "functions": [
+        {
+          "name": "new_with_renderer",
+          "startLine": 75,
+          "endLine": 133,
+          "params": [
+            "device",
+            "queue",
+            "renderer",
+            "size"
+          ]
+        },
+        {
+          "name": "with_composition",
+          "startLine": 135,
+          "endLine": 155,
+          "params": [
+            "composition_operation",
+            "f"
+          ]
+        },
+        {
+          "name": "ignore_clips",
+          "startLine": 157,
+          "endLine": 168,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "is_viewport_cleared",
+          "startLine": 170,
+          "endLine": 184,
+          "params": [
+            "rect",
+            "transform"
+          ]
+        },
+        {
+          "name": "ensure_drawing",
+          "startLine": 186,
+          "endLine": 198,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 204,
+          "endLine": 240,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "clear_rect",
+          "startLine": 242,
+          "endLine": 269,
+          "params": [
+            "rect",
+            "transform"
+          ]
+        },
+        {
+          "name": "copy_surface",
+          "startLine": 271,
+          "endLine": 309,
+          "params": [
+            "surface",
+            "source",
+            "destination"
+          ]
+        },
+        {
+          "name": "create_similar_draw_target",
+          "startLine": 311,
+          "endLine": 318,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "draw_surface",
+          "startLine": 320,
+          "endLine": 365,
+          "params": [
+            "surface",
+            "dest",
+            "source",
+            "filter",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "draw_surface_with_shadow",
+          "startLine": 367,
+          "endLine": 381,
+          "params": [
+            "_surface",
+            "_dest",
+            "_shadow_options",
+            "_composition_options"
+          ]
+        },
+        {
+          "name": "fill",
+          "startLine": 383,
+          "endLine": 401,
+          "params": [
+            "path",
+            "fill_rule",
+            "style",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_text",
+          "startLine": 403,
+          "endLine": 450,
+          "params": [
+            "text_runs",
+            "style",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_rect",
+          "startLine": 452,
+          "endLine": 468,
+          "params": [
+            "rect",
+            "style",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "get_size",
+          "startLine": 470,
+          "endLine": 472,
+          "params": []
+        },
+        {
+          "name": "pop_clip",
+          "startLine": 474,
+          "endLine": 478,
+          "params": []
+        },
+        {
+          "name": "push_clip",
+          "startLine": 480,
+          "endLine": 486,
+          "params": [
+            "path",
+            "_fill_rule",
+            "transform"
+          ]
+        },
+        {
+          "name": "push_clip_rect",
+          "startLine": 488,
+          "endLine": 498,
+          "params": [
+            "rect"
+          ]
+        },
+        {
+          "name": "stroke",
+          "startLine": 500,
+          "endLine": 518,
+          "params": [
+            "path",
+            "style",
+            "line_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_text",
+          "startLine": 520,
+          "endLine": 569,
+          "params": [
+            "text_runs",
+            "style",
+            "line_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_rect",
+          "startLine": 571,
+          "endLine": 590,
+          "params": [
+            "rect",
+            "style",
+            "line_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "image_descriptor_and_serializable_data",
+          "startLine": 592,
+          "endLine": 614,
+          "params": []
+        },
+        {
+          "name": "snapshot",
+          "startLine": 616,
+          "endLine": 639,
+          "params": []
+        },
+        {
+          "name": "surface",
+          "startLine": 641,
+          "endLine": 643,
+          "params": []
+        },
+        {
+          "name": "create_source_surface_from_data",
+          "startLine": 645,
+          "endLine": 653,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "drop",
+          "startLine": 657,
+          "endLine": 661,
+          "params": []
+        },
+        {
+          "name": "convert_to_brush",
+          "startLine": 664,
+          "endLine": 670,
+          "params": [
+            "style",
+            "composition_options"
+          ]
+        },
+        {
+          "name": "render_to_texture",
+          "startLine": 673,
+          "endLine": 704,
+          "params": []
+        },
+        {
+          "name": "render_to_buffer",
+          "startLine": 706,
+          "endLine": 733,
+          "params": []
+        },
+        {
+          "name": "map_read",
+          "startLine": 735,
+          "endLine": 752,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "extend3d",
+          "startLine": 755,
+          "endLine": 761,
+          "params": [
+            "size"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "VelloDrawTarget",
+          "startLine": 48,
+          "endLine": 61,
+          "methods": [
+            "new_with_renderer",
+            "with_composition",
+            "ignore_clips",
+            "is_viewport_cleared",
+            "ensure_drawing",
+            "new",
+            "clear_rect",
+            "copy_surface",
+            "create_similar_draw_target",
+            "draw_surface",
+            "draw_surface_with_shadow",
+            "fill",
+            "fill_text",
+            "fill_rect",
+            "get_size",
+            "pop_clip",
+            "push_clip",
+            "push_clip_rect",
+            "stroke",
+            "stroke_text",
+            "stroke_rect",
+            "image_descriptor_and_serializable_data",
+            "snapshot",
+            "surface",
+            "create_source_surface_from_data",
+            "drop",
+            "render_to_texture",
+            "render_to_buffer",
+            "map_read"
+          ],
+          "properties": [
+            "device",
+            "queue",
+            "renderer",
+            "scene",
+            "size",
+            "clips",
+            "state",
+            "render_texture",
+            "render_texture_view",
+            "render_image",
+            "padded_byte_width",
+            "rendered_buffer"
+          ]
+        },
+        {
+          "name": "State",
+          "startLine": 64,
+          "endLine": 72,
+          "methods": [],
+          "properties": [
+            "Drawing",
+            "RenderedToTexture",
+            "RenderedToBuffer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "VelloDrawTarget",
+          "line": 48,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_with_renderer",
+          "callee": "device.create_texture",
+          "lineNumber": 81
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "extend3d",
+          "lineNumber": 83
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "render_texture.create_view",
+          "lineNumber": 91
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "TextureViewDescriptor::default",
+          "lineNumber": 91
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "vec![].into",
+          "lineNumber": 94
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "peniko::ImageSampler::default",
+          "lineNumber": 100
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "renderer.borrow_mut().override_image",
+          "lineNumber": 102
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "renderer.borrow_mut",
+          "lineNumber": 102
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "Some",
+          "lineNumber": 104
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "render_texture.clone",
+          "lineNumber": 105
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "(size.width * 4).next_multiple_of",
+          "lineNumber": 111
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "device.create_buffer",
+          "lineNumber": 113
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "Some",
+          "lineNumber": 114
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "vello::Scene::new",
+          "lineNumber": 123
+        },
+        {
+          "caller": "new_with_renderer",
+          "callee": "Vec::new",
+          "lineNumber": 125
+        },
+        {
+          "caller": "with_composition",
+          "callee": "CompositionOrBlending::Composition",
+          "lineNumber": 141
+        },
+        {
+          "caller": "with_composition",
+          "callee": "f",
+          "lineNumber": 143
+        },
+        {
+          "caller": "with_composition",
+          "callee": "self.scene.push_layer",
+          "lineNumber": 146
+        },
+        {
+          "caller": "with_composition",
+          "callee": "composition_operation.convert",
+          "lineNumber": 148
+        },
+        {
+          "caller": "with_composition",
+          "callee": "kurbo::Rect::ZERO.with_size",
+          "lineNumber": 151
+        },
+        {
+          "caller": "with_composition",
+          "callee": "self.size.cast",
+          "lineNumber": 151
+        },
+        {
+          "caller": "with_composition",
+          "callee": "f",
+          "lineNumber": 153
+        },
+        {
+          "caller": "with_composition",
+          "callee": "self.scene.pop_layer",
+          "lineNumber": 154
+        },
+        {
+          "caller": "ignore_clips",
+          "callee": "self.scene.pop_layer",
+          "lineNumber": 160
+        },
+        {
+          "caller": "ignore_clips",
+          "callee": "f",
+          "lineNumber": 162
+        },
+        {
+          "caller": "ignore_clips",
+          "callee": "self.scene.push_clip_layer",
+          "lineNumber": 165
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "transform.outer_transformed_rect",
+          "lineNumber": 171
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "rect.cast",
+          "lineNumber": 171
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "transformed_rect.is_empty",
+          "lineNumber": 172
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "Rect::from_size",
+          "lineNumber": 175
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "self.get_size().cast",
+          "lineNumber": 175
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "self.get_size",
+          "lineNumber": 175
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "self.clips.iter().try_fold",
+          "lineNumber": 176
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "self.clips.iter",
+          "lineNumber": 176
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "acc.intersection",
+          "lineNumber": 177
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "e.0.bounding_box().into",
+          "lineNumber": 177
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "e.0.bounding_box",
+          "lineNumber": 177
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "transformed_rect.cast().contains_rect",
+          "lineNumber": 182
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "transformed_rect.cast",
+          "lineNumber": 182
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "clip.contains_rect",
+          "lineNumber": 183
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self.ignore_clips",
+          "lineNumber": 190
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self_\n                        .scene.draw_image",
+          "lineNumber": 191
+        },
+        {
+          "caller": "new",
+          "callee": "Backends::from_env().unwrap_or_default",
+          "lineNumber": 208
+        },
+        {
+          "caller": "new",
+          "callee": "Backends::from_env",
+          "lineNumber": 208
+        },
+        {
+          "caller": "new",
+          "callee": "InstanceFlags::from_build_config().with_env",
+          "lineNumber": 209
+        },
+        {
+          "caller": "new",
+          "callee": "InstanceFlags::from_build_config",
+          "lineNumber": 209
+        },
+        {
+          "caller": "new",
+          "callee": "BackendOptions::from_env_or_default",
+          "lineNumber": 210
+        },
+        {
+          "caller": "new",
+          "callee": "Instance::new",
+          "lineNumber": 211
+        },
+        {
+          "caller": "new",
+          "callee": "MemoryBudgetThresholds::default",
+          "lineNumber": 216
+        },
+        {
+          "caller": "new",
+          "callee": "Vec::new",
+          "lineNumber": 220
+        },
+        {
+          "caller": "new",
+          "callee": "pollster::block_on(context.device(None)).unwrap",
+          "lineNumber": 222
+        },
+        {
+          "caller": "new",
+          "callee": "pollster::block_on",
+          "lineNumber": 222
+        },
+        {
+          "caller": "new",
+          "callee": "context.device",
+          "lineNumber": 222
+        },
+        {
+          "caller": "new",
+          "callee": "device_handle.device.clone",
+          "lineNumber": 224
+        },
+        {
+          "caller": "new",
+          "callee": "device_handle.queue.clone",
+          "lineNumber": 225
+        },
+        {
+          "caller": "new",
+          "callee": "vello::Renderer::new(\n            &device,\n            vello::RendererOptions {\n                use_cpu: false,\n                num_init_threads: NonZeroUsize::new(1),\n                antialiasing_support: vello::AaSupport::area_only(),\n                pipeline_cache: None,\n            },\n        ).unwrap",
+          "lineNumber": 226
+        },
+        {
+          "caller": "new",
+          "callee": "vello::Renderer::new",
+          "lineNumber": 226
+        },
+        {
+          "caller": "new",
+          "callee": "NonZeroUsize::new",
+          "lineNumber": 230
+        },
+        {
+          "caller": "new",
+          "callee": "vello::AaSupport::area_only",
+          "lineNumber": 231
+        },
+        {
+          "caller": "new",
+          "callee": "device.on_uncaptured_error",
+          "lineNumber": 236
+        },
+        {
+          "caller": "new",
+          "callee": "Arc::new",
+          "lineNumber": 236
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_renderer",
+          "lineNumber": 239
+        },
+        {
+          "caller": "new",
+          "callee": "Rc::new",
+          "lineNumber": 239
+        },
+        {
+          "caller": "new",
+          "callee": "RefCell::new",
+          "lineNumber": 239
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.is_viewport_cleared",
+          "lineNumber": 245
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.scene.reset",
+          "lineNumber": 246
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.clips.clear",
+          "lineNumber": 247
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 251
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "rect.cast().into",
+          "lineNumber": 252
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "rect.cast",
+          "lineNumber": 252
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "transform.into",
+          "lineNumber": 253
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.scene.push_layer",
+          "lineNumber": 254
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.scene.fill",
+          "lineNumber": 261
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "peniko::BrushRef::Solid",
+          "lineNumber": 264
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.scene.pop_layer",
+          "lineNumber": 268
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 272
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "destination.cast::<f64>().into",
+          "lineNumber": 273
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "destination.cast::<f64>",
+          "lineNumber": 273
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "kurbo::Rect::from_origin_size",
+          "lineNumber": 274
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "source.size.cast",
+          "lineNumber": 274
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self.ignore_clips",
+          "lineNumber": 276
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self_.scene.push_layer",
+          "lineNumber": 277
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self_.scene.fill",
+          "lineNumber": 285
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "peniko::Blob::from",
+          "lineNumber": 290
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "Some",
+          "lineNumber": 303
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "kurbo::Affine::translate",
+          "lineNumber": 303
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "destination.to_vec2",
+          "lineNumber": 303
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self_.scene.pop_layer",
+          "lineNumber": 307
+        },
+        {
+          "caller": "create_similar_draw_target",
+          "callee": "Self::new_with_renderer",
+          "lineNumber": 312
+        },
+        {
+          "caller": "create_similar_draw_target",
+          "callee": "self.device.clone",
+          "lineNumber": 313
+        },
+        {
+          "caller": "create_similar_draw_target",
+          "callee": "self.queue.clone",
+          "lineNumber": 314
+        },
+        {
+          "caller": "create_similar_draw_target",
+          "callee": "self.renderer.clone",
+          "lineNumber": 315
+        },
+        {
+          "caller": "create_similar_draw_target",
+          "callee": "size.cast",
+          "lineNumber": 316
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 329
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "dest.into",
+          "lineNumber": 331
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self.with_composition",
+          "lineNumber": 332
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self_.scene.fill",
+          "lineNumber": 333
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "transform.cast().into",
+          "lineNumber": 335
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "transform.cast",
+          "lineNumber": 335
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "peniko::Blob::from",
+          "lineNumber": 338
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "filter.convert",
+          "lineNumber": 349
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "Some",
+          "lineNumber": 356
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "kurbo::Affine::translate((dest.origin.x, dest.origin.y)).pre_scale_non_uniform",
+          "lineNumber": 357
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "kurbo::Affine::translate",
+          "lineNumber": 357
+        },
+        {
+          "caller": "fill",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 391
+        },
+        {
+          "caller": "fill",
+          "callee": "self.with_composition",
+          "lineNumber": 392
+        },
+        {
+          "caller": "fill",
+          "callee": "self_.scene.fill",
+          "lineNumber": 393
+        },
+        {
+          "caller": "fill",
+          "callee": "fill_rule.convert",
+          "lineNumber": 394
+        },
+        {
+          "caller": "fill",
+          "callee": "transform.cast().into",
+          "lineNumber": 395
+        },
+        {
+          "caller": "fill",
+          "callee": "transform.cast",
+          "lineNumber": 395
+        },
+        {
+          "caller": "fill",
+          "callee": "convert_to_brush",
+          "lineNumber": 396
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 410
+        },
+        {
+          "caller": "fill_text",
+          "callee": "convert_to_brush",
+          "lineNumber": 411
+        },
+        {
+          "caller": "fill_text",
+          "callee": "transform.cast().into",
+          "lineNumber": 412
+        },
+        {
+          "caller": "fill_text",
+          "callee": "transform.cast",
+          "lineNumber": 412
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self.with_composition",
+          "lineNumber": 413
+        },
+        {
+          "caller": "fill_text",
+          "callee": "text_runs.iter",
+          "lineNumber": 414
+        },
+        {
+          "caller": "fill_text",
+          "callee": "SHARED_FONT_CACHE.with",
+          "lineNumber": 415
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow().contains_key",
+          "lineNumber": 417
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow",
+          "lineNumber": 417
+        },
+        {
+          "caller": "fill_text",
+          "callee": "text_run.font.font_data_and_index",
+          "lineNumber": 418
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_data_and_index.convert",
+          "lineNumber": 421
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow_mut().insert",
+          "lineNumber": 422
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow_mut",
+          "lineNumber": 422
+        },
+        {
+          "caller": "fill_text",
+          "callee": "identifier.clone",
+          "lineNumber": 422
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow",
+          "lineNumber": 425
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.get",
+          "lineNumber": 426
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                        .scene\n                        .draw_glyphs(font)\n                        .transform(transform)\n                        .brush(&pattern)\n                        .font_size(text_run.pt_size).draw",
+          "lineNumber": 430
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                        .scene\n                        .draw_glyphs(font)\n                        .transform(transform)\n                        .brush(&pattern).font_size",
+          "lineNumber": 430
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                        .scene\n                        .draw_glyphs(font)\n                        .transform(transform).brush",
+          "lineNumber": 430
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                        .scene\n                        .draw_glyphs(font).transform",
+          "lineNumber": 430
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                        .scene.draw_glyphs",
+          "lineNumber": 430
+        },
+        {
+          "caller": "fill_text",
+          "callee": "text_run\n                                .glyphs_and_positions\n                                .iter().map",
+          "lineNumber": 438
+        },
+        {
+          "caller": "fill_text",
+          "callee": "text_run\n                                .glyphs_and_positions.iter",
+          "lineNumber": 438
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 459
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "convert_to_brush",
+          "lineNumber": 460
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "transform.cast().into",
+          "lineNumber": 461
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "transform.cast",
+          "lineNumber": 461
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "rect.cast().into",
+          "lineNumber": 462
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "rect.cast",
+          "lineNumber": 462
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self.with_composition",
+          "lineNumber": 463
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self_\n                .scene.fill",
+          "lineNumber": 464
+        },
+        {
+          "caller": "get_size",
+          "callee": "self.size.cast",
+          "lineNumber": 471
+        },
+        {
+          "caller": "pop_clip",
+          "callee": "self.clips.pop().is_some",
+          "lineNumber": 475
+        },
+        {
+          "caller": "pop_clip",
+          "callee": "self.clips.pop",
+          "lineNumber": 475
+        },
+        {
+          "caller": "pop_clip",
+          "callee": "self.scene.pop_layer",
+          "lineNumber": 476
+        },
+        {
+          "caller": "push_clip",
+          "callee": "self.scene.push_clip_layer",
+          "lineNumber": 481
+        },
+        {
+          "caller": "push_clip",
+          "callee": "transform.cast().into",
+          "lineNumber": 482
+        },
+        {
+          "caller": "push_clip",
+          "callee": "transform.cast",
+          "lineNumber": 482
+        },
+        {
+          "caller": "push_clip",
+          "callee": "path.clone",
+          "lineNumber": 483
+        },
+        {
+          "caller": "push_clip",
+          "callee": "path.transform",
+          "lineNumber": 484
+        },
+        {
+          "caller": "push_clip",
+          "callee": "transform.cast",
+          "lineNumber": 484
+        },
+        {
+          "caller": "push_clip",
+          "callee": "self.clips.push",
+          "lineNumber": 485
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "Path::new",
+          "lineNumber": 489
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "rect.cast",
+          "lineNumber": 490
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "path.rect",
+          "lineNumber": 491
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "self.push_clip",
+          "lineNumber": 497
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "Transform2D::identity",
+          "lineNumber": 497
+        },
+        {
+          "caller": "stroke",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 508
+        },
+        {
+          "caller": "stroke",
+          "callee": "self.with_composition",
+          "lineNumber": 509
+        },
+        {
+          "caller": "stroke",
+          "callee": "self_.scene.stroke",
+          "lineNumber": 510
+        },
+        {
+          "caller": "stroke",
+          "callee": "line_options.convert",
+          "lineNumber": 511
+        },
+        {
+          "caller": "stroke",
+          "callee": "transform.cast().into",
+          "lineNumber": 512
+        },
+        {
+          "caller": "stroke",
+          "callee": "transform.cast",
+          "lineNumber": 512
+        },
+        {
+          "caller": "stroke",
+          "callee": "convert_to_brush",
+          "lineNumber": 513
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 528
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "convert_to_brush",
+          "lineNumber": 529
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "transform.cast().into",
+          "lineNumber": 530
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "transform.cast",
+          "lineNumber": 530
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "line_options.convert",
+          "lineNumber": 531
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self.with_composition",
+          "lineNumber": 532
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "text_runs.iter",
+          "lineNumber": 533
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "SHARED_FONT_CACHE.with",
+          "lineNumber": 534
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow().contains_key",
+          "lineNumber": 536
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow",
+          "lineNumber": 536
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "text_run.font.font_data_and_index",
+          "lineNumber": 537
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_data_and_index.convert",
+          "lineNumber": 540
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow_mut().insert",
+          "lineNumber": 541
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow_mut",
+          "lineNumber": 541
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "identifier.clone",
+          "lineNumber": 541
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow",
+          "lineNumber": 544
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.get",
+          "lineNumber": 545
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_\n                        .scene\n                        .draw_glyphs(font)\n                        .transform(transform)\n                        .brush(&pattern)\n                        .font_size(text_run.pt_size).draw",
+          "lineNumber": 549
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_\n                        .scene\n                        .draw_glyphs(font)\n                        .transform(transform)\n                        .brush(&pattern).font_size",
+          "lineNumber": 549
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_\n                        .scene\n                        .draw_glyphs(font)\n                        .transform(transform).brush",
+          "lineNumber": 549
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_\n                        .scene\n                        .draw_glyphs(font).transform",
+          "lineNumber": 549
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_\n                        .scene.draw_glyphs",
+          "lineNumber": 549
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "text_run\n                                .glyphs_and_positions\n                                .iter().map",
+          "lineNumber": 557
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "text_run\n                                .glyphs_and_positions.iter",
+          "lineNumber": 557
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 579
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "rect.cast().into",
+          "lineNumber": 580
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "rect.cast",
+          "lineNumber": 580
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self.with_composition",
+          "lineNumber": 581
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self_.scene.stroke",
+          "lineNumber": 582
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "line_options.convert",
+          "lineNumber": 583
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "transform.cast().into",
+          "lineNumber": 584
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "transform.cast",
+          "lineNumber": 584
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "convert_to_brush",
+          "lineNumber": 585
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "self.map_read",
+          "lineNumber": 597
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "size.cast().cast_unit",
+          "lineNumber": 600
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "size.cast",
+          "lineNumber": 600
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "data.map",
+          "lineNumber": 601
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "ImageDescriptorFlags::empty",
+          "lineNumber": 603
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "SerializableImageData::Raw",
+          "lineNumber": 605
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "GenericSharedMemory::from_bytes_with_mutator",
+          "lineNumber": 606
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "pixels::generic_transform_inplace::<1, false, false>",
+          "lineNumber": 607
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "GenericSharedMemory::from_byte",
+          "lineNumber": 610
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "size.area",
+          "lineNumber": 610
+        },
+        {
+          "caller": "snapshot",
+          "callee": "self.map_read",
+          "lineNumber": 619
+        },
+        {
+          "caller": "snapshot",
+          "callee": "data\n                .map(|data| {\n                    let mut result_unpadded = Vec::<u8>::with_capacity(size.area() as usize * 4);\n                    for row in 0..size.height {\n                        let start = (row * padded_byte_width).try_into().unwrap();\n                        result_unpadded.extend(&data[start..start + (size.width * 4) as usize]);\n                    }\n                    result_unpadded\n                }).unwrap_or_else",
+          "lineNumber": 620
+        },
+        {
+          "caller": "snapshot",
+          "callee": "data.map",
+          "lineNumber": 620
+        },
+        {
+          "caller": "snapshot",
+          "callee": "Vec::<u8>::with_capacity",
+          "lineNumber": 622
+        },
+        {
+          "caller": "snapshot",
+          "callee": "size.area",
+          "lineNumber": 622
+        },
+        {
+          "caller": "snapshot",
+          "callee": "(row * padded_byte_width).try_into().unwrap",
+          "lineNumber": 624
+        },
+        {
+          "caller": "snapshot",
+          "callee": "(row * padded_byte_width).try_into",
+          "lineNumber": 624
+        },
+        {
+          "caller": "snapshot",
+          "callee": "result_unpadded.extend",
+          "lineNumber": 625
+        },
+        {
+          "caller": "snapshot",
+          "callee": "Snapshot::from_vec",
+          "lineNumber": 630
+        },
+        {
+          "caller": "surface",
+          "callee": "self.snapshot().as_raw_bytes().to_vec",
+          "lineNumber": 642
+        },
+        {
+          "caller": "surface",
+          "callee": "self.snapshot().as_raw_bytes",
+          "lineNumber": 642
+        },
+        {
+          "caller": "surface",
+          "callee": "self.snapshot",
+          "lineNumber": 642
+        },
+        {
+          "caller": "create_source_surface_from_data",
+          "callee": "data.transform",
+          "lineNumber": 646
+        },
+        {
+          "caller": "create_source_surface_from_data",
+          "callee": "Some",
+          "lineNumber": 652
+        },
+        {
+          "caller": "create_source_surface_from_data",
+          "callee": "data.as_raw_bytes().to_vec",
+          "lineNumber": 652
+        },
+        {
+          "caller": "create_source_surface_from_data",
+          "callee": "data.as_raw_bytes",
+          "lineNumber": 652
+        },
+        {
+          "caller": "drop",
+          "callee": "self.renderer\n            .borrow_mut().override_image",
+          "lineNumber": 658
+        },
+        {
+          "caller": "drop",
+          "callee": "self.renderer.borrow_mut",
+          "lineNumber": 658
+        },
+        {
+          "caller": "convert_to_brush",
+          "callee": "style.convert",
+          "lineNumber": 668
+        },
+        {
+          "caller": "convert_to_brush",
+          "callee": "brush.multiply_alpha",
+          "lineNumber": 669
+        },
+        {
+          "caller": "render_to_texture",
+          "callee": "self.renderer\n            .borrow_mut()\n            .render_to_texture(\n                &self.device,\n                &self.queue,\n                &self.scene,\n                &self.render_texture_view,\n                &vello::RenderParams {\n                    base_color: peniko::color::AlphaColor::TRANSPARENT,\n                    width: self.size.width,\n                    height: self.size.height,\n                    antialiasing_method: vello::AaConfig::Area,\n                },\n            ).unwrap",
+          "lineNumber": 681
+        },
+        {
+          "caller": "render_to_texture",
+          "callee": "self.renderer\n            .borrow_mut().render_to_texture",
+          "lineNumber": 681
+        },
+        {
+          "caller": "render_to_texture",
+          "callee": "self.renderer.borrow_mut",
+          "lineNumber": 681
+        },
+        {
+          "caller": "render_to_texture",
+          "callee": "self.scene.reset",
+          "lineNumber": 698
+        },
+        {
+          "caller": "render_to_texture",
+          "callee": "self.scene.push_clip_layer",
+          "lineNumber": 701
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "self.render_to_texture",
+          "lineNumber": 710
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "extend3d",
+          "lineNumber": 712
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "self\n            .device.create_command_encoder",
+          "lineNumber": 714
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "Some",
+          "lineNumber": 717
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "encoder.copy_texture_to_buffer",
+          "lineNumber": 719
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "self.render_texture.as_image_copy",
+          "lineNumber": 720
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "Some",
+          "lineNumber": 725
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "self.queue.submit",
+          "lineNumber": 731
+        },
+        {
+          "caller": "render_to_buffer",
+          "callee": "encoder.finish",
+          "lineNumber": 731
+        },
+        {
+          "caller": "map_read",
+          "callee": "self.render_to_buffer",
+          "lineNumber": 736
+        },
+        {
+          "caller": "map_read",
+          "callee": "self.rendered_buffer.slice",
+          "lineNumber": 738
+        },
+        {
+          "caller": "map_read",
+          "callee": "futures_intrusive::channel::shared::oneshot_channel",
+          "lineNumber": 739
+        },
+        {
+          "caller": "map_read",
+          "callee": "buf_slice.map_async",
+          "lineNumber": 740
+        },
+        {
+          "caller": "map_read",
+          "callee": "sender.send(v).unwrap",
+          "lineNumber": 740
+        },
+        {
+          "caller": "map_read",
+          "callee": "sender.send",
+          "lineNumber": 740
+        },
+        {
+          "caller": "map_read",
+          "callee": "vello::util::block_on_wgpu(&self.device, receiver.receive()).unwrap",
+          "lineNumber": 742
+        },
+        {
+          "caller": "map_read",
+          "callee": "vello::util::block_on_wgpu",
+          "lineNumber": 742
+        },
+        {
+          "caller": "map_read",
+          "callee": "receiver.receive",
+          "lineNumber": 742
+        },
+        {
+          "caller": "map_read",
+          "callee": "f",
+          "lineNumber": 745
+        },
+        {
+          "caller": "map_read",
+          "callee": "buf_slice.get_mapped_range",
+          "lineNumber": 747
+        },
+        {
+          "caller": "map_read",
+          "callee": "f",
+          "lineNumber": 748
+        },
+        {
+          "caller": "map_read",
+          "callee": "Some",
+          "lineNumber": 748
+        },
+        {
+          "caller": "map_read",
+          "callee": "self.rendered_buffer.unmap",
+          "lineNumber": 750
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 31,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/canvas/vello_cpu_backend.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 591,
+      "nonEmptyLines": 549,
+      "functions": [
+        {
+          "name": "with_composition",
+          "startLine": 57,
+          "endLine": 71,
+          "params": [
+            "composition_operation",
+            "f"
+          ]
+        },
+        {
+          "name": "ignore_clips",
+          "startLine": 73,
+          "endLine": 84,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "ensure_drawing",
+          "startLine": 86,
+          "endLine": 109,
+          "params": []
+        },
+        {
+          "name": "pixmap",
+          "startLine": 111,
+          "endLine": 124,
+          "params": []
+        },
+        {
+          "name": "size",
+          "startLine": 126,
+          "endLine": 128,
+          "params": []
+        },
+        {
+          "name": "is_viewport_cleared",
+          "startLine": 130,
+          "endLine": 146,
+          "params": [
+            "rect",
+            "transform"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 152,
+          "endLine": 161,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "clear_rect",
+          "startLine": 163,
+          "endLine": 185,
+          "params": [
+            "rect",
+            "transform"
+          ]
+        },
+        {
+          "name": "copy_surface",
+          "startLine": 187,
+          "endLine": 215,
+          "params": [
+            "surface",
+            "source",
+            "destination"
+          ]
+        },
+        {
+          "name": "create_similar_draw_target",
+          "startLine": 217,
+          "endLine": 219,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "draw_surface",
+          "startLine": 221,
+          "endLine": 262,
+          "params": [
+            "surface",
+            "dest",
+            "source",
+            "filter",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "draw_surface_with_shadow",
+          "startLine": 264,
+          "endLine": 278,
+          "params": [
+            "_surface",
+            "_dest",
+            "_shadow_options",
+            "_composition_options"
+          ]
+        },
+        {
+          "name": "fill",
+          "startLine": 280,
+          "endLine": 296,
+          "params": [
+            "path",
+            "fill_rule",
+            "style",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_text",
+          "startLine": 298,
+          "endLine": 338,
+          "params": [
+            "text_runs",
+            "style",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "fill_rect",
+          "startLine": 340,
+          "endLine": 353,
+          "params": [
+            "rect",
+            "style",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "get_size",
+          "startLine": 355,
+          "endLine": 357,
+          "params": []
+        },
+        {
+          "name": "pop_clip",
+          "startLine": 359,
+          "endLine": 363,
+          "params": []
+        },
+        {
+          "name": "push_clip",
+          "startLine": 365,
+          "endLine": 372,
+          "params": [
+            "path",
+            "fill_rule",
+            "transform"
+          ]
+        },
+        {
+          "name": "push_clip_rect",
+          "startLine": 374,
+          "endLine": 384,
+          "params": [
+            "rect"
+          ]
+        },
+        {
+          "name": "stroke",
+          "startLine": 386,
+          "endLine": 401,
+          "params": [
+            "path",
+            "style",
+            "line_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_text",
+          "startLine": 403,
+          "endLine": 445,
+          "params": [
+            "text_runs",
+            "style",
+            "line_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "stroke_rect",
+          "startLine": 447,
+          "endLine": 462,
+          "params": [
+            "rect",
+            "style",
+            "line_options",
+            "composition_options",
+            "transform"
+          ]
+        },
+        {
+          "name": "image_descriptor_and_serializable_data",
+          "startLine": 464,
+          "endLine": 476,
+          "params": []
+        },
+        {
+          "name": "snapshot",
+          "startLine": 478,
+          "endLine": 487,
+          "params": []
+        },
+        {
+          "name": "surface",
+          "startLine": 489,
+          "endLine": 496,
+          "params": []
+        },
+        {
+          "name": "create_source_surface_from_data",
+          "startLine": 498,
+          "endLine": 500,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "snapshot_as_pixmap",
+          "startLine": 503,
+          "endLine": 517,
+          "params": [
+            "snapshot"
+          ]
+        },
+        {
+          "name": "convert",
+          "startLine": 520,
+          "endLine": 564,
+          "params": []
+        },
+        {
+          "name": "paint",
+          "startLine": 567,
+          "endLine": 591,
+          "params": [
+            "style",
+            "alpha"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "State",
+          "startLine": 31,
+          "endLine": 38,
+          "methods": [],
+          "properties": [
+            "Drawing",
+            "Rendered"
+          ]
+        },
+        {
+          "name": "VelloCPUDrawTarget",
+          "startLine": 40,
+          "endLine": 54,
+          "methods": [
+            "with_composition",
+            "ignore_clips",
+            "ensure_drawing",
+            "pixmap",
+            "size",
+            "is_viewport_cleared",
+            "new",
+            "clear_rect",
+            "copy_surface",
+            "create_similar_draw_target",
+            "draw_surface",
+            "draw_surface_with_shadow",
+            "fill",
+            "fill_text",
+            "fill_rect",
+            "get_size",
+            "pop_clip",
+            "push_clip",
+            "push_clip_rect",
+            "stroke",
+            "stroke_text",
+            "stroke_rect",
+            "image_descriptor_and_serializable_data",
+            "snapshot",
+            "surface",
+            "create_source_surface_from_data"
+          ],
+          "properties": [
+            "ctx",
+            "resources",
+            "pixmap",
+            "clips",
+            "state"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "VelloCPUDrawTarget",
+          "line": 40,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "with_composition",
+          "callee": "CompositionOrBlending::Composition",
+          "lineNumber": 63
+        },
+        {
+          "caller": "with_composition",
+          "callee": "f",
+          "lineNumber": 65
+        },
+        {
+          "caller": "with_composition",
+          "callee": "self.ctx.push_blend_layer",
+          "lineNumber": 68
+        },
+        {
+          "caller": "with_composition",
+          "callee": "composition_operation.convert",
+          "lineNumber": 68
+        },
+        {
+          "caller": "with_composition",
+          "callee": "f",
+          "lineNumber": 69
+        },
+        {
+          "caller": "with_composition",
+          "callee": "self.ctx.pop_layer",
+          "lineNumber": 70
+        },
+        {
+          "caller": "ignore_clips",
+          "callee": "self.ctx.pop_layer",
+          "lineNumber": 76
+        },
+        {
+          "caller": "ignore_clips",
+          "callee": "f",
+          "lineNumber": 78
+        },
+        {
+          "caller": "ignore_clips",
+          "callee": "self.ctx.set_transform",
+          "lineNumber": 81
+        },
+        {
+          "caller": "ignore_clips",
+          "callee": "self.ctx.push_clip_layer",
+          "lineNumber": 82
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self.ignore_clips",
+          "lineNumber": 90
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self_.ctx.set_transform",
+          "lineNumber": 91
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self_.ctx.set_paint",
+          "lineNumber": 92
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "vello_cpu::ImageSource::Pixmap",
+          "lineNumber": 93
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "Arc::new",
+          "lineNumber": 93
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self_.pixmap.clone",
+          "lineNumber": 93
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self_.ctx.fill_rect",
+          "lineNumber": 101
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "kurbo::Rect::from_origin_size",
+          "lineNumber": 101
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self_.size().cast",
+          "lineNumber": 103
+        },
+        {
+          "caller": "ensure_drawing",
+          "callee": "self_.size",
+          "lineNumber": 103
+        },
+        {
+          "caller": "pixmap",
+          "callee": "self.ignore_clips",
+          "lineNumber": 113
+        },
+        {
+          "caller": "pixmap",
+          "callee": "self_.ctx.flush",
+          "lineNumber": 114
+        },
+        {
+          "caller": "pixmap",
+          "callee": "self_\n                    .ctx.render_to_pixmap",
+          "lineNumber": 115
+        },
+        {
+          "caller": "pixmap",
+          "callee": "self_.ctx.reset",
+          "lineNumber": 118
+        },
+        {
+          "caller": "pixmap",
+          "callee": "self.pixmap.data_as_u8_slice",
+          "lineNumber": 123
+        },
+        {
+          "caller": "size",
+          "callee": "Size2D::new(self.ctx.width(), self.ctx.height()).cast",
+          "lineNumber": 127
+        },
+        {
+          "caller": "size",
+          "callee": "Size2D::new",
+          "lineNumber": 127
+        },
+        {
+          "caller": "size",
+          "callee": "self.ctx.width",
+          "lineNumber": 127
+        },
+        {
+          "caller": "size",
+          "callee": "self.ctx.height",
+          "lineNumber": 127
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "transform.outer_transformed_rect",
+          "lineNumber": 131
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "rect.cast",
+          "lineNumber": 131
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "transformed_rect.is_empty",
+          "lineNumber": 132
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "Rect::from_size",
+          "lineNumber": 135
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "self.get_size().cast",
+          "lineNumber": 135
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "self.get_size",
+          "lineNumber": 135
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "self.clips.iter().try_fold",
+          "lineNumber": 136
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "self.clips.iter",
+          "lineNumber": 136
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "path.0.clone",
+          "lineNumber": 137
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "bez.apply_affine",
+          "lineNumber": 138
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "acc.intersection",
+          "lineNumber": 139
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "bez.bounding_box().into",
+          "lineNumber": 139
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "bez.bounding_box",
+          "lineNumber": 139
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "transformed_rect.cast().contains_rect",
+          "lineNumber": 144
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "transformed_rect.cast",
+          "lineNumber": 144
+        },
+        {
+          "caller": "is_viewport_cleared",
+          "callee": "clip.contains_rect",
+          "lineNumber": 145
+        },
+        {
+          "caller": "new",
+          "callee": "size.cast",
+          "lineNumber": 153
+        },
+        {
+          "caller": "new",
+          "callee": "vello_cpu::RenderContext::new",
+          "lineNumber": 155
+        },
+        {
+          "caller": "new",
+          "callee": "vello_cpu::Resources::new",
+          "lineNumber": 156
+        },
+        {
+          "caller": "new",
+          "callee": "vello_cpu::Pixmap::new",
+          "lineNumber": 157
+        },
+        {
+          "caller": "new",
+          "callee": "Vec::new",
+          "lineNumber": 158
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.is_viewport_cleared",
+          "lineNumber": 166
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.ctx.reset",
+          "lineNumber": 167
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.clips.clear",
+          "lineNumber": 168
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 172
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "rect.cast().into",
+          "lineNumber": 173
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "rect.cast",
+          "lineNumber": 173
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "rect.to_path",
+          "lineNumber": 174
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "clip_path.apply_affine",
+          "lineNumber": 175
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "transform.cast().into",
+          "lineNumber": 175
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "transform.cast",
+          "lineNumber": 175
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.ctx.push_layer",
+          "lineNumber": 177
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "Some",
+          "lineNumber": 178
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "clip_path.to_path",
+          "lineNumber": 178
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "Some",
+          "lineNumber": 179
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "blend_mode.into",
+          "lineNumber": 179
+        },
+        {
+          "caller": "clear_rect",
+          "callee": "self.ctx.pop_layer",
+          "lineNumber": 184
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 193
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "destination.cast::<f64>().into",
+          "lineNumber": 194
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "destination.cast::<f64>",
+          "lineNumber": 194
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "kurbo::Rect::from_origin_size",
+          "lineNumber": 195
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "source.size.cast",
+          "lineNumber": 195
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self.ctx.set_transform",
+          "lineNumber": 196
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self.ignore_clips",
+          "lineNumber": 197
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self_.ctx.set_paint",
+          "lineNumber": 202
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "vello_cpu::ImageSource::Pixmap",
+          "lineNumber": 203
+        },
+        {
+          "caller": "copy_surface",
+          "callee": "self_.ctx.fill_rect",
+          "lineNumber": 211
+        },
+        {
+          "caller": "create_similar_draw_target",
+          "callee": "Self::new",
+          "lineNumber": 218
+        },
+        {
+          "caller": "create_similar_draw_target",
+          "callee": "size.cast",
+          "lineNumber": 218
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 230
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "Arc::get_mut(&mut surface)\n                .expect(\"surface should be owned\").multiply_alpha",
+          "lineNumber": 233
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "Arc::get_mut(&mut surface).expect",
+          "lineNumber": 233
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "Arc::get_mut",
+          "lineNumber": 233
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self.with_composition",
+          "lineNumber": 237
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self_.ctx.set_transform",
+          "lineNumber": 238
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "transform.cast().into",
+          "lineNumber": 238
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "transform.cast",
+          "lineNumber": 238
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self_.ctx.set_paint",
+          "lineNumber": 239
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "vello_cpu::ImageSource::Pixmap",
+          "lineNumber": 240
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "filter.convert",
+          "lineNumber": 246
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self_.ctx.set_paint_transform",
+          "lineNumber": 253
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "kurbo::Affine::translate((dest.origin.x, dest.origin.y)).pre_scale_non_uniform",
+          "lineNumber": 254
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "kurbo::Affine::translate",
+          "lineNumber": 254
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self_.ctx.fill_rect",
+          "lineNumber": 259
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "dest.into",
+          "lineNumber": 259
+        },
+        {
+          "caller": "draw_surface",
+          "callee": "self_.ctx.reset_paint_transform",
+          "lineNumber": 260
+        },
+        {
+          "caller": "fill",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 288
+        },
+        {
+          "caller": "fill",
+          "callee": "self.with_composition",
+          "lineNumber": 289
+        },
+        {
+          "caller": "fill",
+          "callee": "self_.ctx.set_transform",
+          "lineNumber": 290
+        },
+        {
+          "caller": "fill",
+          "callee": "transform.cast().into",
+          "lineNumber": 290
+        },
+        {
+          "caller": "fill",
+          "callee": "transform.cast",
+          "lineNumber": 290
+        },
+        {
+          "caller": "fill",
+          "callee": "self_.ctx.set_fill_rule",
+          "lineNumber": 291
+        },
+        {
+          "caller": "fill",
+          "callee": "fill_rule.convert",
+          "lineNumber": 291
+        },
+        {
+          "caller": "fill",
+          "callee": "self_.ctx.set_paint",
+          "lineNumber": 292
+        },
+        {
+          "caller": "fill",
+          "callee": "paint",
+          "lineNumber": 292
+        },
+        {
+          "caller": "fill",
+          "callee": "self_.ctx.fill_path",
+          "lineNumber": 293
+        },
+        {
+          "caller": "fill",
+          "callee": "self.ctx.set_fill_rule",
+          "lineNumber": 295
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 305
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self.ctx.set_paint",
+          "lineNumber": 306
+        },
+        {
+          "caller": "fill_text",
+          "callee": "paint",
+          "lineNumber": 306
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self.ctx.set_transform",
+          "lineNumber": 307
+        },
+        {
+          "caller": "fill_text",
+          "callee": "transform.cast().into",
+          "lineNumber": 307
+        },
+        {
+          "caller": "fill_text",
+          "callee": "transform.cast",
+          "lineNumber": 307
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self.with_composition",
+          "lineNumber": 308
+        },
+        {
+          "caller": "fill_text",
+          "callee": "text_runs.iter",
+          "lineNumber": 309
+        },
+        {
+          "caller": "fill_text",
+          "callee": "SHARED_FONT_CACHE.with",
+          "lineNumber": 310
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow().contains_key",
+          "lineNumber": 312
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow",
+          "lineNumber": 312
+        },
+        {
+          "caller": "fill_text",
+          "callee": "text_run.font.font_data_and_index",
+          "lineNumber": 313
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_data_and_index.convert",
+          "lineNumber": 316
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow_mut().insert",
+          "lineNumber": 317
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow_mut",
+          "lineNumber": 317
+        },
+        {
+          "caller": "fill_text",
+          "callee": "identifier.clone",
+          "lineNumber": 317
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.borrow",
+          "lineNumber": 320
+        },
+        {
+          "caller": "fill_text",
+          "callee": "font_cache.get",
+          "lineNumber": 321
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                        .ctx\n                        .glyph_run(&mut self_.resources, font)\n                        .font_size(text_run.pt_size).fill_glyphs",
+          "lineNumber": 324
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                        .ctx\n                        .glyph_run(&mut self_.resources, font).font_size",
+          "lineNumber": 324
+        },
+        {
+          "caller": "fill_text",
+          "callee": "self_\n                        .ctx.glyph_run",
+          "lineNumber": 324
+        },
+        {
+          "caller": "fill_text",
+          "callee": "text_run.glyphs_and_positions.iter().map",
+          "lineNumber": 328
+        },
+        {
+          "caller": "fill_text",
+          "callee": "text_run.glyphs_and_positions.iter",
+          "lineNumber": 328
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 347
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self.with_composition",
+          "lineNumber": 348
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self_.ctx.set_transform",
+          "lineNumber": 349
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "transform.cast().into",
+          "lineNumber": 349
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "transform.cast",
+          "lineNumber": 349
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self_.ctx.set_paint",
+          "lineNumber": 350
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "paint",
+          "lineNumber": 350
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "self_.ctx.fill_rect",
+          "lineNumber": 351
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "rect.cast().into",
+          "lineNumber": 351
+        },
+        {
+          "caller": "fill_rect",
+          "callee": "rect.cast",
+          "lineNumber": 351
+        },
+        {
+          "caller": "get_size",
+          "callee": "self.size().cast",
+          "lineNumber": 356
+        },
+        {
+          "caller": "get_size",
+          "callee": "self.size",
+          "lineNumber": 356
+        },
+        {
+          "caller": "pop_clip",
+          "callee": "self.clips.pop().is_some",
+          "lineNumber": 360
+        },
+        {
+          "caller": "pop_clip",
+          "callee": "self.clips.pop",
+          "lineNumber": 360
+        },
+        {
+          "caller": "pop_clip",
+          "callee": "self.ctx.pop_layer",
+          "lineNumber": 361
+        },
+        {
+          "caller": "push_clip",
+          "callee": "transform.cast().into",
+          "lineNumber": 366
+        },
+        {
+          "caller": "push_clip",
+          "callee": "transform.cast",
+          "lineNumber": 366
+        },
+        {
+          "caller": "push_clip",
+          "callee": "self.ctx.set_transform",
+          "lineNumber": 367
+        },
+        {
+          "caller": "push_clip",
+          "callee": "self.ctx.set_fill_rule",
+          "lineNumber": 368
+        },
+        {
+          "caller": "push_clip",
+          "callee": "fill_rule.convert",
+          "lineNumber": 368
+        },
+        {
+          "caller": "push_clip",
+          "callee": "self.ctx.push_clip_layer",
+          "lineNumber": 369
+        },
+        {
+          "caller": "push_clip",
+          "callee": "self.clips.push",
+          "lineNumber": 370
+        },
+        {
+          "caller": "push_clip",
+          "callee": "path.clone",
+          "lineNumber": 370
+        },
+        {
+          "caller": "push_clip",
+          "callee": "self.ctx.set_fill_rule",
+          "lineNumber": 371
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "Path::new",
+          "lineNumber": 375
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "rect.cast",
+          "lineNumber": 376
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "path.rect",
+          "lineNumber": 377
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "self.push_clip",
+          "lineNumber": 383
+        },
+        {
+          "caller": "push_clip_rect",
+          "callee": "Transform2D::identity",
+          "lineNumber": 383
+        },
+        {
+          "caller": "stroke",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 394
+        },
+        {
+          "caller": "stroke",
+          "callee": "self.with_composition",
+          "lineNumber": 395
+        },
+        {
+          "caller": "stroke",
+          "callee": "self_.ctx.set_transform",
+          "lineNumber": 396
+        },
+        {
+          "caller": "stroke",
+          "callee": "transform.cast().into",
+          "lineNumber": 396
+        },
+        {
+          "caller": "stroke",
+          "callee": "transform.cast",
+          "lineNumber": 396
+        },
+        {
+          "caller": "stroke",
+          "callee": "self_.ctx.set_paint",
+          "lineNumber": 397
+        },
+        {
+          "caller": "stroke",
+          "callee": "paint",
+          "lineNumber": 397
+        },
+        {
+          "caller": "stroke",
+          "callee": "self_.ctx.set_stroke",
+          "lineNumber": 398
+        },
+        {
+          "caller": "stroke",
+          "callee": "line_options.convert",
+          "lineNumber": 398
+        },
+        {
+          "caller": "stroke",
+          "callee": "self_.ctx.stroke_path",
+          "lineNumber": 399
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 411
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self.ctx.set_paint",
+          "lineNumber": 412
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "paint",
+          "lineNumber": 412
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self.ctx.set_stroke",
+          "lineNumber": 413
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "line_options.convert",
+          "lineNumber": 413
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self.ctx.set_transform",
+          "lineNumber": 414
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "transform.cast().into",
+          "lineNumber": 414
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "transform.cast",
+          "lineNumber": 414
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self.with_composition",
+          "lineNumber": 415
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "text_runs.iter",
+          "lineNumber": 416
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "SHARED_FONT_CACHE.with",
+          "lineNumber": 417
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow().contains_key",
+          "lineNumber": 419
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow",
+          "lineNumber": 419
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "text_run.font.font_data_and_index",
+          "lineNumber": 420
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_data_and_index.convert",
+          "lineNumber": 423
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow_mut().insert",
+          "lineNumber": 424
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow_mut",
+          "lineNumber": 424
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "identifier.clone",
+          "lineNumber": 424
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.borrow",
+          "lineNumber": 427
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "font_cache.get",
+          "lineNumber": 428
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_\n                        .ctx\n                        .glyph_run(&mut self_.resources, font)\n                        .font_size(text_run.pt_size).stroke_glyphs",
+          "lineNumber": 431
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_\n                        .ctx\n                        .glyph_run(&mut self_.resources, font).font_size",
+          "lineNumber": 431
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "self_\n                        .ctx.glyph_run",
+          "lineNumber": 431
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "text_run.glyphs_and_positions.iter().map",
+          "lineNumber": 435
+        },
+        {
+          "caller": "stroke_text",
+          "callee": "text_run.glyphs_and_positions.iter",
+          "lineNumber": 435
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self.ensure_drawing",
+          "lineNumber": 455
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self.with_composition",
+          "lineNumber": 456
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self_.ctx.set_transform",
+          "lineNumber": 457
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "transform.cast().into",
+          "lineNumber": 457
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "transform.cast",
+          "lineNumber": 457
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self_.ctx.set_paint",
+          "lineNumber": 458
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "paint",
+          "lineNumber": 458
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self_.ctx.set_stroke",
+          "lineNumber": 459
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "line_options.convert",
+          "lineNumber": 459
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "self_.ctx.stroke_rect",
+          "lineNumber": 460
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "rect.cast().into",
+          "lineNumber": 460
+        },
+        {
+          "caller": "stroke_rect",
+          "callee": "rect.cast",
+          "lineNumber": 460
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "self.size().cast().cast_unit",
+          "lineNumber": 469
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "self.size().cast",
+          "lineNumber": 469
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "self.size",
+          "lineNumber": 469
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "ImageDescriptorFlags::empty",
+          "lineNumber": 472
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "SerializableImageData::Raw",
+          "lineNumber": 474
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "GenericSharedMemory::from_bytes",
+          "lineNumber": 474
+        },
+        {
+          "caller": "image_descriptor_and_serializable_data",
+          "callee": "self.pixmap",
+          "lineNumber": 474
+        },
+        {
+          "caller": "snapshot",
+          "callee": "Snapshot::from_vec",
+          "lineNumber": 479
+        },
+        {
+          "caller": "snapshot",
+          "callee": "self.size().cast",
+          "lineNumber": 480
+        },
+        {
+          "caller": "snapshot",
+          "callee": "self.size",
+          "lineNumber": 480
+        },
+        {
+          "caller": "snapshot",
+          "callee": "self.pixmap().to_vec",
+          "lineNumber": 485
+        },
+        {
+          "caller": "snapshot",
+          "callee": "self.pixmap",
+          "lineNumber": 485
+        },
+        {
+          "caller": "surface",
+          "callee": "self.pixmap",
+          "lineNumber": 490
+        },
+        {
+          "caller": "surface",
+          "callee": "Arc::new",
+          "lineNumber": 491
+        },
+        {
+          "caller": "surface",
+          "callee": "vello_cpu::Pixmap::from_parts",
+          "lineNumber": 491
+        },
+        {
+          "caller": "surface",
+          "callee": "self.pixmap.clone().take",
+          "lineNumber": 492
+        },
+        {
+          "caller": "surface",
+          "callee": "self.pixmap.clone",
+          "lineNumber": 492
+        },
+        {
+          "caller": "surface",
+          "callee": "self.pixmap.width",
+          "lineNumber": 493
+        },
+        {
+          "caller": "surface",
+          "callee": "self.pixmap.height",
+          "lineNumber": 494
+        },
+        {
+          "caller": "create_source_surface_from_data",
+          "callee": "Some",
+          "lineNumber": 499
+        },
+        {
+          "caller": "create_source_surface_from_data",
+          "callee": "snapshot_as_pixmap",
+          "lineNumber": 499
+        },
+        {
+          "caller": "snapshot_as_pixmap",
+          "callee": "snapshot.size().cast",
+          "lineNumber": 504
+        },
+        {
+          "caller": "snapshot_as_pixmap",
+          "callee": "snapshot.size",
+          "lineNumber": 504
+        },
+        {
+          "caller": "snapshot_as_pixmap",
+          "callee": "snapshot.transform",
+          "lineNumber": 505
+        },
+        {
+          "caller": "snapshot_as_pixmap",
+          "callee": "Arc::new",
+          "lineNumber": 512
+        },
+        {
+          "caller": "snapshot_as_pixmap",
+          "callee": "vello_cpu::Pixmap::from_parts",
+          "lineNumber": 512
+        },
+        {
+          "caller": "snapshot_as_pixmap",
+          "callee": "bytemuck::cast_vec",
+          "lineNumber": 513
+        },
+        {
+          "caller": "snapshot_as_pixmap",
+          "callee": "snapshot.into",
+          "lineNumber": 513
+        },
+        {
+          "caller": "convert",
+          "callee": "vello_cpu::PaintType::Solid",
+          "lineNumber": 523
+        },
+        {
+          "caller": "convert",
+          "callee": "absolute_color.convert",
+          "lineNumber": 523
+        },
+        {
+          "caller": "convert",
+          "callee": "kurbo::Point::new",
+          "lineNumber": 525
+        },
+        {
+          "caller": "convert",
+          "callee": "kurbo::Point::new",
+          "lineNumber": 526
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Gradient::new_linear",
+          "lineNumber": 527
+        },
+        {
+          "caller": "convert",
+          "callee": "style.stops.convert",
+          "lineNumber": 528
+        },
+        {
+          "caller": "convert",
+          "callee": "vello_cpu::PaintType::Gradient",
+          "lineNumber": 529
+        },
+        {
+          "caller": "convert",
+          "callee": "kurbo::Point::new",
+          "lineNumber": 532
+        },
+        {
+          "caller": "convert",
+          "callee": "kurbo::Point::new",
+          "lineNumber": 533
+        },
+        {
+          "caller": "convert",
+          "callee": "peniko::Gradient::new_two_point_radial",
+          "lineNumber": 534
+        },
+        {
+          "caller": "convert",
+          "callee": "style.stops.convert",
+          "lineNumber": 540
+        },
+        {
+          "caller": "convert",
+          "callee": "vello_cpu::PaintType::Gradient",
+          "lineNumber": 541
+        },
+        {
+          "caller": "convert",
+          "callee": "snapshot_as_pixmap",
+          "lineNumber": 544
+        },
+        {
+          "caller": "convert",
+          "callee": "surface_style.surface_data.to_owned",
+          "lineNumber": 544
+        },
+        {
+          "caller": "convert",
+          "callee": "vello_cpu::PaintType::Image",
+          "lineNumber": 545
+        },
+        {
+          "caller": "convert",
+          "callee": "vello_cpu::ImageSource::Pixmap",
+          "lineNumber": 546
+        },
+        {
+          "caller": "paint",
+          "callee": "style.convert",
+          "lineNumber": 569
+        },
+        {
+          "caller": "paint",
+          "callee": "vello_cpu::PaintType::Solid",
+          "lineNumber": 575
+        },
+        {
+          "caller": "paint",
+          "callee": "alpha_color.multiply_alpha",
+          "lineNumber": 575
+        },
+        {
+          "caller": "paint",
+          "callee": "vello_cpu::PaintType::Gradient",
+          "lineNumber": 578
+        },
+        {
+          "caller": "paint",
+          "callee": "gradient.multiply_alpha",
+          "lineNumber": 578
+        },
+        {
+          "caller": "paint",
+          "callee": "Arc::get_mut(pixmap)\n                        .expect(\"pixmap should not be shared with anyone at this point\").multiply_alpha",
+          "lineNumber": 582
+        },
+        {
+          "caller": "paint",
+          "callee": "Arc::get_mut(pixmap).expect",
+          "lineNumber": 582
+        },
+        {
+          "caller": "paint",
+          "callee": "Arc::get_mut",
+          "lineNumber": 582
+        },
+        {
+          "caller": "paint",
+          "callee": "vello_cpu::PaintType::Image",
+          "lineNumber": 587
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 29,
+        "classCount": 2
+      }
+    }
+  ]
+}

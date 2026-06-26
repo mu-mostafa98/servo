@@ -1,0 +1,1411 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "type": "file",
+      "name": "writablestreamdefaultcontroller.rs",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "summary": "Implements the WritableStreamDefaultController orchestrating write/close/abort algorithm execution, chunk sizing, backpressure calculation, and queue advancement for writable streams.",
+      "tags": [
+        "streams-api",
+        "controller",
+        "writable-stream"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/stream/writablestreamdefaultcontroller.rs:UnderlyingSinkType",
+      "type": "class",
+      "name": "UnderlyingSinkType",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        276,
+        298
+      ],
+      "summary": "The UnderlyingSinkType class implementing stream operations within the writablestreamdefaultcontroller module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/writablestreamdefaultcontroller.rs:WritableStreamDefaultController",
+      "type": "class",
+      "name": "WritableStreamDefaultController",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        318,
+        348
+      ],
+      "summary": "The WritableStreamDefaultController class implementing stream operations within the writablestreamdefaultcontroller module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@90",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        90,
+        107
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@123",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        123,
+        140
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@168",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        168,
+        192
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@206",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        206,
+        239
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@253",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        253,
+        270
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:new_js",
+      "type": "function",
+      "name": "new_js",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        301,
+        313
+      ],
+      "summary": "Implements the new_js operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        353,
+        371
+      ],
+      "summary": "Internal constructor initializing the DOM object with reflector setup.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        374,
+        392
+      ],
+      "summary": "Constructor creating a new DOM-wrapped instance of the enclosing struct.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:started",
+      "type": "function",
+      "name": "started",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        394,
+        396
+      ],
+      "summary": "Implements the started operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:set_underlying_sink_this_object",
+      "type": "function",
+      "name": "set_underlying_sink_this_object",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        399,
+        401
+      ],
+      "summary": "Setter for underlying sink this object property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:signal_abort",
+      "type": "function",
+      "name": "signal_abort",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        404,
+        406
+      ],
+      "summary": "Implements the signal_abort operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:clear_algorithms",
+      "type": "function",
+      "name": "clear_algorithms",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        409,
+        439
+      ],
+      "summary": "Implements the clear_algorithms operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:setup",
+      "type": "function",
+      "name": "setup",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        442,
+        511
+      ],
+      "summary": "Initializes the controller or stream with the underlying source, size algorithm, and high water mark.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:close",
+      "type": "function",
+      "name": "close",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        514,
+        521
+      ],
+      "summary": "Closes the stream, signaling completion to consumers.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:start_algorithm",
+      "type": "function",
+      "name": "start_algorithm",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        524,
+        573
+      ],
+      "summary": "Callback algorithm implementation for start algorithm.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:abort_steps",
+      "type": "function",
+      "name": "abort_steps",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        576,
+        641
+      ],
+      "summary": "Implements the abort_steps operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:call_write_algorithm",
+      "type": "function",
+      "name": "call_write_algorithm",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        644,
+        720
+      ],
+      "summary": "Callback algorithm implementation for call write algorithm.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:call_close_algorithm",
+      "type": "function",
+      "name": "call_close_algorithm",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        723,
+        767
+      ],
+      "summary": "Callback algorithm implementation for call close algorithm.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:process_close",
+      "type": "function",
+      "name": "process_close",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        770,
+        812
+      ],
+      "summary": "Implements the process_close operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:advance_queue_if_needed",
+      "type": "function",
+      "name": "advance_queue_if_needed",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        815,
+        863
+      ],
+      "summary": "Implements the advance_queue_if_needed operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:perform_error_steps",
+      "type": "function",
+      "name": "perform_error_steps",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        866,
+        869
+      ],
+      "summary": "Implements the perform_error_steps operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:process_write",
+      "type": "function",
+      "name": "process_write",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        872,
+        904
+      ],
+      "summary": "Implements the process_write operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:get_desired_size",
+      "type": "function",
+      "name": "get_desired_size",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        907,
+        911
+      ],
+      "summary": "Getter for desired size property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:get_chunk_size",
+      "type": "function",
+      "name": "get_chunk_size",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        923,
+        961
+      ],
+      "summary": "Getter for chunk size property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:write",
+      "type": "function",
+      "name": "write",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        964,
+        1007
+      ],
+      "summary": "Implements the write operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:error_if_needed",
+      "type": "function",
+      "name": "error_if_needed",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        1010,
+        1026
+      ],
+      "summary": "Implements the error_if_needed operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:error",
+      "type": "function",
+      "name": "error",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        1029,
+        1047
+      ],
+      "summary": "Errors the stream, rejecting pending promises and propagating state.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:Error",
+      "type": "function",
+      "name": "Error",
+      "filePath": "components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "lineRange": [
+        1054,
+        1069
+      ],
+      "summary": "Implements the Error operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "type": "file",
+      "name": "writablestreamdefaultwriter.rs",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "summary": "Implements the WritableStreamDefaultWriter providing write/close/abort operations on writable streams with ready/closed promise management and release semantics.",
+      "tags": [
+        "streams-api",
+        "writer",
+        "writable-stream"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/stream/writablestreamdefaultwriter.rs:WritableStreamDefaultWriter",
+      "type": "class",
+      "name": "WritableStreamDefaultWriter",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        25,
+        37
+      ],
+      "summary": "The WritableStreamDefaultWriter class implementing stream operations within the writablestreamdefaultwriter module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        51,
+        62
+      ],
+      "summary": "Constructor creating a new DOM-wrapped instance of the enclosing struct.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:setup",
+      "type": "function",
+      "name": "setup",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        66,
+        150
+      ],
+      "summary": "Initializes the controller or stream with the underlying source, size algorithm, and high water mark.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:reject_closed_promise_with_stored_error",
+      "type": "function",
+      "name": "reject_closed_promise_with_stored_error",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        152,
+        158
+      ],
+      "summary": "Implements the reject_closed_promise_with_stored_error operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:set_close_promise_is_handled",
+      "type": "function",
+      "name": "set_close_promise_is_handled",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        160,
+        162
+      ],
+      "summary": "Setter for close promise is handled property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:set_ready_promise",
+      "type": "function",
+      "name": "set_ready_promise",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        164,
+        166
+      ],
+      "summary": "Setter for ready promise property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:resolve_ready_promise_with_undefined",
+      "type": "function",
+      "name": "resolve_ready_promise_with_undefined",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        168,
+        170
+      ],
+      "summary": "Implements the resolve_ready_promise_with_undefined operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:resolve_closed_promise_with_undefined",
+      "type": "function",
+      "name": "resolve_closed_promise_with_undefined",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        172,
+        174
+      ],
+      "summary": "Implements the resolve_closed_promise_with_undefined operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:ensure_ready_promise_rejected",
+      "type": "function",
+      "name": "ensure_ready_promise_rejected",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        177,
+        200
+      ],
+      "summary": "Implements the ensure_ready_promise_rejected operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:ensure_closed_promise_rejected",
+      "type": "function",
+      "name": "ensure_closed_promise_rejected",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        203,
+        226
+      ],
+      "summary": "Implements the ensure_closed_promise_rejected operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:abort",
+      "type": "function",
+      "name": "abort",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        229,
+        243
+      ],
+      "summary": "Implements the abort operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:close",
+      "type": "function",
+      "name": "close",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        246,
+        255
+      ],
+      "summary": "Closes the stream, signaling completion to consumers.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:write",
+      "type": "function",
+      "name": "write",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        258,
+        339
+      ],
+      "summary": "Implements the write operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:release",
+      "type": "function",
+      "name": "release",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        342,
+        370
+      ],
+      "summary": "Implements the release operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:close_with_error_propagation",
+      "type": "function",
+      "name": "close_with_error_propagation",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        373,
+        411
+      ],
+      "summary": "Implements the close_with_error_propagation operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:get_stream",
+      "type": "function",
+      "name": "get_stream",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        413,
+        415
+      ],
+      "summary": "Getter for stream property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:Abort",
+      "type": "function",
+      "name": "Abort",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        443,
+        456
+      ],
+      "summary": "Implements the Abort operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:Close",
+      "type": "function",
+      "name": "Close",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        459,
+        482
+      ],
+      "summary": "Implements the Close operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:ReleaseLock",
+      "type": "function",
+      "name": "ReleaseLock",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        485,
+        499
+      ],
+      "summary": "Implements the ReleaseLock operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:Write",
+      "type": "function",
+      "name": "Write",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        502,
+        515
+      ],
+      "summary": "Implements the Write operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "lineRange": [
+        518,
+        530
+      ],
+      "summary": "WebIDL-binding constructor invoked from JavaScript.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "class:components/script/dom/stream/writablestreamdefaultcontroller.rs:UnderlyingSinkType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "class:components/script/dom/stream/writablestreamdefaultcontroller.rs:UnderlyingSinkType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "class:components/script/dom/stream/writablestreamdefaultcontroller.rs:WritableStreamDefaultController",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "class:components/script/dom/stream/writablestreamdefaultcontroller.rs:WritableStreamDefaultController",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@90",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@123",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@168",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@206",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:callback@253",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:new_js",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:new_js",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:started",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:started",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:set_underlying_sink_this_object",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:set_underlying_sink_this_object",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:signal_abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:signal_abort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:clear_algorithms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:setup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:setup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:close",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:start_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:abort_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:abort_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:call_write_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:call_close_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:process_close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:process_close",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:advance_queue_if_needed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:perform_error_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:perform_error_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:process_write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:get_desired_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:get_desired_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:get_chunk_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:get_chunk_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:write",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:error_if_needed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:error_if_needed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultcontroller.rs:Error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "class:components/script/dom/stream/writablestreamdefaultwriter.rs:WritableStreamDefaultWriter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "class:components/script/dom/stream/writablestreamdefaultwriter.rs:WritableStreamDefaultWriter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:setup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:setup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:reject_closed_promise_with_stored_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:reject_closed_promise_with_stored_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:set_close_promise_is_handled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:set_close_promise_is_handled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:set_ready_promise",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:set_ready_promise",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:resolve_ready_promise_with_undefined",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:resolve_ready_promise_with_undefined",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:resolve_closed_promise_with_undefined",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:resolve_closed_promise_with_undefined",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:ensure_ready_promise_rejected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:ensure_ready_promise_rejected",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:ensure_closed_promise_rejected",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:write",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:release",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:release",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:close_with_error_propagation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:close_with_error_propagation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:get_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:get_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:Abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:Close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:ReleaseLock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:Write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "target": "function:components/script/dom/stream/writablestreamdefaultwriter.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

@@ -1,0 +1,1128 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "type": "file",
+      "name": "fakexrdevice.rs",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "summary": "Mock XR device implementation for testing, providing methods to simulate views, input sources, and pose changes via a channel-based command interface.",
+      "tags": [
+        "testing",
+        "mock",
+        "webxr",
+        "device-simulation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/webxr/fakexrdevice.rs:FakeXRDevice",
+      "type": "class",
+      "name": "FakeXRDevice",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        41,
+        47
+      ],
+      "summary": "Mock XR device that simulates views, viewer origin, input sources, and bounds geometry for WebXR testing.",
+      "tags": [
+        "webxr",
+        "mock",
+        "testing",
+        "device"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        50,
+        56
+      ],
+      "summary": "Internal constructor for DOM object initialization.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        58,
+        64
+      ],
+      "summary": "Creates a new DOM object and registers it with the JavaScript runtime.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:disconnect",
+      "type": "function",
+      "name": "disconnect",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        66,
+        68
+      ],
+      "summary": "disconnect function.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:view",
+      "type": "function",
+      "name": "view",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        71,
+        106
+      ],
+      "summary": "Converts a raw MockViewInit into an XRView structure with projection matrix, transform, and field of view.",
+      "tags": [
+        "webxr",
+        "utility",
+        "views"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:get_views",
+      "type": "function",
+      "name": "get_views",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        108,
+        121
+      ],
+      "summary": "Converts view initialization data into mock view structures for mono or stereo rendering.",
+      "tags": [
+        "webxr",
+        "utility",
+        "views"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:get_origin",
+      "type": "function",
+      "name": "get_origin",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        123,
+        142
+      ],
+      "summary": "Converts a raw position/orientation array into a RigidTransform3D for spatial computations.",
+      "tags": [
+        "webxr",
+        "utility",
+        "transform"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:get_point",
+      "type": "function",
+      "name": "get_point",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        144,
+        146
+      ],
+      "summary": "get point function.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:get_world",
+      "type": "function",
+      "name": "get_world",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        148,
+        176
+      ],
+      "summary": "Converts hit test region data from raw arrays into structured MockRegion objects with triangle faces.",
+      "tags": [
+        "webxr",
+        "utility",
+        "hit-test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:SetViews",
+      "type": "function",
+      "name": "SetViews",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        190,
+        200
+      ],
+      "summary": "Sets the simulated views (mono or stereo) for the mock XR device.",
+      "tags": [
+        "webxr",
+        "testing",
+        "views"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:SetViewerOrigin",
+      "type": "function",
+      "name": "SetViewerOrigin",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        203,
+        212
+      ],
+      "summary": "SetViewerOrigin function.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:SimulateInputSourceConnection",
+      "type": "function",
+      "name": "SimulateInputSourceConnection",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        254,
+        302
+      ],
+      "summary": "Simulates a new XR input source connection with specified handedness, target ray mode, profiles, and buttons.",
+      "tags": [
+        "webxr",
+        "testing",
+        "input-simulation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:Disconnect",
+      "type": "function",
+      "name": "Disconnect",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        305,
+        324
+      ],
+      "summary": "Simulates device disconnection with a promise-based callback for test synchronization.",
+      "tags": [
+        "webxr",
+        "testing",
+        "disconnection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrdevice.rs:SetBoundsGeometry",
+      "type": "function",
+      "name": "SetBoundsGeometry",
+      "filePath": "components/script/dom/webxr/fakexrdevice.rs",
+      "lineRange": [
+        327,
+        343
+      ],
+      "summary": "Sets the room-scale boundary geometry from 2D point coordinates for bounded reference spaces.",
+      "tags": [
+        "webxr",
+        "testing",
+        "boundary"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "type": "file",
+      "name": "fakexrinputcontroller.rs",
+      "filePath": "components/script/dom/webxr/fakexrinputcontroller.rs",
+      "summary": "Mock XR input controller for testing, supporting simulation of pointer/grip origins, selection, handedness, and button state changes.",
+      "tags": [
+        "testing",
+        "mock",
+        "webxr",
+        "input-controller"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webxr/fakexrinputcontroller.rs:FakeXRInputController",
+      "type": "class",
+      "name": "FakeXRInputController",
+      "filePath": "components/script/dom/webxr/fakexrinputcontroller.rs",
+      "lineRange": [
+        29,
+        35
+      ],
+      "summary": "Mock XR input controller providing programmable pointer/grip origin, selection, and button state simulation.",
+      "tags": [
+        "webxr",
+        "mock",
+        "testing",
+        "input"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrinputcontroller.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webxr/fakexrinputcontroller.rs",
+      "lineRange": [
+        38,
+        47
+      ],
+      "summary": "Internal constructor for DOM object initialization.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrinputcontroller.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webxr/fakexrinputcontroller.rs",
+      "lineRange": [
+        49,
+        60
+      ],
+      "summary": "Creates a new FakeXRInputController DOM object with a sender channel and input ID.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrinputcontroller.rs:UpdateButtonState",
+      "type": "function",
+      "name": "UpdateButtonState",
+      "filePath": "components/script/dom/webxr/fakexrinputcontroller.rs",
+      "lineRange": [
+        155,
+        170
+      ],
+      "summary": "Validates and sends button state updates through the mock input channel.",
+      "tags": [
+        "webxr",
+        "testing",
+        "button-state"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webxr/fakexrinputcontroller.rs:init_to_mock_buttons",
+      "type": "function",
+      "name": "init_to_mock_buttons",
+      "filePath": "components/script/dom/webxr/fakexrinputcontroller.rs",
+      "lineRange": [
+        186,
+        199
+      ],
+      "summary": "Converts raw button state descriptors into MockButton structures for input source simulation.",
+      "tags": [
+        "webxr",
+        "testing",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webxr/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/webxr/mod.rs",
+      "summary": "Module declaration file that re-exports all WebXR DOM types as the public interface of the webxr module.",
+      "tags": [
+        "module",
+        "webxr",
+        "barrel",
+        "exports"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust module barrel file re-exporting all WebXR DOM bindings."
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "type": "file",
+      "name": "xrboundedreferencespace.rs",
+      "filePath": "components/script/dom/webxr/xrboundedreferencespace.rs",
+      "summary": "Implements XRBoundedReferenceSpace, a reference space with a geometry boundary for room-scale XR experiences.",
+      "tags": [
+        "webxr",
+        "reference-space",
+        "room-scale"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrboundedreferencespace.rs:XRBoundedReferenceSpace",
+      "type": "class",
+      "name": "XRBoundedReferenceSpace",
+      "filePath": "components/script/dom/webxr/xrboundedreferencespace.rs",
+      "lineRange": [
+        23,
+        26
+      ],
+      "summary": "Reference space with a room-scale boundary geometry for bounded XR experiences.",
+      "tags": [
+        "webxr",
+        "reference-space",
+        "boundary"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webxr/xrboundedreferencespace.rs",
+      "lineRange": [
+        29,
+        41
+      ],
+      "summary": "Internal constructor for XRBoundedReferenceSpace with a session reference and offset transform.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webxr/xrboundedreferencespace.rs",
+      "lineRange": [
+        43,
+        51
+      ],
+      "summary": "Creates a new DOM object and registers it with the JavaScript runtime.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new_offset",
+      "type": "function",
+      "name": "new_offset",
+      "filePath": "components/script/dom/webxr/xrboundedreferencespace.rs",
+      "lineRange": [
+        53,
+        64
+      ],
+      "summary": "Creates an XRBoundedReferenceSpace with a specified offset transform from a reference space.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrboundedreferencespace.rs:reference_space",
+      "type": "function",
+      "name": "reference_space",
+      "filePath": "components/script/dom/webxr/xrboundedreferencespace.rs",
+      "lineRange": [
+        66,
+        68
+      ],
+      "summary": "reference space function.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrboundedreferencespace.rs:BoundsGeometry",
+      "type": "function",
+      "name": "BoundsGeometry",
+      "filePath": "components/script/dom/webxr/xrboundedreferencespace.rs",
+      "lineRange": [
+        73,
+        93
+      ],
+      "summary": "Returns the boundary geometry as a frozen array of DOMPointReadOnly objects.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrcompositionlayer.rs",
+      "type": "file",
+      "name": "xrcompositionlayer.rs",
+      "filePath": "components/script/dom/webxr/xrcompositionlayer.rs",
+      "summary": "Stub type definition for XRCompositionLayer, a base layer type for composited XR content.",
+      "tags": [
+        "webxr",
+        "layer",
+        "stub"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrcompositionlayer.rs:XRCompositionLayer",
+      "type": "class",
+      "name": "XRCompositionLayer",
+      "filePath": "components/script/dom/webxr/xrcompositionlayer.rs",
+      "lineRange": [
+        10,
+        12
+      ],
+      "summary": "XRCompositionLayer class.",
+      "tags": [
+        "webxr"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrcubelayer.rs",
+      "type": "file",
+      "name": "xrcubelayer.rs",
+      "filePath": "components/script/dom/webxr/xrcubelayer.rs",
+      "summary": "Stub type definition for XRCubeLayer, representing a cube map layer in the XR compositor.",
+      "tags": [
+        "webxr",
+        "layer",
+        "stub"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrcubelayer.rs:XRCubeLayer",
+      "type": "class",
+      "name": "XRCubeLayer",
+      "filePath": "components/script/dom/webxr/xrcubelayer.rs",
+      "lineRange": [
+        10,
+        12
+      ],
+      "summary": "XRCubeLayer class.",
+      "tags": [
+        "webxr"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrcylinderlayer.rs",
+      "type": "file",
+      "name": "xrcylinderlayer.rs",
+      "filePath": "components/script/dom/webxr/xrcylinderlayer.rs",
+      "summary": "Stub type definition for XRCylinderLayer, representing a cylindrical projection layer for XR media.",
+      "tags": [
+        "webxr",
+        "layer",
+        "stub"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrcylinderlayer.rs:XRCylinderLayer",
+      "type": "class",
+      "name": "XRCylinderLayer",
+      "filePath": "components/script/dom/webxr/xrcylinderlayer.rs",
+      "lineRange": [
+        10,
+        12
+      ],
+      "summary": "XRCylinderLayer class.",
+      "tags": [
+        "webxr"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrcompositionlayer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrcubelayer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrcylinderlayer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrequirectlayer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrframe.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrhand.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrhittestresult.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrhittestsource.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrinputsource.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrinputsourcearray.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrinputsourceevent.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrinputsourceschangeevent.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrjointpose.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrjointspace.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrlayer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrlayerevent.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/mod.rs",
+      "target": "file:components/script/dom/webxr/xrmediabinding.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "file:components/script/dom/webxr/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "file:components/script/dom/webxr/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "file:components/script/dom/webxr/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcompositionlayer.rs",
+      "target": "file:components/script/dom/webxr/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcompositionlayer.rs",
+      "target": "file:components/script/dom/webxr/xrlayer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcubelayer.rs",
+      "target": "file:components/script/dom/webxr/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcubelayer.rs",
+      "target": "file:components/script/dom/webxr/xrcompositionlayer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcylinderlayer.rs",
+      "target": "file:components/script/dom/webxr/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcylinderlayer.rs",
+      "target": "file:components/script/dom/webxr/xrcompositionlayer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "class:components/script/dom/webxr/fakexrdevice.rs:FakeXRDevice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:disconnect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:view",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:get_views",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:get_origin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:get_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:get_world",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:SetViews",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:SetViewerOrigin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:SimulateInputSourceConnection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:Disconnect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:SetBoundsGeometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "class:components/script/dom/webxr/fakexrinputcontroller.rs:FakeXRInputController",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "function:components/script/dom/webxr/fakexrinputcontroller.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "function:components/script/dom/webxr/fakexrinputcontroller.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "function:components/script/dom/webxr/fakexrinputcontroller.rs:UpdateButtonState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "function:components/script/dom/webxr/fakexrinputcontroller.rs:init_to_mock_buttons",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "class:components/script/dom/webxr/xrboundedreferencespace.rs:XRBoundedReferenceSpace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new_offset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:reference_space",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:BoundsGeometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcompositionlayer.rs",
+      "target": "class:components/script/dom/webxr/xrcompositionlayer.rs:XRCompositionLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcubelayer.rs",
+      "target": "class:components/script/dom/webxr/xrcubelayer.rs:XRCubeLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcylinderlayer.rs",
+      "target": "class:components/script/dom/webxr/xrcylinderlayer.rs:XRCylinderLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "class:components/script/dom/webxr/fakexrdevice.rs:FakeXRDevice",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:disconnect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:view",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:get_views",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:get_origin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:get_point",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrdevice.rs",
+      "target": "function:components/script/dom/webxr/fakexrdevice.rs:get_world",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "class:components/script/dom/webxr/fakexrinputcontroller.rs:FakeXRInputController",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "function:components/script/dom/webxr/fakexrinputcontroller.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "function:components/script/dom/webxr/fakexrinputcontroller.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/fakexrinputcontroller.rs",
+      "target": "function:components/script/dom/webxr/fakexrinputcontroller.rs:init_to_mock_buttons",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "class:components/script/dom/webxr/xrboundedreferencespace.rs:XRBoundedReferenceSpace",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:new_offset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrboundedreferencespace.rs",
+      "target": "function:components/script/dom/webxr/xrboundedreferencespace.rs:reference_space",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcompositionlayer.rs",
+      "target": "class:components/script/dom/webxr/xrcompositionlayer.rs:XRCompositionLayer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcubelayer.rs",
+      "target": "class:components/script/dom/webxr/xrcubelayer.rs:XRCubeLayer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrcylinderlayer.rs",
+      "target": "class:components/script/dom/webxr/xrcylinderlayer.rs:XRCylinderLayer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webxr/fakexrdevice.rs:SimulateInputSourceConnection",
+      "target": "function:components/script/dom/webxr/fakexrinputcontroller.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

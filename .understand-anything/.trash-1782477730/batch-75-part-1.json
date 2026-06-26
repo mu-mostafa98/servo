@@ -1,0 +1,1093 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/servoparser/async_html.rs",
+      "type": "file",
+      "name": "async_html.rs",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "summary": "Implements the async HTML tokenizer that runs parsing on a background thread, communicating with the main thread via message channels. Provides the Tokenizer and Sink types that drive the HTML tree construction algorithm asynchronously.",
+      "tags": ["parser", "html", "async", "tokenizer", "dom"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/dom/servoparser/encoding.rs",
+      "type": "file",
+      "name": "encoding.rs",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "summary": "Implements HTML document character encoding detection and decoding per the HTML Standard. Handles BOM sniffing, byte stream prescanning, meta charset detection, and XML encoding declarations.",
+      "tags": ["encoding", "parser", "html", "character-detection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/dom/servoparser/html.rs",
+      "type": "file",
+      "name": "html.rs",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "summary": "Provides a synchronous HTML tokenizer wrapper and HTML serialization utilities including fragment serialization and shadow DOM serialization support.",
+      "tags": ["parser", "html", "serialization", "tokenizer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/async_html.rs:Tokenizer",
+      "type": "class",
+      "name": "Tokenizer",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [208, 223],
+      "summary": "Main async HTML tokenizer that communicates with a background parser thread via cross-thread message channels, providing feed, end, and accessor methods.",
+      "tags": ["tokenizer", "html", "async", "parser"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/async_html.rs:Sink",
+      "type": "class",
+      "name": "Sink",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [728, 735],
+      "summary": "Tree construction sink for the async HTML parser, implementing the sink interface expected by the html5ever tree builder and processing parse operations on the main thread.",
+      "tags": ["sink", "dom", "tree-construction", "html"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/async_html.rs:ParseOperation",
+      "type": "class",
+      "name": "ParseOperation",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [70, 146],
+      "summary": "Enum of all tree-building operations sent from the parser thread to the main thread, including element creation, node insertion, attribute manipulation, and shadow DOM attachment.",
+      "tags": ["enum", "parser", "dom-operation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [226, 293],
+      "summary": "Creates a new async Tokenizer, setting up cross-thread channels, initializing the HTML tree builder sink, and spawning the background parser thread.",
+      "tags": ["constructor", "tokenizer", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:feed",
+      "type": "function",
+      "name": "feed",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [295, 356],
+      "summary": "Feeds input data to the background parser thread and processes results including script execution and encoding detection responses.",
+      "tags": ["parser", "input", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:end",
+      "type": "function",
+      "name": "end",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [358, 382],
+      "summary": "Signals end of input to the parser thread and processes pending operations.",
+      "tags": ["parser", "termination"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:url",
+      "type": "function",
+      "name": "url",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [384, 386],
+      "summary": "Returns the URL of the document being parsed.",
+      "tags": ["accessor", "url"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:set_plaintext_state",
+      "type": "function",
+      "name": "set_plaintext_state",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [388, 392],
+      "summary": "Sets the parser to plaintext state by sending the SetPlainTextState message to the parser thread.",
+      "tags": ["parser-state", "plaintext"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:get_current_line",
+      "type": "function",
+      "name": "get_current_line",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [394, 396],
+      "summary": "Returns the current line number in the parser input.",
+      "tags": ["accessor", "line-number"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:process_operation",
+      "type": "function",
+      "name": "process_operation",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [467, 641],
+      "summary": "Dispatches and executes tree-building operations on the main thread, handling element creation, comment insertion, doctype handling, attribute manipulation, shadow root attachment, and form association.",
+      "tags": ["tree-construction", "dom", "operation-dispatch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [650, 720],
+      "summary": "Main loop running on the parser background thread, receiving input chunks, driving the html5ever tokenizer and tree builder, and sending results back to the main thread.",
+      "tags": ["parser-loop", "background-thread", "html"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:append",
+      "type": "function",
+      "name": "append",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [435, 452],
+      "summary": "Appends a node or text as the last child of a given parent node.",
+      "tags": ["dom", "insertion", "tree-manipulation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:get_template_contents",
+      "type": "function",
+      "name": "get_template_contents",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [805, 819],
+      "summary": "Retrieves the DocumentFragment contents of an HTMLTemplateElement for use as the insertion point.",
+      "tags": ["dom", "template", "shadow-dom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:create_element",
+      "type": "function",
+      "name": "create_element",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [833, 866],
+      "summary": "Creates a DOM element from parser tokens with the given name, attributes, and flags, including custom element support.",
+      "tags": ["dom", "element-creation", "parser"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:associate_with_form",
+      "type": "function",
+      "name": "associate_with_form",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [887, 900],
+      "summary": "Associates form-associated elements with their form owner during parser-inserted element processing.",
+      "tags": ["dom", "forms", "parser"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:append_before_sibling",
+      "type": "function",
+      "name": "append_before_sibling",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [902, 915],
+      "summary": "Sink method to insert a child before a sibling node in the tree, used by the tree construction algorithm.",
+      "tags": ["dom", "insertion", "tree-construction"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:append_based_on_parent_node",
+      "type": "function",
+      "name": "append_based_on_parent_node",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [917, 932],
+      "summary": "Appends a child to its parent, handling form-association for elements inserted during tree construction.",
+      "tags": ["dom", "insertion", "forms"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:append_doctype_to_document",
+      "type": "function",
+      "name": "append_doctype_to_document",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [958, 969],
+      "summary": "Creates and appends a DocumentType node to the document during tree construction.",
+      "tags": ["dom", "doctype", "tree-construction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:add_attrs_if_missing",
+      "type": "function",
+      "name": "add_attrs_if_missing",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [971, 983],
+      "summary": "Adds attributes to an element only if they are not already present, used for duplicate attribute handling during tree construction.",
+      "tags": ["dom", "attributes", "tree-construction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/async_html.rs:attach_declarative_shadow",
+      "type": "function",
+      "name": "attach_declarative_shadow",
+      "filePath": "components/script/dom/servoparser/async_html.rs",
+      "lineRange": [1019, 1045],
+      "summary": "Attaches a declarative shadow root to a template element during tree construction, handling the serialized form parse.",
+      "tags": ["dom", "shadow-dom", "declarative"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/encoding.rs:DetectingState",
+      "type": "class",
+      "name": "DetectingState",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [17, 28],
+      "summary": "State machine for the initial encoding detection phase, buffering bytes and attempting BOM sniffing, prescanning, and chardetng fallback.",
+      "tags": ["encoding", "state-machine", "detection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/encoding.rs:DecodingState",
+      "type": "class",
+      "name": "DecodingState",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [31, 41],
+      "summary": "Holds the active decoder and resolved encoding once encoding determination has completed.",
+      "tags": ["encoding", "decoder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/encoding.rs:NetworkDecoderState",
+      "type": "class",
+      "name": "NetworkDecoderState",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [44, 48],
+      "summary": "Enum wrapping Detecting and Decoding states of the network decoder, providing a unified push-based decoding interface.",
+      "tags": ["encoding", "state-machine", "decoder"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/encoding.rs:NetworkSink",
+      "type": "class",
+      "name": "NetworkSink",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [289, 292],
+      "summary": "Sink that collects decoded text output from the character decoding process.",
+      "tags": ["encoding", "sink", "decoder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [193, 204],
+      "summary": "Creates a new NetworkDecoderState in the Detecting phase with optional encoding hints from content-type and container document.",
+      "tags": ["constructor", "encoding", "decoder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:push",
+      "type": "function",
+      "name": "push",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [214, 241],
+      "summary": "Pushes a chunk of bytes into the decoder, transitioning from detecting to decoding once encoding is determined.",
+      "tags": ["encoding", "decoder", "input"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [243, 269],
+      "summary": "Finalizes decoding, flushing remaining bytes through the decoder and returning the final encoding.",
+      "tags": ["encoding", "decoder", "finalization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:is_finished",
+      "type": "function",
+      "name": "is_finished",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [271, 276],
+      "summary": "Returns whether decoding has completed.",
+      "tags": ["accessor", "encoding"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:decoder",
+      "type": "function",
+      "name": "decoder",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [278, 283],
+      "summary": "Returns the resolved decoder if encoding detection has completed.",
+      "tags": ["accessor", "encoding", "decoder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:prescan_the_byte_stream_to_determine_the_encoding",
+      "type": "function",
+      "name": "prescan_the_byte_stream_to_determine_the_encoding",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [319, 503],
+      "summary": "Implements the HTML Standard byte stream prescan algorithm that scans for encoding hints from meta charset declarations.",
+      "tags": ["encoding", "prescan", "html-standard"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:get_xml_encoding",
+      "type": "function",
+      "name": "get_xml_encoding",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [746, 828],
+      "summary": "Extracts encoding from XML declaration in the byte stream.",
+      "tags": ["encoding", "xml", "declaration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:get_an_attribute",
+      "type": "function",
+      "name": "get_an_attribute",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [506, 678],
+      "summary": "Parses an attribute from the byte stream during encoding prescan, handling quoted and unquoted attribute values.",
+      "tags": ["encoding", "attribute-parsing", "prescan"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:extract_a_character_encoding_from_a_meta_element",
+      "type": "function",
+      "name": "extract_a_character_encoding_from_a_meta_element",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [681, 743],
+      "summary": "Extracts the character encoding from a parsed meta element's attributes during byte stream prescan.",
+      "tags": ["encoding", "meta", "charset"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:determine_the_character_encoding",
+      "type": "function",
+      "name": "determine_the_character_encoding",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [76, 184],
+      "summary": "Implements the HTML Standard encoding determination algorithm, trying BOM sniffing, prescanning, XML declaration, and chardetng fallback in sequence.",
+      "tags": ["encoding", "detection", "html-standard"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/encoding.rs:buffer",
+      "type": "function",
+      "name": "buffer",
+      "filePath": "components/script/dom/servoparser/encoding.rs",
+      "lineRange": [64, 73],
+      "summary": "Buffers incoming bytes and triggers encoding determination with timeout-based heuristics.",
+      "tags": ["encoding", "buffering", "detection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/html.rs:Tokenizer",
+      "type": "class",
+      "name": "Tokenizer",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [43, 46],
+      "summary": "Synchronous HTML tokenizer wrapper that delegates to html5ever's HtmlTokenizer and TreeBuilder for synchronous parsing scenarios.",
+      "tags": ["tokenizer", "html", "synchronous", "parser"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/html.rs:SerializationIterator",
+      "type": "class",
+      "name": "SerializationIterator",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [172, 180],
+      "summary": "Iterates the DOM subtree and yields serialization commands (open/close element, serialize non-element, shadow root) for HTML serialization.",
+      "tags": ["serialization", "iterator", "dom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/servoparser/html.rs:HtmlSerialize",
+      "type": "class",
+      "name": "HtmlSerialize",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [375, 377],
+      "summary": "Wrapper type that implements the serialization trait for HTML fragment serialization.",
+      "tags": ["serialization", "html", "trait"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [49, 99],
+      "summary": "Creates a new synchronous HTML tokenizer, initializing html5ever's tokenizer and tree builder with fragment or full document parsing support.",
+      "tags": ["constructor", "tokenizer", "html"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:feed",
+      "type": "function",
+      "name": "feed",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [101, 111],
+      "summary": "Feeds input to the synchronous HTML tokenizer and returns results including script handles or encoding indicators.",
+      "tags": ["parser", "input", "tokenizer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:end",
+      "type": "function",
+      "name": "end",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [113, 115],
+      "summary": "Signals end of input to the synchronous tokenizer.",
+      "tags": ["parser", "termination"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:url",
+      "type": "function",
+      "name": "url",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [117, 119],
+      "summary": "Returns the URL of the document being parsed synchronously.",
+      "tags": ["accessor", "url"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:set_plaintext_state",
+      "type": "function",
+      "name": "set_plaintext_state",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [121, 123],
+      "summary": "Sets the synchronous parser to plaintext state.",
+      "tags": ["parser-state", "plaintext"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:get_current_line",
+      "type": "function",
+      "name": "get_current_line",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [125, 127],
+      "summary": "Returns the current line number from the synchronous parser.",
+      "tags": ["accessor", "line-number"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:serialize_html_fragment",
+      "type": "function",
+      "name": "serialize_html_fragment",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [286, 373],
+      "summary": "Serializes a DOM node to HTML markup, supporting shadow DOM serialization and configurable traversal scope.",
+      "tags": ["serialization", "html", "dom", "shadow-dom"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:serialize",
+      "type": "function",
+      "name": "serialize",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [387, 395],
+      "summary": "Implements the serialization trait for HtmlSerialize delegating to serialize_html_fragment.",
+      "tags": ["serialization", "html", "trait-implementation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:start_element",
+      "type": "function",
+      "name": "start_element",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [131, 163],
+      "summary": "Serializes an element opening tag including namespace handling and self-closing syntax for void elements.",
+      "tags": ["serialization", "html", "element"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:handle_node_contents",
+      "type": "function",
+      "name": "handle_node_contents",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [209, 232],
+      "summary": "Pushes serialization commands for a node's children, handling shadow root contents when enabled.",
+      "tags": ["serialization", "dom-traversal", "shadow-dom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:push_node",
+      "type": "function",
+      "name": "push_node",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [234, 246],
+      "summary": "Pushes a node onto the serialization stack, expanding its children for iteration.",
+      "tags": ["serialization", "stack", "dom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/servoparser/html.rs:next",
+      "type": "function",
+      "name": "next",
+      "filePath": "components/script/dom/servoparser/html.rs",
+      "lineRange": [253, 282],
+      "summary": "Returns the next serialization command in the iteration, managing the serialization stack.",
+      "tags": ["serialization", "iterator", "command"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "class:components/script/dom/servoparser/async_html.rs:Tokenizer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "class:components/script/dom/servoparser/async_html.rs:Sink",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "class:components/script/dom/servoparser/async_html.rs:ParseOperation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:feed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:end",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:set_plaintext_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:get_current_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:process_operation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:append",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:get_template_contents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:create_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:associate_with_form",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:append_before_sibling",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:append_based_on_parent_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:append_doctype_to_document",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:add_attrs_if_missing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:attach_declarative_shadow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "class:components/script/dom/servoparser/async_html.rs:Tokenizer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "class:components/script/dom/servoparser/async_html.rs:Sink",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:feed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:end",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:set_plaintext_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/async_html.rs",
+      "target": "function:components/script/dom/servoparser/async_html.rs:get_current_line",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "class:components/script/dom/servoparser/encoding.rs:DetectingState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "class:components/script/dom/servoparser/encoding.rs:DecodingState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "class:components/script/dom/servoparser/encoding.rs:NetworkDecoderState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "class:components/script/dom/servoparser/encoding.rs:NetworkSink",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:push",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:is_finished",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:decoder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:prescan_the_byte_stream_to_determine_the_encoding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:get_xml_encoding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:get_an_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:extract_a_character_encoding_from_a_meta_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:determine_the_character_encoding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:buffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "class:components/script/dom/servoparser/encoding.rs:DetectingState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "class:components/script/dom/servoparser/encoding.rs:DecodingState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "class:components/script/dom/servoparser/encoding.rs:NetworkDecoderState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "class:components/script/dom/servoparser/encoding.rs:NetworkSink",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:push",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:finish",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:is_finished",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:decoder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:prescan_the_byte_stream_to_determine_the_encoding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/encoding.rs",
+      "target": "function:components/script/dom/servoparser/encoding.rs:get_xml_encoding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "class:components/script/dom/servoparser/html.rs:Tokenizer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "class:components/script/dom/servoparser/html.rs:SerializationIterator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "class:components/script/dom/servoparser/html.rs:HtmlSerialize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:feed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:end",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:set_plaintext_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:get_current_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:serialize_html_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:serialize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:start_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:handle_node_contents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:push_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:next",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "class:components/script/dom/servoparser/html.rs:Tokenizer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "class:components/script/dom/servoparser/html.rs:HtmlSerialize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:feed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:end",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:set_plaintext_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:get_current_line",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:serialize_html_fragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/servoparser/html.rs",
+      "target": "function:components/script/dom/servoparser/html.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

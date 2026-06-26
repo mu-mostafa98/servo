@@ -1,0 +1,1764 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/shared/embedder/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/embedder/lib.rs",
+      "summary": "Central module crate defining all embedder-facing types including viewport geometry, cursor management, embedder messaging, media session, permissions, web resource requests, JavaScript evaluation, notifications, and webview management.",
+      "tags": ["entry-point", "type-definition", "embedder", "api", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebViewPoint",
+      "type": "class",
+      "name": "WebViewPoint",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [61, 64],
+      "summary": "Describes a point in a WebView, expressed either in device pixels or CSS page pixels with conversion methods.",
+      "tags": ["type-definition", "geometry", "coordinate", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebViewRect",
+      "type": "class",
+      "name": "WebViewRect",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [98, 101],
+      "summary": "Describes a rectangle in a WebView, expressed either in device pixels or CSS page pixels with scale conversion.",
+      "tags": ["type-definition", "geometry", "rectangle", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebViewVector",
+      "type": "class",
+      "name": "WebViewVector",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [138, 141],
+      "summary": "Describes a 2D vector in a WebView, expressed either in device pixels or CSS page pixels with scale conversion.",
+      "tags": ["type-definition", "geometry", "vector", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:Scroll",
+      "type": "class",
+      "name": "Scroll",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [173, 181],
+      "summary": "Enum of scroll operations: delta offset, scroll to start, or scroll to end.",
+      "tags": ["type-definition", "scroll", "enum", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ShutdownState",
+      "type": "class",
+      "name": "ShutdownState",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [186, 190],
+      "summary": "Tracks whether Servo is not shutting down, in progress, or has finished shutting down.",
+      "tags": ["type-definition", "lifecycle", "shutdown", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:Cursor",
+      "type": "class",
+      "name": "Cursor",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [196, 233],
+      "summary": "Large enum of all standard cursor types including resize cursors, grab, pointer, text, zoom, and more.",
+      "tags": ["type-definition", "cursor", "ui", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:EventLoopWaker",
+      "type": "class",
+      "name": "EventLoopWaker",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [239, 248],
+      "summary": "Trait for embedders to implement, allowing Servo to request the main event loop be woken up for message processing.",
+      "tags": ["trait", "event-loop", "embedder", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:GenericEmbedderProxy",
+      "type": "class",
+      "name": "GenericEmbedderProxy",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [257, 260],
+      "summary": "Generic sender paired with an event loop waker for dispatching messages to the embedder and waking its event loop.",
+      "tags": ["type-definition", "messaging", "proxy", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:RefreshDriver",
+      "type": "class",
+      "name": "RefreshDriver",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [287, 295],
+      "summary": "Trait for embedders to drive animation frame scheduling, e.g. via Vsync notifications.",
+      "tags": ["trait", "animation", "vsync", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:AuthenticationResponse",
+      "type": "class",
+      "name": "AuthenticationResponse",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [299, 304],
+      "summary": "Credentials for HTTP authentication challenges with username and password fields.",
+      "tags": ["type-definition", "authentication", "http", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:AllowOrDeny",
+      "type": "class",
+      "name": "AllowOrDeny",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [308, 311],
+      "summary": "Simple enum for binary allow/deny responses to permission requests.",
+      "tags": ["type-definition", "permission", "response", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:RegisterOrUnregister",
+      "type": "class",
+      "name": "RegisterOrUnregister",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [315, 318],
+      "summary": "Simple enum indicating whether a protocol handler should be registered or unregistered.",
+      "tags": ["type-definition", "protocol-handler", "registration", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ProtocolHandlerUpdateRegistration",
+      "type": "class",
+      "name": "ProtocolHandlerUpdateRegistration",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [324, 331],
+      "summary": "Represents a request to register or unregister a custom protocol handler for a URL scheme.",
+      "tags": ["type-definition", "protocol-handler", "scheme", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ViewportDetails",
+      "type": "class",
+      "name": "ViewportDetails",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [336, 343],
+      "summary": "Viewport size and HiDPI scale factor for rendering WebView contents.",
+      "tags": ["type-definition", "viewport", "rendering", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ScreenMetrics",
+      "type": "class",
+      "name": "ScreenMetrics",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [356, 359],
+      "summary": "Screen size and available size in device-independent pixels for DOM Screen API usage.",
+      "tags": ["type-definition", "screen", "geometry", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:PixelFormat",
+      "type": "class",
+      "name": "PixelFormat",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [374, 385],
+      "summary": "Enum of pixel buffer formats: K8, KA8, RGB8, RGBA8, and BGRA8.",
+      "tags": ["type-definition", "pixel", "format", "image", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:Image",
+      "type": "class",
+      "name": "Image",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [389, 397],
+      "summary": "A raster image buffer with width, height, pixel format, and shared memory backing for pixel data.",
+      "tags": ["type-definition", "image", "raster", "shared-memory", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ConsoleLogLevel",
+      "type": "class",
+      "name": "ConsoleLogLevel",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [431, 439],
+      "summary": "Enum of console API message severity levels: Log, Debug, Info, Warn, Error, Trace, Dir.",
+      "tags": ["type-definition", "logging", "console", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:BluetoothDeviceDescription",
+      "type": "class",
+      "name": "BluetoothDeviceDescription",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [457, 462],
+      "summary": "Address and human-readable name for a discovered Bluetooth device.",
+      "tags": ["type-definition", "bluetooth", "device", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:EmbedderMsg",
+      "type": "class",
+      "name": "EmbedderMsg",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [466, 546],
+      "summary": "Central enum of all messages sent from Servo to the embedder, covering 25+ message types including status, clipboard, cursor, media session, permissions, web resource interception, accessibility, and devtools.",
+      "tags": ["type-definition", "messaging", "embedder", "ipc", "rust"],
+      "complexity": "complex",
+      "languageNotes": "Large enum with variants carrying WebViewId, GenericSender callbacks, and domain-specific payloads for bidirectional process communication."
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:MediaMetadata",
+      "type": "class",
+      "name": "MediaMetadata",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [557, 564],
+      "summary": "Media session metadata: title, artist, and album strings for media notifications.",
+      "tags": ["type-definition", "media", "metadata", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:MediaSessionPlaybackState",
+      "type": "class",
+      "name": "MediaSessionPlaybackState",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [579, 586],
+      "summary": "Enum of media session playback states: None, Playing, Paused.",
+      "tags": ["type-definition", "media", "playback", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:MediaPositionState",
+      "type": "class",
+      "name": "MediaPositionState",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [590, 594],
+      "summary": "Media playback position state with duration, playback rate, and current position.",
+      "tags": ["type-definition", "media", "position", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:MediaSessionEvent",
+      "type": "class",
+      "name": "MediaSessionEvent",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [608, 615],
+      "summary": "Enum of media session events: SetMetadata, PlaybackStateChange, SetPositionState.",
+      "tags": ["type-definition", "media", "event", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:PermissionFeature",
+      "type": "class",
+      "name": "PermissionFeature",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [619, 633],
+      "summary": "Enum of permission features matching the DOM PermissionName enum including geolocation, notifications, camera, microphone, bluetooth, screen wake lock, and gamepad.",
+      "tags": ["type-definition", "permission", "features", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:InputMethodType",
+      "type": "class",
+      "name": "InputMethodType",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [639, 653],
+      "summary": "Enum of input method editor types appropriate for editing HTML input fields: color, date, email, number, password, text, url, etc.",
+      "tags": ["type-definition", "input-method", "html-input", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:DualRumbleEffectParams",
+      "type": "class",
+      "name": "DualRumbleEffectParams",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [658, 663],
+      "summary": "Parameters for dual-rumble gamepad haptic effects: duration, start delay, strong and weak magnitude.",
+      "tags": ["type-definition", "gamepad", "haptic", "rumble", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:GamepadHapticEffectType",
+      "type": "class",
+      "name": "GamepadHapticEffectType",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [668, 670],
+      "summary": "Enum of gamepad haptic effect types, currently only DualRumble with parameters.",
+      "tags": ["type-definition", "gamepad", "haptic", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebResourceRequest",
+      "type": "class",
+      "name": "WebResourceRequest",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [673, 689],
+      "summary": "Details of a web resource request including method, headers, URL, destination, referrer, and flags for main frame and redirect status.",
+      "tags": ["type-definition", "web-resource", "request", "http", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebResourceResponseMsg",
+      "type": "class",
+      "name": "WebResourceResponseMsg",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [692, 705],
+      "summary": "Enum of messages for web resource interception: Start with response, SendBodyData, FinishLoad, CancelLoad, and DoNotIntercept.",
+      "tags": ["type-definition", "web-resource", "interception", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebResourceResponse",
+      "type": "class",
+      "name": "WebResourceResponse",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [708, 723],
+      "summary": "HTTP response data for intercepted web resources: URL, headers, status code, and status message.",
+      "tags": ["type-definition", "web-resource", "response", "http", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:Theme",
+      "type": "class",
+      "name": "Theme",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [753, 758],
+      "summary": "Enum of platform theme: Light or Dark.",
+      "tags": ["type-definition", "theme", "color-scheme", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:MediaSessionActionType",
+      "type": "class",
+      "name": "MediaSessionActionType",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [772, 796],
+      "summary": "Enum of media session action types: Play, Pause, SeekBackward, SeekForward, PreviousTrack, NextTrack, SkipAd, Stop, and SeekTo.",
+      "tags": ["type-definition", "media", "action", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:LoadStatus",
+      "type": "class",
+      "name": "LoadStatus",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [801, 811],
+      "summary": "Enum of web page load states: Started, HeadParsed, Complete.",
+      "tags": ["type-definition", "loading", "status", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:Notification",
+      "type": "class",
+      "name": "Notification",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [816, 847],
+      "summary": "Desktop notification data including title, body, tag, language, silent flag, icon/badge/image URLs with associated raster resources, and action buttons.",
+      "tags": ["type-definition", "notification", "desktop", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:NotificationAction",
+      "type": "class",
+      "name": "NotificationAction",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [851, 860],
+      "summary": "Action button for a desktop notification: name, title, icon URL, and icon raster resource.",
+      "tags": ["type-definition", "notification", "action", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ScreenGeometry",
+      "type": "class",
+      "name": "ScreenGeometry",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [868, 883],
+      "summary": "Screen size, available size, and window rectangle in device pixels for CSSOM Screen APIs and window position queries.",
+      "tags": ["type-definition", "screen", "geometry", "cssom", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:PaintHitTestResult",
+      "type": "class",
+      "name": "PaintHitTestResult",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [930, 939],
+      "summary": "Result of a paint hit test containing the pipeline ID, viewport point, and external scroll ID.",
+      "tags": ["type-definition", "hit-test", "paint", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:AnimationState",
+      "type": "class",
+      "name": "AnimationState",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [944, 953],
+      "summary": "Enum of animation state combinations: whether animations and animation callbacks are present or absent.",
+      "tags": ["type-definition", "animation", "state", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:JSValue",
+      "type": "class",
+      "name": "JSValue",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1035, 1047],
+      "summary": "Enum of JavaScript values that can be serialized across the process boundary: Undefined, Null, Boolean, Number, String, Element, ShadowRoot, Frame, Window, Array, Object.",
+      "tags": ["type-definition", "javascript", "serialization", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:JavaScriptErrorInfo",
+      "type": "class",
+      "name": "JavaScriptErrorInfo",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1051, 1057],
+      "summary": "Detailed JavaScript error information: message, filename, stack trace, line number, and column.",
+      "tags": ["type-definition", "javascript", "error", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:JavaScriptEvaluationResultSerializationError",
+      "type": "class",
+      "name": "JavaScriptEvaluationResultSerializationError",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1062, 1076],
+      "summary": "Error enum for failures during JavaScript result serialization: detached shadow root, stale element, unknown type, or other errors.",
+      "tags": ["type-definition", "javascript", "serialization", "error", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:JavaScriptEvaluationError",
+      "type": "class",
+      "name": "JavaScriptEvaluationError",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1080, 1096],
+      "summary": "Error enum for JavaScript evaluation failures including document not found, compilation failure, evaluation failure, internal error, webview not ready, and serialization error.",
+      "tags": ["type-definition", "javascript", "evaluation", "error", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ScreenshotCaptureError",
+      "type": "class",
+      "name": "ScreenshotCaptureError",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1100, 1106],
+      "summary": "Error enum for screenshot capture failures: could not read image or webview does not exist.",
+      "tags": ["type-definition", "screenshot", "error", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:RgbColor",
+      "type": "class",
+      "name": "RgbColor",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1109, 1113],
+      "summary": "Simple RGB color value with red, green, and blue byte fields.",
+      "tags": ["type-definition", "color", "rgb", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ScriptToEmbedderChan",
+      "type": "class",
+      "name": "ScriptToEmbedderChan",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1117, 1117],
+      "summary": "Wraps a GenericCallback for sending EmbedderMsg from the script thread to the embedder with event loop waking.",
+      "tags": ["type-definition", "channel", "messaging", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:NewWebViewDetails",
+      "type": "class",
+      "name": "NewWebViewDetails",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1149, 1153],
+      "summary": "Details for communicating a new WebView created by the embedder back to the constellation: ID, viewport details, and user content manager ID.",
+      "tags": ["type-definition", "webview", "creation", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:UrlRequest",
+      "type": "class",
+      "name": "UrlRequest",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1164, 1171],
+      "summary": "A customizable URL load request with URL and configurable HTTP headers.",
+      "tags": ["type-definition", "url", "request", "http", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WakeLockType",
+      "type": "class",
+      "name": "WakeLockType",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1190, 1192],
+      "summary": "Enum of wake lock types, currently only Screen.",
+      "tags": ["type-definition", "wake-lock", "power", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WakeLockDelegate",
+      "type": "class",
+      "name": "WakeLockDelegate",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1198, 1208],
+      "summary": "Trait for platform-specific wake lock support to prevent the screen from sleeping while a wake lock is held.",
+      "tags": ["trait", "wake-lock", "platform", "power", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:as_device_point",
+      "type": "function",
+      "name": "as_device_point",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [68, 73],
+      "summary": "Converts a WebViewPoint to DevicePoint by applying the CSS-to-device-pixel scale factor.",
+      "tags": ["method", "conversion", "geometry", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:as_device_rect",
+      "type": "function",
+      "name": "as_device_rect",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [105, 110],
+      "summary": "Converts a WebViewRect to DeviceRect by applying the CSS-to-device-pixel scale factor.",
+      "tags": ["method", "conversion", "geometry", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:WebViewRect_from_LayoutRect",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [120, 125],
+      "summary": "Converts a LayoutRect to a WebViewRect by constructing a Box2D from CSSPixel points.",
+      "tags": ["conversion", "from-impl", "geometry", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:as_device_vector",
+      "type": "function",
+      "name": "as_device_vector",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [145, 150],
+      "summary": "Converts a WebViewVector to DeviceVector2D by applying the CSS-to-device-pixel scale factor.",
+      "tags": ["method", "conversion", "geometry", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:GenericEmbedderProxy::send",
+      "type": "function",
+      "name": "send",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [263, 269],
+      "summary": "Sends a message through the proxy channel and wakes the embedder event loop, logging warnings on failure.",
+      "tags": ["method", "messaging", "send", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:GenericEmbedderProxy::clone",
+      "type": "function",
+      "name": "clone",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [273, 278],
+      "summary": "Clones the GenericEmbedderProxy by cloning its sender and event loop waker.",
+      "tags": ["method", "clone", "messaging", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:Image::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [406, 420],
+      "summary": "Creates a new Image with width, height, shared memory data, byte range, and pixel format.",
+      "tags": ["constructor", "image", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:ConsoleLogLevel_from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [442, 452],
+      "summary": "Converts a ConsoleLogLevel to the equivalent log::Level for integration with the Rust logging facade.",
+      "tags": ["conversion", "from-impl", "logging", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:MediaMetadata::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [567, 573],
+      "summary": "Creates MediaMetadata with the given title and empty artist and album strings.",
+      "tags": ["constructor", "media", "metadata", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:MediaPositionState::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [597, 603],
+      "summary": "Creates a MediaPositionState from duration, playback rate, and position values.",
+      "tags": ["constructor", "media", "position", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:WebResourceResponse::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [726, 733],
+      "summary": "Creates a new WebResourceResponse with default empty headers, OK status, and OK status message.",
+      "tags": ["constructor", "http", "response", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:Theme_from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [761, 766],
+      "summary": "Converts a Theme enum to a PrefersColorScheme for CSS media query evaluation.",
+      "tags": ["conversion", "from-impl", "theme", "css", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:ScriptToEmbedderChan::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1121, 1138],
+      "summary": "Creates a ScriptToEmbedderChan wrapping a GenericCallback that forwards EmbedderMsg and wakes the event loop on arrival.",
+      "tags": ["constructor", "channel", "callback", "messaging", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/embedder/lib.rs:UrlRequest::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1174, 1179],
+      "summary": "Creates a UrlRequest from a URL with an empty header map.",
+      "tags": ["constructor", "url", "request", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/embedder/resources.rs",
+      "type": "file",
+      "name": "resources.rs",
+      "filePath": "components/shared/embedder/resources.rs",
+      "summary": "Defines the Resource enum for embedder-bundled assets and the ResourceReaderMethods trait with a static registration mechanism via inventory crate.",
+      "tags": ["type-definition", "resources", "asset-management", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/resources.rs:Resource",
+      "type": "class",
+      "name": "Resource",
+      "filePath": "components/shared/embedder/resources.rs",
+      "lineRange": [96, 143],
+      "summary": "Enum of all bundled resources: bluetooth blocklist, domain list, HSTS preload, error pages, icons, debugger JS, and JSON viewer HTML.",
+      "tags": ["type-definition", "resources", "asset", "enum", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/resources.rs:ResourceReaderMethods",
+      "type": "class",
+      "name": "ResourceReaderMethods",
+      "filePath": "components/shared/embedder/resources.rs",
+      "lineRange": [163, 178],
+      "summary": "Trait that embedders implement to provide resource reading with sandbox-aware file access for content processes.",
+      "tags": ["trait", "resource-reader", "sandbox", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/resources.rs:read_bytes",
+      "type": "function",
+      "name": "read_bytes",
+      "filePath": "components/shared/embedder/resources.rs",
+      "lineRange": [80, 82],
+      "summary": "Reads a named Resource and returns its contents as raw bytes via the registered resource reader.",
+      "tags": ["function", "resource", "io", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/resources.rs:read_string",
+      "type": "function",
+      "name": "read_string",
+      "filePath": "components/shared/embedder/resources.rs",
+      "lineRange": [84, 86],
+      "summary": "Reads a named Resource and returns its contents as a UTF-8 string.",
+      "tags": ["function", "resource", "io", "string", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/resources.rs:sandbox_access_files",
+      "type": "function",
+      "name": "sandbox_access_files",
+      "filePath": "components/shared/embedder/resources.rs",
+      "lineRange": [88, 90],
+      "summary": "Returns the list of files that should remain accessible after sandboxing the content process.",
+      "tags": ["function", "sandbox", "security", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/resources.rs:sandbox_access_files_dirs",
+      "type": "function",
+      "name": "sandbox_access_files_dirs",
+      "filePath": "components/shared/embedder/resources.rs",
+      "lineRange": [92, 94],
+      "summary": "Returns the list of directories that should remain accessible after sandboxing the content process.",
+      "tags": ["function", "sandbox", "security", "directory", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/resources.rs:Resource::filename",
+      "type": "function",
+      "name": "filename",
+      "filePath": "components/shared/embedder/resources.rs",
+      "lineRange": [146, 160],
+      "summary": "Returns the filename associated with each Resource variant, mapping bluetooth blocklist, error pages, icons, and other assets to their file names.",
+      "tags": ["method", "resource", "filename", "rust"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "file:components/shared/embedder/embedder_controls.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "file:components/shared/embedder/input_events.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "file:components/shared/embedder/resources.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "file:components/shared/embedder/user_contents.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "file:components/shared/embedder/webdriver.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewPoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewRect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewVector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Scroll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ShutdownState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Cursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:EventLoopWaker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:GenericEmbedderProxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:RefreshDriver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:AuthenticationResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:AllowOrDeny",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:RegisterOrUnregister",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ProtocolHandlerUpdateRegistration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ViewportDetails",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScreenMetrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:PixelFormat",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ConsoleLogLevel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:BluetoothDeviceDescription",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:EmbedderMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaSessionPlaybackState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaPositionState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaSessionEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:PermissionFeature",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:InputMethodType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:DualRumbleEffectParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:GamepadHapticEffectType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebResourceRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebResourceResponseMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebResourceResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Theme",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaSessionActionType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:LoadStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Notification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:NotificationAction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScreenGeometry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:PaintHitTestResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:AnimationState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:JSValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:JavaScriptErrorInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:JavaScriptEvaluationResultSerializationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:JavaScriptEvaluationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScreenshotCaptureError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:RgbColor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScriptToEmbedderChan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:NewWebViewDetails",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:UrlRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WakeLockType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WakeLockDelegate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:as_device_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:as_device_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:WebViewRect_from_LayoutRect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:as_device_vector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:GenericEmbedderProxy::send",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:GenericEmbedderProxy::clone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:Image::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:ConsoleLogLevel_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:MediaMetadata::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:MediaPositionState::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:WebResourceResponse::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:Theme_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:ScriptToEmbedderChan::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:UrlRequest::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewPoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewRect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewVector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Scroll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ShutdownState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Cursor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:EventLoopWaker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:GenericEmbedderProxy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:RefreshDriver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:AuthenticationResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:AllowOrDeny",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:RegisterOrUnregister",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ProtocolHandlerUpdateRegistration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ViewportDetails",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScreenMetrics",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:PixelFormat",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ConsoleLogLevel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:BluetoothDeviceDescription",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:EmbedderMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaMetadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaSessionPlaybackState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaPositionState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaSessionEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:PermissionFeature",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:InputMethodType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:DualRumbleEffectParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:GamepadHapticEffectType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebResourceRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebResourceResponseMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebResourceResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Theme",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:MediaSessionActionType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:LoadStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Notification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:NotificationAction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScreenGeometry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:PaintHitTestResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:AnimationState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:JSValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:JavaScriptErrorInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:JavaScriptEvaluationResultSerializationError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:JavaScriptEvaluationError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScreenshotCaptureError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:RgbColor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScriptToEmbedderChan",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:NewWebViewDetails",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:UrlRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WakeLockType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WakeLockDelegate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:as_device_point",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:as_device_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:WebViewRect_from_LayoutRect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:as_device_vector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:GenericEmbedderProxy::send",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:GenericEmbedderProxy::clone",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:Image::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:ConsoleLogLevel_from",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:MediaMetadata::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:MediaPositionState::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:WebResourceResponse::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:Theme_from",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:ScriptToEmbedderChan::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "function:components/shared/embedder/lib.rs:UrlRequest::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "class:components/shared/embedder/resources.rs:Resource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "class:components/shared/embedder/resources.rs:ResourceReaderMethods",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:read_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:read_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:sandbox_access_files",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:sandbox_access_files_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:Resource::filename",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "class:components/shared/embedder/resources.rs:Resource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "class:components/shared/embedder/resources.rs:ResourceReaderMethods",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:read_bytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:read_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:sandbox_access_files",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:sandbox_access_files_dirs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/resources.rs",
+      "target": "function:components/shared/embedder/resources.rs:Resource::filename",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

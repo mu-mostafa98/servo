@@ -1,0 +1,1031 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/constellation/pipeline.rs",
+      "type": "file",
+      "name": "pipeline.rs",
+      "filePath": "components/constellation/pipeline.rs",
+      "summary": "Manages individual pipeline lifecycle: spawning, throttling, activity tracking, and parent-child browsing context relationships.",
+      "tags": [
+        "pipeline",
+        "lifecycle",
+        "child-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/constellation/process_manager.rs",
+      "type": "file",
+      "name": "process_manager.rs",
+      "filePath": "components/constellation/process_manager.rs",
+      "summary": "Manages child process lifecycle for sandboxed and unsandboxed subprocesses, supporting registration, selection, and cleanup.",
+      "tags": [
+        "process-management",
+        "child-process",
+        "sandbox"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/constellation/sandboxing.rs",
+      "type": "file",
+      "name": "sandboxing.rs",
+      "filePath": "components/constellation/sandboxing.rs",
+      "summary": "Implements platform-specific sandboxing profiles and multiprocess spawning for script and service worker processes.",
+      "tags": [
+        "sandbox",
+        "security",
+        "process-spawning",
+        "multiprocess"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Provides conditional compilation for Windows, Android, and Unix sandbox profiles with different security policies per platform."
+    },
+    {
+      "id": "file:components/constellation/serviceworker.rs",
+      "type": "file",
+      "name": "serviceworker.rs",
+      "filePath": "components/constellation/serviceworker.rs",
+      "summary": "Defines unprivileged content configuration for spawning service worker processes.",
+      "tags": [
+        "service-worker",
+        "process-spawning",
+        "unprivileged"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/pipeline.rs:spawn",
+      "type": "function",
+      "name": "spawn",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        75,
+        98
+      ],
+      "summary": "Initiates a new pipeline by sending a SpawnPipeline message to the event loop.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/pipeline.rs:new_already_spawned",
+      "type": "function",
+      "name": "new_already_spawned",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        102,
+        131
+      ],
+      "summary": "Records a pipeline that was spawned externally with its properties.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "factory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/pipeline.rs:send_exit_message_to_script",
+      "type": "function",
+      "name": "send_exit_message_to_script",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        136,
+        148
+      ],
+      "summary": "Sends an ExitPipeline message and optionally discards the browsing context.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/pipeline.rs:set_activity",
+      "type": "function",
+      "name": "set_activity",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        151,
+        156
+      ],
+      "summary": "Sends a SetDocumentActivity message to the pipeline script thread.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/pipeline.rs:to_sendable",
+      "type": "function",
+      "name": "to_sendable",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        159,
+        164
+      ],
+      "summary": "Creates a sendable representation of this pipeline for IPC.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/pipeline.rs:add_child",
+      "type": "function",
+      "name": "add_child",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        167,
+        169
+      ],
+      "summary": "Adds a child browsing context to this pipeline.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/pipeline.rs:remove_child",
+      "type": "function",
+      "name": "remove_child",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        172,
+        188
+      ],
+      "summary": "Removes a child browsing context, cleaning up parent references.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/pipeline.rs:set_throttled",
+      "type": "function",
+      "name": "set_throttled",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        192,
+        200
+      ],
+      "summary": "Sends throttle state updates to both the script thread and paint thread.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/pipeline.rs:Pipeline",
+      "type": "class",
+      "name": "Pipeline",
+      "filePath": "components/constellation/pipeline.rs",
+      "lineRange": [
+        25,
+        71
+      ],
+      "summary": "Represents a single pipeline with its event loop, children browsing contexts, throttling state, and activity level.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/process_manager.rs:wait",
+      "type": "function",
+      "name": "wait",
+      "filePath": "components/constellation/process_manager.rs",
+      "lineRange": [
+        24,
+        34
+      ],
+      "summary": "Blocks until the child process exits and returns its exit status.",
+      "tags": [
+        "process-management",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/process_manager.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/constellation/process_manager.rs",
+      "lineRange": [
+        45,
+        50
+      ],
+      "summary": "Creates a new ProcessManager with the given memory profiler channel.",
+      "tags": [
+        "exported",
+        "process-management",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/process_manager.rs:add",
+      "type": "function",
+      "name": "add",
+      "filePath": "components/constellation/process_manager.rs",
+      "lineRange": [
+        52,
+        55
+      ],
+      "summary": "Registers a new child process with its receiver for selection.",
+      "tags": [
+        "exported",
+        "process-management",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/process_manager.rs:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "components/constellation/process_manager.rs",
+      "lineRange": [
+        57,
+        61
+      ],
+      "summary": "Registers all process receivers into a Select for message multiplexing.",
+      "tags": [
+        "exported",
+        "process-management",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/process_manager.rs:receiver_at",
+      "type": "function",
+      "name": "receiver_at",
+      "filePath": "components/constellation/process_manager.rs",
+      "lineRange": [
+        63,
+        66
+      ],
+      "summary": "Returns the receiver at the given index in the process list.",
+      "tags": [
+        "exported",
+        "process-management",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/process_manager.rs:remove",
+      "type": "function",
+      "name": "remove",
+      "filePath": "components/constellation/process_manager.rs",
+      "lineRange": [
+        69,
+        79
+      ],
+      "summary": "Removes and terminates a child process, unregistering from the memory profiler.",
+      "tags": [
+        "exported",
+        "process-management",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/process_manager.rs:Process",
+      "type": "class",
+      "name": "Process",
+      "filePath": "components/constellation/process_manager.rs",
+      "lineRange": [
+        11,
+        14
+      ],
+      "summary": "Enum representing either an unsandboxed or sandboxed child process with a wait handle.",
+      "tags": [
+        "exported",
+        "process-management",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/process_manager.rs:ProcessManager",
+      "type": "class",
+      "name": "ProcessManager",
+      "filePath": "components/constellation/process_manager.rs",
+      "lineRange": [
+        39,
+        42
+      ],
+      "summary": "Manages a collection of child processes with select-based message routing and memory profiler integration.",
+      "tags": [
+        "exported",
+        "process-management",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:opts",
+      "type": "function",
+      "name": "opts",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        39,
+        44
+      ],
+      "summary": "Returns the command-line options for unprivileged content.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:prefs",
+      "type": "function",
+      "name": "prefs",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        46,
+        51
+      ],
+      "summary": "Returns the preferences for unprivileged content.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L56",
+      "type": "function",
+      "name": "content_process_sandbox_profile:L56",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        56,
+        94
+      ],
+      "summary": "Builds a platform-specific sandbox profile for content processes.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L108",
+      "type": "function",
+      "name": "content_process_sandbox_profile:L108",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        108,
+        129
+      ],
+      "summary": "Builds a platform-specific sandbox profile for content processes.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L143",
+      "type": "function",
+      "name": "content_process_sandbox_profile:L143",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        143,
+        146
+      ],
+      "summary": "Builds a platform-specific sandbox profile for content processes.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L157",
+      "type": "function",
+      "name": "spawn_multiprocess:L157",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        157,
+        178
+      ],
+      "summary": "Spawns an unprivileged content process with appropriate sandboxing.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L190",
+      "type": "function",
+      "name": "spawn_multiprocess:L190",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        190,
+        248
+      ],
+      "summary": "Spawns an unprivileged content process with appropriate sandboxing.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L251",
+      "type": "function",
+      "name": "spawn_multiprocess:L251",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        251,
+        254
+      ],
+      "summary": "Spawns an unprivileged content process with appropriate sandboxing.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/sandboxing.rs:setup_common",
+      "type": "function",
+      "name": "setup_common",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        256,
+        267
+      ],
+      "summary": "Configures common command-line arguments and environment variables for a child process.",
+      "tags": [
+        "sandbox",
+        "security",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/sandboxing.rs:UnprivilegedContent",
+      "type": "class",
+      "name": "UnprivilegedContent",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        33,
+        36
+      ],
+      "summary": "Enum of unprivileged content types (ScriptEventLoop, ServiceWorker) with access to options and preferences.",
+      "tags": [
+        "exported",
+        "sandbox",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/sandboxing.rs:CommandMethods",
+      "type": "class",
+      "name": "CommandMethods",
+      "filePath": "components/constellation/sandboxing.rs",
+      "lineRange": [
+        270,
+        281
+      ],
+      "summary": "Helper trait for adding arguments and environment variables to sandbox command builders.",
+      "tags": [
+        "sandbox",
+        "security",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/serviceworker.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/constellation/serviceworker.rs",
+      "lineRange": [
+        29,
+        41
+      ],
+      "summary": "Creates service worker unprivileged content configuration.",
+      "tags": [
+        "exported",
+        "service-worker",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/serviceworker.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "components/constellation/serviceworker.rs",
+      "lineRange": [
+        44,
+        49
+      ],
+      "summary": "Starts the service worker process using the service worker factory.",
+      "tags": [
+        "exported",
+        "service-worker",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/serviceworker.rs:spawn_multiprocess",
+      "type": "function",
+      "name": "spawn_multiprocess",
+      "filePath": "components/constellation/serviceworker.rs",
+      "lineRange": [
+        52,
+        54
+      ],
+      "summary": "Spawns a sandboxed service worker process.",
+      "tags": [
+        "exported",
+        "service-worker",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/serviceworker.rs:ServiceWorkerUnprivilegedContent",
+      "type": "class",
+      "name": "ServiceWorkerUnprivilegedContent",
+      "filePath": "components/constellation/serviceworker.rs",
+      "lineRange": [
+        20,
+        26
+      ],
+      "summary": "Configuration for spawning an unprivileged service worker process with options, preferences, and origin.",
+      "tags": [
+        "exported",
+        "service-worker",
+        "type"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:spawn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:spawn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:new_already_spawned",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:new_already_spawned",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:send_exit_message_to_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:send_exit_message_to_script",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:set_activity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:set_activity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:to_sendable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:to_sendable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:add_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:add_child",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:remove_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:remove_child",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:set_throttled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "function:components/constellation/pipeline.rs:set_throttled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "class:components/constellation/pipeline.rs:Pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/pipeline.rs",
+      "target": "class:components/constellation/pipeline.rs:Pipeline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:wait",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:add",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:add",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:register",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:receiver_at",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:receiver_at",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:remove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "function:components/constellation/process_manager.rs:remove",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "class:components/constellation/process_manager.rs:Process",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "class:components/constellation/process_manager.rs:Process",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "class:components/constellation/process_manager.rs:ProcessManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/process_manager.rs",
+      "target": "class:components/constellation/process_manager.rs:ProcessManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:opts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:opts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:prefs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:prefs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L56",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L56",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L108",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L108",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L143",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:content_process_sandbox_profile:L143",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L157",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L157",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L190",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L190",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L251",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:spawn_multiprocess:L251",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "function:components/constellation/sandboxing.rs:setup_common",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "class:components/constellation/sandboxing.rs:UnprivilegedContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "class:components/constellation/sandboxing.rs:UnprivilegedContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/sandboxing.rs",
+      "target": "class:components/constellation/sandboxing.rs:CommandMethods",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/serviceworker.rs",
+      "target": "function:components/constellation/serviceworker.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/serviceworker.rs",
+      "target": "function:components/constellation/serviceworker.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/serviceworker.rs",
+      "target": "function:components/constellation/serviceworker.rs:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/serviceworker.rs",
+      "target": "function:components/constellation/serviceworker.rs:start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/serviceworker.rs",
+      "target": "function:components/constellation/serviceworker.rs:spawn_multiprocess",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/serviceworker.rs",
+      "target": "function:components/constellation/serviceworker.rs:spawn_multiprocess",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/serviceworker.rs",
+      "target": "class:components/constellation/serviceworker.rs:ServiceWorkerUnprivilegedContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/serviceworker.rs",
+      "target": "class:components/constellation/serviceworker.rs:ServiceWorkerUnprivilegedContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

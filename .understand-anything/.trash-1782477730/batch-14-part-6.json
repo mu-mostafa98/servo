@@ -1,0 +1,1253 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/task.rs",
+      "type": "file",
+      "name": "task.rs",
+      "filePath": "components/script/task.rs",
+      "summary": "Provides the task macro and trait definitions for creating HTML-spec-compliant tasks with JS tracing, cancellation, and various execution modes.",
+      "tags": [
+        "rust",
+        "scheduling",
+        "tasks",
+        "macros",
+        "trait-definitions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/task.rs:wrap_task",
+      "type": "function",
+      "name": "wrap_task",
+      "filePath": "components/script/task.rs",
+      "lineRange": [
+        175,
+        183
+      ],
+      "summary": "wrap_task (9 lines, 1 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task.rs:cancelled",
+      "type": "function",
+      "name": "cancelled",
+      "filePath": "components/script/task.rs",
+      "lineRange": [
+        185,
+        187
+      ],
+      "summary": "cancelled (3 lines, 0 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task.rs:TaskOnce",
+      "type": "class",
+      "name": "TaskOnce",
+      "filePath": "components/script/task.rs",
+      "lineRange": [
+        111,
+        117
+      ],
+      "summary": "TaskOnce struct with 2 methods and 0 properties (7 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task.rs:NonSendTaskOnce",
+      "type": "class",
+      "name": "NonSendTaskOnce",
+      "filePath": "components/script/task.rs",
+      "lineRange": [
+        120,
+        122
+      ],
+      "summary": "NonSendTaskOnce struct with 1 methods and 0 properties (3 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task.rs:TaskBox",
+      "type": "class",
+      "name": "TaskBox",
+      "filePath": "components/script/task.rs",
+      "lineRange": [
+        125,
+        129
+      ],
+      "summary": "TaskBox struct with 2 methods and 0 properties (5 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task.rs:NonSendTaskBox",
+      "type": "class",
+      "name": "NonSendTaskBox",
+      "filePath": "components/script/task.rs",
+      "lineRange": [
+        132,
+        134
+      ],
+      "summary": "NonSendTaskBox struct with 1 methods and 0 properties (3 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task.rs:TaskCanceller",
+      "type": "class",
+      "name": "TaskCanceller",
+      "filePath": "components/script/task.rs",
+      "lineRange": [
+        168,
+        171
+      ],
+      "summary": "TaskCanceller struct with 2 methods and 1 properties (4 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task.rs:CancellableTask",
+      "type": "class",
+      "name": "CancellableTask",
+      "filePath": "components/script/task.rs",
+      "lineRange": [
+        191,
+        194
+      ],
+      "summary": "CancellableTask struct with 0 methods and 2 properties (4 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/task_manager.rs",
+      "type": "file",
+      "name": "task_manager.rs",
+      "filePath": "components/script/task_manager.rs",
+      "summary": "Manages per-pipeline task cancellers with support for shared (worker) and per-source (window) cancellation strategies.",
+      "tags": [
+        "rust",
+        "scheduling",
+        "tasks",
+        "cancellation",
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:cancel_all_tasks_and_ignore_future_tasks_1",
+      "type": "function",
+      "name": "cancel_all_tasks_and_ignore_future_tasks_1",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        34,
+        47
+      ],
+      "summary": "Marks all task cancellers to prevent future tasks from being queued.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:cancel_pending_tasks_for_source_1",
+      "type": "function",
+      "name": "cancel_pending_tasks_for_source_1",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        49,
+        63
+      ],
+      "summary": "Removes and cancels all pending tasks for a specific task source.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        86,
+        102
+      ],
+      "summary": "Constructor for the containing struct (3 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:pipeline_id",
+      "type": "function",
+      "name": "pipeline_id",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        104,
+        106
+      ],
+      "summary": "pipeline_id (3 lines, 0 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:sender",
+      "type": "function",
+      "name": "sender",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        108,
+        110
+      ],
+      "summary": "sender (3 lines, 0 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:canceller",
+      "type": "function",
+      "name": "canceller",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        112,
+        114
+      ],
+      "summary": "canceller (3 lines, 1 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:set_sender",
+      "type": "function",
+      "name": "set_sender",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        119,
+        121
+      ],
+      "summary": "set_sender (3 lines, 1 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:cancel_all_tasks_and_ignore_future_tasks_2",
+      "type": "function",
+      "name": "cancel_all_tasks_and_ignore_future_tasks_2",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        124,
+        126
+      ],
+      "summary": "Marks all task cancellers to prevent future tasks from being queued.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_manager.rs:cancel_pending_tasks_for_source_2",
+      "type": "function",
+      "name": "cancel_pending_tasks_for_source_2",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        130,
+        133
+      ],
+      "summary": "Removes and cancels all pending tasks for a specific task source.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task_manager.rs:TaskCancellers",
+      "type": "class",
+      "name": "TaskCancellers",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        18,
+        24
+      ],
+      "summary": "Enum managing task cancellation strategies: shared (for workers) or per-source (for windows).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/task_manager.rs:TaskManager",
+      "type": "class",
+      "name": "TaskManager",
+      "filePath": "components/script/task_manager.rs",
+      "lineRange": [
+        78,
+        83
+      ],
+      "summary": "Manages per-pipeline task cancellers and provides task queuing through the appropriate task source.",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/task_queue.rs",
+      "type": "file",
+      "name": "task_queue.rs",
+      "filePath": "components/script/task_queue.rs",
+      "summary": "Implements the HTML-spec task queue with throttling, inactive document deferral, and cross-channel message draining for the script event loop.",
+      "tags": [
+        "rust",
+        "scheduling",
+        "tasks",
+        "event-loop",
+        "queue"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/task_queue.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        60,
+        69
+      ],
+      "summary": "Constructor for the containing struct (2 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_queue.rs:release_tasks_for_fully_active_documents",
+      "type": "function",
+      "name": "release_tasks_for_fully_active_documents",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        73,
+        87
+      ],
+      "summary": "release_tasks_for_fully_active_documents (15 lines, 1 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_queue.rs:store_task_for_inactive_pipeline",
+      "type": "function",
+      "name": "store_task_for_inactive_pipeline",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        91,
+        106
+      ],
+      "summary": "store_task_for_inactive_pipeline (16 lines, 2 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_queue.rs:process_incoming_tasks",
+      "type": "function",
+      "name": "process_incoming_tasks",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        110,
+        181
+      ],
+      "summary": "process_incoming_tasks (72 lines, 2 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/task_queue.rs:select",
+      "type": "function",
+      "name": "select",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        185,
+        191
+      ],
+      "summary": "select (7 lines, 0 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_queue.rs:recv",
+      "type": "function",
+      "name": "recv",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        194,
+        196
+      ],
+      "summary": "recv (3 lines, 0 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_queue.rs:take_tasks_and_recv",
+      "type": "function",
+      "name": "take_tasks_and_recv",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        199,
+        205
+      ],
+      "summary": "take_tasks_and_recv (7 lines, 1 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_queue.rs:take_tasks",
+      "type": "function",
+      "name": "take_tasks",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        209,
+        264
+      ],
+      "summary": "take_tasks (56 lines, 2 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/task_queue.rs:QueuedTask",
+      "type": "class",
+      "name": "QueuedTask",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        23,
+        30
+      ],
+      "summary": "QueuedTask struct with 0 methods and 5 properties (8 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task_queue.rs:QueuedTaskConversion",
+      "type": "class",
+      "name": "QueuedTaskConversion",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        33,
+        41
+      ],
+      "summary": "QueuedTaskConversion struct with 7 methods and 0 properties (9 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/task_queue.rs:TaskQueue",
+      "type": "class",
+      "name": "TaskQueue",
+      "filePath": "components/script/task_queue.rs",
+      "lineRange": [
+        44,
+        57
+      ],
+      "summary": "Generic task queue implementing throttling, inactive document deferral, and wake-up signaling for the event loop.",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/task_source.rs",
+      "type": "file",
+      "name": "task_source.rs",
+      "filePath": "components/script/task_source.rs",
+      "summary": "Defines all HTML-spec task source names and the task source abstraction for queueing tasks to the appropriate event loop pipeline.",
+      "tags": [
+        "rust",
+        "scheduling",
+        "tasks",
+        "task-source",
+        "enum"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/task_source.rs:queue_1",
+      "type": "function",
+      "name": "queue_1",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        103,
+        110
+      ],
+      "summary": "Queues a closure as a task on the specified task source with event category tracking.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_source.rs:queue_unconditionally_1",
+      "type": "function",
+      "name": "queue_unconditionally_1",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        113,
+        125
+      ],
+      "summary": "Queues a task unconditionally bypassing the active/inactive document check.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_source.rs:queue_simple_event",
+      "type": "function",
+      "name": "queue_simple_event",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        127,
+        130
+      ],
+      "summary": "queue_simple_event (4 lines, 2 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_source.rs:queue_event",
+      "type": "function",
+      "name": "queue_event",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        132,
+        146
+      ],
+      "summary": "queue_event (15 lines, 4 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_source.rs:to_sendable",
+      "type": "function",
+      "name": "to_sendable",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        150,
+        162
+      ],
+      "summary": "to_sendable (13 lines, 0 parameters).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_source.rs:queue_2",
+      "type": "function",
+      "name": "queue_2",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        181,
+        185
+      ],
+      "summary": "Queues a closure as a task on the specified task source with event category tracking.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/task_source.rs:queue_unconditionally_2",
+      "type": "function",
+      "name": "queue_unconditionally_2",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        188,
+        204
+      ],
+      "summary": "Queues a task unconditionally bypassing the active/inactive document check.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task_source.rs:TaskSourceName",
+      "type": "class",
+      "name": "TaskSourceName",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        23,
+        59
+      ],
+      "summary": "TaskSourceName struct with 0 methods and 24 properties (37 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task_source.rs:TaskSource",
+      "type": "class",
+      "name": "TaskSource",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        96,
+        99
+      ],
+      "summary": "TaskSource struct with 0 methods and 2 properties (4 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/task_source.rs:SendableTaskSource",
+      "type": "class",
+      "name": "SendableTaskSource",
+      "filePath": "components/script/task_source.rs",
+      "lineRange": [
+        172,
+        178
+      ],
+      "summary": "SendableTaskSource struct with 5 methods and 4 properties (7 lines).",
+      "tags": [
+        "rust",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/test.rs",
+      "type": "file",
+      "name": "test.rs",
+      "filePath": "components/script/test.rs",
+      "summary": "Exports selected DOM types and struct size-checking functions used by compile-fail tests to verify memory layout constraints.",
+      "tags": [
+        "rust",
+        "test",
+        "compile-fail",
+        "size-of",
+        "re-export"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/task.rs",
+      "target": "function:components/script/task.rs:wrap_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "function:components/script/task.rs:wrap_task",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "function:components/script/task.rs:cancelled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "function:components/script/task.rs:cancelled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:TaskOnce",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:TaskOnce",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:NonSendTaskOnce",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:NonSendTaskOnce",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:TaskBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:TaskBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:NonSendTaskBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:NonSendTaskBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:TaskCanceller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:TaskCanceller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:CancellableTask",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task.rs",
+      "target": "class:components/script/task.rs:CancellableTask",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:cancel_all_tasks_and_ignore_future_tasks_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:cancel_all_tasks_and_ignore_future_tasks_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:cancel_pending_tasks_for_source_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:cancel_pending_tasks_for_source_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:pipeline_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:pipeline_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:sender",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:sender",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:canceller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:canceller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:set_sender",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:set_sender",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:cancel_all_tasks_and_ignore_future_tasks_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:cancel_all_tasks_and_ignore_future_tasks_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:cancel_pending_tasks_for_source_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "function:components/script/task_manager.rs:cancel_pending_tasks_for_source_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "class:components/script/task_manager.rs:TaskCancellers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "class:components/script/task_manager.rs:TaskManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_manager.rs",
+      "target": "class:components/script/task_manager.rs:TaskManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:release_tasks_for_fully_active_documents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:store_task_for_inactive_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:process_incoming_tasks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:select",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:select",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:recv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:recv",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:take_tasks_and_recv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:take_tasks_and_recv",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:take_tasks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "function:components/script/task_queue.rs:take_tasks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "class:components/script/task_queue.rs:QueuedTask",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "class:components/script/task_queue.rs:QueuedTask",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "class:components/script/task_queue.rs:QueuedTaskConversion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "class:components/script/task_queue.rs:QueuedTaskConversion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "class:components/script/task_queue.rs:TaskQueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_queue.rs",
+      "target": "class:components/script/task_queue.rs:TaskQueue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_unconditionally_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_unconditionally_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_simple_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_simple_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:to_sendable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:to_sendable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_unconditionally_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "function:components/script/task_source.rs:queue_unconditionally_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "class:components/script/task_source.rs:TaskSourceName",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "class:components/script/task_source.rs:TaskSourceName",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "class:components/script/task_source.rs:TaskSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "class:components/script/task_source.rs:TaskSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "class:components/script/task_source.rs:SendableTaskSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/task_source.rs",
+      "target": "class:components/script/task_source.rs:SendableTaskSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

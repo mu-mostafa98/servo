@@ -1,0 +1,1581 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/document/document.rs",
+      "type": "file",
+      "name": "document.rs",
+      "filePath": "components/script/dom/document/document.rs",
+      "summary": "Core Document implementation for the Servo browser engine, implementing the DOM Document interface with lifecycle management, script loading, rendering, stylesheet handling, animation timing, intersection observers, and navigation history.",
+      "tags": [
+        "dom",
+        "document",
+        "core",
+        "lifecycle",
+        "rendering"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust implementation of core DOM interfaces using Servo's DomRefCell, JS tracing, and script layout patterns."
+    },
+    {
+      "id": "class:components/script/dom/document/document.rs:DocumentSource",
+      "type": "class",
+      "name": "DocumentSource",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3393,
+        3396
+      ],
+      "summary": "Internal enum for document source type classification.",
+      "tags": [
+        "enum",
+        "internal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/document/document.rs:HasBrowsingContext",
+      "type": "class",
+      "name": "HasBrowsingContext",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3495,
+        3498
+      ],
+      "summary": "Internal enum for browsing context presence.",
+      "tags": [
+        "enum",
+        "internal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:deferred_script_loaded",
+      "type": "function",
+      "name": "deferred_script_loaded",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2429,
+        2437
+      ],
+      "summary": "Method deferred_script_loaded with 3 parameters in document module (8 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:process_deferred_scripts",
+      "type": "function",
+      "name": "process_deferred_scripts",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2440,
+        2460
+      ],
+      "summary": "Method process_deferred_scripts with 1 parameters in document module (20 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:maybe_dispatch_dom_content_loaded",
+      "type": "function",
+      "name": "maybe_dispatch_dom_content_loaded",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2463,
+        2509
+      ],
+      "summary": "Dispatches the DOMContentLoaded event when all parsing and blocking resources have loaded.",
+      "tags": [
+        "events",
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:destroy_document_and_its_descendants",
+      "type": "function",
+      "name": "destroy_document_and_its_descendants",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2512,
+        2547
+      ],
+      "summary": "Method destroy_document_and_its_descendants with 1 parameters in document module (35 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:destroy",
+      "type": "function",
+      "name": "destroy",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2550,
+        2588
+      ],
+      "summary": "Destroys the document and its associated resources, cleaning up all child nodes, observers, and pending callbacks.",
+      "tags": [
+        "lifecycle",
+        "cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:terminate_fetch_group",
+      "type": "function",
+      "name": "terminate_fetch_group",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2591,
+        2606
+      ],
+      "summary": "Method terminate_fetch_group in document module (15 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:abort",
+      "type": "function",
+      "name": "abort",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2617,
+        2661
+      ],
+      "summary": "Aborts document loading and parsing, cleaning up the parser, scripts, and fetch operations.",
+      "tags": [
+        "lifecycle",
+        "loading"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:abort_a_document_and_its_descendants",
+      "type": "function",
+      "name": "abort_a_document_and_its_descendants",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2664,
+        2694
+      ],
+      "summary": "Method abort_a_document_and_its_descendants with 1 parameters in document module (30 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:record_tti_if_necessary",
+      "type": "function",
+      "name": "record_tti_if_necessary",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2750,
+        2760
+      ],
+      "summary": "Method record_tti_if_necessary in document module (10 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:lookup_custom_element_definition",
+      "type": "function",
+      "name": "lookup_custom_element_definition",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2768,
+        2789
+      ],
+      "summary": "Looks up a custom element definition from the registry by namespace, local name, and is value.",
+      "tags": [
+        "custom-elements",
+        "registry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:unregister_responsive_image",
+      "type": "function",
+      "name": "unregister_responsive_image",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2821,
+        2830
+      ],
+      "summary": "Method unregister_responsive_image with 1 parameters in document module (9 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:register_media_controls",
+      "type": "function",
+      "name": "register_media_controls",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2832,
+        2842
+      ],
+      "summary": "Method register_media_controls with 2 parameters in document module (10 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:unregister_media_controls",
+      "type": "function",
+      "name": "unregister_media_controls",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2844,
+        2850
+      ],
+      "summary": "Method unregister_media_controls with 1 parameters in document module (6 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:mark_canvas_as_dirty",
+      "type": "function",
+      "name": "mark_canvas_as_dirty",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2852,
+        2861
+      ],
+      "summary": "Method mark_canvas_as_dirty with 1 parameters in document module (9 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:needs_rendering_update",
+      "type": "function",
+      "name": "needs_rendering_update",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2866,
+        2898
+      ],
+      "summary": "Method needs_rendering_update in document module (32 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:update_the_rendering",
+      "type": "function",
+      "name": "update_the_rendering",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2907,
+        2958
+      ],
+      "summary": "Main rendering update loop processing resize/intersection observers, animation callbacks, and paint.",
+      "tags": [
+        "rendering",
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:maybe_fulfill_font_ready_promise",
+      "type": "function",
+      "name": "maybe_fulfill_font_ready_promise",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        2977,
+        3009
+      ],
+      "summary": "Method maybe_fulfill_font_ready_promise with 1 parameters in document module (32 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:gather_active_resize_observations_at_depth",
+      "type": "function",
+      "name": "gather_active_resize_observations_at_depth",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3029,
+        3041
+      ],
+      "summary": "Method gather_active_resize_observations_at_depth with 1 parameters in document module (12 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:broadcast_active_resize_observations",
+      "type": "function",
+      "name": "broadcast_active_resize_observations",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3045,
+        3064
+      ],
+      "summary": "Method broadcast_active_resize_observations with 1 parameters in document module (19 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:deliver_resize_loop_error_notification",
+      "type": "function",
+      "name": "deliver_resize_loop_error_notification",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3075,
+        3083
+      ],
+      "summary": "Method deliver_resize_loop_error_notification with 1 parameters in document module (8 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:encoding_parse_a_url",
+      "type": "function",
+      "name": "encoding_parse_a_url",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3090,
+        3113
+      ],
+      "summary": "Parses a URL string using the document's encoding for non-ASCII characters.",
+      "tags": [
+        "url",
+        "encoding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:allowed_to_use_feature",
+      "type": "function",
+      "name": "allowed_to_use_feature",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3116,
+        3133
+      ],
+      "summary": "Method allowed_to_use_feature with 1 parameters in document module (17 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:remove_intersection_observer",
+      "type": "function",
+      "name": "remove_intersection_observer",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3146,
+        3153
+      ],
+      "summary": "Method remove_intersection_observer with 1 parameters in document module (7 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:update_intersection_observer_steps",
+      "type": "function",
+      "name": "update_intersection_observer_steps",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3156,
+        3172
+      ],
+      "summary": "Method update_intersection_observer_steps with 2 parameters in document module (16 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:update_single_intersection_observer_steps",
+      "type": "function",
+      "name": "update_single_intersection_observer_steps",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3175,
+        3189
+      ],
+      "summary": "Method update_single_intersection_observer_steps with 3 parameters in document module (14 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:notify_intersection_observers",
+      "type": "function",
+      "name": "notify_intersection_observers",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3192,
+        3209
+      ],
+      "summary": "Method notify_intersection_observers with 1 parameters in document module (17 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:queue_an_intersection_observer_task",
+      "type": "function",
+      "name": "queue_an_intersection_observer_task",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3212,
+        3233
+      ],
+      "summary": "Method queue_an_intersection_observer_task in document module (21 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:handle_paint_metric",
+      "type": "function",
+      "name": "handle_paint_metric",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3235,
+        3272
+      ],
+      "summary": "Handles paint metric events and dispatches appropriate DOM events.",
+      "tags": [
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:write",
+      "type": "function",
+      "name": "write",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3275,
+        3357
+      ],
+      "summary": "Method write with 5 parameters in document module (82 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:rooted_nodes_for_accessibility_integrity_check",
+      "type": "function",
+      "name": "rooted_nodes_for_accessibility_integrity_check",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3374,
+        3389
+      ],
+      "summary": "Method rooted_nodes_for_accessibility_integrity_check in document module (15 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:flush_shadow_root_stylesheets_if_necessary",
+      "type": "function",
+      "name": "flush_shadow_root_stylesheets_if_necessary",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3415,
+        3421
+      ],
+      "summary": "Method flush_shadow_root_stylesheets_if_necessary with 2 parameters in document module (6 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:get_registrable_domain_suffix_of_or_is_equal_to",
+      "type": "function",
+      "name": "get_registrable_domain_suffix_of_or_is_equal_to",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3441,
+        3487
+      ],
+      "summary": "Determines if a host suffix string is a registrable domain suffix for security policy checks.",
+      "tags": [
+        "security",
+        "domain"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3502,
+        3685
+      ],
+      "summary": "Constructor that initializes the struct from inherited state.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:insecure_requests_policy",
+      "type": "function",
+      "name": "insecure_requests_policy",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3688,
+        3702
+      ],
+      "summary": "Method insecure_requests_policy in document module (14 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:remove_script_and_layout_blocker",
+      "type": "function",
+      "name": "remove_script_and_layout_blocker",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3752,
+        3761
+      ],
+      "summary": "Method remove_script_and_layout_blocker with 1 parameters in document module (9 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:ensure_safe_to_run_script_or_layout",
+      "type": "function",
+      "name": "ensure_safe_to_run_script_or_layout",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3770,
+        3776
+      ],
+      "summary": "Method ensure_safe_to_run_script_or_layout in document module (6 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3779,
+        3826
+      ],
+      "summary": "Constructor for initializing the struct with default or provided values.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3829,
+        3887
+      ],
+      "summary": "Constructor that creates a new instance with a given prototype.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:get_redirect_count",
+      "type": "function",
+      "name": "get_redirect_count",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3889,
+        3895
+      ],
+      "summary": "Method get_redirect_count in document module (6 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:performance_timing_attribute",
+      "type": "function",
+      "name": "performance_timing_attribute",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3909,
+        3943
+      ],
+      "summary": "Computes the performance timing attribute values for navigation timing API.",
+      "tags": [
+        "performance",
+        "timing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:nth_element_by_name",
+      "type": "function",
+      "name": "nth_element_by_name",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3952,
+        3961
+      ],
+      "summary": "Method nth_element_by_name with 2 parameters in document module (9 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:nth_in_node_list",
+      "type": "function",
+      "name": "nth_in_node_list",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        3986,
+        3999
+      ],
+      "summary": "Method nth_in_node_list with 2 parameters in document module (13 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:flush_stylesheets_for_reflow",
+      "type": "function",
+      "name": "flush_stylesheets_for_reflow",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4016,
+        4027
+      ],
+      "summary": "Method flush_stylesheets_for_reflow in document module (11 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:make_document_unsalvageable",
+      "type": "function",
+      "name": "make_document_unsalvageable",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4034,
+        4041
+      ],
+      "summary": "Method make_document_unsalvageable in document module (7 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:appropriate_template_contents_owner_document",
+      "type": "function",
+      "name": "appropriate_template_contents_owner_document",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4044,
+        4084
+      ],
+      "summary": "Returns the appropriate owner document for template contents, creating one if needed.",
+      "tags": [
+        "template",
+        "dom"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:ensure_pending_restyle",
+      "type": "function",
+      "name": "ensure_pending_restyle",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4090,
+        4098
+      ],
+      "summary": "Method ensure_pending_restyle with 1 parameters in document module (8 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:element_attr_will_change",
+      "type": "function",
+      "name": "element_attr_will_change",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4100,
+        4152
+      ],
+      "summary": "Handles attribute change notifications for style invalidation and restyle tracking.",
+      "tags": [
+        "rendering",
+        "attributes"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:set_target_element",
+      "type": "function",
+      "name": "set_target_element",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4164,
+        4174
+      ],
+      "summary": "Method set_target_element with 1 parameters in document module (10 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:reset_form_owner_for_listeners",
+      "type": "function",
+      "name": "reset_form_owner_for_listeners",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4204,
+        4214
+      ],
+      "summary": "Method reset_form_owner_for_listeners with 2 parameters in document module (10 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:flush_shadow_root_stylesheets_if_necessary_for_layout",
+      "type": "function",
+      "name": "flush_shadow_root_stylesheets_if_necessary_for_layout",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4236,
+        4252
+      ],
+      "summary": "Method flush_shadow_root_stylesheets_if_necessary_for_layout with 2 parameters in document module (16 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:stylesheet_at",
+      "type": "function",
+      "name": "stylesheet_at",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4258,
+        4264
+      ],
+      "summary": "Method stylesheet_at with 1 parameters in document module (6 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:add_owned_stylesheet",
+      "type": "function",
+      "name": "add_owned_stylesheet",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4272,
+        4311
+      ],
+      "summary": "Adds an owned stylesheet to the document and registers it with the stylist.",
+      "tags": [
+        "stylesheet"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/document.rs:append_constructed_stylesheet",
+      "type": "function",
+      "name": "append_constructed_stylesheet",
+      "filePath": "components/script/dom/document/document.rs",
+      "lineRange": [
+        4318,
+        4349
+      ],
+      "summary": "Appends a constructed CSS stylesheet to the document, registering it for use.",
+      "tags": [
+        "stylesheet",
+        "cssom"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "class:components/script/dom/document/document.rs:DocumentSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "class:components/script/dom/document/document.rs:DocumentSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "class:components/script/dom/document/document.rs:HasBrowsingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "class:components/script/dom/document/document.rs:HasBrowsingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:deferred_script_loaded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:deferred_script_loaded",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:process_deferred_scripts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:maybe_dispatch_dom_content_loaded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:maybe_dispatch_dom_content_loaded",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:destroy_document_and_its_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:destroy_document_and_its_descendants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:destroy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:destroy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:terminate_fetch_group",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:abort",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:abort",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:abort_a_document_and_its_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:abort_a_document_and_its_descendants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:record_tti_if_necessary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:record_tti_if_necessary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:lookup_custom_element_definition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:lookup_custom_element_definition",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:unregister_responsive_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:unregister_responsive_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:register_media_controls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:register_media_controls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:unregister_media_controls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:unregister_media_controls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:mark_canvas_as_dirty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:mark_canvas_as_dirty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:needs_rendering_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:needs_rendering_update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:update_the_rendering",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:update_the_rendering",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:maybe_fulfill_font_ready_promise",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:maybe_fulfill_font_ready_promise",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:gather_active_resize_observations_at_depth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:gather_active_resize_observations_at_depth",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:broadcast_active_resize_observations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:broadcast_active_resize_observations",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:deliver_resize_loop_error_notification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:deliver_resize_loop_error_notification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:encoding_parse_a_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:encoding_parse_a_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:allowed_to_use_feature",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:allowed_to_use_feature",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:remove_intersection_observer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:remove_intersection_observer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:update_intersection_observer_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:update_intersection_observer_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:update_single_intersection_observer_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:notify_intersection_observers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:notify_intersection_observers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:queue_an_intersection_observer_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:queue_an_intersection_observer_task",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:handle_paint_metric",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:handle_paint_metric",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:rooted_nodes_for_accessibility_integrity_check",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:rooted_nodes_for_accessibility_integrity_check",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:flush_shadow_root_stylesheets_if_necessary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:flush_shadow_root_stylesheets_if_necessary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:get_registrable_domain_suffix_of_or_is_equal_to",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:get_registrable_domain_suffix_of_or_is_equal_to",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:insecure_requests_policy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:insecure_requests_policy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:remove_script_and_layout_blocker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:remove_script_and_layout_blocker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:ensure_safe_to_run_script_or_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:ensure_safe_to_run_script_or_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:get_redirect_count",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:get_redirect_count",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:performance_timing_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:performance_timing_attribute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:nth_element_by_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:nth_element_by_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:nth_in_node_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:flush_stylesheets_for_reflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:flush_stylesheets_for_reflow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:make_document_unsalvageable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:make_document_unsalvageable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:appropriate_template_contents_owner_document",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:appropriate_template_contents_owner_document",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:ensure_pending_restyle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:ensure_pending_restyle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:element_attr_will_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:element_attr_will_change",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:set_target_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:set_target_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:reset_form_owner_for_listeners",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:flush_shadow_root_stylesheets_if_necessary_for_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:flush_shadow_root_stylesheets_if_necessary_for_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:stylesheet_at",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:stylesheet_at",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:add_owned_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:add_owned_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:append_constructed_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/document.rs",
+      "target": "function:components/script/dom/document/document.rs:append_constructed_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

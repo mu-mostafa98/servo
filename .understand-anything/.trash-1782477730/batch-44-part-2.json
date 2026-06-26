@@ -1,0 +1,584 @@
+{
+  "nodes": [
+    {
+      "id": "file:etc/ci/scenario/servo_test_frame_rate_with_video.py",
+      "type": "file",
+      "name": "servo_test_frame_rate_with_video.py",
+      "filePath": "etc/ci/scenario/servo_test_frame_rate_with_video.py",
+      "summary": "Test scenario that measures frame rate during video playback interaction on a mobile device.",
+      "tags": [
+        "test",
+        "performance",
+        "frame-rate",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_test_frame_rate_with_video.py:operator",
+      "type": "function",
+      "name": "operator",
+      "filePath": "etc/ci/scenario/servo_test_frame_rate_with_video.py",
+      "lineRange": [
+        23,
+        87
+      ],
+      "summary": "Measures frame rate during video playback: creates driver, selects video content, records via screenrecord, runs gfxinfo, computes FPS.",
+      "tags": [
+        "test",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:etc/ci/scenario/servo_test_open_page_base.py",
+      "type": "file",
+      "name": "servo_test_open_page_base.py",
+      "filePath": "etc/ci/scenario/servo_test_open_page_base.py",
+      "summary": "Test scenario that opens a base Mossel page and verifies page element availability via WebDriver.",
+      "tags": [
+        "test",
+        "page-load",
+        "automation",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_test_open_page_base.py:operator",
+      "type": "function",
+      "name": "operator",
+      "filePath": "etc/ci/scenario/servo_test_open_page_base.py",
+      "lineRange": [
+        20,
+        39
+      ],
+      "summary": "Opens the Mossel page, loads elements, closes popup, and verifies page element presence with error handling.",
+      "tags": [
+        "test",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:etc/ci/scenario/servo_test_open_page_servo.py",
+      "type": "file",
+      "name": "servo_test_open_page_servo.py",
+      "filePath": "etc/ci/scenario/servo_test_open_page_servo.py",
+      "summary": "Test scenario that opens a Servo-specific page and verifies page element availability via WebDriver.",
+      "tags": [
+        "test",
+        "page-load",
+        "automation",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_test_open_page_servo.py:operator",
+      "type": "function",
+      "name": "operator",
+      "filePath": "etc/ci/scenario/servo_test_open_page_servo.py",
+      "lineRange": [
+        18,
+        40
+      ],
+      "summary": "Opens a Servo page URL, waits for page load, and verifies element presence with error handling.",
+      "tags": [
+        "test",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:etc/ci/scenario/servo_test_open_page_servo_plot.py",
+      "type": "file",
+      "name": "servo_test_open_page_servo_plot.py",
+      "filePath": "etc/ci/scenario/servo_test_open_page_servo_plot.py",
+      "summary": "Test scenario that opens a Servo page with memory usage plotting enabled, combining page load testing with memory monitoring.",
+      "tags": [
+        "test",
+        "page-load",
+        "memory",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_test_open_page_servo_plot.py:operator",
+      "type": "function",
+      "name": "operator",
+      "filePath": "etc/ci/scenario/servo_test_open_page_servo_plot.py",
+      "lineRange": [
+        19,
+        51
+      ],
+      "summary": "Opens a Servo page with NonBlockingMemoryLogging active, logging memory events before and after page load, then verifies elements.",
+      "tags": [
+        "test",
+        "automation",
+        "memory"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:etc/ci/scenario/servo_test_redirection.py",
+      "type": "file",
+      "name": "servo_test_redirection.py",
+      "filePath": "etc/ci/scenario/servo_test_redirection.py",
+      "summary": "Test scenario that validates Mossel page redirection behavior through category link navigation.",
+      "tags": [
+        "test",
+        "redirection",
+        "automation",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_test_redirection.py:operator",
+      "type": "function",
+      "name": "operator",
+      "filePath": "etc/ci/scenario/servo_test_redirection.py",
+      "lineRange": [
+        19,
+        36
+      ],
+      "summary": "Opens Mossel page, loads elements, closes popup, clicks a category, and identifies an element in the redirected view.",
+      "tags": [
+        "test",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:etc/ci/scenario/servo_test_slide.py",
+      "type": "file",
+      "name": "servo_test_slide.py",
+      "filePath": "etc/ci/scenario/servo_test_slide.py",
+      "summary": "Test scenario that validates page sliding/swiping behavior in Mossel with memory usage monitoring.",
+      "tags": [
+        "test",
+        "gesture",
+        "memory",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_test_slide.py:operator",
+      "type": "function",
+      "name": "operator",
+      "filePath": "etc/ci/scenario/servo_test_slide.py",
+      "lineRange": [
+        21,
+        64
+      ],
+      "summary": "Tests page sliding/swiping: starts memory logging, loads Mossel, navigates categories, takes screenshots, and verifies slide behavior.",
+      "tags": [
+        "test",
+        "automation",
+        "gesture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "type": "file",
+      "name": "update_mitmproxy_dump.py",
+      "filePath": "etc/ci/scenario/update_mitmproxy_dump.py",
+      "summary": "Orchestrates mitmproxy dump file updates by running multiple Servo test scenarios to capture and refresh network traffic recording data.",
+      "tags": [
+        "test",
+        "network",
+        "mitmproxy",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/update_mitmproxy_dump.py:google_test",
+      "type": "function",
+      "name": "google_test",
+      "filePath": "etc/ci/scenario/update_mitmproxy_dump.py",
+      "lineRange": [
+        34,
+        40
+      ],
+      "summary": "Simple test function that opens google.com via WebDriver to capture baseline network traffic for mitmproxy recording.",
+      "tags": [
+        "test",
+        "network"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/update_mitmproxy_dump.py:run_test",
+      "type": "function",
+      "name": "run_test",
+      "filePath": "etc/ci/scenario/update_mitmproxy_dump.py",
+      "lineRange": [
+        43,
+        48
+      ],
+      "summary": "Wraps a test function call with the common Servo test framework for mitmproxy dump capture.",
+      "tags": [
+        "test",
+        "utility"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_with_video.py",
+      "target": "function:etc/ci/scenario/servo_test_frame_rate_with_video.py:operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_with_video.py",
+      "target": "function:etc/ci/scenario/servo_test_frame_rate_with_video.py:operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_base.py",
+      "target": "function:etc/ci/scenario/servo_test_open_page_base.py:operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_base.py",
+      "target": "function:etc/ci/scenario/servo_test_open_page_base.py:operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_servo.py",
+      "target": "function:etc/ci/scenario/servo_test_open_page_servo.py:operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_servo.py",
+      "target": "function:etc/ci/scenario/servo_test_open_page_servo.py:operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_servo_plot.py",
+      "target": "function:etc/ci/scenario/servo_test_open_page_servo_plot.py:operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_servo_plot.py",
+      "target": "function:etc/ci/scenario/servo_test_open_page_servo_plot.py:operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_redirection.py",
+      "target": "function:etc/ci/scenario/servo_test_redirection.py:operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_redirection.py",
+      "target": "function:etc/ci/scenario/servo_test_redirection.py:operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_slide.py",
+      "target": "function:etc/ci/scenario/servo_test_slide.py:operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_slide.py",
+      "target": "function:etc/ci/scenario/servo_test_slide.py:operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "function:etc/ci/scenario/update_mitmproxy_dump.py:google_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "function:etc/ci/scenario/update_mitmproxy_dump.py:google_test",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "function:etc/ci/scenario/update_mitmproxy_dump.py:run_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "function:etc/ci/scenario/update_mitmproxy_dump.py:run_test",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_with_video.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_base.py",
+      "target": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_base.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_servo.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_servo_plot.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_open_page_servo_plot.py",
+      "target": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_redirection.py",
+      "target": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_redirection.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_slide.py",
+      "target": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_slide.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_slide.py",
+      "target": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "file:etc/ci/scenario/servo_speedometer.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "file:etc/ci/scenario/servo_test_open_page_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "file:etc/ci/scenario/servo_test_open_page_servo.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "file:etc/ci/scenario/servo_test_redirection.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/update_mitmproxy_dump.py",
+      "target": "file:etc/ci/scenario/servo_test_slide.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_frame_rate_with_video.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_frame_rate_with_video.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:calculate_frame_rate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_open_page_base.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_open_page_base.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:load_mossel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_open_page_base.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:close_popup",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_open_page_servo.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_open_page_servo_plot.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_redirection.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:load_mossel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_redirection.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:close_popup",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_redirection.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:click_category",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_redirection.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:identify_element_in_category",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_slide.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:load_mossel",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_slide.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:close_popup",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_slide.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:click_category",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_slide.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:identify_element_in_category",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/update_mitmproxy_dump.py:google_test",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/update_mitmproxy_dump.py:run_test",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:run_test",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

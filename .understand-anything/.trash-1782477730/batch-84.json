@@ -1,0 +1,995 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/worklet/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/worklet/mod.rs",
+      "summary": "Barrel module that re-exports all worklet submodules (PaintSize, PaintWorkletGlobalScope, Worklet, WorkletGlobalScope) for public access within the crate.",
+      "tags": ["barrel", "entry-point", "module"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/worklet/paintsize.rs",
+      "type": "file",
+      "name": "paintsize.rs",
+      "filePath": "components/script/dom/worklet/paintsize.rs",
+      "summary": "Defines the PaintSize struct representing the dimensions (width/height) available to a CSS Paint worklet rendering context.",
+      "tags": ["data-model", "dom", "worklet"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "type": "file",
+      "name": "paintworkletglobalscope.rs",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "summary": "Implements the PaintWorkletGlobalScope, the execution environment for CSS Paint worklets, handling paint definition registration, image rendering, and JavaScript callback invocation via SpiderMonkey.",
+      "tags": ["worklet", "dom", "api-handler", "rendering"],
+      "complexity": "complex",
+      "languageNotes": "Heavy use of SpiderMonkey JSAPI for invoking JavaScript paint callbacks, managing JS heap values, and constructing render contexts within a Rust worklet thread."
+    },
+    {
+      "id": "file:components/script/dom/worklet/worklet.rs",
+      "type": "file",
+      "name": "worklet.rs",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "summary": "Core worklet infrastructure managing the DOM Worklet interface, a three-thread thread pool with role swapping, script fetching and evaluation, and CSP enforcement for worklet execution.",
+      "tags": ["worklet", "dom", "infrastructure", "multithreading", "execution-engine"],
+      "complexity": "complex",
+      "languageNotes": "Implements a three-thread pool (primary, hot backup, cold backup) with role swapping for fault tolerance and continuous availability during worklet execution."
+    },
+    {
+      "id": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "type": "file",
+      "name": "workletglobalscope.rs",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "summary": "Base WorkletGlobalScope abstraction providing shared initialization, JavaScript evaluation, paint worklet registration, and task dispatching for typed worklet global scopes (Paint, Test).",
+      "tags": ["worklet", "dom", "base-class", "execution-context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/worklet/paintsize.rs:PaintSize",
+      "type": "class",
+      "name": "PaintSize",
+      "filePath": "components/script/dom/worklet/paintsize.rs",
+      "lineRange": [17, 21],
+      "summary": "DOM-accessible struct representing paint worklet dimensions with width and height properties available to the JavaScript paint callback.",
+      "tags": ["data-model", "dom", "dimensions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/worklet/paintworkletglobalscope.rs:PaintWorkletGlobalScope",
+      "type": "class",
+      "name": "PaintWorkletGlobalScope",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [56, 85],
+      "summary": "The execution scope for CSS Paint worklets, managing paint definitions, class instances, cached rendering state, and image results.",
+      "tags": ["worklet", "dom", "execution-context", "rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/worklet/worklet.rs:Worklet",
+      "type": "class",
+      "name": "Worklet",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [91, 96],
+      "summary": "DOM Worklet interface providing the addModule API for loading worklet scripts and managing the worklet lifecycle.",
+      "tags": ["worklet", "dom", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/worklet/worklet.rs:WorkletThreadPool",
+      "type": "class",
+      "name": "WorkletThreadPool",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [268, 283],
+      "summary": "Manages a pool of worklet threads (primary, hot backup, cold backup) for parallel script execution and fault tolerance via role swapping.",
+      "tags": ["worklet", "multithreading", "pool", "fault-tolerance"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/worklet/worklet.rs:WorkletThread",
+      "type": "class",
+      "name": "WorkletThread",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [464, 489],
+      "summary": "Represents an individual worklet thread running a SpiderMonkey JS runtime, handling task execution, garbage collection, and global scope lifecycle.",
+      "tags": ["worklet", "thread", "runtime", "execution-engine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/worklet/worklet.rs:WorkletExecutor",
+      "type": "class",
+      "name": "WorkletExecutor",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [820, 824],
+      "summary": "Task executor bridge that routes worklet tasks from the paint worklet scope to the primary worklet thread via channel communication.",
+      "tags": ["worklet", "executor", "communication"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/worklet/workletglobalscope.rs:WorkletGlobalScope",
+      "type": "class",
+      "name": "WorkletGlobalScope",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [41, 51],
+      "summary": "Base global scope for all worklet types, providing shared state initialization, JavaScript evaluation, paint worklet registration, and task dispatching.",
+      "tags": ["worklet", "dom", "base-class", "execution-context"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/worklet/workletglobalscope.rs:WorkletGlobalScopeInit",
+      "type": "class",
+      "name": "WorkletGlobalScopeInit",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [198, 221],
+      "summary": "Configuration struct carrying all initialization channels and resources (script thread sender, resource threads, profilers, devtools channels, image cache) for creating a worklet global scope.",
+      "tags": ["worklet", "configuration", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintsize.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/worklet/paintsize.rs",
+      "lineRange": [32, 38],
+      "summary": "Creates a new PaintSize DOM object wrapping the provided dimensions with reflective bindings.",
+      "tags": ["constructor", "dom", "worklet"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [88, 127],
+      "summary": "Constructs a PaintWorkletGlobalScope with worklet executor, image cache, and default rendering state.",
+      "tags": ["constructor", "dom", "worklet"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:image_cache",
+      "type": "function",
+      "name": "image_cache",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [129, 131],
+      "summary": "Returns a clone of the worklet's image cache client for fetching rasterized paint images.",
+      "tags": ["getter", "caching", "rendering"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:perform_a_worklet_task",
+      "type": "function",
+      "name": "perform_a_worklet_task",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [133, 207],
+      "summary": "Dispatches paint worklet tasks by either drawing synchronously or speculatively scheduling via the executor, caching results and missing image URLs.",
+      "tags": ["task-dispatch", "caching", "rendering"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:draw_a_paint_image",
+      "type": "function",
+      "name": "draw_a_paint_image",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [210, 237],
+      "summary": "Schedules a paint image draw by sending a worklet task through the executor and waiting for the result with a configurable timeout.",
+      "tags": ["rendering", "task-dispatch", "async"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:invoke_a_paint_callback",
+      "type": "function",
+      "name": "invoke_a_paint_callback",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [242, 381],
+      "summary": "Invokes a registered JavaScript paint callback by constructing the JS paint instance, setting up rendering context and paint size objects, calling the paint function, and capturing the resulting image.",
+      "tags": ["rendering", "javascript-interop", "callback", "image-processing"],
+      "complexity": "complex",
+      "languageNotes": "Extensive use of SpiderMonkey JSAPI for object construction, property access, function calling, and exception handling within the paint worklet scope."
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:invalid_image",
+      "type": "function",
+      "name": "invalid_image",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [384, 397],
+      "summary": "Generates an invalid image result with a transparent bitmap and the list of missing image URLs for error propagation.",
+      "tags": ["error-handling", "rendering"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:painter",
+      "type": "function",
+      "name": "painter",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [399, 454],
+      "summary": "Creates a painter object that bridges the paint worklet scope to the embedder by wrapping the executor in a mutex for thread-safe task scheduling.",
+      "tags": ["factory", "thread-safety", "rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:PaintDefinition::new",
+      "type": "function",
+      "name": "PaintDefinition::new",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [492, 510],
+      "summary": "Constructs a PaintDefinition holding the class constructor, paint function, alpha flag, input argument count, and execution context.",
+      "tags": ["constructor", "javascript-interop"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/paintworkletglobalscope.rs:RegisterPaint",
+      "type": "function",
+      "name": "RegisterPaint",
+      "filePath": "components/script/dom/worklet/paintworkletglobalscope.rs",
+      "lineRange": [517, 605],
+      "summary": "Implements the registerPaint() API for CSS Paint worklets, validating the paint class, extracting input properties and arguments, constructing the rendering context, and registering the paint definition.",
+      "tags": ["api-handler", "validation", "registration", "javascript-interop"],
+      "complexity": "complex",
+      "languageNotes": "Validates JavaScript paint class structure (constructor, paint method, prototype chain) and registers the definition with the script thread via cross-thread messaging."
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [99, 109],
+      "summary": "Initializes a new Worklet DOM object with reflector, window reference, global type, and thread pool placeholder.",
+      "tags": ["constructor", "dom", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [111, 122],
+      "summary": "Creates a new Worklet DOM object with reflective bindings and wraps it in a DOM root for garbage collection.",
+      "tags": ["constructor", "dom", "garbage-collection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:worklet_id",
+      "type": "function",
+      "name": "worklet_id",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [125, 127],
+      "summary": "Returns the unique worklet identifier used to look up the corresponding global scope.",
+      "tags": ["getter", "identification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:worklet_global_scope_type",
+      "type": "function",
+      "name": "worklet_global_scope_type",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [130, 132],
+      "summary": "Returns the global scope type indicator for this worklet (e.g. Paint, Test).",
+      "tags": ["getter", "type-identification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:AddModule",
+      "type": "function",
+      "name": "AddModule",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [137, 183],
+      "summary": "Implements the addModule(scriptURL, options) API for loading worklet scripts, validating the URL, creating a promise, and dispatching script fetch to the worklet thread pool.",
+      "tags": ["api-handler", "loading", "promise", "validation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:spawn",
+      "type": "function",
+      "name": "spawn",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [296, 317],
+      "summary": "Initializes the worklet thread pool by creating three WorkletThreadRoles (primary, hot backup, cold backup) and spawning the corresponding WorkletThread instances.",
+      "tags": ["initialization", "multithreading", "pool"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:WorkletThreadPool::fetch_and_invoke_a_worklet_script",
+      "type": "function",
+      "name": "WorkletThreadPool::fetch_and_invoke_a_worklet_script",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [324, 361],
+      "summary": "Sends a fetch-and-invoke worklet script task to the primary thread via channel, wrapping all parameters and waking worker threads.",
+      "tags": ["task-dispatch", "communication", "loading"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:exit_worklet",
+      "type": "function",
+      "name": "exit_worklet",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [363, 372],
+      "summary": "Sends an ExitWorklet control message to all thread roles and wakes the threads to process the shutdown.",
+      "tags": ["shutdown", "lifecycle", "communication"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:test_worklet_lookup",
+      "type": "function",
+      "name": "test_worklet_lookup",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [376, 381],
+      "summary": "Sends a test lookup task through the worklet thread pool and waits for a synchronous response to verify thread communication.",
+      "tags": ["testing", "communication", "verification"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:WorkletThread::spawn",
+      "type": "function",
+      "name": "WorkletThread::spawn",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [502, 535],
+      "summary": "Spawns a new OS thread for a worklet, initializes the SpiderMonkey runtime, and enters the worklet run loop.",
+      "tags": ["threading", "runtime-initialization", "spawning"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:WorkletThread::run",
+      "type": "function",
+      "name": "WorkletThread::run",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [538, 609],
+      "summary": "Main worklet thread event loop that processes worklet tasks, handles role swap coordination, processes control messages, and triggers garbage collection.",
+      "tags": ["event-loop", "multithreading", "lifecycle"],
+      "complexity": "complex",
+      "languageNotes": "Implements role swapping coordination between primary, hot backup, and cold backup worklet threads to ensure continuous availability during maintenance."
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:WorkletThread::gc",
+      "type": "function",
+      "name": "WorkletThread::gc",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [619, 632],
+      "summary": "Triggers SpiderMonkey garbage collection when memory usage exceeds the adaptive gc threshold.",
+      "tags": ["garbage-collection", "memory-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:get_worklet_global_scope",
+      "type": "function",
+      "name": "get_worklet_global_scope",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [637, 666],
+      "summary": "Retrieves or creates the worklet global scope for given identifiers, caching it in the thread's scope map.",
+      "tags": ["caching", "lifecycle", "lookup"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:WorkletThread::fetch_and_invoke_a_worklet_script",
+      "type": "function",
+      "name": "WorkletThread::fetch_and_invoke_a_worklet_script",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [671, 743],
+      "summary": "Fetches a worklet script via HTTP, evaluates it in the global scope's JS context, and resolves or rejects the associated promise.",
+      "tags": ["loading", "javascript-evaluation", "networking", "promise"],
+      "complexity": "complex",
+      "languageNotes": "Constructs a Fetch API request with CORS mode, evaluates fetched JavaScript in the worklet's JS runtime, and communicates results back to the main script thread."
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:process_control",
+      "type": "function",
+      "name": "process_control",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [754, 795],
+      "summary": "Processes control messages (ExitWorklet, FetchAndInvokeAWorkletScript) by removing global scopes or dispatching script fetch tasks.",
+      "tags": ["control-flow", "lifecycle", "task-dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:run_in_script_thread",
+      "type": "function",
+      "name": "run_in_script_thread",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [798, 815],
+      "summary": "Forwards a cancellable task to the main script thread via CommonScriptMsg for execution in the script thread context.",
+      "tags": ["communication", "cross-thread", "task-dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/worklet.rs:schedule_a_worklet_task",
+      "type": "function",
+      "name": "schedule_a_worklet_task",
+      "filePath": "components/script/dom/worklet/worklet.rs",
+      "lineRange": [835, 839],
+      "summary": "Schedules a worklet task by sending a WorkletData::Task message to the primary worklet thread sender.",
+      "tags": ["task-dispatch", "communication"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/workletglobalscope.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [56, 93],
+      "summary": "Creates a typed WorkletGlobalScope (Paint or Test) by calling the appropriate subclass constructor and initializing the JS realm with exposed interfaces.",
+      "tags": ["constructor", "factory", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/workletglobalscope.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [96, 132],
+      "summary": "Initializes the inherited GlobalScope state with all resource channels, origin, base URL, and worklet-specific fields.",
+      "tags": ["constructor", "initialization", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/worklet/workletglobalscope.rs:evaluate_js",
+      "type": "function",
+      "name": "evaluate_js",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [135, 151],
+      "summary": "Evaluates a JavaScript string in the worklet's JS realm, entering an auto realm for correct JS context.",
+      "tags": ["javascript-evaluation", "scripting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/workletglobalscope.rs:register_paint_worklet",
+      "type": "function",
+      "name": "register_paint_worklet",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [154, 168],
+      "summary": "Sends a RegisterPaintWorklet message to the main script thread with the paint worklet name, properties, and painter reference.",
+      "tags": ["registration", "cross-thread", "communication"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/workletglobalscope.rs:base_url",
+      "type": "function",
+      "name": "base_url",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [171, 173],
+      "summary": "Returns a clone of the worklet global scope's base URL for resolving relative script URLs.",
+      "tags": ["getter", "url-resolution"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/workletglobalscope.rs:executor",
+      "type": "function",
+      "name": "executor",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [176, 178],
+      "summary": "Returns a clone of the worklet executor used for scheduling tasks on the worklet thread.",
+      "tags": ["getter", "executor", "task-scheduling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/worklet/workletglobalscope.rs:perform_a_worklet_task",
+      "type": "function",
+      "name": "perform_a_worklet_task",
+      "filePath": "components/script/dom/worklet/workletglobalscope.rs",
+      "lineRange": [181, 193],
+      "summary": "Dispatches a worklet task to the appropriate typed global scope (Paint or Test) based on downcast resolution.",
+      "tags": ["task-dispatch", "polymorphism", "worklet"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/worklet/mod.rs",
+      "target": "file:components/script/dom/worklet/paintsize.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/worklet/mod.rs",
+      "target": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/worklet/mod.rs",
+      "target": "file:components/script/dom/worklet/worklet.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/worklet/mod.rs",
+      "target": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintsize.rs",
+      "target": "class:components/script/dom/worklet/paintsize.rs:PaintSize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintsize.rs",
+      "target": "function:components/script/dom/worklet/paintsize.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintsize.rs",
+      "target": "class:components/script/dom/worklet/paintsize.rs:PaintSize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintsize.rs",
+      "target": "function:components/script/dom/worklet/paintsize.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "class:components/script/dom/worklet/paintworkletglobalscope.rs:PaintWorkletGlobalScope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:image_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:perform_a_worklet_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:draw_a_paint_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:invoke_a_paint_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:invalid_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:painter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:PaintDefinition::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:RegisterPaint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "class:components/script/dom/worklet/paintworkletglobalscope.rs:PaintWorkletGlobalScope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:image_cache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/paintworkletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:perform_a_worklet_task",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "class:components/script/dom/worklet/worklet.rs:Worklet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "class:components/script/dom/worklet/worklet.rs:WorkletThreadPool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "class:components/script/dom/worklet/worklet.rs:WorkletThread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "class:components/script/dom/worklet/worklet.rs:WorkletExecutor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:worklet_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:worklet_global_scope_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:AddModule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:spawn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:WorkletThreadPool::fetch_and_invoke_a_worklet_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:exit_worklet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:test_worklet_lookup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:WorkletThread::spawn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:WorkletThread::run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:WorkletThread::gc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:get_worklet_global_scope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:WorkletThread::fetch_and_invoke_a_worklet_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:process_control",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:run_in_script_thread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:schedule_a_worklet_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "class:components/script/dom/worklet/worklet.rs:Worklet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "class:components/script/dom/worklet/worklet.rs:WorkletThreadPool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "class:components/script/dom/worklet/worklet.rs:WorkletExecutor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:worklet_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:worklet_global_scope_type",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:spawn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:exit_worklet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:test_worklet_lookup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/worklet.rs",
+      "target": "function:components/script/dom/worklet/worklet.rs:schedule_a_worklet_task",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "class:components/script/dom/worklet/workletglobalscope.rs:WorkletGlobalScope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "class:components/script/dom/worklet/workletglobalscope.rs:WorkletGlobalScopeInit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:evaluate_js",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:register_paint_worklet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:base_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:executor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:perform_a_worklet_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "class:components/script/dom/worklet/workletglobalscope.rs:WorkletGlobalScope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "class:components/script/dom/worklet/workletglobalscope.rs:WorkletGlobalScopeInit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:evaluate_js",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:register_paint_worklet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:base_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:executor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/worklet/workletglobalscope.rs",
+      "target": "function:components/script/dom/worklet/workletglobalscope.rs:perform_a_worklet_task",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/worklet/workletglobalscope.rs:new",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/worklet/workletglobalscope.rs:perform_a_worklet_task",
+      "target": "function:components/script/dom/worklet/paintworkletglobalscope.rs:perform_a_worklet_task",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/worklet/paintworkletglobalscope.rs:invoke_a_paint_callback",
+      "target": "function:components/script/dom/worklet/paintsize.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

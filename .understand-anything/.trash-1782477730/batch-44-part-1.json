@@ -1,0 +1,1348 @@
+{
+  "nodes": [
+    {
+      "id": "file:etc/ci/scenario/blink_perf_test.py",
+      "type": "file",
+      "name": "blink_perf_test.py",
+      "filePath": "etc/ci/scenario/blink_perf_test.py",
+      "summary": "Runs Blink performance test suites via WebDriver, collecting timing results and memory metrics, then writing output to JSON and CSV for CI benchmarking pipelines.",
+      "tags": [
+        "test",
+        "benchmarking",
+        "performance",
+        "ci",
+        "python"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:etc/ci/scenario/blink_perf_test.py:run_single_test",
+      "type": "function",
+      "name": "run_single_test",
+      "filePath": "etc/ci/scenario/blink_perf_test.py",
+      "lineRange": [
+        146,
+        201
+      ],
+      "summary": "Executes a single Blink performance test by navigating via WebDriver, waiting for results, and parsing timing output from log elements.",
+      "tags": [
+        "test",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/blink_perf_test.py:parse_memory_report",
+      "type": "function",
+      "name": "parse_memory_report",
+      "filePath": "etc/ci/scenario/blink_perf_test.py",
+      "lineRange": [
+        251,
+        278
+      ],
+      "summary": "Parses the memory report text from a WebDriver page, extracting explicit, resident, and smaps memory metrics.",
+      "tags": [
+        "memory",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/blink_perf_test.py:memory_report_to_bencher_metrics",
+      "type": "function",
+      "name": "memory_report_to_bencher_metrics",
+      "filePath": "etc/ci/scenario/blink_perf_test.py",
+      "lineRange": [
+        294,
+        331
+      ],
+      "summary": "Converts a MemoryReport object into Bencher-compatible metric format with lower/upper value bounds.",
+      "tags": [
+        "benchmarking",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/blink_perf_test.py:run_tests",
+      "type": "function",
+      "name": "run_tests",
+      "filePath": "etc/ci/scenario/blink_perf_test.py",
+      "lineRange": [
+        339,
+        457
+      ],
+      "summary": "Orchestrates the full test run: iterating test files, starting Servo, creating drivers, collecting results and memory reports, writing CSV output.",
+      "tags": [
+        "test",
+        "benchmarking",
+        "ci"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:etc/ci/scenario/blink_perf_test.py:get_memory_report_str",
+      "type": "function",
+      "name": "get_memory_report_str",
+      "filePath": "etc/ci/scenario/blink_perf_test.py",
+      "lineRange": [
+        460,
+        473
+      ],
+      "summary": "Navigates to the memory report page and retrieves the raw memory report string via WebDriver interaction.",
+      "tags": [
+        "memory",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:etc/ci/scenario/blink_perf_test.py:LocalFileServe",
+      "type": "class",
+      "name": "LocalFileServe",
+      "filePath": "etc/ci/scenario/blink_perf_test.py",
+      "lineRange": [
+        111,
+        139
+      ],
+      "summary": "Context manager that sets up a local HTTP server on a background thread for serving test files during benchmarking.",
+      "tags": [
+        "utility",
+        "server"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "type": "file",
+      "name": "common_function_for_mossel.py",
+      "filePath": "etc/ci/scenario/common_function_for_mossel.py",
+      "summary": "Provides shared WebDriver automation helpers for Mossel interactive element testing, including page loading, popup dismissal, and category navigation.",
+      "tags": [
+        "utility",
+        "test",
+        "automation",
+        "python"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_mossel.py:load_mossel",
+      "type": "function",
+      "name": "load_mossel",
+      "filePath": "etc/ci/scenario/common_function_for_mossel.py",
+      "lineRange": [
+        18,
+        34
+      ],
+      "summary": "Loads the Mossel page in WebDriver, sets page load timeout, and logs the loaded page title.",
+      "tags": [
+        "test",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_mossel.py:close_popup",
+      "type": "function",
+      "name": "close_popup",
+      "filePath": "etc/ci/scenario/common_function_for_mossel.py",
+      "lineRange": [
+        41,
+        55
+      ],
+      "summary": "Closes a birthday popup on the Mossel page by finding and clicking the dismiss element with error handling.",
+      "tags": [
+        "test",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_mossel.py:click_category",
+      "type": "function",
+      "name": "click_category",
+      "filePath": "etc/ci/scenario/common_function_for_mossel.py",
+      "lineRange": [
+        58,
+        66
+      ],
+      "summary": "Finds and clicks a category element on the Mossel page, handling NoSuchElementException gracefully.",
+      "tags": [
+        "test",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_mossel.py:identify_element_in_category",
+      "type": "function",
+      "name": "identify_element_in_category",
+      "filePath": "etc/ci/scenario/common_function_for_mossel.py",
+      "lineRange": [
+        69,
+        86
+      ],
+      "summary": "Navigates through category elements on the Mossel page, refreshing until a suitable element is found.",
+      "tags": [
+        "test",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "file",
+      "name": "common_function_for_servo_test.py",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "summary": "Core shared library for all Servo CI test scenarios, providing WebDriver setup, port forwarding via HDC, mitmproxy integration, Servo process management, frame rate calculation, and screenshot utilities.",
+      "tags": [
+        "utility",
+        "test",
+        "automation",
+        "infrastructure",
+        "python"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Python context managers (MitmProxy) manage mitmproxy lifecycle with __enter__/__exit__."
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:common_args_from_args",
+      "type": "function",
+      "name": "common_args_from_args",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        65,
+        79
+      ],
+      "summary": "Parses common command-line arguments for Servo test scripts using argparse, returning the parsed args and remaining unparsed args.",
+      "tags": [
+        "utility",
+        "cli"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:calculate_frame_rate",
+      "type": "function",
+      "name": "calculate_frame_rate",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        164,
+        212
+      ],
+      "summary": "Runs frame rate measurement via adb shell dumpsys and parses the output to compute average frame rate in FPS.",
+      "tags": [
+        "utility",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "function",
+      "name": "create_driver",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        215,
+        235
+      ],
+      "summary": "Creates a remote WebDriver connection to Servo with retry logic and timeout handling.",
+      "tags": [
+        "utility",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:port_forward",
+      "type": "function",
+      "name": "port_forward",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        248,
+        269
+      ],
+      "summary": "Sets up or removes HDC port forwarding between host and device for WebDriver and mitmproxy communication.",
+      "tags": [
+        "utility",
+        "network"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:setup_hdc_forward",
+      "type": "function",
+      "name": "setup_hdc_forward",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        272,
+        303
+      ],
+      "summary": "Configures HDC port forwarding with retry logic, waiting until both WebDriver and host service ports are forwarded successfully.",
+      "tags": [
+        "utility",
+        "network"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:start_servo",
+      "type": "function",
+      "name": "start_servo",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        306,
+        337
+      ],
+      "summary": "Starts the Servo browser process with given options, constructing the command-line and handling Harmony device connections.",
+      "tags": [
+        "utility",
+        "automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:stop_servo",
+      "type": "function",
+      "name": "stop_servo",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        340,
+        355
+      ],
+      "summary": "Stops a running Servo process gracefully with terminate/wait/kill sequence, or kills via adb for remote devices.",
+      "tags": [
+        "utility",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:element_scroll_into_view_and_rect",
+      "type": "function",
+      "name": "element_scroll_into_view_and_rect",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        358,
+        393
+      ],
+      "summary": "Scrolls a page element into view using JavaScript and returns its bounding rectangle coordinates.",
+      "tags": [
+        "utility",
+        "dom"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:element_screenshot",
+      "type": "function",
+      "name": "element_screenshot",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        396,
+        411
+      ],
+      "summary": "Takes a screenshot of a specific page element by capturing the full screen and cropping to the element's bounding rectangle.",
+      "tags": [
+        "utility",
+        "screenshot"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:is_servo_window_focused",
+      "type": "function",
+      "name": "is_servo_window_focused",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        414,
+        435
+      ],
+      "summary": "Checks whether the Servo window is focused on a HarmonyOS device by parsing HDC window focus output.",
+      "tags": [
+        "utility",
+        "automation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:close_usb_popup",
+      "type": "function",
+      "name": "close_usb_popup",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        438,
+        452
+      ],
+      "summary": "Closes USB connection popup dialogs on HarmonyOS devices by sending key events when the Servo window loses focus.",
+      "tags": [
+        "utility",
+        "automation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/common_function_for_servo_test.py:run_test",
+      "type": "function",
+      "name": "run_test",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        457,
+        517
+      ],
+      "summary": "Top-level test runner that sets up environment, configures HDC forwarding, starts mitmproxy if needed, launches Servo, executes the test function, and handles cleanup.",
+      "tags": [
+        "test",
+        "automation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:etc/ci/scenario/common_function_for_servo_test.py:HostOptions",
+      "type": "class",
+      "name": "HostOptions",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        48,
+        58
+      ],
+      "summary": "Enum-like class parsing the TARGET_OS environment variable to determine the target platform (Linux, Android, or HarmonyOS).",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:etc/ci/scenario/common_function_for_servo_test.py:MitmProxyRunType",
+      "type": "class",
+      "name": "MitmProxyRunType",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        82,
+        93
+      ],
+      "summary": "Enumeration of mitmproxy run modes (disabled, socat, full proxy) with a method to determine if Servo should proxy through it.",
+      "tags": [
+        "utility",
+        "config"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:etc/ci/scenario/common_function_for_servo_test.py:MitmProxy",
+      "type": "class",
+      "name": "MitmProxy",
+      "filePath": "etc/ci/scenario/common_function_for_servo_test.py",
+      "lineRange": [
+        109,
+        161
+      ],
+      "summary": "Context manager that starts and stops a mitmproxy process with optional socat forwarding for HTTPS traffic capture.",
+      "tags": [
+        "utility",
+        "network",
+        "test"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "type": "file",
+      "name": "memory_usage_plotter.py",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "summary": "Memory usage monitoring and visualization tool for Servo processes, providing real-time logging via background threads, CSV export, and matplotlib-based plotting of RSS and swap memory over time.",
+      "tags": [
+        "utility",
+        "monitoring",
+        "benchmarking",
+        "python"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Background threading with threading.Event for graceful shutdown, matplotlib for time-series memory visualization."
+    },
+    {
+      "id": "function:etc/ci/scenario/memory_usage_plotter.py:parse_memory_info",
+      "type": "function",
+      "name": "parse_memory_info",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        85,
+        111
+      ],
+      "summary": "Parses Linux /proc/status memory information text into a structured MemoryInfo object with VM RSS, HWM, size, and swap metrics.",
+      "tags": [
+        "memory",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/memory_usage_plotter.py:get_memory_info",
+      "type": "function",
+      "name": "get_memory_info",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        114,
+        159
+      ],
+      "summary": "Retrieves memory information for a given PID by reading /proc/status or using tasklist/ps commands depending on the target OS.",
+      "tags": [
+        "memory",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/memory_usage_plotter.py:raise_if_input_invalid",
+      "type": "function",
+      "name": "raise_if_input_invalid",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        166,
+        175
+      ],
+      "summary": "Validates that a file path exists and contains properly formatted memory log data, raising InvalidInputFile on failure.",
+      "tags": [
+        "utility",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/memory_usage_plotter.py:pidof",
+      "type": "function",
+      "name": "pidof",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        178,
+        198
+      ],
+      "summary": "Finds the process ID of a running package/application by name using hdc or pgrep depending on target OS.",
+      "tags": [
+        "utility",
+        "process"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/memory_usage_plotter.py:load_memory_log",
+      "type": "function",
+      "name": "load_memory_log",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        220,
+        238
+      ],
+      "summary": "Loads a previously saved memory CSV log file back into a MemoryLog object with MemorySample entries.",
+      "tags": [
+        "utility",
+        "io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/memory_usage_plotter.py:get_servo_pid",
+      "type": "function",
+      "name": "get_servo_pid",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        435,
+        443
+      ],
+      "summary": "Gets the Servo process PID and validates exactly one instance is running, raising MoreThanOneInstanceOfServo if ambiguous.",
+      "tags": [
+        "utility",
+        "process"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:etc/ci/scenario/memory_usage_plotter.py:MemoryInfo",
+      "type": "class",
+      "name": "MemoryInfo",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        55,
+        82
+      ],
+      "summary": "Data class holding parsed memory metrics (VM RSS, HWM, size, swap, RSS breakdown) with methods for MB conversion and string representation.",
+      "tags": [
+        "memory",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:etc/ci/scenario/memory_usage_plotter.py:MemoryLog",
+      "type": "class",
+      "name": "MemoryLog",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        210,
+        217
+      ],
+      "summary": "In-memory collection of MemorySample entries with add and clear methods for accumulating memory measurements during a test run.",
+      "tags": [
+        "memory",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:etc/ci/scenario/memory_usage_plotter.py:NonBlockingMemoryLogging",
+      "type": "class",
+      "name": "NonBlockingMemoryLogging",
+      "filePath": "etc/ci/scenario/memory_usage_plotter.py",
+      "lineRange": [
+        245,
+        428
+      ],
+      "summary": "Core class that runs memory logging on a background thread with configurable frequency, WebDriver event marking, CSV output, and matplotlib-based plotting.",
+      "tags": [
+        "memory",
+        "monitoring"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:etc/ci/scenario/servo_speedometer.py",
+      "type": "file",
+      "name": "servo_speedometer.py",
+      "filePath": "etc/ci/scenario/servo_speedometer.py",
+      "summary": "Runs the Speedometer JavaScript benchmark suite through WebDriver and converts results to Bencher metric reporting format.",
+      "tags": [
+        "test",
+        "benchmark",
+        "performance",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_speedometer.py:speedometer_to_bmf",
+      "type": "function",
+      "name": "speedometer_to_bmf",
+      "filePath": "etc/ci/scenario/servo_speedometer.py",
+      "lineRange": [
+        21,
+        51
+      ],
+      "summary": "Converts Speedometer test results into Bencher Metric Format (BMF) JSON for CI benchmark tracking.",
+      "tags": [
+        "benchmarking",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_speedometer.py:run_speedometer",
+      "type": "function",
+      "name": "run_speedometer",
+      "filePath": "etc/ci/scenario/servo_speedometer.py",
+      "lineRange": [
+        54,
+        85
+      ],
+      "summary": "Drives the Speedometer benchmark via WebDriver, polls for completion, parses the JavaScript results, and writes BMF output.",
+      "tags": [
+        "test",
+        "benchmarking"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:etc/ci/scenario/servo_test_frame_rate_base_page.py",
+      "type": "file",
+      "name": "servo_test_frame_rate_base_page.py",
+      "filePath": "etc/ci/scenario/servo_test_frame_rate_base_page.py",
+      "summary": "Test scenario that measures frame rate during basic page interaction on a mobile device, using adb shell dumpsys for frame timing data.",
+      "tags": [
+        "test",
+        "performance",
+        "frame-rate",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_test_frame_rate_base_page.py:operator",
+      "type": "function",
+      "name": "operator",
+      "filePath": "etc/ci/scenario/servo_test_frame_rate_base_page.py",
+      "lineRange": [
+        23,
+        96
+      ],
+      "summary": "Measures frame rate during base page operations: creates driver, closes popups, starts video recording, runs gfxinfo, computes FPS via calculate_frame_rate.",
+      "tags": [
+        "test",
+        "performance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:etc/ci/scenario/servo_test_frame_rate_with_carousel.py",
+      "type": "file",
+      "name": "servo_test_frame_rate_with_carousel.py",
+      "filePath": "etc/ci/scenario/servo_test_frame_rate_with_carousel.py",
+      "summary": "Test scenario that measures frame rate during carousel/slideshow interactions on a mobile device.",
+      "tags": [
+        "test",
+        "performance",
+        "frame-rate",
+        "python"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:etc/ci/scenario/servo_test_frame_rate_with_carousel.py:operator",
+      "type": "function",
+      "name": "operator",
+      "filePath": "etc/ci/scenario/servo_test_frame_rate_with_carousel.py",
+      "lineRange": [
+        23,
+        99
+      ],
+      "summary": "Measures frame rate during carousel scrolling: creates driver, closes popups, interacts with carousel content, runs gfxinfo, computes FPS.",
+      "tags": [
+        "test",
+        "performance"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:run_single_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:run_single_test",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:parse_memory_report",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:parse_memory_report",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:memory_report_to_bencher_metrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:memory_report_to_bencher_metrics",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:run_tests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:run_tests",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:get_memory_report_str",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "function:etc/ci/scenario/blink_perf_test.py:get_memory_report_str",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "class:etc/ci/scenario/blink_perf_test.py:LocalFileServe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "class:etc/ci/scenario/blink_perf_test.py:LocalFileServe",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:load_mossel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:load_mossel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:close_popup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:close_popup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:click_category",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:click_category",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:identify_element_in_category",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_mossel.py",
+      "target": "function:etc/ci/scenario/common_function_for_mossel.py:identify_element_in_category",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:common_args_from_args",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:common_args_from_args",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:calculate_frame_rate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:calculate_frame_rate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:port_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:port_forward",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:setup_hdc_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:setup_hdc_forward",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:start_servo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:start_servo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:stop_servo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:stop_servo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:element_scroll_into_view_and_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:element_scroll_into_view_and_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:element_screenshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:element_screenshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:is_servo_window_focused",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:is_servo_window_focused",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:close_usb_popup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:close_usb_popup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:run_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:run_test",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "class:etc/ci/scenario/common_function_for_servo_test.py:HostOptions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "class:etc/ci/scenario/common_function_for_servo_test.py:HostOptions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "class:etc/ci/scenario/common_function_for_servo_test.py:MitmProxyRunType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "class:etc/ci/scenario/common_function_for_servo_test.py:MitmProxyRunType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "class:etc/ci/scenario/common_function_for_servo_test.py:MitmProxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "target": "class:etc/ci/scenario/common_function_for_servo_test.py:MitmProxy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:parse_memory_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:parse_memory_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:get_memory_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:get_memory_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:raise_if_input_invalid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:raise_if_input_invalid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:pidof",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:pidof",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:load_memory_log",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:load_memory_log",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:get_servo_pid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "function:etc/ci/scenario/memory_usage_plotter.py:get_servo_pid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "class:etc/ci/scenario/memory_usage_plotter.py:MemoryInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "class:etc/ci/scenario/memory_usage_plotter.py:MemoryInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "class:etc/ci/scenario/memory_usage_plotter.py:MemoryLog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "class:etc/ci/scenario/memory_usage_plotter.py:MemoryLog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "class:etc/ci/scenario/memory_usage_plotter.py:NonBlockingMemoryLogging",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "class:etc/ci/scenario/memory_usage_plotter.py:NonBlockingMemoryLogging",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_speedometer.py",
+      "target": "function:etc/ci/scenario/servo_speedometer.py:speedometer_to_bmf",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_speedometer.py",
+      "target": "function:etc/ci/scenario/servo_speedometer.py:speedometer_to_bmf",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_speedometer.py",
+      "target": "function:etc/ci/scenario/servo_speedometer.py:run_speedometer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_speedometer.py",
+      "target": "function:etc/ci/scenario/servo_speedometer.py:run_speedometer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_base_page.py",
+      "target": "function:etc/ci/scenario/servo_test_frame_rate_base_page.py:operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_base_page.py",
+      "target": "function:etc/ci/scenario/servo_test_frame_rate_base_page.py:operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_with_carousel.py",
+      "target": "function:etc/ci/scenario/servo_test_frame_rate_with_carousel.py:operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_with_carousel.py",
+      "target": "function:etc/ci/scenario/servo_test_frame_rate_with_carousel.py:operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:etc/ci/scenario/blink_perf_test.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/memory_usage_plotter.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_speedometer.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_base_page.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:etc/ci/scenario/servo_test_frame_rate_with_carousel.py",
+      "target": "file:etc/ci/scenario/common_function_for_servo_test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:etc/ci/scenario/blink_perf_test.py:run_tests",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:start_servo",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/blink_perf_test.py:run_tests",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/blink_perf_test.py:run_tests",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:close_usb_popup",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/blink_perf_test.py:run_tests",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:stop_servo",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_speedometer.py:run_speedometer",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_frame_rate_base_page.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_frame_rate_base_page.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:calculate_frame_rate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_frame_rate_with_carousel.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:create_driver",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:etc/ci/scenario/servo_test_frame_rate_with_carousel.py:operator",
+      "target": "function:etc/ci/scenario/common_function_for_servo_test.py:calculate_frame_rate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

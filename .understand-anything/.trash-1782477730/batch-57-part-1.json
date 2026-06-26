@@ -1,0 +1,1045 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/webxr/gl_utils.rs",
+      "type": "file",
+      "name": "gl_utils.rs",
+      "filePath": "components/webxr/gl_utils.rs",
+      "summary": "Provides the GlClearer struct for managing framebuffer objects and performing OpenGL clear operations across XR layers, supporting reverse winding for mirror modes.",
+      "tags": ["utility", "opengl", "webxr"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/webxr/gl_utils.rs:GlClearer",
+      "type": "class",
+      "name": "GlClearer",
+      "filePath": "components/webxr/gl_utils.rs",
+      "lineRange": [14, 24],
+      "summary": "Manages framebuffer object creation, caching, and clearing operations for WebXR rendering layers.",
+      "tags": ["utility", "opengl", "framebuffer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/gl_utils.rs:GlClearer::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/webxr/gl_utils.rs",
+      "lineRange": [27, 33],
+      "summary": "Constructs a GlClearer with an optional reverse winding flag for mirror display modes.",
+      "tags": ["constructor", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/webxr/gl_utils.rs:GlClearer::fbo",
+      "type": "function",
+      "name": "fbo",
+      "filePath": "components/webxr/gl_utils.rs",
+      "lineRange": [35, 86],
+      "summary": "Retrieves or creates a cached framebuffer object for a given layer, color target, and depth-stencil combination.",
+      "tags": ["framebuffer", "opengl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/gl_utils.rs:GlClearer::clear",
+      "type": "function",
+      "name": "clear",
+      "filePath": "components/webxr/gl_utils.rs",
+      "lineRange": [88, 154],
+      "summary": "Clears the color, depth, and stencil buffers for a specific layer, saving and restoring OpenGL state.",
+      "tags": ["opengl", "render", "utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/webxr/gl_utils.rs:GlClearer::destroy_layer",
+      "type": "function",
+      "name": "destroy_layer",
+      "filePath": "components/webxr/gl_utils.rs",
+      "lineRange": [156, 176],
+      "summary": "Removes a layer's framebuffer from the cache and deletes its OpenGL framebuffer object.",
+      "tags": ["cleanup", "opengl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/webxr/glwindow/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "summary": "Implements an OpenGL-based WebXR display backend with support for multiple rendering modes (blit, stereo, cubemap, spherical) and surfman-based layer management.",
+      "tags": ["webxr", "opengl", "display", "render"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/webxr/glwindow/mod.rs:GlWindow",
+      "type": "class",
+      "name": "GlWindow",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [44, 57],
+      "summary": "Trait defining the interface for GL window backends: render target, rotation, translation, display handle, and mode.",
+      "tags": ["trait", "abstraction", "webxr"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/webxr/glwindow/mod.rs:GlWindowMode",
+      "type": "class",
+      "name": "GlWindowMode",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [60, 66],
+      "summary": "Enumeration of rendering modes: Blit, StereoLeftRight, StereoRedCyan, Cubemap, and Spherical.",
+      "tags": ["enum", "render-mode"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/webxr/glwindow/mod.rs:GlWindowDiscovery",
+      "type": "class",
+      "name": "GlWindowDiscovery",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [73, 78],
+      "summary": "Discovers and creates GlWindowDevice sessions from a display handle, adapter, and context attributes.",
+      "tags": ["discovery", "session", "webxr"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDiscovery::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [81, 98],
+      "summary": "Creates a GlWindowDiscovery by extracting the Surfman connection, adapter, and GL API from the display handle.",
+      "tags": ["constructor", "discovery", "surfman"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDiscovery::request_session",
+      "type": "function",
+      "name": "request_session",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [102, 127],
+      "summary": "Requests an XR session by validating the init, constructing a GlWindowDevice, and spawning it on the main thread.",
+      "tags": ["session", "webxr", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "type": "class",
+      "name": "GlWindowDevice",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [134, 148],
+      "summary": "Core device implementation managing the GL context, swap chains, layer manager, clip planes, and per-frame rendering for a GL window XR session.",
+      "tags": ["device", "render", "webxr", "opengl"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::viewports",
+      "type": "function",
+      "name": "viewports",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [156, 176],
+      "summary": "Computes viewport rects for each eye based on the current rendering mode.",
+      "tags": ["viewport", "render"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::begin_animation_frame",
+      "type": "function",
+      "name": "begin_animation_frame",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [188, 208],
+      "summary": "Begins an animation frame by computing the viewer pose from window translation/rotation and delegating to the layer manager.",
+      "tags": ["animation-frame", "pose", "webxr"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::end_animation_frame",
+      "type": "function",
+      "name": "end_animation_frame",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [210, 303],
+      "summary": "Ends an animation frame: makes the GL context current, blits each layer's texture to the window surface, and presents the swap chain.",
+      "tags": ["animation-frame", "render", "opengl", "surfman"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [344, 429],
+      "summary": "Constructs a GlWindowDevice: creates a Surfman context, initializes OpenGL bindings, sets up swap chains, framebuffers, blending, and the shader.",
+      "tags": ["constructor", "device", "opengl", "surfman"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::blit_texture",
+      "type": "function",
+      "name": "blit_texture",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [431, 461],
+      "summary": "Blits a texture onto the default framebuffer using the blit framebuffer path.",
+      "tags": ["opengl", "blit", "texture"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::layer_manager",
+      "type": "function",
+      "name": "layer_manager",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [463, 474],
+      "summary": "Lazily initializes and returns the SurfmanLayerManager with swap chains and viewports.",
+      "tags": ["layer", "lazy-init"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::viewport_size",
+      "type": "function",
+      "name": "viewport_size",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [487, 513],
+      "summary": "Computes the viewport size per eye based on the rendering mode.",
+      "tags": ["viewport", "size"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::views",
+      "type": "function",
+      "name": "views",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [515, 529],
+      "summary": "Returns the per-eye view transforms for the current rendering mode.",
+      "tags": ["view", "transform", "webxr"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::view",
+      "type": "function",
+      "name": "view",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [531, 575],
+      "summary": "Computes a single eye view: projection matrix and rigid transform for the given eye based on the rendering mode.",
+      "tags": ["view", "projection", "matrix"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::perspective",
+      "type": "function",
+      "name": "perspective",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [577, 599],
+      "summary": "Builds a perspective projection matrix from the current window mode's field of view and aspect ratio.",
+      "tags": ["projection", "matrix", "camera"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/webxr/glwindow/mod.rs:GlWindowShader",
+      "type": "class",
+      "name": "GlWindowShader",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [602, 608],
+      "summary": "Manages a fullscreen quad shader program for rendering XR eye textures to the window with various distortion modes.",
+      "tags": ["shader", "opengl", "render"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowShader::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [716, 807],
+      "summary": "Compiles vertex and fragment shaders, links the program, and sets up fullscreen quad vertex attributes for texture rendering.",
+      "tags": ["constructor", "shader", "opengl", "compilation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/webxr/glwindow/mod.rs:GlWindowShader::draw_texture",
+      "type": "function",
+      "name": "draw_texture",
+      "filePath": "components/webxr/glwindow/mod.rs",
+      "lineRange": [809, 855],
+      "summary": "Renders a texture onto the fullscreen quad with the shader program, applying wasted-space handling for non-square textures.",
+      "tags": ["render", "shader", "texture", "opengl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/webxr/headless/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/webxr/headless/mod.rs",
+      "summary": "Provides headless (non-GPU) WebXR discovery and device implementations for testing and simulation purposes, supporting mock device connections and hit testing.",
+      "tags": ["webxr", "headless", "testing", "simulation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/webxr/headless/mod.rs:HeadlessMockDiscovery",
+      "type": "class",
+      "name": "HeadlessMockDiscovery",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [26, 28],
+      "summary": "Discovery interface for simulating headless XR device connections with arbitrary view and input configurations.",
+      "tags": ["discovery", "mock", "testing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessMockDiscovery::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [31, 33],
+      "summary": "Constructs a HeadlessMockDiscovery with an enabled flag.",
+      "tags": ["constructor", "mock"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessMockDiscovery::simulate_device_connection",
+      "type": "function",
+      "name": "simulate_device_connection",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [85, 122],
+      "summary": "Simulates an XR device connection by creating a HeadlessDeviceData, spawning a message-processing thread, and returning a device handle.",
+      "tags": ["simulation", "thread", "device"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/webxr/headless/mod.rs:HeadlessDiscovery",
+      "type": "class",
+      "name": "HeadlessDiscovery",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [36, 41],
+      "summary": "Standard headless XR discovery that manages shared device data and supports VR, AR, and inline session types.",
+      "tags": ["discovery", "session", "webxr"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDiscovery::request_session",
+      "type": "function",
+      "name": "request_session",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [134, 170],
+      "summary": "Requests a headless XR session by validating support, creating a PerSessionData entry, and spawning the device on an XR thread.",
+      "tags": ["session", "dispatch", "webxr"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/webxr/headless/mod.rs:HeadlessDevice",
+      "type": "class",
+      "name": "HeadlessDevice",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [52, 59],
+      "summary": "Headless XR device implementation providing session lifecycle, input, hit testing, and layer management without GPU rendering.",
+      "tags": ["device", "webxr", "headless"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/webxr/headless/mod.rs:HeadlessDeviceData",
+      "type": "class",
+      "name": "HeadlessDeviceData",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [70, 82],
+      "summary": "Shared mutable state for headless XR: views, inputs, sessions, world geometry for hit testing, and floor/bounds tracking.",
+      "tags": ["data", "state", "webxr"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDevice::view",
+      "type": "function",
+      "name": "view",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [184, 199],
+      "summary": "Constructs a single eye view with projection matrix and inverse transform from the session init configuration.",
+      "tags": ["view", "projection", "matrix"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDevice::layer_manager",
+      "type": "function",
+      "name": "layer_manager",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [213, 224],
+      "summary": "Lazily creates and returns the SurfmanLayerManager for headless rendering.",
+      "tags": ["layer", "lazy-init"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDevice::begin_animation_frame",
+      "type": "function",
+      "name": "begin_animation_frame",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [248, 290],
+      "summary": "Begins a headless animation frame: processes frame data, performs hit testing against world geometry, and returns frame with inputs and events.",
+      "tags": ["animation-frame", "hit-test", "webxr"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDevice::environment_blend_mode",
+      "type": "function",
+      "name": "environment_blend_mode",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [334, 347],
+      "summary": "Returns the environment blend mode for the current session, defaulting to opaque.",
+      "tags": ["blend-mode", "webxr"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::get_frame",
+      "type": "function",
+      "name": "get_frame",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [359, 401],
+      "summary": "Builds a frame update with view transforms, input snapshots, and sub-image descriptions for the headless device.",
+      "tags": ["frame", "update", "webxr"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::viewports",
+      "type": "function",
+      "name": "viewports",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [403, 413],
+      "summary": "Computes viewport rects for mono, stereo, or stereo-capture modes.",
+      "tags": ["viewport", "render"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::handle_msg",
+      "type": "function",
+      "name": "handle_msg",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [424, 560],
+      "summary": "Processes device messages: setting views, connecting/disconnecting inputs, triggering select events, and updating button/axis states.",
+      "tags": ["message", "input", "event", "handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::native_ray",
+      "type": "function",
+      "name": "native_ray",
+      "filePath": "components/webxr/headless/mod.rs",
+      "lineRange": [562, 589],
+      "summary": "Converts an input ray from viewer-relative to world-relative coordinates using the floor transform and viewer origin.",
+      "tags": ["ray", "coordinate-transform", "input"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/webxr/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/webxr/lib.rs",
+      "summary": "Library root for the WebXR crate, re-exporting all modules: GL utilities, GL window, headless, OpenXR, and surfman layer management.",
+      "tags": ["entry-point", "barrel", "webxr"],
+      "complexity": "simple",
+      "languageNotes": "Rust crate root using pub mod declarations to expose submodules."
+    },
+    {
+      "id": "class:components/webxr/lib.rs:WebXrRegistry",
+      "type": "class",
+      "name": "WebXrRegistry",
+      "filePath": "components/webxr/lib.rs",
+      "lineRange": [23, 26],
+      "summary": "Registry for WebXR discovery implementations that can register and make XR sessions available to the embedding layer.",
+      "tags": ["registry", "webxr", "discovery"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "class:components/webxr/gl_utils.rs:GlClearer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::fbo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::clear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::destroy_layer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/gl_utils.rs:GlClearer",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/gl_utils.rs:GlClearer",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::fbo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/gl_utils.rs:GlClearer",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::clear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/gl_utils.rs:GlClearer",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::destroy_layer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "class:components/webxr/gl_utils.rs:GlClearer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::clear",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/gl_utils.rs",
+      "target": "function:components/webxr/gl_utils.rs:GlClearer::destroy_layer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindowMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindowDiscovery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindowShader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDiscovery::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDiscovery::request_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::viewports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::begin_animation_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::end_animation_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::blit_texture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::layer_manager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::viewport_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::views",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::view",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::perspective",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowShader::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowShader::draw_texture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDiscovery",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDiscovery::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDiscovery",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDiscovery::request_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::viewports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::begin_animation_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::end_animation_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::blit_texture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::layer_manager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::viewport_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::views",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::view",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDevice::perspective",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowShader",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowShader::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/glwindow/mod.rs:GlWindowShader",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowShader::draw_texture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindowMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindowDiscovery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "function:components/webxr/glwindow/mod.rs:GlWindowDiscovery::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/glwindow/mod.rs",
+      "target": "class:components/webxr/glwindow/mod.rs:GlWindowDevice",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "class:components/webxr/headless/mod.rs:HeadlessMockDiscovery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessMockDiscovery::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessMockDiscovery::simulate_device_connection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "class:components/webxr/headless/mod.rs:HeadlessDiscovery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDiscovery::request_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "class:components/webxr/headless/mod.rs:HeadlessDevice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "class:components/webxr/headless/mod.rs:HeadlessDeviceData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDevice::view",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDevice::layer_manager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDevice::begin_animation_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDevice::environment_blend_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::get_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::viewports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::handle_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::native_ray",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessMockDiscovery",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessMockDiscovery::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessMockDiscovery",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessMockDiscovery::simulate_device_connection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDiscovery",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDiscovery::request_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDevice",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDevice::view",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDevice",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDevice::layer_manager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDevice",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDevice::begin_animation_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDevice",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDevice::environment_blend_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDeviceData",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::get_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDeviceData",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::viewports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDeviceData",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::handle_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "class:components/webxr/headless/mod.rs:HeadlessDeviceData",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessDeviceData::native_ray",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "class:components/webxr/headless/mod.rs:HeadlessMockDiscovery",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/headless/mod.rs",
+      "target": "function:components/webxr/headless/mod.rs:HeadlessMockDiscovery::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/lib.rs",
+      "target": "class:components/webxr/lib.rs:WebXrRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/webxr/lib.rs",
+      "target": "class:components/webxr/lib.rs:WebXrRegistry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/webxr/lib.rs",
+      "target": "file:components/webxr/gl_utils.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/webxr/lib.rs",
+      "target": "file:components/webxr/glwindow/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/webxr/lib.rs",
+      "target": "file:components/webxr/headless/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/webxr/lib.rs",
+      "target": "file:components/webxr/openxr/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/webxr/lib.rs",
+      "target": "file:components/webxr/surfman_layer_manager.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

@@ -1,0 +1,3388 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 9,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "python/mach/mach/base.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 66,
+      "nonEmptyLines": 44,
+      "classes": [
+        {
+          "name": "CommandContext",
+          "startLine": 8,
+          "endLine": 18,
+          "methods": [
+            "__init__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "MachError",
+          "startLine": 21,
+          "endLine": 22,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "NoCommandError",
+          "startLine": 25,
+          "endLine": 26,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "UnknownCommandError",
+          "startLine": 29,
+          "endLine": 37,
+          "methods": [
+            "__init__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "UnrecognizedArgumentError",
+          "startLine": 40,
+          "endLine": 47,
+          "methods": [
+            "__init__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "FailedCommandError",
+          "startLine": 50,
+          "endLine": 62,
+          "methods": [
+            "__init__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "MissingFileError",
+          "startLine": 65,
+          "endLine": 66,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "CommandContext",
+          "line": 8,
+          "isDefault": false
+        },
+        {
+          "name": "MachError",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "NoCommandError",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "UnknownCommandError",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "UnrecognizedArgumentError",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "FailedCommandError",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "MissingFileError",
+          "line": 65,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "kwargs.items",
+          "lineNumber": 17
+        },
+        {
+          "caller": "__init__",
+          "callee": "setattr",
+          "lineNumber": 18
+        },
+        {
+          "caller": "__init__",
+          "callee": "MachError.__init__",
+          "lineNumber": 33
+        },
+        {
+          "caller": "__init__",
+          "callee": "MachError.__init__",
+          "lineNumber": 44
+        },
+        {
+          "caller": "__init__",
+          "callee": "Exception.__init__",
+          "lineNumber": 60
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 0,
+        "classCount": 7
+      }
+    },
+    {
+      "path": "python/mach/mach/config.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 417,
+      "nonEmptyLines": 301,
+      "functions": [
+        {
+          "name": "reraise_attribute_error",
+          "startLine": 131,
+          "endLine": 142,
+          "params": [
+            "func"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ConfigException",
+          "startLine": 26,
+          "endLine": 27,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ConfigType",
+          "startLine": 30,
+          "endLine": 57,
+          "methods": [
+            "validate",
+            "from_config",
+            "to_config"
+          ],
+          "properties": []
+        },
+        {
+          "name": "StringType",
+          "startLine": 60,
+          "endLine": 68,
+          "methods": [
+            "validate",
+            "from_config"
+          ],
+          "properties": []
+        },
+        {
+          "name": "BooleanType",
+          "startLine": 71,
+          "endLine": 83,
+          "methods": [
+            "validate",
+            "from_config",
+            "to_config"
+          ],
+          "properties": []
+        },
+        {
+          "name": "IntegerType",
+          "startLine": 86,
+          "endLine": 94,
+          "methods": [
+            "validate",
+            "from_config"
+          ],
+          "properties": []
+        },
+        {
+          "name": "PositiveIntegerType",
+          "startLine": 97,
+          "endLine": 104,
+          "methods": [
+            "validate"
+          ],
+          "properties": []
+        },
+        {
+          "name": "PathType",
+          "startLine": 107,
+          "endLine": 115,
+          "methods": [
+            "validate",
+            "from_config"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DefaultValue",
+          "startLine": 127,
+          "endLine": 128,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "ConfigSettings",
+          "startLine": 145,
+          "endLine": 417,
+          "methods": [
+            "__init__",
+            "load_file",
+            "load_files",
+            "load_fps",
+            "write",
+            "_format_metadata",
+            "register_provider",
+            "_finalize",
+            "__len__",
+            "__iter__",
+            "__contains__",
+            "__getitem__",
+            "__getattr__"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ConfigException",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "ConfigType",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "StringType",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "BooleanType",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "IntegerType",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "PositiveIntegerType",
+          "line": 97,
+          "isDefault": false
+        },
+        {
+          "name": "PathType",
+          "line": 107,
+          "isDefault": false
+        },
+        {
+          "name": "DefaultValue",
+          "line": 127,
+          "isDefault": false
+        },
+        {
+          "name": "reraise_attribute_error",
+          "line": 131,
+          "isDefault": false
+        },
+        {
+          "name": "ConfigSettings",
+          "line": 145,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate",
+          "callee": "isinstance",
+          "lineNumber": 63
+        },
+        {
+          "caller": "validate",
+          "callee": "TypeError",
+          "lineNumber": 64
+        },
+        {
+          "caller": "from_config",
+          "callee": "config.get",
+          "lineNumber": 68
+        },
+        {
+          "caller": "validate",
+          "callee": "isinstance",
+          "lineNumber": 74
+        },
+        {
+          "caller": "validate",
+          "callee": "TypeError",
+          "lineNumber": 75
+        },
+        {
+          "caller": "from_config",
+          "callee": "config.getboolean",
+          "lineNumber": 79
+        },
+        {
+          "caller": "validate",
+          "callee": "isinstance",
+          "lineNumber": 89
+        },
+        {
+          "caller": "validate",
+          "callee": "TypeError",
+          "lineNumber": 90
+        },
+        {
+          "caller": "from_config",
+          "callee": "config.getint",
+          "lineNumber": 94
+        },
+        {
+          "caller": "validate",
+          "callee": "isinstance",
+          "lineNumber": 100
+        },
+        {
+          "caller": "validate",
+          "callee": "TypeError",
+          "lineNumber": 101
+        },
+        {
+          "caller": "validate",
+          "callee": "ValueError",
+          "lineNumber": 104
+        },
+        {
+          "caller": "validate",
+          "callee": "isinstance",
+          "lineNumber": 110
+        },
+        {
+          "caller": "validate",
+          "callee": "TypeError",
+          "lineNumber": 111
+        },
+        {
+          "caller": "from_config",
+          "callee": "config.get",
+          "lineNumber": 115
+        },
+        {
+          "caller": "reraise_attribute_error",
+          "callee": "wraps",
+          "lineNumber": 135
+        },
+        {
+          "caller": "_",
+          "callee": "func",
+          "lineNumber": 138
+        },
+        {
+          "caller": "_",
+          "callee": "sys.exc_info",
+          "lineNumber": 140
+        },
+        {
+          "caller": "_",
+          "callee": "AttributeError",
+          "lineNumber": 141
+        },
+        {
+          "caller": "__init__",
+          "callee": "object.__setattr__",
+          "lineNumber": 194
+        },
+        {
+          "caller": "__init__",
+          "callee": "object.__setattr__",
+          "lineNumber": 195
+        },
+        {
+          "caller": "__init__",
+          "callee": "object.__setattr__",
+          "lineNumber": 196
+        },
+        {
+          "caller": "__init__",
+          "callee": "any",
+          "lineNumber": 198
+        },
+        {
+          "caller": "__init__",
+          "callee": "object.__setattr__",
+          "lineNumber": 199
+        },
+        {
+          "caller": "options",
+          "callee": "self._config.options",
+          "lineNumber": 204
+        },
+        {
+          "caller": "get_meta",
+          "callee": "KeyError",
+          "lineNumber": 213
+        },
+        {
+          "caller": "_validate",
+          "callee": "self.get_meta",
+          "lineNumber": 216
+        },
+        {
+          "caller": "_validate",
+          "callee": "meta['type_cls'].validate",
+          "lineNumber": 217
+        },
+        {
+          "caller": "_validate",
+          "callee": "ValueError",
+          "lineNumber": 220
+        },
+        {
+          "caller": "_validate",
+          "callee": "', '.join",
+          "lineNumber": 221
+        },
+        {
+          "caller": "_validate",
+          "callee": "sorted",
+          "lineNumber": 221
+        },
+        {
+          "caller": "__len__",
+          "callee": "len",
+          "lineNumber": 225
+        },
+        {
+          "caller": "__iter__",
+          "callee": "iter",
+          "lineNumber": 228
+        },
+        {
+          "caller": "__contains__",
+          "callee": "self._config.has_option",
+          "lineNumber": 231
+        },
+        {
+          "caller": "__getitem__",
+          "callee": "self.get_meta",
+          "lineNumber": 234
+        },
+        {
+          "caller": "__getitem__",
+          "callee": "self._config.has_option",
+          "lineNumber": 236
+        },
+        {
+          "caller": "__getitem__",
+          "callee": "meta['type_cls'].from_config",
+          "lineNumber": 237
+        },
+        {
+          "caller": "__getitem__",
+          "callee": "meta.get",
+          "lineNumber": 239
+        },
+        {
+          "caller": "__getitem__",
+          "callee": "KeyError",
+          "lineNumber": 242
+        },
+        {
+          "caller": "__getitem__",
+          "callee": "self._validate",
+          "lineNumber": 244
+        },
+        {
+          "caller": "__setitem__",
+          "callee": "self._validate",
+          "lineNumber": 248
+        },
+        {
+          "caller": "__setitem__",
+          "callee": "self.get_meta",
+          "lineNumber": 249
+        },
+        {
+          "caller": "__setitem__",
+          "callee": "self._config.has_section",
+          "lineNumber": 251
+        },
+        {
+          "caller": "__setitem__",
+          "callee": "self._config.add_section",
+          "lineNumber": 252
+        },
+        {
+          "caller": "__setitem__",
+          "callee": "self._config.set",
+          "lineNumber": 254
+        },
+        {
+          "caller": "__setitem__",
+          "callee": "meta['type_cls'].to_config",
+          "lineNumber": 254
+        },
+        {
+          "caller": "__delitem__",
+          "callee": "self._config.remove_option",
+          "lineNumber": 257
+        },
+        {
+          "caller": "__delitem__",
+          "callee": "len",
+          "lineNumber": 260
+        },
+        {
+          "caller": "__delitem__",
+          "callee": "self._config.options",
+          "lineNumber": 260
+        },
+        {
+          "caller": "__delitem__",
+          "callee": "self._config.remove_section",
+          "lineNumber": 261
+        },
+        {
+          "caller": "__getattr__",
+          "callee": "self.__getitem__",
+          "lineNumber": 265
+        },
+        {
+          "caller": "__setattr__",
+          "callee": "self.__setitem__",
+          "lineNumber": 269
+        },
+        {
+          "caller": "__delattr__",
+          "callee": "self.__delitem__",
+          "lineNumber": 273
+        },
+        {
+          "caller": "__init__",
+          "callee": "RawConfigParser",
+          "lineNumber": 276
+        },
+        {
+          "caller": "__init__",
+          "callee": "set",
+          "lineNumber": 282
+        },
+        {
+          "caller": "load_file",
+          "callee": "self.load_files",
+          "lineNumber": 285
+        },
+        {
+          "caller": "load_files",
+          "callee": "os.path.exists",
+          "lineNumber": 294
+        },
+        {
+          "caller": "load_files",
+          "callee": "open",
+          "lineNumber": 296
+        },
+        {
+          "caller": "load_files",
+          "callee": "self.load_fps",
+          "lineNumber": 297
+        },
+        {
+          "caller": "load_files",
+          "callee": "self.loaded_files.update",
+          "lineNumber": 298
+        },
+        {
+          "caller": "load_files",
+          "callee": "set",
+          "lineNumber": 298
+        },
+        {
+          "caller": "load_files",
+          "callee": "fp.close",
+          "lineNumber": 300
+        },
+        {
+          "caller": "load_fps",
+          "callee": "self._config.readfp",
+          "lineNumber": 306
+        },
+        {
+          "caller": "write",
+          "callee": "self._config.write",
+          "lineNumber": 310
+        },
+        {
+          "caller": "_format_metadata",
+          "callee": "isinstance",
+          "lineNumber": 338
+        },
+        {
+          "caller": "_format_metadata",
+          "callee": "meta.update",
+          "lineNumber": 350
+        },
+        {
+          "caller": "register_provider",
+          "callee": "ConfigException",
+          "lineNumber": 358
+        },
+        {
+          "caller": "register_provider",
+          "callee": "callable",
+          "lineNumber": 361
+        },
+        {
+          "caller": "register_provider",
+          "callee": "settings",
+          "lineNumber": 362
+        },
+        {
+          "caller": "register_provider",
+          "callee": "collections.defaultdict",
+          "lineNumber": 364
+        },
+        {
+          "caller": "register_provider",
+          "callee": "setting[0].split",
+          "lineNumber": 366
+        },
+        {
+          "caller": "register_provider",
+          "callee": "ConfigException",
+          "lineNumber": 369
+        },
+        {
+          "caller": "register_provider",
+          "callee": "self._format_metadata",
+          "lineNumber": 372
+        },
+        {
+          "caller": "register_provider",
+          "callee": "config_settings.items",
+          "lineNumber": 375
+        },
+        {
+          "caller": "register_provider",
+          "callee": "self._settings.get",
+          "lineNumber": 376
+        },
+        {
+          "caller": "register_provider",
+          "callee": "settings.items",
+          "lineNumber": 378
+        },
+        {
+          "caller": "register_provider",
+          "callee": "ConfigException",
+          "lineNumber": 380
+        },
+        {
+          "caller": "_finalize",
+          "callee": "self._settings.items",
+          "lineNumber": 391
+        },
+        {
+          "caller": "_finalize",
+          "callee": "ConfigSettings.ConfigSection",
+          "lineNumber": 392
+        },
+        {
+          "caller": "__len__",
+          "callee": "len",
+          "lineNumber": 399
+        },
+        {
+          "caller": "__iter__",
+          "callee": "self._finalize",
+          "lineNumber": 402
+        },
+        {
+          "caller": "__iter__",
+          "callee": "iter",
+          "lineNumber": 404
+        },
+        {
+          "caller": "__iter__",
+          "callee": "self._sections.keys",
+          "lineNumber": 404
+        },
+        {
+          "caller": "__getitem__",
+          "callee": "self._finalize",
+          "lineNumber": 410
+        },
+        {
+          "caller": "__getattr__",
+          "callee": "self.__getitem__",
+          "lineNumber": 417
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 1,
+        "classCount": 9
+      }
+    },
+    {
+      "path": "python/mach/mach/decorators.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 348,
+      "nonEmptyLines": 257,
+      "functions": [
+        {
+          "name": "CommandProvider",
+          "startLine": 96,
+          "endLine": 204,
+          "params": []
+        },
+        {
+          "name": "SettingsProvider",
+          "startLine": 333,
+          "endLine": 348,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "_MachCommand",
+          "startLine": 17,
+          "endLine": 93,
+          "methods": [
+            "__init__",
+            "parser",
+            "docstring",
+            "__ior__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Command",
+          "startLine": 207,
+          "endLine": 237,
+          "methods": [
+            "__init__",
+            "__call__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "SubCommand",
+          "startLine": 240,
+          "endLine": 267,
+          "methods": [
+            "__init__",
+            "__call__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "CommandArgument",
+          "startLine": 270,
+          "endLine": 298,
+          "methods": [
+            "__init__",
+            "__call__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "CommandArgumentGroup",
+          "startLine": 301,
+          "endLine": 330,
+          "methods": [
+            "__init__",
+            "__call__"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "_MachCommand",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "CommandProvider",
+          "line": 96,
+          "isDefault": false
+        },
+        {
+          "name": "Command",
+          "line": 207,
+          "isDefault": false
+        },
+        {
+          "name": "SubCommand",
+          "line": 240,
+          "isDefault": false
+        },
+        {
+          "name": "CommandArgument",
+          "line": 270,
+          "isDefault": false
+        },
+        {
+          "name": "CommandArgumentGroup",
+          "line": 301,
+          "isDefault": false
+        },
+        {
+          "name": "SettingsProvider",
+          "line": 333,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "parser",
+          "callee": "callable",
+          "lineNumber": 76
+        },
+        {
+          "caller": "parser",
+          "callee": "self._parser",
+          "lineNumber": 77
+        },
+        {
+          "caller": "__ior__",
+          "callee": "isinstance",
+          "lineNumber": 86
+        },
+        {
+          "caller": "__ior__",
+          "callee": "ValueError",
+          "lineNumber": 87
+        },
+        {
+          "caller": "__ior__",
+          "callee": "getattr",
+          "lineNumber": 90
+        },
+        {
+          "caller": "__ior__",
+          "callee": "setattr",
+          "lineNumber": 91
+        },
+        {
+          "caller": "__ior__",
+          "callee": "getattr",
+          "lineNumber": 91
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "isfunc",
+          "lineNumber": 114
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "inspect.getfullargspec",
+          "lineNumber": 115
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "len",
+          "lineNumber": 117
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "inspect.getsourcefile",
+          "lineNumber": 120
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "MachError",
+          "lineNumber": 121
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "len",
+          "lineNumber": 123
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "set",
+          "lineNumber": 126
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "sorted",
+          "lineNumber": 132
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "cls.__dict__.keys",
+          "lineNumber": 132
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "isinstance",
+          "lineNumber": 135
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "getattr",
+          "lineNumber": 138
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "seen_commands.add",
+          "lineNumber": 146
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "isinstance",
+          "lineNumber": 155
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "type",
+          "lineNumber": 156
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "MachError",
+          "lineNumber": 157
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "hasattr",
+          "lineNumber": 160
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "type",
+          "lineNumber": 161
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "MachError",
+          "lineNumber": 162
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "Registrar.register_command_handler",
+          "lineNumber": 168
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "sorted",
+          "lineNumber": 173
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "cls.__dict__.keys",
+          "lineNumber": 173
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "isinstance",
+          "lineNumber": 176
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "getattr",
+          "lineNumber": 179
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "MachError",
+          "lineNumber": 188
+        },
+        {
+          "caller": "CommandProvider",
+          "callee": "MachError",
+          "lineNumber": 200
+        },
+        {
+          "caller": "__init__",
+          "callee": "_MachCommand",
+          "lineNumber": 229
+        },
+        {
+          "caller": "__call__",
+          "callee": "hasattr",
+          "lineNumber": 232
+        },
+        {
+          "caller": "__call__",
+          "callee": "_MachCommand",
+          "lineNumber": 233
+        },
+        {
+          "caller": "__init__",
+          "callee": "_MachCommand",
+          "lineNumber": 258
+        },
+        {
+          "caller": "__call__",
+          "callee": "hasattr",
+          "lineNumber": 262
+        },
+        {
+          "caller": "__call__",
+          "callee": "_MachCommand",
+          "lineNumber": 263
+        },
+        {
+          "caller": "__init__",
+          "callee": "kwargs.get",
+          "lineNumber": 285
+        },
+        {
+          "caller": "__init__",
+          "callee": "len",
+          "lineNumber": 288
+        },
+        {
+          "caller": "__init__",
+          "callee": "all",
+          "lineNumber": 289
+        },
+        {
+          "caller": "__call__",
+          "callee": "hasattr",
+          "lineNumber": 293
+        },
+        {
+          "caller": "__call__",
+          "callee": "_MachCommand",
+          "lineNumber": 294
+        },
+        {
+          "caller": "__call__",
+          "callee": "func._mach_command.arguments.insert",
+          "lineNumber": 296
+        },
+        {
+          "caller": "__call__",
+          "callee": "hasattr",
+          "lineNumber": 325
+        },
+        {
+          "caller": "__call__",
+          "callee": "_MachCommand",
+          "lineNumber": 326
+        },
+        {
+          "caller": "__call__",
+          "callee": "func._mach_command.argument_group_names.insert",
+          "lineNumber": 328
+        },
+        {
+          "caller": "SettingsProvider",
+          "callee": "hasattr",
+          "lineNumber": 340
+        },
+        {
+          "caller": "SettingsProvider",
+          "callee": "MachError",
+          "lineNumber": 341
+        },
+        {
+          "caller": "SettingsProvider",
+          "callee": "Registrar.register_settings_provider",
+          "lineNumber": 347
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 7,
+        "functionCount": 2,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "python/mach/mach/dispatcher.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 468,
+      "nonEmptyLines": 386,
+      "functions": [
+        {
+          "name": "format_docstring",
+          "startLine": 447,
+          "endLine": 468,
+          "params": [
+            "docstring"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DispatchSettings",
+          "startLine": 24,
+          "endLine": 31,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CommandFormatter",
+          "startLine": 34,
+          "endLine": 38,
+          "methods": [
+            "add_usage"
+          ],
+          "properties": []
+        },
+        {
+          "name": "CommandAction",
+          "startLine": 41,
+          "endLine": 439,
+          "methods": [
+            "__init__",
+            "__call__",
+            "_handle_main_help",
+            "_populate_command_group",
+            "_handle_command_help",
+            "_handle_subcommand_main_help",
+            "_handle_subcommand_help",
+            "_suggest_command"
+          ],
+          "properties": []
+        },
+        {
+          "name": "NoUsageFormatter",
+          "startLine": 442,
+          "endLine": 444,
+          "methods": [
+            "_format_usage"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "DispatchSettings",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "CommandFormatter",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "CommandAction",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "NoUsageFormatter",
+          "line": 442,
+          "isDefault": false
+        },
+        {
+          "name": "format_docstring",
+          "line": 447,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "argparse.Action.__init__",
+          "lineNumber": 79
+        },
+        {
+          "caller": "__call__",
+          "callee": "self._handle_main_help",
+          "lineNumber": 103
+        },
+        {
+          "caller": "__call__",
+          "callee": "sys.exit",
+          "lineNumber": 104
+        },
+        {
+          "caller": "__call__",
+          "callee": "values[0].lower",
+          "lineNumber": 106
+        },
+        {
+          "caller": "__call__",
+          "callee": "self._handle_command_help",
+          "lineNumber": 111
+        },
+        {
+          "caller": "__call__",
+          "callee": "self._handle_main_help",
+          "lineNumber": 113
+        },
+        {
+          "caller": "__call__",
+          "callee": "sys.exit",
+          "lineNumber": 114
+        },
+        {
+          "caller": "__call__",
+          "callee": "args.index",
+          "lineNumber": 119
+        },
+        {
+          "caller": "__call__",
+          "callee": "args.index",
+          "lineNumber": 119
+        },
+        {
+          "caller": "__call__",
+          "callee": "self._handle_command_help",
+          "lineNumber": 121
+        },
+        {
+          "caller": "__call__",
+          "callee": "sys.exit",
+          "lineNumber": 122
+        },
+        {
+          "caller": "__call__",
+          "callee": "self._handle_command_help",
+          "lineNumber": 124
+        },
+        {
+          "caller": "__call__",
+          "callee": "sys.exit",
+          "lineNumber": 125
+        },
+        {
+          "caller": "__call__",
+          "callee": "NoCommandError",
+          "lineNumber": 127
+        },
+        {
+          "caller": "__call__",
+          "callee": "shlex.split",
+          "lineNumber": 132
+        },
+        {
+          "caller": "__call__",
+          "callee": "defaults.pop",
+          "lineNumber": 133
+        },
+        {
+          "caller": "__call__",
+          "callee": "self._suggest_command",
+          "lineNumber": 138
+        },
+        {
+          "caller": "__call__",
+          "callee": "print",
+          "lineNumber": 143
+        },
+        {
+          "caller": "__call__",
+          "callee": "sys.exit",
+          "lineNumber": 144
+        },
+        {
+          "caller": "__call__",
+          "callee": "self._mach_registrar.command_handlers.get",
+          "lineNumber": 146
+        },
+        {
+          "caller": "__call__",
+          "callee": "set(args).intersection",
+          "lineNumber": 156
+        },
+        {
+          "caller": "__call__",
+          "callee": "set",
+          "lineNumber": 156
+        },
+        {
+          "caller": "__call__",
+          "callee": "self._handle_subcommand_help",
+          "lineNumber": 157
+        },
+        {
+          "caller": "__call__",
+          "callee": "sys.exit",
+          "lineNumber": 158
+        },
+        {
+          "caller": "__call__",
+          "callee": "args.pop",
+          "lineNumber": 165
+        },
+        {
+          "caller": "__call__",
+          "callee": "subparser._actions.remove",
+          "lineNumber": 184
+        },
+        {
+          "caller": "__call__",
+          "callee": "argparse.ArgumentParser",
+          "lineNumber": 189
+        },
+        {
+          "caller": "__call__",
+          "callee": "arg[1].get",
+          "lineNumber": 193
+        },
+        {
+          "caller": "__call__",
+          "callee": "arg[1].get",
+          "lineNumber": 197
+        },
+        {
+          "caller": "__call__",
+          "callee": "len",
+          "lineNumber": 202
+        },
+        {
+          "caller": "__call__",
+          "callee": "all",
+          "lineNumber": 203
+        },
+        {
+          "caller": "__call__",
+          "callee": "subparser.add_argument",
+          "lineNumber": 206
+        },
+        {
+          "caller": "__call__",
+          "callee": "setattr",
+          "lineNumber": 210
+        },
+        {
+          "caller": "__call__",
+          "callee": "setattr",
+          "lineNumber": 211
+        },
+        {
+          "caller": "__call__",
+          "callee": "setattr",
+          "lineNumber": 212
+        },
+        {
+          "caller": "__call__",
+          "callee": "subparser.parse_known_args",
+          "lineNumber": 214
+        },
+        {
+          "caller": "__call__",
+          "callee": "setattr",
+          "lineNumber": 215
+        },
+        {
+          "caller": "__call__",
+          "callee": "extra.remove",
+          "lineNumber": 224
+        },
+        {
+          "caller": "__call__",
+          "callee": "arg.replace",
+          "lineNumber": 233
+        },
+        {
+          "caller": "__call__",
+          "callee": "UnrecognizedArgumentError",
+          "lineNumber": 235
+        },
+        {
+          "caller": "__call__",
+          "callee": "setattr",
+          "lineNumber": 238
+        },
+        {
+          "caller": "__call__",
+          "callee": "setattr",
+          "lineNumber": 240
+        },
+        {
+          "caller": "__call__",
+          "callee": "options.get",
+          "lineNumber": 240
+        },
+        {
+          "caller": "__call__",
+          "callee": "UnrecognizedArgumentError",
+          "lineNumber": 242
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "r.categories.items",
+          "lineNumber": 252
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "sorted",
+          "lineNumber": 253
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "itemgetter",
+          "lineNumber": 253
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "sorted",
+          "lineNumber": 257
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "handler.cls",
+          "lineNumber": 265
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "handler.cls",
+          "lineNumber": 267
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "c",
+          "lineNumber": 271
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "disabled_commands.append",
+          "lineNumber": 277
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "parser.add_argument_group",
+          "lineNumber": 282
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "group.add_argument",
+          "lineNumber": 285
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "parser.add_argument_group",
+          "lineNumber": 290
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "group.add_argument",
+          "lineNumber": 293
+        },
+        {
+          "caller": "_handle_main_help",
+          "callee": "parser.print_help",
+          "lineNumber": 296
+        },
+        {
+          "caller": "_populate_command_group",
+          "callee": "parser.add_argument_group",
+          "lineNumber": 303
+        },
+        {
+          "caller": "_populate_command_group",
+          "callee": "arg[1].get",
+          "lineNumber": 307
+        },
+        {
+          "caller": "_populate_command_group",
+          "callee": "group.add_argument",
+          "lineNumber": 311
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "self._mach_registrar.command_handlers.get",
+          "lineNumber": 314
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "UnknownCommandError",
+          "lineNumber": 317
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "print",
+          "lineNumber": 320
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "sys.exit",
+          "lineNumber": 321
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "self._handle_subcommand_help",
+          "lineNumber": 324
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "argparse.ArgumentParser",
+          "lineNumber": 361
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "c_parser.add_argument_group",
+          "lineNumber": 362
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "self._populate_command_group",
+          "lineNumber": 364
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "format_docstring",
+          "lineNumber": 369
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "parser.print_help",
+          "lineNumber": 379
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "print",
+          "lineNumber": 380
+        },
+        {
+          "caller": "_handle_command_help",
+          "callee": "c_parser.print_help",
+          "lineNumber": 381
+        },
+        {
+          "caller": "_handle_subcommand_main_help",
+          "callee": "parser.add_argument_group",
+          "lineNumber": 386
+        },
+        {
+          "caller": "_handle_subcommand_main_help",
+          "callee": "sorted",
+          "lineNumber": 388
+        },
+        {
+          "caller": "_handle_subcommand_main_help",
+          "callee": "handler.subcommand_handlers.items",
+          "lineNumber": 388
+        },
+        {
+          "caller": "_handle_subcommand_main_help",
+          "callee": "group.add_argument",
+          "lineNumber": 389
+        },
+        {
+          "caller": "_handle_subcommand_main_help",
+          "callee": "format_docstring",
+          "lineNumber": 393
+        },
+        {
+          "caller": "_handle_subcommand_main_help",
+          "callee": "parser.print_help",
+          "lineNumber": 397
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "set(args).intersection",
+          "lineNumber": 400
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "set",
+          "lineNumber": 400
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "list",
+          "lineNumber": 400
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "handler.subcommand_handlers.keys",
+          "lineNumber": 400
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "self._handle_subcommand_main_help",
+          "lineNumber": 402
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "subcommand.pop",
+          "lineNumber": 404
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "argparse.ArgumentParser",
+          "lineNumber": 407
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "c_parser.add_argument_group",
+          "lineNumber": 410
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "self._populate_command_group",
+          "lineNumber": 411
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "format_docstring",
+          "lineNumber": 414
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "parser.print_help",
+          "lineNumber": 420
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "print",
+          "lineNumber": 421
+        },
+        {
+          "caller": "_handle_subcommand_help",
+          "callee": "c_parser.print_help",
+          "lineNumber": 422
+        },
+        {
+          "caller": "_suggest_command",
+          "callee": "self._mach_registrar.command_handlers.values",
+          "lineNumber": 426
+        },
+        {
+          "caller": "_suggest_command",
+          "callee": "set",
+          "lineNumber": 437
+        },
+        {
+          "caller": "_suggest_command",
+          "callee": "difflib.get_close_matches",
+          "lineNumber": 437
+        },
+        {
+          "caller": "_suggest_command",
+          "callee": "cmd.startswith",
+          "lineNumber": 438
+        },
+        {
+          "caller": "_suggest_command",
+          "callee": "UnknownCommandError",
+          "lineNumber": 439
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "docstring.expandtabs().splitlines",
+          "lineNumber": 454
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "docstring.expandtabs",
+          "lineNumber": 454
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "line.lstrip",
+          "lineNumber": 457
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "min",
+          "lineNumber": 459
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "len",
+          "lineNumber": 459
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "len",
+          "lineNumber": 459
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "lines[0].strip",
+          "lineNumber": 460
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "trimmed.append",
+          "lineNumber": 463
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "line[indent:].rstrip",
+          "lineNumber": 463
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "trimmed.pop",
+          "lineNumber": 465
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "trimmed.pop",
+          "lineNumber": 467
+        },
+        {
+          "caller": "format_docstring",
+          "callee": "'\\n'.join",
+          "lineNumber": 468
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 5,
+        "functionCount": 1,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "python/mach/mach/logging.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 298,
+      "nonEmptyLines": 215,
+      "functions": [
+        {
+          "name": "format_seconds",
+          "startLine": 22,
+          "endLine": 27,
+          "params": [
+            "total"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ConvertToStructuredFilter",
+          "startLine": 30,
+          "endLine": 40,
+          "methods": [
+            "filter"
+          ],
+          "properties": []
+        },
+        {
+          "name": "StructuredJSONFormatter",
+          "startLine": 43,
+          "endLine": 50,
+          "methods": [
+            "format"
+          ],
+          "properties": []
+        },
+        {
+          "name": "StructuredHumanFormatter",
+          "startLine": 53,
+          "endLine": 88,
+          "methods": [
+            "__init__",
+            "format",
+            "_time"
+          ],
+          "properties": []
+        },
+        {
+          "name": "StructuredTerminalFormatter",
+          "startLine": 91,
+          "endLine": 136,
+          "methods": [
+            "set_terminal",
+            "format",
+            "_colorize"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LoggingManager",
+          "startLine": 139,
+          "endLine": 298,
+          "methods": [
+            "__init__",
+            "terminal",
+            "add_json_handler",
+            "add_terminal_logging",
+            "replace_terminal_handler",
+            "enable_unstructured",
+            "disable_unstructured",
+            "register_structured_logger",
+            "enable_all_structured_loggers"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "format_seconds",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "ConvertToStructuredFilter",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "StructuredJSONFormatter",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "StructuredHumanFormatter",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "StructuredTerminalFormatter",
+          "line": 91,
+          "isDefault": false
+        },
+        {
+          "name": "LoggingManager",
+          "line": 139,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "format_seconds",
+          "callee": "divmod",
+          "lineNumber": 25
+        },
+        {
+          "caller": "filter",
+          "callee": "hasattr",
+          "lineNumber": 33
+        },
+        {
+          "caller": "filter",
+          "callee": "hasattr",
+          "lineNumber": 33
+        },
+        {
+          "caller": "filter",
+          "callee": "record.getMessage",
+          "lineNumber": 37
+        },
+        {
+          "caller": "format",
+          "callee": "getattr",
+          "lineNumber": 47
+        },
+        {
+          "caller": "format",
+          "callee": "getattr",
+          "lineNumber": 48
+        },
+        {
+          "caller": "format",
+          "callee": "json.dumps",
+          "lineNumber": 50
+        },
+        {
+          "caller": "format",
+          "callee": "record.msg.format",
+          "lineNumber": 71
+        },
+        {
+          "caller": "format",
+          "callee": "self._time",
+          "lineNumber": 76
+        },
+        {
+          "caller": "format",
+          "callee": "format_seconds",
+          "lineNumber": 78
+        },
+        {
+          "caller": "format",
+          "callee": "record.msg.format",
+          "lineNumber": 99
+        },
+        {
+          "caller": "format",
+          "callee": "self.terminal.blue",
+          "lineNumber": 104
+        },
+        {
+          "caller": "format",
+          "callee": "format_seconds",
+          "lineNumber": 104
+        },
+        {
+          "caller": "format",
+          "callee": "self._time",
+          "lineNumber": 104
+        },
+        {
+          "caller": "format",
+          "callee": "self._colorize",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_colorize",
+          "callee": "s.startswith",
+          "lineNumber": 120
+        },
+        {
+          "caller": "_colorize",
+          "callee": "s.startswith",
+          "lineNumber": 124
+        },
+        {
+          "caller": "_colorize",
+          "callee": "self.terminal.green",
+          "lineNumber": 125
+        },
+        {
+          "caller": "_colorize",
+          "callee": "s.startswith",
+          "lineNumber": 126
+        },
+        {
+          "caller": "_colorize",
+          "callee": "self.terminal.red",
+          "lineNumber": 127
+        },
+        {
+          "caller": "_colorize",
+          "callee": "s.startswith",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_colorize",
+          "callee": "self.terminal.yellow",
+          "lineNumber": 129
+        },
+        {
+          "caller": "_colorize",
+          "callee": "s.startswith",
+          "lineNumber": 130
+        },
+        {
+          "caller": "_colorize",
+          "callee": "self.terminal.yellow",
+          "lineNumber": 131
+        },
+        {
+          "caller": "__init__",
+          "callee": "time.time",
+          "lineNumber": 150
+        },
+        {
+          "caller": "__init__",
+          "callee": "logging.getLogger",
+          "lineNumber": 156
+        },
+        {
+          "caller": "__init__",
+          "callee": "self.root_logger.setLevel",
+          "lineNumber": 157
+        },
+        {
+          "caller": "__init__",
+          "callee": "self.root_logger.addHandler",
+          "lineNumber": 162
+        },
+        {
+          "caller": "__init__",
+          "callee": "logging.NullHandler",
+          "lineNumber": 162
+        },
+        {
+          "caller": "__init__",
+          "callee": "logging.getLogger",
+          "lineNumber": 164
+        },
+        {
+          "caller": "__init__",
+          "callee": "mach_logger.setLevel",
+          "lineNumber": 165
+        },
+        {
+          "caller": "__init__",
+          "callee": "ConvertToStructuredFilter",
+          "lineNumber": 167
+        },
+        {
+          "caller": "terminal",
+          "callee": "blessed.Terminal",
+          "lineNumber": 179
+        },
+        {
+          "caller": "add_json_handler",
+          "callee": "logging.StreamHandler",
+          "lineNumber": 192
+        },
+        {
+          "caller": "add_json_handler",
+          "callee": "handler.setFormatter",
+          "lineNumber": 193
+        },
+        {
+          "caller": "add_json_handler",
+          "callee": "StructuredJSONFormatter",
+          "lineNumber": 193
+        },
+        {
+          "caller": "add_json_handler",
+          "callee": "handler.setLevel",
+          "lineNumber": 194
+        },
+        {
+          "caller": "add_json_handler",
+          "callee": "logger.addHandler",
+          "lineNumber": 198
+        },
+        {
+          "caller": "add_json_handler",
+          "callee": "self.json_handlers.append",
+          "lineNumber": 200
+        },
+        {
+          "caller": "add_terminal_logging",
+          "callee": "StructuredHumanFormatter",
+          "lineNumber": 206
+        },
+        {
+          "caller": "add_terminal_logging",
+          "callee": "StructuredTerminalFormatter",
+          "lineNumber": 211
+        },
+        {
+          "caller": "add_terminal_logging",
+          "callee": "formatter.set_terminal",
+          "lineNumber": 214
+        },
+        {
+          "caller": "add_terminal_logging",
+          "callee": "logging.StreamHandler",
+          "lineNumber": 216
+        },
+        {
+          "caller": "add_terminal_logging",
+          "callee": "handler.setFormatter",
+          "lineNumber": 217
+        },
+        {
+          "caller": "add_terminal_logging",
+          "callee": "handler.setLevel",
+          "lineNumber": 218
+        },
+        {
+          "caller": "add_terminal_logging",
+          "callee": "logger.addHandler",
+          "lineNumber": 221
+        },
+        {
+          "caller": "replace_terminal_handler",
+          "callee": "logger.removeHandler",
+          "lineNumber": 237
+        },
+        {
+          "caller": "replace_terminal_handler",
+          "callee": "logger.addHandler",
+          "lineNumber": 241
+        },
+        {
+          "caller": "enable_unstructured",
+          "callee": "self.terminal_handler.addFilter",
+          "lineNumber": 250
+        },
+        {
+          "caller": "enable_unstructured",
+          "callee": "self.root_logger.addHandler",
+          "lineNumber": 251
+        },
+        {
+          "caller": "disable_unstructured",
+          "callee": "self.terminal_handler.removeFilter",
+          "lineNumber": 256
+        },
+        {
+          "caller": "disable_unstructured",
+          "callee": "self.root_logger.removeHandler",
+          "lineNumber": 257
+        },
+        {
+          "caller": "register_structured_logger",
+          "callee": "self.structured_loggers.append",
+          "lineNumber": 265
+        },
+        {
+          "caller": "register_structured_logger",
+          "callee": "logger.addHandler",
+          "lineNumber": 268
+        },
+        {
+          "caller": "register_structured_logger",
+          "callee": "logger.addHandler",
+          "lineNumber": 272
+        },
+        {
+          "caller": "enable_all_structured_loggers",
+          "callee": "self.root_logger.manager.loggerDict.values",
+          "lineNumber": 282
+        },
+        {
+          "caller": "enable_all_structured_loggers",
+          "callee": "isinstance",
+          "lineNumber": 284
+        },
+        {
+          "caller": "enable_all_structured_loggers",
+          "callee": "logger.removeHandler",
+          "lineNumber": 288
+        },
+        {
+          "caller": "enable_all_structured_loggers",
+          "callee": "logger.removeHandler",
+          "lineNumber": 292
+        },
+        {
+          "caller": "enable_all_structured_loggers",
+          "callee": "self.register_structured_logger",
+          "lineNumber": 297
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 6,
+        "functionCount": 1,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "python/mach/mach/main.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 601,
+      "nonEmptyLines": 470,
+      "classes": [
+        {
+          "name": "ArgumentParser",
+          "startLine": 97,
+          "endLine": 131,
+          "methods": [
+            "error",
+            "format_help"
+          ],
+          "properties": []
+        },
+        {
+          "name": "ContextWrapper",
+          "startLine": 134,
+          "endLine": 153,
+          "methods": [
+            "__init__",
+            "__getattribute__",
+            "__setattr__"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Mach",
+          "startLine": 157,
+          "endLine": 601,
+          "methods": [
+            "__init__",
+            "add_global_argument",
+            "load_commands_from_directory",
+            "load_commands_from_file",
+            "load_commands_from_entry_point",
+            "define_category",
+            "require_conditions",
+            "require_conditions",
+            "run",
+            "_run",
+            "log",
+            "_print_error_header",
+            "_print_exception",
+            "load_settings",
+            "get_argument_parser"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "ArgumentParser",
+          "line": 97,
+          "isDefault": false
+        },
+        {
+          "name": "ContextWrapper",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "Mach",
+          "line": 156,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "error",
+          "callee": "message.startswith",
+          "lineNumber": 102
+        },
+        {
+          "caller": "error",
+          "callee": "argparse.ArgumentParser.error",
+          "lineNumber": 103
+        },
+        {
+          "caller": "error",
+          "callee": "print",
+          "lineNumber": 106
+        },
+        {
+          "caller": "error",
+          "callee": "self.print_help",
+          "lineNumber": 107
+        },
+        {
+          "caller": "error",
+          "callee": "sys.exit",
+          "lineNumber": 108
+        },
+        {
+          "caller": "format_help",
+          "callee": "argparse.ArgumentParser.format_help",
+          "lineNumber": 111
+        },
+        {
+          "caller": "format_help",
+          "callee": "text.find",
+          "lineNumber": 120
+        },
+        {
+          "caller": "format_help",
+          "callee": "text.find",
+          "lineNumber": 123
+        },
+        {
+          "caller": "format_help",
+          "callee": "len",
+          "lineNumber": 126
+        },
+        {
+          "caller": "format_help",
+          "callee": "len",
+          "lineNumber": 127
+        },
+        {
+          "caller": "__init__",
+          "callee": "object.__setattr__",
+          "lineNumber": 136
+        },
+        {
+          "caller": "__init__",
+          "callee": "object.__setattr__",
+          "lineNumber": 137
+        },
+        {
+          "caller": "__getattribute__",
+          "callee": "getattr",
+          "lineNumber": 141
+        },
+        {
+          "caller": "__getattribute__",
+          "callee": "object.__getattribute__",
+          "lineNumber": 141
+        },
+        {
+          "caller": "__getattribute__",
+          "callee": "object.__getattribute__",
+          "lineNumber": 144
+        },
+        {
+          "caller": "__getattribute__",
+          "callee": "setattr",
+          "lineNumber": 149
+        },
+        {
+          "caller": "__setattr__",
+          "callee": "setattr",
+          "lineNumber": 153
+        },
+        {
+          "caller": "__setattr__",
+          "callee": "object.__getattribute__",
+          "lineNumber": 153
+        },
+        {
+          "caller": "__init__",
+          "callee": "os.path.isdir",
+          "lineNumber": 203
+        },
+        {
+          "caller": "__init__",
+          "callee": "LoggingManager",
+          "lineNumber": 206
+        },
+        {
+          "caller": "__init__",
+          "callee": "logging.getLogger",
+          "lineNumber": 207
+        },
+        {
+          "caller": "__init__",
+          "callee": "ConfigSettings",
+          "lineNumber": 208
+        },
+        {
+          "caller": "__init__",
+          "callee": "self.settings_paths.append",
+          "lineNumber": 212
+        },
+        {
+          "caller": "__init__",
+          "callee": "self.log_manager.register_structured_logger",
+          "lineNumber": 214
+        },
+        {
+          "caller": "add_global_argument",
+          "callee": "self.global_arguments.append",
+          "lineNumber": 224
+        },
+        {
+          "caller": "load_commands_from_directory",
+          "callee": "sorted",
+          "lineNumber": 232
+        },
+        {
+          "caller": "load_commands_from_directory",
+          "callee": "os.listdir",
+          "lineNumber": 232
+        },
+        {
+          "caller": "load_commands_from_directory",
+          "callee": "f.endswith",
+          "lineNumber": 233
+        },
+        {
+          "caller": "load_commands_from_directory",
+          "callee": "os.path.join",
+          "lineNumber": 236
+        },
+        {
+          "caller": "load_commands_from_directory",
+          "callee": "self.load_commands_from_file",
+          "lineNumber": 239
+        },
+        {
+          "caller": "load_commands_from_file",
+          "callee": "uuid.uuid4",
+          "lineNumber": 250
+        },
+        {
+          "caller": "load_commands_from_file",
+          "callee": "importlib.util.spec_from_file_location",
+          "lineNumber": 251
+        },
+        {
+          "caller": "load_commands_from_file",
+          "callee": "importlib.util.module_from_spec",
+          "lineNumber": 252
+        },
+        {
+          "caller": "load_commands_from_file",
+          "callee": "spec.loader.exec_module",
+          "lineNumber": 254
+        },
+        {
+          "caller": "load_commands_from_file",
+          "callee": "MissingFileError",
+          "lineNumber": 259
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "print",
+          "lineNumber": 272
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "pkg_resources.iter_entry_points",
+          "lineNumber": 276
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "entry.load",
+          "lineNumber": 277
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "isinstance",
+          "lineNumber": 278
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "print",
+          "lineNumber": 279
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "sys.exit",
+          "lineNumber": 280
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "os.path.isfile",
+          "lineNumber": 283
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "self.load_commands_from_file",
+          "lineNumber": 284
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "os.path.isdir",
+          "lineNumber": 285
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "self.load_commands_from_directory",
+          "lineNumber": 286
+        },
+        {
+          "caller": "load_commands_from_entry_point",
+          "callee": "print",
+          "lineNumber": 288
+        },
+        {
+          "caller": "define_category",
+          "callee": "Registrar.register_category",
+          "lineNumber": 293
+        },
+        {
+          "caller": "run",
+          "callee": "dict",
+          "lineNumber": 327
+        },
+        {
+          "caller": "run",
+          "callee": "codecs.getreader",
+          "lineNumber": 332
+        },
+        {
+          "caller": "run",
+          "callee": "codecs.getwriter",
+          "lineNumber": 335
+        },
+        {
+          "caller": "run",
+          "callee": "codecs.getwriter",
+          "lineNumber": 338
+        },
+        {
+          "caller": "run",
+          "callee": "os.isatty",
+          "lineNumber": 344
+        },
+        {
+          "caller": "run",
+          "callee": "orig_stdout.fileno",
+          "lineNumber": 344
+        },
+        {
+          "caller": "run",
+          "callee": "setenv",
+          "lineNumber": 345
+        },
+        {
+          "caller": "run",
+          "callee": "self._run",
+          "lineNumber": 347
+        },
+        {
+          "caller": "run",
+          "callee": "print",
+          "lineNumber": 349
+        },
+        {
+          "caller": "run",
+          "callee": "self._print_error_header",
+          "lineNumber": 358
+        },
+        {
+          "caller": "run",
+          "callee": "print",
+          "lineNumber": 359
+        },
+        {
+          "caller": "run",
+          "callee": "sys.exc_info",
+          "lineNumber": 361
+        },
+        {
+          "caller": "run",
+          "callee": "traceback.extract_tb",
+          "lineNumber": 362
+        },
+        {
+          "caller": "run",
+          "callee": "self._print_exception",
+          "lineNumber": 364
+        },
+        {
+          "caller": "run",
+          "callee": "os.environ.clear",
+          "lineNumber": 369
+        },
+        {
+          "caller": "run",
+          "callee": "os.environ.update",
+          "lineNumber": 370
+        },
+        {
+          "caller": "_run",
+          "callee": "self.settings.register_provider",
+          "lineNumber": 380
+        },
+        {
+          "caller": "_run",
+          "callee": "self.load_settings",
+          "lineNumber": 381
+        },
+        {
+          "caller": "_run",
+          "callee": "CommandContext",
+          "lineNumber": 383
+        },
+        {
+          "caller": "_run",
+          "callee": "self.populate_context_handler",
+          "lineNumber": 388
+        },
+        {
+          "caller": "_run",
+          "callee": "ContextWrapper",
+          "lineNumber": 389
+        },
+        {
+          "caller": "_run",
+          "callee": "self.get_argument_parser",
+          "lineNumber": 391
+        },
+        {
+          "caller": "_run",
+          "callee": "len",
+          "lineNumber": 393
+        },
+        {
+          "caller": "_run",
+          "callee": "parser.print_usage",
+          "lineNumber": 398
+        },
+        {
+          "caller": "_run",
+          "callee": "parser.parse_args",
+          "lineNumber": 402
+        },
+        {
+          "caller": "_run",
+          "callee": "print",
+          "lineNumber": 404
+        },
+        {
+          "caller": "_run",
+          "callee": "', '.join",
+          "lineNumber": 408
+        },
+        {
+          "caller": "_run",
+          "callee": "print",
+          "lineNumber": 409
+        },
+        {
+          "caller": "_run",
+          "callee": "print",
+          "lineNumber": 413
+        },
+        {
+          "caller": "_run",
+          "callee": "' '.join",
+          "lineNumber": 414
+        },
+        {
+          "caller": "_run",
+          "callee": "hasattr",
+          "lineNumber": 417
+        },
+        {
+          "caller": "_run",
+          "callee": "MachError",
+          "lineNumber": 418
+        },
+        {
+          "caller": "_run",
+          "callee": "getattr",
+          "lineNumber": 420
+        },
+        {
+          "caller": "_run",
+          "callee": "self.log_manager.add_json_handler",
+          "lineNumber": 424
+        },
+        {
+          "caller": "_run",
+          "callee": "self.log_manager.register_structured_logger",
+          "lineNumber": 431
+        },
+        {
+          "caller": "_run",
+          "callee": "logging.getLogger",
+          "lineNumber": 431
+        },
+        {
+          "caller": "_run",
+          "callee": "self.log_manager.add_terminal_logging",
+          "lineNumber": 439
+        },
+        {
+          "caller": "_run",
+          "callee": "self.load_settings",
+          "lineNumber": 446
+        },
+        {
+          "caller": "_run",
+          "callee": "Registrar._run_command_handler",
+          "lineNumber": 449
+        },
+        {
+          "caller": "_run",
+          "callee": "vars",
+          "lineNumber": 451
+        },
+        {
+          "caller": "_run",
+          "callee": "print",
+          "lineNumber": 455
+        },
+        {
+          "caller": "_run",
+          "callee": "sys.exc_info",
+          "lineNumber": 458
+        },
+        {
+          "caller": "_run",
+          "callee": "traceback.extract_tb",
+          "lineNumber": 461
+        },
+        {
+          "caller": "_run",
+          "callee": "len",
+          "lineNumber": 469
+        },
+        {
+          "caller": "_run",
+          "callee": "print",
+          "lineNumber": 470
+        },
+        {
+          "caller": "_run",
+          "callee": "self._print_exception",
+          "lineNumber": 471
+        },
+        {
+          "caller": "_run",
+          "callee": "traceback.extract_tb",
+          "lineNumber": 472
+        },
+        {
+          "caller": "_run",
+          "callee": "command_frames.append",
+          "lineNumber": 484
+        },
+        {
+          "caller": "_run",
+          "callee": "other_frames.append",
+          "lineNumber": 486
+        },
+        {
+          "caller": "_run",
+          "callee": "self._print_error_header",
+          "lineNumber": 492
+        },
+        {
+          "caller": "_run",
+          "callee": "len",
+          "lineNumber": 494
+        },
+        {
+          "caller": "_run",
+          "callee": "print",
+          "lineNumber": 495
+        },
+        {
+          "caller": "_run",
+          "callee": "print",
+          "lineNumber": 497
+        },
+        {
+          "caller": "_run",
+          "callee": "self._print_exception",
+          "lineNumber": 499
+        },
+        {
+          "caller": "log",
+          "callee": "self.logger.log",
+          "lineNumber": 505
+        },
+        {
+          "caller": "_print_error_header",
+          "callee": "fh.write",
+          "lineNumber": 509
+        },
+        {
+          "caller": "_print_error_header",
+          "callee": "fh.write",
+          "lineNumber": 510
+        },
+        {
+          "caller": "_print_error_header",
+          "callee": "fh.write",
+          "lineNumber": 511
+        },
+        {
+          "caller": "_print_error_header",
+          "callee": "repr",
+          "lineNumber": 511
+        },
+        {
+          "caller": "_print_error_header",
+          "callee": "fh.write",
+          "lineNumber": 512
+        },
+        {
+          "caller": "_print_exception",
+          "callee": "fh.write",
+          "lineNumber": 515
+        },
+        {
+          "caller": "_print_exception",
+          "callee": "fh.write",
+          "lineNumber": 516
+        },
+        {
+          "caller": "_print_exception",
+          "callee": "traceback.format_exception_only",
+          "lineNumber": 518
+        },
+        {
+          "caller": "_print_exception",
+          "callee": "fh.write",
+          "lineNumber": 519
+        },
+        {
+          "caller": "_print_exception",
+          "callee": "fh.write",
+          "lineNumber": 521
+        },
+        {
+          "caller": "_print_exception",
+          "callee": "traceback.format_list",
+          "lineNumber": 522
+        },
+        {
+          "caller": "_print_exception",
+          "callee": "fh.write",
+          "lineNumber": 523
+        },
+        {
+          "caller": "load_settings",
+          "callee": "isinstance",
+          "lineNumber": 533
+        },
+        {
+          "caller": "find_in_dir",
+          "callee": "os.path.isfile",
+          "lineNumber": 539
+        },
+        {
+          "caller": "find_in_dir",
+          "callee": "os.path.join",
+          "lineNumber": 543
+        },
+        {
+          "caller": "find_in_dir",
+          "callee": "os.path.isfile",
+          "lineNumber": 544
+        },
+        {
+          "caller": "load_settings",
+          "callee": "map",
+          "lineNumber": 547
+        },
+        {
+          "caller": "load_settings",
+          "callee": "filter",
+          "lineNumber": 548
+        },
+        {
+          "caller": "load_settings",
+          "callee": "self.settings.load_files",
+          "lineNumber": 550
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "ArgumentParser",
+          "lineNumber": 555
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "parser.add_argument_group",
+          "lineNumber": 561
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 563
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 566
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "argparse.FileType",
+          "lineNumber": 567
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 569
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 577
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 582
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 585
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 587
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 590
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "global_group.add_argument",
+          "lineNumber": 594
+        },
+        {
+          "caller": "get_argument_parser",
+          "callee": "parser.add_argument",
+          "lineNumber": 598
+        }
+      ],
+      "metrics": {
+        "importCount": 7,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "python/mach/mach/registrar.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 153,
+      "nonEmptyLines": 114,
+      "classes": [
+        {
+          "name": "MachRegistrar",
+          "startLine": 19,
+          "endLine": 150,
+          "methods": [
+            "__init__",
+            "register_command_handler",
+            "register_settings_provider",
+            "register_category",
+            "_condition_failed_message",
+            "_instance",
+            "_fail_conditions",
+            "_run_command_handler",
+            "dispatch"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "MachRegistrar",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "set",
+          "lineNumber": 25
+        },
+        {
+          "caller": "register_command_handler",
+          "callee": "MachError",
+          "lineNumber": 34
+        },
+        {
+          "caller": "register_command_handler",
+          "callee": "MachError",
+          "lineNumber": 38
+        },
+        {
+          "caller": "register_command_handler",
+          "callee": "self.commands_by_category[handler.category].add",
+          "lineNumber": 42
+        },
+        {
+          "caller": "register_settings_provider",
+          "callee": "self.settings_providers.add",
+          "lineNumber": 45
+        },
+        {
+          "caller": "register_category",
+          "callee": "set",
+          "lineNumber": 49
+        },
+        {
+          "caller": "_condition_failed_message",
+          "callee": "part.append",
+          "lineNumber": 57
+        },
+        {
+          "caller": "_condition_failed_message",
+          "callee": "msg.append",
+          "lineNumber": 58
+        },
+        {
+          "caller": "_condition_failed_message",
+          "callee": "' - '.join",
+          "lineNumber": 58
+        },
+        {
+          "caller": "_condition_failed_message",
+          "callee": "'\\n'.join",
+          "lineNumber": 59
+        },
+        {
+          "caller": "_instance",
+          "callee": "Exception",
+          "lineNumber": 66
+        },
+        {
+          "caller": "_instance",
+          "callee": "getattr",
+          "lineNumber": 69
+        },
+        {
+          "caller": "_instance",
+          "callee": "prerun",
+          "lineNumber": 71
+        },
+        {
+          "caller": "_instance",
+          "callee": "cls",
+          "lineNumber": 75
+        },
+        {
+          "caller": "_instance",
+          "callee": "cls",
+          "lineNumber": 77
+        },
+        {
+          "caller": "_fail_conditions",
+          "callee": "c",
+          "lineNumber": 86
+        },
+        {
+          "caller": "_fail_conditions",
+          "callee": "fail_conditions.append",
+          "lineNumber": 87
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "MachRegistrar._instance",
+          "lineNumber": 92
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "MachRegistrar._fail_conditions",
+          "lineNumber": 93
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "print",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "MachRegistrar._condition_failed_message",
+          "lineNumber": 95
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "getattr",
+          "lineNumber": 99
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "time.time",
+          "lineNumber": 101
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "pdb.runcall",
+          "lineNumber": 105
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "fn",
+          "lineNumber": 107
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "time.time",
+          "lineNumber": 109
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "isinstance",
+          "lineNumber": 112
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "getattr",
+          "lineNumber": 115
+        },
+        {
+          "caller": "_run_command_handler",
+          "callee": "postrun",
+          "lineNumber": 117
+        },
+        {
+          "caller": "dispatch",
+          "callee": "parser._defaults.copy",
+          "lineNumber": 138
+        },
+        {
+          "caller": "dispatch",
+          "callee": "parser.set_defaults",
+          "lineNumber": 139
+        },
+        {
+          "caller": "dispatch",
+          "callee": "parser.parse_known_args",
+          "lineNumber": 140
+        },
+        {
+          "caller": "dispatch",
+          "callee": "vars",
+          "lineNumber": 141
+        },
+        {
+          "caller": "dispatch",
+          "callee": "'{} {}'.format",
+          "lineNumber": 146
+        },
+        {
+          "caller": "dispatch",
+          "callee": "parser.error",
+          "lineNumber": 147
+        },
+        {
+          "caller": "dispatch",
+          "callee": "\"unrecognized arguments for {}: {}\".format",
+          "lineNumber": 147
+        },
+        {
+          "caller": "dispatch",
+          "callee": "', '.join",
+          "lineNumber": 148
+        },
+        {
+          "caller": "dispatch",
+          "callee": "\"'{}'\".format",
+          "lineNumber": 148
+        },
+        {
+          "caller": "dispatch",
+          "callee": "self._run_command_handler",
+          "lineNumber": 150
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "python/mach/mach/terminal.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 74,
+      "nonEmptyLines": 53,
+      "classes": [
+        {
+          "name": "LoggingHandler",
+          "startLine": 17,
+          "endLine": 52,
+          "methods": [
+            "__init__",
+            "flush",
+            "emit"
+          ],
+          "properties": []
+        },
+        {
+          "name": "TerminalFooter",
+          "startLine": 55,
+          "endLine": 74,
+          "methods": [
+            "__init__",
+            "_clear_lines",
+            "clear",
+            "draw"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LoggingHandler",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "TerminalFooter",
+          "line": 55,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "__init__",
+          "callee": "logging.Handler.__init__",
+          "lineNumber": 26
+        },
+        {
+          "caller": "flush",
+          "callee": "self.acquire",
+          "lineNumber": 32
+        },
+        {
+          "caller": "flush",
+          "callee": "self.fh.flush",
+          "lineNumber": 35
+        },
+        {
+          "caller": "flush",
+          "callee": "self.release",
+          "lineNumber": 37
+        },
+        {
+          "caller": "emit",
+          "callee": "self.format",
+          "lineNumber": 40
+        },
+        {
+          "caller": "emit",
+          "callee": "self.footer.clear",
+          "lineNumber": 43
+        },
+        {
+          "caller": "emit",
+          "callee": "self.fh.write",
+          "lineNumber": 45
+        },
+        {
+          "caller": "emit",
+          "callee": "self.fh.write",
+          "lineNumber": 46
+        },
+        {
+          "caller": "emit",
+          "callee": "self.footer.draw",
+          "lineNumber": 49
+        },
+        {
+          "caller": "emit",
+          "callee": "self.flush",
+          "lineNumber": 52
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "range",
+          "lineNumber": 62
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.fh.write",
+          "lineNumber": 63
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.t.move_x",
+          "lineNumber": 63
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.fh.write",
+          "lineNumber": 64
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.t.clear_eol",
+          "lineNumber": 64
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.fh.write",
+          "lineNumber": 65
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.t.move_up",
+          "lineNumber": 65
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.fh.write",
+          "lineNumber": 67
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.t.move_down",
+          "lineNumber": 67
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.fh.write",
+          "lineNumber": 68
+        },
+        {
+          "caller": "_clear_lines",
+          "callee": "self.t.move_x",
+          "lineNumber": 68
+        },
+        {
+          "caller": "clear",
+          "callee": "Exception",
+          "lineNumber": 71
+        },
+        {
+          "caller": "draw",
+          "callee": "Exception",
+          "lineNumber": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "python/mach/mach/util.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 28,
+      "nonEmptyLines": 22,
+      "functions": [
+        {
+          "name": "setenv",
+          "startLine": 11,
+          "endLine": 28,
+          "params": [
+            "key",
+            "value"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "setenv",
+          "line": 11,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "setenv",
+          "callee": "isinstance",
+          "lineNumber": 18
+        },
+        {
+          "caller": "setenv",
+          "callee": "key.encode",
+          "lineNumber": 19
+        },
+        {
+          "caller": "setenv",
+          "callee": "isinstance",
+          "lineNumber": 20
+        },
+        {
+          "caller": "setenv",
+          "callee": "value.encode",
+          "lineNumber": 21
+        },
+        {
+          "caller": "setenv",
+          "callee": "isinstance",
+          "lineNumber": 23
+        },
+        {
+          "caller": "setenv",
+          "callee": "key.decode",
+          "lineNumber": 24
+        },
+        {
+          "caller": "setenv",
+          "callee": "isinstance",
+          "lineNumber": 25
+        },
+        {
+          "caller": "setenv",
+          "callee": "value.decode",
+          "lineNumber": 26
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

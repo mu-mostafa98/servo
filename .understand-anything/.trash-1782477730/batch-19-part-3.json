@@ -1,0 +1,1138 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/html/htmltitleelement.rs",
+      "type": "file",
+      "name": "htmltitleelement.rs",
+      "filePath": "components/script/dom/html/htmltitleelement.rs",
+      "summary": "Implements the HTMLTitleElement DOM interface for `<title>` elements, managing the document title text and notification.",
+      "tags": [
+        "dom",
+        "html-element",
+        "title",
+        "document"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltitleelement.rs:HTMLTitleElement",
+      "type": "class",
+      "name": "HTMLTitleElement",
+      "filePath": "components/script/dom/html/htmltitleelement.rs",
+      "summary": "DOM struct for `<title>` elements that triggers document title updates when the text changes.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        22,
+        25
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltitleelement.rs:children_changed",
+      "type": "function",
+      "name": "children_changed",
+      "filePath": "components/script/dom/html/htmltitleelement.rs",
+      "summary": "Updates the document title when the title element's child text changes.",
+      "tags": [
+        "title",
+        "document",
+        "dom-update"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        82,
+        92
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltitleelement.rs:bind_to_tree",
+      "type": "function",
+      "name": "bind_to_tree",
+      "filePath": "components/script/dom/html/htmltitleelement.rs",
+      "summary": "Notifies the document that the title element has been added, triggering a title update.",
+      "tags": [
+        "title",
+        "lifecycle"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        94,
+        102
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltitleelement.rs:pop",
+      "type": "function",
+      "name": "pop",
+      "filePath": "components/script/dom/html/htmltitleelement.rs",
+      "summary": "Pops the title element from the stack of open elements, updating the document title.",
+      "tags": [
+        "title",
+        "parsing",
+        "lifecycle"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        104,
+        114
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltrackelement.rs",
+      "type": "file",
+      "name": "htmltrackelement.rs",
+      "filePath": "components/script/dom/html/htmltrackelement.rs",
+      "summary": "Implements the HTMLTrackElement DOM interface for `<track>` elements, managing text track kind, ready state, and media text track association.",
+      "tags": [
+        "dom",
+        "html-element",
+        "track",
+        "media",
+        "text-track"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltrackelement.rs:HTMLTrackElement",
+      "type": "class",
+      "name": "HTMLTrackElement",
+      "filePath": "components/script/dom/html/htmltrackelement.rs",
+      "summary": "DOM struct for `<track>` elements with text track management and ready state tracking.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        33,
+        37
+      ]
+    },
+    {
+      "id": "class:components/script/dom/html/htmltrackelement.rs:ReadyState",
+      "type": "class",
+      "name": "ReadyState",
+      "filePath": "components/script/dom/html/htmltrackelement.rs",
+      "summary": "Enum representing track loading states: None, Loading, Loaded, Error.",
+      "tags": [
+        "media",
+        "track",
+        "state"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        25,
+        30
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltrackelement.rs:Kind",
+      "type": "function",
+      "name": "Kind",
+      "filePath": "components/script/dom/html/htmltrackelement.rs",
+      "summary": "Determines the track kind (subtitles, captions, descriptions, chapters, metadata) based on the `kind` attribute value.",
+      "tags": [
+        "track",
+        "getter",
+        "media"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        83,
+        107
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlulistelement.rs",
+      "type": "file",
+      "name": "htmlulistelement.rs",
+      "filePath": "components/script/dom/html/htmlulistelement.rs",
+      "summary": "Implements the HTMLUListElement DOM interface for `<ul>` (unordered list) elements.",
+      "tags": [
+        "dom",
+        "html-element",
+        "list"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlulistelement.rs:HTMLUListElement",
+      "type": "class",
+      "name": "HTMLUListElement",
+      "filePath": "components/script/dom/html/htmlulistelement.rs",
+      "summary": "DOM struct for `<ul>` unordered list elements.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        17,
+        19
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlunknownelement.rs",
+      "type": "file",
+      "name": "htmlunknownelement.rs",
+      "filePath": "components/script/dom/html/htmlunknownelement.rs",
+      "summary": "Implements the HTMLUnknownElement DOM interface for unrecognized/non-standard HTML elements, serving as a fallback DOM type.",
+      "tags": [
+        "dom",
+        "html-element",
+        "fallback"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlunknownelement.rs:HTMLUnknownElement",
+      "type": "class",
+      "name": "HTMLUnknownElement",
+      "filePath": "components/script/dom/html/htmlunknownelement.rs",
+      "summary": "DOM struct for unknown/non-standard HTML elements, a minimal HTMLElement wrapper.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        15,
+        17
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlvideoelement.rs",
+      "type": "file",
+      "name": "htmlvideoelement.rs",
+      "filePath": "components/script/dom/html/htmlvideoelement.rs",
+      "summary": "Implements the HTMLVideoElement DOM interface for `<video>` elements, managing video dimensions, poster frame fetching, and media data synchronization with layout.",
+      "tags": [
+        "dom",
+        "html-element",
+        "video",
+        "media",
+        "poster"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlvideoelement.rs:HTMLVideoElement",
+      "type": "class",
+      "name": "HTMLVideoElement",
+      "filePath": "components/script/dom/html/htmlvideoelement.rs",
+      "summary": "DOM struct for `<video>` elements with video dimension tracking, poster frame management, and media element integration.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        50,
+        65
+      ]
+    },
+    {
+      "id": "class:components/script/dom/html/htmlvideoelement.rs:PosterFrameFetchContext",
+      "type": "class",
+      "name": "PosterFrameFetchContext",
+      "filePath": "components/script/dom/html/htmlvideoelement.rs",
+      "summary": "Internal context struct for managing poster image fetch lifecycle, including response handling and compositor frame delivery.",
+      "tags": [
+        "media",
+        "fetch",
+        "poster"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        406,
+        419
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlvideoelement.rs:get_current_frame_data",
+      "type": "function",
+      "name": "get_current_frame_data",
+      "filePath": "components/script/dom/html/htmlvideoelement.rs",
+      "summary": "Retrieves the current video frame data as an image response for layout rendering.",
+      "tags": [
+        "video",
+        "frame",
+        "layout"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        123,
+        150
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlvideoelement.rs:update_poster_frame",
+      "type": "function",
+      "name": "update_poster_frame",
+      "filePath": "components/script/dom/html/htmlvideoelement.rs",
+      "summary": "Updates the poster frame displayed on the video element, handling image response processing and size derivation.",
+      "tags": [
+        "video",
+        "poster",
+        "rendering"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        153,
+        227
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlvideoelement.rs:do_fetch_poster_frame",
+      "type": "function",
+      "name": "do_fetch_poster_frame",
+      "filePath": "components/script/dom/html/htmlvideoelement.rs",
+      "summary": "Fetches the poster image URL, creating a fetch request with appropriate CORS and referrer settings.",
+      "tags": [
+        "poster",
+        "fetch",
+        "network"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        230,
+        273
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlvideoelement.rs:process_response",
+      "type": "function",
+      "name": "process_response",
+      "filePath": "components/script/dom/html/htmlvideoelement.rs",
+      "summary": "Processes the poster image fetch response, handling redirects and content-type validation.",
+      "tags": [
+        "fetch",
+        "response",
+        "image"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        426,
+        450
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlvideoelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmlvideoelement.rs",
+      "summary": "Handles attribute changes on the video element (poster, width, height), triggering poster fetch or dimension updates.",
+      "tags": [
+        "attribute",
+        "video",
+        "dom-update"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        364,
+        381
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/interactive_element_command.rs",
+      "type": "file",
+      "name": "interactive_element_command.rs",
+      "filePath": "components/script/dom/html/interactive_element_command.rs",
+      "summary": "Implements the InteractiveElementCommand enum for the HTML `command` concept, handling access key delegation and command activation across anchor, button, input, option, and generic HTML elements.",
+      "tags": [
+        "dom",
+        "commands",
+        "access-key",
+        "interactive"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/interactive_element_command.rs:InteractiveElementCommand",
+      "type": "class",
+      "name": "InteractiveElementCommand",
+      "filePath": "components/script/dom/html/interactive_element_command.rs",
+      "summary": "Enum representing interactive element commands for access key handling, wrapping anchor, button, input, option, and generic HTML elements.",
+      "tags": [
+        "commands",
+        "enum",
+        "interactive"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        25,
+        31
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/interactive_element_command.rs:try_from (legend)",
+      "type": "function",
+      "name": "try_from (legend)",
+      "filePath": "components/script/dom/html/interactive_element_command.rs",
+      "summary": "Tries to create an InteractiveElementCommand from a `<legend>` element by finding its access key delegatee within a fieldset.",
+      "tags": [
+        "access-key",
+        "legend",
+        "delegation"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        43,
+        75
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/interactive_element_command.rs:try_from (element ref)",
+      "type": "function",
+      "name": "try_from (element ref)",
+      "filePath": "components/script/dom/html/interactive_element_command.rs",
+      "summary": "Tries to create an InteractiveElementCommand from an element reference using DOM method lookups.",
+      "tags": [
+        "commands",
+        "conversion"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        81,
+        106
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/interactive_element_command.rs:disabled",
+      "type": "function",
+      "name": "disabled",
+      "filePath": "components/script/dom/html/interactive_element_command.rs",
+      "summary": "Checks if the command is disabled by evaluating the underlying element's disabled state or ancestor fieldset disabled state.",
+      "tags": [
+        "commands",
+        "state"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        110,
+        144
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/interactive_element_command.rs:perform_action",
+      "type": "function",
+      "name": "perform_action",
+      "filePath": "components/script/dom/html/interactive_element_command.rs",
+      "summary": "Executes the command action (click or focus) based on the underlying element type.",
+      "tags": [
+        "commands",
+        "execution"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        157,
+        194
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/html/mod.rs",
+      "summary": "Barrel module declaring all public HTML element submodules and re-exporting the input_element module as htmlinputelement.",
+      "tags": [
+        "barrel",
+        "module",
+        "dom",
+        "html"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/html/htmltitleelement.rs",
+      "target": "class:components/script/dom/html/htmltitleelement.rs:HTMLTitleElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltitleelement.rs",
+      "target": "function:components/script/dom/html/htmltitleelement.rs:children_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltitleelement.rs",
+      "target": "function:components/script/dom/html/htmltitleelement.rs:bind_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltitleelement.rs",
+      "target": "function:components/script/dom/html/htmltitleelement.rs:pop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltrackelement.rs",
+      "target": "class:components/script/dom/html/htmltrackelement.rs:HTMLTrackElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltrackelement.rs",
+      "target": "class:components/script/dom/html/htmltrackelement.rs:ReadyState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltrackelement.rs",
+      "target": "function:components/script/dom/html/htmltrackelement.rs:Kind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlulistelement.rs",
+      "target": "class:components/script/dom/html/htmlulistelement.rs:HTMLUListElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlunknownelement.rs",
+      "target": "class:components/script/dom/html/htmlunknownelement.rs:HTMLUnknownElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlvideoelement.rs",
+      "target": "class:components/script/dom/html/htmlvideoelement.rs:HTMLVideoElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlvideoelement.rs",
+      "target": "class:components/script/dom/html/htmlvideoelement.rs:PosterFrameFetchContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlvideoelement.rs",
+      "target": "function:components/script/dom/html/htmlvideoelement.rs:get_current_frame_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlvideoelement.rs",
+      "target": "function:components/script/dom/html/htmlvideoelement.rs:update_poster_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlvideoelement.rs",
+      "target": "function:components/script/dom/html/htmlvideoelement.rs:do_fetch_poster_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlvideoelement.rs",
+      "target": "function:components/script/dom/html/htmlvideoelement.rs:process_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlvideoelement.rs",
+      "target": "function:components/script/dom/html/htmlvideoelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/interactive_element_command.rs",
+      "target": "class:components/script/dom/html/interactive_element_command.rs:InteractiveElementCommand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/interactive_element_command.rs",
+      "target": "function:components/script/dom/html/interactive_element_command.rs:try_from (legend)",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/interactive_element_command.rs",
+      "target": "function:components/script/dom/html/interactive_element_command.rs:try_from (element ref)",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/interactive_element_command.rs",
+      "target": "function:components/script/dom/html/interactive_element_command.rs:disabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/interactive_element_command.rs",
+      "target": "function:components/script/dom/html/interactive_element_command.rs:perform_action",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlanchorelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlareaelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlaudioelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlbaseelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlbodyelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlbrelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlcollection.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmldataelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmldatalistelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmldetailselement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmldialogelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmldirectoryelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmldivelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmldlistelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmldocument.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlembedelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlfieldsetelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlfontelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlformcontrolscollection.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlformelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlframeelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlframesetelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlheadelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlheadingelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlhrelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlhtmlelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmliframeelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlimageelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmllabelelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmllegendelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmllielement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmllinkelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlmapelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlmarqueeelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlmediaelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlmenuelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlmetaelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlmeterelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlmodelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlobjectelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlolistelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmloptgroupelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmloptionelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmloptionscollection.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmloutputelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlparagraphelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlparamelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlpictureelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlpreelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlprogresselement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlquoteelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlscriptelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlselectelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlslotelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlsourceelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlspanelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlstyleelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltablecaptionelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltablecellelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltablecolelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltableelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltablerowelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltablesectionelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltemplateelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltextareaelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltimeelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltitleelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmltrackelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlulistelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlunknownelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/htmlvideoelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/input_element/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/html/mod.rs",
+      "target": "file:components/script/dom/html/interactive_element_command.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

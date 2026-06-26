@@ -1,0 +1,1429 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webgpu/gpupipelineerror.rs",
+      "type": "file",
+      "name": "gpupipelineerror.rs",
+      "filePath": "components/script/dom/webgpu/gpupipelineerror.rs",
+      "summary": "Implements the GPUPipelineError DOM class representing pipeline creation or validation errors with an associated GPUError reason.",
+      "tags": [
+        "webgpu",
+        "error-handling",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpupipelineerror.rs:GPUPipelineError",
+      "type": "class",
+      "name": "GPUPipelineError",
+      "filePath": "components/script/dom/webgpu/gpupipelineerror.rs",
+      "lineRange": [
+        20,
+        23
+      ],
+      "summary": "DOM class for pipeline errors with a GPUPipelineErrorReason, used to report shader compilation and pipeline validation failures.",
+      "tags": [
+        "webgpu",
+        "error-handling",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpupipelineerror.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/webgpu/gpupipelineerror.rs",
+      "lineRange": [
+        33,
+        46
+      ],
+      "summary": "Creates GPUPipelineError with a prototype, used internally for DOM object reflection.",
+      "tags": [
+        "webgpu",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpupipelineerror.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpupipelineerror.rs",
+      "lineRange": [
+        48,
+        55
+      ],
+      "summary": "Public constructor creating GPUPipelineError with a message and reason.",
+      "tags": [
+        "webgpu",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "type": "file",
+      "name": "gpupipelinelayout.rs",
+      "filePath": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "summary": "Defines the GPUPipelineLayout DOM class managing bind group layouts for GPU pipeline resource binding.",
+      "tags": [
+        "webgpu",
+        "pipeline",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpupipelinelayout.rs:GPUPipelineLayout",
+      "type": "class",
+      "name": "GPUPipelineLayout",
+      "filePath": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "lineRange": [
+        48,
+        54
+      ],
+      "summary": "Represents a GPU pipeline layout, holding a collection of bind group layouts used by compute and render pipelines.",
+      "tags": [
+        "webgpu",
+        "pipeline",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpupipelinelayout.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "lineRange": [
+        33,
+        44
+      ],
+      "summary": "Releases the underlying wgpu pipeline layout resource by sending a DropPipelineLayout request.",
+      "tags": [
+        "webgpu",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpupipelinelayout.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "lineRange": [
+        57,
+        72
+      ],
+      "summary": "Initializes the GPUPipelineLayout's reflector, label, and bind group layouts.",
+      "tags": [
+        "webgpu",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpupipelinelayout.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "lineRange": [
+        74,
+        92
+      ],
+      "summary": "Creates a new reflected DOM GPUPipelineLayout object.",
+      "tags": [
+        "webgpu",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpupipelinelayout.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "lineRange": [
+        96,
+        98
+      ],
+      "summary": "Returns the internal WebGPU pipeline layout ID.",
+      "tags": [
+        "webgpu",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpupipelinelayout.rs:bind_group_layouts",
+      "type": "function",
+      "name": "bind_group_layouts",
+      "filePath": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "lineRange": [
+        100,
+        102
+      ],
+      "summary": "Returns a clone of the bind group layouts associated with this pipeline layout.",
+      "tags": [
+        "webgpu",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpupipelinelayout.rs:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "lineRange": [
+        105,
+        143
+      ],
+      "summary": "Creates a GPUPipelineLayout from a descriptor by validating bind group layouts and sending a CreatePipelineLayout request.",
+      "tags": [
+        "webgpu",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "type": "file",
+      "name": "gpuqueryset.rs",
+      "filePath": "components/script/dom/webgpu/gpuqueryset.rs",
+      "summary": "Implements the GPUQuerySet DOM class for managing GPU occlusion and timestamp query sets.",
+      "tags": [
+        "webgpu",
+        "query",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpuqueryset.rs:GPUQuerySet",
+      "type": "class",
+      "name": "GPUQuerySet",
+      "filePath": "components/script/dom/webgpu/gpuqueryset.rs",
+      "lineRange": [
+        46,
+        52
+      ],
+      "summary": "Represents a GPU query set used for occlusion and timestamp queries during GPU command execution.",
+      "tags": [
+        "webgpu",
+        "query",
+        "data-model"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueryset.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/script/dom/webgpu/gpuqueryset.rs",
+      "lineRange": [
+        31,
+        42
+      ],
+      "summary": "Releases the underlying query set by sending a DropQuerySet request.",
+      "tags": [
+        "webgpu",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueryset.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpuqueryset.rs",
+      "lineRange": [
+        55,
+        69
+      ],
+      "summary": "Initializes the GPUQuerySet with reflector, label, type, and count.",
+      "tags": [
+        "webgpu",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueryset.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpuqueryset.rs",
+      "lineRange": [
+        71,
+        87
+      ],
+      "summary": "Creates a reflected DOM GPUQuerySet object with query type and count.",
+      "tags": [
+        "webgpu",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueryset.rs:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "components/script/dom/webgpu/gpuqueryset.rs",
+      "lineRange": [
+        90,
+        130
+      ],
+      "summary": "Validates device features and creates a GPU query set from a descriptor, checking timestamp query support.",
+      "tags": [
+        "webgpu",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueryset.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webgpu/gpuqueryset.rs",
+      "lineRange": [
+        132,
+        134
+      ],
+      "summary": "Returns the internal WebGPU query set ID.",
+      "tags": [
+        "webgpu",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "type": "file",
+      "name": "gpuqueue.rs",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "summary": "Implements the GPUQueue DOM class for submitting command buffers, writing buffer/texture data, copying external images, and tracking work completion.",
+      "tags": [
+        "webgpu",
+        "queue",
+        "command-submission"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpuqueue.rs:GPUQueue",
+      "type": "class",
+      "name": "GPUQueue",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        42,
+        51
+      ],
+      "summary": "Core GPU queue interface providing Submit, WriteBuffer, WriteTexture, CopyExternalImageToTexture, and OnSubmittedWorkDone operations.",
+      "tags": [
+        "webgpu",
+        "queue",
+        "command-submission"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueue.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        64,
+        75
+      ],
+      "summary": "Creates a new reflected DOM GPUQueue object with channel and queue handle.",
+      "tags": [
+        "webgpu",
+        "queue"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueue.rs:set_device",
+      "type": "function",
+      "name": "set_device",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        79,
+        81
+      ],
+      "summary": "Associates the GPUQueue with a GPUDevice reference.",
+      "tags": [
+        "webgpu",
+        "queue"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueue.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        83,
+        85
+      ],
+      "summary": "Returns the internal WebGPU queue ID.",
+      "tags": [
+        "webgpu",
+        "queue"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueue.rs:Submit",
+      "type": "function",
+      "name": "Submit",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        100,
+        110
+      ],
+      "summary": "Submits a sequence of command buffers to the GPU queue for execution.",
+      "tags": [
+        "webgpu",
+        "queue",
+        "command-submission"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueue.rs:WriteBuffer",
+      "type": "function",
+      "name": "WriteBuffer",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        114,
+        176
+      ],
+      "summary": "Writes data into a GPUBuffer from a typed array or shared memory, with offset and size validation.",
+      "tags": [
+        "webgpu",
+        "queue",
+        "data-transfer"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueue.rs:WriteTexture",
+      "type": "function",
+      "name": "WriteTexture",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        179,
+        218
+      ],
+      "summary": "Writes data into a GPUTexture region from a typed array, converting the destination and data layout descriptors.",
+      "tags": [
+        "webgpu",
+        "queue",
+        "data-transfer"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueue.rs:CopyExternalImageToTexture",
+      "type": "function",
+      "name": "CopyExternalImageToTexture",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        225,
+        383
+      ],
+      "summary": "Copies an external image (ImageBitmap, ImageData, canvas/ video frame) into a GPU texture with origin-clean and security checks.",
+      "tags": [
+        "webgpu",
+        "queue",
+        "image-copy",
+        "security-check"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpuqueue.rs:OnSubmittedWorkDone",
+      "type": "function",
+      "name": "OnSubmittedWorkDone",
+      "filePath": "components/script/dom/webgpu/gpuqueue.rs",
+      "lineRange": [
+        386,
+        403
+      ],
+      "summary": "Returns a Promise that resolves when all submitted work on this queue has completed.",
+      "tags": [
+        "webgpu",
+        "queue",
+        "async",
+        "promise"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "type": "file",
+      "name": "gpurenderbundle.rs",
+      "filePath": "components/script/dom/webgpu/gpurenderbundle.rs",
+      "summary": "Implements the GPURenderBundle DOM class representing a pre-recorded bundle of render commands for efficient replay.",
+      "tags": [
+        "webgpu",
+        "render",
+        "bundle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpurenderbundle.rs:GPURenderBundle",
+      "type": "class",
+      "name": "GPURenderBundle",
+      "filePath": "components/script/dom/webgpu/gpurenderbundle.rs",
+      "lineRange": [
+        40,
+        46
+      ],
+      "summary": "Pre-recorded render command bundle that can be executed multiple times via ExecuteBundles on a render pass encoder.",
+      "tags": [
+        "webgpu",
+        "render",
+        "bundle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundle.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/script/dom/webgpu/gpurenderbundle.rs",
+      "lineRange": [
+        25,
+        36
+      ],
+      "summary": "Releases the underlying render bundle by sending a DropRenderBundle request.",
+      "tags": [
+        "webgpu",
+        "render",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundle.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpurenderbundle.rs",
+      "lineRange": [
+        49,
+        64
+      ],
+      "summary": "Initializes GPURenderBundle with device, channel, and label references.",
+      "tags": [
+        "webgpu",
+        "render",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundle.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpurenderbundle.rs",
+      "lineRange": [
+        66,
+        84
+      ],
+      "summary": "Creates a reflected DOM GPURenderBundle object.",
+      "tags": [
+        "webgpu",
+        "render",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundle.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webgpu/gpurenderbundle.rs",
+      "lineRange": [
+        88,
+        90
+      ],
+      "summary": "Returns the internal WebGPU render bundle ID.",
+      "tags": [
+        "webgpu",
+        "render",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "type": "file",
+      "name": "gpurenderbundleencoder.rs",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "summary": "Implements the GPURenderBundleEncoder DOM class for recording render commands into reusable bundles.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpurenderbundleencoder.rs:GPURenderBundleEncoder",
+      "type": "class",
+      "name": "GPURenderBundleEncoder",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        34,
+        43
+      ],
+      "summary": "Records draw, bind, and debug commands into a GPURenderBundle, supporting SetBindGroup, SetPipeline, draw calls, and Finish.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        46,
+        59
+      ],
+      "summary": "Initializes GPURenderBundleEncoder with encoder handle and device reference.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        61,
+        79
+      ],
+      "summary": "Creates a reflected DOM GPURenderBundleEncoder object.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        84,
+        131
+      ],
+      "summary": "Factory method that validates color and depth-stencil formats before creating a render bundle encoder from a descriptor.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:SetBindGroup",
+      "type": "function",
+      "name": "SetBindGroup",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        147,
+        159
+      ],
+      "summary": "Sets the bind group for a given index on the render bundle encoder.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:SetIndexBuffer",
+      "type": "function",
+      "name": "SetIndexBuffer",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        169,
+        188
+      ],
+      "summary": "Sets the index buffer with a format and optional offset/size for indexed drawing.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:SetVertexBuffer",
+      "type": "function",
+      "name": "SetVertexBuffer",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        191,
+        201
+      ],
+      "summary": "Sets the vertex buffer for a given slot with offset and size.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:Draw",
+      "type": "function",
+      "name": "Draw",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        204,
+        214
+      ],
+      "summary": "Records a non-indexed draw call with vertex/instance count and offsets.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:DrawIndexed",
+      "type": "function",
+      "name": "DrawIndexed",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        217,
+        235
+      ],
+      "summary": "Records an indexed draw call with index/instance count and offsets including base vertex.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:Finish",
+      "type": "function",
+      "name": "Finish",
+      "filePath": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "lineRange": [
+        289,
+        319
+      ],
+      "summary": "Completes the render bundle encoding and returns a GPURenderBundle, sending the encoded commands to the WebGPU backend.",
+      "tags": [
+        "webgpu",
+        "render",
+        "encoder",
+        "bundle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "type": "file",
+      "name": "gpurenderpassencoder.rs",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "summary": "Implements the GPURenderPassEncoder DOM class for recording render pass commands including draw, viewport, scissor, and debug operations.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpurenderpassencoder.rs:GPURenderPassEncoder",
+      "type": "class",
+      "name": "GPURenderPassEncoder",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "lineRange": [
+        46,
+        51
+      ],
+      "summary": "Records draw calls and state-setting commands during a render pass, communicating with the GPU via channel-based RenderCommand messages.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "lineRange": [
+        54,
+        69
+      ],
+      "summary": "Initializes GPURenderPassEncoder with channel, render pass handle, parent encoder, and label.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "lineRange": [
+        71,
+        89
+      ],
+      "summary": "Creates a reflected DOM GPURenderPassEncoder object.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:send_render_command",
+      "type": "function",
+      "name": "send_render_command",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "lineRange": [
+        91,
+        104
+      ],
+      "summary": "Sends a RenderCommand message over the channel with encoder and device IDs.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder",
+        "internal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "lineRange": [
+        108,
+        110
+      ],
+      "summary": "Returns the internal WebGPU render pass ID.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:SetViewport",
+      "type": "function",
+      "name": "SetViewport",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "lineRange": [
+        134,
+        151
+      ],
+      "summary": "Sets the viewport rectangle and depth range for the render pass.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:SetIndexBuffer",
+      "type": "function",
+      "name": "SetIndexBuffer",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "lineRange": [
+        190,
+        206
+      ],
+      "summary": "Sets the index buffer with format, offset, and optional size for indexed draw calls.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:DrawIndexed",
+      "type": "function",
+      "name": "DrawIndexed",
+      "filePath": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "lineRange": [
+        229,
+        244
+      ],
+      "summary": "Records an indexed draw call with index/instance count and vertex offset.",
+      "tags": [
+        "webgpu",
+        "render",
+        "pass-encoder"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelineerror.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelineerror.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelineerror.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelineerror.rs:new_with_proto",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelineerror.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelineerror.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelineerror.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelineerror.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelineerror.rs",
+      "target": "class:components/script/dom/webgpu/gpupipelineerror.rs:GPUPipelineError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelineerror.rs",
+      "target": "class:components/script/dom/webgpu/gpupipelineerror.rs:GPUPipelineError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:bind_group_layouts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:bind_group_layouts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "function:components/script/dom/webgpu/gpupipelinelayout.rs:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "class:components/script/dom/webgpu/gpupipelinelayout.rs:GPUPipelineLayout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpupipelinelayout.rs",
+      "target": "class:components/script/dom/webgpu/gpupipelinelayout.rs:GPUPipelineLayout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueryset.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "class:components/script/dom/webgpu/gpuqueryset.rs:GPUQuerySet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueryset.rs",
+      "target": "class:components/script/dom/webgpu/gpuqueryset.rs:GPUQuerySet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:set_device",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:set_device",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:Submit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:WriteBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:WriteTexture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:CopyExternalImageToTexture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "function:components/script/dom/webgpu/gpuqueue.rs:OnSubmittedWorkDone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "class:components/script/dom/webgpu/gpuqueue.rs:GPUQueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpuqueue.rs",
+      "target": "class:components/script/dom/webgpu/gpuqueue.rs:GPUQueue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundle.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundle.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundle.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundle.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundle.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundle.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "target": "class:components/script/dom/webgpu/gpurenderbundle.rs:GPURenderBundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundle.rs",
+      "target": "class:components/script/dom/webgpu/gpurenderbundle.rs:GPURenderBundle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:SetBindGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:SetIndexBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:SetVertexBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:Draw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:DrawIndexed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderbundleencoder.rs:Finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "class:components/script/dom/webgpu/gpurenderbundleencoder.rs:GPURenderBundleEncoder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "target": "class:components/script/dom/webgpu/gpurenderbundleencoder.rs:GPURenderBundleEncoder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:send_render_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:SetViewport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:SetIndexBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpurenderpassencoder.rs:DrawIndexed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "class:components/script/dom/webgpu/gpurenderpassencoder.rs:GPURenderPassEncoder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "target": "class:components/script/dom/webgpu/gpurenderpassencoder.rs:GPURenderPassEncoder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

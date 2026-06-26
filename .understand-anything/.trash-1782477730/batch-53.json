@@ -1,0 +1,670 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/BASIC/basic.py",
+      "type": "file",
+      "name": "basic.py",
+      "filePath": "components/script_bindings/third_party/ply/example/BASIC/basic.py",
+      "summary": "Entry point for the Dartmouth BASIC (1964) interpreter example. Parses command-line arguments to run a BASIC source file or launch an interactive REPL loop using PLY-based lexer, parser, and interpreter components.",
+      "tags": ["entry-point", "interpreter", "basic-language"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/BASIC/basiclex.py",
+      "type": "file",
+      "name": "basiclex.py",
+      "filePath": "components/script_bindings/third_party/ply/example/BASIC/basiclex.py",
+      "summary": "PLY lexer specification for Dartmouth BASIC. Defines token rules for identifiers, REM statements, NEWLINEs, and error handling using PLY naming conventions for the BASIC example interpreter.",
+      "tags": ["lexer", "tokenizer", "basic-language"],
+      "complexity": "simple",
+      "languageNotes": "Uses PLY's naming convention where t_NAME functions define token rules and t_error handles illegal characters."
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/BASIC/basiclog.py",
+      "type": "file",
+      "name": "basiclog.py",
+      "filePath": "components/script_bindings/third_party/ply/example/BASIC/basiclog.py",
+      "summary": "Logging-enabled variant of the BASIC interpreter entry point. Configures Python logging for PLY parser debug output, writing parse trace information to a file.",
+      "tags": ["entry-point", "logging", "basic-language"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/BASIC/basinterp.py",
+      "type": "file",
+      "name": "basinterp.py",
+      "filePath": "components/script_bindings/third_party/ply/example/BASIC/basinterp.py",
+      "summary": "Full BASIC interpreter runtime implementing statement execution for Dartmouth BASIC programs. The BasicInterpreter class handles variable assignment, arithmetic expressions, control flow (FOR/NEXT, IF/GOTO), subroutines (GOSUB/RETURN), array operations (DIM), and built-in math functions.",
+      "tags": ["interpreter", "runtime", "basic-language", "expression-evaluation"],
+      "complexity": "complex",
+      "languageNotes": "Implements recursive expression evaluation via self.eval() dispatching on parse tree nodes, mirroring the grammar production rules."
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "type": "file",
+      "name": "basparse.py",
+      "filePath": "components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "summary": "PLY parser grammar specification for Dartmouth BASIC. Defines production rules for all BASIC statements (LET, PRINT, IF, FOR, GOTO, GOSUB, DIM, READ, DATA, REM, DEF, END, STOP), expressions with binary/unary operators, and variable references with array subscript support.",
+      "tags": ["parser", "grammar", "basic-language", "yacc"],
+      "complexity": "complex",
+      "languageNotes": "Uses PLY yacc conventions where p_NAME functions define grammar production rules with documentation strings specifying the grammar."
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "type": "file",
+      "name": "GardenSnake.py",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "summary": "Complete Python parser and compiler for a simplified Python-like language built with PLY. Includes an indentation-aware lexer (IndentLexer), full parser grammar for function definitions, if statements, expressions, and AST construction with compilation to Python bytecode.",
+      "tags": ["parser", "compiler", "grammar", "ast", "indentation"],
+      "complexity": "complex",
+      "languageNotes": "Implements indentation-sensitive lexing via INDENT/DEDENT token generation, similar to Python's own tokenizer, and compiles the AST to Python code objects using the compiler module."
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/yply/ylex.py",
+      "type": "file",
+      "name": "ylex.py",
+      "filePath": "components/script_bindings/third_party/ply/example/yply/ylex.py",
+      "summary": "PLY lexer for parsing YACC grammar specification files. Tokenizes YACC sections (definitions, rules), handles C code blocks enclosed in braces, and manages lexer state transitions between code and grammar sections.",
+      "tags": ["lexer", "tokenizer", "yacc", "grammar-converter"],
+      "complexity": "moderate",
+      "languageNotes": "Demonstrates PLY lexer states to switch between normal tokenization and C code block tokenization within YACC specifications."
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "type": "file",
+      "name": "yparse.py",
+      "filePath": "components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "summary": "PLY parser grammar for converting YACC specification files into PLY-compatible Python code. Parses YACC definitions sections (tokens, types, precedence, union) and grammar rules, emitting equivalent PLY parser function definitions with embedded action code.",
+      "tags": ["parser", "grammar", "yacc", "code-generation"],
+      "complexity": "moderate",
+      "languageNotes": "Meta-parser that parses YACC grammar specifications and generates PLY-compatible Python parser code as output."
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/yply/yply.py",
+      "type": "file",
+      "name": "yply.py",
+      "filePath": "components/script_bindings/third_party/ply/example/yply/yply.py",
+      "summary": "Entry point script that converts a UNIX YACC specification file into a PLY-compatible Python parser specification. Accepts an optional -nocode flag to discard embedded C code from the generated output.",
+      "tags": ["entry-point", "yacc", "code-generation", "converter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/ply/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "components/script_bindings/third_party/ply/ply/__init__.py",
+      "summary": "Package initialization for the PLY (Python Lex-Yacc) library. Declares the package version (3.9) and exports the lex and yacc module names for public use.",
+      "tags": ["package-init", "library", "lex-yacc"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/example/BASIC/basinterp.py:BasicInterpreter",
+      "type": "class",
+      "name": "BasicInterpreter",
+      "filePath": "components/script_bindings/third_party/ply/example/BASIC/basinterp.py",
+      "lineRange": [9, 496],
+      "summary": "Core runtime interpreter for Dartmouth BASIC programs. Handles statement execution, variable management, control flow (FOR loops, IF/GOTO), subroutines, expressions, and built-in math functions.",
+      "tags": ["interpreter", "runtime", "basic-language", "expression-evaluation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/BASIC/basparse.py:p_program",
+      "type": "function",
+      "name": "p_program",
+      "filePath": "components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "lineRange": [20, 34],
+      "summary": "Top-level grammar rule for a BASIC program. Groups numbered statements into an ordered dictionary keyed by line number, separating the program preamble from subsequent statements.",
+      "tags": ["grammar-rule", "parser", "basic-language"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/BASIC/basparse.py:p_variable",
+      "type": "function",
+      "name": "p_variable",
+      "filePath": "components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "lineRange": [373, 382],
+      "summary": "Grammar rule for BASIC variable references, supporting both simple scalar variables and array subscripts with single or double dimensions.",
+      "tags": ["grammar-rule", "parser", "basic-language"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:track_tokens_filter",
+      "type": "function",
+      "name": "track_tokens_filter",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [184, 217],
+      "summary": "Lexer filter that tracks line and column number information for tokens. Wraps tokens with positional metadata for use in error reporting and debugging.",
+      "tags": ["lexer", "filter", "token-tracking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:indentation_filter",
+      "type": "function",
+      "name": "indentation_filter",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [241, 314],
+      "summary": "Lexer filter implementing Python-style indentation handling. Generates INDENT tokens when indentation increases and DEDENT tokens when it decreases, raising IndentationError on inconsistent indentation.",
+      "tags": ["lexer", "filter", "indentation", "python-like"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:filter",
+      "type": "function",
+      "name": "filter",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [319, 330],
+      "summary": "Composes the token tracking and indentation filters into a pipeline for use by the IndentLexer. Adds an optional ENDMARKER token at end of input.",
+      "tags": ["lexer", "filter", "pipeline"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:Assign",
+      "type": "function",
+      "name": "Assign",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [364, 379],
+      "summary": "Creates AST assignment nodes for the GardenSnake parser. Handles both simple variable assignments and tuple unpacking assignments, raising SyntaxError on invalid left-hand sides.",
+      "tags": ["ast", "assignment", "parser"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_file_input",
+      "type": "function",
+      "name": "p_file_input",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [391, 405],
+      "summary": "Top-level grammar rule for a GardenSnake source file. Builds the AST Module node from the parsed statement list, handling both single-statement and multi-statement inputs.",
+      "tags": ["grammar-rule", "parser", "ast"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_comparison",
+      "type": "function",
+      "name": "p_comparison",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [572, 588],
+      "summary": "Grammar rule for comparison expressions supporting less-than, greater-than, and equality operators. Built using factory functions that create AST Compare nodes.",
+      "tags": ["grammar-rule", "parser", "expressions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_power",
+      "type": "function",
+      "name": "p_power",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [595, 604],
+      "summary": "Grammar rule for function call expressions with positional arguments. Constructs AST CallFunc nodes from the atom and its argument list trailer.",
+      "tags": ["grammar-rule", "parser", "function-calls"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_testlist",
+      "type": "function",
+      "name": "p_testlist",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [633, 646],
+      "summary": "Grammar rule for expression lists in GardenSnake. Constructs AST Tuple nodes from comma-separated expressions, handling single-element edge cases.",
+      "tags": ["grammar-rule", "parser", "expressions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_testlist_multi",
+      "type": "function",
+      "name": "p_testlist_multi",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [649, 660],
+      "summary": "Grammar rule for compound/nested expression lists. Creates AST Tuple nodes for comma-separated expression sequences in contexts requiring non-singleton tuples.",
+      "tags": ["grammar-rule", "parser", "expressions"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:IndentLexer",
+      "type": "class",
+      "name": "IndentLexer",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [335, 351],
+      "summary": "Custom PLY lexer wrapper that applies indentation-aware token filtering. Wraps the standard PLY lexer output with track_tokens_filter and indentation_filter to generate INDENT/DEDENT tokens.",
+      "tags": ["lexer", "indentation", "wrapper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:GardenSnakeParser",
+      "type": "class",
+      "name": "GardenSnakeParser",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [693, 704],
+      "summary": "PLY-based parser for the GardenSnake language. Initializes the IndentLexer and PLY yacc parser, providing a parse method that returns an AST Module node from source input.",
+      "tags": ["parser", "pl1", "ast"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:GardenSnakeCompiler",
+      "type": "class",
+      "name": "GardenSnakeCompiler",
+      "filePath": "components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "lineRange": [712, 724],
+      "summary": "Compiles GardenSnake source code into executable Python code objects. Uses the GardenSnakeParser to produce an AST, then compiles it to bytecode via the compiler module.",
+      "tags": ["compiler", "bytecode", "code-generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_defsection",
+      "type": "function",
+      "name": "p_defsection",
+      "filePath": "components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "lineRange": [21, 30],
+      "summary": "Grammar rule for the YACC definitions section. Emits parsed token declarations, types, and precedence rules as formatted PLY-compatible Python code.",
+      "tags": ["grammar-rule", "parser", "yacc", "code-generation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_definition_token",
+      "type": "function",
+      "name": "p_definition_token",
+      "filePath": "components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "lineRange": [55, 65],
+      "summary": "Grammar rule for YACC %token declarations. Collects token names with optional type annotations and precedence values into lists for later code generation.",
+      "tags": ["grammar-rule", "parser", "yacc", "token-declaration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_rules",
+      "type": "function",
+      "name": "p_rules",
+      "filePath": "components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "lineRange": [124, 168],
+      "summary": "Core grammar rule for YACC grammar rules sections. Parses production rule definitions with embedded C action code and generates equivalent PLY-compatible parser function definitions with proper indentation.",
+      "tags": ["grammar-rule", "parser", "yacc", "code-generation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_morerules",
+      "type": "function",
+      "name": "p_morerules",
+      "filePath": "components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "lineRange": [194, 205],
+      "summary": "Grammar rule for chaining multiple alternative productions of a single YACC non-terminal symbol, separated by pipe characters.",
+      "tags": ["grammar-rule", "parser", "yacc"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basic.py",
+      "target": "file:components/script_bindings/third_party/ply/example/BASIC/basiclex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basic.py",
+      "target": "file:components/script_bindings/third_party/ply/example/BASIC/basinterp.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basic.py",
+      "target": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basiclex.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basiclog.py",
+      "target": "file:components/script_bindings/third_party/ply/example/BASIC/basiclex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basiclog.py",
+      "target": "file:components/script_bindings/third_party/ply/example/BASIC/basinterp.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basiclog.py",
+      "target": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "target": "file:components/script_bindings/third_party/ply/example/BASIC/basiclex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/ylex.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "file:components/script_bindings/third_party/ply/example/yply/ylex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yply.py",
+      "target": "file:components/script_bindings/third_party/ply/example/yply/ylex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yply.py",
+      "target": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yply.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basinterp.py",
+      "target": "class:components/script_bindings/third_party/ply/example/BASIC/basinterp.py:BasicInterpreter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basinterp.py",
+      "target": "class:components/script_bindings/third_party/ply/example/BASIC/basinterp.py:BasicInterpreter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/BASIC/basparse.py:p_program",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/BASIC/basparse.py:p_program",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/BASIC/basparse.py:p_variable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/BASIC/basparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/BASIC/basparse.py:p_variable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:track_tokens_filter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:track_tokens_filter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:indentation_filter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:indentation_filter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:filter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:filter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:Assign",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:Assign",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_file_input",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_file_input",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_comparison",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_comparison",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_power",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_power",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_testlist",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_testlist",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_testlist_multi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "function:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:p_testlist_multi",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:IndentLexer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:IndentLexer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:GardenSnakeParser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:GardenSnakeParser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:GardenSnakeCompiler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py",
+      "target": "class:components/script_bindings/third_party/ply/example/GardenSnake/GardenSnake.py:GardenSnakeCompiler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_defsection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_defsection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_definition_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_definition_token",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_rules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_rules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_morerules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/yply/yparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/yply/yparse.py:p_morerules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

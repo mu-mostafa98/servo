@@ -1,0 +1,666 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/serviceworker/client.rs",
+      "type": "file",
+      "name": "client.rs",
+      "filePath": "components/script/dom/serviceworker/client.rs",
+      "summary": "Implements the ServiceWorker Client DOM interface, managing client window references, URL and frame type attributes, and postMessage communication forwarding to the service worker manager.",
+      "tags": ["service-worker", "dom-interface", "client", "messaging"],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding using Reflector pattern with IPC channel-based message forwarding to the service worker manager process."
+    },
+    {
+      "id": "file:components/script/dom/serviceworker/extendableevent.rs",
+      "type": "file",
+      "name": "extendableevent.rs",
+      "filePath": "components/script/dom/serviceworker/extendableevent.rs",
+      "summary": "Implements the ExtendableEvent DOM interface for service worker lifecycle events, providing event construction and the WaitUntil API for extending event lifetimes.",
+      "tags": ["service-worker", "dom-interface", "event", "lifecycle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "type": "file",
+      "name": "extendablemessageevent.rs",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "summary": "Implements the ExtendableMessageEvent DOM interface for service worker message events, including structured clone serialization, message dispatching to clients, and source/port tracking.",
+      "tags": ["service-worker", "dom-interface", "messaging", "event"],
+      "complexity": "complex",
+      "languageNotes": "Uses structured clone for cross-thread message passing and CachedFrozenArray for port lifecycle management."
+    },
+    {
+      "id": "file:components/script/dom/serviceworker/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/serviceworker/mod.rs",
+      "summary": "Barrel module that re-exports all service worker DOM interface types, serving as the module entry point for the service worker package.",
+      "tags": ["service-worker", "barrel", "module", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "type": "file",
+      "name": "navigationpreloadmanager.rs",
+      "filePath": "components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "summary": "Implements the NavigationPreloadManager DOM interface for managing service worker navigation preload enable/disable state and header values.",
+      "tags": ["service-worker", "navigation-preload", "dom-interface", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/serviceworker/client.rs:Client",
+      "type": "class",
+      "name": "Client",
+      "filePath": "components/script/dom/serviceworker/client.rs",
+      "lineRange": [28, 44],
+      "summary": "DOM interface representing a service worker client (window/worker context), with URL, frame type, worker ID, and message forwarding capabilities.",
+      "tags": ["dom-interface", "service-worker", "client"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/serviceworker/extendableevent.rs:ExtendableEvent",
+      "type": "class",
+      "name": "ExtendableEvent",
+      "filePath": "components/script/dom/serviceworker/extendableevent.rs",
+      "lineRange": [25, 28],
+      "summary": "DOM interface for service worker extendable events, supporting the WaitUntil mechanism for deferring event completion.",
+      "tags": ["dom-interface", "service-worker", "event"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/serviceworker/extendablemessageevent.rs:MessageSource",
+      "type": "class",
+      "name": "MessageSource",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [34, 38],
+      "summary": "Enum-like type representing the source of a service worker message: a Client, a ServiceWorker, or a MessagePort.",
+      "tags": ["dom-interface", "message-source", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/serviceworker/extendablemessageevent.rs:ExtendableMessageEvent",
+      "type": "class",
+      "name": "ExtendableMessageEvent",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [86, 102],
+      "summary": "DOM interface for extendable message events in service workers, carrying data, origin, lastEventId, source client/worker, and message ports.",
+      "tags": ["dom-interface", "service-worker", "messaging", "event"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/serviceworker/navigationpreloadmanager.rs:NavigationPreloadManager",
+      "type": "class",
+      "name": "NavigationPreloadManager",
+      "filePath": "components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "lineRange": [25, 28],
+      "summary": "DOM interface for managing service worker navigation preload behavior, including enabling/disabling preload and setting custom header values.",
+      "tags": ["dom-interface", "navigation-preload", "service-worker"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/client.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/serviceworker/client.rs",
+      "lineRange": [47, 60],
+      "summary": "Initializes a new Client with the service worker manager sender, URL, frame type, and worker ID without DOM reflection.",
+      "tags": ["constructor", "initialization", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/client.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/serviceworker/client.rs",
+      "lineRange": [62, 80],
+      "summary": "Public constructor that creates a reflected DOM Client object with the given global context, sender, URL, frame type, and worker ID.",
+      "tags": ["constructor", "dom-reflection", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/client.rs:post_message_impl",
+      "type": "function",
+      "name": "post_message_impl",
+      "filePath": "components/script/dom/serviceworker/client.rs",
+      "lineRange": [83, 110],
+      "summary": "Internal postMessage implementation that serializes the message payload via structured clone and forwards it through the service worker manager channel.",
+      "tags": ["messaging", "serialization", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/client.rs:PostMessage_",
+      "type": "function",
+      "name": "PostMessage_",
+      "filePath": "components/script/dom/serviceworker/client.rs",
+      "lineRange": [125, 141],
+      "summary": "Web-exposed postMessage method with transferable support, extracting transfer objects from the options parameter before delegating to post_message_impl.",
+      "tags": ["messaging", "public-api", "transferables"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendableevent.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/serviceworker/extendableevent.rs",
+      "lineRange": [38, 46],
+      "summary": "Public constructor creating an ExtendableEvent with type, bubbles, and cancelable flags for a given service worker global scope.",
+      "tags": ["constructor", "public-api", "event"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendableevent.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/serviceworker/extendableevent.rs",
+      "lineRange": [48, 67],
+      "summary": "Creates an ExtendableEvent with a custom prototype, used internally during DOM construction with prototype chain setup.",
+      "tags": ["constructor", "dom-reflection", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendableevent.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/serviceworker/extendableevent.rs",
+      "lineRange": [72, 87],
+      "summary": "WebIDL Constructor implementation handling ExtendableEventInit dictionary with event initialization and type extraction.",
+      "tags": ["constructor", "public-api", "idl-binding"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:from_1",
+      "type": "function",
+      "name": "from_1",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [41, 51],
+      "summary": "Converts a ClientOrServiceWorkerOrMessagePort enum into a MessageSource variant for dispatch targeting.",
+      "tags": ["conversion", "enum-mapping", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:from_2",
+      "type": "function",
+      "name": "from_2",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [55, 67],
+      "summary": "Converts a reference to a Client DOM object into a DomRoot-wrapped MessageSource for ownership-safe message dispatch.",
+      "tags": ["conversion", "dom-binding", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:from_3",
+      "type": "function",
+      "name": "from_3",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [71, 81],
+      "summary": "Converts a MessageSource back into a ClientOrServiceWorkerOrMessagePort enum for cross-thread message routing.",
+      "tags": ["conversion", "enum-mapping", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [106, 124],
+      "summary": "Initializes the ExtendableMessageEvent fields including origin, lastEventId, source client, and frozen ports array without DOM reflection.",
+      "tags": ["constructor", "initialization", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [127, 152],
+      "summary": "Public constructor creating a fully initialized ExtendableMessageEvent with data, origin, source, and ports for dispatches.",
+      "tags": ["constructor", "messaging", "public-api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [155, 182],
+      "summary": "Creates an ExtendableMessageEvent with a custom prototype for DOM construction, initializing all message event fields.",
+      "tags": ["constructor", "dom-reflection", "internal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:dispatch_jsval",
+      "type": "function",
+      "name": "dispatch_jsval",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [187, 208],
+      "summary": "Creates and fires an ExtendableMessageEvent from a JS value payload with source and ports on the given event target.",
+      "tags": ["messaging", "dispatch", "public-api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:dispatch_error",
+      "type": "function",
+      "name": "dispatch_error",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [210, 227],
+      "summary": "Dispatches an ExtendableMessageEvent with error data, origin, lastEventId, source, and ports for error propagation in service workers.",
+      "tags": ["messaging", "dispatch", "error-handling", "public-api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [232, 256],
+      "summary": "WebIDL Constructor implementation building an ExtendableMessageEvent from the ExtendableMessageEventInit dictionary with all optional fields.",
+      "tags": ["constructor", "idl-binding", "public-api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/extendablemessageevent.rs:Ports",
+      "type": "function",
+      "name": "Ports",
+      "filePath": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "lineRange": [284, 295],
+      "summary": "Getter for the message ports array, lazily initializing and freezing the port list from the internal ports storage.",
+      "tags": ["getter", "ports", "lazy-initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "lineRange": [39, 46],
+      "summary": "Public constructor creating a reflected NavigationPreloadManager DOM object linked to a service worker registration.",
+      "tags": ["constructor", "dom-reflection", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:Enable",
+      "type": "function",
+      "name": "Enable",
+      "filePath": "components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "lineRange": [51, 68],
+      "summary": "Enables navigation preload by setting the flag on the registration, returning a promise that resolves on success or rejects if the registration is inactive.",
+      "tags": ["navigation-preload", "promise", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:Disable",
+      "type": "function",
+      "name": "Disable",
+      "filePath": "components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "lineRange": [71, 88],
+      "summary": "Disables navigation preload by clearing the flag on the registration, returning a promise that resolves on success.",
+      "tags": ["navigation-preload", "promise", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:SetHeaderValue",
+      "type": "function",
+      "name": "SetHeaderValue",
+      "filePath": "components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "lineRange": [91, 108],
+      "summary": "Sets the navigation preload HTTP header value on the registration, returning a promise that resolves on success.",
+      "tags": ["navigation-preload", "header", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:GetState",
+      "type": "function",
+      "name": "GetState",
+      "filePath": "components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "lineRange": [111, 133],
+      "summary": "Returns the current navigation preload state as a NavigationPreloadState object, including enabled flag and header value.",
+      "tags": ["navigation-preload", "state", "getter"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/client.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/extendableevent.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/serviceworker.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/serviceworkercontainer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/serviceworkerglobalscope.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/serviceworkerregistration.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/mod.rs",
+      "target": "file:components/script/dom/serviceworker/windowclient.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/client.rs",
+      "target": "class:components/script/dom/serviceworker/client.rs:Client",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/client.rs",
+      "target": "function:components/script/dom/serviceworker/client.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/client.rs",
+      "target": "function:components/script/dom/serviceworker/client.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/client.rs",
+      "target": "function:components/script/dom/serviceworker/client.rs:post_message_impl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/client.rs",
+      "target": "function:components/script/dom/serviceworker/client.rs:PostMessage_",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/client.rs",
+      "target": "class:components/script/dom/serviceworker/client.rs:Client",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/client.rs",
+      "target": "function:components/script/dom/serviceworker/client.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendableevent.rs",
+      "target": "class:components/script/dom/serviceworker/extendableevent.rs:ExtendableEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendableevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendableevent.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendableevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendableevent.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendableevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendableevent.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendableevent.rs",
+      "target": "class:components/script/dom/serviceworker/extendableevent.rs:ExtendableEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendableevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendableevent.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "class:components/script/dom/serviceworker/extendablemessageevent.rs:MessageSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "class:components/script/dom/serviceworker/extendablemessageevent.rs:ExtendableMessageEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:from_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:from_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:from_3",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:dispatch_jsval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:dispatch_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:Ports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "class:components/script/dom/serviceworker/extendablemessageevent.rs:MessageSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "class:components/script/dom/serviceworker/extendablemessageevent.rs:ExtendableMessageEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:dispatch_jsval",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/extendablemessageevent.rs",
+      "target": "function:components/script/dom/serviceworker/extendablemessageevent.rs:dispatch_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "target": "class:components/script/dom/serviceworker/navigationpreloadmanager.rs:NavigationPreloadManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "target": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "target": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:Enable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "target": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:Disable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "target": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:SetHeaderValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "target": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:GetState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "target": "class:components/script/dom/serviceworker/navigationpreloadmanager.rs:NavigationPreloadManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "target": "function:components/script/dom/serviceworker/navigationpreloadmanager.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:components/script/dom/serviceworker/extendablemessageevent.rs:ExtendableMessageEvent",
+      "target": "class:components/script/dom/serviceworker/extendableevent.rs:ExtendableEvent",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    }
+  ]
+}

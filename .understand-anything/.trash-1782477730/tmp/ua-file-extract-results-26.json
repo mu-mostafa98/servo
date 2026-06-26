@@ -1,0 +1,5348 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 21,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/script/dom/webxr/fakexrdevice.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 370,
+      "nonEmptyLines": 324,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 50,
+          "endLine": 56,
+          "params": [
+            "sender"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 58,
+          "endLine": 64,
+          "params": [
+            "cx",
+            "global",
+            "sender"
+          ]
+        },
+        {
+          "name": "disconnect",
+          "startLine": 66,
+          "endLine": 68,
+          "params": [
+            "sender"
+          ]
+        },
+        {
+          "name": "view",
+          "startLine": 71,
+          "endLine": 106,
+          "params": [
+            "view"
+          ]
+        },
+        {
+          "name": "get_views",
+          "startLine": 108,
+          "endLine": 121,
+          "params": [
+            "views"
+          ]
+        },
+        {
+          "name": "get_origin",
+          "startLine": 123,
+          "endLine": 142,
+          "params": [
+            "origin"
+          ]
+        },
+        {
+          "name": "get_point",
+          "startLine": 144,
+          "endLine": 146,
+          "params": [
+            "pt"
+          ]
+        },
+        {
+          "name": "get_world",
+          "startLine": 148,
+          "endLine": 176,
+          "params": [
+            "world"
+          ]
+        },
+        {
+          "name": "convert",
+          "startLine": 179,
+          "endLine": 185,
+          "params": []
+        },
+        {
+          "name": "SetViews",
+          "startLine": 190,
+          "endLine": 200,
+          "params": [
+            "views",
+            "_secondary_views"
+          ]
+        },
+        {
+          "name": "SetViewerOrigin",
+          "startLine": 203,
+          "endLine": 212,
+          "params": [
+            "origin",
+            "_emulated_position"
+          ]
+        },
+        {
+          "name": "ClearViewerOrigin",
+          "startLine": 215,
+          "endLine": 217,
+          "params": []
+        },
+        {
+          "name": "ClearFloorOrigin",
+          "startLine": 220,
+          "endLine": 222,
+          "params": []
+        },
+        {
+          "name": "SetFloorOrigin",
+          "startLine": 225,
+          "endLine": 230,
+          "params": [
+            "origin"
+          ]
+        },
+        {
+          "name": "ClearWorld",
+          "startLine": 233,
+          "endLine": 235,
+          "params": []
+        },
+        {
+          "name": "SetWorld",
+          "startLine": 238,
+          "endLine": 241,
+          "params": [
+            "world"
+          ]
+        },
+        {
+          "name": "SimulateVisibilityChange",
+          "startLine": 244,
+          "endLine": 251,
+          "params": [
+            "v"
+          ]
+        },
+        {
+          "name": "SimulateInputSourceConnection",
+          "startLine": 254,
+          "endLine": 302,
+          "params": [
+            "cx",
+            "init"
+          ]
+        },
+        {
+          "name": "Disconnect",
+          "startLine": 305,
+          "endLine": 324,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "SetBoundsGeometry",
+          "startLine": 327,
+          "endLine": 343,
+          "params": [
+            "bounds_coodinates"
+          ]
+        },
+        {
+          "name": "SimulateResetPose",
+          "startLine": 346,
+          "endLine": 348,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 352,
+          "endLine": 358,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 362,
+          "endLine": 369,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "FakeXRDevice",
+          "startLine": 41,
+          "endLine": 47,
+          "methods": [
+            "new_inherited",
+            "new",
+            "disconnect",
+            "SetViews",
+            "SetViewerOrigin",
+            "ClearViewerOrigin",
+            "ClearFloorOrigin",
+            "SetFloorOrigin",
+            "ClearWorld",
+            "SetWorld",
+            "SimulateVisibilityChange",
+            "SimulateInputSourceConnection",
+            "Disconnect",
+            "SetBoundsGeometry",
+            "SimulateResetPose"
+          ],
+          "properties": [
+            "reflector",
+            "sender",
+            "next_input_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "FakeXRDevice",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "disconnect",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "view",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "get_views",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "get_origin",
+          "line": 123,
+          "isDefault": false
+        },
+        {
+          "name": "get_point",
+          "line": 144,
+          "isDefault": false
+        },
+        {
+          "name": "get_world",
+          "line": 148,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 52
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 54
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "InputId",
+          "lineNumber": 54
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new",
+          "callee": "FakeXRDevice::new_inherited",
+          "lineNumber": 63
+        },
+        {
+          "caller": "disconnect",
+          "callee": "self.sender.send",
+          "lineNumber": 67
+        },
+        {
+          "caller": "disconnect",
+          "callee": "MockDeviceMsg::Disconnect",
+          "lineNumber": 67
+        },
+        {
+          "caller": "view",
+          "callee": "view.projectionMatrix.len",
+          "lineNumber": 72
+        },
+        {
+          "caller": "view",
+          "callee": "view.viewOffset.position.len",
+          "lineNumber": 72
+        },
+        {
+          "caller": "view",
+          "callee": "Err",
+          "lineNumber": 73
+        },
+        {
+          "caller": "view",
+          "callee": "Error::Type",
+          "lineNumber": 73
+        },
+        {
+          "caller": "view",
+          "callee": "c\"Incorrectly sized array\".into",
+          "lineNumber": 73
+        },
+        {
+          "caller": "view",
+          "callee": "view.projectionMatrix.iter().map(|x| **x).collect",
+          "lineNumber": 77
+        },
+        {
+          "caller": "view",
+          "callee": "view.projectionMatrix.iter().map",
+          "lineNumber": 77
+        },
+        {
+          "caller": "view",
+          "callee": "view.projectionMatrix.iter",
+          "lineNumber": 77
+        },
+        {
+          "caller": "view",
+          "callee": "proj.copy_from_slice",
+          "lineNumber": 78
+        },
+        {
+          "caller": "view",
+          "callee": "Transform3D::from_array",
+          "lineNumber": 79
+        },
+        {
+          "caller": "view",
+          "callee": "get_origin(&view.viewOffset)?.inverse",
+          "lineNumber": 82
+        },
+        {
+          "caller": "view",
+          "callee": "get_origin",
+          "lineNumber": 82
+        },
+        {
+          "caller": "view",
+          "callee": "Size2D::new",
+          "lineNumber": 84
+        },
+        {
+          "caller": "view",
+          "callee": "Point2D::new",
+          "lineNumber": 86
+        },
+        {
+          "caller": "view",
+          "callee": "Point2D::zero",
+          "lineNumber": 87
+        },
+        {
+          "caller": "view",
+          "callee": "Rect::new",
+          "lineNumber": 89
+        },
+        {
+          "caller": "view",
+          "callee": "view.fieldOfView.as_ref().map",
+          "lineNumber": 91
+        },
+        {
+          "caller": "view",
+          "callee": "view.fieldOfView.as_ref",
+          "lineNumber": 91
+        },
+        {
+          "caller": "view",
+          "callee": "fov.leftDegrees.to_radians",
+          "lineNumber": 93
+        },
+        {
+          "caller": "view",
+          "callee": "fov.rightDegrees.to_radians",
+          "lineNumber": 94
+        },
+        {
+          "caller": "view",
+          "callee": "fov.upDegrees.to_radians",
+          "lineNumber": 95
+        },
+        {
+          "caller": "view",
+          "callee": "fov.downDegrees.to_radians",
+          "lineNumber": 96
+        },
+        {
+          "caller": "view",
+          "callee": "Ok",
+          "lineNumber": 100
+        },
+        {
+          "caller": "get_views",
+          "callee": "views.len",
+          "lineNumber": 109
+        },
+        {
+          "caller": "get_views",
+          "callee": "Ok",
+          "lineNumber": 110
+        },
+        {
+          "caller": "get_views",
+          "callee": "MockViewsInit::Mono",
+          "lineNumber": 110
+        },
+        {
+          "caller": "get_views",
+          "callee": "view",
+          "lineNumber": 110
+        },
+        {
+          "caller": "get_views",
+          "callee": "Err",
+          "lineNumber": 115
+        },
+        {
+          "caller": "get_views",
+          "callee": "Error::NotSupported",
+          "lineNumber": 115
+        },
+        {
+          "caller": "get_views",
+          "callee": "Ok",
+          "lineNumber": 117
+        },
+        {
+          "caller": "get_views",
+          "callee": "MockViewsInit::Stereo",
+          "lineNumber": 117
+        },
+        {
+          "caller": "get_views",
+          "callee": "view",
+          "lineNumber": 117
+        },
+        {
+          "caller": "get_views",
+          "callee": "view",
+          "lineNumber": 117
+        },
+        {
+          "caller": "get_views",
+          "callee": "Err",
+          "lineNumber": 119
+        },
+        {
+          "caller": "get_views",
+          "callee": "Error::NotSupported",
+          "lineNumber": 119
+        },
+        {
+          "caller": "get_origin",
+          "callee": "origin.position.len",
+          "lineNumber": 126
+        },
+        {
+          "caller": "get_origin",
+          "callee": "origin.orientation.len",
+          "lineNumber": 126
+        },
+        {
+          "caller": "get_origin",
+          "callee": "Err",
+          "lineNumber": 127
+        },
+        {
+          "caller": "get_origin",
+          "callee": "Error::Type",
+          "lineNumber": 127
+        },
+        {
+          "caller": "get_origin",
+          "callee": "c\"Incorrectly sized array\".into",
+          "lineNumber": 127
+        },
+        {
+          "caller": "get_origin",
+          "callee": "Vector3D::new",
+          "lineNumber": 129
+        },
+        {
+          "caller": "get_origin",
+          "callee": "Rotation3D::unit_quaternion",
+          "lineNumber": 134
+        },
+        {
+          "caller": "get_origin",
+          "callee": "Ok",
+          "lineNumber": 141
+        },
+        {
+          "caller": "get_origin",
+          "callee": "RigidTransform3D::new",
+          "lineNumber": 141
+        },
+        {
+          "caller": "get_point",
+          "callee": "Point3D::new(pt.x / pt.w, pt.y / pt.w, pt.z / pt.w).cast",
+          "lineNumber": 145
+        },
+        {
+          "caller": "get_point",
+          "callee": "Point3D::new",
+          "lineNumber": 145
+        },
+        {
+          "caller": "get_world",
+          "callee": "world\n        .hitTestRegions\n        .iter()\n        .map(|region| {\n            let ty = region.type_.convert();\n            let faces = region\n                .faces\n                .iter()\n                .map(|face| {\n                    if face.vertices.len() != 3 {\n                        return Err(Error::Type(\n                            c\"Incorrectly sized array for triangle list\".into(),\n                        ));\n                    }\n\n                    Ok(Triangle {\n                        first: get_point(&face.vertices[0]),\n                        second: get_point(&face.vertices[1]),\n                        third: get_point(&face.vertices[2]),\n                    })\n                })\n                .collect::<Fallible<Vec<_>>>()?;\n            Ok(MockRegion { faces, ty })\n        })\n        .collect::<Fallible<Vec<_>>>",
+          "lineNumber": 149
+        },
+        {
+          "caller": "get_world",
+          "callee": "world\n        .hitTestRegions\n        .iter().map",
+          "lineNumber": 149
+        },
+        {
+          "caller": "get_world",
+          "callee": "world\n        .hitTestRegions.iter",
+          "lineNumber": 149
+        },
+        {
+          "caller": "get_world",
+          "callee": "region.type_.convert",
+          "lineNumber": 153
+        },
+        {
+          "caller": "get_world",
+          "callee": "region\n                .faces\n                .iter()\n                .map(|face| {\n                    if face.vertices.len() != 3 {\n                        return Err(Error::Type(\n                            c\"Incorrectly sized array for triangle list\".into(),\n                        ));\n                    }\n\n                    Ok(Triangle {\n                        first: get_point(&face.vertices[0]),\n                        second: get_point(&face.vertices[1]),\n                        third: get_point(&face.vertices[2]),\n                    })\n                })\n                .collect::<Fallible<Vec<_>>>",
+          "lineNumber": 154
+        },
+        {
+          "caller": "get_world",
+          "callee": "region\n                .faces\n                .iter().map",
+          "lineNumber": 154
+        },
+        {
+          "caller": "get_world",
+          "callee": "region\n                .faces.iter",
+          "lineNumber": 154
+        },
+        {
+          "caller": "get_world",
+          "callee": "face.vertices.len",
+          "lineNumber": 158
+        },
+        {
+          "caller": "get_world",
+          "callee": "Err",
+          "lineNumber": 159
+        },
+        {
+          "caller": "get_world",
+          "callee": "Error::Type",
+          "lineNumber": 159
+        },
+        {
+          "caller": "get_world",
+          "callee": "c\"Incorrectly sized array for triangle list\".into",
+          "lineNumber": 160
+        },
+        {
+          "caller": "get_world",
+          "callee": "Ok",
+          "lineNumber": 164
+        },
+        {
+          "caller": "get_world",
+          "callee": "get_point",
+          "lineNumber": 165
+        },
+        {
+          "caller": "get_world",
+          "callee": "get_point",
+          "lineNumber": 166
+        },
+        {
+          "caller": "get_world",
+          "callee": "get_point",
+          "lineNumber": 167
+        },
+        {
+          "caller": "get_world",
+          "callee": "Ok",
+          "lineNumber": 171
+        },
+        {
+          "caller": "get_world",
+          "callee": "Ok",
+          "lineNumber": 175
+        },
+        {
+          "caller": "SetViews",
+          "callee": "self\n            .sender.send",
+          "lineNumber": 195
+        },
+        {
+          "caller": "SetViews",
+          "callee": "MockDeviceMsg::SetViews",
+          "lineNumber": 197
+        },
+        {
+          "caller": "SetViews",
+          "callee": "get_views",
+          "lineNumber": 197
+        },
+        {
+          "caller": "SetViews",
+          "callee": "Ok",
+          "lineNumber": 199
+        },
+        {
+          "caller": "SetViewerOrigin",
+          "callee": "self\n            .sender.send",
+          "lineNumber": 208
+        },
+        {
+          "caller": "SetViewerOrigin",
+          "callee": "MockDeviceMsg::SetViewerOrigin",
+          "lineNumber": 210
+        },
+        {
+          "caller": "SetViewerOrigin",
+          "callee": "Some",
+          "lineNumber": 210
+        },
+        {
+          "caller": "SetViewerOrigin",
+          "callee": "get_origin",
+          "lineNumber": 210
+        },
+        {
+          "caller": "SetViewerOrigin",
+          "callee": "Ok",
+          "lineNumber": 211
+        },
+        {
+          "caller": "ClearViewerOrigin",
+          "callee": "self.sender.send",
+          "lineNumber": 216
+        },
+        {
+          "caller": "ClearViewerOrigin",
+          "callee": "MockDeviceMsg::SetViewerOrigin",
+          "lineNumber": 216
+        },
+        {
+          "caller": "ClearFloorOrigin",
+          "callee": "self.sender.send",
+          "lineNumber": 221
+        },
+        {
+          "caller": "ClearFloorOrigin",
+          "callee": "MockDeviceMsg::SetFloorOrigin",
+          "lineNumber": 221
+        },
+        {
+          "caller": "SetFloorOrigin",
+          "callee": "self\n            .sender.send",
+          "lineNumber": 226
+        },
+        {
+          "caller": "SetFloorOrigin",
+          "callee": "MockDeviceMsg::SetFloorOrigin",
+          "lineNumber": 228
+        },
+        {
+          "caller": "SetFloorOrigin",
+          "callee": "Some",
+          "lineNumber": 228
+        },
+        {
+          "caller": "SetFloorOrigin",
+          "callee": "get_origin",
+          "lineNumber": 228
+        },
+        {
+          "caller": "SetFloorOrigin",
+          "callee": "Ok",
+          "lineNumber": 229
+        },
+        {
+          "caller": "ClearWorld",
+          "callee": "self.sender.send",
+          "lineNumber": 234
+        },
+        {
+          "caller": "SetWorld",
+          "callee": "self.sender.send",
+          "lineNumber": 239
+        },
+        {
+          "caller": "SetWorld",
+          "callee": "MockDeviceMsg::SetWorld",
+          "lineNumber": 239
+        },
+        {
+          "caller": "SetWorld",
+          "callee": "get_world",
+          "lineNumber": 239
+        },
+        {
+          "caller": "SetWorld",
+          "callee": "Ok",
+          "lineNumber": 240
+        },
+        {
+          "caller": "SimulateVisibilityChange",
+          "callee": "self.sender.send",
+          "lineNumber": 250
+        },
+        {
+          "caller": "SimulateVisibilityChange",
+          "callee": "MockDeviceMsg::VisibilityChange",
+          "lineNumber": 250
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "self.next_input_id.get",
+          "lineNumber": 259
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "self.next_input_id.set",
+          "lineNumber": 260
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "InputId",
+          "lineNumber": 260
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "init.handedness.convert",
+          "lineNumber": 262
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "init.targetRayMode.convert",
+          "lineNumber": 263
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "Some",
+          "lineNumber": 265
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "get_origin",
+          "lineNumber": 265
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "Some",
+          "lineNumber": 268
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "get_origin",
+          "lineNumber": 268
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "init.profiles.iter().cloned().map(String::from).collect",
+          "lineNumber": 273
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "init.profiles.iter().cloned().map",
+          "lineNumber": 273
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "init.profiles.iter().cloned",
+          "lineNumber": 273
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "init.profiles.iter",
+          "lineNumber": 273
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "supported_buttons.extend",
+          "lineNumber": 277
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "init_to_mock_buttons",
+          "lineNumber": 277
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "self.global",
+          "lineNumber": 296
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "self.sender.send",
+          "lineNumber": 297
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "MockDeviceMsg::AddInputSource",
+          "lineNumber": 297
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "FakeXRInputController::new",
+          "lineNumber": 299
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "self.sender.clone",
+          "lineNumber": 299
+        },
+        {
+          "caller": "SimulateInputSourceConnection",
+          "callee": "Ok",
+          "lineNumber": 301
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "self.global",
+          "lineNumber": 306
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 307
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "Some",
+          "lineNumber": 308
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "TrustedPromise::new",
+          "lineNumber": 308
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "p.clone",
+          "lineNumber": 308
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "global\n            .task_manager()\n            .dom_manipulation_task_source().to_sendable",
+          "lineNumber": 309
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "global\n            .task_manager().dom_manipulation_task_source",
+          "lineNumber": 309
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "global.task_manager",
+          "lineNumber": 309
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "ProfileGenericCallback::new(global.time_profiler_chan().clone(), move |_| {\n                let trusted = trusted\n                    .take()\n                    .expect(\"disconnect callback called multiple times\");\n                task_source.queue(trusted.resolve_task(()));\n            }).expect",
+          "lineNumber": 315
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "ProfileGenericCallback::new",
+          "lineNumber": 315
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "global.time_profiler_chan().clone",
+          "lineNumber": 315
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "global.time_profiler_chan",
+          "lineNumber": 315
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "trusted\n                    .take().expect",
+          "lineNumber": 316
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "trusted.take",
+          "lineNumber": 316
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "task_source.queue",
+          "lineNumber": 319
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "trusted.resolve_task",
+          "lineNumber": 319
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "self.disconnect",
+          "lineNumber": 322
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "bounds_coodinates.len",
+          "lineNumber": 328
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "Err",
+          "lineNumber": 329
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "Error::Type",
+          "lineNumber": 329
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "c\"Bounds geometry must contain at least 3 points\".into",
+          "lineNumber": 330
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "bounds_coodinates\n            .iter()\n            .map(|coord| {\n                let x = *coord.x.unwrap() as f32;\n                let y = *coord.z.unwrap() as f32;\n                Point2D::new(x, y)\n            }).collect",
+          "lineNumber": 333
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "bounds_coodinates\n            .iter().map",
+          "lineNumber": 333
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "bounds_coodinates.iter",
+          "lineNumber": 333
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "coord.x.unwrap",
+          "lineNumber": 336
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "coord.z.unwrap",
+          "lineNumber": 337
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "Point2D::new",
+          "lineNumber": 338
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "self.sender.send",
+          "lineNumber": 341
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "MockDeviceMsg::SetBoundsGeometry",
+          "lineNumber": 341
+        },
+        {
+          "caller": "SetBoundsGeometry",
+          "callee": "Ok",
+          "lineNumber": 342
+        },
+        {
+          "caller": "SimulateResetPose",
+          "callee": "self.sender.send",
+          "lineNumber": 347
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 9,
+        "functionCount": 23,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/fakexrinputcontroller.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 199,
+      "nonEmptyLines": 176,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 38,
+          "endLine": 47,
+          "params": [
+            "sender",
+            "id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 49,
+          "endLine": 60,
+          "params": [
+            "cx",
+            "global",
+            "sender",
+            "id"
+          ]
+        },
+        {
+          "name": "send_message",
+          "startLine": 62,
+          "endLine": 66,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "SetPointerOrigin",
+          "startLine": 71,
+          "endLine": 74,
+          "params": [
+            "origin",
+            "_emulated"
+          ]
+        },
+        {
+          "name": "SetGripOrigin",
+          "startLine": 77,
+          "endLine": 80,
+          "params": [
+            "origin",
+            "_emulated"
+          ]
+        },
+        {
+          "name": "ClearGripOrigin",
+          "startLine": 83,
+          "endLine": 85,
+          "params": []
+        },
+        {
+          "name": "Disconnect",
+          "startLine": 88,
+          "endLine": 90,
+          "params": []
+        },
+        {
+          "name": "Reconnect",
+          "startLine": 93,
+          "endLine": 95,
+          "params": []
+        },
+        {
+          "name": "StartSelection",
+          "startLine": 98,
+          "endLine": 103,
+          "params": []
+        },
+        {
+          "name": "EndSelection",
+          "startLine": 106,
+          "endLine": 111,
+          "params": []
+        },
+        {
+          "name": "SimulateSelect",
+          "startLine": 114,
+          "endLine": 119,
+          "params": []
+        },
+        {
+          "name": "SetHandedness",
+          "startLine": 122,
+          "endLine": 129,
+          "params": [
+            "handedness"
+          ]
+        },
+        {
+          "name": "SetTargetRayMode",
+          "startLine": 132,
+          "endLine": 140,
+          "params": [
+            "target_ray_mode"
+          ]
+        },
+        {
+          "name": "SetProfiles",
+          "startLine": 143,
+          "endLine": 146,
+          "params": [
+            "profiles"
+          ]
+        },
+        {
+          "name": "SetSupportedButtons",
+          "startLine": 149,
+          "endLine": 152,
+          "params": [
+            "supported_buttons"
+          ]
+        },
+        {
+          "name": "UpdateButtonState",
+          "startLine": 155,
+          "endLine": 170,
+          "params": [
+            "button_state"
+          ]
+        },
+        {
+          "name": "convert",
+          "startLine": 174,
+          "endLine": 182,
+          "params": []
+        },
+        {
+          "name": "init_to_mock_buttons",
+          "startLine": 186,
+          "endLine": 199,
+          "params": [
+            "buttons"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "FakeXRInputController",
+          "startLine": 29,
+          "endLine": 35,
+          "methods": [
+            "new_inherited",
+            "new",
+            "send_message",
+            "SetPointerOrigin",
+            "SetGripOrigin",
+            "ClearGripOrigin",
+            "Disconnect",
+            "Reconnect",
+            "StartSelection",
+            "EndSelection",
+            "SimulateSelect",
+            "SetHandedness",
+            "SetTargetRayMode",
+            "SetProfiles",
+            "SetSupportedButtons",
+            "UpdateButtonState"
+          ],
+          "properties": [
+            "reflector",
+            "sender",
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "FakeXRInputController",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "init_to_mock_buttons",
+          "line": 186,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 43
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 55
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new",
+          "callee": "FakeXRInputController::new_inherited",
+          "lineNumber": 56
+        },
+        {
+          "caller": "send_message",
+          "callee": "self\n            .sender.send",
+          "lineNumber": 63
+        },
+        {
+          "caller": "send_message",
+          "callee": "MockDeviceMsg::MessageInputSource",
+          "lineNumber": 65
+        },
+        {
+          "caller": "SetPointerOrigin",
+          "callee": "self.send_message",
+          "lineNumber": 72
+        },
+        {
+          "caller": "SetPointerOrigin",
+          "callee": "MockInputMsg::SetPointerOrigin",
+          "lineNumber": 72
+        },
+        {
+          "caller": "SetPointerOrigin",
+          "callee": "Some",
+          "lineNumber": 72
+        },
+        {
+          "caller": "SetPointerOrigin",
+          "callee": "get_origin",
+          "lineNumber": 72
+        },
+        {
+          "caller": "SetPointerOrigin",
+          "callee": "Ok",
+          "lineNumber": 73
+        },
+        {
+          "caller": "SetGripOrigin",
+          "callee": "self.send_message",
+          "lineNumber": 78
+        },
+        {
+          "caller": "SetGripOrigin",
+          "callee": "MockInputMsg::SetGripOrigin",
+          "lineNumber": 78
+        },
+        {
+          "caller": "SetGripOrigin",
+          "callee": "Some",
+          "lineNumber": 78
+        },
+        {
+          "caller": "SetGripOrigin",
+          "callee": "get_origin",
+          "lineNumber": 78
+        },
+        {
+          "caller": "SetGripOrigin",
+          "callee": "Ok",
+          "lineNumber": 79
+        },
+        {
+          "caller": "ClearGripOrigin",
+          "callee": "self.send_message",
+          "lineNumber": 84
+        },
+        {
+          "caller": "ClearGripOrigin",
+          "callee": "MockInputMsg::SetGripOrigin",
+          "lineNumber": 84
+        },
+        {
+          "caller": "Disconnect",
+          "callee": "self.send_message",
+          "lineNumber": 89
+        },
+        {
+          "caller": "Reconnect",
+          "callee": "self.send_message",
+          "lineNumber": 94
+        },
+        {
+          "caller": "StartSelection",
+          "callee": "self.send_message",
+          "lineNumber": 99
+        },
+        {
+          "caller": "StartSelection",
+          "callee": "MockInputMsg::TriggerSelect",
+          "lineNumber": 99
+        },
+        {
+          "caller": "EndSelection",
+          "callee": "self.send_message",
+          "lineNumber": 107
+        },
+        {
+          "caller": "EndSelection",
+          "callee": "MockInputMsg::TriggerSelect",
+          "lineNumber": 107
+        },
+        {
+          "caller": "SimulateSelect",
+          "callee": "self.send_message",
+          "lineNumber": 115
+        },
+        {
+          "caller": "SimulateSelect",
+          "callee": "MockInputMsg::TriggerSelect",
+          "lineNumber": 115
+        },
+        {
+          "caller": "SetHandedness",
+          "callee": "self.send_message",
+          "lineNumber": 128
+        },
+        {
+          "caller": "SetHandedness",
+          "callee": "MockInputMsg::SetHandedness",
+          "lineNumber": 128
+        },
+        {
+          "caller": "SetTargetRayMode",
+          "callee": "self.send_message",
+          "lineNumber": 139
+        },
+        {
+          "caller": "SetTargetRayMode",
+          "callee": "MockInputMsg::SetTargetRayMode",
+          "lineNumber": 139
+        },
+        {
+          "caller": "SetProfiles",
+          "callee": "profiles.into_iter().map(String::from).collect",
+          "lineNumber": 144
+        },
+        {
+          "caller": "SetProfiles",
+          "callee": "profiles.into_iter().map",
+          "lineNumber": 144
+        },
+        {
+          "caller": "SetProfiles",
+          "callee": "profiles.into_iter",
+          "lineNumber": 144
+        },
+        {
+          "caller": "SetProfiles",
+          "callee": "self.send_message",
+          "lineNumber": 145
+        },
+        {
+          "caller": "SetProfiles",
+          "callee": "MockInputMsg::SetProfiles",
+          "lineNumber": 145
+        },
+        {
+          "caller": "SetSupportedButtons",
+          "callee": "init_to_mock_buttons",
+          "lineNumber": 150
+        },
+        {
+          "caller": "SetSupportedButtons",
+          "callee": "self.send_message",
+          "lineNumber": 151
+        },
+        {
+          "caller": "SetSupportedButtons",
+          "callee": "MockInputMsg::SetSupportedButtons",
+          "lineNumber": 151
+        },
+        {
+          "caller": "UpdateButtonState",
+          "callee": "Err",
+          "lineNumber": 158
+        },
+        {
+          "caller": "UpdateButtonState",
+          "callee": "Error::Type",
+          "lineNumber": 158
+        },
+        {
+          "caller": "UpdateButtonState",
+          "callee": "c\"Pressed button must also be touched\".into",
+          "lineNumber": 158
+        },
+        {
+          "caller": "UpdateButtonState",
+          "callee": "Err",
+          "lineNumber": 161
+        },
+        {
+          "caller": "UpdateButtonState",
+          "callee": "Error::Type",
+          "lineNumber": 161
+        },
+        {
+          "caller": "UpdateButtonState",
+          "callee": "c\"Pressed value must be non-negative\".into",
+          "lineNumber": 161
+        },
+        {
+          "caller": "UpdateButtonState",
+          "callee": "Ok",
+          "lineNumber": 169
+        },
+        {
+          "caller": "init_to_mock_buttons",
+          "callee": "buttons\n        .iter()\n        .map(|b| MockButton {\n            button_type: b.buttonType.convert(),\n            pressed: b.pressed,\n            touched: b.touched,\n            pressed_value: *b.pressedValue,\n            x_value: *b.xValue,\n            y_value: *b.yValue,\n        }).collect",
+          "lineNumber": 187
+        },
+        {
+          "caller": "init_to_mock_buttons",
+          "callee": "buttons\n        .iter().map",
+          "lineNumber": 187
+        },
+        {
+          "caller": "init_to_mock_buttons",
+          "callee": "buttons.iter",
+          "lineNumber": 187
+        },
+        {
+          "caller": "init_to_mock_buttons",
+          "callee": "b.buttonType.convert",
+          "lineNumber": 190
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 4,
+        "functionCount": 18,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 45,
+      "nonEmptyLines": 44,
+      "metrics": {
+        "importCount": 20,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrboundedreferencespace.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 94,
+      "nonEmptyLines": 85,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 29,
+          "endLine": 41,
+          "params": [
+            "session",
+            "offset"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 43,
+          "endLine": 51,
+          "params": [
+            "cx",
+            "window",
+            "session"
+          ]
+        },
+        {
+          "name": "new_offset",
+          "startLine": 53,
+          "endLine": 64,
+          "params": [
+            "cx",
+            "global",
+            "session",
+            "offset"
+          ]
+        },
+        {
+          "name": "reference_space",
+          "startLine": 66,
+          "endLine": 68,
+          "params": []
+        },
+        {
+          "name": "BoundsGeometry",
+          "startLine": 73,
+          "endLine": 93,
+          "params": [
+            "cx",
+            "retval"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRBoundedReferenceSpace",
+          "startLine": 23,
+          "endLine": 26,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_offset",
+            "reference_space",
+            "BoundsGeometry"
+          ],
+          "properties": [
+            "reference_space",
+            "offset"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRBoundedReferenceSpace",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "new_offset",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "reference_space",
+          "line": 66,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "XRReferenceSpace::new_inherited",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 39
+        },
+        {
+          "caller": "new",
+          "callee": "XRRigidTransform::identity",
+          "lineNumber": 48
+        },
+        {
+          "caller": "new",
+          "callee": "window.global",
+          "lineNumber": 49
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_offset",
+          "lineNumber": 50
+        },
+        {
+          "caller": "new_offset",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new_offset",
+          "callee": "Box::new",
+          "lineNumber": 60
+        },
+        {
+          "caller": "new_offset",
+          "callee": "XRBoundedReferenceSpace::new_inherited",
+          "lineNumber": 60
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "self.reference_space.get_bounds",
+          "lineNumber": 74
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "bounds\n                .into_iter()\n                .map(|point| {\n                    DOMPointReadOnly::new(\n                        cx,\n                        &self.global(),\n                        point.x.into(),\n                        0.0,\n                        point.y.into(),\n                        1.0,\n                    )\n                }).collect",
+          "lineNumber": 75
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "bounds\n                .into_iter().map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "bounds.into_iter",
+          "lineNumber": 75
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "DOMPointReadOnly::new",
+          "lineNumber": 78
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "self.global",
+          "lineNumber": 80
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "point.x.into",
+          "lineNumber": 81
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "point.y.into",
+          "lineNumber": 83
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "to_frozen_array",
+          "lineNumber": 89
+        },
+        {
+          "caller": "BoundsGeometry",
+          "callee": "to_frozen_array::<DomRoot<DOMPointReadOnly>>",
+          "lineNumber": 91
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 5,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrcompositionlayer.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "classes": [
+        {
+          "name": "XRCompositionLayer",
+          "startLine": 10,
+          "endLine": 12,
+          "methods": [],
+          "properties": [
+            "xr_layer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRCompositionLayer",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrcubelayer.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "classes": [
+        {
+          "name": "XRCubeLayer",
+          "startLine": 10,
+          "endLine": 12,
+          "methods": [],
+          "properties": [
+            "composition_layer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRCubeLayer",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrcylinderlayer.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "classes": [
+        {
+          "name": "XRCylinderLayer",
+          "startLine": 10,
+          "endLine": 12,
+          "methods": [],
+          "properties": [
+            "composition_layer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRCylinderLayer",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrequirectlayer.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 12,
+      "nonEmptyLines": 9,
+      "classes": [
+        {
+          "name": "XREquirectLayer",
+          "startLine": 10,
+          "endLine": 12,
+          "methods": [],
+          "properties": [
+            "composition_layer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XREquirectLayer",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrframe.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 301,
+      "nonEmptyLines": 268,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 42,
+          "endLine": 50,
+          "params": [
+            "session",
+            "data"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 52,
+          "endLine": 59,
+          "params": [
+            "cx",
+            "window",
+            "session",
+            "data"
+          ]
+        },
+        {
+          "name": "set_active",
+          "startLine": 62,
+          "endLine": 64,
+          "params": [
+            "active"
+          ]
+        },
+        {
+          "name": "set_animation_frame",
+          "startLine": 67,
+          "endLine": 69,
+          "params": [
+            "animation_frame"
+          ]
+        },
+        {
+          "name": "get_pose",
+          "startLine": 71,
+          "endLine": 73,
+          "params": [
+            "space"
+          ]
+        },
+        {
+          "name": "get_sub_images",
+          "startLine": 75,
+          "endLine": 80,
+          "params": [
+            "layer_id"
+          ]
+        },
+        {
+          "name": "Session",
+          "startLine": 85,
+          "endLine": 87,
+          "params": []
+        },
+        {
+          "name": "PredictedDisplayTime",
+          "startLine": 90,
+          "endLine": 95,
+          "params": []
+        },
+        {
+          "name": "GetViewerPose",
+          "startLine": 98,
+          "endLine": 128,
+          "params": [
+            "cx",
+            "reference"
+          ]
+        },
+        {
+          "name": "GetPose",
+          "startLine": 131,
+          "endLine": 155,
+          "params": [
+            "cx",
+            "space",
+            "base_space"
+          ]
+        },
+        {
+          "name": "GetJointPose",
+          "startLine": 158,
+          "endLine": 189,
+          "params": [
+            "cx",
+            "space",
+            "base_space"
+          ]
+        },
+        {
+          "name": "GetHitTestResults",
+          "startLine": 192,
+          "endLine": 203,
+          "params": [
+            "cx",
+            "source"
+          ]
+        },
+        {
+          "name": "FillJointRadii",
+          "startLine": 206,
+          "endLine": 247,
+          "params": [
+            "joint_spaces",
+            "radii"
+          ]
+        },
+        {
+          "name": "FillPoses",
+          "startLine": 250,
+          "endLine": 300,
+          "params": [
+            "spaces",
+            "base_space",
+            "transforms"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRFrame",
+          "startLine": 32,
+          "endLine": 39,
+          "methods": [
+            "new_inherited",
+            "new",
+            "set_active",
+            "set_animation_frame",
+            "get_pose",
+            "get_sub_images",
+            "Session",
+            "PredictedDisplayTime",
+            "GetViewerPose",
+            "GetPose",
+            "GetJointPose",
+            "GetHitTestResults",
+            "FillJointRadii",
+            "FillPoses"
+          ],
+          "properties": [
+            "reflector_",
+            "session",
+            "data",
+            "active",
+            "animation_frame"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRFrame",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "set_active",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "set_animation_frame",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "get_pose",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "get_sub_images",
+          "line": 75,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 45
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 47
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 48
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 58
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 58
+        },
+        {
+          "caller": "new",
+          "callee": "XRFrame::new_inherited",
+          "lineNumber": 58
+        },
+        {
+          "caller": "set_active",
+          "callee": "self.active.set",
+          "lineNumber": 63
+        },
+        {
+          "caller": "set_animation_frame",
+          "callee": "self.animation_frame.set",
+          "lineNumber": 68
+        },
+        {
+          "caller": "get_pose",
+          "callee": "space.get_pose",
+          "lineNumber": 72
+        },
+        {
+          "caller": "get_sub_images",
+          "callee": "self.data\n            .sub_images\n            .iter().find",
+          "lineNumber": 76
+        },
+        {
+          "caller": "get_sub_images",
+          "callee": "self.data\n            .sub_images.iter",
+          "lineNumber": 76
+        },
+        {
+          "caller": "Session",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 86
+        },
+        {
+          "caller": "PredictedDisplayTime",
+          "callee": "Finite::new(self.data.predicted_display_time).expect",
+          "lineNumber": 93
+        },
+        {
+          "caller": "PredictedDisplayTime",
+          "callee": "Finite::new",
+          "lineNumber": 93
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "reference.upcast::<XRSpace>().session",
+          "lineNumber": 103
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "reference.upcast::<XRSpace>",
+          "lineNumber": 103
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "Err",
+          "lineNumber": 104
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "Error::InvalidState",
+          "lineNumber": 104
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "self.active.get",
+          "lineNumber": 107
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "self.animation_frame.get",
+          "lineNumber": 107
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "Err",
+          "lineNumber": 108
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "Error::InvalidState",
+          "lineNumber": 108
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "reference.get_base_transform",
+          "lineNumber": 111
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "Ok",
+          "lineNumber": 114
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "self.data.pose.as_ref",
+          "lineNumber": 116
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "Ok",
+          "lineNumber": 119
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "Ok",
+          "lineNumber": 121
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "Some",
+          "lineNumber": 121
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "XRViewerPose::new",
+          "lineNumber": 121
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "self.global().as_window",
+          "lineNumber": 123
+        },
+        {
+          "caller": "GetViewerPose",
+          "callee": "self.global",
+          "lineNumber": 123
+        },
+        {
+          "caller": "GetPose",
+          "callee": "space.session",
+          "lineNumber": 137
+        },
+        {
+          "caller": "GetPose",
+          "callee": "base_space.session",
+          "lineNumber": 137
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Err",
+          "lineNumber": 138
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Error::InvalidState",
+          "lineNumber": 138
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.active.get",
+          "lineNumber": 140
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Err",
+          "lineNumber": 141
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Error::InvalidState",
+          "lineNumber": 141
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.get_pose",
+          "lineNumber": 143
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Ok",
+          "lineNumber": 146
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.get_pose",
+          "lineNumber": 148
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Ok",
+          "lineNumber": 151
+        },
+        {
+          "caller": "GetPose",
+          "callee": "space.then",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GetPose",
+          "callee": "base_space.inverse",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Ok",
+          "lineNumber": 154
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Some",
+          "lineNumber": 154
+        },
+        {
+          "caller": "GetPose",
+          "callee": "XRPose::new",
+          "lineNumber": 154
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.global().as_window",
+          "lineNumber": 154
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.global",
+          "lineNumber": 154
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "space.upcast::<XRSpace>().session",
+          "lineNumber": 164
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "space.upcast::<XRSpace>",
+          "lineNumber": 164
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "base_space.session",
+          "lineNumber": 165
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Err",
+          "lineNumber": 167
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Error::InvalidState",
+          "lineNumber": 167
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "self.active.get",
+          "lineNumber": 169
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Err",
+          "lineNumber": 170
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Error::InvalidState",
+          "lineNumber": 170
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "space.frame",
+          "lineNumber": 172
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Ok",
+          "lineNumber": 175
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "self.get_pose",
+          "lineNumber": 177
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Ok",
+          "lineNumber": 180
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "joint_frame.pose.then",
+          "lineNumber": 182
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "base_space.inverse",
+          "lineNumber": 182
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Ok",
+          "lineNumber": 183
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Some",
+          "lineNumber": 183
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "XRJointPose::new",
+          "lineNumber": 183
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "self.global().as_window",
+          "lineNumber": 185
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "self.global",
+          "lineNumber": 185
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "pose.cast_unit",
+          "lineNumber": 186
+        },
+        {
+          "caller": "GetJointPose",
+          "callee": "Some",
+          "lineNumber": 187
+        },
+        {
+          "caller": "GetHitTestResults",
+          "callee": "self.data\n            .hit_test_results\n            .iter()\n            .filter(|r| r.id == source.id())\n            .map(|r| XRHitTestResult::new(cx, self.global().as_window(), *r, self)).collect",
+          "lineNumber": 197
+        },
+        {
+          "caller": "GetHitTestResults",
+          "callee": "self.data\n            .hit_test_results\n            .iter()\n            .filter(|r| r.id == source.id()).map",
+          "lineNumber": 197
+        },
+        {
+          "caller": "GetHitTestResults",
+          "callee": "self.data\n            .hit_test_results\n            .iter().filter",
+          "lineNumber": 197
+        },
+        {
+          "caller": "GetHitTestResults",
+          "callee": "self.data\n            .hit_test_results.iter",
+          "lineNumber": 197
+        },
+        {
+          "caller": "GetHitTestResults",
+          "callee": "source.id",
+          "lineNumber": 200
+        },
+        {
+          "caller": "GetHitTestResults",
+          "callee": "XRHitTestResult::new",
+          "lineNumber": 201
+        },
+        {
+          "caller": "GetHitTestResults",
+          "callee": "self.global().as_window",
+          "lineNumber": 201
+        },
+        {
+          "caller": "GetHitTestResults",
+          "callee": "self.global",
+          "lineNumber": 201
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "self.active.get",
+          "lineNumber": 211
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "Err",
+          "lineNumber": 212
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "Error::InvalidState",
+          "lineNumber": 212
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "joint_space.upcast::<XRSpace>().session",
+          "lineNumber": 216
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "joint_space.upcast::<XRSpace>",
+          "lineNumber": 216
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "Err",
+          "lineNumber": 217
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "Error::InvalidState",
+          "lineNumber": 217
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "joint_spaces.len",
+          "lineNumber": 221
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "radii.len",
+          "lineNumber": 221
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "Err",
+          "lineNumber": 222
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "Error::Type",
+          "lineNumber": 222
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "c\"Length of radii does not match length of joint spaces\".to_owned",
+          "lineNumber": 223
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "radii.to_vec",
+          "lineNumber": 227
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "radii_vec.iter_mut().enumerate().for_each",
+          "lineNumber": 229
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "radii_vec.iter_mut().enumerate",
+          "lineNumber": 229
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "radii_vec.iter_mut",
+          "lineNumber": 229
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "joint_spaces\n                .get(i).and_then",
+          "lineNumber": 230
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "joint_spaces.get",
+          "lineNumber": 230
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "joint_space.frame",
+          "lineNumber": 232
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "radii_vec.fill",
+          "lineNumber": 241
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "radii.update",
+          "lineNumber": 244
+        },
+        {
+          "caller": "FillJointRadii",
+          "callee": "Ok",
+          "lineNumber": 246
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "self.active.get",
+          "lineNumber": 256
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Err",
+          "lineNumber": 257
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Error::InvalidState",
+          "lineNumber": 257
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "space.session",
+          "lineNumber": 261
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Err",
+          "lineNumber": 262
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Error::InvalidState",
+          "lineNumber": 262
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "base_space.session",
+          "lineNumber": 266
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Err",
+          "lineNumber": 267
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Error::InvalidState",
+          "lineNumber": 267
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "spaces.len",
+          "lineNumber": 270
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "transforms.len",
+          "lineNumber": 270
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Err",
+          "lineNumber": 271
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Error::Type",
+          "lineNumber": 271
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "c\"Transforms array length does not match 16 * spaces length\".to_owned",
+          "lineNumber": 272
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "transforms.to_vec",
+          "lineNumber": 276
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "spaces.iter().enumerate().for_each",
+          "lineNumber": 278
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "spaces.iter().enumerate",
+          "lineNumber": 278
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "spaces.iter",
+          "lineNumber": 278
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "self.get_pose",
+          "lineNumber": 279
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "self.get_pose",
+          "lineNumber": 283
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "joint_pose.then",
+          "lineNumber": 287
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "base_pose.inverse",
+          "lineNumber": 287
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "pose.to_transform",
+          "lineNumber": 288
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "elements.to_array",
+          "lineNumber": 289
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "transforms_vec[i * 16..(i + 1) * 16].copy_from_slice",
+          "lineNumber": 290
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "transforms_vec.fill",
+          "lineNumber": 294
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "transforms.update",
+          "lineNumber": 297
+        },
+        {
+          "caller": "FillPoses",
+          "callee": "Ok",
+          "lineNumber": 299
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 6,
+        "functionCount": 14,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrhand.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 194,
+      "nonEmptyLines": 180,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 116,
+          "endLine": 122,
+          "params": [
+            "source",
+            "spaces"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 124,
+          "endLine": 141,
+          "params": [
+            "cx",
+            "global",
+            "source",
+            "support"
+          ]
+        },
+        {
+          "name": "Size",
+          "startLine": 146,
+          "endLine": 148,
+          "params": []
+        },
+        {
+          "name": "Get",
+          "startLine": 151,
+          "endLine": 161,
+          "params": [
+            "joint_name"
+          ]
+        },
+        {
+          "name": "to_jsval",
+          "startLine": 170,
+          "endLine": 172,
+          "params": [
+            "cx",
+            "rval"
+          ]
+        },
+        {
+          "name": "get_iterable_length",
+          "startLine": 179,
+          "endLine": 181,
+          "params": []
+        },
+        {
+          "name": "get_value_at_index",
+          "startLine": 183,
+          "endLine": 189,
+          "params": [
+            "n"
+          ]
+        },
+        {
+          "name": "get_key_at_index",
+          "startLine": 191,
+          "endLine": 193,
+          "params": [
+            "n"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRHand",
+          "startLine": 108,
+          "endLine": 113,
+          "methods": [
+            "new_inherited",
+            "new",
+            "Size",
+            "Get",
+            "get_iterable_length",
+            "get_value_at_index",
+            "get_key_at_index"
+          ],
+          "properties": [
+            "reflector_",
+            "source",
+            "spaces"
+          ]
+        },
+        {
+          "name": "ValueWrapper",
+          "startLine": 166,
+          "endLine": 166,
+          "methods": [
+            "to_jsval"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRHand",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 124,
+          "isDefault": false
+        },
+        {
+          "name": "ValueWrapper",
+          "line": 166,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 118
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 119
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "spaces.map",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "j.as_ref().map",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "j.as_ref",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new",
+          "callee": "source.id",
+          "lineNumber": 130
+        },
+        {
+          "caller": "new",
+          "callee": "source.session",
+          "lineNumber": 131
+        },
+        {
+          "caller": "new",
+          "callee": "support.map",
+          "lineNumber": 132
+        },
+        {
+          "caller": "new",
+          "callee": "JOINT_SPACE_MAP\n                .iter()\n                .find(|&&(_, value)| value == joint)\n                .map(|&(hand_joint, _)| hand_joint).expect",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "JOINT_SPACE_MAP\n                .iter()\n                .find(|&&(_, value)| value == joint).map",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "JOINT_SPACE_MAP\n                .iter().find",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "JOINT_SPACE_MAP.iter",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "field.map",
+          "lineNumber": 138
+        },
+        {
+          "caller": "new",
+          "callee": "XRJointSpace::new",
+          "lineNumber": 138
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 140
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 140
+        },
+        {
+          "caller": "new",
+          "callee": "XRHand::new_inherited",
+          "lineNumber": 140
+        },
+        {
+          "caller": "Get",
+          "callee": "JOINT_SPACE_MAP\n            .iter()\n            .find(|&&(key, _)| key == joint_name)\n            .map(|&(_, joint)| joint).expect",
+          "lineNumber": 152
+        },
+        {
+          "caller": "Get",
+          "callee": "JOINT_SPACE_MAP\n            .iter()\n            .find(|&&(key, _)| key == joint_name).map",
+          "lineNumber": 152
+        },
+        {
+          "caller": "Get",
+          "callee": "JOINT_SPACE_MAP\n            .iter().find",
+          "lineNumber": 152
+        },
+        {
+          "caller": "Get",
+          "callee": "JOINT_SPACE_MAP.iter",
+          "lineNumber": 152
+        },
+        {
+          "caller": "Get",
+          "callee": "self.spaces\n            .get(joint)\n            .map(|j| DomRoot::from_ref(&**j)).expect",
+          "lineNumber": 157
+        },
+        {
+          "caller": "Get",
+          "callee": "self.spaces\n            .get(joint).map",
+          "lineNumber": 157
+        },
+        {
+          "caller": "Get",
+          "callee": "self.spaces.get",
+          "lineNumber": 157
+        },
+        {
+          "caller": "Get",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 159
+        },
+        {
+          "caller": "to_jsval",
+          "callee": "self.0.to_jsval",
+          "lineNumber": 171
+        },
+        {
+          "caller": "get_iterable_length",
+          "callee": "JOINT_SPACE_MAP.len",
+          "lineNumber": 180
+        },
+        {
+          "caller": "get_value_at_index",
+          "callee": "self.spaces\n            .get(joint)\n            .map(|j| ValueWrapper(DomRoot::from_ref(&**j))).expect",
+          "lineNumber": 185
+        },
+        {
+          "caller": "get_value_at_index",
+          "callee": "self.spaces\n            .get(joint).map",
+          "lineNumber": 185
+        },
+        {
+          "caller": "get_value_at_index",
+          "callee": "self.spaces.get",
+          "lineNumber": 185
+        },
+        {
+          "caller": "get_value_at_index",
+          "callee": "ValueWrapper",
+          "lineNumber": 187
+        },
+        {
+          "caller": "get_value_at_index",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 187
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 3,
+        "functionCount": 8,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrhittestresult.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 56,
+      "nonEmptyLines": 50,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 27,
+          "endLine": 33,
+          "params": [
+            "result",
+            "frame"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 35,
+          "endLine": 46,
+          "params": [
+            "cx",
+            "window",
+            "result",
+            "frame"
+          ]
+        },
+        {
+          "name": "GetPose",
+          "startLine": 51,
+          "endLine": 55,
+          "params": [
+            "cx",
+            "base"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRHitTestResult",
+          "startLine": 19,
+          "endLine": 24,
+          "methods": [
+            "new_inherited",
+            "new",
+            "GetPose"
+          ],
+          "properties": [
+            "reflector_",
+            "result",
+            "frame"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRHitTestResult",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 35,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 29
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new",
+          "callee": "XRHitTestResult::new_inherited",
+          "lineNumber": 42
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.frame.get_pose",
+          "lineNumber": 52
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.result.space.then",
+          "lineNumber": 53
+        },
+        {
+          "caller": "GetPose",
+          "callee": "base.inverse",
+          "lineNumber": 53
+        },
+        {
+          "caller": "GetPose",
+          "callee": "Some",
+          "lineNumber": 54
+        },
+        {
+          "caller": "GetPose",
+          "callee": "XRPose::new",
+          "lineNumber": 54
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.global().as_window",
+          "lineNumber": 54
+        },
+        {
+          "caller": "GetPose",
+          "callee": "self.global",
+          "lineNumber": 54
+        },
+        {
+          "caller": "GetPose",
+          "callee": "pose.cast_unit",
+          "lineNumber": 54
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrhittestsource.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 48,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 24,
+          "endLine": 30,
+          "params": [
+            "id",
+            "session"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 32,
+          "endLine": 43,
+          "params": [
+            "cx",
+            "window",
+            "id",
+            "session"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 45,
+          "endLine": 47,
+          "params": []
+        },
+        {
+          "name": "Cancel",
+          "startLine": 52,
+          "endLine": 54,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRHitTestSource",
+          "startLine": 16,
+          "endLine": 21,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "Cancel"
+          ],
+          "properties": [
+            "reflector_",
+            "id",
+            "session"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRHitTestSource",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 45,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 26
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 28
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 38
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 39
+        },
+        {
+          "caller": "new",
+          "callee": "XRHitTestSource::new_inherited",
+          "lineNumber": 39
+        },
+        {
+          "caller": "Cancel",
+          "callee": "self.session.with_session",
+          "lineNumber": 53
+        },
+        {
+          "caller": "Cancel",
+          "callee": "s.cancel_hit_test",
+          "lineNumber": 53
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 3,
+        "functionCount": 4,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrinputsource.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 188,
+      "nonEmptyLines": 171,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 43,
+          "endLine": 74,
+          "params": [
+            "cx",
+            "window",
+            "session",
+            "info"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 76,
+          "endLine": 97,
+          "params": [
+            "cx",
+            "window",
+            "session",
+            "info"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 99,
+          "endLine": 101,
+          "params": []
+        },
+        {
+          "name": "session",
+          "startLine": 103,
+          "endLine": 105,
+          "params": []
+        },
+        {
+          "name": "update_gamepad_state",
+          "startLine": 107,
+          "endLine": 118,
+          "params": [
+            "frame"
+          ]
+        },
+        {
+          "name": "gamepad",
+          "startLine": 120,
+          "endLine": 122,
+          "params": []
+        },
+        {
+          "name": "Handedness",
+          "startLine": 127,
+          "endLine": 133,
+          "params": []
+        },
+        {
+          "name": "TargetRayMode",
+          "startLine": 136,
+          "endLine": 143,
+          "params": []
+        },
+        {
+          "name": "TargetRaySpace",
+          "startLine": 146,
+          "endLine": 151,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "GetGripSpace",
+          "startLine": 154,
+          "endLine": 163,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "Profiles",
+          "startLine": 165,
+          "endLine": 167,
+          "params": [
+            "_cx",
+            "retval"
+          ]
+        },
+        {
+          "name": "SkipRendering",
+          "startLine": 170,
+          "endLine": 174,
+          "params": []
+        },
+        {
+          "name": "GetGamepad",
+          "startLine": 177,
+          "endLine": 179,
+          "params": []
+        },
+        {
+          "name": "GetHand",
+          "startLine": 182,
+          "endLine": 187,
+          "params": [
+            "cx"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRInputSource",
+          "startLine": 29,
+          "endLine": 40,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "session",
+            "update_gamepad_state",
+            "gamepad",
+            "Handedness",
+            "TargetRayMode",
+            "TargetRaySpace",
+            "GetGripSpace",
+            "Profiles",
+            "SkipRendering",
+            "GetGamepad",
+            "GetHand"
+          ],
+          "properties": [
+            "reflector",
+            "session",
+            "info",
+            "target_ray_space",
+            "grip_space",
+            "hand",
+            "profiles",
+            "gamepad"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRInputSource",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "session",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "update_gamepad_state",
+          "line": 107,
+          "isDefault": false
+        },
+        {
+          "name": "gamepad",
+          "line": 120,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Gamepad::new",
+          "lineNumber": 50
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "\"\".into",
+          "lineNumber": 54
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "\"xr-standard\".into",
+          "lineNumber": 55
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 66
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 69
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Heap::default",
+          "lineNumber": 71
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 82
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 83
+        },
+        {
+          "caller": "new",
+          "callee": "XRInputSource::new_inherited",
+          "lineNumber": 83
+        },
+        {
+          "caller": "new",
+          "callee": "enter_auto_realm",
+          "lineNumber": 88
+        },
+        {
+          "caller": "new",
+          "callee": "realm.current_realm",
+          "lineNumber": 89
+        },
+        {
+          "caller": "new",
+          "callee": "source\n            .info\n            .profiles.safe_to_jsval",
+          "lineNumber": 91
+        },
+        {
+          "caller": "new",
+          "callee": "cx.into",
+          "lineNumber": 94
+        },
+        {
+          "caller": "new",
+          "callee": "profiles.handle_mut",
+          "lineNumber": 94
+        },
+        {
+          "caller": "new",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 94
+        },
+        {
+          "caller": "new",
+          "callee": "source.profiles.set",
+          "lineNumber": 95
+        },
+        {
+          "caller": "new",
+          "callee": "profiles.get",
+          "lineNumber": 95
+        },
+        {
+          "caller": "update_gamepad_state",
+          "callee": "frame\n            .button_values\n            .iter()\n            .enumerate().for_each",
+          "lineNumber": 108
+        },
+        {
+          "caller": "update_gamepad_state",
+          "callee": "frame\n            .button_values\n            .iter().enumerate",
+          "lineNumber": 108
+        },
+        {
+          "caller": "update_gamepad_state",
+          "callee": "frame\n            .button_values.iter",
+          "lineNumber": 108
+        },
+        {
+          "caller": "update_gamepad_state",
+          "callee": "self.gamepad.map_and_normalize_buttons",
+          "lineNumber": 113
+        },
+        {
+          "caller": "update_gamepad_state",
+          "callee": "frame.axis_values.iter().enumerate().for_each",
+          "lineNumber": 115
+        },
+        {
+          "caller": "update_gamepad_state",
+          "callee": "frame.axis_values.iter().enumerate",
+          "lineNumber": 115
+        },
+        {
+          "caller": "update_gamepad_state",
+          "callee": "frame.axis_values.iter",
+          "lineNumber": 115
+        },
+        {
+          "caller": "update_gamepad_state",
+          "callee": "self.gamepad.map_and_normalize_axes",
+          "lineNumber": 116
+        },
+        {
+          "caller": "TargetRaySpace",
+          "callee": "self.target_ray_space.or_init",
+          "lineNumber": 147
+        },
+        {
+          "caller": "TargetRaySpace",
+          "callee": "self.global",
+          "lineNumber": 148
+        },
+        {
+          "caller": "TargetRaySpace",
+          "callee": "XRSpace::new_inputspace",
+          "lineNumber": 149
+        },
+        {
+          "caller": "GetGripSpace",
+          "callee": "Some",
+          "lineNumber": 156
+        },
+        {
+          "caller": "GetGripSpace",
+          "callee": "self.grip_space.or_init",
+          "lineNumber": 156
+        },
+        {
+          "caller": "GetGripSpace",
+          "callee": "self.global",
+          "lineNumber": 157
+        },
+        {
+          "caller": "GetGripSpace",
+          "callee": "XRSpace::new_inputspace",
+          "lineNumber": 158
+        },
+        {
+          "caller": "Profiles",
+          "callee": "retval.set",
+          "lineNumber": 166
+        },
+        {
+          "caller": "Profiles",
+          "callee": "self.profiles.get",
+          "lineNumber": 166
+        },
+        {
+          "caller": "GetGamepad",
+          "callee": "Some",
+          "lineNumber": 178
+        },
+        {
+          "caller": "GetGamepad",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 178
+        },
+        {
+          "caller": "GetHand",
+          "callee": "self.info.hand_support.as_ref().map",
+          "lineNumber": 183
+        },
+        {
+          "caller": "GetHand",
+          "callee": "self.info.hand_support.as_ref",
+          "lineNumber": 183
+        },
+        {
+          "caller": "GetHand",
+          "callee": "self.hand.or_init",
+          "lineNumber": 184
+        },
+        {
+          "caller": "GetHand",
+          "callee": "XRHand::new",
+          "lineNumber": 185
+        },
+        {
+          "caller": "GetHand",
+          "callee": "self.global",
+          "lineNumber": 185
+        },
+        {
+          "caller": "GetHand",
+          "callee": "hand.clone",
+          "lineNumber": 185
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 7,
+        "functionCount": 14,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrinputsourcearray.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 145,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 28,
+          "endLine": 33,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 35,
+          "endLine": 37,
+          "params": [
+            "cx",
+            "window"
+          ]
+        },
+        {
+          "name": "add_input_sources",
+          "startLine": 39,
+          "endLine": 76,
+          "params": [
+            "cx",
+            "session",
+            "inputs"
+          ]
+        },
+        {
+          "name": "remove_input_source",
+          "startLine": 78,
+          "endLine": 100,
+          "params": [
+            "cx",
+            "session",
+            "id"
+          ]
+        },
+        {
+          "name": "add_remove_input_source",
+          "startLine": 102,
+          "endLine": 137,
+          "params": [
+            "cx",
+            "session",
+            "id",
+            "info"
+          ]
+        },
+        {
+          "name": "find",
+          "startLine": 139,
+          "endLine": 145,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "Length",
+          "startLine": 150,
+          "endLine": 152,
+          "params": []
+        },
+        {
+          "name": "IndexedGetter",
+          "startLine": 155,
+          "endLine": 160,
+          "params": [
+            "n"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRInputSourceArray",
+          "startLine": 22,
+          "endLine": 25,
+          "methods": [
+            "new_inherited",
+            "new",
+            "add_input_sources",
+            "remove_input_source",
+            "add_remove_input_source",
+            "find",
+            "Length",
+            "IndexedGetter"
+          ],
+          "properties": [
+            "reflector_",
+            "input_sources"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRInputSourceArray",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "add_input_sources",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "remove_input_source",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "add_remove_input_source",
+          "line": 102,
+          "isDefault": false
+        },
+        {
+          "name": "find",
+          "line": 139,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 30
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 36
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 36
+        },
+        {
+          "caller": "new",
+          "callee": "XRInputSourceArray::new_inherited",
+          "lineNumber": 36
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "self.global",
+          "lineNumber": 45
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "global.as_window",
+          "lineNumber": 46
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "XRInputSource::new",
+          "lineNumber": 60
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "info.clone",
+          "lineNumber": 60
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "self.input_sources.borrow_mut().push",
+          "lineNumber": 61
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "self.input_sources.borrow_mut",
+          "lineNumber": 61
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "Dom::from_ref",
+          "lineNumber": 61
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "added.push",
+          "lineNumber": 62
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "XRInputSourcesChangeEvent::new",
+          "lineNumber": 65
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 75
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 75
+        },
+        {
+          "caller": "add_input_sources",
+          "callee": "session.upcast",
+          "lineNumber": 75
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "self.global",
+          "lineNumber": 79
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "global.as_window",
+          "lineNumber": 80
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "self.input_sources.borrow().iter().find",
+          "lineNumber": 81
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "self.input_sources.borrow().iter",
+          "lineNumber": 81
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "self.input_sources.borrow",
+          "lineNumber": 81
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "i.id",
+          "lineNumber": 81
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "i.gamepad().update_connected",
+          "lineNumber": 82
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "i.gamepad",
+          "lineNumber": 82
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 83
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "XRInputSourcesChangeEvent::new",
+          "lineNumber": 88
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "self.input_sources.borrow_mut().retain",
+          "lineNumber": 98
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "self.input_sources.borrow_mut",
+          "lineNumber": 98
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "i.id",
+          "lineNumber": 98
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 99
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 99
+        },
+        {
+          "caller": "remove_input_source",
+          "callee": "session.upcast",
+          "lineNumber": 99
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "self.global",
+          "lineNumber": 109
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "global.as_window",
+          "lineNumber": 110
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "self.input_sources.borrow().iter().find",
+          "lineNumber": 112
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "self.input_sources.borrow().iter",
+          "lineNumber": 112
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "self.input_sources.borrow",
+          "lineNumber": 112
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "i.id",
+          "lineNumber": 112
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "i.gamepad().update_connected",
+          "lineNumber": 113
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "i.gamepad",
+          "lineNumber": 113
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 114
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "self.input_sources.borrow_mut().retain",
+          "lineNumber": 120
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "self.input_sources.borrow_mut",
+          "lineNumber": 120
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "i.id",
+          "lineNumber": 120
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "XRInputSource::new",
+          "lineNumber": 121
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "self.input_sources.borrow_mut().push",
+          "lineNumber": 122
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "self.input_sources.borrow_mut",
+          "lineNumber": 122
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "Dom::from_ref",
+          "lineNumber": 122
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "XRInputSourcesChangeEvent::new",
+          "lineNumber": 126
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 136
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 136
+        },
+        {
+          "caller": "add_remove_input_source",
+          "callee": "session.upcast",
+          "lineNumber": 136
+        },
+        {
+          "caller": "find",
+          "callee": "self.input_sources\n            .borrow()\n            .iter()\n            .find(|x| x.id() == id).map",
+          "lineNumber": 140
+        },
+        {
+          "caller": "find",
+          "callee": "self.input_sources\n            .borrow()\n            .iter().find",
+          "lineNumber": 140
+        },
+        {
+          "caller": "find",
+          "callee": "self.input_sources\n            .borrow().iter",
+          "lineNumber": 140
+        },
+        {
+          "caller": "find",
+          "callee": "self.input_sources.borrow",
+          "lineNumber": 140
+        },
+        {
+          "caller": "find",
+          "callee": "x.id",
+          "lineNumber": 143
+        },
+        {
+          "caller": "find",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 144
+        },
+        {
+          "caller": "Length",
+          "callee": "self.input_sources.borrow().len",
+          "lineNumber": 151
+        },
+        {
+          "caller": "Length",
+          "callee": "self.input_sources.borrow",
+          "lineNumber": 151
+        },
+        {
+          "caller": "IndexedGetter",
+          "callee": "self.input_sources\n            .borrow()\n            .get(n as usize).map",
+          "lineNumber": 156
+        },
+        {
+          "caller": "IndexedGetter",
+          "callee": "self.input_sources\n            .borrow().get",
+          "lineNumber": 156
+        },
+        {
+          "caller": "IndexedGetter",
+          "callee": "self.input_sources.borrow",
+          "lineNumber": 156
+        },
+        {
+          "caller": "IndexedGetter",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 159
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 6,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrinputsourceevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 112,
+      "nonEmptyLines": 102,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 32,
+          "endLine": 38,
+          "params": [
+            "frame",
+            "source"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 40,
+          "endLine": 50,
+          "params": [
+            "cx",
+            "window",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "frame",
+            "source"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 53,
+          "endLine": 74,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "frame",
+            "source"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 79,
+          "endLine": 96,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "Frame",
+          "startLine": 99,
+          "endLine": 101,
+          "params": []
+        },
+        {
+          "name": "InputSource",
+          "startLine": 104,
+          "endLine": 106,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 109,
+          "endLine": 111,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRInputSourceEvent",
+          "startLine": 25,
+          "endLine": 29,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "Frame",
+            "InputSource",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "frame",
+            "source"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRInputSourceEvent",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 40,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 36
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 49
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 64
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "XRInputSourceEvent::new_inherited",
+          "lineNumber": 64
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "trackevent.upcast::<Event>",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.init_event",
+          "lineNumber": 71
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 86
+        },
+        {
+          "caller": "Constructor",
+          "callee": "XRInputSourceEvent::new_with_proto",
+          "lineNumber": 86
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 90
+        },
+        {
+          "caller": "Frame",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 100
+        },
+        {
+          "caller": "InputSource",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 105
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 110
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 7,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrinputsourceschangeevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 138,
+      "nonEmptyLines": 127,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 39,
+          "endLine": 46,
+          "params": [
+            "session"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 49,
+          "endLine": 62,
+          "params": [
+            "cx",
+            "window",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "session",
+            "added",
+            "removed"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 65,
+          "endLine": 94,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "session",
+            "added",
+            "removed"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 99,
+          "endLine": 117,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "Session",
+          "startLine": 120,
+          "endLine": 122,
+          "params": []
+        },
+        {
+          "name": "Added",
+          "startLine": 125,
+          "endLine": 127,
+          "params": [
+            "_cx",
+            "retval"
+          ]
+        },
+        {
+          "name": "Removed",
+          "startLine": 130,
+          "endLine": 132,
+          "params": [
+            "_cx",
+            "retval"
+          ]
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 135,
+          "endLine": 137,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRInputSourcesChangeEvent",
+          "startLine": 29,
+          "endLine": 36,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "Session",
+            "Added",
+            "Removed",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "session",
+            "added",
+            "removed"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRInputSourcesChangeEvent",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 49,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Heap::default",
+          "lineNumber": 43
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Heap::default",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 76
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 77
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "XRInputSourcesChangeEvent::new_inherited",
+          "lineNumber": 77
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "changeevent.upcast::<Event>",
+          "lineNumber": 83
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.init_event",
+          "lineNumber": 84
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "enter_auto_realm",
+          "lineNumber": 86
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "realm.current_realm",
+          "lineNumber": 87
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "to_frozen_array",
+          "lineNumber": 89
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "frozen_val.handle_mut",
+          "lineNumber": 89
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "changeevent.added.set",
+          "lineNumber": 90
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "to_frozen_array",
+          "lineNumber": 91
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "frozen_val.handle_mut",
+          "lineNumber": 91
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "changeevent.removed.set",
+          "lineNumber": 92
+        },
+        {
+          "caller": "Constructor",
+          "callee": "XRInputSourcesChangeEvent::new_with_proto",
+          "lineNumber": 106
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 110
+        },
+        {
+          "caller": "Session",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 121
+        },
+        {
+          "caller": "Added",
+          "callee": "retval.set",
+          "lineNumber": 126
+        },
+        {
+          "caller": "Added",
+          "callee": "self.added.get",
+          "lineNumber": 126
+        },
+        {
+          "caller": "Removed",
+          "callee": "retval.set",
+          "lineNumber": 131
+        },
+        {
+          "caller": "Removed",
+          "callee": "self.removed.get",
+          "lineNumber": 131
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 136
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrjointpose.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 51,
+      "nonEmptyLines": 45,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 24,
+          "endLine": 29,
+          "params": [
+            "transform",
+            "radius"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 43,
+          "params": [
+            "cx",
+            "window",
+            "pose",
+            "radius"
+          ]
+        },
+        {
+          "name": "GetRadius",
+          "startLine": 48,
+          "endLine": 50,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRJointPose",
+          "startLine": 18,
+          "endLine": 21,
+          "methods": [
+            "new_inherited",
+            "new",
+            "GetRadius"
+          ],
+          "properties": [
+            "pose",
+            "radius"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRJointPose",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 31,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "XRPose::new_inherited",
+          "lineNumber": 26
+        },
+        {
+          "caller": "new",
+          "callee": "XRRigidTransform::new",
+          "lineNumber": 37
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 38
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 39
+        },
+        {
+          "caller": "new",
+          "callee": "XRJointPose::new_inherited",
+          "lineNumber": 39
+        },
+        {
+          "caller": "GetRadius",
+          "callee": "self.radius.map",
+          "lineNumber": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrjointspace.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 84,
+      "nonEmptyLines": 75,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 30,
+          "endLine": 42,
+          "params": [
+            "session",
+            "input",
+            "joint",
+            "hand_joint"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 44,
+          "endLine": 57,
+          "params": [
+            "cx",
+            "global",
+            "session",
+            "input",
+            "joint",
+            "hand_joint"
+          ]
+        },
+        {
+          "name": "space",
+          "startLine": 59,
+          "endLine": 63,
+          "params": []
+        },
+        {
+          "name": "frame",
+          "startLine": 65,
+          "endLine": 72,
+          "params": [
+            "frame"
+          ]
+        },
+        {
+          "name": "get_pose",
+          "startLine": 74,
+          "endLine": 76,
+          "params": [
+            "frame"
+          ]
+        },
+        {
+          "name": "JointName",
+          "startLine": 81,
+          "endLine": 83,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRJointSpace",
+          "startLine": 19,
+          "endLine": 27,
+          "methods": [
+            "new_inherited",
+            "new",
+            "space",
+            "frame",
+            "get_pose",
+            "JointName"
+          ],
+          "properties": [
+            "xrspace",
+            "input",
+            "joint",
+            "hand_joint"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRJointSpace",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "space",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "frame",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "get_pose",
+          "line": 74,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "XRSpace::new_inherited",
+          "lineNumber": 37
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 52
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 53
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 53
+        },
+        {
+          "caller": "space",
+          "callee": "BaseSpace::Joint",
+          "lineNumber": 60
+        },
+        {
+          "caller": "space",
+          "callee": "RigidTransform3D::identity",
+          "lineNumber": 61
+        },
+        {
+          "caller": "frame",
+          "callee": "frame\n            .inputs\n            .iter()\n            .find(|i| i.id == self.input)\n            .and_then(|i| i.hand.as_ref()).and_then",
+          "lineNumber": 66
+        },
+        {
+          "caller": "frame",
+          "callee": "frame\n            .inputs\n            .iter()\n            .find(|i| i.id == self.input).and_then",
+          "lineNumber": 66
+        },
+        {
+          "caller": "frame",
+          "callee": "frame\n            .inputs\n            .iter().find",
+          "lineNumber": 66
+        },
+        {
+          "caller": "frame",
+          "callee": "frame\n            .inputs.iter",
+          "lineNumber": 66
+        },
+        {
+          "caller": "frame",
+          "callee": "i.hand.as_ref",
+          "lineNumber": 70
+        },
+        {
+          "caller": "frame",
+          "callee": "h.get",
+          "lineNumber": 71
+        },
+        {
+          "caller": "get_pose",
+          "callee": "self.frame(frame).map(|f| f.pose).map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "get_pose",
+          "callee": "self.frame(frame).map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "get_pose",
+          "callee": "self.frame",
+          "lineNumber": 75
+        },
+        {
+          "caller": "get_pose",
+          "callee": "t.cast_unit",
+          "lineNumber": 75
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 6,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrlayer.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 77,
+      "nonEmptyLines": 67,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 31,
+          "endLine": 42,
+          "params": [
+            "session",
+            "context",
+            "layer_id"
+          ]
+        },
+        {
+          "name": "layer_id",
+          "startLine": 44,
+          "endLine": 46,
+          "params": []
+        },
+        {
+          "name": "context_id",
+          "startLine": 48,
+          "endLine": 50,
+          "params": []
+        },
+        {
+          "name": "context",
+          "startLine": 52,
+          "endLine": 54,
+          "params": []
+        },
+        {
+          "name": "session",
+          "startLine": 56,
+          "endLine": 58,
+          "params": []
+        },
+        {
+          "name": "begin_frame",
+          "startLine": 60,
+          "endLine": 67,
+          "params": [
+            "cx",
+            "frame"
+          ]
+        },
+        {
+          "name": "end_frame",
+          "startLine": 69,
+          "endLine": 76,
+          "params": [
+            "frame"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRLayer",
+          "startLine": 20,
+          "endLine": 28,
+          "methods": [
+            "new_inherited",
+            "layer_id",
+            "context_id",
+            "context",
+            "session",
+            "begin_frame",
+            "end_frame"
+          ],
+          "properties": [
+            "event_target",
+            "session",
+            "context",
+            "layer_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRLayer",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "layer_id",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "context_id",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "context",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "session",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "begin_frame",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "end_frame",
+          "line": 69,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "EventTarget::new_inherited",
+          "lineNumber": 37
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 38
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 39
+        },
+        {
+          "caller": "context_id",
+          "callee": "self.context.context_id",
+          "lineNumber": 49
+        },
+        {
+          "caller": "begin_frame",
+          "callee": "self.downcast::<XRWebGLLayer>",
+          "lineNumber": 62
+        },
+        {
+          "caller": "begin_frame",
+          "callee": "this.begin_frame",
+          "lineNumber": 63
+        },
+        {
+          "caller": "end_frame",
+          "callee": "self.downcast::<XRWebGLLayer>",
+          "lineNumber": 71
+        },
+        {
+          "caller": "end_frame",
+          "callee": "this.end_frame",
+          "lineNumber": 72
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 8,
+        "functionCount": 7,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrlayerevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 77,
+      "nonEmptyLines": 69,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 29,
+          "endLine": 34,
+          "params": [
+            "layer"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 36,
+          "endLine": 48,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "layer"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 53,
+          "endLine": 66,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "Layer",
+          "startLine": 69,
+          "endLine": 71,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 74,
+          "endLine": 76,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRLayerEvent",
+          "startLine": 23,
+          "endLine": 26,
+          "methods": [
+            "new_inherited",
+            "new",
+            "Constructor",
+            "Layer",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "layer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRLayerEvent",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 29,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 43
+        },
+        {
+          "caller": "new",
+          "callee": "XRLayerEvent::new_inherited",
+          "lineNumber": 43
+        },
+        {
+          "caller": "Constructor",
+          "callee": "XRLayerEvent::new",
+          "lineNumber": 60
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 61
+        },
+        {
+          "caller": "Constructor",
+          "callee": "event.event.init_event",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Layer",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 70
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 75
+        }
+      ],
+      "metrics": {
+        "importCount": 2,
+        "exportCount": 2,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webxr/xrmediabinding.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 101,
+      "nonEmptyLines": 90,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 28,
+          "endLine": 33,
+          "params": [
+            "session"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 35,
+          "endLine": 47,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "session"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 52,
+          "endLine": 70,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "session"
+          ]
+        },
+        {
+          "name": "CreateQuadLayer",
+          "startLine": 73,
+          "endLine": 80,
+          "params": [
+            "_",
+            "_"
+          ]
+        },
+        {
+          "name": "CreateCylinderLayer",
+          "startLine": 83,
+          "endLine": 90,
+          "params": [
+            "_",
+            "_"
+          ]
+        },
+        {
+          "name": "CreateEquirectLayer",
+          "startLine": 93,
+          "endLine": 100,
+          "params": [
+            "_",
+            "_"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "XRMediaBinding",
+          "startLine": 22,
+          "endLine": 25,
+          "methods": [
+            "new_inherited",
+            "new",
+            "Constructor",
+            "CreateQuadLayer",
+            "CreateCylinderLayer",
+            "CreateEquirectLayer"
+          ],
+          "properties": [
+            "reflector",
+            "session"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "XRMediaBinding",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 28,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 30
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new",
+          "callee": "XRMediaBinding::new_inherited",
+          "lineNumber": 42
+        },
+        {
+          "caller": "Constructor",
+          "callee": "session.is_ended",
+          "lineNumber": 59
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Err",
+          "lineNumber": 60
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Error::InvalidState",
+          "lineNumber": 60
+        },
+        {
+          "caller": "Constructor",
+          "callee": "session.is_immersive",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Err",
+          "lineNumber": 65
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Error::InvalidState",
+          "lineNumber": 65
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 69
+        },
+        {
+          "caller": "Constructor",
+          "callee": "XRMediaBinding::new",
+          "lineNumber": 69
+        },
+        {
+          "caller": "CreateQuadLayer",
+          "callee": "Err",
+          "lineNumber": 79
+        },
+        {
+          "caller": "CreateQuadLayer",
+          "callee": "Error::NotSupported",
+          "lineNumber": 79
+        },
+        {
+          "caller": "CreateCylinderLayer",
+          "callee": "Err",
+          "lineNumber": 89
+        },
+        {
+          "caller": "CreateCylinderLayer",
+          "callee": "Error::NotSupported",
+          "lineNumber": 89
+        },
+        {
+          "caller": "CreateEquirectLayer",
+          "callee": "Err",
+          "lineNumber": 99
+        },
+        {
+          "caller": "CreateEquirectLayer",
+          "callee": "Error::NotSupported",
+          "lineNumber": 99
+        }
+      ],
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 2,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    }
+  ]
+}

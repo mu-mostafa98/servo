@@ -1,0 +1,4358 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 15,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/shared/webxr/device.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 101,
+      "nonEmptyLines": 77,
+      "functions": [
+        {
+          "name": "request_session",
+          "startLine": 89,
+          "endLine": 96,
+          "params": [
+            "mode",
+            "init",
+            "xr"
+          ]
+        },
+        {
+          "name": "supports_session",
+          "startLine": 98,
+          "endLine": 100,
+          "params": [
+            "mode"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DiscoveryAPI",
+          "startLine": 17,
+          "endLine": 25,
+          "methods": [
+            "request_session",
+            "supports_session"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DeviceAPI",
+          "startLine": 28,
+          "endLine": 86,
+          "methods": [
+            "create_layer",
+            "destroy_layer",
+            "floor_transform",
+            "viewports",
+            "begin_animation_frame",
+            "end_animation_frame",
+            "initial_inputs",
+            "set_event_dest",
+            "quit",
+            "set_quitter",
+            "update_clip_planes",
+            "granted_features",
+            "environment_blend_mode",
+            "request_hit_test",
+            "cancel_hit_test",
+            "update_frame_rate",
+            "supported_frame_rates",
+            "reference_space_bounds"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "DiscoveryAPI",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "DeviceAPI",
+          "line": 28,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "supported_frame_rates",
+          "callee": "Vec::new",
+          "lineNumber": 80
+        },
+        {
+          "caller": "request_session",
+          "callee": "(**self).request_session",
+          "lineNumber": 95
+        },
+        {
+          "caller": "supports_session",
+          "callee": "(**self).supports_session",
+          "lineNumber": 99
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 2,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/shared/webxr/error.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 19,
+      "nonEmptyLines": 15,
+      "classes": [
+        {
+          "name": "Error",
+          "startLine": 12,
+          "endLine": 19,
+          "methods": [],
+          "properties": [
+            "NoMatchingDevice",
+            "CommunicationError",
+            "ThreadCreationError",
+            "InlineSession",
+            "UnsupportedFeature",
+            "BackendSpecific"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Error",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/shared/webxr/events.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 75,
+      "nonEmptyLines": 67,
+      "functions": [
+        {
+          "name": "default",
+          "startLine": 52,
+          "endLine": 54,
+          "params": []
+        },
+        {
+          "name": "callback",
+          "startLine": 58,
+          "endLine": 65,
+          "params": [
+            "event"
+          ]
+        },
+        {
+          "name": "upgrade",
+          "startLine": 67,
+          "endLine": 74,
+          "params": [
+            "dest"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Event",
+          "startLine": 15,
+          "endLine": 32,
+          "methods": [],
+          "properties": [
+            "AddInput",
+            "RemoveInput",
+            "UpdateInput",
+            "SessionEnd",
+            "VisibilityChange",
+            "Select",
+            "InputChanged",
+            "ReferenceSpaceChanged"
+          ]
+        },
+        {
+          "name": "Visibility",
+          "startLine": 35,
+          "endLine": 42,
+          "methods": [],
+          "properties": [
+            "Visible",
+            "VisibleBlurred",
+            "Hidden"
+          ]
+        },
+        {
+          "name": "EventBuffer",
+          "startLine": 46,
+          "endLine": 49,
+          "methods": [
+            "default",
+            "callback",
+            "upgrade"
+          ],
+          "properties": [
+            "Buffered",
+            "Sink"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Event",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "Visibility",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "EventBuffer",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "callback",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "upgrade",
+          "line": 67,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "default",
+          "callee": "EventBuffer::Buffered",
+          "lineNumber": 53
+        },
+        {
+          "caller": "callback",
+          "callee": "events.push",
+          "lineNumber": 60
+        },
+        {
+          "caller": "callback",
+          "callee": "dest.send",
+          "lineNumber": 62
+        },
+        {
+          "caller": "upgrade",
+          "callee": "events.drain",
+          "lineNumber": 69
+        },
+        {
+          "caller": "upgrade",
+          "callee": "dest.send",
+          "lineNumber": 70
+        },
+        {
+          "caller": "upgrade",
+          "callee": "EventBuffer::Sink",
+          "lineNumber": 73
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 3,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "components/shared/webxr/frame.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 53,
+      "nonEmptyLines": 43,
+      "classes": [
+        {
+          "name": "Frame",
+          "startLine": 17,
+          "endLine": 34,
+          "methods": [],
+          "properties": [
+            "pose",
+            "inputs",
+            "events",
+            "sub_images",
+            "hit_test_results",
+            "predicted_display_time"
+          ]
+        },
+        {
+          "name": "FrameUpdateEvent",
+          "startLine": 37,
+          "endLine": 41,
+          "methods": [],
+          "properties": [
+            "UpdateFloorTransform",
+            "UpdateViewports",
+            "HitTestSourceAdded"
+          ]
+        },
+        {
+          "name": "ViewerPose",
+          "startLine": 44,
+          "endLine": 53,
+          "methods": [],
+          "properties": [
+            "transform",
+            "views"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Frame",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "FrameUpdateEvent",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "ViewerPose",
+          "line": 44,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "components/shared/webxr/hand.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 139,
+      "nonEmptyLines": 126,
+      "functions": [
+        {
+          "name": "default",
+          "startLine": 43,
+          "endLine": 48,
+          "params": []
+        },
+        {
+          "name": "map",
+          "startLine": 52,
+          "endLine": 72,
+          "params": [
+            "cx",
+            "map"
+          ]
+        },
+        {
+          "name": "get",
+          "startLine": 74,
+          "endLine": 86,
+          "params": [
+            "joint"
+          ]
+        },
+        {
+          "name": "map",
+          "startLine": 90,
+          "endLine": 106,
+          "params": [
+            "cx",
+            "map"
+          ]
+        },
+        {
+          "name": "get",
+          "startLine": 108,
+          "endLine": 116,
+          "params": [
+            "joint"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "HandSpace",
+          "startLine": 12,
+          "endLine": 12,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Hand",
+          "startLine": 15,
+          "endLine": 25,
+          "methods": [],
+          "properties": [
+            "wrist",
+            "thumb_metacarpal",
+            "thumb_phalanx_proximal",
+            "thumb_phalanx_distal",
+            "thumb_phalanx_tip",
+            "index",
+            "middle",
+            "ring",
+            "little"
+          ]
+        },
+        {
+          "name": "Finger",
+          "startLine": 28,
+          "endLine": 34,
+          "methods": [],
+          "properties": [
+            "metacarpal",
+            "phalanx_proximal",
+            "phalanx_intermediate",
+            "phalanx_distal",
+            "phalanx_tip"
+          ]
+        },
+        {
+          "name": "JointFrame",
+          "startLine": 37,
+          "endLine": 40,
+          "methods": [
+            "default"
+          ],
+          "properties": [
+            "pose",
+            "radius"
+          ]
+        },
+        {
+          "name": "FingerJoint",
+          "startLine": 120,
+          "endLine": 126,
+          "methods": [],
+          "properties": [
+            "Metacarpal",
+            "PhalanxProximal",
+            "PhalanxIntermediate",
+            "PhalanxDistal",
+            "PhalanxTip"
+          ]
+        },
+        {
+          "name": "Joint",
+          "startLine": 129,
+          "endLine": 139,
+          "methods": [],
+          "properties": [
+            "Wrist",
+            "ThumbMetacarpal",
+            "ThumbPhalanxProximal",
+            "ThumbPhalanxDistal",
+            "ThumbPhalanxTip",
+            "Index",
+            "Middle",
+            "Ring",
+            "Little"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "HandSpace",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "Hand",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "Finger",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "JointFrame",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "map",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "get",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "map",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "get",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "FingerJoint",
+          "line": 120,
+          "isDefault": false
+        },
+        {
+          "name": "Joint",
+          "line": 129,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "default",
+          "callee": "RigidTransform3D::identity",
+          "lineNumber": 45
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 58
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 59
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 60
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 65
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 66
+        },
+        {
+          "caller": "map",
+          "callee": "self.index.map",
+          "lineNumber": 67
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 67
+        },
+        {
+          "caller": "map",
+          "callee": "Joint::Index",
+          "lineNumber": 67
+        },
+        {
+          "caller": "map",
+          "callee": "self.middle.map",
+          "lineNumber": 68
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 68
+        },
+        {
+          "caller": "map",
+          "callee": "Joint::Middle",
+          "lineNumber": 68
+        },
+        {
+          "caller": "map",
+          "callee": "self.ring.map",
+          "lineNumber": 69
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 69
+        },
+        {
+          "caller": "map",
+          "callee": "Joint::Ring",
+          "lineNumber": 69
+        },
+        {
+          "caller": "map",
+          "callee": "self.little.map",
+          "lineNumber": 70
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 70
+        },
+        {
+          "caller": "map",
+          "callee": "Joint::Little",
+          "lineNumber": 70
+        },
+        {
+          "caller": "get",
+          "callee": "self.wrist.as_ref",
+          "lineNumber": 76
+        },
+        {
+          "caller": "get",
+          "callee": "self.thumb_metacarpal.as_ref",
+          "lineNumber": 77
+        },
+        {
+          "caller": "get",
+          "callee": "self.thumb_phalanx_proximal.as_ref",
+          "lineNumber": 78
+        },
+        {
+          "caller": "get",
+          "callee": "self.thumb_phalanx_distal.as_ref",
+          "lineNumber": 79
+        },
+        {
+          "caller": "get",
+          "callee": "self.thumb_phalanx_tip.as_ref",
+          "lineNumber": 80
+        },
+        {
+          "caller": "get",
+          "callee": "self.index.get",
+          "lineNumber": 81
+        },
+        {
+          "caller": "get",
+          "callee": "self.middle.get",
+          "lineNumber": 82
+        },
+        {
+          "caller": "get",
+          "callee": "self.ring.get",
+          "lineNumber": 83
+        },
+        {
+          "caller": "get",
+          "callee": "self.little.get",
+          "lineNumber": 84
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 96
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 97
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 98
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 103
+        },
+        {
+          "caller": "map",
+          "callee": "map",
+          "lineNumber": 104
+        },
+        {
+          "caller": "get",
+          "callee": "self.metacarpal.as_ref",
+          "lineNumber": 110
+        },
+        {
+          "caller": "get",
+          "callee": "self.phalanx_proximal.as_ref",
+          "lineNumber": 111
+        },
+        {
+          "caller": "get",
+          "callee": "self.phalanx_intermediate.as_ref",
+          "lineNumber": 112
+        },
+        {
+          "caller": "get",
+          "callee": "self.phalanx_distal.as_ref",
+          "lineNumber": 113
+        },
+        {
+          "caller": "get",
+          "callee": "self.phalanx_tip.as_ref",
+          "lineNumber": 114
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 5,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "components/shared/webxr/hittest.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 173,
+      "nonEmptyLines": 146,
+      "functions": [
+        {
+          "name": "is_type",
+          "startLine": 68,
+          "endLine": 74,
+          "params": [
+            "ty"
+          ]
+        },
+        {
+          "name": "add_type",
+          "startLine": 76,
+          "endLine": 82,
+          "params": [
+            "ty"
+          ]
+        },
+        {
+          "name": "from_iter",
+          "startLine": 86,
+          "endLine": 94,
+          "params": [
+            "iter"
+          ]
+        },
+        {
+          "name": "intersect",
+          "startLine": 99,
+          "endLine": 172,
+          "params": [
+            "ray"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Ray",
+          "startLine": 15,
+          "endLine": 20,
+          "methods": [],
+          "properties": [
+            "origin",
+            "direction"
+          ]
+        },
+        {
+          "name": "EntityType",
+          "startLine": 24,
+          "endLine": 28,
+          "methods": [],
+          "properties": [
+            "Point",
+            "Plane",
+            "Mesh"
+          ]
+        },
+        {
+          "name": "HitTestSource",
+          "startLine": 32,
+          "endLine": 37,
+          "methods": [],
+          "properties": [
+            "id",
+            "space",
+            "ray",
+            "types"
+          ]
+        },
+        {
+          "name": "HitTestId",
+          "startLine": 40,
+          "endLine": 40,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "EntityTypes",
+          "startLine": 44,
+          "endLine": 48,
+          "methods": [
+            "is_type",
+            "add_type",
+            "from_iter"
+          ],
+          "properties": [
+            "point",
+            "plane",
+            "mesh"
+          ]
+        },
+        {
+          "name": "HitTestResult",
+          "startLine": 51,
+          "endLine": 54,
+          "methods": [],
+          "properties": [
+            "id",
+            "space"
+          ]
+        },
+        {
+          "name": "HitTestSpace",
+          "startLine": 58,
+          "endLine": 58,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Triangle",
+          "startLine": 61,
+          "endLine": 65,
+          "methods": [
+            "intersect"
+          ],
+          "properties": [
+            "first",
+            "second",
+            "third"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Ray",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "EntityType",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "HitTestSource",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "HitTestId",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "EntityTypes",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "HitTestResult",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "HitTestSpace",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "Triangle",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "is_type",
+          "line": 68,
+          "isDefault": false
+        },
+        {
+          "name": "add_type",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "intersect",
+          "line": 99,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "from_iter",
+          "callee": "iter.into_iter().fold",
+          "lineNumber": 90
+        },
+        {
+          "caller": "from_iter",
+          "callee": "iter.into_iter",
+          "lineNumber": 90
+        },
+        {
+          "caller": "from_iter",
+          "callee": "Default::default",
+          "lineNumber": 90
+        },
+        {
+          "caller": "from_iter",
+          "callee": "acc.add_type",
+          "lineNumber": 91
+        },
+        {
+          "caller": "intersect",
+          "callee": "ray.direction.cross",
+          "lineNumber": 112
+        },
+        {
+          "caller": "intersect",
+          "callee": "edge1.dot",
+          "lineNumber": 113
+        },
+        {
+          "caller": "intersect",
+          "callee": "v0.to_vector",
+          "lineNumber": 121
+        },
+        {
+          "caller": "intersect",
+          "callee": "s.dot",
+          "lineNumber": 124
+        },
+        {
+          "caller": "intersect",
+          "callee": "(0. ..=1.).contains",
+          "lineNumber": 126
+        },
+        {
+          "caller": "intersect",
+          "callee": "s.cross",
+          "lineNumber": 131
+        },
+        {
+          "caller": "intersect",
+          "callee": "ray.direction.dot",
+          "lineNumber": 133
+        },
+        {
+          "caller": "intersect",
+          "callee": "edge2.dot",
+          "lineNumber": 142
+        },
+        {
+          "caller": "intersect",
+          "callee": "edge1.cross(edge2).normalize",
+          "lineNumber": 150
+        },
+        {
+          "caller": "intersect",
+          "callee": "edge1.cross",
+          "lineNumber": 150
+        },
+        {
+          "caller": "intersect",
+          "callee": "Vector3D::new",
+          "lineNumber": 151
+        },
+        {
+          "caller": "intersect",
+          "callee": "normal.dot",
+          "lineNumber": 152
+        },
+        {
+          "caller": "intersect",
+          "callee": "Rotation3D::identity",
+          "lineNumber": 157
+        },
+        {
+          "caller": "intersect",
+          "callee": "normal.cross",
+          "lineNumber": 159
+        },
+        {
+          "caller": "intersect",
+          "callee": "normal.dot",
+          "lineNumber": 160
+        },
+        {
+          "caller": "intersect",
+          "callee": "Rotation3D::quaternion",
+          "lineNumber": 164
+        },
+        {
+          "caller": "intersect",
+          "callee": "Some",
+          "lineNumber": 167
+        },
+        {
+          "caller": "intersect",
+          "callee": "RigidTransform3D::new",
+          "lineNumber": 167
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 11,
+        "functionCount": 4,
+        "classCount": 8
+      }
+    },
+    {
+      "path": "components/shared/webxr/input.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 66,
+      "nonEmptyLines": 57,
+      "classes": [
+        {
+          "name": "InputId",
+          "startLine": 12,
+          "endLine": 12,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Handedness",
+          "startLine": 15,
+          "endLine": 19,
+          "methods": [],
+          "properties": [
+            "None",
+            "Left",
+            "Right"
+          ]
+        },
+        {
+          "name": "TargetRayMode",
+          "startLine": 22,
+          "endLine": 27,
+          "methods": [],
+          "properties": [
+            "Gaze",
+            "TrackedPointer",
+            "Screen",
+            "TransientPointer"
+          ]
+        },
+        {
+          "name": "InputSource",
+          "startLine": 30,
+          "endLine": 37,
+          "methods": [],
+          "properties": [
+            "handedness",
+            "target_ray_mode",
+            "id",
+            "supports_grip",
+            "hand_support",
+            "profiles"
+          ]
+        },
+        {
+          "name": "InputFrame",
+          "startLine": 40,
+          "endLine": 50,
+          "methods": [],
+          "properties": [
+            "id",
+            "target_ray_origin",
+            "grip_origin",
+            "pressed",
+            "hand",
+            "squeezed",
+            "button_values",
+            "axis_values",
+            "input_changed"
+          ]
+        },
+        {
+          "name": "SelectEvent",
+          "startLine": 53,
+          "endLine": 60,
+          "methods": [],
+          "properties": [
+            "Start",
+            "End",
+            "Select"
+          ]
+        },
+        {
+          "name": "SelectKind",
+          "startLine": 63,
+          "endLine": 66,
+          "methods": [],
+          "properties": [
+            "Select",
+            "Squeeze"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "InputId",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "Handedness",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "TargetRayMode",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "InputSource",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "InputFrame",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "SelectEvent",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "SelectKind",
+          "line": 63,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 0,
+        "classCount": 7
+      }
+    },
+    {
+      "path": "components/shared/webxr/layer.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 279,
+      "nonEmptyLines": 237,
+      "functions": [
+        {
+          "name": "device",
+          "startLine": 37,
+          "endLine": 39,
+          "params": [
+            "_"
+          ]
+        },
+        {
+          "name": "context",
+          "startLine": 41,
+          "endLine": 43,
+          "params": [
+            "_"
+          ]
+        },
+        {
+          "name": "bindings",
+          "startLine": 45,
+          "endLine": 47,
+          "params": [
+            "_"
+          ]
+        },
+        {
+          "name": "clone",
+          "startLine": 60,
+          "endLine": 62,
+          "params": []
+        },
+        {
+          "name": "fmt",
+          "startLine": 66,
+          "endLine": 68,
+          "params": [
+            "fmt"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 72,
+          "endLine": 77,
+          "params": [
+            "grand_manager"
+          ]
+        },
+        {
+          "name": "create_layer_manager",
+          "startLine": 79,
+          "endLine": 86,
+          "params": [
+            "factory"
+          ]
+        },
+        {
+          "name": "fmt",
+          "startLine": 122,
+          "endLine": 124,
+          "params": [
+            "fmt"
+          ]
+        },
+        {
+          "name": "create_layer",
+          "startLine": 128,
+          "endLine": 134,
+          "params": [
+            "context_id",
+            "init"
+          ]
+        },
+        {
+          "name": "destroy_layer",
+          "startLine": 136,
+          "endLine": 138,
+          "params": [
+            "context_id",
+            "layer_id"
+          ]
+        },
+        {
+          "name": "begin_frame",
+          "startLine": 140,
+          "endLine": 145,
+          "params": [
+            "layers"
+          ]
+        },
+        {
+          "name": "end_frame",
+          "startLine": 147,
+          "endLine": 149,
+          "params": [
+            "layers"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 153,
+          "endLine": 158,
+          "params": [
+            "manager"
+          ]
+        },
+        {
+          "name": "drop",
+          "startLine": 162,
+          "endLine": 168,
+          "params": []
+        },
+        {
+          "name": "fmt",
+          "startLine": 177,
+          "endLine": 179,
+          "params": [
+            "fmt"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 183,
+          "endLine": 189,
+          "params": [
+            "factory"
+          ]
+        },
+        {
+          "name": "build",
+          "startLine": 191,
+          "endLine": 196,
+          "params": [
+            "contexts"
+          ]
+        },
+        {
+          "name": "default",
+          "startLine": 205,
+          "endLine": 207,
+          "params": []
+        },
+        {
+          "name": "texture_size",
+          "startLine": 232,
+          "endLine": 250,
+          "params": [
+            "viewports"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ContextId",
+          "startLine": 16,
+          "endLine": 16,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GLTypes",
+          "startLine": 18,
+          "endLine": 22,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "GLContexts",
+          "startLine": 24,
+          "endLine": 28,
+          "methods": [
+            "device",
+            "bindings",
+            "context"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LayerGrandManagerAPI",
+          "startLine": 50,
+          "endLine": 55,
+          "methods": [
+            "create_layer_manager",
+            "clone_layer_grand_manager"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LayerGrandManager",
+          "startLine": 57,
+          "endLine": 57,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "LayerManagerAPI",
+          "startLine": 89,
+          "endLine": 117,
+          "methods": [
+            "create_layer",
+            "destroy_layer",
+            "layers",
+            "begin_frame",
+            "end_frame"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LayerManager",
+          "startLine": 119,
+          "endLine": 119,
+          "methods": [
+            "fmt",
+            "create_layer",
+            "destroy_layer",
+            "begin_frame",
+            "end_frame",
+            "new",
+            "drop"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LayerManagerFactory",
+          "startLine": 172,
+          "endLine": 174,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "LayerId",
+          "startLine": 200,
+          "endLine": 200,
+          "methods": [
+            "default"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LayerInit",
+          "startLine": 211,
+          "endLine": 229,
+          "methods": [
+            "texture_size"
+          ],
+          "properties": [
+            "WebGLLayer",
+            "ProjectionLayer"
+          ]
+        },
+        {
+          "name": "LayerLayout",
+          "startLine": 255,
+          "endLine": 263,
+          "methods": [],
+          "properties": [
+            "Mono",
+            "StereoLeftRight",
+            "StereoTopBottom"
+          ]
+        },
+        {
+          "name": "SubImages",
+          "startLine": 266,
+          "endLine": 270,
+          "methods": [],
+          "properties": [
+            "layer_id",
+            "sub_image",
+            "view_sub_images"
+          ]
+        },
+        {
+          "name": "SubImage",
+          "startLine": 274,
+          "endLine": 279,
+          "methods": [],
+          "properties": [
+            "color_texture",
+            "depth_stencil_texture",
+            "texture_array_index",
+            "viewport"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ContextId",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "GLTypes",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "GLContexts",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "LayerGrandManagerAPI",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "LayerGrandManager",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "create_layer_manager",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "LayerManagerAPI",
+          "line": 89,
+          "isDefault": false
+        },
+        {
+          "name": "LayerManager",
+          "line": 119,
+          "isDefault": false
+        },
+        {
+          "name": "create_layer",
+          "line": 128,
+          "isDefault": false
+        },
+        {
+          "name": "destroy_layer",
+          "line": 136,
+          "isDefault": false
+        },
+        {
+          "name": "begin_frame",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "end_frame",
+          "line": 147,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "LayerManagerFactory",
+          "line": 172,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 183,
+          "isDefault": false
+        },
+        {
+          "name": "build",
+          "line": 191,
+          "isDefault": false
+        },
+        {
+          "name": "LayerId",
+          "line": 200,
+          "isDefault": false
+        },
+        {
+          "name": "LayerInit",
+          "line": 211,
+          "isDefault": false
+        },
+        {
+          "name": "texture_size",
+          "line": 232,
+          "isDefault": false
+        },
+        {
+          "name": "LayerLayout",
+          "line": 255,
+          "isDefault": false
+        },
+        {
+          "name": "SubImages",
+          "line": 266,
+          "isDefault": false
+        },
+        {
+          "name": "SubImage",
+          "line": 274,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "device",
+          "callee": "Some",
+          "lineNumber": 38
+        },
+        {
+          "caller": "context",
+          "callee": "Some",
+          "lineNumber": 42
+        },
+        {
+          "caller": "bindings",
+          "callee": "Some",
+          "lineNumber": 46
+        },
+        {
+          "caller": "clone",
+          "callee": "self.0.clone_layer_grand_manager",
+          "lineNumber": 61
+        },
+        {
+          "caller": "fmt",
+          "callee": "\"LayerGrandManager(...)\".fmt",
+          "lineNumber": 67
+        },
+        {
+          "caller": "new",
+          "callee": "LayerGrandManager",
+          "lineNumber": 76
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 76
+        },
+        {
+          "caller": "create_layer_manager",
+          "callee": "self.0.create_layer_manager",
+          "lineNumber": 84
+        },
+        {
+          "caller": "create_layer_manager",
+          "callee": "LayerManagerFactory::new",
+          "lineNumber": 85
+        },
+        {
+          "caller": "fmt",
+          "callee": "\"LayerManager(...)\".fmt",
+          "lineNumber": 123
+        },
+        {
+          "caller": "create_layer",
+          "callee": "self.0.create_layer",
+          "lineNumber": 133
+        },
+        {
+          "caller": "destroy_layer",
+          "callee": "self.0.destroy_layer",
+          "lineNumber": 137
+        },
+        {
+          "caller": "begin_frame",
+          "callee": "self.0.begin_frame",
+          "lineNumber": 144
+        },
+        {
+          "caller": "end_frame",
+          "callee": "self.0.end_frame",
+          "lineNumber": 148
+        },
+        {
+          "caller": "new",
+          "callee": "LayerManager",
+          "lineNumber": 157
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 157
+        },
+        {
+          "caller": "drop",
+          "callee": "self.0.layers().to_vec",
+          "lineNumber": 164
+        },
+        {
+          "caller": "drop",
+          "callee": "self.0.layers",
+          "lineNumber": 164
+        },
+        {
+          "caller": "drop",
+          "callee": "layers.into_iter",
+          "lineNumber": 165
+        },
+        {
+          "caller": "drop",
+          "callee": "self.destroy_layer",
+          "lineNumber": 166
+        },
+        {
+          "caller": "fmt",
+          "callee": "\"LayerManagerFactory(...)\".fmt",
+          "lineNumber": 178
+        },
+        {
+          "caller": "new",
+          "callee": "LayerManagerFactory",
+          "lineNumber": 188
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 188
+        },
+        {
+          "caller": "new",
+          "callee": "Ok",
+          "lineNumber": 188
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 188
+        },
+        {
+          "caller": "new",
+          "callee": "factory",
+          "lineNumber": 188
+        },
+        {
+          "caller": "build",
+          "callee": "(self.0)",
+          "lineNumber": 195
+        },
+        {
+          "caller": "default",
+          "callee": "LayerId",
+          "lineNumber": 206
+        },
+        {
+          "caller": "default",
+          "callee": "NEXT_LAYER_ID.fetch_add",
+          "lineNumber": 206
+        },
+        {
+          "caller": "texture_size",
+          "callee": "viewports\n                    .viewports\n                    .iter().fold",
+          "lineNumber": 242
+        },
+        {
+          "caller": "texture_size",
+          "callee": "viewports\n                    .viewports.iter",
+          "lineNumber": 242
+        },
+        {
+          "caller": "texture_size",
+          "callee": "Rect::zero",
+          "lineNumber": 245
+        },
+        {
+          "caller": "texture_size",
+          "callee": "acc.union",
+          "lineNumber": 245
+        },
+        {
+          "caller": "texture_size",
+          "callee": "(native_size.to_f32() * *scale).to_i32",
+          "lineNumber": 247
+        },
+        {
+          "caller": "texture_size",
+          "callee": "native_size.to_f32",
+          "lineNumber": 247
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 23,
+        "functionCount": 19,
+        "classCount": 13
+      }
+    },
+    {
+      "path": "components/shared/webxr/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 51,
+      "nonEmptyLines": 48,
+      "metrics": {
+        "importCount": 14,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/shared/webxr/mock.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 120,
+      "nonEmptyLines": 107,
+      "classes": [
+        {
+          "name": "MockDiscoveryAPI",
+          "startLine": 17,
+          "endLine": 23,
+          "methods": [
+            "simulate_device_connection"
+          ],
+          "properties": []
+        },
+        {
+          "name": "MockDeviceInit",
+          "startLine": 26,
+          "endLine": 35,
+          "methods": [],
+          "properties": [
+            "floor_origin",
+            "supports_inline",
+            "supports_vr",
+            "supports_ar",
+            "viewer_origin",
+            "views",
+            "supported_features",
+            "world"
+          ]
+        },
+        {
+          "name": "MockViewInit",
+          "startLine": 38,
+          "endLine": 44,
+          "methods": [],
+          "properties": [
+            "transform",
+            "projection",
+            "viewport",
+            "fov"
+          ]
+        },
+        {
+          "name": "MockViewsInit",
+          "startLine": 47,
+          "endLine": 50,
+          "methods": [],
+          "properties": [
+            "Mono",
+            "Stereo"
+          ]
+        },
+        {
+          "name": "MockDeviceMsg",
+          "startLine": 53,
+          "endLine": 65,
+          "methods": [],
+          "properties": [
+            "SetViewerOrigin",
+            "SetFloorOrigin",
+            "SetViews",
+            "AddInputSource",
+            "MessageInputSource",
+            "VisibilityChange",
+            "SetWorld",
+            "ClearWorld",
+            "Disconnect",
+            "SetBoundsGeometry",
+            "SimulateResetPose"
+          ]
+        },
+        {
+          "name": "MockInputInit",
+          "startLine": 68,
+          "endLine": 73,
+          "methods": [],
+          "properties": [
+            "source",
+            "pointer_origin",
+            "grip_origin",
+            "supported_buttons"
+          ]
+        },
+        {
+          "name": "MockInputMsg",
+          "startLine": 76,
+          "endLine": 90,
+          "methods": [],
+          "properties": [
+            "SetHandedness",
+            "SetTargetRayMode",
+            "SetProfiles",
+            "SetPointerOrigin",
+            "SetGripOrigin",
+            "TriggerSelect",
+            "Disconnect",
+            "Reconnect",
+            "SetSupportedButtons",
+            "UpdateButtonState"
+          ]
+        },
+        {
+          "name": "MockRegion",
+          "startLine": 93,
+          "endLine": 96,
+          "methods": [],
+          "properties": [
+            "faces",
+            "ty"
+          ]
+        },
+        {
+          "name": "MockWorld",
+          "startLine": 99,
+          "endLine": 101,
+          "methods": [],
+          "properties": [
+            "regions"
+          ]
+        },
+        {
+          "name": "MockButtonType",
+          "startLine": 104,
+          "endLine": 110,
+          "methods": [],
+          "properties": [
+            "Grip",
+            "Touchpad",
+            "Thumbstick",
+            "OptionalButton",
+            "OptionalThumbstick"
+          ]
+        },
+        {
+          "name": "MockButton",
+          "startLine": 113,
+          "endLine": 120,
+          "methods": [],
+          "properties": [
+            "button_type",
+            "pressed",
+            "touched",
+            "pressed_value",
+            "x_value",
+            "y_value"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "MockDiscoveryAPI",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "MockDeviceInit",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "MockViewInit",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "MockViewsInit",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "MockDeviceMsg",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "MockInputInit",
+          "line": 68,
+          "isDefault": false
+        },
+        {
+          "name": "MockInputMsg",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "MockRegion",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "MockWorld",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "MockButtonType",
+          "line": 104,
+          "isDefault": false
+        },
+        {
+          "name": "MockButton",
+          "line": 113,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 11,
+        "functionCount": 0,
+        "classCount": 11
+      }
+    },
+    {
+      "path": "components/shared/webxr/registry.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 236,
+      "nonEmptyLines": 214,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 40,
+          "endLine": 44,
+          "params": [
+            "waker"
+          ]
+        },
+        {
+          "name": "wake",
+          "startLine": 46,
+          "endLine": 48,
+          "params": []
+        },
+        {
+          "name": "supports_session",
+          "startLine": 52,
+          "endLine": 59,
+          "params": [
+            "mode",
+            "dest"
+          ]
+        },
+        {
+          "name": "request_session",
+          "startLine": 61,
+          "endLine": 75,
+          "params": [
+            "mode",
+            "init",
+            "dest",
+            "animation_frame_handler"
+          ]
+        },
+        {
+          "name": "simulate_device_connection",
+          "startLine": 77,
+          "endLine": 86,
+          "params": [
+            "init",
+            "dest"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 90,
+          "endLine": 111,
+          "params": [
+            "waker",
+            "grand_manager"
+          ]
+        },
+        {
+          "name": "registry",
+          "startLine": 113,
+          "endLine": 118,
+          "params": []
+        },
+        {
+          "name": "register",
+          "startLine": 120,
+          "endLine": 125,
+          "params": [
+            "discovery"
+          ]
+        },
+        {
+          "name": "register_mock",
+          "startLine": 127,
+          "endLine": 132,
+          "params": [
+            "discovery"
+          ]
+        },
+        {
+          "name": "run_on_main_thread",
+          "startLine": 134,
+          "endLine": 139,
+          "params": [
+            "session"
+          ]
+        },
+        {
+          "name": "run_one_frame",
+          "startLine": 141,
+          "endLine": 149,
+          "params": []
+        },
+        {
+          "name": "running",
+          "startLine": 151,
+          "endLine": 153,
+          "params": []
+        },
+        {
+          "name": "handle_msg",
+          "startLine": 155,
+          "endLine": 167,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "supports_session",
+          "startLine": 169,
+          "endLine": 176,
+          "params": [
+            "mode"
+          ]
+        },
+        {
+          "name": "request_session",
+          "startLine": 178,
+          "endLine": 203,
+          "params": [
+            "mode",
+            "init",
+            "raf_sender"
+          ]
+        },
+        {
+          "name": "simulate_device_connection",
+          "startLine": 205,
+          "endLine": 219,
+          "params": [
+            "init"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Registry",
+          "startLine": 18,
+          "endLine": 21,
+          "methods": [
+            "supports_session",
+            "request_session",
+            "simulate_device_connection"
+          ],
+          "properties": [
+            "sender",
+            "waker"
+          ]
+        },
+        {
+          "name": "MainThreadRegistry",
+          "startLine": 23,
+          "endLine": 32,
+          "methods": [],
+          "properties": [
+            "discoveries",
+            "sessions",
+            "mocks",
+            "sender",
+            "receiver",
+            "waker",
+            "grand_manager",
+            "next_session_id"
+          ]
+        },
+        {
+          "name": "MainThreadWakerImpl",
+          "startLine": 35,
+          "endLine": 37,
+          "methods": [
+            "new",
+            "wake"
+          ],
+          "properties": [
+            "callback"
+          ]
+        },
+        {
+          "name": "RegistryMsg",
+          "startLine": 224,
+          "endLine": 236,
+          "methods": [],
+          "properties": [
+            "RequestSession",
+            "SupportsSession",
+            "SimulateDeviceConnection"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Registry",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "MainThreadRegistry",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "supports_session",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "request_session",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "simulate_device_connection",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "registry",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "register",
+          "line": 120,
+          "isDefault": false
+        },
+        {
+          "name": "register_mock",
+          "line": 127,
+          "isDefault": false
+        },
+        {
+          "name": "run_on_main_thread",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "run_one_frame",
+          "line": 141,
+          "isDefault": false
+        },
+        {
+          "name": "running",
+          "line": 151,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "GenericCallback::new(move |_| waker.wake()).expect",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new",
+          "callee": "GenericCallback::new",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new",
+          "callee": "waker.wake",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new",
+          "callee": "Ok",
+          "lineNumber": 43
+        },
+        {
+          "caller": "wake",
+          "callee": "self.callback.send",
+          "lineNumber": 47
+        },
+        {
+          "caller": "supports_session",
+          "callee": "self.sender.send",
+          "lineNumber": 57
+        },
+        {
+          "caller": "supports_session",
+          "callee": "RegistryMsg::SupportsSession",
+          "lineNumber": 57
+        },
+        {
+          "caller": "supports_session",
+          "callee": "self.waker.wake",
+          "lineNumber": 58
+        },
+        {
+          "caller": "request_session",
+          "callee": "self.sender.send",
+          "lineNumber": 68
+        },
+        {
+          "caller": "request_session",
+          "callee": "RegistryMsg::RequestSession",
+          "lineNumber": 68
+        },
+        {
+          "caller": "request_session",
+          "callee": "self.waker.wake",
+          "lineNumber": 74
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "self\n            .sender.send",
+          "lineNumber": 82
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "RegistryMsg::SimulateDeviceConnection",
+          "lineNumber": 84
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "self.waker.wake",
+          "lineNumber": 85
+        },
+        {
+          "caller": "new",
+          "callee": "generic_channel::channel",
+          "lineNumber": 94
+        },
+        {
+          "caller": "new",
+          "callee": "Err",
+          "lineNumber": 95
+        },
+        {
+          "caller": "new",
+          "callee": "Vec::new",
+          "lineNumber": 97
+        },
+        {
+          "caller": "new",
+          "callee": "Vec::new",
+          "lineNumber": 98
+        },
+        {
+          "caller": "new",
+          "callee": "Vec::new",
+          "lineNumber": 99
+        },
+        {
+          "caller": "new",
+          "callee": "MainThreadWakerImpl::new",
+          "lineNumber": 100
+        },
+        {
+          "caller": "new",
+          "callee": "Ok",
+          "lineNumber": 101
+        },
+        {
+          "caller": "registry",
+          "callee": "self.sender.clone",
+          "lineNumber": 115
+        },
+        {
+          "caller": "registry",
+          "callee": "self.waker.clone",
+          "lineNumber": 116
+        },
+        {
+          "caller": "register",
+          "callee": "self.discoveries.push",
+          "lineNumber": 124
+        },
+        {
+          "caller": "register",
+          "callee": "Box::new",
+          "lineNumber": 124
+        },
+        {
+          "caller": "register_mock",
+          "callee": "self.mocks.push",
+          "lineNumber": 131
+        },
+        {
+          "caller": "register_mock",
+          "callee": "Box::new",
+          "lineNumber": 131
+        },
+        {
+          "caller": "run_on_main_thread",
+          "callee": "self.sessions.push",
+          "lineNumber": 138
+        },
+        {
+          "caller": "run_on_main_thread",
+          "callee": "Box::new",
+          "lineNumber": 138
+        },
+        {
+          "caller": "run_one_frame",
+          "callee": "self.receiver.try_recv",
+          "lineNumber": 142
+        },
+        {
+          "caller": "run_one_frame",
+          "callee": "self.handle_msg",
+          "lineNumber": 143
+        },
+        {
+          "caller": "run_one_frame",
+          "callee": "session.run_one_frame",
+          "lineNumber": 146
+        },
+        {
+          "caller": "run_one_frame",
+          "callee": "self.sessions.retain",
+          "lineNumber": 148
+        },
+        {
+          "caller": "run_one_frame",
+          "callee": "session.running",
+          "lineNumber": 148
+        },
+        {
+          "caller": "running",
+          "callee": "self.sessions.iter().any",
+          "lineNumber": 152
+        },
+        {
+          "caller": "running",
+          "callee": "self.sessions.iter",
+          "lineNumber": 152
+        },
+        {
+          "caller": "running",
+          "callee": "session.running",
+          "lineNumber": 152
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "dest.send",
+          "lineNumber": 158
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.supports_session",
+          "lineNumber": 158
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "dest.send",
+          "lineNumber": 161
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.request_session",
+          "lineNumber": 161
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "dest.send",
+          "lineNumber": 164
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.simulate_device_connection",
+          "lineNumber": 164
+        },
+        {
+          "caller": "supports_session",
+          "callee": "discovery.supports_session",
+          "lineNumber": 171
+        },
+        {
+          "caller": "supports_session",
+          "callee": "Ok",
+          "lineNumber": 172
+        },
+        {
+          "caller": "supports_session",
+          "callee": "Err",
+          "lineNumber": 175
+        },
+        {
+          "caller": "request_session",
+          "callee": "discovery.supports_session",
+          "lineNumber": 185
+        },
+        {
+          "caller": "request_session",
+          "callee": "raf_sender.clone",
+          "lineNumber": 186
+        },
+        {
+          "caller": "request_session",
+          "callee": "SessionId",
+          "lineNumber": 187
+        },
+        {
+          "caller": "request_session",
+          "callee": "SessionBuilder::new",
+          "lineNumber": 189
+        },
+        {
+          "caller": "request_session",
+          "callee": "self.grand_manager.clone",
+          "lineNumber": 192
+        },
+        {
+          "caller": "request_session",
+          "callee": "discovery.request_session",
+          "lineNumber": 195
+        },
+        {
+          "caller": "request_session",
+          "callee": "Ok",
+          "lineNumber": 196
+        },
+        {
+          "caller": "request_session",
+          "callee": "Err",
+          "lineNumber": 202
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "generic_channel::channel",
+          "lineNumber": 210
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "Err",
+          "lineNumber": 211
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "mock.simulate_device_connection",
+          "lineNumber": 213
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "init.clone",
+          "lineNumber": 213
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "self.discoveries.insert",
+          "lineNumber": 214
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "Ok",
+          "lineNumber": 215
+        },
+        {
+          "caller": "simulate_device_connection",
+          "callee": "Err",
+          "lineNumber": 218
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 12,
+        "functionCount": 16,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "components/shared/webxr/session.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 509,
+      "nonEmptyLines": 453,
+      "functions": [
+        {
+          "name": "validate",
+          "startLine": 46,
+          "endLine": 69,
+          "params": [
+            "mode",
+            "supported"
+          ]
+        },
+        {
+          "name": "feature_requested",
+          "startLine": 71,
+          "endLine": 76,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "quit",
+          "startLine": 110,
+          "endLine": 112,
+          "params": []
+        },
+        {
+          "name": "id",
+          "startLine": 134,
+          "endLine": 136,
+          "params": []
+        },
+        {
+          "name": "floor_transform",
+          "startLine": 138,
+          "endLine": 140,
+          "params": []
+        },
+        {
+          "name": "reference_space_bounds",
+          "startLine": 142,
+          "endLine": 146,
+          "params": []
+        },
+        {
+          "name": "initial_inputs",
+          "startLine": 148,
+          "endLine": 150,
+          "params": []
+        },
+        {
+          "name": "environment_blend_mode",
+          "startLine": 152,
+          "endLine": 154,
+          "params": []
+        },
+        {
+          "name": "viewports",
+          "startLine": 156,
+          "endLine": 158,
+          "params": []
+        },
+        {
+          "name": "recommended_framebuffer_resolution",
+          "startLine": 164,
+          "endLine": 171,
+          "params": []
+        },
+        {
+          "name": "create_layer",
+          "startLine": 173,
+          "endLine": 181,
+          "params": [
+            "context_id",
+            "init"
+          ]
+        },
+        {
+          "name": "destroy_layer",
+          "startLine": 184,
+          "endLine": 188,
+          "params": [
+            "context_id",
+            "layer_id"
+          ]
+        },
+        {
+          "name": "set_layers",
+          "startLine": 190,
+          "endLine": 192,
+          "params": [
+            "layers"
+          ]
+        },
+        {
+          "name": "start_render_loop",
+          "startLine": 194,
+          "endLine": 196,
+          "params": []
+        },
+        {
+          "name": "update_clip_planes",
+          "startLine": 198,
+          "endLine": 200,
+          "params": [
+            "near",
+            "far"
+          ]
+        },
+        {
+          "name": "set_event_dest",
+          "startLine": 202,
+          "endLine": 204,
+          "params": [
+            "dest"
+          ]
+        },
+        {
+          "name": "render_animation_frame",
+          "startLine": 206,
+          "endLine": 208,
+          "params": []
+        },
+        {
+          "name": "end_session",
+          "startLine": 210,
+          "endLine": 212,
+          "params": []
+        },
+        {
+          "name": "apply_event",
+          "startLine": 214,
+          "endLine": 220,
+          "params": [
+            "event"
+          ]
+        },
+        {
+          "name": "granted_features",
+          "startLine": 222,
+          "endLine": 224,
+          "params": []
+        },
+        {
+          "name": "request_hit_test",
+          "startLine": 226,
+          "endLine": 228,
+          "params": [
+            "source"
+          ]
+        },
+        {
+          "name": "cancel_hit_test",
+          "startLine": 230,
+          "endLine": 232,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "update_frame_rate",
+          "startLine": 234,
+          "endLine": 236,
+          "params": [
+            "rate",
+            "sender"
+          ]
+        },
+        {
+          "name": "supported_frame_rates",
+          "startLine": 238,
+          "endLine": 240,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 268,
+          "endLine": 295,
+          "params": [
+            "device",
+            "frame_sender",
+            "id"
+          ]
+        },
+        {
+          "name": "new_session",
+          "startLine": 297,
+          "endLine": 315,
+          "params": []
+        },
+        {
+          "name": "run",
+          "startLine": 317,
+          "endLine": 324,
+          "params": []
+        },
+        {
+          "name": "handle_msg",
+          "startLine": 326,
+          "endLine": 406,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "quit",
+          "startLine": 408,
+          "endLine": 411,
+          "params": []
+        },
+        {
+          "name": "run_one_frame",
+          "startLine": 424,
+          "endLine": 433,
+          "params": []
+        },
+        {
+          "name": "running",
+          "startLine": 435,
+          "endLine": 437,
+          "params": []
+        },
+        {
+          "name": "id",
+          "startLine": 449,
+          "endLine": 451,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 453,
+          "endLine": 465,
+          "params": [
+            "sessions",
+            "frame_sender",
+            "layer_grand_manager",
+            "id"
+          ]
+        },
+        {
+          "name": "spawn",
+          "startLine": 468,
+          "endLine": 494,
+          "params": [
+            "factory"
+          ]
+        },
+        {
+          "name": "run_on_main_thread",
+          "startLine": 497,
+          "endLine": 508,
+          "params": [
+            "factory"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "SessionMode",
+          "startLine": 26,
+          "endLine": 30,
+          "methods": [],
+          "properties": [
+            "Inline",
+            "ImmersiveVR",
+            "ImmersiveAR"
+          ]
+        },
+        {
+          "name": "SessionInit",
+          "startLine": 34,
+          "endLine": 41,
+          "methods": [
+            "validate",
+            "feature_requested"
+          ],
+          "properties": [
+            "required_features",
+            "optional_features",
+            "first_person_observer_view"
+          ]
+        },
+        {
+          "name": "EnvironmentBlendMode",
+          "startLine": 81,
+          "endLine": 85,
+          "methods": [],
+          "properties": [
+            "Opaque",
+            "AlphaBlend",
+            "Additive"
+          ]
+        },
+        {
+          "name": "SessionMsg",
+          "startLine": 89,
+          "endLine": 102,
+          "methods": [],
+          "properties": [
+            "CreateLayer",
+            "DestroyLayer",
+            "SetLayers",
+            "SetEventDest",
+            "UpdateClipPlanes",
+            "StartRenderLoop",
+            "RenderAnimationFrame",
+            "RequestHitTest",
+            "CancelHitTest",
+            "UpdateFrameRate",
+            "Quit",
+            "GetBoundsGeometry"
+          ]
+        },
+        {
+          "name": "Quitter",
+          "startLine": 105,
+          "endLine": 107,
+          "methods": [
+            "quit"
+          ],
+          "properties": [
+            "sender"
+          ]
+        },
+        {
+          "name": "Session",
+          "startLine": 119,
+          "endLine": 128,
+          "methods": [
+            "id",
+            "floor_transform",
+            "reference_space_bounds",
+            "initial_inputs",
+            "environment_blend_mode",
+            "viewports",
+            "recommended_framebuffer_resolution",
+            "create_layer",
+            "destroy_layer",
+            "set_layers",
+            "start_render_loop",
+            "update_clip_planes",
+            "set_event_dest",
+            "render_animation_frame",
+            "end_session",
+            "apply_event",
+            "granted_features",
+            "request_hit_test",
+            "cancel_hit_test",
+            "update_frame_rate",
+            "supported_frame_rates"
+          ],
+          "properties": [
+            "floor_transform",
+            "viewports",
+            "sender",
+            "environment_blend_mode",
+            "initial_inputs",
+            "granted_features",
+            "id",
+            "supported_frame_rates"
+          ]
+        },
+        {
+          "name": "SessionId",
+          "startLine": 131,
+          "endLine": 131,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "RenderState",
+          "startLine": 244,
+          "endLine": 248,
+          "methods": [],
+          "properties": [
+            "NotInRenderLoop",
+            "InRenderLoop",
+            "PendingQuit"
+          ]
+        },
+        {
+          "name": "SessionThread",
+          "startLine": 251,
+          "endLine": 262,
+          "methods": [],
+          "properties": [
+            "receiver",
+            "sender",
+            "layers",
+            "pending_layers",
+            "frame_count",
+            "frame_sender",
+            "running",
+            "device",
+            "id",
+            "render_state"
+          ]
+        },
+        {
+          "name": "MainThreadSession",
+          "startLine": 415,
+          "endLine": 418,
+          "methods": [
+            "run_one_frame",
+            "running"
+          ],
+          "properties": []
+        },
+        {
+          "name": "SessionBuilder",
+          "startLine": 441,
+          "endLine": 446,
+          "methods": [],
+          "properties": [
+            "sessions",
+            "frame_sender",
+            "layer_grand_manager",
+            "id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SessionMode",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "SessionInit",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "validate",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "feature_requested",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "EnvironmentBlendMode",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "Quitter",
+          "line": 105,
+          "isDefault": false
+        },
+        {
+          "name": "quit",
+          "line": 110,
+          "isDefault": false
+        },
+        {
+          "name": "Session",
+          "line": 119,
+          "isDefault": false
+        },
+        {
+          "name": "SessionId",
+          "line": 131,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "floor_transform",
+          "line": 138,
+          "isDefault": false
+        },
+        {
+          "name": "reference_space_bounds",
+          "line": 142,
+          "isDefault": false
+        },
+        {
+          "name": "initial_inputs",
+          "line": 148,
+          "isDefault": false
+        },
+        {
+          "name": "environment_blend_mode",
+          "line": 152,
+          "isDefault": false
+        },
+        {
+          "name": "viewports",
+          "line": 156,
+          "isDefault": false
+        },
+        {
+          "name": "recommended_framebuffer_resolution",
+          "line": 164,
+          "isDefault": false
+        },
+        {
+          "name": "create_layer",
+          "line": 173,
+          "isDefault": false
+        },
+        {
+          "name": "destroy_layer",
+          "line": 184,
+          "isDefault": false
+        },
+        {
+          "name": "set_layers",
+          "line": 190,
+          "isDefault": false
+        },
+        {
+          "name": "start_render_loop",
+          "line": 194,
+          "isDefault": false
+        },
+        {
+          "name": "update_clip_planes",
+          "line": 198,
+          "isDefault": false
+        },
+        {
+          "name": "set_event_dest",
+          "line": 202,
+          "isDefault": false
+        },
+        {
+          "name": "render_animation_frame",
+          "line": 206,
+          "isDefault": false
+        },
+        {
+          "name": "end_session",
+          "line": 210,
+          "isDefault": false
+        },
+        {
+          "name": "apply_event",
+          "line": 214,
+          "isDefault": false
+        },
+        {
+          "name": "granted_features",
+          "line": 222,
+          "isDefault": false
+        },
+        {
+          "name": "request_hit_test",
+          "line": 226,
+          "isDefault": false
+        },
+        {
+          "name": "cancel_hit_test",
+          "line": 230,
+          "isDefault": false
+        },
+        {
+          "name": "update_frame_rate",
+          "line": 234,
+          "isDefault": false
+        },
+        {
+          "name": "supported_frame_rates",
+          "line": 238,
+          "isDefault": false
+        },
+        {
+          "name": "SessionThread",
+          "line": 251,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 268,
+          "isDefault": false
+        },
+        {
+          "name": "new_session",
+          "line": 297,
+          "isDefault": false
+        },
+        {
+          "name": "run",
+          "line": 317,
+          "isDefault": false
+        },
+        {
+          "name": "MainThreadSession",
+          "line": 415,
+          "isDefault": false
+        },
+        {
+          "name": "SessionBuilder",
+          "line": 441,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 449,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 453,
+          "isDefault": false
+        },
+        {
+          "name": "spawn",
+          "line": 468,
+          "isDefault": false
+        },
+        {
+          "name": "run_on_main_thread",
+          "line": 497,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "validate",
+          "callee": "supported.contains",
+          "lineNumber": 54
+        },
+        {
+          "caller": "validate",
+          "callee": "Err",
+          "lineNumber": 55
+        },
+        {
+          "caller": "validate",
+          "callee": "Error::UnsupportedFeature",
+          "lineNumber": 55
+        },
+        {
+          "caller": "validate",
+          "callee": "f.into",
+          "lineNumber": 55
+        },
+        {
+          "caller": "validate",
+          "callee": "self.required_features.clone",
+          "lineNumber": 58
+        },
+        {
+          "caller": "validate",
+          "callee": "supported.contains",
+          "lineNumber": 62
+        },
+        {
+          "caller": "validate",
+          "callee": "granted.push",
+          "lineNumber": 64
+        },
+        {
+          "caller": "validate",
+          "callee": "f.clone",
+          "lineNumber": 64
+        },
+        {
+          "caller": "validate",
+          "callee": "Ok",
+          "lineNumber": 68
+        },
+        {
+          "caller": "feature_requested",
+          "callee": "self.required_features\n            .iter()\n            .chain(self.optional_features.iter()).any",
+          "lineNumber": 72
+        },
+        {
+          "caller": "feature_requested",
+          "callee": "self.required_features\n            .iter().chain",
+          "lineNumber": 72
+        },
+        {
+          "caller": "feature_requested",
+          "callee": "self.required_features.iter",
+          "lineNumber": 72
+        },
+        {
+          "caller": "feature_requested",
+          "callee": "self.optional_features.iter",
+          "lineNumber": 74
+        },
+        {
+          "caller": "quit",
+          "callee": "self.sender.send",
+          "lineNumber": 111
+        },
+        {
+          "caller": "reference_space_bounds",
+          "callee": "generic_channel::channel",
+          "lineNumber": 143
+        },
+        {
+          "caller": "reference_space_bounds",
+          "callee": "self.sender.send",
+          "lineNumber": 144
+        },
+        {
+          "caller": "reference_space_bounds",
+          "callee": "SessionMsg::GetBoundsGeometry",
+          "lineNumber": 144
+        },
+        {
+          "caller": "reference_space_bounds",
+          "callee": "receiver.recv().ok",
+          "lineNumber": 145
+        },
+        {
+          "caller": "reference_space_bounds",
+          "callee": "receiver.recv",
+          "lineNumber": 145
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "self.viewports()\n            .iter()\n            .fold(None::<Rect<_, _>>, |acc, vp| {\n                Some(acc.map(|a| a.union(vp)).unwrap_or(*vp))\n            }).map",
+          "lineNumber": 165
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "self.viewports()\n            .iter().fold",
+          "lineNumber": 165
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "self.viewports().iter",
+          "lineNumber": 165
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "self.viewports",
+          "lineNumber": 165
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "Some",
+          "lineNumber": 168
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "acc.map(|a| a.union(vp)).unwrap_or",
+          "lineNumber": 168
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "acc.map",
+          "lineNumber": 168
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "a.union",
+          "lineNumber": 168
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "Size2D::new",
+          "lineNumber": 170
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "rect.max_x",
+          "lineNumber": 170
+        },
+        {
+          "caller": "recommended_framebuffer_resolution",
+          "callee": "rect.max_y",
+          "lineNumber": 170
+        },
+        {
+          "caller": "create_layer",
+          "callee": "generic_channel::channel",
+          "lineNumber": 174
+        },
+        {
+          "caller": "create_layer",
+          "callee": "Err",
+          "lineNumber": 175
+        },
+        {
+          "caller": "create_layer",
+          "callee": "self\n            .sender.send",
+          "lineNumber": 177
+        },
+        {
+          "caller": "create_layer",
+          "callee": "SessionMsg::CreateLayer",
+          "lineNumber": 179
+        },
+        {
+          "caller": "create_layer",
+          "callee": "receiver.recv().map_err",
+          "lineNumber": 180
+        },
+        {
+          "caller": "create_layer",
+          "callee": "receiver.recv",
+          "lineNumber": 180
+        },
+        {
+          "caller": "destroy_layer",
+          "callee": "self\n            .sender.send",
+          "lineNumber": 185
+        },
+        {
+          "caller": "destroy_layer",
+          "callee": "SessionMsg::DestroyLayer",
+          "lineNumber": 187
+        },
+        {
+          "caller": "set_layers",
+          "callee": "self.sender.send",
+          "lineNumber": 191
+        },
+        {
+          "caller": "set_layers",
+          "callee": "SessionMsg::SetLayers",
+          "lineNumber": 191
+        },
+        {
+          "caller": "start_render_loop",
+          "callee": "self.sender.send",
+          "lineNumber": 195
+        },
+        {
+          "caller": "update_clip_planes",
+          "callee": "self.sender.send",
+          "lineNumber": 199
+        },
+        {
+          "caller": "update_clip_planes",
+          "callee": "SessionMsg::UpdateClipPlanes",
+          "lineNumber": 199
+        },
+        {
+          "caller": "set_event_dest",
+          "callee": "self.sender.send",
+          "lineNumber": 203
+        },
+        {
+          "caller": "set_event_dest",
+          "callee": "SessionMsg::SetEventDest",
+          "lineNumber": 203
+        },
+        {
+          "caller": "render_animation_frame",
+          "callee": "self.sender.send",
+          "lineNumber": 207
+        },
+        {
+          "caller": "end_session",
+          "callee": "self.sender.send",
+          "lineNumber": 211
+        },
+        {
+          "caller": "request_hit_test",
+          "callee": "self.sender.send",
+          "lineNumber": 227
+        },
+        {
+          "caller": "request_hit_test",
+          "callee": "SessionMsg::RequestHitTest",
+          "lineNumber": 227
+        },
+        {
+          "caller": "cancel_hit_test",
+          "callee": "self.sender.send",
+          "lineNumber": 231
+        },
+        {
+          "caller": "cancel_hit_test",
+          "callee": "SessionMsg::CancelHitTest",
+          "lineNumber": 231
+        },
+        {
+          "caller": "update_frame_rate",
+          "callee": "self.sender.send",
+          "lineNumber": 235
+        },
+        {
+          "caller": "update_frame_rate",
+          "callee": "SessionMsg::UpdateFrameRate",
+          "lineNumber": 235
+        },
+        {
+          "caller": "new",
+          "callee": "generic_channel::channel",
+          "lineNumber": 273
+        },
+        {
+          "caller": "new",
+          "callee": "Err",
+          "lineNumber": 274
+        },
+        {
+          "caller": "new",
+          "callee": "device.set_quitter",
+          "lineNumber": 276
+        },
+        {
+          "caller": "new",
+          "callee": "sender.clone",
+          "lineNumber": 277
+        },
+        {
+          "caller": "new",
+          "callee": "Vec::new",
+          "lineNumber": 281
+        },
+        {
+          "caller": "new",
+          "callee": "Ok",
+          "lineNumber": 283
+        },
+        {
+          "caller": "new_session",
+          "callee": "self.device.floor_transform",
+          "lineNumber": 298
+        },
+        {
+          "caller": "new_session",
+          "callee": "self.device.viewports",
+          "lineNumber": 299
+        },
+        {
+          "caller": "new_session",
+          "callee": "self.sender.clone",
+          "lineNumber": 300
+        },
+        {
+          "caller": "new_session",
+          "callee": "self.device.initial_inputs",
+          "lineNumber": 301
+        },
+        {
+          "caller": "new_session",
+          "callee": "self.device.environment_blend_mode",
+          "lineNumber": 302
+        },
+        {
+          "caller": "new_session",
+          "callee": "self.device.granted_features().into",
+          "lineNumber": 303
+        },
+        {
+          "caller": "new_session",
+          "callee": "self.device.granted_features",
+          "lineNumber": 303
+        },
+        {
+          "caller": "new_session",
+          "callee": "self.device.supported_frame_rates",
+          "lineNumber": 304
+        },
+        {
+          "caller": "run",
+          "callee": "self.receiver.recv",
+          "lineNumber": 318
+        },
+        {
+          "caller": "run",
+          "callee": "self.handle_msg",
+          "lineNumber": 319
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.set_event_dest",
+          "lineNumber": 330
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.request_hit_test",
+          "lineNumber": 333
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.cancel_hit_test",
+          "lineNumber": 336
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.create_layer",
+          "lineNumber": 339
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "sender.send",
+          "lineNumber": 340
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.layers.retain",
+          "lineNumber": 343
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.destroy_layer",
+          "lineNumber": 344
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "Some",
+          "lineNumber": 347
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.pending_layers.take",
+          "lineNumber": 350
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.begin_animation_frame",
+          "lineNumber": 353
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.frame_sender.send",
+          "lineNumber": 361
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.update_clip_planes",
+          "lineNumber": 363
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.end_animation_frame",
+          "lineNumber": 367
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.quit",
+          "lineNumber": 370
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.pending_layers.take",
+          "lineNumber": 374
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.begin_animation_frame",
+          "lineNumber": 378
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.frame_sender.send",
+          "lineNumber": 386
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.update_frame_rate",
+          "lineNumber": 389
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "sender.send",
+          "lineNumber": 390
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.quit",
+          "lineNumber": 394
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.device.reference_space_bounds",
+          "lineNumber": 401
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "sender.send",
+          "lineNumber": 402
+        },
+        {
+          "caller": "quit",
+          "callee": "self.device.quit",
+          "lineNumber": 410
+        },
+        {
+          "caller": "run_one_frame",
+          "callee": "self.receiver.try_recv_timeout",
+          "lineNumber": 427
+        },
+        {
+          "caller": "run_one_frame",
+          "callee": "self.handle_msg",
+          "lineNumber": 428
+        },
+        {
+          "caller": "spawn",
+          "callee": "generic_channel::channel",
+          "lineNumber": 473
+        },
+        {
+          "caller": "spawn",
+          "callee": "Err",
+          "lineNumber": 474
+        },
+        {
+          "caller": "spawn",
+          "callee": "thread::spawn",
+          "lineNumber": 479
+        },
+        {
+          "caller": "spawn",
+          "callee": "factory(layer_grand_manager).and_then",
+          "lineNumber": 480
+        },
+        {
+          "caller": "spawn",
+          "callee": "factory",
+          "lineNumber": 480
+        },
+        {
+          "caller": "spawn",
+          "callee": "SessionThread::new",
+          "lineNumber": 481
+        },
+        {
+          "caller": "spawn",
+          "callee": "thread.new_session",
+          "lineNumber": 484
+        },
+        {
+          "caller": "spawn",
+          "callee": "acks.send",
+          "lineNumber": 485
+        },
+        {
+          "caller": "spawn",
+          "callee": "Ok",
+          "lineNumber": 485
+        },
+        {
+          "caller": "spawn",
+          "callee": "thread.run",
+          "lineNumber": 486
+        },
+        {
+          "caller": "spawn",
+          "callee": "acks.send",
+          "lineNumber": 489
+        },
+        {
+          "caller": "spawn",
+          "callee": "Err",
+          "lineNumber": 489
+        },
+        {
+          "caller": "spawn",
+          "callee": "ackr.recv().unwrap_or",
+          "lineNumber": 493
+        },
+        {
+          "caller": "spawn",
+          "callee": "ackr.recv",
+          "lineNumber": 493
+        },
+        {
+          "caller": "spawn",
+          "callee": "Err",
+          "lineNumber": 493
+        },
+        {
+          "caller": "run_on_main_thread",
+          "callee": "factory",
+          "lineNumber": 502
+        },
+        {
+          "caller": "run_on_main_thread",
+          "callee": "SessionThread::new",
+          "lineNumber": 504
+        },
+        {
+          "caller": "run_on_main_thread",
+          "callee": "session_thread.new_session",
+          "lineNumber": 505
+        },
+        {
+          "caller": "run_on_main_thread",
+          "callee": "self.sessions.push",
+          "lineNumber": 506
+        },
+        {
+          "caller": "run_on_main_thread",
+          "callee": "Box::new",
+          "lineNumber": 506
+        },
+        {
+          "caller": "run_on_main_thread",
+          "callee": "Ok",
+          "lineNumber": 507
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 40,
+        "functionCount": 35,
+        "classCount": 11
+      }
+    },
+    {
+      "path": "components/shared/webxr/space.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 31,
+      "nonEmptyLines": 26,
+      "classes": [
+        {
+          "name": "ApiSpace",
+          "startLine": 14,
+          "endLine": 14,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "BaseSpace",
+          "startLine": 17,
+          "endLine": 25,
+          "methods": [],
+          "properties": [
+            "Local",
+            "Floor",
+            "Viewer",
+            "BoundedFloor",
+            "TargetRay",
+            "Grip",
+            "Joint"
+          ]
+        },
+        {
+          "name": "Space",
+          "startLine": 28,
+          "endLine": 31,
+          "methods": [],
+          "properties": [
+            "base",
+            "offset"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ApiSpace",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "BaseSpace",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "Space",
+          "line": 28,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 0,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "components/shared/webxr/util.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 131,
+      "nonEmptyLines": 115,
+      "functions": [
+        {
+          "name": "default",
+          "startLine": 19,
+          "endLine": 25,
+          "params": []
+        },
+        {
+          "name": "update",
+          "startLine": 29,
+          "endLine": 33,
+          "params": [
+            "near",
+            "far"
+          ]
+        },
+        {
+          "name": "recently_updated",
+          "startLine": 36,
+          "endLine": 43,
+          "params": []
+        },
+        {
+          "name": "request_hit_test",
+          "startLine": 54,
+          "endLine": 56,
+          "params": [
+            "source"
+          ]
+        },
+        {
+          "name": "commit_tests",
+          "startLine": 58,
+          "endLine": 65,
+          "params": []
+        },
+        {
+          "name": "tests",
+          "startLine": 67,
+          "endLine": 69,
+          "params": []
+        },
+        {
+          "name": "cancel_hit_test",
+          "startLine": 71,
+          "endLine": 74,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "fov_to_projection_matrix",
+          "startLine": 79,
+          "endLine": 94,
+          "params": [
+            "left",
+            "right",
+            "top",
+            "bottom",
+            "clip_planes"
+          ]
+        },
+        {
+          "name": "frustum_to_projection_matrix",
+          "startLine": 98,
+          "endLine": 131,
+          "params": [
+            "left",
+            "right",
+            "top",
+            "bottom",
+            "clip_planes"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ClipPlanes",
+          "startLine": 11,
+          "endLine": 16,
+          "methods": [
+            "default",
+            "update",
+            "recently_updated"
+          ],
+          "properties": [
+            "near",
+            "far",
+            "update"
+          ]
+        },
+        {
+          "name": "HitTestList",
+          "startLine": 48,
+          "endLine": 51,
+          "methods": [
+            "request_hit_test",
+            "commit_tests",
+            "tests",
+            "cancel_hit_test"
+          ],
+          "properties": [
+            "tests",
+            "uncommitted_tests"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ClipPlanes",
+          "line": 11,
+          "isDefault": false
+        },
+        {
+          "name": "update",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "recently_updated",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "HitTestList",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "request_hit_test",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "commit_tests",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "tests",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "cancel_hit_test",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "fov_to_projection_matrix",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "frustum_to_projection_matrix",
+          "line": 98,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "request_hit_test",
+          "callee": "self.uncommitted_tests.push",
+          "lineNumber": 55
+        },
+        {
+          "caller": "commit_tests",
+          "callee": "self.uncommitted_tests.drain",
+          "lineNumber": 60
+        },
+        {
+          "caller": "commit_tests",
+          "callee": "events.push",
+          "lineNumber": 61
+        },
+        {
+          "caller": "commit_tests",
+          "callee": "FrameUpdateEvent::HitTestSourceAdded",
+          "lineNumber": 61
+        },
+        {
+          "caller": "commit_tests",
+          "callee": "self.tests.push",
+          "lineNumber": 62
+        },
+        {
+          "caller": "cancel_hit_test",
+          "callee": "self.tests.retain",
+          "lineNumber": 72
+        },
+        {
+          "caller": "cancel_hit_test",
+          "callee": "self.uncommitted_tests.retain",
+          "lineNumber": 73
+        },
+        {
+          "caller": "fov_to_projection_matrix",
+          "callee": "left.tan",
+          "lineNumber": 88
+        },
+        {
+          "caller": "fov_to_projection_matrix",
+          "callee": "right.tan",
+          "lineNumber": 89
+        },
+        {
+          "caller": "fov_to_projection_matrix",
+          "callee": "top.tan",
+          "lineNumber": 90
+        },
+        {
+          "caller": "fov_to_projection_matrix",
+          "callee": "bottom.tan",
+          "lineNumber": 91
+        },
+        {
+          "caller": "fov_to_projection_matrix",
+          "callee": "frustum_to_projection_matrix",
+          "lineNumber": 93
+        },
+        {
+          "caller": "frustum_to_projection_matrix",
+          "callee": "Transform3D::new",
+          "lineNumber": 113
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 9,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/shared/webxr/view.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 150,
+      "nonEmptyLines": 126,
+      "functions": [
+        {
+          "name": "eq",
+          "startLine": 66,
+          "endLine": 68,
+          "params": [
+            "rhs"
+          ]
+        },
+        {
+          "name": "default",
+          "startLine": 108,
+          "endLine": 113,
+          "params": []
+        },
+        {
+          "name": "cast_unit",
+          "startLine": 117,
+          "endLine": 122,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "Viewer",
+          "startLine": 16,
+          "endLine": 16,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Floor",
+          "startLine": 21,
+          "endLine": 21,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "LeftEye",
+          "startLine": 26,
+          "endLine": 26,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "RightEye",
+          "startLine": 31,
+          "endLine": 31,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CubeLeft",
+          "startLine": 35,
+          "endLine": 35,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CubeRight",
+          "startLine": 39,
+          "endLine": 39,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CubeTop",
+          "startLine": 43,
+          "endLine": 43,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CubeBottom",
+          "startLine": 47,
+          "endLine": 47,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "CubeBack",
+          "startLine": 51,
+          "endLine": 51,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "SomeEye",
+          "startLine": 55,
+          "endLine": 55,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Native",
+          "startLine": 74,
+          "endLine": 74,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Display",
+          "startLine": 80,
+          "endLine": 80,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Viewport",
+          "startLine": 86,
+          "endLine": 86,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Input",
+          "startLine": 90,
+          "endLine": 90,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "Capture",
+          "startLine": 94,
+          "endLine": 94,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "View",
+          "startLine": 102,
+          "endLine": 105,
+          "methods": [],
+          "properties": [
+            "transform",
+            "projection"
+          ]
+        },
+        {
+          "name": "Views",
+          "startLine": 128,
+          "endLine": 142,
+          "methods": [],
+          "properties": [
+            "Inline",
+            "Mono",
+            "Stereo",
+            "StereoCapture",
+            "Cubemap"
+          ]
+        },
+        {
+          "name": "Viewports",
+          "startLine": 148,
+          "endLine": 150,
+          "methods": [],
+          "properties": [
+            "viewports"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Viewer",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "Floor",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "LeftEye",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "RightEye",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "CubeLeft",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "CubeRight",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "CubeTop",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "CubeBottom",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "CubeBack",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "SomeEye",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "Native",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "Display",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "Viewport",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "Input",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "Capture",
+          "line": 94,
+          "isDefault": false
+        },
+        {
+          "name": "View",
+          "line": 102,
+          "isDefault": false
+        },
+        {
+          "name": "cast_unit",
+          "line": 117,
+          "isDefault": false
+        },
+        {
+          "name": "Views",
+          "line": 128,
+          "isDefault": false
+        },
+        {
+          "name": "Viewports",
+          "line": 148,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "default",
+          "callee": "RigidTransform3D::identity",
+          "lineNumber": 110
+        },
+        {
+          "caller": "default",
+          "callee": "Transform3D::identity",
+          "lineNumber": 111
+        },
+        {
+          "caller": "cast_unit",
+          "callee": "self.transform.cast_unit",
+          "lineNumber": 119
+        },
+        {
+          "caller": "cast_unit",
+          "callee": "Transform3D::from_untyped",
+          "lineNumber": 120
+        },
+        {
+          "caller": "cast_unit",
+          "callee": "self.projection.to_untyped",
+          "lineNumber": 120
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 19,
+        "functionCount": 3,
+        "classCount": 18
+      }
+    }
+  ]
+}

@@ -1,0 +1,894 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webxr/xrview.rs",
+      "type": "file",
+      "name": "xrview.rs",
+      "filePath": "components/script/dom/webxr/xrview.rs",
+      "summary": "XRView DOM binding representing a single eye view with projection matrix, transform, and viewport scale.",
+      "tags": [
+        "webxr",
+        "dom-binding",
+        "view",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrview.rs:XRView",
+      "type": "class",
+      "name": "XRView",
+      "filePath": "components/script/dom/webxr/xrview.rs",
+      "summary": "Single eye view providing eye type, projection matrix, transform, and viewport scale.",
+      "tags": [
+        "webxr",
+        "view",
+        "dom-class"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        24,
+        35
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrview.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webxr/xrview.rs",
+      "summary": "Internal constructor initializing session, transform, eye, projection, and viewport index.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        38,
+        55
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrview.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webxr/xrview.rs",
+      "summary": "Public constructor creating rigid transform from view data.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        57,
+        80
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrview.rs:session",
+      "type": "function",
+      "name": "session",
+      "filePath": "components/script/dom/webxr/xrview.rs",
+      "summary": "Returns the associated XRSession.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        82,
+        84
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrview.rs:viewport_index",
+      "type": "function",
+      "name": "viewport_index",
+      "filePath": "components/script/dom/webxr/xrview.rs",
+      "summary": "Returns viewport index in sub-image array.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        86,
+        88
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrview.rs:ProjectionMatrix",
+      "type": "function",
+      "name": "ProjectionMatrix",
+      "filePath": "components/script/dom/webxr/xrview.rs",
+      "summary": "Returns 4x4 projection matrix as Float64Array.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        98,
+        109
+      ]
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrviewerpose.rs",
+      "type": "file",
+      "name": "xrviewerpose.rs",
+      "filePath": "components/script/dom/webxr/xrviewerpose.rs",
+      "summary": "XRViewerPose DOM binding representing viewer head pose with associated eye views.",
+      "tags": [
+        "webxr",
+        "dom-binding",
+        "pose",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrviewerpose.rs:XRViewerPose",
+      "type": "class",
+      "name": "XRViewerPose",
+      "filePath": "components/script/dom/webxr/xrviewerpose.rs",
+      "summary": "Extends XRPose with XRView array from device viewer pose.",
+      "tags": [
+        "webxr",
+        "pose",
+        "view",
+        "dom-class"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        28,
+        32
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrviewerpose.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webxr/xrviewerpose.rs",
+      "summary": "Constructs XRViewerPose creating eye views from device pose or inline view.",
+      "tags": [
+        "webxr",
+        "constructor",
+        "pose"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        42,
+        191
+      ]
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrviewport.rs",
+      "type": "file",
+      "name": "xrviewport.rs",
+      "filePath": "components/script/dom/webxr/xrviewport.rs",
+      "summary": "XRViewport DOM binding representing rectangular viewport in WebXR framebuffer.",
+      "tags": [
+        "webxr",
+        "dom-binding",
+        "viewport",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrviewport.rs:XRViewport",
+      "type": "class",
+      "name": "XRViewport",
+      "filePath": "components/script/dom/webxr/xrviewport.rs",
+      "summary": "Rectangular viewport region with x, y, width, height properties.",
+      "tags": [
+        "webxr",
+        "viewport",
+        "dom-class"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        16,
+        20
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrviewport.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webxr/xrviewport.rs",
+      "summary": "Public constructor from webxr_api::Viewport.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        30,
+        36
+      ]
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrwebglbinding.rs",
+      "type": "file",
+      "name": "xrwebglbinding.rs",
+      "filePath": "components/script/dom/webxr/xrwebglbinding.rs",
+      "summary": "XRWebGLBinding DOM binding for WebGL integration in WebXR layer creation.",
+      "tags": [
+        "webxr",
+        "dom-binding",
+        "webgl",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrwebglbinding.rs:XRWebGLBinding",
+      "type": "class",
+      "name": "XRWebGLBinding",
+      "filePath": "components/script/dom/webxr/xrwebglbinding.rs",
+      "summary": "WebGL binding providing factory methods for XR layers and sub-images.",
+      "tags": [
+        "webxr",
+        "webgl",
+        "binding",
+        "dom-class"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        34,
+        38
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebglbinding.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webxr/xrwebglbinding.rs",
+      "summary": "Internal constructor storing session and context.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        41,
+        50
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebglbinding.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webxr/xrwebglbinding.rs",
+      "summary": "Constructor with prototype.",
+      "tags": [
+        "webxr",
+        "constructor"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        52,
+        65
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebglbinding.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/webxr/xrwebglbinding.rs",
+      "summary": "JS constructor validating session and context state.",
+      "tags": [
+        "webxr",
+        "constructor",
+        "validation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        70,
+        101
+      ]
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "type": "file",
+      "name": "xrwebgllayer.rs",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "XRWebGLLayer DOM binding managing WebGL framebuffer lifecycle for WebXR rendering.",
+      "tags": [
+        "webxr",
+        "dom-binding",
+        "webgl",
+        "layer",
+        "rust"
+      ],
+      "complexity": "complex",
+      "lineRange": "Integrates with WebGL command system for texture binding during frame rendering."
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrwebgllayer.rs:XRWebGLLayer",
+      "type": "class",
+      "name": "XRWebGLLayer",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "WebGL layer managing framebuffer, begin/end frame texture binding, and viewports.",
+      "tags": [
+        "webxr",
+        "webgl",
+        "layer",
+        "dom-class"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        52,
+        61
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Internal constructor initializing XRLayer and framebuffer.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        64,
+        80
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Constructor with prototype.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        83,
+        105
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:layer_id",
+      "type": "function",
+      "name": "layer_id",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Returns device-assigned WebXR layer ID.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        107,
+        109
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:context_id",
+      "type": "function",
+      "name": "context_id",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Returns WebGL context ID.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        111,
+        113
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:session",
+      "type": "function",
+      "name": "session",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Returns owning XRSession.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        115,
+        117
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:size",
+      "type": "function",
+      "name": "size",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Returns framebuffer size in pixels.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        119,
+        129
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:begin_frame",
+      "type": "function",
+      "name": "begin_frame",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Begins XR frame with texture binding and GL state management.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        139,
+        203
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:end_frame",
+      "type": "function",
+      "name": "end_frame",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Ends XR frame detaching textures and flushing GL context.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        205,
+        228
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:context",
+      "type": "function",
+      "name": "context",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Returns WebGL context.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        230,
+        232
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "JS constructor creating framebuffer and registering layer.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        237,
+        294
+      ]
+    },
+    {
+      "id": "function:components/script/dom/webxr/xrwebgllayer.rs:GetViewport",
+      "type": "function",
+      "name": "GetViewport",
+      "filePath": "components/script/dom/webxr/xrwebgllayer.rs",
+      "summary": "Computes viewport rect for given XRView.",
+      "tags": [
+        "webxr",
+        "method"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        339,
+        361
+      ]
+    },
+    {
+      "id": "file:components/script/dom/webxr/xrwebglsubimage.rs",
+      "type": "file",
+      "name": "xrwebglsubimage.rs",
+      "filePath": "components/script/dom/webxr/xrwebglsubimage.rs",
+      "summary": "XRWebGLSubImage DOM binding with color/depth textures, image index, and texture dimensions.",
+      "tags": [
+        "webxr",
+        "dom-binding",
+        "webgl",
+        "sub-image",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webxr/xrwebglsubimage.rs:XRWebGLSubImage",
+      "type": "class",
+      "name": "XRWebGLSubImage",
+      "filePath": "components/script/dom/webxr/xrwebglsubimage.rs",
+      "summary": "WebGL sub-image with color texture, depth/stencil texture, and size.",
+      "tags": [
+        "webxr",
+        "webgl",
+        "sub-image",
+        "dom-class"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        15,
+        22
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "function:components/script/dom/webxr/xrview.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "function:components/script/dom/webxr/xrview.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "function:components/script/dom/webxr/xrview.rs:session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "function:components/script/dom/webxr/xrview.rs:viewport_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "function:components/script/dom/webxr/xrview.rs:ProjectionMatrix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "class:components/script/dom/webxr/xrview.rs:XRView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "class:components/script/dom/webxr/xrview.rs:XRView",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "function:components/script/dom/webxr/xrview.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "function:components/script/dom/webxr/xrview.rs:session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrview.rs",
+      "target": "function:components/script/dom/webxr/xrview.rs:viewport_index",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrviewerpose.rs",
+      "target": "function:components/script/dom/webxr/xrviewerpose.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrviewerpose.rs",
+      "target": "class:components/script/dom/webxr/xrviewerpose.rs:XRViewerPose",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrviewerpose.rs",
+      "target": "class:components/script/dom/webxr/xrviewerpose.rs:XRViewerPose",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrviewerpose.rs",
+      "target": "function:components/script/dom/webxr/xrviewerpose.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrviewport.rs",
+      "target": "function:components/script/dom/webxr/xrviewport.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrviewport.rs",
+      "target": "class:components/script/dom/webxr/xrviewport.rs:XRViewport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrviewport.rs",
+      "target": "class:components/script/dom/webxr/xrviewport.rs:XRViewport",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrviewport.rs",
+      "target": "function:components/script/dom/webxr/xrviewport.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebglbinding.rs",
+      "target": "function:components/script/dom/webxr/xrwebglbinding.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebglbinding.rs",
+      "target": "function:components/script/dom/webxr/xrwebglbinding.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebglbinding.rs",
+      "target": "function:components/script/dom/webxr/xrwebglbinding.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebglbinding.rs",
+      "target": "class:components/script/dom/webxr/xrwebglbinding.rs:XRWebGLBinding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebglbinding.rs",
+      "target": "class:components/script/dom/webxr/xrwebglbinding.rs:XRWebGLBinding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebglbinding.rs",
+      "target": "function:components/script/dom/webxr/xrwebglbinding.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:layer_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:context_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:begin_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:end_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:GetViewport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "class:components/script/dom/webxr/xrwebgllayer.rs:XRWebGLLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "class:components/script/dom/webxr/xrwebgllayer.rs:XRWebGLLayer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:layer_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:context_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:begin_frame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:end_frame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebgllayer.rs",
+      "target": "function:components/script/dom/webxr/xrwebgllayer.rs:context",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebglsubimage.rs",
+      "target": "class:components/script/dom/webxr/xrwebglsubimage.rs:XRWebGLSubImage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webxr/xrwebglsubimage.rs",
+      "target": "class:components/script/dom/webxr/xrwebglsubimage.rs:XRWebGLSubImage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webxr/xrviewerpose.rs:new",
+      "target": "function:components/script/dom/webxr/xrview.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webxr/xrview.rs:new",
+      "target": "function:components/script/dom/webxr/xrrigidtransform.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webxr/xrviewerpose.rs:new",
+      "target": "function:components/script/dom/webxr/xrrigidtransform.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webxr/xrwebgllayer.rs:GetViewport",
+      "target": "function:components/script/dom/webxr/xrviewport.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

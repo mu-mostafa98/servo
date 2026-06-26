@@ -1,0 +1,278 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/servo/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/servo/lib.rs",
+      "summary": "Crate root for the servo embedder crate. Re-exports all public modules (clipboard, gamepad, gstreamer, JavaScript, networking, proxies, responders, servo engine, delegates, site data, user content, and webview management) to form the public API surface for embedders.",
+      "tags": ["entry-point", "barrel", "rust-crate"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/servo/clipboard_delegate.rs",
+      "type": "file",
+      "name": "clipboard_delegate.rs",
+      "filePath": "components/servo/clipboard_delegate.rs",
+      "summary": "Clipboard delegate providing clipboard access through system clipboard (using the clipboard crate) with a fallback shared in-memory clipboard for headless or restricted environments.",
+      "tags": ["service", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/clipboard_delegate.rs:ClipboardDelegate",
+      "type": "class",
+      "name": "ClipboardDelegate",
+      "filePath": "components/servo/clipboard_delegate.rs",
+      "lineRange": [49, 60],
+      "summary": "Trait defining the clipboard operations interface: clear, get_text, and set_text, with an optional result sender for async responses.",
+      "tags": ["type-definition", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/clipboard_delegate.rs:StringRequest",
+      "type": "class",
+      "name": "StringRequest",
+      "filePath": "components/servo/clipboard_delegate.rs",
+      "lineRange": [9, 12],
+      "summary": "A string request wrapper that sends clipboard text results through a channel, sending an error response on drop if no response was sent.",
+      "tags": ["utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/servo/gamepad_delegate.rs",
+      "type": "file",
+      "name": "gamepad_delegate.rs",
+      "filePath": "components/servo/gamepad_delegate.rs",
+      "summary": "Gamepad delegate providing haptic effect request types and a trait for handling vibration feedback on game controllers.",
+      "tags": ["type-definition", "service"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/gamepad_delegate.rs:GamepadHapticEffectRequest",
+      "type": "class",
+      "name": "GamepadHapticEffectRequest",
+      "filePath": "components/servo/gamepad_delegate.rs",
+      "lineRange": [12, 16],
+      "summary": "Represents a haptic effect request on a gamepad with index, request type, and a callback for success/failure notification.",
+      "tags": ["type-definition", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/gamepad_delegate.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/servo/gamepad_delegate.rs",
+      "lineRange": [19, 29],
+      "summary": "Creates a new GamepadHapticEffectRequest with the given gamepad index, request type, and callback for async result notification.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/servo/gstreamer_plugins.rs",
+      "type": "file",
+      "name": "gstreamer_plugins.rs",
+      "filePath": "components/servo/gstreamer_plugins.rs",
+      "summary": "GStreamer plugin registration providing the list of GStreamer plugin basenames required for media playback, filtered by platform (Android, Windows, macOS, Unix).",
+      "tags": ["utility", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/gstreamer_plugins.rs:gstreamer_plugins",
+      "type": "function",
+      "name": "gstreamer_plugins",
+      "filePath": "components/servo/gstreamer_plugins.rs",
+      "lineRange": [13, 32],
+      "summary": "Returns the list of GStreamer plugin filenames required for media playback, adding platform-specific plugins for Android, Windows, macOS, and Unix.",
+      "tags": ["utility", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/servo/javascript_evaluator.rs",
+      "type": "file",
+      "name": "javascript_evaluator.rs",
+      "filePath": "components/servo/javascript_evaluator.rs",
+      "summary": "JavaScript evaluator managing pending script evaluations with ID generation, dispatch to the constellation, and async result completion.",
+      "tags": ["service", "event-handler", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/javascript_evaluator.rs:JavaScriptEvaluator",
+      "type": "class",
+      "name": "JavaScriptEvaluator",
+      "filePath": "components/servo/javascript_evaluator.rs",
+      "lineRange": [16, 20],
+      "summary": "Manages JavaScript evaluation requests by generating unique IDs, dispatching them to the constellation, tracking pending evaluations, and completing them when results arrive.",
+      "tags": ["service", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/javascript_evaluator.rs:evaluate",
+      "type": "function",
+      "name": "evaluate",
+      "filePath": "components/servo/javascript_evaluator.rs",
+      "lineRange": [36, 51],
+      "summary": "Initiates a JavaScript evaluation in a webview by generating a unique ID and sending an EvaluateJavaScript message to the constellation.",
+      "tags": ["api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/javascript_evaluator.rs:finish_evaluation",
+      "type": "function",
+      "name": "finish_evaluation",
+      "filePath": "components/servo/javascript_evaluator.rs",
+      "lineRange": [53, 63],
+      "summary": "Completes a pending JavaScript evaluation by looking up the pending callback and invoking it with the result.",
+      "tags": ["event-handler"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/clipboard_delegate.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/gamepad_delegate.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/gstreamer_plugins.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/javascript_evaluator.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/network_manager.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/proxies.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/responders.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/servo_delegate.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/servo.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/site_data_manager.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/user_content_manager.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/webview_delegate.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/lib.rs",
+      "target": "file:components/servo/webview.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/servo/clipboard_delegate.rs",
+      "target": "class:components/servo/clipboard_delegate.rs:ClipboardDelegate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/clipboard_delegate.rs",
+      "target": "class:components/servo/clipboard_delegate.rs:StringRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/gamepad_delegate.rs",
+      "target": "class:components/servo/gamepad_delegate.rs:GamepadHapticEffectRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/gamepad_delegate.rs",
+      "target": "function:components/servo/gamepad_delegate.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/gstreamer_plugins.rs",
+      "target": "function:components/servo/gstreamer_plugins.rs:gstreamer_plugins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/javascript_evaluator.rs",
+      "target": "class:components/servo/javascript_evaluator.rs:JavaScriptEvaluator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/javascript_evaluator.rs",
+      "target": "function:components/servo/javascript_evaluator.rs:evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/javascript_evaluator.rs",
+      "target": "function:components/servo/javascript_evaluator.rs:finish_evaluation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

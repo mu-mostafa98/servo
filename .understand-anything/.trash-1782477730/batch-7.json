@@ -1,0 +1,1267 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/fragment_tree/base_fragment.rs",
+      "type": "file",
+      "name": "base_fragment.rs",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Core data structures for the fragment tree: defines BaseFragment with shared fields (tag, style, rect, status), FragmentStatus enum for tracking fragment reuse, BaseFragmentInfo for identifying fragment origins, and Tag for identifying DOM node/pseudo-element associations.",
+      "tags": ["fragment-tree", "data-model", "layout"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragment",
+      "type": "class",
+      "name": "BaseFragment",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "lineRange": [45, 66],
+      "summary": "Core fragment data structure holding the tag, style, content rect, and status for all fragment types. Contains the minimal shared state used by BoxFragment, PositioningFragment, TextFragment, and other fragment variants.",
+      "tags": ["fragment-tree", "data-model", "core-struct"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragmentInfo",
+      "type": "class",
+      "name": "BaseFragmentInfo",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "lineRange": [142, 148],
+      "summary": "Identifies the origin of a fragment with tag and flags, used during fragment construction from DOM nodes or anonymous box creation.",
+      "tags": ["fragment-tree", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/fragment_tree/base_fragment.rs:Tag",
+      "type": "class",
+      "name": "Tag",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "lineRange": [279, 282],
+      "summary": "Identifies the DOM node and pseudo-element chain that a fragment originates from. Used for display list fragment ID generation and debugging output.",
+      "tags": ["fragment-tree", "identifier"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/fragment_tree/box_fragment.rs",
+      "type": "file",
+      "name": "box_fragment.rs",
+      "filePath": "components/layout/fragment_tree/box_fragment.rs",
+      "summary": "Defines BoxFragment, the primary fragment type for CSS box model elements, including padding/border/margin rect calculations, scrollable overflow computation, sticky positioning inset resolution, and baseline management. Also defines supporting types like SpecificLayoutInfo and BoxFragmentRareData.",
+      "tags": ["fragment-tree", "box-model", "layout"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/fragment_tree/box_fragment.rs:BoxFragment",
+      "type": "class",
+      "name": "BoxFragment",
+      "filePath": "components/layout/fragment_tree/box_fragment.rs",
+      "lineRange": [116, 154],
+      "summary": "The main fragment type representing a CSS box with padding, border, margin, baselines, scrollable overflow tracking, and spatial tree node association. Handles containing block offset calculations, sticky positioning, and layout-specific info for table/grid elements.",
+      "tags": ["fragment-tree", "box-model", "core-struct"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/fragment_tree/containing_block.rs",
+      "type": "file",
+      "name": "containing_block.rs",
+      "filePath": "components/layout/fragment_tree/containing_block.rs",
+      "summary": "Implements ContainingBlockManager, which tracks three containing block contexts (for non-absolute, absolute, and fixed descendants) during fragment tree traversal and resolves the correct containing block for each fragment based on its CSS position value.",
+      "tags": ["fragment-tree", "containing-block", "positioning"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/fragment_tree/fragment.rs",
+      "type": "file",
+      "name": "fragment.rs",
+      "filePath": "components/layout/fragment_tree/fragment.rs",
+      "summary": "Defines the Fragment enum (the central fragment tree node type) with variants for LayoutRoot, Box, Float, Positioning, placeholders, Text, Image, and IFrame fragments. Also provides CollapsedBlockMargins and CollapsedMargin for margin collapse computation, and concrete fragment types for replaced and text content.",
+      "tags": ["fragment-tree", "enum", "layout"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/fragment_tree/fragment.rs:Fragment",
+      "type": "class",
+      "name": "Fragment",
+      "filePath": "components/layout/fragment_tree/fragment.rs",
+      "lineRange": [32, 51],
+      "summary": "The central enum representing all fragment types in the fragment tree: LayoutRoot, Box, Float, Positioning, AbsoluteOrFixedPositionedPlaceholder, Text, Image, and IFrame. Exposes methods for box containment checks, scrolling, finding children, and point-hit testing.",
+      "tags": ["fragment-tree", "enum", "core-struct"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "type": "file",
+      "name": "fragment_tree.rs",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Defines FragmentTree, the top-level container for the entire fragment tree, managing root fragments, scrollable overflow, the initial containing block, and viewport scroll sensitivity. Provides methods for printing, finding box fragments, and clearing/computing scrollable overflow.",
+      "tags": ["fragment-tree", "tree-structure", "layout"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/fragment_tree/hoisted_shared_fragment.rs",
+      "type": "file",
+      "name": "hoisted_shared_fragment.rs",
+      "filePath": "components/layout/fragment_tree/hoisted_shared_fragment.rs",
+      "summary": "Defines HoistedSharedFragment, a shared fragment wrapper used for hoisted absolutely and fixed positioned fragments that are moved up the tree to their containing block while preserving original tree order for painting.",
+      "tags": ["fragment-tree", "positioning", "hoisted-fragment"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/fragment_tree/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/fragment_tree/mod.rs",
+      "summary": "Barrel module file that declares and re-exports all fragment_tree submodules: base_fragment, box_fragment, containing_block, fragment, fragment_tree, hoisted_shared_fragment, and positioning_fragment.",
+      "tags": ["module", "barrel", "re-exports"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/fragment_tree/positioning_fragment.rs",
+      "type": "file",
+      "name": "positioning_fragment.rs",
+      "filePath": "components/layout/fragment_tree/positioning_fragment.rs",
+      "summary": "Defines PositioningFragment, a fragment type for elements with position: relative/absolute/fixed/sticky, providing containing block offset, scrollable overflow, and printing support for positioned layout contexts.",
+      "tags": ["fragment-tree", "positioning", "fragment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/fragment_tree/positioning_fragment.rs:PositioningFragment",
+      "type": "class",
+      "name": "PositioningFragment",
+      "filePath": "components/layout/fragment_tree/positioning_fragment.rs",
+      "lineRange": [17, 57],
+      "summary": "Fragment type for positioned elements (relative, absolute, fixed, sticky). Manages containing block offsets, scrollable overflow computation, and supports both anonymous and named fragment creation.",
+      "tags": ["fragment-tree", "positioning", "fragment"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/geom.rs",
+      "type": "file",
+      "name": "geom.rs",
+      "filePath": "components/layout/geom.rs",
+      "summary": "Defines core geometric types used throughout layout: LogicalVec2 and LogicalRect for writing-mode-relative coordinates, LogicalSides and LogicalSides1D for logical box sides, SyncPhysicalRectAu as an atomically-updatable physical rectangle, and trait conversions between logical and physical coordinate spaces.",
+      "tags": ["geometry", "types", "layout-foundation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/geom.rs:SyncPhysicalRectAu",
+      "type": "class",
+      "name": "SyncPhysicalRectAu",
+      "filePath": "components/layout/geom.rs",
+      "lineRange": [234, 240],
+      "summary": "Thread-safe atomic physical rectangle wrapper using AtomicI32 for x, y, width, height, enabling concurrent read/write access during parallel layout.",
+      "tags": ["geometry", "atomic", "sync"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/layout_box_base.rs",
+      "type": "file",
+      "name": "layout_box_base.rs",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Defines LayoutBoxBase, the foundational node in the box tree that holds style, fragment storage, layout result caching, and subtree size tracking. Also defines layout result types for independent formatting contexts and same-formatting-context block layout.",
+      "tags": ["box-tree", "caching", "layout-foundation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/layout_box_base.rs:LayoutBoxBase",
+      "type": "class",
+      "name": "LayoutBoxBase",
+      "filePath": "components/layout/layout_box_base.rs",
+      "lineRange": [42, 65],
+      "summary": "Core box tree node that stores style, fragment collection, inline content size cache, cached layout results, subtree size for parallelism heuristics, and parent references. Provides methods for fragment management and cache invalidation.",
+      "tags": ["box-tree", "caching", "core-struct"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/layout_impl.rs",
+      "type": "file",
+      "name": "layout_impl.rs",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Implements LayoutThread, the main layout engine driving style application, box tree construction, fragment tree layout, display list building, and embedder communication. Also defines LayoutFactoryImpl for creating layout threads and supporting types for font metrics and registered painters.",
+      "tags": ["layout-engine", "thread", "main-loop"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/layout_impl.rs:LayoutThread",
+      "type": "class",
+      "name": "LayoutThread",
+      "filePath": "components/layout/layout_impl.rs",
+      "lineRange": [124, 165],
+      "summary": "The main layout driver that handles reflow requests: processes restyles, constructs the box tree, lays out fragments, builds display lists, manages image cache, handles scroll offsets, and communicates with the script and embedder threads.",
+      "tags": ["layout-engine", "thread", "core-struct"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/layout_root.rs",
+      "type": "file",
+      "name": "layout_root.rs",
+      "filePath": "components/layout/layout_root.rs",
+      "summary": "Defines LayoutRoot for tracking fragment tree layout roots (absolutely-positioned fragments that isolate damage from ancestors), enabling incremental fragment tree layout by converting upward Relayout damage into DescendantCollectedAsLayoutRoot damage.",
+      "tags": ["incremental-layout", "positioning", "damage"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/layout/lib.rs",
+      "summary": "Root module for the layout crate, declaring all submodules and defining shared types: ConstraintSpace for intrinsic sizing constraints, containing block variants (IndefiniteContainingBlock, ContainingBlock, DefiniteContainingBlock), ContainingBlockSize, and PropagatedBoxTreeData for ancestor-to-descendant data flow during box tree construction.",
+      "tags": ["module-root", "shared-types", "containing-block"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/lists.rs",
+      "type": "file",
+      "name": "lists.rs",
+      "filePath": "components/layout/lists.rs",
+      "summary": "Implements CSS list-style marker generation: creates ::marker pseudo-element content with appropriate counter representations and symbols for ordered and unordered lists.",
+      "tags": ["lists", "counter-style", "marker"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/positioned.rs",
+      "type": "file",
+      "name": "positioned.rs",
+      "filePath": "components/layout/positioned.rs",
+      "summary": "Implements absolute and fixed positioning layout: manages AbsolutelyPositionedBox and HoistedAbsolutelyPositionedBox for hoisted positioned fragments, PositioningContext for collecting and laying out positioned descendants, and absolute axis solving with the inset-modified containing block algorithm.",
+      "tags": ["positioning", "absolute-layout", "fixed-layout"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/positioned.rs:PositioningContext",
+      "type": "class",
+      "name": "PositioningContext",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [175, 196],
+      "summary": "Collects and manages absolutely and fixed positioned boxes within a containing block. Handles static position adjustment for hoisted fragments, parallel layout of collected children, and relative position adjustments.",
+      "tags": ["positioning", "collection", "layout"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/query.rs",
+      "type": "file",
+      "name": "query.rs",
+      "filePath": "components/layout/query.rs",
+      "summary": "Provides query processing utilities for the layout thread: handles requests for padding, box areas, client rects, CSS zoom, scroll areas, resolved styles, offset parents, scroll containers, text steps, character offsets, containing blocks, and effective overflow.",
+      "tags": ["query", "style-resolver", "utilities"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/quotes.rs",
+      "type": "file",
+      "name": "quotes.rs",
+      "filePath": "components/layout/quotes.rs",
+      "summary": "Contains locale-specific quotation mark data derived from ICU CLDR, providing QuotePair (opening/closing) values for over 300 language codes used by the CSS quotes property.",
+      "tags": ["quotes", "localization", "cldr"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/replaced.rs",
+      "type": "file",
+      "name": "replaced.rs",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Implements layout for replaced elements (images, iframes, video, canvas): computes natural sizes, preferred aspect ratio, fragment creation, inline content sizes, and layout of the replaced content box with proper sizing constraints.",
+      "tags": ["replaced-elements", "layout", "images"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:ReplacedContents",
+      "type": "class",
+      "name": "ReplacedContents",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [72, 88],
+      "summary": "Handles the sizing and layout for replaced content types (images, iframes, video, canvas). Provides natural size determination, aspect ratio computation, fragment creation, and inline content size measurement.",
+      "tags": ["replaced-elements", "sizing", "content"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/sizing.rs",
+      "type": "file",
+      "name": "sizing.rs",
+      "filePath": "components/layout/sizing.rs",
+      "summary": "Implements CSS intrinsic sizing: ContentSizes for min/max-content, ComputeInlineContentSizes for traversing the fragment tree, Size/SizeConstraint/Sizes for resolving CSS sizing properties with percentage and auto handling, and LazySize for deferred container-size-dependent resolution.",
+      "tags": ["sizing", "intrinsic-sizes", "css-sizing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:ContentSizes",
+      "type": "class",
+      "name": "ContentSizes",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [41, 44],
+      "summary": "Represents min-content and max-content sizes with operations for max, union, shrink-to-fit, and outer inline size computation.",
+      "tags": ["sizing", "intrinsic", "content"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/style_ext.rs",
+      "type": "file",
+      "name": "style_ext.rs",
+      "filePath": "components/layout/style_ext.rs",
+      "summary": "Extension traits and types for CSS ComputedValues: display value resolution, padding/border/margin calculations, aspect ratio management, overflow direction detection, transform support, and comprehensive style query methods on the ComputedValuesExt trait.",
+      "tags": ["style-extensions", "computed-values", "css"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:ComputedValuesExt",
+      "type": "class",
+      "name": "ComputedValuesExt",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [497, 500],
+      "summary": "Extension trait on ComputedValues providing 33 helper methods for box offsets, sizes, margins, padding, borders, transforms, z-index, overflow, isolation, positioning, and other CSS property queries used extensively throughout layout.",
+      "tags": ["style-extensions", "computed-values", "helper"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/table/construct.rs",
+      "type": "file",
+      "name": "construct.rs",
+      "filePath": "components/layout/table/construct.rs",
+      "summary": "HTML table box tree construction: traverses DOM elements to build TableBuilder state machine, resolves rowspan/colspan, creates anonymous rows/cells for non-table content, reorders row groups, and generates the final table structure with resolved slot locations.",
+      "tags": ["table", "box-tree", "construction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/table/construct.rs:TableBuilder",
+      "type": "class",
+      "name": "TableBuilder",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [150, 157],
+      "summary": "State machine for building an HTML table's box tree from DOM traversal. Manages row groups, rows, cells, column groups, and resolves rowspan/colspan with slot allocation.",
+      "tags": ["table", "builder", "construction"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/table/layout.rs",
+      "type": "file",
+      "name": "layout.rs",
+      "filePath": "components/layout/table/layout.rs",
+      "summary": "HTML table layout algorithm implementing the CSS table model: computes track constrainedness, cell measures, column measures, intrinsic inline sizes, table width, column width distribution, row layout, table height computation, and fragment generation for table elements.",
+      "tags": ["table", "layout", "algorithm"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/table/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/table/mod.rs",
+      "summary": "Defines table data model types: Table, TableSlot, TableSlotCell, TableTrack, TableTrackGroup, TableLevelBox, CollapsedBorder, and related types for representing HTML table structure during the box tree phase of layout.",
+      "tags": ["table", "data-model", "module-root"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:Table",
+      "type": "class",
+      "name": "Table",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [90, 100],
+      "summary": "Represents a CSS table with slots, tracks, row groups, captions, and layout style. Coordinates table layout phases through collect, measure, and layout steps.",
+      "tags": ["table", "data-model", "core-struct"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/taffy/layout.rs",
+      "type": "file",
+      "name": "layout.rs",
+      "filePath": "components/layout/taffy/layout.rs",
+      "summary": "Integrates the Taffy layout engine for flexbox and grid layout: resolves sizing constraints, computes child layouts using Taffy's algorithm, manages inline content sizing, and produces Servo fragment tree output from Taffy layout results.",
+      "tags": ["taffy", "flexbox", "grid", "layout-engine"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/taffy/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/taffy/mod.rs",
+      "summary": "Defines TaffyContainer and TaffyItemBox for managing flexbox/grid child items in the box tree, with construction from DOM traversal and repair_style support for incremental layout.",
+      "tags": ["taffy", "container", "box-tree"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/taffy/mod.rs:TaffyItemBox",
+      "type": "class",
+      "name": "TaffyItemBox",
+      "filePath": "components/layout/taffy/mod.rs",
+      "lineRange": [84, 89],
+      "summary": "Represents a child item in a Taffy flexbox/grid container, wrapping either an in-flow independent formatting context or an out-of-flow absolutely positioned box.",
+      "tags": ["taffy", "flexbox", "grid", "item"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/taffy/stylo_taffy/convert.rs",
+      "type": "file",
+      "name": "convert.rs",
+      "filePath": "components/layout/taffy/stylo_taffy/convert.rs",
+      "summary": "Conversion functions between Servo's CSS style types and Taffy's layout style types: length/dimension values, margins, insets, box-sizing, overflow, alignment, gaps, grid properties, and track sizes.",
+      "tags": ["taffy", "style-conversion", "bridge"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/taffy/stylo_taffy/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/taffy/stylo_taffy/mod.rs",
+      "summary": "Barrel module re-exporting TaffyStyloStyle, the converter functions, and supporting types for integrating the Taffy layout engine with Servo's style system.",
+      "tags": ["module", "barrel", "taffy"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/taffy/stylo_taffy/wrapper.rs",
+      "type": "file",
+      "name": "wrapper.rs",
+      "filePath": "components/layout/taffy/stylo_taffy/wrapper.rs",
+      "summary": "Implements TaffyStyloStyle, a wrapper around Servo's ComputedValues that implements Taffy's CoreStyle and FlexboxStyle/GridStyle traits, bridging Servo's CSS property access with Taffy's layout algorithm requirements.",
+      "tags": ["taffy", "style-wrapper", "bridge"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/traversal.rs",
+      "type": "file",
+      "name": "traversal.rs",
+      "filePath": "components/layout/traversal.rs",
+      "summary": "Implements style recalculation and box tree damage propagation: RecalcStyle as a DomTraversal for the style system, and functions for computing damage and selectively rebuilding the box tree above and below dirty roots.",
+      "tags": ["traversal", "style-recalc", "damage"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragmentInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:Tag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/fragment_tree/box_fragment.rs",
+      "target": "class:components/layout/fragment_tree/box_fragment.rs:BoxFragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment.rs",
+      "target": "class:components/layout/fragment_tree/fragment.rs:Fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/fragment_tree/positioning_fragment.rs",
+      "target": "class:components/layout/fragment_tree/positioning_fragment.rs:PositioningFragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/geom.rs",
+      "target": "class:components/layout/geom.rs:SyncPhysicalRectAu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "class:components/layout/layout_box_base.rs:LayoutBoxBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "class:components/layout/layout_impl.rs:LayoutThread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:PositioningContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ReplacedContents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:ContentSizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:ComputedValuesExt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:TableBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:Table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/taffy/mod.rs",
+      "target": "class:components/layout/taffy/mod.rs:TaffyItemBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/base_fragment.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/box_fragment.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/containing_block.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/fragment.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/hoisted_shared_fragment.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/positioning_fragment.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/accessibility_tree.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/cell.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/construct_modern.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/context.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/display_list/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/dom_traversal.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/dom.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/flexbox/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/flow/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/formatting_contexts.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/fragment_tree/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/geom.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_box_base.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_impl.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_root.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/lists.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/positioned.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/query.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/quotes.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/replaced.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/sizing.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/style_ext.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/table/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/taffy/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/traversal.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "file:components/layout/flow/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "file:components/layout/table/construct.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "file:components/layout/table/layout.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/taffy/mod.rs",
+      "target": "file:components/layout/taffy/layout.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/taffy/mod.rs",
+      "target": "file:components/layout/taffy/stylo_taffy/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/taffy/stylo_taffy/mod.rs",
+      "target": "file:components/layout/taffy/stylo_taffy/convert.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/taffy/stylo_taffy/mod.rs",
+      "target": "file:components/layout/taffy/stylo_taffy/wrapper.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/accessibility_tree.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/cell.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/context.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/display_list/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/dom.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/dom_traversal.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/flexbox/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/flow/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/formatting_contexts.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/fragment_tree/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/geom.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_box_base.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_impl.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_root.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/lists.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/positioned.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/query.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/quotes.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/replaced.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/sizing.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/style_ext.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/table/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/taffy/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/traversal.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "file:components/layout/flow/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "file:components/layout/table/construct.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "file:components/layout/table/layout.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/taffy/mod.rs",
+      "target": "file:components/layout/taffy/layout.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/taffy/mod.rs",
+      "target": "file:components/layout/taffy/stylo_taffy/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/taffy/stylo_taffy/mod.rs",
+      "target": "file:components/layout/taffy/stylo_taffy/convert.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/taffy/stylo_taffy/mod.rs",
+      "target": "file:components/layout/taffy/stylo_taffy/wrapper.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment.rs",
+      "target": "file:components/layout/fragment_tree/base_fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment.rs",
+      "target": "file:components/layout/fragment_tree/box_fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment.rs",
+      "target": "file:components/layout/fragment_tree/hoisted_shared_fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment.rs",
+      "target": "file:components/layout/fragment_tree/positioning_fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "file:components/layout/fragment_tree/base_fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "file:components/layout/fragment_tree/box_fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "file:components/layout/fragment_tree/containing_block.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "file:components/layout/fragment_tree/fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "file:components/layout/fragment_tree/fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "file:components/layout/geom.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "file:components/layout/style_ext.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "file:components/layout/sizing.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "file:components/layout/geom.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "file:components/layout/fragment_tree/fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "file:components/layout/style_ext.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "file:components/layout/geom.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "file:components/layout/geom.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "file:components/layout/sizing.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "file:components/layout/style_ext.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "file:components/layout/style_ext.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "file:components/layout/query.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "file:components/layout/traversal.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "file:components/layout/geom.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "file:components/layout/table/construct.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "file:components/layout/taffy/stylo_taffy/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/geom.rs",
+      "target": "file:components/layout/sizing.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/traversal.rs",
+      "target": "file:components/layout/layout_root.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/layout_root.rs",
+      "target": "file:components/layout/positioned.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "file:components/layout/replaced.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "file:components/layout/sizing.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "file:components/layout/style_ext.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "file:components/layout/geom.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "file:components/layout/fragment_tree/fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "file:components/layout/table/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

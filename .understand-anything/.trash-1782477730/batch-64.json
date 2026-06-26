@@ -1,0 +1,1110 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webvtt/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/webvtt/mod.rs",
+      "summary": "Module declaration file that re-exports all WebVTT-related DOM types: TextTrack, TextTrackCue, TextTrackCueList, TextTrackList, TrackEvent, VTTCue, and VTTRegion.",
+      "tags": ["entry-point", "barrel", "module", "webvtt"],
+      "complexity": "simple",
+      "languageNotes": "Rust module barrel file using pub mod declarations to expose submodules to the parent DOM module."
+    },
+    {
+      "id": "file:components/script/dom/webvtt/texttrack.rs",
+      "type": "file",
+      "name": "texttrack.rs",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "summary": "Implements the TextTrack DOM interface representing a text track (subtitles, captions, descriptions, chapters, metadata) with properties for id, kind, label, language, and mode, along with cue management operations.",
+      "tags": ["dom-interface", "data-model", "webvtt", "media"],
+      "complexity": "moderate",
+      "languageNotes": "Servo DOM binding using #[dom_struct] attribute, reflect_dom_object, and the new_inherited pattern for garbage-collected DOM object construction."
+    },
+    {
+      "id": "class:components/script/dom/webvtt/texttrack.rs:TextTrack",
+      "type": "class",
+      "name": "TextTrack",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [26, 35],
+      "summary": "DOM struct representing an HTMLTrackElement's text track, storing event target base, kind, label, language, id, mode, cue list, and associated track lists.",
+      "tags": ["dom-interface", "data-model", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrack.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [38, 56],
+      "summary": "Creates a new TextTrack with initial properties including id, kind, label, language, mode, and optional track list, using EventTarget::new_inherited as the base.",
+      "tags": ["constructor", "init", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrack.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [59, 76],
+      "summary": "Public constructor that wraps new_inherited with DOM reflection, registering the TextTrack as a garbage-collected DOM object.",
+      "tags": ["constructor", "dom-reflection", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrack.rs:get_cues",
+      "type": "function",
+      "name": "get_cues",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [78, 82],
+      "summary": "Returns the TextTrackCueList for this track, lazily initializing it if not yet created.",
+      "tags": ["getter", "lazy-init", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrack.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [84, 86],
+      "summary": "Returns the track's identifier string as a DOMString.",
+      "tags": ["getter", "accessor", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrack.rs:add_track_list",
+      "type": "function",
+      "name": "add_track_list",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [88, 90],
+      "summary": "Associates a TextTrackList with this track by storing it in the track_list field.",
+      "tags": ["mutator", "association", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrack.rs:remove_track_list",
+      "type": "function",
+      "name": "remove_track_list",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [92, 94],
+      "summary": "Clears the associated track list reference from this track.",
+      "tags": ["mutator", "association", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrack.rs:AddCue",
+      "type": "function",
+      "name": "AddCue",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [148, 162],
+      "summary": "Adds a cue to this track's cue list, first removing it from any other track it belongs to.",
+      "tags": ["mutator", "cue-management", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrack.rs:RemoveCue",
+      "type": "function",
+      "name": "RemoveCue",
+      "filePath": "components/script/dom/webvtt/texttrack.rs",
+      "lineRange": [165, 175],
+      "summary": "Removes a cue from this track's cue list, returning an error if the cue is not found.",
+      "tags": ["mutator", "cue-management", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "type": "file",
+      "name": "texttrackcue.rs",
+      "filePath": "components/script/dom/webvtt/texttrackcue.rs",
+      "summary": "Implements the TextTrackCue DOM interface serving as the base class for individual WebVTT cues with start/end time tracking, pause-on-exit flag, and optional track association.",
+      "tags": ["dom-interface", "data-model", "webvtt", "base-class"],
+      "complexity": "moderate",
+      "languageNotes": "Base DOM class for VTTCue using DomRefCell for mutable interior fields and Cell for Copy-type properties."
+    },
+    {
+      "id": "class:components/script/dom/webvtt/texttrackcue.rs:TextTrackCue",
+      "type": "class",
+      "name": "TextTrackCue",
+      "filePath": "components/script/dom/webvtt/texttrackcue.rs",
+      "lineRange": [21, 28],
+      "summary": "DOM struct serving as the base cue type, holding event target reference, cue id, optional track, start/end times, and pause-on-exit flag.",
+      "tags": ["dom-interface", "data-model", "base-class", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcue.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webvtt/texttrackcue.rs",
+      "lineRange": [31, 45],
+      "summary": "Initializes a TextTrackCue with id, start/end times, and optional track reference using EventTarget::new_inherited.",
+      "tags": ["constructor", "init", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcue.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webvtt/texttrackcue.rs",
+      "lineRange": [48, 61],
+      "summary": "Public constructor that wraps new_inherited with DOM reflection and garbage collection support.",
+      "tags": ["constructor", "dom-reflection", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcue.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webvtt/texttrackcue.rs",
+      "lineRange": [63, 65],
+      "summary": "Returns the cue's identifier string by cloning the internally-stored DOMString.",
+      "tags": ["getter", "accessor", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcue.rs:get_track",
+      "type": "function",
+      "name": "get_track",
+      "filePath": "components/script/dom/webvtt/texttrackcue.rs",
+      "lineRange": [67, 69],
+      "summary": "Returns the optional TextTrack that this cue belongs to, or None if unassociated.",
+      "tags": ["getter", "association", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "type": "file",
+      "name": "texttrackcuelist.rs",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "summary": "Implements the TextTrackCueList DOM interface providing an indexed, ordered collection of TextTrackCue objects with lookup by index and by ID string.",
+      "tags": ["dom-interface", "collection", "webvtt", "media"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webvtt/texttrackcuelist.rs:TextTrackCueList",
+      "type": "class",
+      "name": "TextTrackCueList",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "lineRange": [17, 20],
+      "summary": "DOM struct maintaining a sorted list of TextTrackCue DOM references via DomRefCell for interior mutability.",
+      "tags": ["dom-interface", "collection", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcuelist.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "lineRange": [23, 28],
+      "summary": "Creates a new TextTrackCueList from an initial vector of TextTrackCue references.",
+      "tags": ["constructor", "init", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcuelist.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "lineRange": [30, 40],
+      "summary": "Public constructor that wraps new_inherited with DOM reflection for garbage-collected allocation.",
+      "tags": ["constructor", "dom-reflection", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcuelist.rs:item",
+      "type": "function",
+      "name": "item",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "lineRange": [42, 47],
+      "summary": "Returns the cue at the given index, or None if out of bounds.",
+      "tags": ["getter", "indexed-access", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcuelist.rs:find",
+      "type": "function",
+      "name": "find",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "lineRange": [49, 56],
+      "summary": "Finds the index of a given cue in the list by identity comparison, returning the position and cue reference.",
+      "tags": ["lookup", "indexed-access", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcuelist.rs:add",
+      "type": "function",
+      "name": "add",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "lineRange": [58, 63],
+      "summary": "Adds a cue to the list if it is not already present.",
+      "tags": ["mutator", "collection", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcuelist.rs:remove",
+      "type": "function",
+      "name": "remove",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "lineRange": [65, 67],
+      "summary": "Removes the cue at the given index from the list.",
+      "tags": ["mutator", "collection", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttrackcuelist.rs:GetCueById",
+      "type": "function",
+      "name": "GetCueById",
+      "filePath": "components/script/dom/webvtt/texttrackcuelist.rs",
+      "lineRange": [82, 92],
+      "summary": "Searches the cue list by ID string and returns the first matching TextTrackCue, or None.",
+      "tags": ["lookup", "id-search", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webvtt/texttracklist.rs",
+      "type": "file",
+      "name": "texttracklist.rs",
+      "filePath": "components/script/dom/webvtt/texttracklist.rs",
+      "summary": "Implements the TextTrackList DOM interface providing an observable indexed collection of TextTrack objects with add, remove, lookup-by-id operations, and event dispatching.",
+      "tags": ["dom-interface", "collection", "webvtt", "event-handler"],
+      "complexity": "moderate",
+      "languageNotes": "Demonstrates the Servo DOM event dispatch pattern through task queuing on the media element task source."
+    },
+    {
+      "id": "class:components/script/dom/webvtt/texttracklist.rs:TextTrackList",
+      "type": "class",
+      "name": "TextTrackList",
+      "filePath": "components/script/dom/webvtt/texttracklist.rs",
+      "lineRange": [24, 27],
+      "summary": "DOM struct holding an EventTarget base and a DomRefCell-wrapped vector of TextTrack DOM references.",
+      "tags": ["dom-interface", "collection", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttracklist.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webvtt/texttracklist.rs",
+      "lineRange": [30, 35],
+      "summary": "Creates a new TextTrackList from an initial vector of TextTrack references, wrapped in DomRefCell.",
+      "tags": ["constructor", "init", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttracklist.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webvtt/texttracklist.rs",
+      "lineRange": [37, 47],
+      "summary": "Public constructor that wraps new_inherited with DOM reflection for garbage-collected allocation.",
+      "tags": ["constructor", "dom-reflection", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttracklist.rs:item",
+      "type": "function",
+      "name": "item",
+      "filePath": "components/script/dom/webvtt/texttracklist.rs",
+      "lineRange": [49, 54],
+      "summary": "Returns the TextTrack at the given index, or None if out of bounds.",
+      "tags": ["getter", "indexed-access", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttracklist.rs:find",
+      "type": "function",
+      "name": "find",
+      "filePath": "components/script/dom/webvtt/texttracklist.rs",
+      "lineRange": [56, 63],
+      "summary": "Finds the index of a given TextTrack in the list by identity comparison.",
+      "tags": ["lookup", "indexed-access", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttracklist.rs:add",
+      "type": "function",
+      "name": "add",
+      "filePath": "components/script/dom/webvtt/texttracklist.rs",
+      "lineRange": [65, 98],
+      "summary": "Adds a track to the list, queues an addtrack event on the media element task source, and registers the track list backreference.",
+      "tags": ["mutator", "event-dispatch", "webvtt"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/texttracklist.rs:remove",
+      "type": "function",
+      "name": "remove",
+      "filePath": "components/script/dom/webvtt/texttracklist.rs",
+      "lineRange": [103, 110],
+      "summary": "Removes a track by index, clears its track list backreference, and fires a removetrack event.",
+      "tags": ["mutator", "event-dispatch", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webvtt/trackevent.rs",
+      "type": "file",
+      "name": "trackevent.rs",
+      "filePath": "components/script/dom/webvtt/trackevent.rs",
+      "summary": "Implements the TrackEvent DOM interface for firing addtrack and removetrack events on media elements, supporting video, audio, and text track types via the MediaTrack enum.",
+      "tags": ["dom-interface", "event-handler", "webvtt", "media"],
+      "complexity": "moderate",
+      "languageNotes": "Servo DOM event subclass pattern using Event::new_inherited and reflect_dom_object_with_proto for prototype chain support."
+    },
+    {
+      "id": "class:components/script/dom/webvtt/trackevent.rs:TrackEvent",
+      "type": "class",
+      "name": "TrackEvent",
+      "filePath": "components/script/dom/webvtt/trackevent.rs",
+      "lineRange": [34, 37],
+      "summary": "DOM event struct holding a base Event and a typed track reference (VideoTrack, AudioTrack, or TextTrack) via the MediaTrack enum.",
+      "tags": ["dom-interface", "event", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/trackevent.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webvtt/trackevent.rs",
+      "lineRange": [42, 60],
+      "summary": "Constructs a TrackEvent with a typed track reference (video, audio, or text), wrapping Event::new_inherited.",
+      "tags": ["constructor", "init", "event", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/trackevent.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webvtt/trackevent.rs",
+      "lineRange": [62, 71],
+      "summary": "Public convenience constructor delegating to new_with_proto with default prototype.",
+      "tags": ["constructor", "dom-reflection", "webvtt"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/trackevent.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/webvtt/trackevent.rs",
+      "lineRange": [73, 93],
+      "summary": "Full constructor that creates a TrackEvent with a specific prototype, initializes the event type, bubbles, and cancelable properties.",
+      "tags": ["constructor", "dom-reflection", "event-init", "webvtt"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/trackevent.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/webvtt/trackevent.rs",
+      "lineRange": [98, 114],
+      "summary": "WebIDL constructor that parses TrackEventInit dictionary and constructs a new TrackEvent from JavaScript.",
+      "tags": ["constructor", "webidl-bindings", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/trackevent.rs:GetTrack",
+      "type": "function",
+      "name": "GetTrack",
+      "filePath": "components/script/dom/webvtt/trackevent.rs",
+      "lineRange": [118, 131],
+      "summary": "Returns the typed track reference from the event, wrapping it in the appropriate VideoTrackOrAudioTrackOrTextTrack union type.",
+      "tags": ["getter", "accessor", "event", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webvtt/vttcue.rs",
+      "type": "file",
+      "name": "vttcue.rs",
+      "filePath": "components/script/dom/webvtt/vttcue.rs",
+      "summary": "Implements the VTTCue DOM interface extending TextTrackCue with WebVTT-specific styling properties including region, vertical direction, line and position settings, alignment, size, and text content.",
+      "tags": ["dom-interface", "data-model", "webvtt", "styling"],
+      "complexity": "complex",
+      "languageNotes": "Extends TextTrackCue via composition with TextTrackCue as the first field; uses DomRefCell for String fields and Cell for enum fields."
+    },
+    {
+      "id": "class:components/script/dom/webvtt/vttcue.rs:VTTCue",
+      "type": "class",
+      "name": "VTTCue",
+      "filePath": "components/script/dom/webvtt/vttcue.rs",
+      "lineRange": [27, 39],
+      "summary": "DOM struct composing TextTrackCue with properties for region, vertical direction, snap-to-lines, line/position settings, alignment, size, and text content.",
+      "tags": ["dom-interface", "data-model", "webvtt"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/vttcue.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webvtt/vttcue.rs",
+      "lineRange": [42, 61],
+      "summary": "Initializes a VTTCue with start/end time and text content, setting all styling properties to their WebVTT defaults.",
+      "tags": ["constructor", "init", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/vttcue.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webvtt/vttcue.rs",
+      "lineRange": [63, 77],
+      "summary": "Public constructor that wraps new_inherited with DOM reflection via reflect_dom_object_with_proto.",
+      "tags": ["constructor", "dom-reflection", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/vttcue.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/webvtt/vttcue.rs",
+      "lineRange": [82, 91],
+      "summary": "WebIDL constructor for VTTCue taking start time, end time, and text from JavaScript.",
+      "tags": ["constructor", "webidl-bindings", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/vttcue.rs:SetPosition",
+      "type": "function",
+      "name": "SetPosition",
+      "filePath": "components/script/dom/webvtt/vttcue.rs",
+      "lineRange": [152, 161],
+      "summary": "Sets the cue position with validation, returning IndexSizeError if the value is outside the valid range.",
+      "tags": ["setter", "validation", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/vttcue.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/script/dom/webvtt/vttcue.rs",
+      "lineRange": [230, 239],
+      "summary": "Implements From<f64> for LineAndPositionSetting, converting a double to either a Double value or AutoKeyword.",
+      "tags": ["type-conversion", "enum", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webvtt/vttregion.rs",
+      "type": "file",
+      "name": "vttregion.rs",
+      "filePath": "components/script/dom/webvtt/vttregion.rs",
+      "summary": "Implements the VTTRegion DOM interface representing a WebVTT rendering region with configurable width, lines, region and viewport anchor coordinates, and scroll behavior.",
+      "tags": ["dom-interface", "data-model", "webvtt", "rendering"],
+      "complexity": "moderate",
+      "languageNotes": "Uses Reflector directly (not an EventTarget subclass) since VTTRegion is not an event target in the WebVTT spec."
+    },
+    {
+      "id": "class:components/script/dom/webvtt/vttregion.rs:VTTRegion",
+      "type": "class",
+      "name": "VTTRegion",
+      "filePath": "components/script/dom/webvtt/vttregion.rs",
+      "lineRange": [21, 31],
+      "summary": "DOM struct with a Reflector base and Cell/DomRefCell fields for id, width, lines, anchor coordinates, and scroll setting.",
+      "tags": ["dom-interface", "data-model", "webvtt"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webvtt/vttregion.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webvtt/vttregion.rs",
+      "lineRange": [34, 46],
+      "summary": "Initializes a VTTRegion with default values: empty id, width 100, lines 3, all anchors at 0, and scroll NONE.",
+      "tags": ["constructor", "init", "webvtt"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webvtt/mod.rs",
+      "target": "file:components/script/dom/webvtt/texttrack.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webvtt/mod.rs",
+      "target": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webvtt/mod.rs",
+      "target": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webvtt/mod.rs",
+      "target": "file:components/script/dom/webvtt/texttracklist.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webvtt/mod.rs",
+      "target": "file:components/script/dom/webvtt/trackevent.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webvtt/mod.rs",
+      "target": "file:components/script/dom/webvtt/vttcue.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webvtt/mod.rs",
+      "target": "file:components/script/dom/webvtt/vttregion.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "class:components/script/dom/webvtt/texttrack.rs:TextTrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:get_cues",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:add_track_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:remove_track_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:AddCue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:RemoveCue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "class:components/script/dom/webvtt/texttrack.rs:TextTrack",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:get_cues",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:add_track_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrack.rs",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:remove_track_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "class:components/script/dom/webvtt/texttrackcue.rs:TextTrackCue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:get_track",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "class:components/script/dom/webvtt/texttrackcue.rs:TextTrackCue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcue.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:get_track",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "class:components/script/dom/webvtt/texttrackcuelist.rs:TextTrackCueList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:find",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:add",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:remove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:GetCueById",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "class:components/script/dom/webvtt/texttrackcuelist.rs:TextTrackCueList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:item",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:find",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:add",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttrackcuelist.rs",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:remove",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "class:components/script/dom/webvtt/texttracklist.rs:TextTrackList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:find",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:add",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:remove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "class:components/script/dom/webvtt/texttracklist.rs:TextTrackList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:item",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:find",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:add",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/texttracklist.rs",
+      "target": "function:components/script/dom/webvtt/texttracklist.rs:remove",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/trackevent.rs",
+      "target": "class:components/script/dom/webvtt/trackevent.rs:TrackEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/trackevent.rs",
+      "target": "function:components/script/dom/webvtt/trackevent.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/trackevent.rs",
+      "target": "function:components/script/dom/webvtt/trackevent.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/trackevent.rs",
+      "target": "function:components/script/dom/webvtt/trackevent.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/trackevent.rs",
+      "target": "function:components/script/dom/webvtt/trackevent.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/trackevent.rs",
+      "target": "function:components/script/dom/webvtt/trackevent.rs:GetTrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/trackevent.rs",
+      "target": "class:components/script/dom/webvtt/trackevent.rs:TrackEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/trackevent.rs",
+      "target": "function:components/script/dom/webvtt/trackevent.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttcue.rs",
+      "target": "class:components/script/dom/webvtt/vttcue.rs:VTTCue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttcue.rs",
+      "target": "function:components/script/dom/webvtt/vttcue.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttcue.rs",
+      "target": "function:components/script/dom/webvtt/vttcue.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttcue.rs",
+      "target": "function:components/script/dom/webvtt/vttcue.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttcue.rs",
+      "target": "function:components/script/dom/webvtt/vttcue.rs:SetPosition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttcue.rs",
+      "target": "function:components/script/dom/webvtt/vttcue.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttcue.rs",
+      "target": "class:components/script/dom/webvtt/vttcue.rs:VTTCue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttcue.rs",
+      "target": "function:components/script/dom/webvtt/vttcue.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttregion.rs",
+      "target": "class:components/script/dom/webvtt/vttregion.rs:VTTRegion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttregion.rs",
+      "target": "function:components/script/dom/webvtt/vttregion.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webvtt/vttregion.rs",
+      "target": "class:components/script/dom/webvtt/vttregion.rs:VTTRegion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webvtt/texttrack.rs:get_cues",
+      "target": "function:components/script/dom/webvtt/texttrackcuelist.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webvtt/texttracklist.rs:add",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:add_track_list",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webvtt/texttracklist.rs:remove",
+      "target": "function:components/script/dom/webvtt/texttrack.rs:remove_track_list",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webvtt/vttcue.rs:new_inherited",
+      "target": "function:components/script/dom/webvtt/texttrackcue.rs:new_inherited",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,458 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/shared/embedder/user_contents.rs",
+      "type": "file",
+      "name": "user_contents.rs",
+      "filePath": "components/shared/embedder/user_contents.rs",
+      "summary": "Defines types for injecting user-provided stylesheets and scripts into web pages, with ID generation, source management, and memory accounting.",
+      "tags": ["type-definition", "user-content", "stylesheet", "script", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/user_contents.rs:UserContentManagerId",
+      "type": "class",
+      "name": "UserContentManagerId",
+      "filePath": "components/shared/embedder/user_contents.rs",
+      "lineRange": [16, 16],
+      "summary": "Opaque identifier for a user content manager with auto-incrementing atomic ID generation.",
+      "tags": ["type-definition", "identifier", "atomic-id", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/user_contents.rs:UserContents",
+      "type": "class",
+      "name": "UserContents",
+      "filePath": "components/shared/embedder/user_contents.rs",
+      "lineRange": [25, 28],
+      "summary": "Container for user-injected scripts and stylesheets to be applied to web pages.",
+      "tags": ["type-definition", "user-content", "container", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/user_contents.rs:UserStyleSheet",
+      "type": "class",
+      "name": "UserStyleSheet",
+      "filePath": "components/shared/embedder/user_contents.rs",
+      "lineRange": [49, 53],
+      "summary": "A user-injected stylesheet with auto-generated ID, CSS source string, and source URL.",
+      "tags": ["type-definition", "stylesheet", "user-content", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/user_contents.rs:UserScript",
+      "type": "class",
+      "name": "UserScript",
+      "filePath": "components/shared/embedder/user_contents.rs",
+      "lineRange": [94, 98],
+      "summary": "A user-injected script with auto-generated ID, JavaScript source string, and optional source file path on disk.",
+      "tags": ["type-definition", "script", "user-content", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/user_contents.rs:UserStyleSheet::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/embedder/user_contents.rs",
+      "lineRange": [58, 64],
+      "summary": "Creates a UserStyleSheet from a CSS source string and URL, generating a new ID.",
+      "tags": ["constructor", "stylesheet", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/user_contents.rs:UserScript::new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/embedder/user_contents.rs",
+      "lineRange": [103, 109],
+      "summary": "Creates a UserScript from a script source string and optional source file path, generating a new ID.",
+      "tags": ["constructor", "script", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/user_contents.rs:UserScript::size_of",
+      "type": "function",
+      "name": "size_of",
+      "filePath": "components/shared/embedder/user_contents.rs",
+      "lineRange": [129, 137],
+      "summary": "Implements MallocSizeOf for UserScript, accounting for the ID, script string, and source file path memory.",
+      "tags": ["method", "memory", "size", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/embedder/webdriver.rs",
+      "type": "file",
+      "name": "webdriver.rs",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "summary": "Defines WebDriver command messages, script commands, prompt handling, frame IDs, load status types, and sender channels for remote browser automation.",
+      "tags": ["type-definition", "webdriver", "automation", "ipc", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:WebDriverUserPrompt",
+      "type": "class",
+      "name": "WebDriverUserPrompt",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [28, 36],
+      "summary": "Enum of WebDriver user prompt types: Alert, BeforeUnload, Confirm, Default, File, Prompt, and FallbackDefault with string parsing.",
+      "tags": ["type-definition", "webdriver", "prompt", "automation", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:WebDriverUserPromptAction",
+      "type": "class",
+      "name": "WebDriverUserPromptAction",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [54, 58],
+      "summary": "Enum of WebDriver prompt handling actions: Accept, Dismiss, Ignore with string parsing.",
+      "tags": ["type-definition", "webdriver", "action", "prompt", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:CustomHandlersAutomationMode",
+      "type": "class",
+      "name": "CustomHandlersAutomationMode",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [73, 78],
+      "summary": "Enum for protocol handler automation mode: AutoAccept, AutoReject, or None.",
+      "tags": ["type-definition", "webdriver", "protocol-handler", "automation", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:NewWindowTypeHint",
+      "type": "class",
+      "name": "NewWindowTypeHint",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [82, 86],
+      "summary": "Enum for WebDriver new-window type hints: Auto, Tab, Window.",
+      "tags": ["type-definition", "webdriver", "new-window", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:WebDriverCommandMsg",
+      "type": "class",
+      "name": "WebDriverCommandMsg",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [90, 158],
+      "summary": "Large enum of all WebDriver commands sent to the constellation: window management, navigation, input, screenshot, cookie, and browsing context operations.",
+      "tags": ["type-definition", "webdriver", "command", "messaging", "rust"],
+      "complexity": "complex",
+      "languageNotes": "Contains 25+ command variants, many carrying GenericOneshotSender/GenericSender callbacks for asynchronous WebDriver protocol responses."
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:WebDriverScriptCommand",
+      "type": "class",
+      "name": "WebDriverScriptCommand",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [161, 271],
+      "summary": "Very large enum of script-level WebDriver commands including element finding (CSS, XPath, link text, tag name, shadow DOM), cookie management, attribute/property access, scrolling, and load status tracking.",
+      "tags": ["type-definition", "webdriver", "script-command", "dom", "rust"],
+      "complexity": "complex",
+      "languageNotes": "44+ variants covering the full WebDriver element interaction and DOM inspection protocol."
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:WebDriverFrameId",
+      "type": "class",
+      "name": "WebDriverFrameId",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [276, 279],
+      "summary": "Enum for identifying frames by either a short index or a DOM element string.",
+      "tags": ["type-definition", "webdriver", "frame", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:WebDriverLoadStatus",
+      "type": "class",
+      "name": "WebDriverLoadStatus",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [282, 292],
+      "summary": "Enum of WebDriver navigation load states: NavigationStart, NavigationStop, Complete, Timeout, Blocked.",
+      "tags": ["type-definition", "webdriver", "load-status", "navigation", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/webdriver.rs:WebDriverSenders",
+      "type": "class",
+      "name": "WebDriverSenders",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [297, 301],
+      "summary": "Collection of senders for asynchronous WebDriver communication: load status senders, script evaluation interrupt sender, and pending traversal senders.",
+      "tags": ["type-definition", "webdriver", "channel", "async", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/webdriver.rs:WebDriverUserPrompt::new_from_str",
+      "type": "function",
+      "name": "new_from_str",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [39, 50],
+      "summary": "Parses a string into a WebDriverUserPrompt enum matching standard WebDriver prompt type names.",
+      "tags": ["method", "parsing", "webdriver", "prompt", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/embedder/webdriver.rs:WebDriverUserPromptAction::new_from_str",
+      "type": "function",
+      "name": "new_from_str",
+      "filePath": "components/shared/embedder/webdriver.rs",
+      "lineRange": [61, 68],
+      "summary": "Parses a string into a WebDriverUserPromptAction enum matching standard WebDriver action names.",
+      "tags": ["method", "parsing", "webdriver", "action", "rust"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "class:components/shared/embedder/user_contents.rs:UserContentManagerId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "class:components/shared/embedder/user_contents.rs:UserContents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "class:components/shared/embedder/user_contents.rs:UserStyleSheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "class:components/shared/embedder/user_contents.rs:UserScript",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "function:components/shared/embedder/user_contents.rs:UserStyleSheet::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "function:components/shared/embedder/user_contents.rs:UserScript::new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "function:components/shared/embedder/user_contents.rs:UserScript::size_of",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "class:components/shared/embedder/user_contents.rs:UserContentManagerId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "class:components/shared/embedder/user_contents.rs:UserContents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "class:components/shared/embedder/user_contents.rs:UserStyleSheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "class:components/shared/embedder/user_contents.rs:UserScript",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "function:components/shared/embedder/user_contents.rs:UserStyleSheet::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "function:components/shared/embedder/user_contents.rs:UserScript::new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/user_contents.rs",
+      "target": "function:components/shared/embedder/user_contents.rs:UserScript::size_of",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverUserPrompt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverUserPromptAction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:CustomHandlersAutomationMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:NewWindowTypeHint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverCommandMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverScriptCommand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverFrameId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverLoadStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverSenders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "function:components/shared/embedder/webdriver.rs:WebDriverUserPrompt::new_from_str",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "function:components/shared/embedder/webdriver.rs:WebDriverUserPromptAction::new_from_str",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverUserPrompt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverUserPromptAction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:CustomHandlersAutomationMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:NewWindowTypeHint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverCommandMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverScriptCommand",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverFrameId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverLoadStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "class:components/shared/embedder/webdriver.rs:WebDriverSenders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "function:components/shared/embedder/webdriver.rs:WebDriverUserPrompt::new_from_str",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/webdriver.rs",
+      "target": "function:components/shared/embedder/webdriver.rs:WebDriverUserPromptAction::new_from_str",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

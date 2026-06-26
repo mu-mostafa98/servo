@@ -1,0 +1,933 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/shared/net/blob_url_store.rs",
+      "type": "file",
+      "name": "blob_url_store.rs",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "summary": "Provides blob URL parsing, storage, token management, and resolution for blob: protocol URLs used in the Servo browser engine.",
+      "tags": [
+        "data-model",
+        "service",
+        "serialization",
+        "ipc"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust source file using standard library patterns and Servo's IPC infrastructure."
+    },
+    {
+      "id": "class:components/shared/net/blob_url_store.rs:BlobURLStoreError",
+      "type": "class",
+      "name": "BlobURLStoreError",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        25,
+        36
+      ],
+      "summary": "Error type for blob URL store operations: invalid file ID, origin, entry, range, or external errors.",
+      "tags": [
+        "error-type",
+        "blob-url",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/blob_url_store.rs:BlobBuf",
+      "type": "class",
+      "name": "BlobBuf",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        40,
+        48
+      ],
+      "summary": "In-memory buffer for blob data with filename, MIME type, size, and byte content.",
+      "tags": [
+        "data-model",
+        "blob-url",
+        "buffer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/blob_url_store.rs:UrlWithBlobClaim",
+      "type": "class",
+      "name": "UrlWithBlobClaim",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        82,
+        85
+      ],
+      "summary": "Wrapper around a URL with an associated blob token claim for origin validation.",
+      "tags": [
+        "data-model",
+        "blob-url",
+        "wrapping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/net/blob_url_store.rs:TokenSerializationGuard",
+      "type": "class",
+      "name": "TokenSerializationGuard",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        155,
+        158
+      ],
+      "summary": "Serialization guard for blob tokens that refreshes and manages token lifecycle during ser/de.",
+      "tags": [
+        "serialization",
+        "blob-url",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/blob_url_store.rs:BlobResolver",
+      "type": "class",
+      "name": "BlobResolver",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        207,
+        210
+      ],
+      "summary": "Resolves blob URLs to their underlying content by communicating with the resource threads.",
+      "tags": [
+        "resolver",
+        "blob-url",
+        "ipc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/blob_url_store.rs:BlobToken",
+      "type": "class",
+      "name": "BlobToken",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        215,
+        226
+      ],
+      "summary": "Token representing ownership of a blob URL entry with refresh, disown, and revocation capabilities.",
+      "tags": [
+        "token",
+        "blob-url",
+        "lifecycle",
+        "ownership"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/blob_url_store.rs:BlobTokenCommunicator",
+      "type": "class",
+      "name": "BlobTokenCommunicator",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        229,
+        232
+      ],
+      "summary": "Communication channels for blob token revocation and refresh messages.",
+      "tags": [
+        "ipc",
+        "communication",
+        "channel"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/blob_url_store.rs:parse_blob_url",
+      "type": "function",
+      "name": "parse_blob_url",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        58,
+        77
+      ],
+      "summary": "Parses a blob: URL into its origin, UUID, and path components.",
+      "tags": [
+        "parsing",
+        "extraction",
+        "exported"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/blob_url_store.rs:acquire_blob_token_for",
+      "type": "function",
+      "name": "acquire_blob_token_for",
+      "filePath": "components/shared/net/blob_url_store.rs",
+      "lineRange": [
+        273,
+        303
+      ],
+      "summary": "Acquires a blob token for a given URL by parsing it and requesting a token from the file manager.",
+      "tags": [
+        "blob-url",
+        "token",
+        "exported"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/shared/net/filemanager_thread.rs",
+      "type": "file",
+      "name": "filemanager_thread.rs",
+      "filePath": "components/shared/net/filemanager_thread.rs",
+      "summary": "Defines file-related IPC message types and range calculation utilities for reading files and managing blob URL entries in the network layer.",
+      "tags": [
+        "ipc",
+        "data-model",
+        "utility"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust source file using standard library patterns and Servo's IPC infrastructure."
+    },
+    {
+      "id": "class:components/shared/net/filemanager_thread.rs:FileTokenCheck",
+      "type": "class",
+      "name": "FileTokenCheck",
+      "filePath": "components/shared/net/filemanager_thread.rs",
+      "lineRange": [
+        23,
+        34
+      ],
+      "summary": "Enum controlling file token validation: not required, required, or should fail.",
+      "tags": [
+        "enum",
+        "validation",
+        "file-manager"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/filemanager_thread.rs:RelativePos",
+      "type": "class",
+      "name": "RelativePos",
+      "filePath": "components/shared/net/filemanager_thread.rs",
+      "lineRange": [
+        40,
+        48
+      ],
+      "summary": "Relative byte position type with methods for converting to absolute ranges and blob ranges.",
+      "tags": [
+        "data-model",
+        "position",
+        "range"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/net/filemanager_thread.rs:FileManagerThreadMsg",
+      "type": "class",
+      "name": "FileManagerThreadMsg",
+      "filePath": "components/shared/net/filemanager_thread.rs",
+      "lineRange": [
+        123,
+        173
+      ],
+      "summary": "IPC message enum for file manager operations: file selection, reading, blob URL management, and token operations.",
+      "tags": [
+        "ipc",
+        "message",
+        "file-manager"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/filemanager_thread.rs:GetTokenForFileReply",
+      "type": "class",
+      "name": "GetTokenForFileReply",
+      "filePath": "components/shared/net/filemanager_thread.rs",
+      "lineRange": [
+        176,
+        180
+      ],
+      "summary": "Response message containing the blob token and communication channels for a file access request.",
+      "tags": [
+        "data-model",
+        "ipc",
+        "token"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/filemanager_thread.rs:ReadFileProgress",
+      "type": "class",
+      "name": "ReadFileProgress",
+      "filePath": "components/shared/net/filemanager_thread.rs",
+      "lineRange": [
+        183,
+        187
+      ],
+      "summary": "Progress enum for file read operations: metadata, partial data, or EOF.",
+      "tags": [
+        "enum",
+        "file",
+        "io"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/filemanager_thread.rs:FileManagerThreadError",
+      "type": "class",
+      "name": "FileManagerThreadError",
+      "filePath": "components/shared/net/filemanager_thread.rs",
+      "lineRange": [
+        192,
+        201
+      ],
+      "summary": "Error type for file manager operations: invalid selection, user cancellation, filesystem errors, or blob store errors.",
+      "tags": [
+        "error-type",
+        "file-manager",
+        "validation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/net/http_status.rs",
+      "type": "file",
+      "name": "http_status.rs",
+      "filePath": "components/shared/net/http_status.rs",
+      "summary": "Implements the HttpStatus wrapper around HTTP status codes with validation, classification (success/error), and serialization support.",
+      "tags": [
+        "data-model",
+        "validation",
+        "serialization"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust source file using standard library patterns and Servo's IPC infrastructure."
+    },
+    {
+      "id": "class:components/shared/net/http_status.rs:HttpStatus",
+      "type": "class",
+      "name": "HttpStatus",
+      "filePath": "components/shared/net/http_status.rs",
+      "lineRange": [
+        17,
+        20
+      ],
+      "summary": "Wrapper around HTTP status codes with validation, range checking, and display formatting for response handling.",
+      "tags": [
+        "data-model",
+        "http",
+        "status-code"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/shared/net/image_cache.rs",
+      "type": "file",
+      "name": "image_cache.rs",
+      "filePath": "components/shared/net/image_cache.rs",
+      "summary": "Implements the image caching subsystem including raster/vector image types, pending image tracking, and cache lifecycle management.",
+      "tags": [
+        "data-model",
+        "service",
+        "caching"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust source file using standard library patterns and Servo's IPC infrastructure."
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:Image",
+      "type": "class",
+      "name": "Image",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        32,
+        35
+      ],
+      "summary": "Enum for loaded image data: raster pixel data or vector (SVG) image reference.",
+      "tags": [
+        "enum",
+        "image",
+        "data"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:VectorImage",
+      "type": "class",
+      "name": "VectorImage",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        38,
+        43
+      ],
+      "summary": "Vector image data with SVG identifier, metadata, and CORS status tracking.",
+      "tags": [
+        "data-model",
+        "image",
+        "svg"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:ImageOrMetadataAvailable",
+      "type": "class",
+      "name": "ImageOrMetadataAvailable",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        70,
+        73
+      ],
+      "summary": "Enum for image loading results: full image available or just metadata available.",
+      "tags": [
+        "enum",
+        "image",
+        "result"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:ImageLoadListener",
+      "type": "class",
+      "name": "ImageLoadListener",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        82,
+        87
+      ],
+      "summary": "Callback listener for image loading that forwards the response through an IPC channel.",
+      "tags": [
+        "listener",
+        "image",
+        "callback"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:ImageResponse",
+      "type": "class",
+      "name": "ImageResponse",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        116,
+        123
+      ],
+      "summary": "Enum for image loading outcomes: loaded, metadata loaded, or failed to load/decode.",
+      "tags": [
+        "enum",
+        "image",
+        "response"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:PendingImageId",
+      "type": "class",
+      "name": "PendingImageId",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        127,
+        127
+      ],
+      "summary": "Identifier for a pending image load operation.",
+      "tags": [
+        "identifier",
+        "image",
+        "pending"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:PendingImageResponse",
+      "type": "class",
+      "name": "PendingImageResponse",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        130,
+        134
+      ],
+      "summary": "Response type for pending image loads with pipeline ID and response data.",
+      "tags": [
+        "data-model",
+        "image",
+        "response"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:RasterizationCompleteResponse",
+      "type": "class",
+      "name": "RasterizationCompleteResponse",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        137,
+        141
+      ],
+      "summary": "Notification sent when vector image rasterization completes with requested size.",
+      "tags": [
+        "data-model",
+        "image",
+        "rasterization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:ImageCacheResponseMessage",
+      "type": "class",
+      "name": "ImageCacheResponseMessage",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        144,
+        147
+      ],
+      "summary": "Messages for image cache status notifications: pending load status and rasterization completion.",
+      "tags": [
+        "enum",
+        "cache",
+        "message"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:ImageCacheResult",
+      "type": "class",
+      "name": "ImageCacheResult",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        153,
+        158
+      ],
+      "summary": "Enum for image cache lookup results: available, pending, failed, or ready for request.",
+      "tags": [
+        "enum",
+        "cache",
+        "result"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:ImageCacheFactory",
+      "type": "class",
+      "name": "ImageCacheFactory",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        163,
+        170
+      ],
+      "summary": "Factory for creating ImageCache instances.",
+      "tags": [
+        "factory",
+        "cache",
+        "creation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/image_cache.rs:ImageCache",
+      "type": "class",
+      "name": "ImageCache",
+      "filePath": "components/shared/net/image_cache.rs",
+      "lineRange": [
+        174,
+        252
+      ],
+      "summary": "Main image cache implementation managing rasterized images, pending loads, and vector image rasterization.",
+      "tags": [
+        "service",
+        "cache",
+        "image",
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobURLStoreError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobURLStoreError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobBuf",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobBuf",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:UrlWithBlobClaim",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:UrlWithBlobClaim",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:TokenSerializationGuard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:TokenSerializationGuard",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobResolver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobResolver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobToken",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobToken",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobTokenCommunicator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "class:components/shared/net/blob_url_store.rs:BlobTokenCommunicator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "function:components/shared/net/blob_url_store.rs:parse_blob_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "function:components/shared/net/blob_url_store.rs:parse_blob_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "function:components/shared/net/blob_url_store.rs:acquire_blob_token_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/blob_url_store.rs",
+      "target": "function:components/shared/net/blob_url_store.rs:acquire_blob_token_for",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:FileTokenCheck",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:FileTokenCheck",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:RelativePos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:RelativePos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:FileManagerThreadMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:FileManagerThreadMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:GetTokenForFileReply",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:GetTokenForFileReply",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:ReadFileProgress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:ReadFileProgress",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:FileManagerThreadError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/filemanager_thread.rs",
+      "target": "class:components/shared/net/filemanager_thread.rs:FileManagerThreadError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/http_status.rs",
+      "target": "class:components/shared/net/http_status.rs:HttpStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/http_status.rs",
+      "target": "class:components/shared/net/http_status.rs:HttpStatus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:Image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:Image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:VectorImage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:VectorImage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageOrMetadataAvailable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageOrMetadataAvailable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageLoadListener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageLoadListener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:PendingImageId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:PendingImageId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:PendingImageResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:PendingImageResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:RasterizationCompleteResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:RasterizationCompleteResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageCacheResponseMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageCacheResponseMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageCacheResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageCacheResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageCacheFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageCacheFactory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageCache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/image_cache.rs",
+      "target": "class:components/shared/net/image_cache.rs:ImageCache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

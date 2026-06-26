@@ -1,0 +1,3359 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/constellation/broadcastchannel.rs",
+      "type": "file",
+      "name": "broadcastchannel.rs",
+      "filePath": "components/constellation/broadcastchannel.rs",
+      "summary": "Manages broadcast channel routing and message dispatch between browsing contexts.",
+      "tags": [
+        "broadcast-channel",
+        "message-routing",
+        "event-dispatch"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uresents a HashMap-based channel registry with origin-scoped channel trees."
+    },
+    {
+      "id": "file:components/constellation/browsingcontext.rs",
+      "type": "file",
+      "name": "browsingcontext.rs",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "summary": "Defines browsing context structures and iterators for traversing the context tree.",
+      "tags": [
+        "browsing-context",
+        "tree-traversal",
+        "session"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Provides depth-first iterators (FullyActiveBrowsingContextsIterator, AllBrowsingContextsIterator) for traversing the browsing context hierarchy."
+    },
+    {
+      "id": "file:components/constellation/constellation.rs",
+      "type": "file",
+      "name": "constellation.rs",
+      "filePath": "components/constellation/constellation.rs",
+      "summary": "Core constellation module implementing the browser process orchestrator, managing pipelines, browsing contexts, navigation, and script thread coordination.",
+      "tags": [
+        "orchestrator",
+        "process-management",
+        "navigation",
+        "event-handling",
+        "core"
+      ],
+      "complexity": "complex",
+      "languageNotes": "The central message loop processes over 80 message types from embedder, script threads, and background hang monitors using select-based event dispatch."
+    },
+    {
+      "id": "file:components/constellation/constellation_webview.rs",
+      "type": "file",
+      "name": "constellation_webview.rs",
+      "filePath": "components/constellation/constellation_webview.rs",
+      "summary": "Represents a single web view within the constellation, managing input event routing, themes, and active pipeline tracking.",
+      "tags": [
+        "webview",
+        "input-routing",
+        "pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/broadcastchannel.rs:new_broadcast_channel_router",
+      "type": "function",
+      "name": "new_broadcast_channel_router",
+      "filePath": "components/constellation/broadcastchannel.rs",
+      "lineRange": [
+        26,
+        34
+      ],
+      "summary": "Registers a new broadcast channel router with associated callback.",
+      "tags": [
+        "exported",
+        "broadcast-channel",
+        "messaging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/broadcastchannel.rs:remove_broadcast_channel_router",
+      "type": "function",
+      "name": "remove_broadcast_channel_router",
+      "filePath": "components/constellation/broadcastchannel.rs",
+      "lineRange": [
+        38,
+        48
+      ],
+      "summary": "Removes a broadcast channel router and its channel entries.",
+      "tags": [
+        "exported",
+        "broadcast-channel",
+        "messaging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/broadcastchannel.rs:new_broadcast_channel_name_in_router",
+      "type": "function",
+      "name": "new_broadcast_channel_name_in_router",
+      "filePath": "components/constellation/broadcastchannel.rs",
+      "lineRange": [
+        52,
+        61
+      ],
+      "summary": "Registers a channel name under a specific origin within a router.",
+      "tags": [
+        "exported",
+        "broadcast-channel",
+        "messaging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/broadcastchannel.rs:remove_broadcast_channel_name_in_router",
+      "type": "function",
+      "name": "remove_broadcast_channel_name_in_router",
+      "filePath": "components/constellation/broadcastchannel.rs",
+      "lineRange": [
+        65,
+        90
+      ],
+      "summary": "Removes a channel name from a router, cleaning up empty origins.",
+      "tags": [
+        "exported",
+        "broadcast-channel",
+        "messaging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/broadcastchannel.rs:schedule_broadcast",
+      "type": "function",
+      "name": "schedule_broadcast",
+      "filePath": "components/constellation/broadcastchannel.rs",
+      "lineRange": [
+        94,
+        125
+      ],
+      "summary": "Dispatches a message to all routers subscribed to the target channel.",
+      "tags": [
+        "exported",
+        "broadcast-channel",
+        "messaging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/broadcastchannel.rs:BroadcastChannels",
+      "type": "class",
+      "name": "BroadcastChannels",
+      "filePath": "components/constellation/broadcastchannel.rs",
+      "lineRange": [
+        15,
+        21
+      ],
+      "summary": "Manages broadcast channel routers and origin-scoped channel name registrations.",
+      "tags": [
+        "exported",
+        "broadcast-channel",
+        "registry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/browsingcontext.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        80,
+        105
+      ],
+      "summary": "Constructs a new browsing context with the given identifiers and viewport details.",
+      "tags": [
+        "exported",
+        "browsing-context",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/browsingcontext.rs:update_current_entry",
+      "type": "function",
+      "name": "update_current_entry",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        107,
+        109
+      ],
+      "summary": "Updates the current pipeline ID in the browsing context.",
+      "tags": [
+        "exported",
+        "browsing-context",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/browsingcontext.rs:is_top_level",
+      "type": "function",
+      "name": "is_top_level",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        112,
+        114
+      ],
+      "summary": "Returns whether this browsing context has no parent pipeline.",
+      "tags": [
+        "exported",
+        "browsing-context",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/browsingcontext.rs:next:L135",
+      "type": "function",
+      "name": "next:L135",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        135,
+        161
+      ],
+      "summary": "Returns the next fully active browsing context in depth-first traversal order.",
+      "tags": [
+        "iterator",
+        "traversal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/browsingcontext.rs:next:L182",
+      "type": "function",
+      "name": "next:L182",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        182,
+        204
+      ],
+      "summary": "Returns the next browsing context including inactive ones in traversal order.",
+      "tags": [
+        "iterator",
+        "traversal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/browsingcontext.rs:NewBrowsingContextInfo",
+      "type": "class",
+      "name": "NewBrowsingContextInfo",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        19,
+        33
+      ],
+      "summary": "Carries initialization parameters for creating a new browsing context.",
+      "tags": [
+        "exported",
+        "browsing-context",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/browsingcontext.rs:BrowsingContext",
+      "type": "class",
+      "name": "BrowsingContext",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        41,
+        74
+      ],
+      "summary": "Represents a browsing context with its pipeline set, viewport details, and hierarchy information.",
+      "tags": [
+        "exported",
+        "browsing-context",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/browsingcontext.rs:FullyActiveBrowsingContextsIterator",
+      "type": "class",
+      "name": "FullyActiveBrowsingContextsIterator",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        120,
+        131
+      ],
+      "summary": "Depth-first iterator yielding only fully active browsing contexts.",
+      "tags": [
+        "exported",
+        "iterator",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/browsingcontext.rs:AllBrowsingContextsIterator",
+      "type": "class",
+      "name": "AllBrowsingContextsIterator",
+      "filePath": "components/constellation/browsingcontext.rs",
+      "lineRange": [
+        167,
+        178
+      ],
+      "summary": "Depth-first iterator yielding all browsing contexts including inactive ones.",
+      "tags": [
+        "exported",
+        "iterator",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        610,
+        749
+      ],
+      "summary": "Entry point that creates the constellation, spawns the event loop thread, and begins processing messages.",
+      "tags": [
+        "exported",
+        "entry-point",
+        "initialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:add_event_loop",
+      "type": "function",
+      "name": "add_event_loop",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        758,
+        760
+      ],
+      "summary": "Registers an event loop in the constellation event loop set.",
+      "tags": [
+        "exported",
+        "event-loop",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:add_event_loop_join_handle",
+      "type": "function",
+      "name": "add_event_loop_join_handle",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        762,
+        764
+      ],
+      "summary": "Registers a join handle for an event loop thread.",
+      "tags": [
+        "exported",
+        "event-loop",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:run",
+      "type": "function",
+      "name": "run",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        774,
+        805
+      ],
+      "summary": "Main event loop that processes messages from embedder, script threads, and background hang monitors.",
+      "tags": [
+        "event-loop",
+        "orchestration",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:send_message_to_pipeline",
+      "type": "function",
+      "name": "send_message_to_pipeline",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        809,
+        826
+      ],
+      "summary": "Sends a message to a specific pipeline via its event loop channel.",
+      "tags": [
+        "pipeline",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:next_pipeline_namespace_id",
+      "type": "function",
+      "name": "next_pipeline_namespace_id",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        829,
+        834
+      ],
+      "summary": "Allocates and returns the next unique pipeline namespace identifier.",
+      "tags": [
+        "exported",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:get_event_loop",
+      "type": "function",
+      "name": "get_event_loop",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        842,
+        876
+      ],
+      "summary": "Retrieves the event loop.",
+      "tags": [
+        "event-loop",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:set_event_loop",
+      "type": "function",
+      "name": "set_event_loop",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        878,
+        924
+      ],
+      "summary": "Updates the event loop.",
+      "tags": [
+        "event-loop",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:get_event_loop_for_new_pipeline",
+      "type": "function",
+      "name": "get_event_loop_for_new_pipeline",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        926,
+        971
+      ],
+      "summary": "Retrieves the event loop for new pipeline.",
+      "tags": [
+        "pipeline",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:get_or_create_event_loop_for_new_pipeline",
+      "type": "function",
+      "name": "get_or_create_event_loop_for_new_pipeline",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        973,
+        1005
+      ],
+      "summary": "Retrieves the or create event loop for new pipeline.",
+      "tags": [
+        "pipeline",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:new_pipeline",
+      "type": "function",
+      "name": "new_pipeline",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1009,
+        1075
+      ],
+      "summary": "Creates a new pipeline instance.",
+      "tags": [
+        "pipeline",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:fully_active_descendant_browsing_contexts_iter",
+      "type": "function",
+      "name": "fully_active_descendant_browsing_contexts_iter",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1078,
+        1087
+      ],
+      "summary": "Iterates over fully active descendant browsing contexts.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:all_descendant_browsing_contexts_iter",
+      "type": "function",
+      "name": "all_descendant_browsing_contexts_iter",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1098,
+        1107
+      ],
+      "summary": "Iterates over all descendant browsing contexts.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:ancestor_pipelines_of_browsing_context_iter",
+      "type": "function",
+      "name": "ancestor_pipelines_of_browsing_context_iter",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1111,
+        1129
+      ],
+      "summary": "Iterates over ancestor pipelines of browsing context.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:ancestor_or_self_pipelines_of_browsing_context_iter",
+      "type": "function",
+      "name": "ancestor_or_self_pipelines_of_browsing_context_iter",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1133,
+        1145
+      ],
+      "summary": "Iterates over ancestor or self pipelines of browsing context.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:new_browsing_context",
+      "type": "function",
+      "name": "new_browsing_context",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1149,
+        1208
+      ],
+      "summary": "Creates a new browsing context instance.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:add_pending_change",
+      "type": "function",
+      "name": "add_pending_change",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1210,
+        1220
+      ],
+      "summary": "Records a pending session history change for batch processing.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_request",
+      "type": "function",
+      "name": "handle_request",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1224,
+        1304
+      ],
+      "summary": "Processes request messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_request_from_background_hang_monitor",
+      "type": "function",
+      "name": "handle_request_from_background_hang_monitor",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1313,
+        1324
+      ],
+      "summary": "Processes request from background hang monitor messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_request_from_embedder",
+      "type": "function",
+      "name": "handle_request_from_embedder",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1327,
+        1557
+      ],
+      "summary": "Processes request from embedder messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:mutate_user_contents_for_manager_id_and_notify_script_threads",
+      "type": "function",
+      "name": "mutate_user_contents_for_manager_id_and_notify_script_threads",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1559,
+        1578
+      ],
+      "summary": "Applies a mutation callback to user content and notifies affected script threads.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_user_content_manager_action",
+      "type": "function",
+      "name": "handle_user_content_manager_action",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1580,
+        1633
+      ],
+      "summary": "Processes user content manager action messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:send_message_to_all_background_hang_monitors",
+      "type": "function",
+      "name": "send_message_to_all_background_hang_monitors",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1635,
+        1647
+      ],
+      "summary": "Broadcasts a message to all registered background hang monitors.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_evaluate_javascript",
+      "type": "function",
+      "name": "handle_evaluate_javascript",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1650,
+        1684
+      ],
+      "summary": "Processes evaluate javascript messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_request_from_script",
+      "type": "function",
+      "name": "handle_request_from_script",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        1687,
+        2103
+      ],
+      "summary": "Processes request from script messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:check_origin_against_pipeline",
+      "type": "function",
+      "name": "check_origin_against_pipeline",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2108,
+        2124
+      ],
+      "summary": "Validates whether an origin matches the pipeline origin for security checks.",
+      "tags": [
+        "pipeline",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_wgpu_request",
+      "type": "function",
+      "name": "handle_wgpu_request",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2128,
+        2204
+      ],
+      "summary": "Processes wgpu request messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_message_port_transfer_completed",
+      "type": "function",
+      "name": "handle_message_port_transfer_completed",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2207,
+        2250
+      ],
+      "summary": "Processes message port transfer completed messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-port",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_message_port_transfer_failed",
+      "type": "function",
+      "name": "handle_message_port_transfer_failed",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2252,
+        2324
+      ],
+      "summary": "Processes message port transfer failed messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-port",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_complete_message_port_transfer",
+      "type": "function",
+      "name": "handle_complete_message_port_transfer",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2327,
+        2397
+      ],
+      "summary": "Processes complete message port transfer messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-port",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_reroute_messageport",
+      "type": "function",
+      "name": "handle_reroute_messageport",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2400,
+        2422
+      ],
+      "summary": "Processes reroute messageport messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-port",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_messageport_shipped",
+      "type": "function",
+      "name": "handle_messageport_shipped",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2425,
+        2447
+      ],
+      "summary": "Processes messageport shipped messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-port",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_new_messageport",
+      "type": "function",
+      "name": "handle_new_messageport",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2462,
+        2477
+      ],
+      "summary": "Processes new messageport messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-port",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_entangle_messageports",
+      "type": "function",
+      "name": "handle_entangle_messageports",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2480,
+        2497
+      ],
+      "summary": "Processes entangle messageports messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-port",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_disentangle_messageports",
+      "type": "function",
+      "name": "handle_disentangle_messageports",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2501,
+        2545
+      ],
+      "summary": "Processes disentangle messageports messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-port",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_serviceworker_algorithm",
+      "type": "function",
+      "name": "handle_serviceworker_algorithm",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2551,
+        2610
+      ],
+      "summary": "Processes serviceworker algorithm messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_broadcast_storage_event",
+      "type": "function",
+      "name": "handle_broadcast_storage_event",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2613,
+        2677
+      ],
+      "summary": "Processes broadcast storage event messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_exit",
+      "type": "function",
+      "name": "handle_exit",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2680,
+        2747
+      ],
+      "summary": "Processes exit messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "lifecycle",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_shutdown",
+      "type": "function",
+      "name": "handle_shutdown",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2750,
+        2944
+      ],
+      "summary": "Processes shutdown messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "lifecycle",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_pipeline_exited",
+      "type": "function",
+      "name": "handle_pipeline_exited",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2946,
+        2966
+      ],
+      "summary": "Processes pipeline exited messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_send_error",
+      "type": "function",
+      "name": "handle_send_error",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2969,
+        2983
+      ],
+      "summary": "Processes send error messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_panic",
+      "type": "function",
+      "name": "handle_panic",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        2986,
+        3013
+      ],
+      "summary": "Processes panic messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "lifecycle",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_panic_in_webview",
+      "type": "function",
+      "name": "handle_panic_in_webview",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3015,
+        3092
+      ],
+      "summary": "Processes panic in webview messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "lifecycle",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_log_entry",
+      "type": "function",
+      "name": "handle_log_entry",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3101,
+        3120
+      ],
+      "summary": "Processes log entry messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:update_pressed_mouse_buttons",
+      "type": "function",
+      "name": "update_pressed_mouse_buttons",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3122,
+        3143
+      ],
+      "summary": "Updates the pressed mouse buttons state.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:update_active_keybord_modifiers",
+      "type": "function",
+      "name": "update_active_keybord_modifiers",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3146,
+        3180
+      ],
+      "summary": "Updates the active keybord modifiers state.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:set_accessibility_active",
+      "type": "function",
+      "name": "set_accessibility_active",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3182,
+        3205
+      ],
+      "summary": "Updates the accessibility active.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:forward_input_event",
+      "type": "function",
+      "name": "forward_input_event",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3207,
+        3259
+      ],
+      "summary": "Forwards input event to the appropriate target.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_new_top_level_browsing_context",
+      "type": "function",
+      "name": "handle_new_top_level_browsing_context",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3262,
+        3322
+      ],
+      "summary": "Processes new top level browsing context messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_close_top_level_browsing_context",
+      "type": "function",
+      "name": "handle_close_top_level_browsing_context",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3326,
+        3365
+      ],
+      "summary": "Processes close top level browsing context messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_iframe_size_msg",
+      "type": "function",
+      "name": "handle_iframe_size_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3368,
+        3377
+      ],
+      "summary": "Processes iframe size msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_subframe_loaded",
+      "type": "function",
+      "name": "handle_subframe_loaded",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3391,
+        3428
+      ],
+      "summary": "Processes subframe loaded messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "navigation",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_script_loaded_url_in_iframe_msg",
+      "type": "function",
+      "name": "handle_script_loaded_url_in_iframe_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3435,
+        3534
+      ],
+      "summary": "Processes script loaded url in iframe msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_script_new_iframe",
+      "type": "function",
+      "name": "handle_script_new_iframe",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3537,
+        3595
+      ],
+      "summary": "Processes script new iframe messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_script_new_auxiliary",
+      "type": "function",
+      "name": "handle_script_new_auxiliary",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3598,
+        3702
+      ],
+      "summary": "Processes script new auxiliary messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "pipeline",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_refresh_cursor",
+      "type": "function",
+      "name": "handle_refresh_cursor",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3705,
+        3716
+      ],
+      "summary": "Processes refresh cursor messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_change_running_animations_state",
+      "type": "function",
+      "name": "handle_change_running_animations_state",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3719,
+        3735
+      ],
+      "summary": "Processes change running animations state messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "rendering",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_tick_animation",
+      "type": "function",
+      "name": "handle_tick_animation",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3738,
+        3759
+      ],
+      "summary": "Processes tick animation messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "rendering",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_no_longer_waiting_on_asynchronous_image_updates",
+      "type": "function",
+      "name": "handle_no_longer_waiting_on_asynchronous_image_updates",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3762,
+        3773
+      ],
+      "summary": "Processes no longer waiting on asynchronous image updates messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:schedule_navigation",
+      "type": "function",
+      "name": "schedule_navigation",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3779,
+        3810
+      ],
+      "summary": "Schedules navigation operation.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:load_url",
+      "type": "function",
+      "name": "load_url",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3813,
+        3956
+      ],
+      "summary": "Initiates page navigation by creating a new pipeline, managing history, and coordinating script thread loading.",
+      "tags": [
+        "navigation",
+        "entry-point",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_abort_load_url_msg",
+      "type": "function",
+      "name": "handle_abort_load_url_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3959,
+        3976
+      ],
+      "summary": "Processes abort load url msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "navigation",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_load_complete_msg",
+      "type": "function",
+      "name": "handle_load_complete_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3979,
+        3996
+      ],
+      "summary": "Processes load complete msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "navigation",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_navigated_to_fragment",
+      "type": "function",
+      "name": "handle_navigated_to_fragment",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        3999,
+        4032
+      ],
+      "summary": "Processes navigated to fragment messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_traverse_history_msg",
+      "type": "function",
+      "name": "handle_traverse_history_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4035,
+        4186
+      ],
+      "summary": "Processes traverse history msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "navigation",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:update_browsing_context",
+      "type": "function",
+      "name": "update_browsing_context",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4189,
+        4306
+      ],
+      "summary": "Updates the browsing context state.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_joint_session_history_length",
+      "type": "function",
+      "name": "handle_joint_session_history_length",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4320,
+        4331
+      ],
+      "summary": "Processes joint session history length messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "navigation",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_push_history_state_msg",
+      "type": "function",
+      "name": "handle_push_history_state_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4334,
+        4369
+      ],
+      "summary": "Processes push history state msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "navigation",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_replace_history_state_msg",
+      "type": "function",
+      "name": "handle_replace_history_state_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4372,
+        4400
+      ],
+      "summary": "Processes replace history state msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "navigation",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_reload_msg",
+      "type": "function",
+      "name": "handle_reload_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4403,
+        4418
+      ],
+      "summary": "Processes reload msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "navigation",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_post_message_msg",
+      "type": "function",
+      "name": "handle_post_message_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4422,
+        4475
+      ],
+      "summary": "Processes post message msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_focus_ancestor_browsing_contexts_for_focusing_steps",
+      "type": "function",
+      "name": "handle_focus_ancestor_browsing_contexts_for_focusing_steps",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4478,
+        4516
+      ],
+      "summary": "Processes focus ancestor browsing contexts for focusing steps messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "focus",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_focus_remote_browsing_context",
+      "type": "function",
+      "name": "handle_focus_remote_browsing_context",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4518,
+        4536
+      ],
+      "summary": "Processes focus remote browsing context messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "focus",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:focus_browsing_context",
+      "type": "function",
+      "name": "focus_browsing_context",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4549,
+        4688
+      ],
+      "summary": "Handles focus operations for browsing context.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_remove_iframe_msg",
+      "type": "function",
+      "name": "handle_remove_iframe_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4691,
+        4701
+      ],
+      "summary": "Processes remove iframe msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_set_throttled_complete",
+      "type": "function",
+      "name": "handle_set_throttled_complete",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4704,
+        4723
+      ],
+      "summary": "Processes set throttled complete messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_create_canvas_paint_thread_msg",
+      "type": "function",
+      "name": "handle_create_canvas_paint_thread_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4726,
+        4755
+      ],
+      "summary": "Processes create canvas paint thread msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "rendering",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_webdriver_msg",
+      "type": "function",
+      "name": "handle_webdriver_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4758,
+        4817
+      ],
+      "summary": "Processes webdriver msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "webdriver",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:set_webview_throttled",
+      "type": "function",
+      "name": "set_webview_throttled",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4820,
+        4832
+      ],
+      "summary": "Updates the throttle state for all browsing contexts in a webview.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:notify_history_changed",
+      "type": "function",
+      "name": "notify_history_changed",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4835,
+        4942
+      ],
+      "summary": "Sends a history change notification to the embedder for UI updates.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:change_session_history",
+      "type": "function",
+      "name": "change_session_history",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        4945,
+        5089
+      ],
+      "summary": "Processes session history updates.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:notify_focus_state",
+      "type": "function",
+      "name": "notify_focus_state",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5094,
+        5125
+      ],
+      "summary": "Sends focus state information to the embedder for the given pipeline.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:focused_browsing_context_is_descendant_of",
+      "type": "function",
+      "name": "focused_browsing_context_is_descendant_of",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5128,
+        5138
+      ],
+      "summary": "focused_browsing_context_is_descendant_of function with 1 parameter(s).",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:trim_history",
+      "type": "function",
+      "name": "trim_history",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5141,
+        5195
+      ],
+      "summary": "Trims history by removing excess entries.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_activate_document_msg",
+      "type": "function",
+      "name": "handle_activate_document_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5198,
+        5244
+      ],
+      "summary": "Processes activate document msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_change_viewport_details_msg",
+      "type": "function",
+      "name": "handle_change_viewport_details_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5248,
+        5261
+      ],
+      "summary": "Processes change viewport details msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:send_screenshot_readiness_requests_to_pipelines",
+      "type": "function",
+      "name": "send_screenshot_readiness_requests_to_pipelines",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5281,
+        5320
+      ],
+      "summary": "Requests screenshot readiness acknowledgments from all active pipelines.",
+      "tags": [
+        "pipeline",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_screenshot_readiness_response",
+      "type": "function",
+      "name": "handle_screenshot_readiness_response",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5323,
+        5375
+      ],
+      "summary": "Processes screenshot readiness response messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "screenshot",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:get_activity",
+      "type": "function",
+      "name": "get_activity",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5379,
+        5400
+      ],
+      "summary": "Retrieves the activity.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:set_activity",
+      "type": "function",
+      "name": "set_activity",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5404,
+        5419
+      ],
+      "summary": "Updates the activity.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:resize_browsing_context",
+      "type": "function",
+      "name": "resize_browsing_context",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5430,
+        5482
+      ],
+      "summary": "Resizes the browsing context with new viewport dimensions.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_theme_change",
+      "type": "function",
+      "name": "handle_theme_change",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5486,
+        5509
+      ],
+      "summary": "Processes theme change messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:switch_fullscreen_mode",
+      "type": "function",
+      "name": "switch_fullscreen_mode",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5513,
+        5523
+      ],
+      "summary": "Switches fullscreen mode mode.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:close_browsing_context",
+      "type": "function",
+      "name": "close_browsing_context",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5527,
+        5585
+      ],
+      "summary": "Closes and cleans up browsing context resources.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:close_browsing_context_children",
+      "type": "function",
+      "name": "close_browsing_context_children",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5589,
+        5616
+      ],
+      "summary": "Closes and cleans up browsing context children resources.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_discard_document",
+      "type": "function",
+      "name": "handle_discard_document",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5630,
+        5650
+      ],
+      "summary": "Processes discard document messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:close_pipeline",
+      "type": "function",
+      "name": "close_pipeline",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5664,
+        5727
+      ],
+      "summary": "Closes and cleans up pipeline resources.",
+      "tags": [
+        "pipeline",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:maybe_close_random_pipeline",
+      "type": "function",
+      "name": "maybe_close_random_pipeline",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5730,
+        5764
+      ],
+      "summary": "Probabilistically closes a random pipeline for memory management under load.",
+      "tags": [
+        "pipeline",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:browsing_context_to_sendable",
+      "type": "function",
+      "name": "browsing_context_to_sendable",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5768,
+        5794
+      ],
+      "summary": "Converts a browsing context into its sendable IPC representation.",
+      "tags": [
+        "browsing-context",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:set_frame_tree_for_webview",
+      "type": "function",
+      "name": "set_frame_tree_for_webview",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5798,
+        5852
+      ],
+      "summary": "Rebuilds and sends the current frame tree structure for a specific webview.",
+      "tags": [
+        "utility",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_media_session_action_msg",
+      "type": "function",
+      "name": "handle_media_session_action_msg",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5855,
+        5865
+      ],
+      "summary": "Processes media session action msg messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_set_scroll_states",
+      "type": "function",
+      "name": "handle_set_scroll_states",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5868,
+        5882
+      ],
+      "summary": "Processes set scroll states messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_paint_metric",
+      "type": "function",
+      "name": "handle_paint_metric",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5885,
+        5915
+      ],
+      "summary": "Processes paint metric messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "rendering",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_embedder_control_response",
+      "type": "function",
+      "name": "handle_embedder_control_response",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5923,
+        5942
+      ],
+      "summary": "Processes embedder control response messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:handle_update_pinch_zoom_infos",
+      "type": "function",
+      "name": "handle_update_pinch_zoom_infos",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5944,
+        5962
+      ],
+      "summary": "Processes update pinch zoom infos messages received by the constellation event loop.",
+      "tags": [
+        "event-handler",
+        "message-handler",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation.rs:script_to_devtools_callback",
+      "type": "function",
+      "name": "script_to_devtools_callback",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        5964,
+        5993
+      ],
+      "summary": "Forwards DevTools messages from script threads to the DevTools channel.",
+      "tags": [
+        "exported",
+        "utility",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/constellation.rs:TransferState",
+      "type": "class",
+      "name": "TransferState",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        205,
+        224
+      ],
+      "summary": "Enum representing the state of a message port transfer operation.",
+      "tags": [
+        "state",
+        "internal",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/constellation/constellation.rs:Constellation",
+      "type": "class",
+      "name": "Constellation",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        281,
+        525
+      ],
+      "summary": "Core struct holding all constellation state including pipelines, browsing contexts, event loops, and navigation history.",
+      "tags": [
+        "exported",
+        "core",
+        "orchestrator",
+        "singleton"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/constellation/constellation.rs:InitialConstellationState",
+      "type": "class",
+      "name": "InitialConstellationState",
+      "filePath": "components/constellation/constellation.rs",
+      "lineRange": [
+        528,
+        588
+      ],
+      "summary": "Aggregates initial configuration state passed into the constellation at startup.",
+      "tags": [
+        "exported",
+        "state",
+        "type"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/constellation/constellation_webview.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/constellation/constellation_webview.rs",
+      "lineRange": [
+        65,
+        82
+      ],
+      "summary": "new function with 3 parameter(s).",
+      "tags": [
+        "exported",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation_webview.rs:set_theme",
+      "type": "function",
+      "name": "set_theme",
+      "filePath": "components/constellation/constellation_webview.rs",
+      "lineRange": [
+        85,
+        88
+      ],
+      "summary": "set_theme function with 1 parameter(s).",
+      "tags": [
+        "exported",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation_webview.rs:theme",
+      "type": "function",
+      "name": "theme",
+      "filePath": "components/constellation/constellation_webview.rs",
+      "lineRange": [
+        91,
+        93
+      ],
+      "summary": "theme function with 0 parameter(s).",
+      "tags": [
+        "exported",
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation_webview.rs:target_pipeline_id_for_input_event",
+      "type": "function",
+      "name": "target_pipeline_id_for_input_event",
+      "filePath": "components/constellation/constellation_webview.rs",
+      "lineRange": [
+        95,
+        114
+      ],
+      "summary": "target_pipeline_id_for_input_event function with 2 parameter(s).",
+      "tags": [
+        null,
+        "internal",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/constellation/constellation_webview.rs:forward_input_event",
+      "type": "function",
+      "name": "forward_input_event",
+      "filePath": "components/constellation/constellation_webview.rs",
+      "lineRange": [
+        118,
+        190
+      ],
+      "summary": "forward_input_event function with 3 parameter(s).",
+      "tags": [
+        "exported",
+        "internal",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/constellation/constellation_webview.rs:ConstellationWebView",
+      "type": "class",
+      "name": "ConstellationWebView",
+      "filePath": "components/constellation/constellation_webview.rs",
+      "lineRange": [
+        21,
+        62
+      ],
+      "summary": "Represents a web view within the constellation, tracking active pipeline, input state, session history, and theme.",
+      "tags": [
+        "exported",
+        "webview",
+        "type"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:new_broadcast_channel_router",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:new_broadcast_channel_router",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:remove_broadcast_channel_router",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:remove_broadcast_channel_router",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:new_broadcast_channel_name_in_router",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:new_broadcast_channel_name_in_router",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:remove_broadcast_channel_name_in_router",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:remove_broadcast_channel_name_in_router",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:schedule_broadcast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "function:components/constellation/broadcastchannel.rs:schedule_broadcast",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "class:components/constellation/broadcastchannel.rs:BroadcastChannels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/broadcastchannel.rs",
+      "target": "class:components/constellation/broadcastchannel.rs:BroadcastChannels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "function:components/constellation/browsingcontext.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "function:components/constellation/browsingcontext.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "function:components/constellation/browsingcontext.rs:update_current_entry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "function:components/constellation/browsingcontext.rs:update_current_entry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "function:components/constellation/browsingcontext.rs:is_top_level",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "function:components/constellation/browsingcontext.rs:is_top_level",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "function:components/constellation/browsingcontext.rs:next:L135",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "function:components/constellation/browsingcontext.rs:next:L182",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "class:components/constellation/browsingcontext.rs:NewBrowsingContextInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "class:components/constellation/browsingcontext.rs:NewBrowsingContextInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "class:components/constellation/browsingcontext.rs:BrowsingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "class:components/constellation/browsingcontext.rs:BrowsingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "class:components/constellation/browsingcontext.rs:FullyActiveBrowsingContextsIterator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "class:components/constellation/browsingcontext.rs:FullyActiveBrowsingContextsIterator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "class:components/constellation/browsingcontext.rs:AllBrowsingContextsIterator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/browsingcontext.rs",
+      "target": "class:components/constellation/browsingcontext.rs:AllBrowsingContextsIterator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:add_event_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:add_event_loop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:add_event_loop_join_handle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:add_event_loop_join_handle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:run",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:send_message_to_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:next_pipeline_namespace_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:next_pipeline_namespace_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:get_event_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:set_event_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:get_event_loop_for_new_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:get_or_create_event_loop_for_new_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:new_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:fully_active_descendant_browsing_contexts_iter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:all_descendant_browsing_contexts_iter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:ancestor_pipelines_of_browsing_context_iter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:ancestor_or_self_pipelines_of_browsing_context_iter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:new_browsing_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:add_pending_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_request_from_background_hang_monitor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_request_from_embedder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:mutate_user_contents_for_manager_id_and_notify_script_threads",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_user_content_manager_action",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:send_message_to_all_background_hang_monitors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_evaluate_javascript",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_request_from_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:check_origin_against_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_wgpu_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_message_port_transfer_completed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_message_port_transfer_failed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_complete_message_port_transfer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_reroute_messageport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_messageport_shipped",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_new_messageport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_entangle_messageports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_disentangle_messageports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_serviceworker_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_broadcast_storage_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_exit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_shutdown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_pipeline_exited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_send_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_panic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_panic_in_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_log_entry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:update_pressed_mouse_buttons",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:update_active_keybord_modifiers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:set_accessibility_active",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:forward_input_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_new_top_level_browsing_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_close_top_level_browsing_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_iframe_size_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_subframe_loaded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_script_loaded_url_in_iframe_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_script_new_iframe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_script_new_auxiliary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_refresh_cursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_change_running_animations_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_tick_animation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_no_longer_waiting_on_asynchronous_image_updates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:schedule_navigation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:load_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_abort_load_url_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_load_complete_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_navigated_to_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_traverse_history_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:update_browsing_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_joint_session_history_length",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_push_history_state_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_replace_history_state_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_reload_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_post_message_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_focus_ancestor_browsing_contexts_for_focusing_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_focus_remote_browsing_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:focus_browsing_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_remove_iframe_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_set_throttled_complete",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_create_canvas_paint_thread_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_webdriver_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:set_webview_throttled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:notify_history_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:change_session_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:notify_focus_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:focused_browsing_context_is_descendant_of",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:trim_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_activate_document_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_change_viewport_details_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:send_screenshot_readiness_requests_to_pipelines",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_screenshot_readiness_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:get_activity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:set_activity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:resize_browsing_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_theme_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:switch_fullscreen_mode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:close_browsing_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:close_browsing_context_children",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_discard_document",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:close_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:maybe_close_random_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:browsing_context_to_sendable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:set_frame_tree_for_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_media_session_action_msg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_set_scroll_states",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_paint_metric",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_embedder_control_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:handle_update_pinch_zoom_infos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:script_to_devtools_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "function:components/constellation/constellation.rs:script_to_devtools_callback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "class:components/constellation/constellation.rs:TransferState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "class:components/constellation/constellation.rs:Constellation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "class:components/constellation/constellation.rs:Constellation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "class:components/constellation/constellation.rs:InitialConstellationState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation.rs",
+      "target": "class:components/constellation/constellation.rs:InitialConstellationState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:set_theme",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:set_theme",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:theme",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:theme",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:target_pipeline_id_for_input_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:forward_input_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "function:components/constellation/constellation_webview.rs:forward_input_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "class:components/constellation/constellation_webview.rs:ConstellationWebView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/constellation/constellation_webview.rs",
+      "target": "class:components/constellation/constellation_webview.rs:ConstellationWebView",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

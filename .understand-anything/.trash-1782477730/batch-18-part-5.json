@@ -1,0 +1,383 @@
+{
+  "nodes": [
+    {
+      "id": "class:components/script/dom/bindings/reflector.rs:DomGlobal",
+      "type": "class",
+      "name": "DomGlobal",
+      "filePath": "components/script/dom/bindings/reflector.rs",
+      "lineRange": [13, 25],
+      "summary": "Trait providing realm-aware global scope access for DOM objects, supporting both static and entered-realm global retrieval.",
+      "tags": ["global-scope", "trait", "realm"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/bindings/root.rs:LayoutDom",
+      "type": "class",
+      "name": "LayoutDom",
+      "filePath": "components/script/dom/bindings/root.rs",
+      "lineRange": [50, 52],
+      "summary": "Wrapper for safe DOM node access from the layout thread, enabling upcast, downcast, and type checks in a layout context.",
+      "tags": ["layout", "dom-node", "thread-safety"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/bindings/root.rs:DomOnceCell",
+      "type": "class",
+      "name": "DomOnceCell",
+      "filePath": "components/script/dom/bindings/root.rs",
+      "lineRange": [180, 182],
+      "summary": "Once-initialized cell for DOM references with lazy initialization support in the script thread.",
+      "tags": ["once-cell", "lazy-init", "dom-reference"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/bindings/root.rs:AsHandleValue",
+      "type": "class",
+      "name": "AsHandleValue",
+      "filePath": "components/script/dom/bindings/root.rs",
+      "lineRange": [228, 230],
+      "summary": "Trait for converting DOM values into JS HandleValue for SpiderMonkey FFI operations.",
+      "tags": ["handle-value", "conversion", "trait"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/root.rs:from_trusted_node_address",
+      "type": "function",
+      "name": "from_trusted_node_address",
+      "filePath": "components/script/dom/bindings/root.rs",
+      "lineRange": [57, 63],
+      "summary": "Creates a LayoutDom from a trusted node address, asserting layout thread context for safety.",
+      "tags": ["layout", "node-address", "construction"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/root.rs:upcast",
+      "type": "function",
+      "name": "upcast",
+      "filePath": "components/script/dom/bindings/root.rs",
+      "lineRange": [98, 107],
+      "summary": "Upcasts a LayoutDom reference from a derived DOM type to a base type using the DOM inheritance hierarchy.",
+      "tags": ["upcast", "inheritance", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/root.rs:downcast",
+      "type": "function",
+      "name": "downcast",
+      "filePath": "components/script/dom/bindings/root.rs",
+      "lineRange": [110, 116],
+      "summary": "Downcasts a LayoutDom reference from a base type to a derived DOM type, returning an Option.",
+      "tags": ["downcast", "inheritance", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/root.rs:init_once",
+      "type": "function",
+      "name": "init_once",
+      "filePath": "components/script/dom/bindings/root.rs",
+      "lineRange": [190, 196],
+      "summary": "Initializes a DomOnceCell with a lazy callback, asserting script thread context for safety.",
+      "tags": ["once-cell", "lazy-init"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/root.rs:trace",
+      "type": "function",
+      "name": "trace",
+      "filePath": "components/script/dom/bindings/root.rs",
+      "lineRange": [216, 220],
+      "summary": "Traces the inner DOM value of a DomOnceCell for garbage collection purposes.",
+      "tags": ["gc-tracing", "once-cell"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/bindings/serializable.rs:StorageKey",
+      "type": "class",
+      "name": "StorageKey",
+      "filePath": "components/script/dom/bindings/serializable.rs",
+      "lineRange": [21, 24],
+      "summary": "Binary storage key combining a namespace ID and session storage index for DOM object serialization identification.",
+      "tags": ["storage", "key", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/bindings/serializable.rs:Serializable",
+      "type": "class",
+      "name": "Serializable",
+      "filePath": "components/script/dom/bindings/serializable.rs",
+      "lineRange": [48, 71],
+      "summary": "Trait for DOM objects that can be serialized and deserialized across process boundaries using structured clone.",
+      "tags": ["serialization", "trait", "structured-clone"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/serializable.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/bindings/serializable.rs",
+      "lineRange": [27, 34],
+      "summary": "Creates a StorageKey from an Index by encoding the namespace ID and index into bytes.",
+      "tags": ["storage", "key", "creation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/settings_stack.rs:entry_global",
+      "type": "function",
+      "name": "entry_global",
+      "filePath": "components/script/dom/bindings/settings_stack.rs",
+      "lineRange": [34, 45],
+      "summary": "Returns the entry global scope by searching the settings stack for the most recent Entry stack entry.",
+      "tags": ["global-scope", "entry", "settings-stack"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/bindings/settings_stack.rs:incumbent_global",
+      "type": "function",
+      "name": "incumbent_global",
+      "filePath": "components/script/dom/bindings/settings_stack.rs",
+      "lineRange": [50, 76],
+      "summary": "Returns the incumbent global scope by checking the JS caller global or falling back to the settings stack top.",
+      "tags": ["global-scope", "incumbent", "settings-stack"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/bindings/str.rs:ToInputValueString",
+      "type": "class",
+      "name": "ToInputValueString",
+      "filePath": "components/script/dom/bindings/str.rs",
+      "lineRange": [162, 172],
+      "summary": "Trait providing HTML input value serialization for date, month, week, time, and local datetime input types.",
+      "tags": ["input", "serialization", "html-forms", "trait"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/bindings/str.rs:FromInputValueString",
+      "type": "class",
+      "name": "FromInputValueString",
+      "filePath": "components/script/dom/bindings/str.rs",
+      "lineRange": [216, 286],
+      "summary": "Trait providing HTML input value parsing and validation for date, month, week, time, local datetime, color, and email input types.",
+      "tags": ["input", "parsing", "validation", "html-forms", "trait"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/bindings/reflector.rs",
+      "target": "class:components/script/dom/bindings/reflector.rs:DomGlobal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/reflector.rs",
+      "target": "class:components/script/dom/bindings/reflector.rs:DomGlobal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "class:components/script/dom/bindings/root.rs:LayoutDom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "class:components/script/dom/bindings/root.rs:LayoutDom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "class:components/script/dom/bindings/root.rs:DomOnceCell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "class:components/script/dom/bindings/root.rs:DomOnceCell",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "class:components/script/dom/bindings/root.rs:AsHandleValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "class:components/script/dom/bindings/root.rs:AsHandleValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:from_trusted_node_address",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:from_trusted_node_address",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:upcast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:upcast",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:downcast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:downcast",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:init_once",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:init_once",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/root.rs",
+      "target": "function:components/script/dom/bindings/root.rs:trace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/serializable.rs",
+      "target": "class:components/script/dom/bindings/serializable.rs:StorageKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/serializable.rs",
+      "target": "class:components/script/dom/bindings/serializable.rs:StorageKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/serializable.rs",
+      "target": "class:components/script/dom/bindings/serializable.rs:Serializable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/serializable.rs",
+      "target": "class:components/script/dom/bindings/serializable.rs:Serializable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/serializable.rs",
+      "target": "function:components/script/dom/bindings/serializable.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/serializable.rs",
+      "target": "function:components/script/dom/bindings/serializable.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/settings_stack.rs",
+      "target": "function:components/script/dom/bindings/settings_stack.rs:entry_global",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/settings_stack.rs",
+      "target": "function:components/script/dom/bindings/settings_stack.rs:entry_global",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/settings_stack.rs",
+      "target": "function:components/script/dom/bindings/settings_stack.rs:incumbent_global",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/settings_stack.rs",
+      "target": "function:components/script/dom/bindings/settings_stack.rs:incumbent_global",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/str.rs",
+      "target": "class:components/script/dom/bindings/str.rs:ToInputValueString",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/str.rs",
+      "target": "class:components/script/dom/bindings/str.rs:ToInputValueString",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/str.rs",
+      "target": "class:components/script/dom/bindings/str.rs:FromInputValueString",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/str.rs",
+      "target": "class:components/script/dom/bindings/str.rs:FromInputValueString",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

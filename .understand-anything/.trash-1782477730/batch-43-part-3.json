@@ -1,0 +1,759 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/servo/site_data_manager.rs",
+      "type": "file",
+      "name": "site_data_manager.rs",
+      "filePath": "components/servo/site_data_manager.rs",
+      "summary": "Site data manager for querying and clearing per-site storage (cookies, web storage, local storage) across public and private browsing modes, with async cookie operation support.",
+      "tags": ["service", "data-model", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/site_data_manager.rs:SiteDataManager",
+      "type": "class",
+      "name": "SiteDataManager",
+      "filePath": "components/servo/site_data_manager.rs",
+      "lineRange": [98, 105],
+      "summary": "Manages site data operations including querying stored data, clearing cookies and web storage, and handling async cookie operations with pending callback tracking.",
+      "tags": ["service", "data-model"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/site_data_manager.rs:SiteData",
+      "type": "class",
+      "name": "SiteData",
+      "filePath": "components/servo/site_data_manager.rs",
+      "lineRange": [45, 48],
+      "summary": "Represents a single site's stored data with a name and bitmask of storage types present.",
+      "tags": ["data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/site_data_manager.rs:site_data",
+      "type": "function",
+      "name": "site_data",
+      "filePath": "components/servo/site_data_manager.rs",
+      "lineRange": [134, 204],
+      "summary": "Queries all site data by aggregating cookies from resource threads and web storage origins from storage threads, deduplicating by registered domain.",
+      "tags": ["utility"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/site_data_manager.rs:clear_site_data",
+      "type": "function",
+      "name": "clear_site_data",
+      "filePath": "components/servo/site_data_manager.rs",
+      "lineRange": [210, 229],
+      "summary": "Clears site data (cookies and/or web storage) for specified sites in both public and private browsing modes.",
+      "tags": ["utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/site_data_manager.rs:clear_cookies",
+      "type": "function",
+      "name": "clear_cookies",
+      "filePath": "components/servo/site_data_manager.rs",
+      "lineRange": [234, 253],
+      "summary": "Clears all cookies in public and private resource threads with async callback notification.",
+      "tags": ["utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/site_data_manager.rs:clear_session_cookies",
+      "type": "function",
+      "name": "clear_session_cookies",
+      "filePath": "components/servo/site_data_manager.rs",
+      "lineRange": [259, 279],
+      "summary": "Clears only session cookies in public and private resource threads with async callback notification.",
+      "tags": ["utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/site_data_manager.rs:handle_cookie_response",
+      "type": "function",
+      "name": "handle_cookie_response",
+      "filePath": "components/servo/site_data_manager.rs",
+      "lineRange": [337, 376],
+      "summary": "Processes async cookie operation responses, dispatching cookies to stored callbacks or coalescing DoneAfterResponses until all expected responses arrive.",
+      "tags": ["event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/servo/user_content_manager.rs",
+      "type": "file",
+      "name": "user_content_manager.rs",
+      "filePath": "components/servo/user_content_manager.rs",
+      "summary": "User content manager for injecting user scripts and stylesheets into webviews via the constellation proxy.",
+      "tags": ["service", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/user_content_manager.rs:UserContentManager",
+      "type": "class",
+      "name": "UserContentManager",
+      "filePath": "components/servo/user_content_manager.rs",
+      "lineRange": [17, 20],
+      "summary": "Manages injection of user scripts and stylesheets into webviews by sending add/remove actions through the constellation proxy, with cleanup on drop.",
+      "tags": ["service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/servo/webview.rs",
+      "type": "file",
+      "name": "webview.rs",
+      "filePath": "components/servo/webview.rs",
+      "summary": "WebView implementation managing browser tab lifecycle: navigation, rendering, input events, accessibility, zoom, history traversal, JavaScript evaluation, screenshot capture, and embedder control dialogs.",
+      "tags": ["service", "component", "api-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/servo/webview.rs:WebView",
+      "type": "class",
+      "name": "WebView",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [81, 81],
+      "summary": "Public WebView handle with a comprehensive API for navigation, input, zoom, accessibility, JavaScript evaluation, screenshots, history, and embedder controls. Delegates to WebViewInner via Rc<RefCell<>>.",
+      "tags": ["service", "api-handler", "component"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/servo/webview.rs:WebViewInner",
+      "type": "class",
+      "name": "WebViewInner",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [95, 131],
+      "summary": "Internal WebView state holding id, servo handle, delegate, rendering context, delegates (clipboard, gamepad), accessibility data, viewport info, and navigation history.",
+      "tags": ["data-model"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/webview.rs:WebViewBuilder",
+      "type": "class",
+      "name": "WebViewBuilder",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [1017, 1028],
+      "summary": "Builder for constructing a WebView with configurable delegate, URL, HiDPI scale, user content manager, clipboard delegate, and gamepad delegate.",
+      "tags": ["factory", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/webview.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [143, 227],
+      "summary": "Constructs a full WebView: registers rendering context, creates WebViewInner with all delegates, registers with servo's webview map, and sends NewWebView message to constellation.",
+      "tags": ["constructor", "entry-point"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/webview.rs:notify_input_event",
+      "type": "function",
+      "name": "notify_input_event",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [608, 631],
+      "summary": "Processes an input event by forwarding to the paint thread for point events or sending to the constellation for keyboard/tap events, with pending handled-input-event tracking.",
+      "tags": ["event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/webview.rs:set_history",
+      "type": "function",
+      "name": "set_history",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [795, 816],
+      "summary": "Updates the back-forward list and index, notifying the delegate of history changes with URLs loaded from each entry.",
+      "tags": ["utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/webview.rs:show_embedder_control",
+      "type": "function",
+      "name": "show_embedder_control",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [818, 887],
+      "summary": "Shows an embedder control (select element, color picker, file picker, input method, simple dialog, or context menu) by delegating to the delegate with the appropriate control type.",
+      "tags": ["api-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/webview.rs:set_accessibility_active",
+      "type": "function",
+      "name": "set_accessibility_active",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [908, 931],
+      "summary": "Enables or disables accessibility by sending SetAccessibilityActive to the constellation and initializing or removing the accesskit tree.",
+      "tags": ["utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/webview.rs:notify_document_accessibility_tree_id",
+      "type": "function",
+      "name": "notify_document_accessibility_tree_id",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [933, 965],
+      "summary": "Registers a grafted accessibility tree ID from a document, updating existing children if the tree id changed.",
+      "tags": ["event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/webview.rs:process_accessibility_tree_update",
+      "type": "function",
+      "name": "process_accessibility_tree_update",
+      "filePath": "components/servo/webview.rs",
+      "lineRange": [967, 989],
+      "summary": "Applies an accessibility tree update from the constellation, delegating to the delegate and tracking epoch versions.",
+      "tags": ["event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/servo/webview_delegate.rs",
+      "type": "file",
+      "name": "webview_delegate.rs",
+      "filePath": "components/servo/webview_delegate.rs",
+      "summary": "WebView delegate types defining the embedder callback interface: navigation requests, permission requests, authentication, resource loading interception, embedder controls (context menus, select elements, color pickers, file pickers, dialogs), and accessibility tree updates. Includes unit tests.",
+      "tags": ["type-definition", "api-handler", "test"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:WebViewDelegate",
+      "type": "class",
+      "name": "WebViewDelegate",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [914, 1087],
+      "summary": "Trait defining all embedder callbacks for a single webview: URL/page/title/status/cursor/favicon/load/focus/animating notifications, navigation/authentication/permission/resource requests, embedder controls, accessibility tree updates, and crash/media session events.",
+      "tags": ["type-definition", "api-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:NavigationRequest",
+      "type": "class",
+      "name": "NavigationRequest",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [32, 37],
+      "summary": "A navigation request that allows embedders to approve or deny navigation via AllowOrDenyRequest with automatic denial on drop.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:PermissionRequest",
+      "type": "class",
+      "name": "PermissionRequest",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [76, 79],
+      "summary": "A permission request wrapping an AllowOrDenyRequest with the requested feature type.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:AllowOrDenyRequest",
+      "type": "class",
+      "name": "AllowOrDenyRequest",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [102, 102],
+      "summary": "Generic allow/deny request backed by IpcResponder or Tokio oneshot, with error sending for failed responses.",
+      "tags": ["utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:AuthenticationRequest",
+      "type": "class",
+      "name": "AuthenticationRequest",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [193, 198],
+      "summary": "HTTP authentication request with URL, proxy flag, and method to supply credentials via an IpcResponder.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:WebResourceLoad",
+      "type": "class",
+      "name": "WebResourceLoad",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [240, 244],
+      "summary": "Web resource loading request allowing embedders to inspect the request and optionally intercept with a custom response.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:InterceptedWebResourceLoad",
+      "type": "class",
+      "name": "InterceptedWebResourceLoad",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [287, 292],
+      "summary": "An intercepted web resource load that allows streaming body data, finishing with a response, or cancelling the load.",
+      "tags": ["type-definition", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:BluetoothDeviceSelectionRequest",
+      "type": "class",
+      "name": "BluetoothDeviceSelectionRequest",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [158, 161],
+      "summary": "Bluetooth device selection dialog request with available devices and pick/cancel operations.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:ContextMenu",
+      "type": "class",
+      "name": "ContextMenu",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [376, 383],
+      "summary": "Context menu embedder control with position, items, element info, and select/dismiss operations with constellation notification.",
+      "tags": ["type-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:SelectElement",
+      "type": "class",
+      "name": "SelectElement",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [443, 449],
+      "summary": "HTML select element embedder control providing position, options, single/multi select, and submit/drop operations.",
+      "tags": ["type-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:ColorPicker",
+      "type": "class",
+      "name": "ColorPicker",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [515, 521],
+      "summary": "HTML color picker embedder control with current color, position, and select/submit operations.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:FilePicker",
+      "type": "class",
+      "name": "FilePicker",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [572, 576],
+      "summary": "HTML file picker embedder control with filter patterns, multi-select support, current paths, and select/submit/dismiss operations.",
+      "tags": ["type-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:InputMethodControl",
+      "type": "class",
+      "name": "InputMethodControl",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [632, 640],
+      "summary": "Input method editor control providing type, text, insertion point, position, multiline, and virtual keyboard flags.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:SimpleDialog",
+      "type": "class",
+      "name": "SimpleDialog",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [688, 692],
+      "summary": "Simple dialog enum dispatching to Alert/Confirm/Prompt dialog variants with message, confirm, and dismiss operations.",
+      "tags": ["type-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:AlertDialog",
+      "type": "class",
+      "name": "AlertDialog",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [776, 781],
+      "summary": "JavaScript alert dialog with message and confirm action.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:ConfirmDialog",
+      "type": "class",
+      "name": "ConfirmDialog",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [808, 813],
+      "summary": "JavaScript confirm dialog with message, confirm, and dismiss actions.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:PromptDialog",
+      "type": "class",
+      "name": "PromptDialog",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [850, 856],
+      "summary": "JavaScript prompt dialog with message, current value editing, confirm, and dismiss actions.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/webview_delegate.rs:CreateNewWebViewRequest",
+      "type": "class",
+      "name": "CreateNewWebViewRequest",
+      "filePath": "components/servo/webview_delegate.rs",
+      "lineRange": [902, 905],
+      "summary": "Request to create a new webview from an existing one, providing a builder pre-initialized with the same servo instance.",
+      "tags": ["type-definition"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/servo/site_data_manager.rs",
+      "target": "class:components/servo/site_data_manager.rs:SiteDataManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/site_data_manager.rs",
+      "target": "class:components/servo/site_data_manager.rs:SiteData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/site_data_manager.rs",
+      "target": "function:components/servo/site_data_manager.rs:site_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/site_data_manager.rs",
+      "target": "function:components/servo/site_data_manager.rs:clear_site_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/site_data_manager.rs",
+      "target": "function:components/servo/site_data_manager.rs:clear_cookies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/site_data_manager.rs",
+      "target": "function:components/servo/site_data_manager.rs:clear_session_cookies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/site_data_manager.rs",
+      "target": "function:components/servo/site_data_manager.rs:handle_cookie_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/user_content_manager.rs",
+      "target": "class:components/servo/user_content_manager.rs:UserContentManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "class:components/servo/webview.rs:WebView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "class:components/servo/webview.rs:WebViewInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "class:components/servo/webview.rs:WebViewBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "function:components/servo/webview.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "function:components/servo/webview.rs:notify_input_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "function:components/servo/webview.rs:set_history",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "function:components/servo/webview.rs:show_embedder_control",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "function:components/servo/webview.rs:set_accessibility_active",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "function:components/servo/webview.rs:notify_document_accessibility_tree_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "function:components/servo/webview.rs:process_accessibility_tree_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:WebViewDelegate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:NavigationRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:PermissionRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:AllowOrDenyRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:AuthenticationRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:WebResourceLoad",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:InterceptedWebResourceLoad",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:BluetoothDeviceSelectionRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:ContextMenu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:SelectElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:ColorPicker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:FilePicker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:InputMethodControl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:SimpleDialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:AlertDialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:ConfirmDialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:PromptDialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:CreateNewWebViewRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "file:components/servo/site_data_manager.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "file:components/servo/proxies.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "file:components/servo/javascript_evaluator.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "file:components/servo/gstreamer_plugins.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "file:components/servo/network_manager.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "file:components/servo/responders.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "file:components/servo/servo_delegate.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "file:components/servo/clipboard_delegate.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "file:components/servo/gamepad_delegate.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/webview.rs",
+      "target": "file:components/servo/user_content_manager.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "file:components/servo/responders.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/site_data_manager.rs",
+      "target": "file:components/servo/responders.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "class:components/servo/servo.rs:Servo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "class:components/servo/servo.rs:ServoBuilder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/servo/webview_delegate.rs",
+      "target": "class:components/servo/webview_delegate.rs:WebViewDelegate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

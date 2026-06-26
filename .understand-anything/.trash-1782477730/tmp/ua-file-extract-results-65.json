@@ -1,0 +1,963 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 8,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/shared/webgpu/error.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 90,
+      "nonEmptyLines": 77,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 20,
+          "endLine": 25,
+          "params": [
+            "filter"
+          ]
+        },
+        {
+          "name": "source",
+          "startLine": 45,
+          "endLine": 47,
+          "params": []
+        },
+        {
+          "name": "fmt",
+          "startLine": 51,
+          "endLine": 53,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "filter",
+          "startLine": 57,
+          "endLine": 63,
+          "params": []
+        },
+        {
+          "name": "message",
+          "startLine": 65,
+          "endLine": 71,
+          "params": []
+        },
+        {
+          "name": "from_wgpu_error",
+          "startLine": 76,
+          "endLine": 83,
+          "params": [
+            "error"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ErrorScope",
+          "startLine": 14,
+          "endLine": 17,
+          "methods": [
+            "new"
+          ],
+          "properties": [
+            "errors",
+            "filter"
+          ]
+        },
+        {
+          "name": "ErrorFilter",
+          "startLine": 30,
+          "endLine": 34,
+          "methods": [],
+          "properties": [
+            "Validation",
+            "OutOfMemory",
+            "Internal"
+          ]
+        },
+        {
+          "name": "Error",
+          "startLine": 38,
+          "endLine": 42,
+          "methods": [
+            "source",
+            "fmt",
+            "filter",
+            "message",
+            "from_wgpu_error"
+          ],
+          "properties": [
+            "Validation",
+            "OutOfMemory",
+            "Internal"
+          ]
+        },
+        {
+          "name": "PopError",
+          "startLine": 87,
+          "endLine": 90,
+          "methods": [],
+          "properties": [
+            "Lost",
+            "Empty"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ErrorScope",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "ErrorFilter",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "Error",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "filter",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "message",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "from_wgpu_error",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "PopError",
+          "line": 87,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "Vec::new",
+          "lineNumber": 23
+        },
+        {
+          "caller": "fmt",
+          "callee": "f.write_str",
+          "lineNumber": 52
+        },
+        {
+          "caller": "fmt",
+          "callee": "self.message",
+          "lineNumber": 52
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "error.webgpu_error_type",
+          "lineNumber": 77
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "Some",
+          "lineNumber": 78
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "Self::Validation",
+          "lineNumber": 78
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "error.to_string",
+          "lineNumber": 78
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "Some",
+          "lineNumber": 79
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "Self::OutOfMemory",
+          "lineNumber": 79
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "error.to_string",
+          "lineNumber": 79
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "Some",
+          "lineNumber": 80
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "Self::Internal",
+          "lineNumber": 80
+        },
+        {
+          "caller": "from_wgpu_error",
+          "callee": "error.to_string",
+          "lineNumber": 80
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 8,
+        "functionCount": 6,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "components/shared/webgpu/ids.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 54,
+      "nonEmptyLines": 49,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/shared/webgpu/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 184,
+      "nonEmptyLines": 162,
+      "functions": [
+        {
+          "name": "exit",
+          "startLine": 45,
+          "endLine": 49,
+          "params": [
+            "sender"
+          ]
+        },
+        {
+          "name": "stride",
+          "startLine": 71,
+          "endLine": 74,
+          "params": []
+        },
+        {
+          "name": "buffer_size",
+          "startLine": 76,
+          "endLine": 78,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 82,
+          "endLine": 94,
+          "params": [
+            "config"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 114,
+          "endLine": 143,
+          "params": [
+            "error",
+            "source"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 173,
+          "endLine": 183,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "WebGPU",
+          "startLine": 42,
+          "endLine": 42,
+          "methods": [
+            "exit"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Adapter",
+          "startLine": 53,
+          "endLine": 59,
+          "methods": [],
+          "properties": [
+            "adapter_info",
+            "adapter_id",
+            "features",
+            "limits",
+            "channel"
+          ]
+        },
+        {
+          "name": "ContextConfiguration",
+          "startLine": 62,
+          "endLine": 68,
+          "methods": [
+            "stride",
+            "buffer_size"
+          ],
+          "properties": [
+            "device_id",
+            "queue_id",
+            "format",
+            "is_opaque",
+            "size"
+          ]
+        },
+        {
+          "name": "DeviceLostReason",
+          "startLine": 99,
+          "endLine": 102,
+          "methods": [],
+          "properties": [
+            "Unknown",
+            "Destroyed"
+          ]
+        },
+        {
+          "name": "ShaderCompilationInfo",
+          "startLine": 105,
+          "endLine": 111,
+          "methods": [
+            "from"
+          ],
+          "properties": [
+            "line_number",
+            "line_pos",
+            "offset",
+            "length",
+            "message"
+          ]
+        },
+        {
+          "name": "Pipeline",
+          "startLine": 147,
+          "endLine": 150,
+          "methods": [],
+          "properties": [
+            "id",
+            "label"
+          ]
+        },
+        {
+          "name": "Mapping",
+          "startLine": 153,
+          "endLine": 157,
+          "methods": [],
+          "properties": [
+            "data",
+            "mode",
+            "range"
+          ]
+        },
+        {
+          "name": "RequestDeviceError",
+          "startLine": 166,
+          "endLine": 170,
+          "methods": [
+            "from"
+          ],
+          "properties": [
+            "LimitsExceeded",
+            "UnsupportedFeature",
+            "Other"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WebGPU",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "exit",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "Adapter",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "ContextConfiguration",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "stride",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "buffer_size",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "DeviceLostReason",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "ShaderCompilationInfo",
+          "line": 105,
+          "isDefault": false
+        },
+        {
+          "name": "from",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "Pipeline",
+          "line": 147,
+          "isDefault": false
+        },
+        {
+          "name": "Mapping",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "RequestDeviceError",
+          "line": 166,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "exit",
+          "callee": "self.0\n            .send(WebGPURequest::Exit(sender)).map_err",
+          "lineNumber": 46
+        },
+        {
+          "caller": "exit",
+          "callee": "self.0.send",
+          "lineNumber": 46
+        },
+        {
+          "caller": "exit",
+          "callee": "WebGPURequest::Exit",
+          "lineNumber": 47
+        },
+        {
+          "caller": "stride",
+          "callee": "(self.size.width * self.format.bytes_per_pixel() as u32).next_multiple_of",
+          "lineNumber": 72
+        },
+        {
+          "caller": "stride",
+          "callee": "self.format.bytes_per_pixel",
+          "lineNumber": 72
+        },
+        {
+          "caller": "buffer_size",
+          "callee": "self.stride",
+          "lineNumber": 77
+        },
+        {
+          "caller": "from",
+          "callee": "config.size.cast().cast_unit",
+          "lineNumber": 85
+        },
+        {
+          "caller": "from",
+          "callee": "config.size.cast",
+          "lineNumber": 85
+        },
+        {
+          "caller": "from",
+          "callee": "Some",
+          "lineNumber": 86
+        },
+        {
+          "caller": "from",
+          "callee": "config.stride",
+          "lineNumber": 86
+        },
+        {
+          "caller": "from",
+          "callee": "ImageDescriptorFlags::empty",
+          "lineNumber": 91
+        },
+        {
+          "caller": "from",
+          "callee": "e.inner.location",
+          "lineNumber": 116
+        },
+        {
+          "caller": "from",
+          "callee": "e.inner.location",
+          "lineNumber": 117
+        },
+        {
+          "caller": "len_utf16",
+          "callee": "s.chars().map(|c| c.len_utf16() as u64).sum",
+          "lineNumber": 125
+        },
+        {
+          "caller": "len_utf16",
+          "callee": "s.chars().map",
+          "lineNumber": 125
+        },
+        {
+          "caller": "len_utf16",
+          "callee": "s.chars",
+          "lineNumber": 125
+        },
+        {
+          "caller": "len_utf16",
+          "callee": "c.len_utf16",
+          "lineNumber": 125
+        },
+        {
+          "caller": "from",
+          "callee": "source[0..start].rfind('\\n').map(|pos| pos + 1).unwrap_or",
+          "lineNumber": 129
+        },
+        {
+          "caller": "from",
+          "callee": "source[0..start].rfind('\\n').map",
+          "lineNumber": 129
+        },
+        {
+          "caller": "from",
+          "callee": "source[0..start].rfind",
+          "lineNumber": 129
+        },
+        {
+          "caller": "from",
+          "callee": "len_utf16",
+          "lineNumber": 132
+        },
+        {
+          "caller": "from",
+          "callee": "len_utf16",
+          "lineNumber": 133
+        },
+        {
+          "caller": "from",
+          "callee": "len_utf16",
+          "lineNumber": 134
+        },
+        {
+          "caller": "from",
+          "callee": "error.to_string",
+          "lineNumber": 135
+        },
+        {
+          "caller": "from",
+          "callee": "error.to_string",
+          "lineNumber": 139
+        },
+        {
+          "caller": "from",
+          "callee": "Default::default",
+          "lineNumber": 140
+        },
+        {
+          "caller": "from",
+          "callee": "RequestDeviceError::LimitsExceeded",
+          "lineNumber": 176
+        },
+        {
+          "caller": "from",
+          "callee": "RequestDeviceError::UnsupportedFeature",
+          "lineNumber": 179
+        },
+        {
+          "caller": "from",
+          "callee": "RequestDeviceError::Other",
+          "lineNumber": 181
+        },
+        {
+          "caller": "from",
+          "callee": "e.to_string",
+          "lineNumber": 181
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 12,
+        "functionCount": 6,
+        "classCount": 8
+      }
+    },
+    {
+      "path": "components/shared/webgpu/messages/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 9,
+      "metrics": {
+        "importCount": 3,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/shared/webgpu/messages/recv.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 406,
+      "nonEmptyLines": 401,
+      "classes": [
+        {
+          "name": "PendingTexture",
+          "startLine": 59,
+          "endLine": 64,
+          "methods": [],
+          "properties": [
+            "texture_id",
+            "encoder_id",
+            "command_buffer_id",
+            "configuration"
+          ]
+        },
+        {
+          "name": "WebGPURequest",
+          "startLine": 67,
+          "endLine": 406,
+          "methods": [],
+          "properties": [
+            "SetImageKey",
+            "BufferMapAsync",
+            "CommandEncoderFinish",
+            "CopyBufferToBuffer",
+            "CopyBufferToTexture",
+            "CopyTextureToBuffer",
+            "CopyTextureToTexture",
+            "CopyExternalImageToTexture",
+            "CommandEncoderPushDebugGroup",
+            "CommandEncoderPopDebugGroup",
+            "CommandEncoderInsertDebugMarker",
+            "CreateBindGroup",
+            "CreateBindGroupLayout",
+            "CreateBuffer",
+            "CreateCommandEncoder",
+            "CreateComputePipeline",
+            "CreatePipelineLayout",
+            "CreateRenderPipeline",
+            "CreateSampler",
+            "CreateShaderModule",
+            "CreateContext",
+            "Present",
+            "GetImage",
+            "ValidateTextureDescriptor",
+            "DestroyContext",
+            "CreateTexture",
+            "CreateTextureView",
+            "DestroyBuffer",
+            "DestroyDevice",
+            "DestroyTexture",
+            "DropTexture",
+            "DropAdapter",
+            "DropDevice",
+            "DropBuffer",
+            "DropPipelineLayout",
+            "DropComputePipeline",
+            "DropRenderPipeline",
+            "DropBindGroup",
+            "DropBindGroupLayout",
+            "DropCommandEncoder",
+            "DropCommandBuffer",
+            "DropTextureView",
+            "DropSampler",
+            "DropShaderModule",
+            "DropRenderBundle",
+            "DropQuerySet",
+            "DropComputePass",
+            "DropRenderPass",
+            "Exit",
+            "RenderBundleEncoderFinish",
+            "RequestAdapter",
+            "RequestDevice",
+            "BeginComputePass",
+            "ComputePassSetPipeline",
+            "ComputePassSetBindGroup",
+            "ComputePassDispatchWorkgroups",
+            "ComputePassDispatchWorkgroupsIndirect",
+            "ComputePassPushDebugGroup",
+            "ComputePassPopDebugGroup",
+            "ComputePassInsertDebugMarker",
+            "EndComputePass",
+            "BeginRenderPass",
+            "RenderPassCommand",
+            "EndRenderPass",
+            "Submit",
+            "UnmapBuffer",
+            "WriteBuffer",
+            "WriteTexture",
+            "QueueOnSubmittedWorkDone",
+            "PushErrorScope",
+            "DispatchError",
+            "PopErrorScope",
+            "ComputeGetBindGroupLayout",
+            "RenderGetBindGroupLayout",
+            "CreateQuerySet",
+            "ResolveQuerySet"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PendingTexture",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "WebGPURequest",
+          "line": 67,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/shared/webgpu/messages/to_dom.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 16,
+      "nonEmptyLines": 12,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/shared/webgpu/messages/to_script.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 55,
+      "nonEmptyLines": 51,
+      "classes": [
+        {
+          "name": "WebGPUMsg",
+          "startLine": 19,
+          "endLine": 55,
+          "methods": [],
+          "properties": [
+            "FreeAdapter",
+            "FreeDevice",
+            "FreeBuffer",
+            "FreePipelineLayout",
+            "FreeComputePipeline",
+            "FreeRenderPipeline",
+            "FreeBindGroup",
+            "FreeBindGroupLayout",
+            "FreeCommandEncoder",
+            "FreeCommandBuffer",
+            "FreeTexture",
+            "FreeTextureView",
+            "FreeSampler",
+            "FreeSurface",
+            "FreeShaderModule",
+            "FreeRenderBundle",
+            "FreeStagingBuffer",
+            "FreeQuerySet",
+            "FreeComputePass",
+            "FreeRenderPass",
+            "UncapturedError",
+            "DeviceLost",
+            "Exit"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WebGPUMsg",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/shared/webgpu/render_commands.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 165,
+      "nonEmptyLines": 161,
+      "functions": [
+        {
+          "name": "apply_render_command",
+          "startLine": 76,
+          "endLine": 165,
+          "params": [
+            "global",
+            "pass",
+            "command"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "RenderCommand",
+          "startLine": 14,
+          "endLine": 74,
+          "methods": [],
+          "properties": [
+            "SetPipeline",
+            "SetBindGroup",
+            "SetViewport",
+            "SetScissorRect",
+            "SetBlendConstant",
+            "SetStencilReference",
+            "SetIndexBuffer",
+            "SetVertexBuffer",
+            "Draw",
+            "DrawIndexed",
+            "DrawIndirect",
+            "DrawIndexedIndirect",
+            "ExecuteBundles",
+            "PushDebugGroup",
+            "PopDebugGroup",
+            "InsertDebugMarker"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RenderCommand",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "apply_render_command",
+          "line": 76,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_set_pipeline",
+          "lineNumber": 83
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_set_bind_group",
+          "lineNumber": 89
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "Some",
+          "lineNumber": 89
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_set_viewport",
+          "lineNumber": 97
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_set_scissor_rect",
+          "lineNumber": 103
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_set_blend_constant",
+          "lineNumber": 105
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_set_stencil_reference",
+          "lineNumber": 108
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_set_index_buffer",
+          "lineNumber": 115
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_set_vertex_buffer",
+          "lineNumber": 121
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_draw",
+          "lineNumber": 127
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_draw_indexed",
+          "lineNumber": 140
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_draw_indirect",
+          "lineNumber": 149
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_draw_indexed_indirect",
+          "lineNumber": 152
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_execute_bundles",
+          "lineNumber": 155
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_push_debug_group",
+          "lineNumber": 158
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_pop_debug_group",
+          "lineNumber": 160
+        },
+        {
+          "caller": "apply_render_command",
+          "callee": "global.render_pass_insert_debug_marker",
+          "lineNumber": 162
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,4000 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/stream/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/stream/mod.rs",
+      "summary": "Module barrel file that publicly re-exports all stream sub-modules, serving as the module root for the WHATWG Streams API implementation in Servo.",
+      "tags": [
+        "entry-point",
+        "module-barrel",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "type": "file",
+      "name": "readablebytestreamcontroller.rs",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "summary": "Core implementation of ReadableByteStreamController managing byte-level read stream operations including pull-into descriptors, queuing, respond semantics, and BYOB request handling per the Streams spec.",
+      "tags": [
+        "streams-api",
+        "controller",
+        "bytestream"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Large implementation (2000+ lines) implementing the full byte stream controller state machine with pull-into descriptor queuing."
+    },
+    {
+      "id": "class:components/script/dom/stream/readablebytestreamcontroller.rs:QueueEntry",
+      "type": "class",
+      "name": "QueueEntry",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        44,
+        52
+      ],
+      "summary": "The QueueEntry class implementing stream operations within the readablebytestreamcontroller module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablebytestreamcontroller.rs:ReaderType",
+      "type": "class",
+      "name": "ReaderType",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        71,
+        76
+      ],
+      "summary": "The ReaderType class implementing stream operations within the readablebytestreamcontroller module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablebytestreamcontroller.rs:PullIntoDescriptor",
+      "type": "class",
+      "name": "PullIntoDescriptor",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        81,
+        101
+      ],
+      "summary": "The PullIntoDescriptor class implementing stream operations within the readablebytestreamcontroller module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablebytestreamcontroller.rs:ReadableByteStreamController",
+      "type": "class",
+      "name": "ReadableByteStreamController",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        193,
+        223
+      ],
+      "summary": "The ReadableByteStreamController class implementing stream operations within the readablebytestreamcontroller module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:new@57",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        57,
+        67
+      ],
+      "summary": "Constructor creating a new DOM-wrapped instance of the enclosing struct.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:callback@116",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        116,
+        128
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:callback@159",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        159,
+        171
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        226,
+        250
+      ],
+      "summary": "Internal constructor initializing the DOM object with reflector setup.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:new@252",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        252,
+        268
+      ],
+      "summary": "Constructor creating a new DOM-wrapped instance of the enclosing struct.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:set_stream",
+      "type": "function",
+      "name": "set_stream",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        271,
+        273
+      ],
+      "summary": "Setter for stream property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_pull_into",
+      "type": "function",
+      "name": "perform_pull_into",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        276,
+        460
+      ],
+      "summary": "Implements the perform_pull_into operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond",
+      "type": "function",
+      "name": "respond",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        463,
+        513
+      ],
+      "summary": "Implements the respond operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_internal",
+      "type": "function",
+      "name": "respond_internal",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        516,
+        555
+      ],
+      "summary": "Implements the respond_internal operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_in_closed_state",
+      "type": "function",
+      "name": "respond_in_closed_state",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        558,
+        604
+      ],
+      "summary": "Implements the respond_in_closed_state operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_in_readable_state",
+      "type": "function",
+      "name": "respond_in_readable_state",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        607,
+        696
+      ],
+      "summary": "Implements the respond_in_readable_state operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_with_new_view",
+      "type": "function",
+      "name": "respond_with_new_view",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        699,
+        779
+      ],
+      "summary": "Implements the respond_with_new_view operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_desired_size",
+      "type": "function",
+      "name": "get_desired_size",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        782,
+        798
+      ],
+      "summary": "Getter for desired size property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_byob_request",
+      "type": "function",
+      "name": "get_byob_request",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        801,
+        841
+      ],
+      "summary": "Getter for byob request property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:close",
+      "type": "function",
+      "name": "close",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        844,
+        902
+      ],
+      "summary": "Closes the stream, signaling completion to consumers.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:error",
+      "type": "function",
+      "name": "error",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        905,
+        925
+      ],
+      "summary": "Errors the stream, rejecting pending promises and propagating state.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:reset_queue",
+      "type": "function",
+      "name": "reset_queue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        935,
+        943
+      ],
+      "summary": "Implements the reset_queue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:clear_pending_pull_intos",
+      "type": "function",
+      "name": "clear_pending_pull_intos",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        946,
+        952
+      ],
+      "summary": "Implements the clear_pending_pull_intos operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:invalidate_byob_request",
+      "type": "function",
+      "name": "invalidate_byob_request",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        955,
+        967
+      ],
+      "summary": "Implements the invalidate_byob_request operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue",
+      "type": "function",
+      "name": "enqueue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        970,
+        1114
+      ],
+      "summary": "Enqueues a chunk into the stream controller queue.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:commit_pull_into_descriptor",
+      "type": "function",
+      "name": "commit_pull_into_descriptor",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1117,
+        1171
+      ],
+      "summary": "Implements the commit_pull_into_descriptor operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:convert_pull_into_descriptor",
+      "type": "function",
+      "name": "convert_pull_into_descriptor",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1174,
+        1207
+      ],
+      "summary": "Implements the convert_pull_into_descriptor operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:process_pull_into_descriptors_using_queue",
+      "type": "function",
+      "name": "process_pull_into_descriptors_using_queue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1210,
+        1246
+      ],
+      "summary": "Implements the process_pull_into_descriptors_using_queue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_pull_into_descriptor_from_queue",
+      "type": "function",
+      "name": "fill_pull_into_descriptor_from_queue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1249,
+        1374
+      ],
+      "summary": "Implements the fill_pull_into_descriptor_from_queue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_head_pull_into_descriptor",
+      "type": "function",
+      "name": "fill_head_pull_into_descriptor",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1377,
+        1399
+      ],
+      "summary": "Implements the fill_head_pull_into_descriptor operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_detached_pull_into_to_queue",
+      "type": "function",
+      "name": "enqueue_detached_pull_into_to_queue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1402,
+        1430
+      ],
+      "summary": "Implements the enqueue_detached_pull_into_to_queue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_cloned_chunk_to_queue",
+      "type": "function",
+      "name": "enqueue_cloned_chunk_to_queue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1433,
+        1463
+      ],
+      "summary": "Implements the enqueue_cloned_chunk_to_queue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_chunk_to_queue",
+      "type": "function",
+      "name": "enqueue_chunk_to_queue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1466,
+        1481
+      ],
+      "summary": "Implements the enqueue_chunk_to_queue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:in_memory",
+      "type": "function",
+      "name": "in_memory",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1483,
+        1488
+      ],
+      "summary": "Implements the in_memory operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_in_memory_bytes",
+      "type": "function",
+      "name": "get_in_memory_bytes",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1490,
+        1514
+      ],
+      "summary": "Getter for in memory bytes property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:shift_pending_pull_into",
+      "type": "function",
+      "name": "shift_pending_pull_into",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1517,
+        1525
+      ],
+      "summary": "Implements the shift_pending_pull_into operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:process_read_requests_using_queue",
+      "type": "function",
+      "name": "process_read_requests_using_queue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1528,
+        1535
+      ],
+      "summary": "Implements the process_read_requests_using_queue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_read_request_from_queue",
+      "type": "function",
+      "name": "fill_read_request_from_queue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1538,
+        1578
+      ],
+      "summary": "Implements the fill_read_request_from_queue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:handle_queue_drain",
+      "type": "function",
+      "name": "handle_queue_drain",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1581,
+        1596
+      ],
+      "summary": "Implements the handle_queue_drain operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:call_pull_if_needed",
+      "type": "function",
+      "name": "call_pull_if_needed",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1599,
+        1657
+      ],
+      "summary": "Conditionally invokes the pull algorithm if the stream needs more data and a pull is not already in progress.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:should_call_pull",
+      "type": "function",
+      "name": "should_call_pull",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1660,
+        1706
+      ],
+      "summary": "Determines whether the pull algorithm should be called based on stream state and backpressure.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:setup",
+      "type": "function",
+      "name": "setup",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1708,
+        1780
+      ],
+      "summary": "Initializes the controller or stream with the underlying source, size algorithm, and high water mark.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_release_steps",
+      "type": "function",
+      "name": "perform_release_steps",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1783,
+        1798
+      ],
+      "summary": "Implements the perform_release_steps operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_cancel_steps",
+      "type": "function",
+      "name": "perform_cancel_steps",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1801,
+        1840
+      ],
+      "summary": "Executes the underlying source pull or cancel algorithm steps, handling promise resolution.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_pull_steps",
+      "type": "function",
+      "name": "perform_pull_steps",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1843,
+        1916
+      ],
+      "summary": "Executes the underlying source pull or cancel algorithm steps, handling promise resolution.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:set_underlying_source_this_object",
+      "type": "function",
+      "name": "set_underlying_source_this_object",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1919,
+        1923
+      ],
+      "summary": "Setter for underlying source this object property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:remove_entry",
+      "type": "function",
+      "name": "remove_entry",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1925,
+        1930
+      ],
+      "summary": "Implements the remove_entry operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_queue_total_size",
+      "type": "function",
+      "name": "get_queue_total_size",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1932,
+        1934
+      ],
+      "summary": "Getter for queue total size property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_pending_pull_intos_size",
+      "type": "function",
+      "name": "get_pending_pull_intos_size",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1936,
+        1938
+      ],
+      "summary": "Getter for pending pull intos size property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:Close",
+      "type": "function",
+      "name": "Close",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1958,
+        1971
+      ],
+      "summary": "Implements the Close operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablebytestreamcontroller.rs:Enqueue",
+      "type": "function",
+      "name": "Enqueue",
+      "filePath": "components/script/dom/stream/readablebytestreamcontroller.rs",
+      "lineRange": [
+        1974,
+        2005
+      ],
+      "summary": "Implements the Enqueue operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/stream/readablestream.rs",
+      "type": "file",
+      "name": "readablestream.rs",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "summary": "Core ReadableStream implementation covering stream creation, reader acquisition, tee/pipe operations, cross-realm transfer, and all internal state management per the WHATWG Streams specification.",
+      "tags": [
+        "streams-api",
+        "readable-stream",
+        "core"
+      ],
+      "complexity": "complex",
+      "languageNotes": "2500+ line implementation with PipeTo state machine, byte tee/default tee branching, and cross-realm transfer support."
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestream.rs:PipeTo",
+      "type": "class",
+      "name": "PipeTo",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        120,
+        170
+      ],
+      "summary": "The PipeTo class implementing stream operations within the readablestream module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestream.rs:ReadableStreamState",
+      "type": "class",
+      "name": "ReadableStreamState",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        783,
+        788
+      ],
+      "summary": "The ReadableStreamState class implementing stream operations within the readablestream module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestream.rs:ControllerType",
+      "type": "class",
+      "name": "ControllerType",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        793,
+        798
+      ],
+      "summary": "The ControllerType class implementing stream operations within the readablestream module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestream.rs:ReaderType",
+      "type": "class",
+      "name": "ReaderType",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        803,
+        809
+      ],
+      "summary": "The ReaderType class implementing stream operations within the readablestream module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestream.rs:ReadableStream",
+      "type": "class",
+      "name": "ReadableStream",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        890,
+        910
+      ],
+      "summary": "The ReadableStream class implementing stream operations within the readablestream module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestream.rs:CrossRealmTransformReadable",
+      "type": "class",
+      "name": "CrossRealmTransformReadable",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2343,
+        2346
+      ],
+      "summary": "The CrossRealmTransformReadable class implementing stream operations within the readablestream module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:abort_with_reason",
+      "type": "function",
+      "name": "abort_with_reason",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        175,
+        203
+      ],
+      "summary": "Implements the abort_with_reason operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:callback@215",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        215,
+        355
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:wait_for_writer_ready",
+      "type": "function",
+      "name": "wait_for_writer_ready",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        371,
+        395
+      ],
+      "summary": "Implements the wait_for_writer_ready operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:read_chunk",
+      "type": "function",
+      "name": "read_chunk",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        398,
+        413
+      ],
+      "summary": "Implements the read_chunk operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:write_chunk",
+      "type": "function",
+      "name": "write_chunk",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        417,
+        435
+      ],
+      "summary": "Implements the write_chunk operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:wait_on_pending_write",
+      "type": "function",
+      "name": "wait_on_pending_write",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        440,
+        453
+      ],
+      "summary": "Implements the wait_on_pending_write operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:check_and_propagate_errors_forward",
+      "type": "function",
+      "name": "check_and_propagate_errors_forward",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        457,
+        484
+      ],
+      "summary": "Implements the check_and_propagate_errors_forward operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:check_and_propagate_errors_backward",
+      "type": "function",
+      "name": "check_and_propagate_errors_backward",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        488,
+        515
+      ],
+      "summary": "Implements the check_and_propagate_errors_backward operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:check_and_propagate_closing_forward",
+      "type": "function",
+      "name": "check_and_propagate_closing_forward",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        519,
+        546
+      ],
+      "summary": "Implements the check_and_propagate_closing_forward operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:check_and_propagate_closing_backward",
+      "type": "function",
+      "name": "check_and_propagate_closing_backward",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        550,
+        584
+      ],
+      "summary": "Implements the check_and_propagate_closing_backward operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:shutdown",
+      "type": "function",
+      "name": "shutdown",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        589,
+        623
+      ],
+      "summary": "Implements the shutdown operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:perform_action",
+      "type": "function",
+      "name": "perform_action",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        627,
+        712
+      ],
+      "summary": "Implements the perform_action operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:finalize",
+      "type": "function",
+      "name": "finalize",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        715,
+        744
+      ],
+      "summary": "Implements the finalize operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:create_readable_stream",
+      "type": "function",
+      "name": "create_readable_stream",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        823,
+        863
+      ],
+      "summary": "Implements the create_readable_stream operation within the stream protocol.",
+      "tags": [
+        "function",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:readable_byte_stream_tee",
+      "type": "function",
+      "name": "readable_byte_stream_tee",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        866,
+        886
+      ],
+      "summary": "Implements the readable_byte_stream_tee operation within the stream protocol.",
+      "tags": [
+        "function",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        914,
+        923
+      ],
+      "summary": "Internal constructor initializing the DOM object with reflector setup.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        925,
+        936
+      ],
+      "summary": "Internal constructor initializing the DOM object with reflector setup.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:set_default_controller",
+      "type": "function",
+      "name": "set_default_controller",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        940,
+        944
+      ],
+      "summary": "Setter for default controller property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:set_byte_controller",
+      "type": "function",
+      "name": "set_byte_controller",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        948,
+        951
+      ],
+      "summary": "Setter for byte controller property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:assert_no_controller",
+      "type": "function",
+      "name": "assert_no_controller",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        955,
+        958
+      ],
+      "summary": "Implements the assert_no_controller operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:new_from_bytes",
+      "type": "function",
+      "name": "new_from_bytes",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        961,
+        974
+      ],
+      "summary": "Implements the new_from_bytes operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:new_from_bytes_with_byte_reading_support",
+      "type": "function",
+      "name": "new_from_bytes_with_byte_reading_support",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        977,
+        990
+      ],
+      "summary": "Implements the new_from_bytes_with_byte_reading_support operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:new_with_external_underlying_source",
+      "type": "function",
+      "name": "new_with_external_underlying_source",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        994,
+        1010
+      ],
+      "summary": "Implements the new_with_external_underlying_source operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:new_with_external_underlying_byte_source",
+      "type": "function",
+      "name": "new_with_external_underlying_byte_source",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1013,
+        1023
+      ],
+      "summary": "Implements the new_with_external_underlying_byte_source operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:perform_release_steps",
+      "type": "function",
+      "name": "perform_release_steps",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1026,
+        1042
+      ],
+      "summary": "Implements the perform_release_steps operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:perform_pull_steps",
+      "type": "function",
+      "name": "perform_pull_steps",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1047,
+        1061
+      ],
+      "summary": "Executes the underlying source pull or cancel algorithm steps, handling promise resolution.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:perform_pull_into",
+      "type": "function",
+      "name": "perform_pull_into",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1066,
+        1084
+      ],
+      "summary": "Implements the perform_pull_into operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:add_read_request",
+      "type": "function",
+      "name": "add_read_request",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1087,
+        1104
+      ],
+      "summary": "Implements the add_read_request operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:add_read_into_request",
+      "type": "function",
+      "name": "add_read_into_request",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1107,
+        1127
+      ],
+      "summary": "Implements the add_read_into_request operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:enqueue_native",
+      "type": "function",
+      "name": "enqueue_native",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1130,
+        1162
+      ],
+      "summary": "Implements the enqueue_native operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:error",
+      "type": "function",
+      "name": "error",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1165,
+        1205
+      ],
+      "summary": "Errors the stream, rejecting pending promises and propagating state.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_stored_error",
+      "type": "function",
+      "name": "get_stored_error",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1208,
+        1210
+      ],
+      "summary": "Getter for stored error property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:error_native",
+      "type": "function",
+      "name": "error_native",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1214,
+        1218
+      ],
+      "summary": "Implements the error_native operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:controller_close_native",
+      "type": "function",
+      "name": "controller_close_native",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1222,
+        1240
+      ],
+      "summary": "Implements the controller_close_native operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:in_memory",
+      "type": "function",
+      "name": "in_memory",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1244,
+        1256
+      ],
+      "summary": "Implements the in_memory operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_in_memory_bytes",
+      "type": "function",
+      "name": "get_in_memory_bytes",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1260,
+        1274
+      ],
+      "summary": "Getter for in memory bytes property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:acquire_default_reader",
+      "type": "function",
+      "name": "acquire_default_reader",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1280,
+        1292
+      ],
+      "summary": "Implements the acquire_default_reader operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:acquire_byob_reader",
+      "type": "function",
+      "name": "acquire_byob_reader",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1295,
+        1306
+      ],
+      "summary": "Implements the acquire_byob_reader operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_default_controller",
+      "type": "function",
+      "name": "get_default_controller",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1308,
+        1319
+      ],
+      "summary": "Getter for default controller property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_byte_controller",
+      "type": "function",
+      "name": "get_byte_controller",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1321,
+        1330
+      ],
+      "summary": "Getter for byte controller property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_default_reader",
+      "type": "function",
+      "name": "get_default_reader",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1332,
+        1339
+      ],
+      "summary": "Getter for default reader property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:read_a_chunk",
+      "type": "function",
+      "name": "read_a_chunk",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1346,
+        1360
+      ],
+      "summary": "Implements the read_a_chunk operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:stop_reading",
+      "type": "function",
+      "name": "stop_reading",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1366,
+        1382
+      ],
+      "summary": "Implements the stop_reading operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:is_locked",
+      "type": "function",
+      "name": "is_locked",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1385,
+        1391
+      ],
+      "summary": "Implements the is_locked operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:is_disturbed",
+      "type": "function",
+      "name": "is_disturbed",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1393,
+        1395
+      ],
+      "summary": "Implements the is_disturbed operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:set_is_disturbed",
+      "type": "function",
+      "name": "set_is_disturbed",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1397,
+        1399
+      ],
+      "summary": "Setter for is disturbed property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:is_closed",
+      "type": "function",
+      "name": "is_closed",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1401,
+        1403
+      ],
+      "summary": "Implements the is_closed operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:is_errored",
+      "type": "function",
+      "name": "is_errored",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1405,
+        1407
+      ],
+      "summary": "Implements the is_errored operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:is_readable",
+      "type": "function",
+      "name": "is_readable",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1409,
+        1411
+      ],
+      "summary": "Implements the is_readable operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:has_default_reader",
+      "type": "function",
+      "name": "has_default_reader",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1413,
+        1418
+      ],
+      "summary": "Implements the has_default_reader operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:has_byob_reader",
+      "type": "function",
+      "name": "has_byob_reader",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1420,
+        1425
+      ],
+      "summary": "Implements the has_byob_reader operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:has_byte_controller",
+      "type": "function",
+      "name": "has_byte_controller",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1427,
+        1432
+      ],
+      "summary": "Implements the has_byte_controller operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_num_read_requests",
+      "type": "function",
+      "name": "get_num_read_requests",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1435,
+        1447
+      ],
+      "summary": "Getter for num read requests property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_num_read_into_requests",
+      "type": "function",
+      "name": "get_num_read_into_requests",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1450,
+        1468
+      ],
+      "summary": "Getter for num read into requests property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:fulfill_read_request",
+      "type": "function",
+      "name": "fulfill_read_request",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1471,
+        1508
+      ],
+      "summary": "Implements the fulfill_read_request operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:fulfill_read_into_request",
+      "type": "function",
+      "name": "fulfill_read_into_request",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1511,
+        1553
+      ],
+      "summary": "Implements the fulfill_read_into_request operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:close",
+      "type": "function",
+      "name": "close",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1556,
+        1595
+      ],
+      "summary": "Closes the stream, signaling completion to consumers.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:cancel",
+      "type": "function",
+      "name": "cancel",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1598,
+        1675
+      ],
+      "summary": "Implements the cancel operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:set_reader",
+      "type": "function",
+      "name": "set_reader",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1678,
+        1680
+      ],
+      "summary": "Setter for reader property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:byte_tee",
+      "type": "function",
+      "name": "byte_tee",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1684,
+        1777
+      ],
+      "summary": "Implements the byte_tee operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:default_tee",
+      "type": "function",
+      "name": "default_tee",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1781,
+        1878
+      ],
+      "summary": "Implements the default_tee operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:pipe_to",
+      "type": "function",
+      "name": "pipe_to",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1882,
+        1979
+      ],
+      "summary": "Implements the pipe_to operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:tee",
+      "type": "function",
+      "name": "tee",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        1982,
+        2004
+      ],
+      "summary": "Implements the tee operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:set_up_byte_controller",
+      "type": "function",
+      "name": "set_up_byte_controller",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2007,
+        2049
+      ],
+      "summary": "Setter for up byte controller property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:setup_cross_realm_transform_readable",
+      "type": "function",
+      "name": "setup_cross_realm_transform_readable",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2052,
+        2092
+      ],
+      "summary": "Implements the setup_cross_realm_transform_readable operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2097,
+        2171
+      ],
+      "summary": "WebIDL-binding constructor invoked from JavaScript.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:Cancel",
+      "type": "function",
+      "name": "Cancel",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2179,
+        2191
+      ],
+      "summary": "Implements the Cancel operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:GetReader",
+      "type": "function",
+      "name": "GetReader",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2194,
+        2212
+      ],
+      "summary": "Getter for Reader property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:PipeTo",
+      "type": "function",
+      "name": "PipeTo",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2221,
+        2258
+      ],
+      "summary": "Implements the PipeTo operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:PipeThrough",
+      "type": "function",
+      "name": "PipeThrough",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2261,
+        2299
+      ],
+      "summary": "Implements the PipeThrough operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_type_and_value_from_message",
+      "type": "function",
+      "name": "get_type_and_value_from_message",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2305,
+        2334
+      ],
+      "summary": "Getter for type and value from message property.",
+      "tags": [
+        "function",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:handle_message",
+      "type": "function",
+      "name": "handle_message",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2351,
+        2386
+      ],
+      "summary": "Implements the handle_message operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:handle_error",
+      "type": "function",
+      "name": "handle_error",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2390,
+        2409
+      ],
+      "summary": "Implements the handle_error operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_read_promise_done",
+      "type": "function",
+      "name": "get_read_promise_done",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2413,
+        2424
+      ],
+      "summary": "Getter for read promise done property.",
+      "tags": [
+        "function",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:get_read_promise_bytes",
+      "type": "function",
+      "name": "get_read_promise_bytes",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2427,
+        2445
+      ],
+      "summary": "Getter for read promise bytes property.",
+      "tags": [
+        "function",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:bytes_from_chunk_jsval",
+      "type": "function",
+      "name": "bytes_from_chunk_jsval",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2450,
+        2459
+      ],
+      "summary": "Implements the bytes_from_chunk_jsval operation within the stream protocol.",
+      "tags": [
+        "function",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:transfer",
+      "type": "function",
+      "name": "transfer",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2467,
+        2504
+      ],
+      "summary": "Prepares the object for transfer across realm boundaries, serializing its state.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestream.rs:transfer_receive",
+      "type": "function",
+      "name": "transfer_receive",
+      "filePath": "components/script/dom/stream/readablestream.rs",
+      "lineRange": [
+        2507,
+        2528
+      ],
+      "summary": "Reconstructs the stream object from transferred state in a new realm.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/bytelengthqueuingstrategy.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/byteteereadintorequest.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/byteteereadrequest.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/byteteeunderlyingsource.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/compressionstream.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/countqueuingstrategy.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/decompressionstream.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/defaultteereadrequest.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/defaultteeunderlyingsource.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/readablestream.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/readablestreambyobreader.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/readablestreambyobrequest.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/readablestreamdefaultcontroller.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/readablestreamgenericreader.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/transformstream.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/transformstreamdefaultcontroller.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/underlyingsourcecontainer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/writablestream.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/writablestreamdefaultcontroller.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/stream/writablestreamdefaultwriter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "class:components/script/dom/stream/readablebytestreamcontroller.rs:QueueEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "class:components/script/dom/stream/readablebytestreamcontroller.rs:QueueEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "class:components/script/dom/stream/readablebytestreamcontroller.rs:ReaderType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "class:components/script/dom/stream/readablebytestreamcontroller.rs:ReaderType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "class:components/script/dom/stream/readablebytestreamcontroller.rs:PullIntoDescriptor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "class:components/script/dom/stream/readablebytestreamcontroller.rs:PullIntoDescriptor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "class:components/script/dom/stream/readablebytestreamcontroller.rs:ReadableByteStreamController",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "class:components/script/dom/stream/readablebytestreamcontroller.rs:ReadableByteStreamController",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:new@57",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:new@57",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:callback@116",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:callback@159",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:new@252",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:new@252",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:set_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:set_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_pull_into",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_pull_into",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_internal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_in_closed_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_in_readable_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_with_new_view",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:respond_with_new_view",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_desired_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_desired_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_byob_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_byob_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:close",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:reset_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:reset_queue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:clear_pending_pull_intos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:clear_pending_pull_intos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:invalidate_byob_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:invalidate_byob_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:commit_pull_into_descriptor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:convert_pull_into_descriptor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:convert_pull_into_descriptor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:process_pull_into_descriptors_using_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:process_pull_into_descriptors_using_queue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_pull_into_descriptor_from_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_pull_into_descriptor_from_queue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_head_pull_into_descriptor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_head_pull_into_descriptor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_detached_pull_into_to_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_detached_pull_into_to_queue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_cloned_chunk_to_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_cloned_chunk_to_queue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_chunk_to_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:enqueue_chunk_to_queue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:in_memory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:in_memory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_in_memory_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_in_memory_bytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:shift_pending_pull_into",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:shift_pending_pull_into",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:process_read_requests_using_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:process_read_requests_using_queue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_read_request_from_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:fill_read_request_from_queue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:handle_queue_drain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:handle_queue_drain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:call_pull_if_needed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:should_call_pull",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:setup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:setup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_release_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_release_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_cancel_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_cancel_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_pull_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:perform_pull_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:set_underlying_source_this_object",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:set_underlying_source_this_object",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:remove_entry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:remove_entry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_queue_total_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_queue_total_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_pending_pull_intos_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:get_pending_pull_intos_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:Close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablebytestreamcontroller.rs",
+      "target": "function:components/script/dom/stream/readablebytestreamcontroller.rs:Enqueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:PipeTo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:PipeTo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:ReadableStreamState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:ReadableStreamState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:ControllerType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:ControllerType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:ReaderType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:ReaderType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:ReadableStream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:ReadableStream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:CrossRealmTransformReadable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "class:components/script/dom/stream/readablestream.rs:CrossRealmTransformReadable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:abort_with_reason",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:abort_with_reason",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:callback@215",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:wait_for_writer_ready",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:read_chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:write_chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:wait_on_pending_write",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:check_and_propagate_errors_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:check_and_propagate_errors_backward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:check_and_propagate_closing_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:check_and_propagate_closing_backward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:shutdown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:perform_action",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:finalize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:create_readable_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:create_readable_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:readable_byte_stream_tee",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_with_proto",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_default_controller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_default_controller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_byte_controller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_byte_controller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:assert_no_controller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:assert_no_controller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_from_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_from_bytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_from_bytes_with_byte_reading_support",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_from_bytes_with_byte_reading_support",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_with_external_underlying_source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_with_external_underlying_source",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_with_external_underlying_byte_source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:new_with_external_underlying_byte_source",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:perform_release_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:perform_release_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:perform_pull_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:perform_pull_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:perform_pull_into",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:perform_pull_into",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:add_read_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:add_read_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:add_read_into_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:add_read_into_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:enqueue_native",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:enqueue_native",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_stored_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_stored_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:error_native",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:error_native",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:controller_close_native",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:controller_close_native",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:in_memory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:in_memory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_in_memory_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_in_memory_bytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:acquire_default_reader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:acquire_default_reader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:acquire_byob_reader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:acquire_byob_reader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_default_controller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_default_controller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_byte_controller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_byte_controller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_default_reader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_default_reader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:read_a_chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:read_a_chunk",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:stop_reading",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:stop_reading",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_locked",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_locked",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_disturbed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_disturbed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_is_disturbed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_is_disturbed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_closed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_closed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_errored",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_errored",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_readable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:is_readable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:has_default_reader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:has_default_reader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:has_byob_reader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:has_byob_reader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:has_byte_controller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:has_byte_controller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_num_read_requests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_num_read_requests",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_num_read_into_requests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_num_read_into_requests",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:fulfill_read_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:fulfill_read_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:fulfill_read_into_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:fulfill_read_into_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:close",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:cancel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:cancel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_reader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_reader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:byte_tee",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:default_tee",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:pipe_to",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:pipe_to",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:tee",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:tee",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:set_up_byte_controller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:setup_cross_realm_transform_readable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:setup_cross_realm_transform_readable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:Cancel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:GetReader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:PipeTo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:PipeTo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:PipeThrough",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_type_and_value_from_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_type_and_value_from_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:handle_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:handle_message",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:handle_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:handle_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_read_promise_done",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_read_promise_done",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_read_promise_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:get_read_promise_bytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:bytes_from_chunk_jsval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:bytes_from_chunk_jsval",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:transfer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestream.rs",
+      "target": "function:components/script/dom/stream/readablestream.rs:transfer_receive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/mod.rs",
+      "target": "file:components/script/dom/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

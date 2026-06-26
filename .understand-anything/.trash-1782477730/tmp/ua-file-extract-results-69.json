@@ -1,0 +1,6674 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/script/dom/security/csp.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 501,
+      "nonEmptyLines": 451,
+      "functions": [
+        {
+          "name": "is_js_evaluation_allowed",
+          "startLine": 90,
+          "endLine": 100,
+          "params": [
+            "global",
+            "source"
+          ]
+        },
+        {
+          "name": "is_wasm_evaluation_allowed",
+          "startLine": 103,
+          "endLine": 113,
+          "params": [
+            "global"
+          ]
+        },
+        {
+          "name": "should_navigation_request_be_blocked",
+          "startLine": 116,
+          "endLine": 166,
+          "params": [
+            "cx",
+            "global",
+            "load_data",
+            "element"
+          ]
+        },
+        {
+          "name": "should_navigation_response_to_navigation_request_be_blocked",
+          "startLine": 169,
+          "endLine": 226,
+          "params": [
+            "window",
+            "url",
+            "self_origin"
+          ]
+        },
+        {
+          "name": "should_elements_inline_type_behavior_be_blocked",
+          "startLine": 229,
+          "endLine": 255,
+          "params": [
+            "global",
+            "el",
+            "type_",
+            "source",
+            "current_line"
+          ]
+        },
+        {
+          "name": "is_trusted_type_policy_creation_allowed",
+          "startLine": 258,
+          "endLine": 274,
+          "params": [
+            "global",
+            "policy_name",
+            "created_policy_names"
+          ]
+        },
+        {
+          "name": "does_sink_type_require_trusted_types",
+          "startLine": 277,
+          "endLine": 287,
+          "params": [
+            "sink_group",
+            "include_report_only_policies"
+          ]
+        },
+        {
+          "name": "should_sink_type_mismatch_violation_be_blocked_by_csp",
+          "startLine": 290,
+          "endLine": 307,
+          "params": [
+            "global",
+            "sink",
+            "sink_group",
+            "source"
+          ]
+        },
+        {
+          "name": "is_base_allowed_for_document",
+          "startLine": 310,
+          "endLine": 326,
+          "params": [
+            "global",
+            "base",
+            "self_origin"
+          ]
+        },
+        {
+          "name": "concatenate",
+          "startLine": 328,
+          "endLine": 340,
+          "params": [
+            "new_csp_list"
+          ]
+        },
+        {
+          "name": "compute_scripted_caller_source_position",
+          "startLine": 359,
+          "endLine": 372,
+          "params": []
+        },
+        {
+          "name": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "startLine": 375,
+          "endLine": 399,
+          "params": [
+            "resource"
+          ]
+        },
+        {
+          "name": "report_csp_violations",
+          "startLine": 403,
+          "endLine": 464,
+          "params": [
+            "violations",
+            "element",
+            "source_position"
+          ]
+        },
+        {
+          "name": "parse_and_potentially_append_to_csp_list",
+          "startLine": 467,
+          "endLine": 483,
+          "params": [
+            "old_csp_list",
+            "csp_header_iter",
+            "disposition"
+          ]
+        },
+        {
+          "name": "parse_csp_list_from_metadata",
+          "startLine": 486,
+          "endLine": 501,
+          "params": [
+            "headers"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "CspReporting",
+          "startLine": 37,
+          "endLine": 86,
+          "methods": [
+            "is_js_evaluation_allowed",
+            "is_wasm_evaluation_allowed",
+            "should_navigation_request_be_blocked",
+            "should_navigation_response_to_navigation_request_be_blocked",
+            "should_elements_inline_type_behavior_be_blocked",
+            "is_trusted_type_policy_creation_allowed",
+            "does_sink_type_require_trusted_types",
+            "should_sink_type_mismatch_violation_be_blocked_by_csp",
+            "is_base_allowed_for_document",
+            "concatenate"
+          ],
+          "properties": []
+        },
+        {
+          "name": "SourcePosition",
+          "startLine": 343,
+          "endLine": 347,
+          "methods": [],
+          "properties": [
+            "source_file",
+            "line_number",
+            "column_number"
+          ]
+        },
+        {
+          "name": "GlobalCspReporting",
+          "startLine": 349,
+          "endLine": 356,
+          "methods": [
+            "report_csp_violations"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "CspReporting",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "SourcePosition",
+          "line": 343,
+          "isDefault": false
+        },
+        {
+          "name": "GlobalCspReporting",
+          "line": 349,
+          "isDefault": false
+        },
+        {
+          "name": "parse_csp_list_from_metadata",
+          "line": 486,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "is_js_evaluation_allowed",
+          "callee": "csp_list.is_js_evaluation_allowed",
+          "lineNumber": 95
+        },
+        {
+          "caller": "is_js_evaluation_allowed",
+          "callee": "global.report_csp_violations",
+          "lineNumber": 97
+        },
+        {
+          "caller": "is_wasm_evaluation_allowed",
+          "callee": "csp_list.is_wasm_evaluation_allowed",
+          "lineNumber": 108
+        },
+        {
+          "caller": "is_wasm_evaluation_allowed",
+          "callee": "global.report_csp_violations",
+          "lineNumber": 110
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "load_data.url.clone().into_url",
+          "lineNumber": 127
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "load_data.url.clone",
+          "lineNumber": 127
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "load_data.url.clone().into_url",
+          "lineNumber": 129
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "load_data.url.clone",
+          "lineNumber": 129
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "origin.immutable().clone().into_url_origin",
+          "lineNumber": 131
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "origin.immutable().clone",
+          "lineNumber": 131
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "origin.immutable",
+          "lineNumber": 131
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "Origin::new_opaque",
+          "lineNumber": 132
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "\"\".to_owned",
+          "lineNumber": 138
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "\"\".to_owned",
+          "lineNumber": 139
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "csp_list.should_navigation_request_be_blocked",
+          "lineNumber": 143
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "TrustedScript::get_trusted_type_compliant_string(\n                    cx,\n                    global,\n                    TrustedScriptOrString::String(script_source.into()),\n                    \"Location href\",\n                )\n                .ok().map",
+          "lineNumber": 149
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "TrustedScript::get_trusted_type_compliant_string(\n                    cx,\n                    global,\n                    TrustedScriptOrString::String(script_source.into()),\n                    \"Location href\",\n                ).ok",
+          "lineNumber": 149
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "TrustedScript::get_trusted_type_compliant_string",
+          "lineNumber": 149
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "TrustedScriptOrString::String",
+          "lineNumber": 152
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "script_source.into",
+          "lineNumber": 152
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "s.into",
+          "lineNumber": 156
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "request.url.into",
+          "lineNumber": 161
+        },
+        {
+          "caller": "should_navigation_request_be_blocked",
+          "callee": "global.report_csp_violations",
+          "lineNumber": 163
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "window.window_proxy",
+          "lineNumber": 179
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "window_proxy.frame_element",
+          "lineNumber": 183
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "container_element.owner_document",
+          "lineNumber": 184
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "Url::parse(\n                    &container_document\n                        .origin()\n                        .immutable()\n                        .ascii_serialization(),\n                ).expect",
+          "lineNumber": 185
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "Url::parse",
+          "lineNumber": 185
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "container_document\n                        .origin()\n                        .immutable().ascii_serialization",
+          "lineNumber": 186
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "container_document\n                        .origin().immutable",
+          "lineNumber": 186
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "container_document.origin",
+          "lineNumber": 186
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "parent_navigable_origins.push",
+          "lineNumber": 192
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "container_document.window().window_proxy",
+          "lineNumber": 193
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "container_document.window",
+          "lineNumber": 193
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "window_proxy.parent",
+          "lineNumber": 197
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "parent_proxy.document_origin",
+          "lineNumber": 198
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "Url::parse(&parent_origin).expect",
+          "lineNumber": 201
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "Url::parse",
+          "lineNumber": 201
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "parent_navigable_origins.push",
+          "lineNumber": 203
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 204
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "csp_list.should_navigation_response_to_navigation_request_be_blocked",
+          "lineNumber": 211
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "window\n            .as_global_scope().report_csp_violations",
+          "lineNumber": 221
+        },
+        {
+          "caller": "should_navigation_response_to_navigation_request_be_blocked",
+          "callee": "window.as_global_scope",
+          "lineNumber": 221
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "el.is_nonceable",
+          "lineNumber": 241
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "Some",
+          "lineNumber": 242
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "Cow::Owned",
+          "lineNumber": 242
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "el.nonce_value().trim().to_owned",
+          "lineNumber": 242
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "el.nonce_value().trim",
+          "lineNumber": 242
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "el.nonce_value",
+          "lineNumber": 242
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "csp_list.should_elements_inline_type_behavior_be_blocked",
+          "lineNumber": 248
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "el.compute_source_position",
+          "lineNumber": 250
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "current_line.saturating_sub(2).max",
+          "lineNumber": 250
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "current_line.saturating_sub",
+          "lineNumber": 250
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "global.report_csp_violations",
+          "lineNumber": 252
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "Some",
+          "lineNumber": 252
+        },
+        {
+          "caller": "should_elements_inline_type_behavior_be_blocked",
+          "callee": "Some",
+          "lineNumber": 252
+        },
+        {
+          "caller": "is_trusted_type_policy_creation_allowed",
+          "callee": "csp_list.is_trusted_type_policy_creation_allowed",
+          "lineNumber": 269
+        },
+        {
+          "caller": "is_trusted_type_policy_creation_allowed",
+          "callee": "global.report_csp_violations",
+          "lineNumber": 271
+        },
+        {
+          "caller": "does_sink_type_require_trusted_types",
+          "callee": "csp_list.does_sink_type_require_trusted_types",
+          "lineNumber": 286
+        },
+        {
+          "caller": "should_sink_type_mismatch_violation_be_blocked_by_csp",
+          "callee": "csp_list.should_sink_type_mismatch_violation_be_blocked_by_csp",
+          "lineNumber": 301
+        },
+        {
+          "caller": "should_sink_type_mismatch_violation_be_blocked_by_csp",
+          "callee": "global.report_csp_violations",
+          "lineNumber": 304
+        },
+        {
+          "caller": "is_base_allowed_for_document",
+          "callee": "csp_list.is_base_allowed_for_document",
+          "lineNumber": 321
+        },
+        {
+          "caller": "is_base_allowed_for_document",
+          "callee": "global.report_csp_violations",
+          "lineNumber": 323
+        },
+        {
+          "caller": "concatenate",
+          "callee": "Some",
+          "lineNumber": 334
+        },
+        {
+          "caller": "concatenate",
+          "callee": "old_csp_list.append",
+          "lineNumber": 336
+        },
+        {
+          "caller": "concatenate",
+          "callee": "Some",
+          "lineNumber": 337
+        },
+        {
+          "caller": "compute_scripted_caller_source_position",
+          "callee": "describe_scripted_caller",
+          "lineNumber": 360
+        },
+        {
+          "caller": "compute_scripted_caller_source_position",
+          "callee": "GlobalScope::get_cx",
+          "lineNumber": 360
+        },
+        {
+          "caller": "compute_scripted_caller_source_position",
+          "callee": "String::new",
+          "lineNumber": 367
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "\"inline\".to_owned",
+          "lineNumber": 384
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "Some",
+          "lineNumber": 387
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "String::new",
+          "lineNumber": 387
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "ReportingObserver::strip_url_for_reports",
+          "lineNumber": 388
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "url.into",
+          "lineNumber": 388
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "Some",
+          "lineNumber": 391
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "\"trusted-types-policy\".to_owned",
+          "lineNumber": 391
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "Some",
+          "lineNumber": 394
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "\"trusted-types-sink\".to_owned",
+          "lineNumber": 394
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "\"eval\".to_owned",
+          "lineNumber": 396
+        },
+        {
+          "caller": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "callee": "\"wasm-eval\".to_owned",
+          "lineNumber": 397
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "violations.is_empty",
+          "lineNumber": 409
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "source_position.unwrap_or_else",
+          "lineNumber": 414
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "obtain_blocked_uri_for_violation_resource_with_sample",
+          "lineNumber": 417
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default()\n                .resource(resource)\n                .sample(sample)\n                .effective_directive(violation.directive.name)\n                .original_policy(violation.policy.to_string())\n                .report_only(violation.policy.disposition == PolicyDisposition::Report)\n                .source_file(source_position.source_file.clone())\n                .line_number(source_position.line_number)\n                .column_number(source_position.column_number).build",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default()\n                .resource(resource)\n                .sample(sample)\n                .effective_directive(violation.directive.name)\n                .original_policy(violation.policy.to_string())\n                .report_only(violation.policy.disposition == PolicyDisposition::Report)\n                .source_file(source_position.source_file.clone())\n                .line_number(source_position.line_number).column_number",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default()\n                .resource(resource)\n                .sample(sample)\n                .effective_directive(violation.directive.name)\n                .original_policy(violation.policy.to_string())\n                .report_only(violation.policy.disposition == PolicyDisposition::Report)\n                .source_file(source_position.source_file.clone()).line_number",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default()\n                .resource(resource)\n                .sample(sample)\n                .effective_directive(violation.directive.name)\n                .original_policy(violation.policy.to_string())\n                .report_only(violation.policy.disposition == PolicyDisposition::Report).source_file",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default()\n                .resource(resource)\n                .sample(sample)\n                .effective_directive(violation.directive.name)\n                .original_policy(violation.policy.to_string()).report_only",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default()\n                .resource(resource)\n                .sample(sample)\n                .effective_directive(violation.directive.name).original_policy",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default()\n                .resource(resource)\n                .sample(sample).effective_directive",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default()\n                .resource(resource).sample",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default().resource",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportBuilder::default",
+          "lineNumber": 418
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "violation.policy.to_string",
+          "lineNumber": 422
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "source_position.source_file.clone",
+          "lineNumber": 424
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "element.and_then",
+          "lineNumber": 431
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "self.downcast::<Window>",
+          "lineNumber": 434
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "event_target.upcast::<Node>().owner_document",
+          "lineNumber": 438
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "event_target.upcast::<Node>",
+          "lineNumber": 438
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "window.Document",
+          "lineNumber": 438
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "Some",
+          "lineNumber": 442
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "self.downcast::<Window>",
+          "lineNumber": 448
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "Trusted::new",
+          "lineNumber": 449
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "window.Document().upcast",
+          "lineNumber": 449
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "window.Document",
+          "lineNumber": 449
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "Trusted::new",
+          "lineNumber": 452
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "self.upcast",
+          "lineNumber": 452
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "Trusted::new",
+          "lineNumber": 455
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "event_target.upcast",
+          "lineNumber": 455
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "CSPViolationReportTask::new",
+          "lineNumber": 459
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "Trusted::new",
+          "lineNumber": 459
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "self.task_manager()\n                .dom_manipulation_task_source().queue",
+          "lineNumber": 460
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "self.task_manager().dom_manipulation_task_source",
+          "lineNumber": 460
+        },
+        {
+          "caller": "report_csp_violations",
+          "callee": "self.task_manager",
+          "lineNumber": 460
+        },
+        {
+          "caller": "parse_and_potentially_append_to_csp_list",
+          "callee": "header\n            .to_str()\n            .ok().map",
+          "lineNumber": 476
+        },
+        {
+          "caller": "parse_and_potentially_append_to_csp_list",
+          "callee": "header\n            .to_str().ok",
+          "lineNumber": 476
+        },
+        {
+          "caller": "parse_and_potentially_append_to_csp_list",
+          "callee": "header.to_str",
+          "lineNumber": 476
+        },
+        {
+          "caller": "parse_and_potentially_append_to_csp_list",
+          "callee": "CspList::parse",
+          "lineNumber": 479
+        },
+        {
+          "caller": "parse_and_potentially_append_to_csp_list",
+          "callee": "csp_list.concatenate",
+          "lineNumber": 480
+        },
+        {
+          "caller": "parse_csp_list_from_metadata",
+          "callee": "headers.as_ref",
+          "lineNumber": 487
+        },
+        {
+          "caller": "parse_csp_list_from_metadata",
+          "callee": "parse_and_potentially_append_to_csp_list",
+          "lineNumber": 488
+        },
+        {
+          "caller": "parse_csp_list_from_metadata",
+          "callee": "headers.get_all(\"content-security-policy\").iter",
+          "lineNumber": 490
+        },
+        {
+          "caller": "parse_csp_list_from_metadata",
+          "callee": "headers.get_all",
+          "lineNumber": 490
+        },
+        {
+          "caller": "parse_csp_list_from_metadata",
+          "callee": "parse_and_potentially_append_to_csp_list",
+          "lineNumber": 494
+        },
+        {
+          "caller": "parse_csp_list_from_metadata",
+          "callee": "headers\n            .get_all(\"content-security-policy-report-only\").iter",
+          "lineNumber": 496
+        },
+        {
+          "caller": "parse_csp_list_from_metadata",
+          "callee": "headers.get_all",
+          "lineNumber": 496
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 15,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "components/script/dom/security/csppolicyviolationreport.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 263,
+      "nonEmptyLines": 240,
+      "functions": [
+        {
+          "name": "convert",
+          "startLine": 63,
+          "endLine": 79,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 83,
+          "endLine": 110,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 115,
+          "endLine": 149,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "report_only",
+          "startLine": 172,
+          "endLine": 175,
+          "params": [
+            "report_only"
+          ]
+        },
+        {
+          "name": "sample",
+          "startLine": 178,
+          "endLine": 181,
+          "params": [
+            "sample"
+          ]
+        },
+        {
+          "name": "resource",
+          "startLine": 184,
+          "endLine": 187,
+          "params": [
+            "resource"
+          ]
+        },
+        {
+          "name": "line_number",
+          "startLine": 190,
+          "endLine": 193,
+          "params": [
+            "line_number"
+          ]
+        },
+        {
+          "name": "column_number",
+          "startLine": 196,
+          "endLine": 199,
+          "params": [
+            "column_number"
+          ]
+        },
+        {
+          "name": "source_file",
+          "startLine": 202,
+          "endLine": 205,
+          "params": [
+            "source_file"
+          ]
+        },
+        {
+          "name": "effective_directive",
+          "startLine": 208,
+          "endLine": 211,
+          "params": [
+            "effective_directive"
+          ]
+        },
+        {
+          "name": "original_policy",
+          "startLine": 214,
+          "endLine": 217,
+          "params": [
+            "original_policy"
+          ]
+        },
+        {
+          "name": "build",
+          "startLine": 220,
+          "endLine": 252,
+          "params": [
+            "global"
+          ]
+        },
+        {
+          "name": "serialize_disposition",
+          "startLine": 255,
+          "endLine": 263,
+          "params": [
+            "val",
+            "serializer"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "SecurityPolicyViolationReport",
+          "startLine": 23,
+          "endLine": 36,
+          "methods": [
+            "convert",
+            "convert"
+          ],
+          "properties": [
+            "sample",
+            "blocked_url",
+            "referrer",
+            "status_code",
+            "document_url",
+            "source_file",
+            "violated_directive",
+            "effective_directive",
+            "line_number",
+            "column_number",
+            "original_policy",
+            "disposition"
+          ]
+        },
+        {
+          "name": "CSPReportUriViolationReportBody",
+          "startLine": 40,
+          "endLine": 54,
+          "methods": [
+            "from"
+          ],
+          "properties": [
+            "document_uri",
+            "referrer",
+            "blocked_uri",
+            "effective_directive",
+            "violated_directive",
+            "original_policy",
+            "disposition",
+            "status_code",
+            "script_sample",
+            "source_file",
+            "line_number",
+            "column_number"
+          ]
+        },
+        {
+          "name": "CSPReportUriViolationReport",
+          "startLine": 58,
+          "endLine": 60,
+          "methods": [],
+          "properties": [
+            "csp_report"
+          ]
+        },
+        {
+          "name": "CSPViolationReportBuilder",
+          "startLine": 153,
+          "endLine": 169,
+          "methods": [
+            "report_only",
+            "sample",
+            "resource",
+            "line_number",
+            "column_number",
+            "source_file",
+            "effective_directive",
+            "original_policy",
+            "build"
+          ],
+          "properties": [
+            "report_only",
+            "sample",
+            "resource",
+            "line_number",
+            "column_number",
+            "source_file",
+            "effective_directive",
+            "original_policy"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SecurityPolicyViolationReport",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "CSPReportUriViolationReportBody",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "CSPReportUriViolationReport",
+          "line": 58,
+          "isDefault": false
+        },
+        {
+          "name": "CSPViolationReportBuilder",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "report_only",
+          "line": 172,
+          "isDefault": false
+        },
+        {
+          "name": "sample",
+          "line": 178,
+          "isDefault": false
+        },
+        {
+          "name": "resource",
+          "line": 184,
+          "isDefault": false
+        },
+        {
+          "name": "line_number",
+          "line": 190,
+          "isDefault": false
+        },
+        {
+          "name": "column_number",
+          "line": 196,
+          "isDefault": false
+        },
+        {
+          "name": "source_file",
+          "line": 202,
+          "isDefault": false
+        },
+        {
+          "name": "effective_directive",
+          "line": 208,
+          "isDefault": false
+        },
+        {
+          "name": "original_policy",
+          "line": 214,
+          "isDefault": false
+        },
+        {
+          "name": "build",
+          "line": 220,
+          "isDefault": false
+        },
+        {
+          "name": "serialize_disposition",
+          "line": 255,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "convert",
+          "callee": "self.sample.unwrap_or_default().into",
+          "lineNumber": 65
+        },
+        {
+          "caller": "convert",
+          "callee": "self.sample.unwrap_or_default",
+          "lineNumber": 65
+        },
+        {
+          "caller": "convert",
+          "callee": "self.blocked_url.into",
+          "lineNumber": 66
+        },
+        {
+          "caller": "convert",
+          "callee": "self.referrer.into",
+          "lineNumber": 67
+        },
+        {
+          "caller": "convert",
+          "callee": "self.document_url.into",
+          "lineNumber": 69
+        },
+        {
+          "caller": "convert",
+          "callee": "self.source_file.into",
+          "lineNumber": 70
+        },
+        {
+          "caller": "convert",
+          "callee": "self.violated_directive.into",
+          "lineNumber": 71
+        },
+        {
+          "caller": "convert",
+          "callee": "self.effective_directive.into",
+          "lineNumber": 72
+        },
+        {
+          "caller": "convert",
+          "callee": "self.original_policy.into",
+          "lineNumber": 75
+        },
+        {
+          "caller": "convert",
+          "callee": "EventInit::empty",
+          "lineNumber": 77
+        },
+        {
+          "caller": "convert",
+          "callee": "self.source_file.is_empty",
+          "lineNumber": 84
+        },
+        {
+          "caller": "convert",
+          "callee": "Some",
+          "lineNumber": 86
+        },
+        {
+          "caller": "convert",
+          "callee": "self.source_file.into",
+          "lineNumber": 86
+        },
+        {
+          "caller": "convert",
+          "callee": "Some",
+          "lineNumber": 87
+        },
+        {
+          "caller": "convert",
+          "callee": "Some",
+          "lineNumber": 88
+        },
+        {
+          "caller": "convert",
+          "callee": "self.sample.map",
+          "lineNumber": 94
+        },
+        {
+          "caller": "convert",
+          "callee": "s.into",
+          "lineNumber": 94
+        },
+        {
+          "caller": "convert",
+          "callee": "Some",
+          "lineNumber": 95
+        },
+        {
+          "caller": "convert",
+          "callee": "self.blocked_url.into",
+          "lineNumber": 95
+        },
+        {
+          "caller": "convert",
+          "callee": "Some",
+          "lineNumber": 99
+        },
+        {
+          "caller": "convert",
+          "callee": "\"\".to_owned().into",
+          "lineNumber": 99
+        },
+        {
+          "caller": "convert",
+          "callee": "\"\".to_owned",
+          "lineNumber": 99
+        },
+        {
+          "caller": "convert",
+          "callee": "self.document_url.into",
+          "lineNumber": 101
+        },
+        {
+          "caller": "convert",
+          "callee": "self.effective_directive.into",
+          "lineNumber": 103
+        },
+        {
+          "caller": "convert",
+          "callee": "self.original_policy.into",
+          "lineNumber": 106
+        },
+        {
+          "caller": "convert",
+          "callee": "ReportBody::empty",
+          "lineNumber": 108
+        },
+        {
+          "caller": "from",
+          "callee": "value.source_file.is_empty",
+          "lineNumber": 133
+        },
+        {
+          "caller": "from",
+          "callee": "ServoUrl::parse(&value.source_file)\n                .map(ReportingObserver::strip_url_for_reports).ok",
+          "lineNumber": 136
+        },
+        {
+          "caller": "from",
+          "callee": "ServoUrl::parse(&value.source_file).map",
+          "lineNumber": 136
+        },
+        {
+          "caller": "from",
+          "callee": "ServoUrl::parse",
+          "lineNumber": 136
+        },
+        {
+          "caller": "from",
+          "callee": "Some",
+          "lineNumber": 140
+        },
+        {
+          "caller": "from",
+          "callee": "Some",
+          "lineNumber": 142
+        },
+        {
+          "caller": "build",
+          "callee": "self.effective_directive.clone",
+          "lineNumber": 230
+        },
+        {
+          "caller": "build",
+          "callee": "self.effective_directive.clone",
+          "lineNumber": 231
+        },
+        {
+          "caller": "build",
+          "callee": "ReportingObserver::strip_url_for_reports",
+          "lineNumber": 232
+        },
+        {
+          "caller": "build",
+          "callee": "global.get_url",
+          "lineNumber": 232
+        },
+        {
+          "caller": "build",
+          "callee": "global\n                .downcast::<Window>()\n                .map(|window| window.Document().Referrer().into()).unwrap_or_default",
+          "lineNumber": 238
+        },
+        {
+          "caller": "build",
+          "callee": "global\n                .downcast::<Window>().map",
+          "lineNumber": 238
+        },
+        {
+          "caller": "build",
+          "callee": "global\n                .downcast::<Window>",
+          "lineNumber": 238
+        },
+        {
+          "caller": "build",
+          "callee": "window.Document().Referrer().into",
+          "lineNumber": 240
+        },
+        {
+          "caller": "build",
+          "callee": "window.Document().Referrer",
+          "lineNumber": 240
+        },
+        {
+          "caller": "build",
+          "callee": "window.Document",
+          "lineNumber": 240
+        },
+        {
+          "caller": "build",
+          "callee": "global.status_code().unwrap_or",
+          "lineNumber": 250
+        },
+        {
+          "caller": "build",
+          "callee": "global.status_code",
+          "lineNumber": 250
+        },
+        {
+          "caller": "serialize_disposition",
+          "callee": "serializer.serialize_str",
+          "lineNumber": 260
+        },
+        {
+          "caller": "serialize_disposition",
+          "callee": "serializer.serialize_str",
+          "lineNumber": 261
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 14,
+        "functionCount": 13,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "components/script/dom/security/cspviolationreporttask.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 218,
+      "nonEmptyLines": 201,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 41,
+          "endLine": 53,
+          "params": [
+            "global",
+            "event_target",
+            "violation_report",
+            "violation_policy"
+          ]
+        },
+        {
+          "name": "fire_violation_event",
+          "startLine": 55,
+          "endLine": 67,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "serialize_violation",
+          "startLine": 70,
+          "endLine": 79,
+          "params": []
+        },
+        {
+          "name": "post_csp_violation_to_report_uri",
+          "startLine": 82,
+          "endLine": 132,
+          "params": [
+            "report_uri_directive"
+          ]
+        },
+        {
+          "name": "run_once",
+          "startLine": 139,
+          "endLine": 171,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "process_request_body",
+          "startLine": 182,
+          "endLine": 182,
+          "params": [
+            "_"
+          ]
+        },
+        {
+          "name": "process_response",
+          "startLine": 184,
+          "endLine": 191,
+          "params": [
+            "_",
+            "_",
+            "fetch_metadata"
+          ]
+        },
+        {
+          "name": "process_response_chunk",
+          "startLine": 193,
+          "endLine": 195,
+          "params": [
+            "_",
+            "_",
+            "chunk"
+          ]
+        },
+        {
+          "name": "process_response_eof",
+          "startLine": 197,
+          "endLine": 205,
+          "params": [
+            "cx",
+            "_",
+            "response",
+            "timing"
+          ]
+        },
+        {
+          "name": "process_csp_violations",
+          "startLine": 207,
+          "endLine": 207,
+          "params": [
+            "_request_id",
+            "_violations"
+          ]
+        },
+        {
+          "name": "resource_timing_information",
+          "startLine": 211,
+          "endLine": 213,
+          "params": []
+        },
+        {
+          "name": "resource_timing_global",
+          "startLine": 215,
+          "endLine": 217,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "CSPViolationReportTask",
+          "startLine": 33,
+          "endLine": 38,
+          "methods": [
+            "new",
+            "fire_violation_event",
+            "serialize_violation",
+            "post_csp_violation_to_report_uri",
+            "run_once"
+          ],
+          "properties": [
+            "global",
+            "event_target",
+            "violation_report",
+            "violation_policy"
+          ]
+        },
+        {
+          "name": "CSPReportUriFetchListener",
+          "startLine": 174,
+          "endLine": 179,
+          "methods": [
+            "process_request_body",
+            "process_response",
+            "process_response_chunk",
+            "process_response_eof",
+            "process_csp_violations",
+            "resource_timing_information",
+            "resource_timing_global"
+          ],
+          "properties": [
+            "endpoint",
+            "global"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "CSPViolationReportTask",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 41,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "fire_violation_event",
+          "callee": "SecurityPolicyViolationEvent::new",
+          "lineNumber": 56
+        },
+        {
+          "caller": "fire_violation_event",
+          "callee": "self.global.root",
+          "lineNumber": 58
+        },
+        {
+          "caller": "fire_violation_event",
+          "callee": "Atom::from",
+          "lineNumber": 59
+        },
+        {
+          "caller": "fire_violation_event",
+          "callee": "self.violation_report.clone().convert",
+          "lineNumber": 63
+        },
+        {
+          "caller": "fire_violation_event",
+          "callee": "self.violation_report.clone",
+          "lineNumber": 63
+        },
+        {
+          "caller": "fire_violation_event",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 66
+        },
+        {
+          "caller": "fire_violation_event",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 66
+        },
+        {
+          "caller": "fire_violation_event",
+          "callee": "self.event_target.root",
+          "lineNumber": 66
+        },
+        {
+          "caller": "serialize_violation",
+          "callee": "self.violation_report.clone().into",
+          "lineNumber": 73
+        },
+        {
+          "caller": "serialize_violation",
+          "callee": "self.violation_report.clone",
+          "lineNumber": 73
+        },
+        {
+          "caller": "serialize_violation",
+          "callee": "Some",
+          "lineNumber": 76
+        },
+        {
+          "caller": "serialize_violation",
+          "callee": "create_request_body_with_content",
+          "lineNumber": 76
+        },
+        {
+          "caller": "serialize_violation",
+          "callee": "serde_json::to_string(&report_body).unwrap_or_default",
+          "lineNumber": 77
+        },
+        {
+          "caller": "serialize_violation",
+          "callee": "serde_json::to_string",
+          "lineNumber": 77
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "self.global.root",
+          "lineNumber": 83
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "self\n            .violation_policy.contains_a_directive_whose_name_is",
+          "lineNumber": 86
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "ServoUrl::parse_with_base",
+          "lineNumber": 99
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "Some",
+          "lineNumber": 99
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "global.get_url",
+          "lineNumber": 99
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "HeaderMap::with_capacity",
+          "lineNumber": 104
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "headers.typed_insert",
+          "lineNumber": 105
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "ContentType::from",
+          "lineNumber": 105
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "\"application/csp-report\".parse::<mime::Mime>().unwrap",
+          "lineNumber": 106
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "\"application/csp-report\".parse::<mime::Mime>",
+          "lineNumber": 106
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "self.serialize_violation",
+          "lineNumber": 108
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "create_a_potential_cors_request(\n                None,\n                endpoint.clone(),\n                Destination::Report,\n                None,\n                None,\n                global.get_referrer(),\n            )\n            .with_global_scope(&global)\n            .method(http::Method::POST)\n            .body(request_body)\n            .credentials_mode(CredentialsMode::CredentialsSameOrigin).headers",
+          "lineNumber": 109
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "create_a_potential_cors_request(\n                None,\n                endpoint.clone(),\n                Destination::Report,\n                None,\n                None,\n                global.get_referrer(),\n            )\n            .with_global_scope(&global)\n            .method(http::Method::POST)\n            .body(request_body).credentials_mode",
+          "lineNumber": 109
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "create_a_potential_cors_request(\n                None,\n                endpoint.clone(),\n                Destination::Report,\n                None,\n                None,\n                global.get_referrer(),\n            )\n            .with_global_scope(&global)\n            .method(http::Method::POST).body",
+          "lineNumber": 109
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "create_a_potential_cors_request(\n                None,\n                endpoint.clone(),\n                Destination::Report,\n                None,\n                None,\n                global.get_referrer(),\n            )\n            .with_global_scope(&global).method",
+          "lineNumber": 109
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "create_a_potential_cors_request(\n                None,\n                endpoint.clone(),\n                Destination::Report,\n                None,\n                None,\n                global.get_referrer(),\n            ).with_global_scope",
+          "lineNumber": 109
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "create_a_potential_cors_request",
+          "lineNumber": 109
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "endpoint.clone",
+          "lineNumber": 111
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "global.get_referrer",
+          "lineNumber": 115
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "global.fetch",
+          "lineNumber": 123
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "Trusted::new",
+          "lineNumber": 127
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "global.task_manager().networking_task_source().into",
+          "lineNumber": 129
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "global.task_manager().networking_task_source",
+          "lineNumber": 129
+        },
+        {
+          "caller": "post_csp_violation_to_report_uri",
+          "callee": "global.task_manager",
+          "lineNumber": 129
+        },
+        {
+          "caller": "run_once",
+          "callee": "self.fire_violation_event",
+          "lineNumber": 143
+        },
+        {
+          "caller": "run_once",
+          "callee": "self\n            .violation_policy\n            .directive_set\n            .iter().find",
+          "lineNumber": 145
+        },
+        {
+          "caller": "run_once",
+          "callee": "self\n            .violation_policy\n            .directive_set.iter",
+          "lineNumber": 145
+        },
+        {
+          "caller": "run_once",
+          "callee": "self.post_csp_violation_to_report_uri",
+          "lineNumber": 151
+        },
+        {
+          "caller": "run_once",
+          "callee": "self\n            .violation_policy\n            .directive_set\n            .iter().find",
+          "lineNumber": 154
+        },
+        {
+          "caller": "run_once",
+          "callee": "self\n            .violation_policy\n            .directive_set.iter",
+          "lineNumber": 154
+        },
+        {
+          "caller": "run_once",
+          "callee": "self.violation_report.clone().convert",
+          "lineNumber": 161
+        },
+        {
+          "caller": "run_once",
+          "callee": "self.violation_report.clone",
+          "lineNumber": 161
+        },
+        {
+          "caller": "run_once",
+          "callee": "ReportingObserver::generate_and_queue_a_report",
+          "lineNumber": 164
+        },
+        {
+          "caller": "run_once",
+          "callee": "self.global.root",
+          "lineNumber": 165
+        },
+        {
+          "caller": "run_once",
+          "callee": "\"csp-violation\".into",
+          "lineNumber": 166
+        },
+        {
+          "caller": "run_once",
+          "callee": "Some",
+          "lineNumber": 167
+        },
+        {
+          "caller": "run_once",
+          "callee": "report_to_directive.value.join(\" \").into",
+          "lineNumber": 168
+        },
+        {
+          "caller": "run_once",
+          "callee": "report_to_directive.value.join",
+          "lineNumber": 168
+        },
+        {
+          "caller": "process_response_eof",
+          "callee": "submit_timing",
+          "lineNumber": 204
+        },
+        {
+          "caller": "resource_timing_information",
+          "callee": "self.endpoint.clone",
+          "lineNumber": 212
+        },
+        {
+          "caller": "resource_timing_global",
+          "callee": "self.global.root",
+          "lineNumber": 216
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 12,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/security/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 10,
+      "nonEmptyLines": 9,
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/security/sanitizer.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 3239,
+      "nonEmptyLines": 2900,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 54,
+          "endLine": 59,
+          "params": [
+            "configuration"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 61,
+          "endLine": 73,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "configuration"
+          ]
+        },
+        {
+          "name": "get_sanitizer_instance_from_options",
+          "startLine": 76,
+          "endLine": 152,
+          "params": [
+            "cx",
+            "window",
+            "options",
+            "safe"
+          ]
+        },
+        {
+          "name": "set_configuration",
+          "startLine": 155,
+          "endLine": 174,
+          "params": [
+            "configuration",
+            "allow_comments_pis_and_data_attributes"
+          ]
+        },
+        {
+          "name": "set_and_filter_html",
+          "startLine": 177,
+          "endLine": 227,
+          "params": [
+            "cx",
+            "target",
+            "context_element",
+            "html",
+            "options",
+            "safe"
+          ]
+        },
+        {
+          "name": "sanitize",
+          "startLine": 230,
+          "endLine": 246,
+          "params": [
+            "cx",
+            "node",
+            "safe"
+          ]
+        },
+        {
+          "name": "sanitize_core",
+          "startLine": 250,
+          "endLine": 621,
+          "params": [
+            "cx",
+            "node",
+            "configuration",
+            "handle_javascript_navigation_urls"
+          ]
+        },
+        {
+          "name": "contains_javascript_url",
+          "startLine": 624,
+          "endLine": 633,
+          "params": [
+            "attribute_value"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 637,
+          "endLine": 664,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "configuration"
+          ]
+        },
+        {
+          "name": "Get",
+          "startLine": 667,
+          "endLine": 776,
+          "params": []
+        },
+        {
+          "name": "AllowElement",
+          "startLine": 779,
+          "endLine": 988,
+          "params": [
+            "cx",
+            "element"
+          ]
+        },
+        {
+          "name": "RemoveElement",
+          "startLine": 991,
+          "endLine": 994,
+          "params": [
+            "element"
+          ]
+        },
+        {
+          "name": "ReplaceElementWithChildren",
+          "startLine": 997,
+          "endLine": 1046,
+          "params": [
+            "element"
+          ]
+        },
+        {
+          "name": "AllowProcessingInstruction",
+          "startLine": 1049,
+          "endLine": 1102,
+          "params": [
+            "processing_instruction"
+          ]
+        },
+        {
+          "name": "RemoveProcessingInstruction",
+          "startLine": 1105,
+          "endLine": 1160,
+          "params": [
+            "processing_instruction"
+          ]
+        },
+        {
+          "name": "AllowAttribute",
+          "startLine": 1163,
+          "endLine": 1249,
+          "params": [
+            "attribute"
+          ]
+        },
+        {
+          "name": "RemoveAttribute",
+          "startLine": 1252,
+          "endLine": 1255,
+          "params": [
+            "attribute"
+          ]
+        },
+        {
+          "name": "SetComments",
+          "startLine": 1258,
+          "endLine": 1279,
+          "params": [
+            "allow"
+          ]
+        },
+        {
+          "name": "SetDataAttributes",
+          "startLine": 1282,
+          "endLine": 1327,
+          "params": [
+            "allow"
+          ]
+        },
+        {
+          "name": "RemoveUnsafe",
+          "startLine": 1330,
+          "endLine": 1334,
+          "params": []
+        },
+        {
+          "name": "is_valid",
+          "startLine": 1356,
+          "endLine": 1664,
+          "params": []
+        },
+        {
+          "name": "remove_element",
+          "startLine": 1667,
+          "endLine": 1730,
+          "params": [
+            "element"
+          ]
+        },
+        {
+          "name": "remove_attribute",
+          "startLine": 1733,
+          "endLine": 1847,
+          "params": [
+            "attribute"
+          ]
+        },
+        {
+          "name": "remove_unsafe",
+          "startLine": 1850,
+          "endLine": 1892,
+          "params": []
+        },
+        {
+          "name": "canonicalize",
+          "startLine": 1895,
+          "endLine": 2032,
+          "params": [
+            "allow_comments_pis_and_data_attributes"
+          ]
+        },
+        {
+          "name": "canonicalize",
+          "startLine": 2045,
+          "endLine": 2116,
+          "params": []
+        },
+        {
+          "name": "canonicalize",
+          "startLine": 2121,
+          "endLine": 2125,
+          "params": []
+        },
+        {
+          "name": "canonicalize",
+          "startLine": 2129,
+          "endLine": 2152,
+          "params": []
+        },
+        {
+          "name": "canonicalize",
+          "startLine": 2157,
+          "endLine": 2161,
+          "params": []
+        },
+        {
+          "name": "new_dictionary",
+          "startLine": 2207,
+          "endLine": 2209,
+          "params": [
+            "name",
+            "namespace"
+          ]
+        },
+        {
+          "name": "is_string",
+          "startLine": 2211,
+          "endLine": 2213,
+          "params": []
+        },
+        {
+          "name": "is_dictionary",
+          "startLine": 2215,
+          "endLine": 2217,
+          "params": []
+        },
+        {
+          "name": "new_dictionary",
+          "startLine": 2221,
+          "endLine": 2226,
+          "params": [
+            "name",
+            "namespace"
+          ]
+        },
+        {
+          "name": "is_string",
+          "startLine": 2228,
+          "endLine": 2230,
+          "params": []
+        },
+        {
+          "name": "is_dictionary",
+          "startLine": 2232,
+          "endLine": 2234,
+          "params": []
+        },
+        {
+          "name": "contains_item",
+          "startLine": 2261,
+          "endLine": 2267,
+          "params": [
+            "other"
+          ]
+        },
+        {
+          "name": "has_duplicates",
+          "startLine": 2270,
+          "endLine": 2280,
+          "params": []
+        },
+        {
+          "name": "is_intersection_non_empty",
+          "startLine": 2285,
+          "endLine": 2309,
+          "params": [
+            "others"
+          ]
+        },
+        {
+          "name": "remove_item",
+          "startLine": 2342,
+          "endLine": 2360,
+          "params": [
+            "item"
+          ]
+        },
+        {
+          "name": "add_item",
+          "startLine": 2363,
+          "endLine": 2371,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "remove_duplicates",
+          "startLine": 2374,
+          "endLine": 2381,
+          "params": []
+        },
+        {
+          "name": "intersection",
+          "startLine": 2386,
+          "endLine": 2397,
+          "params": [
+            "others"
+          ]
+        },
+        {
+          "name": "difference",
+          "startLine": 2402,
+          "endLine": 2410,
+          "params": [
+            "others"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 2482,
+          "endLine": 2489,
+          "params": []
+        },
+        {
+          "name": "name_mut",
+          "startLine": 2491,
+          "endLine": 2498,
+          "params": []
+        },
+        {
+          "name": "namespace",
+          "startLine": 2500,
+          "endLine": 2507,
+          "params": []
+        },
+        {
+          "name": "namespace_mut",
+          "startLine": 2509,
+          "endLine": 2516,
+          "params": []
+        },
+        {
+          "name": "set_namespace",
+          "startLine": 2518,
+          "endLine": 2538,
+          "params": [
+            "namespace"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 2542,
+          "endLine": 2547,
+          "params": []
+        },
+        {
+          "name": "name_mut",
+          "startLine": 2549,
+          "endLine": 2554,
+          "params": []
+        },
+        {
+          "name": "namespace",
+          "startLine": 2556,
+          "endLine": 2563,
+          "params": []
+        },
+        {
+          "name": "namespace_mut",
+          "startLine": 2565,
+          "endLine": 2572,
+          "params": []
+        },
+        {
+          "name": "set_namespace",
+          "startLine": 2574,
+          "endLine": 2588,
+          "params": [
+            "namespace"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 2592,
+          "endLine": 2597,
+          "params": []
+        },
+        {
+          "name": "name_mut",
+          "startLine": 2599,
+          "endLine": 2604,
+          "params": []
+        },
+        {
+          "name": "namespace",
+          "startLine": 2606,
+          "endLine": 2613,
+          "params": []
+        },
+        {
+          "name": "namespace_mut",
+          "startLine": 2615,
+          "endLine": 2622,
+          "params": []
+        },
+        {
+          "name": "set_namespace",
+          "startLine": 2624,
+          "endLine": 2638,
+          "params": [
+            "namespace"
+          ]
+        },
+        {
+          "name": "is_custom_data_attribute",
+          "startLine": 2642,
+          "endLine": 2647,
+          "params": []
+        },
+        {
+          "name": "attributes",
+          "startLine": 2663,
+          "endLine": 2670,
+          "params": []
+        },
+        {
+          "name": "attributes_mut",
+          "startLine": 2672,
+          "endLine": 2679,
+          "params": []
+        },
+        {
+          "name": "remove_attributes",
+          "startLine": 2681,
+          "endLine": 2688,
+          "params": []
+        },
+        {
+          "name": "remove_attributes_mut",
+          "startLine": 2690,
+          "endLine": 2697,
+          "params": []
+        },
+        {
+          "name": "set_attributes",
+          "startLine": 2699,
+          "endLine": 2717,
+          "params": [
+            "attributes"
+          ]
+        },
+        {
+          "name": "set_remove_attributes",
+          "startLine": 2719,
+          "endLine": 2737,
+          "params": [
+            "remove_attributes"
+          ]
+        },
+        {
+          "name": "target",
+          "startLine": 2746,
+          "endLine": 2751,
+          "params": []
+        },
+        {
+          "name": "contains_target",
+          "startLine": 2771,
+          "endLine": 2775,
+          "params": [
+            "other"
+          ]
+        },
+        {
+          "name": "has_duplicate_targets",
+          "startLine": 2778,
+          "endLine": 2784,
+          "params": []
+        },
+        {
+          "name": "sanitizer",
+          "startLine": 2794,
+          "endLine": 2796,
+          "params": []
+        },
+        {
+          "name": "sanitizer",
+          "startLine": 2800,
+          "endLine": 2802,
+          "params": []
+        },
+        {
+          "name": "built_in_safe_default_configuration",
+          "startLine": 2806,
+          "endLine": 3109,
+          "params": []
+        },
+        {
+          "name": "built_in_safe_baseline_configuration",
+          "startLine": 3112,
+          "endLine": 3144,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "Sanitizer",
+          "startLine": 47,
+          "endLine": 51,
+          "methods": [
+            "new_inherited",
+            "new_with_proto",
+            "get_sanitizer_instance_from_options",
+            "set_configuration",
+            "set_and_filter_html",
+            "sanitize",
+            "Constructor",
+            "Get",
+            "AllowElement",
+            "RemoveElement",
+            "ReplaceElementWithChildren",
+            "AllowProcessingInstruction",
+            "RemoveProcessingInstruction",
+            "AllowAttribute",
+            "RemoveAttribute",
+            "SetComments",
+            "SetDataAttributes",
+            "RemoveUnsafe"
+          ],
+          "properties": [
+            "reflector_",
+            "configuration"
+          ]
+        },
+        {
+          "name": "SanitizerConfigAlgorithm",
+          "startLine": 1337,
+          "endLine": 1352,
+          "methods": [
+            "is_valid",
+            "remove_element",
+            "remove_attribute",
+            "remove_unsafe",
+            "canonicalize"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Canonicalization",
+          "startLine": 2035,
+          "endLine": 2041,
+          "methods": [
+            "canonicalize"
+          ],
+          "properties": []
+        },
+        {
+          "name": "NameCanonicalization",
+          "startLine": 2164,
+          "endLine": 2204,
+          "methods": [
+            "new_dictionary",
+            "is_string",
+            "is_dictionary",
+            "canonicalize_name"
+          ],
+          "properties": []
+        },
+        {
+          "name": "NameSlice",
+          "startLine": 2238,
+          "endLine": 2254,
+          "methods": [
+            "contains_item",
+            "has_duplicates",
+            "is_intersection_non_empty"
+          ],
+          "properties": []
+        },
+        {
+          "name": "NameVec",
+          "startLine": 2313,
+          "endLine": 2335,
+          "methods": [
+            "remove_item",
+            "add_item",
+            "remove_duplicates",
+            "intersection",
+            "difference"
+          ],
+          "properties": []
+        },
+        {
+          "name": "NameMember",
+          "startLine": 2415,
+          "endLine": 2479,
+          "methods": [
+            "name",
+            "name_mut",
+            "namespace",
+            "namespace_mut",
+            "set_namespace",
+            "is_less_than_item",
+            "compare",
+            "is_custom_data_attribute"
+          ],
+          "properties": []
+        },
+        {
+          "name": "AttributeMember",
+          "startLine": 2652,
+          "endLine": 2660,
+          "methods": [
+            "attributes",
+            "attributes_mut",
+            "remove_attributes",
+            "remove_attributes_mut",
+            "set_attributes",
+            "set_remove_attributes"
+          ],
+          "properties": []
+        },
+        {
+          "name": "TargetMember",
+          "startLine": 2741,
+          "endLine": 2743,
+          "methods": [
+            "target"
+          ],
+          "properties": []
+        },
+        {
+          "name": "TargetSlice",
+          "startLine": 2755,
+          "endLine": 2764,
+          "methods": [
+            "contains_target",
+            "has_duplicate_targets"
+          ],
+          "properties": []
+        },
+        {
+          "name": "SanitizerMember",
+          "startLine": 2789,
+          "endLine": 2791,
+          "methods": [
+            "sanitizer"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "Sanitizer",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "new_with_proto",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "get_sanitizer_instance_from_options",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "set_and_filter_html",
+          "line": 177,
+          "isDefault": false
+        },
+        {
+          "name": "sanitize",
+          "line": 230,
+          "isDefault": false
+        },
+        {
+          "name": "SanitizerMember",
+          "line": 2789,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 67
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Sanitizer::new_inherited",
+          "lineNumber": 68
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "options.sanitizer().clone",
+          "lineNumber": 87
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "options.sanitizer",
+          "lineNumber": 87
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "SanitizerOrSanitizerConfigOrSanitizerPresets::SanitizerConfig",
+          "lineNumber": 107
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "built_in_safe_default_configuration",
+          "lineNumber": 108
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "Sanitizer::new_with_proto",
+          "lineNumber": 125
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "SanitizerConfig::default",
+          "lineNumber": 125
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "sanitizer.set_configuration",
+          "lineNumber": 130
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "Err",
+          "lineNumber": 131
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "Error::Type",
+          "lineNumber": 131
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "c\"Failed to set a configuration for a new sanitizer\".into",
+          "lineNumber": 132
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "SanitizerOrSanitizerConfigOrSanitizerPresets::Sanitizer",
+          "lineNumber": 137
+        },
+        {
+          "caller": "get_sanitizer_instance_from_options",
+          "callee": "Ok",
+          "lineNumber": 148
+        },
+        {
+          "caller": "set_configuration",
+          "callee": "configuration.canonicalize",
+          "lineNumber": 161
+        },
+        {
+          "caller": "set_configuration",
+          "callee": "configuration.is_valid",
+          "lineNumber": 164
+        },
+        {
+          "caller": "set_configuration",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 169
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "context_element.local_name",
+          "lineNumber": 188
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "context_element.namespace",
+          "lineNumber": 189
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "context_element.namespace",
+          "lineNumber": 190
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "Ok",
+          "lineNumber": 192
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "Sanitizer::get_sanitizer_instance_from_options",
+          "lineNumber": 197
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "target.owner_window",
+          "lineNumber": 199
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "ServoParser::parse_html_fragment",
+          "lineNumber": 206
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "context_element.owner_document",
+          "lineNumber": 210
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "DomRoot::upcast::<Node>",
+          "lineNumber": 211
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "DocumentFragment::new",
+          "lineNumber": 211
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "fragment\n                .AppendChild(cx, &child).expect",
+          "lineNumber": 215
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "fragment.AppendChild",
+          "lineNumber": 215
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "sanitizer.sanitize",
+          "lineNumber": 221
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "Node::replace_all",
+          "lineNumber": 224
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "Some",
+          "lineNumber": 224
+        },
+        {
+          "caller": "set_and_filter_html",
+          "callee": "Ok",
+          "lineNumber": 226
+        },
+        {
+          "caller": "sanitize",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 232
+        },
+        {
+          "caller": "sanitize",
+          "callee": "configuration.remove_unsafe",
+          "lineNumber": 240
+        },
+        {
+          "caller": "sanitize",
+          "callee": "sanitize_core",
+          "lineNumber": 245
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "node.children",
+          "lineNumber": 257
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.type_id",
+          "lineNumber": 269
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "Some",
+          "lineNumber": 279
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_self",
+          "lineNumber": 280
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "SanitizerPI::String",
+          "lineNumber": 293
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                        .downcast::<ProcessingInstruction>()\n                        .expect(\"Guaranteed by pattern matching of child.type_id()\")\n                        .target().clone",
+          "lineNumber": 294
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                        .downcast::<ProcessingInstruction>()\n                        .expect(\"Guaranteed by pattern matching of child.type_id()\").target",
+          "lineNumber": 294
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                        .downcast::<ProcessingInstruction>().expect",
+          "lineNumber": 294
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                        .downcast::<ProcessingInstruction>",
+          "lineNumber": 294
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration.processingInstructions.as_ref().is_some_and",
+          "lineNumber": 307
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration.processingInstructions.as_ref",
+          "lineNumber": 307
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_processing_instructions.contains_target",
+          "lineNumber": 309
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration\n                    .removeProcessingInstructions\n                    .as_ref().is_some_and",
+          "lineNumber": 311
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration\n                    .removeProcessingInstructions.as_ref",
+          "lineNumber": 311
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_remove_processing_instructions.contains_target",
+          "lineNumber": 315
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_self",
+          "lineNumber": 318
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DomRoot::downcast::<Element>(child).expect",
+          "lineNumber": 326
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DomRoot::downcast::<Element>",
+          "lineNumber": 326
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "SanitizerElement::SanitizerElementNamespace",
+          "lineNumber": 328
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DOMString::from",
+          "lineNumber": 329
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.local_name",
+          "lineNumber": 329
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "Some",
+          "lineNumber": 330
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DOMString::from",
+          "lineNumber": 330
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.namespace",
+          "lineNumber": 330
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration\n                    .replaceWithChildrenElements\n                    .as_ref().is_some_and",
+          "lineNumber": 335
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration\n                    .replaceWithChildrenElements.as_ref",
+          "lineNumber": 335
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_replace_with_children_elements.contains_item",
+          "lineNumber": 339
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "sanitize_core",
+          "lineNumber": 347
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.upcast",
+          "lineNumber": 349
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DocumentFragment::new",
+          "lineNumber": 356
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "node.owner_document",
+          "lineNumber": 356
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DomRoot::upcast::<Node>",
+          "lineNumber": 360
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DomRoot::upcast::<Node>",
+          "lineNumber": 361
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.children",
+          "lineNumber": 362
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "fragment.AppendChild",
+          "lineNumber": 363
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "node.ReplaceChild",
+          "lineNumber": 367
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration\n                    .elements\n                    .as_ref().is_some_and",
+          "lineNumber": 375
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration\n                    .elements.as_ref",
+          "lineNumber": 375
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_elements.contains_item",
+          "lineNumber": 379
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.upcast::<Node>().remove_self",
+          "lineNumber": 383
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.upcast::<Node>",
+          "lineNumber": 383
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration.removeElements.as_ref().is_some_and",
+          "lineNumber": 391
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration.removeElements.as_ref",
+          "lineNumber": 391
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_remove_elements.contains_item",
+          "lineNumber": 393
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.upcast::<Node>().remove_self",
+          "lineNumber": 397
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.upcast::<Node>",
+          "lineNumber": 397
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name().str",
+          "lineNumber": 406
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name",
+          "lineNumber": 406
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name\n                        .namespace().is_some_and",
+          "lineNumber": 407
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.namespace",
+          "lineNumber": 407
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "namespace.str",
+          "lineNumber": 409
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                        .downcast::<HTMLTemplateElement>()\n                        .expect(\"Guaranteed by elementName's name being \\\"template\\\"\").Content",
+          "lineNumber": 411
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                        .downcast::<HTMLTemplateElement>().expect",
+          "lineNumber": 411
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                        .downcast::<HTMLTemplateElement>",
+          "lineNumber": 411
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "sanitize_core",
+          "lineNumber": 415
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "template_contents.upcast",
+          "lineNumber": 417
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.shadow_root",
+          "lineNumber": 425
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "sanitize_core",
+          "lineNumber": 426
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "shadow_root.upcast",
+          "lineNumber": 428
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "SanitizerElementWithAttributes::String",
+          "lineNumber": 436
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "\"\".into",
+          "lineNumber": 436
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_elements.iter().find",
+          "lineNumber": 441
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_elements.iter",
+          "lineNumber": 441
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry.name",
+          "lineNumber": 442
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name",
+          "lineNumber": 442
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry.namespace",
+          "lineNumber": 443
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.namespace",
+          "lineNumber": 443
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "found.clone",
+          "lineNumber": 448
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                    .attrs()\n                    .borrow()\n                    .iter()\n                    .map(|attribute| {\n                        (\n                            attribute.local_name().clone(),\n                            attribute.namespace().clone(),\n                            attribute.value().clone(),\n                        )\n                    })\n                    .collect::<Vec<_>>",
+          "lineNumber": 456
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                    .attrs()\n                    .borrow()\n                    .iter().map",
+          "lineNumber": 456
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                    .attrs()\n                    .borrow().iter",
+          "lineNumber": 456
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child\n                    .attrs().borrow",
+          "lineNumber": 456
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.attrs",
+          "lineNumber": 456
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute.local_name().clone",
+          "lineNumber": 462
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute.local_name",
+          "lineNumber": 462
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute.namespace().clone",
+          "lineNumber": 463
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute.namespace",
+          "lineNumber": 463
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute.value().clone",
+          "lineNumber": 464
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute.value",
+          "lineNumber": 464
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_list.iter",
+          "lineNumber": 469
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "SanitizerAttribute::SanitizerAttributeNamespace",
+          "lineNumber": 473
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DOMString::from",
+          "lineNumber": 475
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_local_name.as_ref",
+          "lineNumber": 475
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_namespace.as_ref().is_empty",
+          "lineNumber": 476
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_namespace.as_ref",
+          "lineNumber": 476
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "Some",
+          "lineNumber": 479
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "DOMString::from",
+          "lineNumber": 479
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_namespace.as_ref",
+          "lineNumber": 479
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_with_local_attributes\n                        .remove_attributes()\n                        .unwrap_or_default().contains_item",
+          "lineNumber": 486
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_with_local_attributes\n                        .remove_attributes().unwrap_or_default",
+          "lineNumber": 486
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_with_local_attributes.remove_attributes",
+          "lineNumber": 486
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_attribute",
+          "lineNumber": 492
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration.attributes.as_ref",
+          "lineNumber": 501
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_attributes.contains_item",
+          "lineNumber": 503
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_with_local_attributes\n                                .attributes()\n                                .unwrap_or_default().contains_item",
+          "lineNumber": 504
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_with_local_attributes\n                                .attributes().unwrap_or_default",
+          "lineNumber": 504
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_with_local_attributes.attributes",
+          "lineNumber": 504
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_local_name.starts_with",
+          "lineNumber": 508
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_namespace.is_empty",
+          "lineNumber": 509
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "Some",
+          "lineNumber": 510
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_attribute",
+          "lineNumber": 513
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_with_local_attributes.attributes().is_some_and",
+          "lineNumber": 520
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_with_local_attributes.attributes",
+          "lineNumber": 520
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "local_attributes.contains_item",
+          "lineNumber": 521
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_attribute",
+          "lineNumber": 524
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration.removeAttributes.as_ref().is_some_and",
+          "lineNumber": 528
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration.removeAttributes.as_ref",
+          "lineNumber": 528
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "configuration_remove_attributes.contains_item",
+          "lineNumber": 530
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_attribute",
+          "lineNumber": 534
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "BUILT_IN_NAVIGATING_URL_ATTRIBUTES_LIST.iter().any",
+          "lineNumber": 543
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "BUILT_IN_NAVIGATING_URL_ATTRIBUTES_LIST.iter",
+          "lineNumber": 543
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry_element_name.as_ref",
+          "lineNumber": 551
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry_element_namespace.as_deref",
+          "lineNumber": 552
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry_attribute_name.as_ref",
+          "lineNumber": 553
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry_attribute_namespace.as_deref",
+          "lineNumber": 554
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name().str().as_ref",
+          "lineNumber": 556
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name().str",
+          "lineNumber": 556
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name",
+          "lineNumber": 556
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.namespace().map(DOMString::str).as_deref",
+          "lineNumber": 557
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.namespace().map",
+          "lineNumber": 557
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.namespace",
+          "lineNumber": 557
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.name().str().as_ref",
+          "lineNumber": 558
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.name().str",
+          "lineNumber": 558
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.name",
+          "lineNumber": 558
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.namespace().map(DOMString::str).as_deref",
+          "lineNumber": 559
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.namespace().map",
+          "lineNumber": 559
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.namespace",
+          "lineNumber": 559
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "contains_javascript_url",
+          "lineNumber": 562
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_attribute",
+          "lineNumber": 564
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.namespace",
+          "lineNumber": 570
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_namespace.is_empty",
+          "lineNumber": 572
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "contains_javascript_url",
+          "lineNumber": 574
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_attribute",
+          "lineNumber": 576
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "BUILT_IN_ANIMATING_URL_ATTRIBUTES_LIST.iter().any",
+          "lineNumber": 582
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "BUILT_IN_ANIMATING_URL_ATTRIBUTES_LIST.iter",
+          "lineNumber": 582
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry_element_name.as_ref",
+          "lineNumber": 590
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry_element_namespace.as_deref",
+          "lineNumber": 591
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry_attribute_name.as_ref",
+          "lineNumber": 592
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "entry_attribute_namespace.as_deref",
+          "lineNumber": 593
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name().str().as_ref",
+          "lineNumber": 595
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name().str",
+          "lineNumber": 595
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.name",
+          "lineNumber": 595
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.namespace().map(DOMString::str).as_deref",
+          "lineNumber": 596
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.namespace().map",
+          "lineNumber": 596
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "element_name.namespace",
+          "lineNumber": 596
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.name().str().as_ref",
+          "lineNumber": 597
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.name().str",
+          "lineNumber": 597
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.name",
+          "lineNumber": 597
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.namespace().map(DOMString::str).as_deref",
+          "lineNumber": 598
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.namespace().map",
+          "lineNumber": 598
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "attribute_name.namespace",
+          "lineNumber": 598
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.remove_attribute",
+          "lineNumber": 603
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "sanitize_core",
+          "lineNumber": 610
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "child.upcast",
+          "lineNumber": 612
+        },
+        {
+          "caller": "sanitize_core",
+          "callee": "Ok",
+          "lineNumber": 620
+        },
+        {
+          "caller": "contains_javascript_url",
+          "callee": "Url::parse",
+          "lineNumber": 627
+        },
+        {
+          "caller": "contains_javascript_url",
+          "callee": "url.scheme",
+          "lineNumber": 632
+        },
+        {
+          "caller": "Constructor",
+          "callee": "built_in_safe_default_configuration",
+          "lineNumber": 650
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Sanitizer::new_with_proto",
+          "lineNumber": 658
+        },
+        {
+          "caller": "Constructor",
+          "callee": "SanitizerConfig::default",
+          "lineNumber": 658
+        },
+        {
+          "caller": "Constructor",
+          "callee": "sanitizer.set_configuration",
+          "lineNumber": 659
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Err",
+          "lineNumber": 660
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Error::Type",
+          "lineNumber": 660
+        },
+        {
+          "caller": "Constructor",
+          "callee": "c\"The configuration is invalid\".into",
+          "lineNumber": 660
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 663
+        },
+        {
+          "caller": "Get",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 669
+        },
+        {
+          "caller": "Get",
+          "callee": "config_elements.iter_mut",
+          "lineNumber": 678
+        },
+        {
+          "caller": "Get",
+          "callee": "element.attributes_mut",
+          "lineNumber": 680
+        },
+        {
+          "caller": "Get",
+          "callee": "element_attributes.sort_by",
+          "lineNumber": 684
+        },
+        {
+          "caller": "Get",
+          "callee": "item_a.compare",
+          "lineNumber": 684
+        },
+        {
+          "caller": "Get",
+          "callee": "element.remove_attributes_mut",
+          "lineNumber": 688
+        },
+        {
+          "caller": "Get",
+          "callee": "element_remove_attributes.sort_by",
+          "lineNumber": 692
+        },
+        {
+          "caller": "Get",
+          "callee": "item_a.compare",
+          "lineNumber": 692
+        },
+        {
+          "caller": "Get",
+          "callee": "config_elements.sort_by",
+          "lineNumber": 698
+        },
+        {
+          "caller": "Get",
+          "callee": "item_a.compare",
+          "lineNumber": 698
+        },
+        {
+          "caller": "Get",
+          "callee": "config_remove_elements.sort_by",
+          "lineNumber": 705
+        },
+        {
+          "caller": "Get",
+          "callee": "item_a.compare",
+          "lineNumber": 705
+        },
+        {
+          "caller": "Get",
+          "callee": "config_replace_with_children_elements.sort_by",
+          "lineNumber": 716
+        },
+        {
+          "caller": "Get",
+          "callee": "item_a.compare",
+          "lineNumber": 716
+        },
+        {
+          "caller": "Get",
+          "callee": "config_processing_instructions.sort_by",
+          "lineNumber": 725
+        },
+        {
+          "caller": "Get",
+          "callee": "processing_instruction_a.target",
+          "lineNumber": 727
+        },
+        {
+          "caller": "Get",
+          "callee": "processing_instruction_b.target",
+          "lineNumber": 727
+        },
+        {
+          "caller": "Get",
+          "callee": "config_remove_processing_instructions.sort_by",
+          "lineNumber": 743
+        },
+        {
+          "caller": "Get",
+          "callee": "processing_instruction_a.target",
+          "lineNumber": 745
+        },
+        {
+          "caller": "Get",
+          "callee": "processing_instruction_b.target",
+          "lineNumber": 745
+        },
+        {
+          "caller": "Get",
+          "callee": "config_attributes.sort_by",
+          "lineNumber": 762
+        },
+        {
+          "caller": "Get",
+          "callee": "item_a.compare",
+          "lineNumber": 762
+        },
+        {
+          "caller": "Get",
+          "callee": "config_remove_attributes.sort_by",
+          "lineNumber": 769
+        },
+        {
+          "caller": "Get",
+          "callee": "item_a.compare",
+          "lineNumber": 769
+        },
+        {
+          "caller": "Get",
+          "callee": "(*config).clone",
+          "lineNumber": 775
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 781
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.canonicalize",
+          "lineNumber": 788
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration.elements.is_some",
+          "lineNumber": 791
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "replace_with_children_elements.remove_item",
+          "lineNumber": 797
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.attributes_mut",
+          "lineNumber": 809
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_attributes.remove_duplicates",
+          "lineNumber": 812
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_attributes.difference",
+          "lineNumber": 816
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "Some",
+          "lineNumber": 819
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_attributes.retain",
+          "lineNumber": 822
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "attribute.is_custom_data_attribute",
+          "lineNumber": 823
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.remove_attributes_mut",
+          "lineNumber": 828
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_remove_attributes.remove_duplicates",
+          "lineNumber": 831
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_remove_attributes.intersection",
+          "lineNumber": 835
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.attributes_mut().cloned",
+          "lineNumber": 846
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.attributes_mut",
+          "lineNumber": 846
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_attributes.remove_duplicates",
+          "lineNumber": 849
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_attributes.difference",
+          "lineNumber": 853
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.remove_attributes().unwrap_or_default",
+          "lineNumber": 854
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.remove_attributes",
+          "lineNumber": 854
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.set_remove_attributes",
+          "lineNumber": 857
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_attributes.difference",
+          "lineNumber": 861
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration\n                                .removeAttributes\n                                .as_deref().unwrap_or_default",
+          "lineNumber": 862
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration\n                                .removeAttributes.as_deref",
+          "lineNumber": 862
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.set_attributes",
+          "lineNumber": 868
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "Some",
+          "lineNumber": 868
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.remove_attributes_mut",
+          "lineNumber": 872
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_remove_attributes.remove_duplicates",
+          "lineNumber": 875
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element_remove_attributes.difference",
+          "lineNumber": 879
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration\n                                .removeAttributes\n                                .as_deref().unwrap_or_default",
+          "lineNumber": 880
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration\n                                .removeAttributes.as_deref",
+          "lineNumber": 880
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration\n                .elements\n                .as_mut().expect",
+          "lineNumber": 890
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration\n                .elements.as_mut",
+          "lineNumber": 890
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_elements.contains_item",
+          "lineNumber": 894
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_elements.push",
+          "lineNumber": 899
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.clone",
+          "lineNumber": 899
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_elements\n                .iter()\n                .find(|item| {\n                    item.name() == element.name() && item.namespace() == element.namespace()\n                }).expect",
+          "lineNumber": 911
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_elements\n                .iter().find",
+          "lineNumber": 911
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_elements.iter",
+          "lineNumber": 911
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "item.name",
+          "lineNumber": 914
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.name",
+          "lineNumber": 914
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "item.namespace",
+          "lineNumber": 914
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.namespace",
+          "lineNumber": 914
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_elements.remove_item",
+          "lineNumber": 924
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_elements.push",
+          "lineNumber": 927
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.attributes().is_some",
+          "lineNumber": 936
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.attributes",
+          "lineNumber": 936
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.remove_attributes().unwrap_or_default().is_empty",
+          "lineNumber": 937
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.remove_attributes().unwrap_or_default",
+          "lineNumber": 937
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "element.remove_attributes",
+          "lineNumber": 937
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "Console::internal_warn",
+          "lineNumber": 941
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "self.global",
+          "lineNumber": 943
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "\"Do not support adding an element with attributes to a sanitizer \\\n                        whose configuration[\\\"elements\\\"] does not exist.\".into",
+          "lineNumber": 944
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "replace_with_children_elements.remove_item",
+          "lineNumber": 958
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration\n                .removeElements\n                .as_ref().is_some_and",
+          "lineNumber": 964
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration\n                .removeElements.as_ref",
+          "lineNumber": 964
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_remove_elements.contains_item",
+          "lineNumber": 968
+        },
+        {
+          "caller": "AllowElement",
+          "callee": "configuration_remove_elements.remove_item",
+          "lineNumber": 982
+        },
+        {
+          "caller": "RemoveElement",
+          "callee": "self.configuration.borrow_mut().remove_element",
+          "lineNumber": 993
+        },
+        {
+          "caller": "RemoveElement",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 993
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 999
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "element.canonicalize",
+          "lineNumber": 1005
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "BUILT_IN_NON_REPLACEABLE_ELEMENTS_LIST.with",
+          "lineNumber": 1008
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "list.contains_item",
+          "lineNumber": 1008
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "configuration\n            .replaceWithChildrenElements\n            .as_ref().is_some_and",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "configuration\n            .replaceWithChildrenElements.as_ref",
+          "lineNumber": 1014
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "configuration_replace_with_children_elements.contains_item",
+          "lineNumber": 1018
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "configuration_remove_elements.remove_item",
+          "lineNumber": 1027
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "configuration_elements.remove_item",
+          "lineNumber": 1032
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "configuration_replace_with_children_elements.add_item",
+          "lineNumber": 1039
+        },
+        {
+          "caller": "ReplaceElementWithChildren",
+          "callee": "Some",
+          "lineNumber": 1041
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 1051
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "processing_instruction.canonicalize",
+          "lineNumber": 1057
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "configuration_processing_instructions.contains_target",
+          "lineNumber": 1063
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "configuration_processing_instructions.push",
+          "lineNumber": 1069
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "configuration\n                    .removeProcessingInstructions\n                    .as_ref().is_some_and",
+          "lineNumber": 1077
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "configuration\n                    .removeProcessingInstructions.as_ref",
+          "lineNumber": 1077
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "configuration_remove_processing_instructions.contains_target",
+          "lineNumber": 1081
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "configuration_remove_processing_instructions.retain",
+          "lineNumber": 1090
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "item.target",
+          "lineNumber": 1091
+        },
+        {
+          "caller": "AllowProcessingInstruction",
+          "callee": "processing_instruction.target",
+          "lineNumber": 1091
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 1107
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "processing_instruction.canonicalize",
+          "lineNumber": 1113
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "configuration_processing_instructions.contains_target",
+          "lineNumber": 1119
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "configuration_processing_instructions.retain",
+          "lineNumber": 1122
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "item.target",
+          "lineNumber": 1123
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "processing_instruction.target",
+          "lineNumber": 1123
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "configuration\n                    .removeProcessingInstructions\n                    .as_ref().is_some_and",
+          "lineNumber": 1135
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "configuration\n                    .removeProcessingInstructions.as_ref",
+          "lineNumber": 1135
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "configuration_remove_processing_instructions.contains_target",
+          "lineNumber": 1139
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "configuration_remove_processing_instructions.push",
+          "lineNumber": 1151
+        },
+        {
+          "caller": "RemoveProcessingInstruction",
+          "callee": "Some",
+          "lineNumber": 1153
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 1165
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "attribute.canonicalize",
+          "lineNumber": 1171
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration.attributes.is_some",
+          "lineNumber": 1174
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "Some",
+          "lineNumber": 1179
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "attribute.is_custom_data_attribute",
+          "lineNumber": 1179
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration\n                .attributes\n                .as_ref().is_some_and",
+          "lineNumber": 1184
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration\n                .attributes.as_ref",
+          "lineNumber": 1184
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration_attributes.contains",
+          "lineNumber": 1188
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration_elements.iter_mut",
+          "lineNumber": 1199
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "element.attributes_mut",
+          "lineNumber": 1202
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "element_attributes.retain",
+          "lineNumber": 1203
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration_attributes.push",
+          "lineNumber": 1217
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "Some",
+          "lineNumber": 1219
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration.removeAttributes.as_ref().is_some_and",
+          "lineNumber": 1230
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration.removeAttributes.as_ref",
+          "lineNumber": 1230
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration_remove_attributes.contains",
+          "lineNumber": 1232
+        },
+        {
+          "caller": "AllowAttribute",
+          "callee": "configuration_remove_attributes.retain",
+          "lineNumber": 1241
+        },
+        {
+          "caller": "RemoveAttribute",
+          "callee": "self.configuration.borrow_mut().remove_attribute",
+          "lineNumber": 1254
+        },
+        {
+          "caller": "RemoveAttribute",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 1254
+        },
+        {
+          "caller": "SetComments",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 1260
+        },
+        {
+          "caller": "SetComments",
+          "callee": "configuration\n            .comments.is_some_and",
+          "lineNumber": 1267
+        },
+        {
+          "caller": "SetComments",
+          "callee": "Some",
+          "lineNumber": 1275
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 1284
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "configuration.attributes.is_none",
+          "lineNumber": 1290
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "Some",
+          "lineNumber": 1295
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "configuration_attributes.retain",
+          "lineNumber": 1304
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "attribute.is_custom_data_attribute",
+          "lineNumber": 1304
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "element.attributes_mut",
+          "lineNumber": 1312
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "element_attributes.retain",
+          "lineNumber": 1315
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "attribute.is_custom_data_attribute",
+          "lineNumber": 1316
+        },
+        {
+          "caller": "SetDataAttributes",
+          "callee": "Some",
+          "lineNumber": 1323
+        },
+        {
+          "caller": "RemoveUnsafe",
+          "callee": "self.configuration.borrow_mut().remove_unsafe",
+          "lineNumber": 1333
+        },
+        {
+          "caller": "RemoveUnsafe",
+          "callee": "self.configuration.borrow_mut",
+          "lineNumber": 1333
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.elements.is_some",
+          "lineNumber": 1366
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.removeElements.is_some",
+          "lineNumber": 1366
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.processingInstructions.is_some",
+          "lineNumber": 1378
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.removeProcessingInstructions.is_some",
+          "lineNumber": 1378
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.attributes.is_some",
+          "lineNumber": 1387
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.removeAttributes.is_some",
+          "lineNumber": 1387
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_elements.has_duplicates",
+          "lineNumber": 1405
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                    .removeElements\n                    .as_ref().is_some_and",
+          "lineNumber": 1412
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                    .removeElements.as_ref",
+          "lineNumber": 1412
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_remove_elements.has_duplicates",
+          "lineNumber": 1415
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n            .replaceWithChildrenElements\n            .as_ref().is_some_and",
+          "lineNumber": 1424
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n            .replaceWithChildrenElements.as_ref",
+          "lineNumber": 1424
+        },
+        {
+          "caller": "is_valid",
+          "callee": "replace_with_children_elements.has_duplicates",
+          "lineNumber": 1428
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_processing_instructions.has_duplicate_targets",
+          "lineNumber": 1439
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.removeProcessingInstructions.as_ref().is_some_and",
+          "lineNumber": 1447
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.removeProcessingInstructions.as_ref",
+          "lineNumber": 1447
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_remove_processing_instructions.has_duplicate_targets",
+          "lineNumber": 1449
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_attributes.has_duplicates",
+          "lineNumber": 1461
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                    .removeAttributes\n                    .as_ref().is_some_and",
+          "lineNumber": 1468
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                    .removeAttributes.as_ref",
+          "lineNumber": 1468
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_remove_attributes.has_duplicates",
+          "lineNumber": 1472
+        },
+        {
+          "caller": "is_valid",
+          "callee": "BUILT_IN_NON_REPLACEABLE_ELEMENTS_LIST.with",
+          "lineNumber": 1486
+        },
+        {
+          "caller": "is_valid",
+          "callee": "list.contains_item",
+          "lineNumber": 1486
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_elements.is_intersection_non_empty",
+          "lineNumber": 1496
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                        .removeElements\n                        .as_ref().is_some_and",
+          "lineNumber": 1506
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                        .removeElements.as_ref",
+          "lineNumber": 1506
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_remove_elements.is_intersection_non_empty",
+          "lineNumber": 1510
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element\n                            .attributes().is_some_and",
+          "lineNumber": 1532
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes",
+          "lineNumber": 1532
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element_attributes.has_duplicates",
+          "lineNumber": 1534
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element\n                            .remove_attributes().is_some_and",
+          "lineNumber": 1541
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes",
+          "lineNumber": 1541
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element_remove_attributes.has_duplicates",
+          "lineNumber": 1544
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_attributes.is_intersection_non_empty",
+          "lineNumber": 1552
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes().unwrap_or_default",
+          "lineNumber": 1553
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes",
+          "lineNumber": 1553
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element\n                            .remove_attributes()\n                            .unwrap_or_default()\n                            .iter().all",
+          "lineNumber": 1560
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element\n                            .remove_attributes()\n                            .unwrap_or_default().iter",
+          "lineNumber": 1560
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element\n                            .remove_attributes().unwrap_or_default",
+          "lineNumber": 1560
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes",
+          "lineNumber": 1560
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_attributes.contains_item",
+          "lineNumber": 1564
+        },
+        {
+          "caller": "is_valid",
+          "callee": "Some",
+          "lineNumber": 1572
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes().is_some_and",
+          "lineNumber": 1573
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes",
+          "lineNumber": 1573
+        },
+        {
+          "caller": "is_valid",
+          "callee": "attributes\n                                    .iter().any",
+          "lineNumber": 1574
+        },
+        {
+          "caller": "is_valid",
+          "callee": "attributes.iter",
+          "lineNumber": 1574
+        },
+        {
+          "caller": "is_valid",
+          "callee": "attribute.is_custom_data_attribute",
+          "lineNumber": 1576
+        },
+        {
+          "caller": "is_valid",
+          "callee": "Some",
+          "lineNumber": 1586
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_attributes\n                        .iter().any",
+          "lineNumber": 1587
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_attributes.iter",
+          "lineNumber": 1587
+        },
+        {
+          "caller": "is_valid",
+          "callee": "attribute.is_custom_data_attribute",
+          "lineNumber": 1589
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes().is_some",
+          "lineNumber": 1602
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes",
+          "lineNumber": 1602
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes().is_some",
+          "lineNumber": 1602
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes",
+          "lineNumber": 1602
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element\n                            .attributes()\n                            .as_ref().is_some_and",
+          "lineNumber": 1608
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element\n                            .attributes().as_ref",
+          "lineNumber": 1608
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes",
+          "lineNumber": 1608
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element_attributes.has_duplicates",
+          "lineNumber": 1611
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes().as_ref().is_some_and",
+          "lineNumber": 1618
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes().as_ref",
+          "lineNumber": 1618
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes",
+          "lineNumber": 1618
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element_remove_attributes.has_duplicates",
+          "lineNumber": 1619
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                            .removeAttributes\n                            .as_ref().is_some_and",
+          "lineNumber": 1626
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                            .removeAttributes.as_ref",
+          "lineNumber": 1626
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_remove_attributes.is_intersection_non_empty",
+          "lineNumber": 1630
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes().unwrap_or_default",
+          "lineNumber": 1631
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.attributes",
+          "lineNumber": 1631
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                            .removeAttributes\n                            .as_ref().is_some_and",
+          "lineNumber": 1641
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self\n                            .removeAttributes.as_ref",
+          "lineNumber": 1641
+        },
+        {
+          "caller": "is_valid",
+          "callee": "config_remove_attributes.is_intersection_non_empty",
+          "lineNumber": 1645
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes().unwrap_or_default",
+          "lineNumber": 1646
+        },
+        {
+          "caller": "is_valid",
+          "callee": "element.remove_attributes",
+          "lineNumber": 1646
+        },
+        {
+          "caller": "is_valid",
+          "callee": "self.dataAttributes.is_some",
+          "lineNumber": 1656
+        },
+        {
+          "caller": "remove_element",
+          "callee": "element.canonicalize",
+          "lineNumber": 1672
+        },
+        {
+          "caller": "remove_element",
+          "callee": "configuration_replace_with_children_elements.remove_item",
+          "lineNumber": 1679
+        },
+        {
+          "caller": "remove_element",
+          "callee": "configuration_elements.contains_item",
+          "lineNumber": 1687
+        },
+        {
+          "caller": "remove_element",
+          "callee": "configuration_elements.remove_item",
+          "lineNumber": 1691
+        },
+        {
+          "caller": "remove_element",
+          "callee": "self\n                .removeElements\n                .as_mut().is_some_and",
+          "lineNumber": 1705
+        },
+        {
+          "caller": "remove_element",
+          "callee": "self\n                .removeElements.as_mut",
+          "lineNumber": 1705
+        },
+        {
+          "caller": "remove_element",
+          "callee": "configuration_remove_elements.contains_item",
+          "lineNumber": 1709
+        },
+        {
+          "caller": "remove_element",
+          "callee": "configuration_remove_elements.add_item",
+          "lineNumber": 1722
+        },
+        {
+          "caller": "remove_element",
+          "callee": "Some",
+          "lineNumber": 1724
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "attribute.canonicalize",
+          "lineNumber": 1738
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "self.attributes.is_some",
+          "lineNumber": 1741
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "self\n                .attributes\n                .as_mut().is_some_and",
+          "lineNumber": 1746
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "self\n                .attributes.as_mut",
+          "lineNumber": 1746
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "configuration_attributes.remove_item",
+          "lineNumber": 1750
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element\n                        .attributes()\n                        .unwrap_or_default().contains",
+          "lineNumber": 1760
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element\n                        .attributes().unwrap_or_default",
+          "lineNumber": 1760
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element.attributes",
+          "lineNumber": 1760
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element.attributes_mut",
+          "lineNumber": 1769
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element_attributes.retain",
+          "lineNumber": 1770
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element\n                        .remove_attributes()\n                        .unwrap_or_default().contains",
+          "lineNumber": 1777
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element\n                        .remove_attributes().unwrap_or_default",
+          "lineNumber": 1777
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element.remove_attributes",
+          "lineNumber": 1777
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element.remove_attributes_mut",
+          "lineNumber": 1786
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element_remove_attributes.retain",
+          "lineNumber": 1787
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "self\n                .removeAttributes\n                .as_ref().is_some_and",
+          "lineNumber": 1803
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "self\n                .removeAttributes.as_ref",
+          "lineNumber": 1803
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "configuration_remove_attributes.contains",
+          "lineNumber": 1807
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element.attributes_mut",
+          "lineNumber": 1821
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element_attributes.retain",
+          "lineNumber": 1822
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element.remove_attributes_mut",
+          "lineNumber": 1829
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "element_remove_attributes.retain",
+          "lineNumber": 1830
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "configuration_remove_attributes.push",
+          "lineNumber": 1839
+        },
+        {
+          "caller": "remove_attribute",
+          "callee": "Some",
+          "lineNumber": 1841
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "built_in_safe_baseline_configuration",
+          "lineNumber": 1853
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "baseline.removeElements.unwrap_or_default",
+          "lineNumber": 1863
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "self.remove_element",
+          "lineNumber": 1866
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "baseline.removeAttributes.unwrap_or_default",
+          "lineNumber": 1872
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "self.remove_attribute",
+          "lineNumber": 1875
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "CONTENT_EVENT_HANDLER_NAMES.iter",
+          "lineNumber": 1881
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "SanitizerAttribute::String",
+          "lineNumber": 1884
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "DOMString::from",
+          "lineNumber": 1884
+        },
+        {
+          "caller": "remove_unsafe",
+          "callee": "self.remove_attribute",
+          "lineNumber": 1885
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.elements.is_none",
+          "lineNumber": 1898
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.removeElements.is_none",
+          "lineNumber": 1898
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 1899
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Vec::new",
+          "lineNumber": 1899
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.processingInstructions.is_none",
+          "lineNumber": 1904
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.removeProcessingInstructions.is_none",
+          "lineNumber": 1904
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 1908
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Vec::new",
+          "lineNumber": 1908
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 1912
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Vec::new",
+          "lineNumber": 1912
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.attributes.is_none",
+          "lineNumber": 1918
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.removeAttributes.is_none",
+          "lineNumber": 1918
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 1919
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Vec::new",
+          "lineNumber": 1919
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "elements\n                .iter()\n                .cloned()\n                .map(SanitizerElementWithAttributes::canonicalize).collect",
+          "lineNumber": 1929
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "elements\n                .iter()\n                .cloned().map",
+          "lineNumber": 1929
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "elements\n                .iter().cloned",
+          "lineNumber": 1929
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "elements.iter",
+          "lineNumber": 1929
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_elements\n                .iter()\n                .cloned()\n                .map(SanitizerElement::canonicalize).collect",
+          "lineNumber": 1943
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_elements\n                .iter()\n                .cloned().map",
+          "lineNumber": 1943
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_elements\n                .iter().cloned",
+          "lineNumber": 1943
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_elements.iter",
+          "lineNumber": 1943
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "replace_with_children_elements\n                .iter()\n                .cloned()\n                .map(SanitizerElement::canonicalize).collect",
+          "lineNumber": 1957
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "replace_with_children_elements\n                .iter()\n                .cloned().map",
+          "lineNumber": 1957
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "replace_with_children_elements\n                .iter().cloned",
+          "lineNumber": 1957
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "replace_with_children_elements.iter",
+          "lineNumber": 1957
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "processing_instructions\n                .iter()\n                .cloned()\n                .map(SanitizerPI::canonicalize).collect",
+          "lineNumber": 1971
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "processing_instructions\n                .iter()\n                .cloned().map",
+          "lineNumber": 1971
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "processing_instructions\n                .iter().cloned",
+          "lineNumber": 1971
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "processing_instructions.iter",
+          "lineNumber": 1971
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_processing_instructions\n                .iter()\n                .cloned()\n                .map(SanitizerPI::canonicalize).collect",
+          "lineNumber": 1986
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_processing_instructions\n                .iter()\n                .cloned().map",
+          "lineNumber": 1986
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_processing_instructions\n                .iter().cloned",
+          "lineNumber": 1986
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_processing_instructions.iter",
+          "lineNumber": 1986
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attributes\n                .iter()\n                .cloned()\n                .map(SanitizerAttribute::canonicalize).collect",
+          "lineNumber": 2000
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attributes\n                .iter()\n                .cloned().map",
+          "lineNumber": 2000
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attributes\n                .iter().cloned",
+          "lineNumber": 2000
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attributes.iter",
+          "lineNumber": 2000
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_attributes\n                .iter()\n                .cloned()\n                .map(SanitizerAttribute::canonicalize).collect",
+          "lineNumber": 2014
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_attributes\n                .iter()\n                .cloned().map",
+          "lineNumber": 2014
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_attributes\n                .iter().cloned",
+          "lineNumber": 2014
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_attributes.iter",
+          "lineNumber": 2014
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.comments.is_none",
+          "lineNumber": 2023
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 2024
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.attributes.is_some",
+          "lineNumber": 2029
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.dataAttributes.is_none",
+          "lineNumber": 2029
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 2030
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "SanitizerElement::String",
+          "lineNumber": 2049
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "std::mem::take",
+          "lineNumber": 2049
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "SanitizerElement::SanitizerElementNamespace",
+          "lineNumber": 2052
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "std::mem::take",
+          "lineNumber": 2053
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "dictionary.parent.namespace.as_mut().map",
+          "lineNumber": 2054
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "dictionary.parent.namespace.as_mut",
+          "lineNumber": 2054
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "parent.canonicalize",
+          "lineNumber": 2058
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "SanitizerElementWithAttributes::SanitizerElementNamespaceWithAttributes",
+          "lineNumber": 2059
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "std::mem::take",
+          "lineNumber": 2062
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "canonicalized_parent.name_mut",
+          "lineNumber": 2062
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "canonicalized_parent.namespace_mut().map",
+          "lineNumber": 2063
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "canonicalized_parent.namespace_mut",
+          "lineNumber": 2063
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.attributes",
+          "lineNumber": 2076
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attributes\n                    .iter()\n                    .cloned()\n                    .map(|attribute| attribute.canonicalize()).collect",
+          "lineNumber": 2081
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attributes\n                    .iter()\n                    .cloned().map",
+          "lineNumber": 2081
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attributes\n                    .iter().cloned",
+          "lineNumber": 2081
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attributes.iter",
+          "lineNumber": 2081
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attribute.canonicalize",
+          "lineNumber": 2084
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "result.set_attributes",
+          "lineNumber": 2088
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 2088
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.remove_attributes",
+          "lineNumber": 2092
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_attributes\n                    .iter()\n                    .cloned()\n                    .map(|attribute| attribute.canonicalize()).collect",
+          "lineNumber": 2097
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_attributes\n                    .iter()\n                    .cloned().map",
+          "lineNumber": 2097
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_attributes\n                    .iter().cloned",
+          "lineNumber": 2097
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "remove_attributes.iter",
+          "lineNumber": 2097
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "attribute.canonicalize",
+          "lineNumber": 2100
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "result.set_remove_attributes",
+          "lineNumber": 2104
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 2104
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "result.attributes().is_none",
+          "lineNumber": 2109
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "result.attributes",
+          "lineNumber": 2109
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "result.remove_attributes().is_none",
+          "lineNumber": 2109
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "result.remove_attributes",
+          "lineNumber": 2109
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "result.set_remove_attributes",
+          "lineNumber": 2111
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 2111
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Vec::new",
+          "lineNumber": 2111
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.canonicalize_name",
+          "lineNumber": 2124
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "Some",
+          "lineNumber": 2124
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "ns!(html).to_string",
+          "lineNumber": 2124
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "SanitizerPI::SanitizerProcessingInstruction",
+          "lineNumber": 2138
+        },
+        {
+          "caller": "canonicalize",
+          "callee": "self.canonicalize_name",
+          "lineNumber": 2160
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "self.is_string",
+          "lineNumber": 2176
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "Self::new_dictionary",
+          "lineNumber": 2177
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "std::mem::take",
+          "lineNumber": 2178
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "self.name_mut",
+          "lineNumber": 2178
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "default_namespace.map",
+          "lineNumber": 2179
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "self\n            .namespace().is_some_and",
+          "lineNumber": 2188
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "self.namespace",
+          "lineNumber": 2188
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "namespace.str",
+          "lineNumber": 2190
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "self.set_namespace",
+          "lineNumber": 2192
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "Self::new_dictionary",
+          "lineNumber": 2199
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "std::mem::take",
+          "lineNumber": 2200
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "self.name_mut",
+          "lineNumber": 2200
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "self.namespace_mut().map",
+          "lineNumber": 2201
+        },
+        {
+          "caller": "canonicalize_name",
+          "callee": "self.namespace_mut",
+          "lineNumber": 2201
+        },
+        {
+          "caller": "new_dictionary",
+          "callee": "SanitizerElement::SanitizerElementNamespace",
+          "lineNumber": 2208
+        },
+        {
+          "caller": "new_dictionary",
+          "callee": "SanitizerAttribute::SanitizerAttributeNamespace",
+          "lineNumber": 2222
+        },
+        {
+          "caller": "contains_item",
+          "callee": "self.iter().any",
+          "lineNumber": 2265
+        },
+        {
+          "caller": "contains_item",
+          "callee": "self.iter",
+          "lineNumber": 2265
+        },
+        {
+          "caller": "contains_item",
+          "callee": "entry.name",
+          "lineNumber": 2266
+        },
+        {
+          "caller": "contains_item",
+          "callee": "other.name",
+          "lineNumber": 2266
+        },
+        {
+          "caller": "contains_item",
+          "callee": "entry.namespace",
+          "lineNumber": 2266
+        },
+        {
+          "caller": "contains_item",
+          "callee": "other.namespace",
+          "lineNumber": 2266
+        },
+        {
+          "caller": "has_duplicates",
+          "callee": "HashSet::new",
+          "lineNumber": 2273
+        },
+        {
+          "caller": "has_duplicates",
+          "callee": "self.iter().any",
+          "lineNumber": 2274
+        },
+        {
+          "caller": "has_duplicates",
+          "callee": "self.iter",
+          "lineNumber": 2274
+        },
+        {
+          "caller": "has_duplicates",
+          "callee": "used.insert",
+          "lineNumber": 2275
+        },
+        {
+          "caller": "has_duplicates",
+          "callee": "entry.name().to_string",
+          "lineNumber": 2276
+        },
+        {
+          "caller": "has_duplicates",
+          "callee": "entry.name",
+          "lineNumber": 2276
+        },
+        {
+          "caller": "has_duplicates",
+          "callee": "entry.namespace().map",
+          "lineNumber": 2277
+        },
+        {
+          "caller": "has_duplicates",
+          "callee": "entry.namespace",
+          "lineNumber": 2277
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "self.iter().map",
+          "lineNumber": 2295
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "self.iter",
+          "lineNumber": 2295
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "entry.clone().canonicalize",
+          "lineNumber": 2295
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "entry.clone",
+          "lineNumber": 2295
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "others\n            .iter()\n            .map(|entry| entry.clone().canonicalize())\n            .collect::<Vec<S>>",
+          "lineNumber": 2296
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "others\n            .iter().map",
+          "lineNumber": 2296
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "others.iter",
+          "lineNumber": 2296
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "entry.clone().canonicalize",
+          "lineNumber": 2298
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "entry.clone",
+          "lineNumber": 2298
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "a.filter(|entry| {\n            b.iter()\n                .any(|other| entry.name() == other.name() && entry.namespace() == other.namespace())\n        }).any",
+          "lineNumber": 2304
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "a.filter",
+          "lineNumber": 2304
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "b.iter().any",
+          "lineNumber": 2305
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "b.iter",
+          "lineNumber": 2305
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "entry.name",
+          "lineNumber": 2306
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "other.name",
+          "lineNumber": 2306
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "entry.namespace",
+          "lineNumber": 2306
+        },
+        {
+          "caller": "is_intersection_non_empty",
+          "callee": "other.namespace",
+          "lineNumber": 2306
+        },
+        {
+          "caller": "remove_item",
+          "callee": "self.retain",
+          "lineNumber": 2350
+        },
+        {
+          "caller": "remove_item",
+          "callee": "item.name",
+          "lineNumber": 2351
+        },
+        {
+          "caller": "remove_item",
+          "callee": "entry.name",
+          "lineNumber": 2351
+        },
+        {
+          "caller": "remove_item",
+          "callee": "item.namespace",
+          "lineNumber": 2351
+        },
+        {
+          "caller": "remove_item",
+          "callee": "entry.namespace",
+          "lineNumber": 2351
+        },
+        {
+          "caller": "add_item",
+          "callee": "self.contains_item",
+          "lineNumber": 2365
+        },
+        {
+          "caller": "add_item",
+          "callee": "self.push",
+          "lineNumber": 2370
+        },
+        {
+          "caller": "remove_duplicates",
+          "callee": "self.sort_by",
+          "lineNumber": 2378
+        },
+        {
+          "caller": "remove_duplicates",
+          "callee": "item_a.compare",
+          "lineNumber": 2378
+        },
+        {
+          "caller": "remove_duplicates",
+          "callee": "self.dedup_by_key",
+          "lineNumber": 2379
+        },
+        {
+          "caller": "remove_duplicates",
+          "callee": "item.name().clone",
+          "lineNumber": 2379
+        },
+        {
+          "caller": "remove_duplicates",
+          "callee": "item.name",
+          "lineNumber": 2379
+        },
+        {
+          "caller": "remove_duplicates",
+          "callee": "item.namespace().cloned",
+          "lineNumber": 2379
+        },
+        {
+          "caller": "remove_duplicates",
+          "callee": "item.namespace",
+          "lineNumber": 2379
+        },
+        {
+          "caller": "intersection",
+          "callee": "self.retain",
+          "lineNumber": 2392
+        },
+        {
+          "caller": "intersection",
+          "callee": "others\n                .iter().any",
+          "lineNumber": 2393
+        },
+        {
+          "caller": "intersection",
+          "callee": "others.iter",
+          "lineNumber": 2393
+        },
+        {
+          "caller": "intersection",
+          "callee": "other.name",
+          "lineNumber": 2395
+        },
+        {
+          "caller": "intersection",
+          "callee": "item.name",
+          "lineNumber": 2395
+        },
+        {
+          "caller": "intersection",
+          "callee": "other.namespace",
+          "lineNumber": 2395
+        },
+        {
+          "caller": "intersection",
+          "callee": "item.namespace",
+          "lineNumber": 2395
+        },
+        {
+          "caller": "difference",
+          "callee": "self.retain",
+          "lineNumber": 2405
+        },
+        {
+          "caller": "difference",
+          "callee": "others\n                .iter().any",
+          "lineNumber": 2406
+        },
+        {
+          "caller": "difference",
+          "callee": "others.iter",
+          "lineNumber": 2406
+        },
+        {
+          "caller": "difference",
+          "callee": "other.name",
+          "lineNumber": 2408
+        },
+        {
+          "caller": "difference",
+          "callee": "item.name",
+          "lineNumber": 2408
+        },
+        {
+          "caller": "difference",
+          "callee": "other.namespace",
+          "lineNumber": 2408
+        },
+        {
+          "caller": "difference",
+          "callee": "item.namespace",
+          "lineNumber": 2408
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_a.namespace",
+          "lineNumber": 2426
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b.namespace().is_some",
+          "lineNumber": 2430
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b.namespace",
+          "lineNumber": 2430
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b.namespace().is_none",
+          "lineNumber": 2437
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b.namespace",
+          "lineNumber": 2437
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b\n                    .namespace().is_some_and",
+          "lineNumber": 2443
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b.namespace",
+          "lineNumber": 2443
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b\n                    .namespace().is_some_and",
+          "lineNumber": 2451
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b.namespace",
+          "lineNumber": 2451
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_a.name",
+          "lineNumber": 2461
+        },
+        {
+          "caller": "is_less_than_item",
+          "callee": "item_b.name",
+          "lineNumber": 2461
+        },
+        {
+          "caller": "compare",
+          "callee": "self.is_less_than_item",
+          "lineNumber": 2466
+        },
+        {
+          "caller": "namespace",
+          "callee": "dictionary.parent.namespace.as_ref",
+          "lineNumber": 2504
+        },
+        {
+          "caller": "namespace_mut",
+          "callee": "dictionary.parent.namespace.as_mut",
+          "lineNumber": 2513
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "SanitizerElementWithAttributes::SanitizerElementNamespaceWithAttributes",
+          "lineNumber": 2522
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "std::mem::take",
+          "lineNumber": 2525
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "namespace.map",
+          "lineNumber": 2526
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "namespace.map",
+          "lineNumber": 2535
+        },
+        {
+          "caller": "namespace",
+          "callee": "dictionary.namespace.as_ref",
+          "lineNumber": 2560
+        },
+        {
+          "caller": "namespace_mut",
+          "callee": "dictionary.namespace.as_mut",
+          "lineNumber": 2569
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "SanitizerElement::SanitizerElementNamespace",
+          "lineNumber": 2578
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "std::mem::take",
+          "lineNumber": 2579
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "namespace.map",
+          "lineNumber": 2580
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "namespace.map",
+          "lineNumber": 2585
+        },
+        {
+          "caller": "namespace",
+          "callee": "dictionary.namespace.as_ref",
+          "lineNumber": 2610
+        },
+        {
+          "caller": "namespace_mut",
+          "callee": "dictionary.namespace.as_mut",
+          "lineNumber": 2619
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "SanitizerAttribute::SanitizerAttributeNamespace",
+          "lineNumber": 2628
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "std::mem::take",
+          "lineNumber": 2629
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "namespace.map",
+          "lineNumber": 2630
+        },
+        {
+          "caller": "set_namespace",
+          "callee": "namespace.map",
+          "lineNumber": 2635
+        },
+        {
+          "caller": "is_custom_data_attribute",
+          "callee": "is_custom_data_attribute",
+          "lineNumber": 2643
+        },
+        {
+          "caller": "is_custom_data_attribute",
+          "callee": "self.name().str",
+          "lineNumber": 2644
+        },
+        {
+          "caller": "is_custom_data_attribute",
+          "callee": "self.name",
+          "lineNumber": 2644
+        },
+        {
+          "caller": "is_custom_data_attribute",
+          "callee": "self.namespace().map(|namespace| namespace.str()).as_deref",
+          "lineNumber": 2645
+        },
+        {
+          "caller": "is_custom_data_attribute",
+          "callee": "self.namespace().map",
+          "lineNumber": 2645
+        },
+        {
+          "caller": "is_custom_data_attribute",
+          "callee": "self.namespace",
+          "lineNumber": 2645
+        },
+        {
+          "caller": "is_custom_data_attribute",
+          "callee": "namespace.str",
+          "lineNumber": 2645
+        },
+        {
+          "caller": "attributes",
+          "callee": "dictionary.attributes.as_deref",
+          "lineNumber": 2667
+        },
+        {
+          "caller": "attributes_mut",
+          "callee": "dictionary.attributes.as_mut",
+          "lineNumber": 2676
+        },
+        {
+          "caller": "remove_attributes",
+          "callee": "dictionary.removeAttributes.as_deref",
+          "lineNumber": 2685
+        },
+        {
+          "caller": "remove_attributes_mut",
+          "callee": "dictionary.removeAttributes.as_mut",
+          "lineNumber": 2694
+        },
+        {
+          "caller": "set_attributes",
+          "callee": "SanitizerElementWithAttributes::SanitizerElementNamespaceWithAttributes",
+          "lineNumber": 2702
+        },
+        {
+          "caller": "set_attributes",
+          "callee": "std::mem::take",
+          "lineNumber": 2705
+        },
+        {
+          "caller": "set_remove_attributes",
+          "callee": "SanitizerElementWithAttributes::SanitizerElementNamespaceWithAttributes",
+          "lineNumber": 2722
+        },
+        {
+          "caller": "set_remove_attributes",
+          "callee": "std::mem::take",
+          "lineNumber": 2725
+        },
+        {
+          "caller": "contains_target",
+          "callee": "self.iter().any",
+          "lineNumber": 2774
+        },
+        {
+          "caller": "contains_target",
+          "callee": "self.iter",
+          "lineNumber": 2774
+        },
+        {
+          "caller": "contains_target",
+          "callee": "entry.target",
+          "lineNumber": 2774
+        },
+        {
+          "caller": "contains_target",
+          "callee": "other.target",
+          "lineNumber": 2774
+        },
+        {
+          "caller": "has_duplicate_targets",
+          "callee": "HashSet::new",
+          "lineNumber": 2781
+        },
+        {
+          "caller": "has_duplicate_targets",
+          "callee": "self.iter().any",
+          "lineNumber": 2782
+        },
+        {
+          "caller": "has_duplicate_targets",
+          "callee": "self.iter",
+          "lineNumber": 2782
+        },
+        {
+          "caller": "has_duplicate_targets",
+          "callee": "used.insert",
+          "lineNumber": 2783
+        },
+        {
+          "caller": "has_duplicate_targets",
+          "callee": "entry.target().to_string",
+          "lineNumber": 2783
+        },
+        {
+          "caller": "has_duplicate_targets",
+          "callee": "entry.target",
+          "lineNumber": 2783
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "attributes\n            .iter()\n            .map(|&attribute| {\n                SanitizerAttribute::SanitizerAttributeNamespace(SanitizerAttributeNamespace {\n                    name: attribute.into(),\n                    namespace: None,\n                })\n            }).collect",
+          "lineNumber": 3068
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "attributes\n            .iter().map",
+          "lineNumber": 3068
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "attributes.iter",
+          "lineNumber": 3068
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "SanitizerAttribute::SanitizerAttributeNamespace",
+          "lineNumber": 3071
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "attribute.into",
+          "lineNumber": 3072
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "ELEMENTS\n        .iter()\n        .map(|&(name, namespace, attributes)| {\n            let attributes = create_attribute_vec(attributes);\n            SanitizerElementWithAttributes::SanitizerElementNamespaceWithAttributes(\n                SanitizerElementNamespaceWithAttributes {\n                    parent: SanitizerElementNamespace {\n                        name: name.into(),\n                        namespace: Some(namespace.to_string().into()),\n                    },\n                    attributes: Some(attributes),\n                    removeAttributes: None,\n                },\n            )\n        }).collect",
+          "lineNumber": 3079
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "ELEMENTS\n        .iter().map",
+          "lineNumber": 3079
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "ELEMENTS.iter",
+          "lineNumber": 3079
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "create_attribute_vec",
+          "lineNumber": 3082
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "SanitizerElementWithAttributes::SanitizerElementNamespaceWithAttributes",
+          "lineNumber": 3083
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "name.into",
+          "lineNumber": 3086
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "Some",
+          "lineNumber": 3087
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "namespace.to_string().into",
+          "lineNumber": 3087
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "namespace.to_string",
+          "lineNumber": 3087
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "Some",
+          "lineNumber": 3089
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "create_attribute_vec",
+          "lineNumber": 3096
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "Some",
+          "lineNumber": 3099
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "Some",
+          "lineNumber": 3102
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "Vec::new",
+          "lineNumber": 3102
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "Some",
+          "lineNumber": 3104
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "Some",
+          "lineNumber": 3106
+        },
+        {
+          "caller": "built_in_safe_default_configuration",
+          "callee": "Some",
+          "lineNumber": 3107
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "REMOVE_ELEMENTS\n        .iter()\n        .map(|&(name, namespace)| {\n            SanitizerElement::SanitizerElementNamespace(SanitizerElementNamespace {\n                name: name.into(),\n                namespace: Some(namespace.to_string().into()),\n            })\n        }).collect",
+          "lineNumber": 3123
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "REMOVE_ELEMENTS\n        .iter().map",
+          "lineNumber": 3123
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "REMOVE_ELEMENTS.iter",
+          "lineNumber": 3123
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "SanitizerElement::SanitizerElementNamespace",
+          "lineNumber": 3126
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "name.into",
+          "lineNumber": 3127
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "Some",
+          "lineNumber": 3128
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "namespace.to_string().into",
+          "lineNumber": 3128
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "namespace.to_string",
+          "lineNumber": 3128
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "Some",
+          "lineNumber": 3135
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "Some",
+          "lineNumber": 3140
+        },
+        {
+          "caller": "built_in_safe_baseline_configuration",
+          "callee": "Vec::new",
+          "lineNumber": 3140
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 72,
+        "classCount": 11
+      }
+    },
+    {
+      "path": "components/script/dom/security/securitypolicyviolationevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 191,
+      "nonEmptyLines": 170,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 41,
+          "endLine": 57,
+          "params": [
+            "init"
+          ]
+        },
+        {
+          "name": "new_initialized",
+          "startLine": 59,
+          "endLine": 71,
+          "params": [
+            "cx",
+            "global",
+            "init",
+            "proto"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 74,
+          "endLine": 91,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "composed",
+            "init"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 93,
+          "endLine": 103,
+          "params": [
+            "cx",
+            "global",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "composed",
+            "init"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 108,
+          "endLine": 125,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "DocumentURI",
+          "startLine": 128,
+          "endLine": 130,
+          "params": []
+        },
+        {
+          "name": "Referrer",
+          "startLine": 133,
+          "endLine": 135,
+          "params": []
+        },
+        {
+          "name": "BlockedURI",
+          "startLine": 138,
+          "endLine": 140,
+          "params": []
+        },
+        {
+          "name": "EffectiveDirective",
+          "startLine": 143,
+          "endLine": 145,
+          "params": []
+        },
+        {
+          "name": "ViolatedDirective",
+          "startLine": 148,
+          "endLine": 150,
+          "params": []
+        },
+        {
+          "name": "OriginalPolicy",
+          "startLine": 153,
+          "endLine": 155,
+          "params": []
+        },
+        {
+          "name": "SourceFile",
+          "startLine": 158,
+          "endLine": 160,
+          "params": []
+        },
+        {
+          "name": "Sample",
+          "startLine": 163,
+          "endLine": 165,
+          "params": []
+        },
+        {
+          "name": "Disposition",
+          "startLine": 168,
+          "endLine": 170,
+          "params": []
+        },
+        {
+          "name": "StatusCode",
+          "startLine": 173,
+          "endLine": 175,
+          "params": []
+        },
+        {
+          "name": "LineNumber",
+          "startLine": 178,
+          "endLine": 180,
+          "params": []
+        },
+        {
+          "name": "ColumnNumber",
+          "startLine": 183,
+          "endLine": 185,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 188,
+          "endLine": 190,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "SecurityPolicyViolationEvent",
+          "startLine": 24,
+          "endLine": 38,
+          "methods": [
+            "new_inherited",
+            "new_initialized",
+            "new_with_proto",
+            "new",
+            "Constructor",
+            "DocumentURI",
+            "Referrer",
+            "BlockedURI",
+            "EffectiveDirective",
+            "ViolatedDirective",
+            "OriginalPolicy",
+            "SourceFile",
+            "Sample",
+            "Disposition",
+            "StatusCode",
+            "LineNumber",
+            "ColumnNumber",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "document_uri",
+            "referrer",
+            "blocked_uri",
+            "effective_directive",
+            "violated_directive",
+            "original_policy",
+            "source_file",
+            "sample",
+            "disposition",
+            "status_code",
+            "line_number",
+            "column_number"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SecurityPolicyViolationEvent",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "new_initialized",
+          "line": 59,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 93,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 43
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "init.documentURI.clone",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "init.referrer.clone",
+          "lineNumber": 45
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "init.blockedURI.clone",
+          "lineNumber": 46
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "init.effectiveDirective.clone",
+          "lineNumber": 47
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "init.violatedDirective.clone",
+          "lineNumber": 48
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "init.originalPolicy.clone",
+          "lineNumber": 49
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "init.sourceFile.clone",
+          "lineNumber": 50
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "init.sample.clone",
+          "lineNumber": 51
+        },
+        {
+          "caller": "new_initialized",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new_initialized",
+          "callee": "Box::new",
+          "lineNumber": 66
+        },
+        {
+          "caller": "new_initialized",
+          "callee": "SecurityPolicyViolationEvent::new_inherited",
+          "lineNumber": 66
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "SecurityPolicyViolationEvent::new_initialized",
+          "lineNumber": 84
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "ev.upcast::<Event>",
+          "lineNumber": 86
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.init_event",
+          "lineNumber": 87
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "bool::from",
+          "lineNumber": 87
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "bool::from",
+          "lineNumber": 87
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.set_composed",
+          "lineNumber": 88
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "bool::from",
+          "lineNumber": 88
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 102
+        },
+        {
+          "caller": "Constructor",
+          "callee": "SecurityPolicyViolationEvent::new_with_proto",
+          "lineNumber": 115
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 119
+        },
+        {
+          "caller": "Constructor",
+          "callee": "EventBubbles::from",
+          "lineNumber": 120
+        },
+        {
+          "caller": "Constructor",
+          "callee": "EventCancelable::from",
+          "lineNumber": 121
+        },
+        {
+          "caller": "Constructor",
+          "callee": "EventComposed::from",
+          "lineNumber": 122
+        },
+        {
+          "caller": "DocumentURI",
+          "callee": "self.document_uri.clone",
+          "lineNumber": 129
+        },
+        {
+          "caller": "Referrer",
+          "callee": "self.referrer.clone",
+          "lineNumber": 134
+        },
+        {
+          "caller": "BlockedURI",
+          "callee": "self.blocked_uri.clone",
+          "lineNumber": 139
+        },
+        {
+          "caller": "EffectiveDirective",
+          "callee": "self.effective_directive.clone",
+          "lineNumber": 144
+        },
+        {
+          "caller": "ViolatedDirective",
+          "callee": "self.violated_directive.clone",
+          "lineNumber": 149
+        },
+        {
+          "caller": "OriginalPolicy",
+          "callee": "self.original_policy.clone",
+          "lineNumber": 154
+        },
+        {
+          "caller": "SourceFile",
+          "callee": "self.source_file.clone",
+          "lineNumber": 159
+        },
+        {
+          "caller": "Sample",
+          "callee": "self.sample.clone",
+          "lineNumber": 164
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 189
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 18,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/security/xframeoptions.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 96,
+      "nonEmptyLines": 93,
+      "functions": [
+        {
+          "name": "check_a_navigation_response_adherence_to_x_frame_options",
+          "startLine": 16,
+          "endLine": 96,
+          "params": [
+            "window",
+            "csp_list",
+            "destination_origin",
+            "headers"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "check_a_navigation_response_adherence_to_x_frame_options",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "window.window_proxy().parent().is_none",
+          "lineNumber": 23
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "window.window_proxy().parent",
+          "lineNumber": 23
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "window.window_proxy",
+          "lineNumber": 23
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "csp_list.0.iter",
+          "lineNumber": 28
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "policy.contains_a_directive_whose_name_is",
+          "lineNumber": 34
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "get_decode_and_split_header_name",
+          "lineNumber": 44
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "FxHashSet::from_iter",
+          "lineNumber": 51
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "raw_xframe_options.iter().map",
+          "lineNumber": 51
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "raw_xframe_options.iter",
+          "lineNumber": 51
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "value.to_lowercase",
+          "lineNumber": 51
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "x_frame_options.len",
+          "lineNumber": 54
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "x_frame_options\n            .iter().any",
+          "lineNumber": 55
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "x_frame_options.iter",
+          "lineNumber": 55
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "x_frame_options.len",
+          "lineNumber": 62
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "x_frame_options.iter().next",
+          "lineNumber": 65
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "x_frame_options.iter",
+          "lineNumber": 65
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "window.window_proxy",
+          "lineNumber": 74
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "window_proxy.frame_element",
+          "lineNumber": 76
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "container_element.owner_document",
+          "lineNumber": 78
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "container_document.origin().same_origin",
+          "lineNumber": 80
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "container_document.origin",
+          "lineNumber": 80
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "container_document.window().window_proxy",
+          "lineNumber": 84
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "container_document.window",
+          "lineNumber": 84
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "window_proxy.parent().is_some",
+          "lineNumber": 90
+        },
+        {
+          "caller": "check_a_navigation_response_adherence_to_x_frame_options",
+          "callee": "window_proxy.parent",
+          "lineNumber": 90
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    }
+  ]
+}

@@ -1,0 +1,1177 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webgpu/gpubufferusage.rs",
+      "type": "file",
+      "name": "gpubufferusage.rs",
+      "filePath": "components/script/dom/webgpu/gpubufferusage.rs",
+      "summary": "Constants-only class defining GPU buffer usage flags (MAP_READ, MAP_WRITE, COPY_SRC, COPY_DST, INDEX, VERTEX, UNIFORM, STORAGE, INDIRECT, QUERY_RESOLVE).",
+      "tags": [
+        "buffer",
+        "memory-management",
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "type": "file",
+      "name": "gpucanvascontext.rs",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "summary": "Implements GPUCanvasContext for configuring and obtaining the current texture from a canvas element for WebGPU rendering.",
+      "tags": [
+        "canvas",
+        "presentation",
+        "webgpu"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses a swap-chain-like presentation buffer pattern with ArrayVec for managing multiple presentation buffers and texture lifetime."
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpucolorwrite.rs",
+      "type": "file",
+      "name": "gpucolorwrite.rs",
+      "filePath": "components/script/dom/webgpu/gpucolorwrite.rs",
+      "summary": "Constants-only class defining GPU color write mask flags (RED, GREEN, BLUE, ALPHA, ALL) for color attachment blending.",
+      "tags": [
+        "constants",
+        "flags",
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "type": "file",
+      "name": "gpucommandbuffer.rs",
+      "filePath": "components/script/dom/webgpu/gpucommandbuffer.rs",
+      "summary": "Implements GPUCommandBuffer representing a recorded list of GPU commands that can be submitted to a queue for execution.",
+      "tags": [
+        "webgpu",
+        "dom-binding",
+        "webgpu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "type": "file",
+      "name": "gpucommandencoder.rs",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "summary": "Implements GPUCommandEncoder for recording GPU commands including compute/render passes, buffer/texture copies, and debug markers.",
+      "tags": [
+        "command-recording",
+        "gpu-commands",
+        "webgpu"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Implements extensive command recording with enums for copy operations, pass encoding, and debug marker commands."
+    },
+    {
+      "id": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "type": "file",
+      "name": "gpucompilationinfo.rs",
+      "filePath": "components/script/dom/webgpu/gpucompilationinfo.rs",
+      "summary": "Implements GPUCompilationInfo containing a list of GPUCompilationMessage items from shader compilation.",
+      "tags": [
+        "compilation",
+        "shader-info",
+        "webgpu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpubufferusage.rs:GPUBufferUsage",
+      "type": "class",
+      "name": "GPUBufferUsage",
+      "filePath": "components/script/dom/webgpu/gpubufferusage.rs",
+      "lineRange": [
+        9,
+        11
+      ],
+      "summary": "WebGPU GPUBufferUsage DOM class with 0 methods exposing WebGPU API functionality.",
+      "tags": [
+        "webgpu",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpucanvascontext.rs:GPUCanvasContext",
+      "type": "class",
+      "name": "GPUCanvasContext",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        71,
+        86
+      ],
+      "summary": "Canvas context for WebGPU rendering, managing configuration, presentation textures, and swap chain lifecycle.",
+      "tags": [
+        "webgpu",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        58,
+        67
+      ],
+      "summary": "Sends a drop/resource cleanup message to the WebGPU render thread via the channel.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        90,
+        122
+      ],
+      "summary": "Initializes the DOM object with Reflector and default field values during construction.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        124,
+        139
+      ],
+      "summary": "Constructs a new reflected DOM object with the given global scope and parameters.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:set_image_key",
+      "type": "function",
+      "name": "set_image_key",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        144,
+        154
+      ],
+      "summary": "Sets the image key for the canvas context presentation.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:update_rendering",
+      "type": "function",
+      "name": "update_rendering",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        157,
+        176
+      ],
+      "summary": "Updates the canvas rendering state, sending the current texture for presentation.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:texture_descriptor_for_canvas_and_configuration",
+      "type": "function",
+      "name": "texture_descriptor_for_canvas_and_configuration",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        179,
+        203
+      ],
+      "summary": "Builds a texture descriptor for the canvas based on current configuration and size.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:expire_current_texture",
+      "type": "function",
+      "name": "expire_current_texture",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        206,
+        226
+      ],
+      "summary": "Destroys the current presentation texture and marks the canvas as dirty.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:context_configuration",
+      "type": "function",
+      "name": "context_configuration",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        241,
+        255
+      ],
+      "summary": "Returns the current canvas context configuration with device and texture descriptor info.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:pending_texture",
+      "type": "function",
+      "name": "pending_texture",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        257,
+        266
+      ],
+      "summary": "Returns the pending presentation texture info for readback operations.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:resize",
+      "type": "function",
+      "name": "resize",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        277,
+        290
+      ],
+      "summary": "Resizes the canvas context, replacing the drawing buffer and re-computing texture descriptors.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:get_image_data",
+      "type": "function",
+      "name": "get_image_data",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        297,
+        315
+      ],
+      "summary": "Retrieves image data from the GPU canvas context via a blocking channel request.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:Configure",
+      "type": "function",
+      "name": "Configure",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        333,
+        377
+      ],
+      "summary": "Configures the canvas context with a device, format, and presentation mode, validating and creating texture descriptors.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucanvascontext.rs:GetCurrentTexture",
+      "type": "function",
+      "name": "GetCurrentTexture",
+      "filePath": "components/script/dom/webgpu/gpucanvascontext.rs",
+      "lineRange": [
+        390,
+        419
+      ],
+      "summary": "Returns the current GPUTexture for rendering, creating a new one if needed via the device.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpucolorwrite.rs:GPUColorWrite",
+      "type": "class",
+      "name": "GPUColorWrite",
+      "filePath": "components/script/dom/webgpu/gpucolorwrite.rs",
+      "lineRange": [
+        9,
+        11
+      ],
+      "summary": "WebGPU GPUColorWrite DOM class with 0 methods exposing WebGPU API functionality.",
+      "tags": [
+        "webgpu",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpucommandbuffer.rs:GPUCommandBuffer",
+      "type": "class",
+      "name": "GPUCommandBuffer",
+      "filePath": "components/script/dom/webgpu/gpucommandbuffer.rs",
+      "lineRange": [
+        40,
+        44
+      ],
+      "summary": "Recorded list of GPU commands ready for submission to a queue.",
+      "tags": [
+        "webgpu",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandbuffer.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/script/dom/webgpu/gpucommandbuffer.rs",
+      "lineRange": [
+        25,
+        36
+      ],
+      "summary": "Sends a drop/resource cleanup message to the WebGPU render thread via the channel.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandbuffer.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpucommandbuffer.rs",
+      "lineRange": [
+        47,
+        60
+      ],
+      "summary": "Initializes the DOM object with Reflector and default field values during construction.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandbuffer.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpucommandbuffer.rs",
+      "lineRange": [
+        62,
+        78
+      ],
+      "summary": "Constructs a new reflected DOM object with the given global scope and parameters.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandbuffer.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webgpu/gpucommandbuffer.rs",
+      "lineRange": [
+        82,
+        84
+      ],
+      "summary": "Returns the internal WebGPU ID of the resource.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpucommandencoder.rs:GPUCommandEncoder",
+      "type": "class",
+      "name": "GPUCommandEncoder",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        43,
+        48
+      ],
+      "summary": "Command encoder for recording GPU operations including compute/render passes, buffer/texture copies, and debug markers.",
+      "tags": [
+        "webgpu",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        63,
+        75
+      ],
+      "summary": "Initializes the DOM object with Reflector and default field values during construction.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        77,
+        92
+      ],
+      "summary": "Constructs a new reflected DOM object with the given global scope and parameters.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:id",
+      "type": "function",
+      "name": "id",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        96,
+        98
+      ],
+      "summary": "Returns the internal WebGPU ID of the resource.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:device_id",
+      "type": "function",
+      "name": "device_id",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        100,
+        102
+      ],
+      "summary": "Returns the device ID associated with this command encoder.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:create",
+      "type": "function",
+      "name": "create",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        105,
+        133
+      ],
+      "summary": "Creates a GPUCommandEncoder from a descriptor, allocating encoder ID and sending creation to the render thread.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:BeginComputePass",
+      "type": "function",
+      "name": "BeginComputePass",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        148,
+        178
+      ],
+      "summary": "Begins a new compute pass, creating a GPUComputePassEncoder from the given descriptor.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:BeginRenderPass",
+      "type": "function",
+      "name": "BeginRenderPass",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        181,
+        259
+      ],
+      "summary": "Begins a new render pass, converting depth/stencil and color attachment descriptors and creating a GPURenderPassEncoder.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:CopyBufferToBuffer",
+      "type": "function",
+      "name": "CopyBufferToBuffer",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        262,
+        283
+      ],
+      "summary": "Records a copy operation between buffer/texture resources in the command buffer.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:CopyBufferToTexture",
+      "type": "function",
+      "name": "CopyBufferToTexture",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        286,
+        305
+      ],
+      "summary": "Records a copy operation between buffer/texture resources in the command buffer.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:CopyTextureToBuffer",
+      "type": "function",
+      "name": "CopyTextureToBuffer",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        308,
+        327
+      ],
+      "summary": "Records a copy operation between buffer/texture resources in the command buffer.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:CopyTextureToTexture",
+      "type": "function",
+      "name": "CopyTextureToTexture",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        330,
+        349
+      ],
+      "summary": "Records a copy operation between buffer/texture resources in the command buffer.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:Finish",
+      "type": "function",
+      "name": "Finish",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        352,
+        379
+      ],
+      "summary": "Finishes command encoding and produces a GPUCommandBuffer from the recorded commands.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:PushDebugGroup",
+      "type": "function",
+      "name": "PushDebugGroup",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        382,
+        395
+      ],
+      "summary": "Records a debug annotation command for GPU debugging tools.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:PopDebugGroup",
+      "type": "function",
+      "name": "PopDebugGroup",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        398,
+        410
+      ],
+      "summary": "Records a debug annotation command for GPU debugging tools.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:InsertDebugMarker",
+      "type": "function",
+      "name": "InsertDebugMarker",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        413,
+        426
+      ],
+      "summary": "Records a debug annotation command for GPU debugging tools.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucommandencoder.rs:ResolveQuerySet",
+      "type": "function",
+      "name": "ResolveQuerySet",
+      "filePath": "components/script/dom/webgpu/gpucommandencoder.rs",
+      "lineRange": [
+        428,
+        452
+      ],
+      "summary": "Resolves a query set result into a destination buffer.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgpu/gpucompilationinfo.rs:GPUCompilationInfo",
+      "type": "class",
+      "name": "GPUCompilationInfo",
+      "filePath": "components/script/dom/webgpu/gpucompilationinfo.rs",
+      "lineRange": [
+        18,
+        22
+      ],
+      "summary": "Container for GPU shader compilation messages reporting errors, warnings, and info.",
+      "tags": [
+        "webgpu",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucompilationinfo.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgpu/gpucompilationinfo.rs",
+      "lineRange": [
+        25,
+        30
+      ],
+      "summary": "Initializes the DOM object with Reflector and default field values during construction.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucompilationinfo.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgpu/gpucompilationinfo.rs",
+      "lineRange": [
+        32,
+        38
+      ],
+      "summary": "Constructs a new reflected DOM object with the given global scope and parameters.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgpu/gpucompilationinfo.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/script/dom/webgpu/gpucompilationinfo.rs",
+      "lineRange": [
+        40,
+        49
+      ],
+      "summary": "Creates a GPUCompilationInfo from an optional shader compilation error.",
+      "tags": [
+        "webgpu"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webgpu/gpubufferusage.rs",
+      "target": "class:components/script/dom/webgpu/gpubufferusage.rs:GPUBufferUsage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpubufferusage.rs",
+      "target": "class:components/script/dom/webgpu/gpubufferusage.rs:GPUBufferUsage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "class:components/script/dom/webgpu/gpucanvascontext.rs:GPUCanvasContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "class:components/script/dom/webgpu/gpucanvascontext.rs:GPUCanvasContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:set_image_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:set_image_key",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:update_rendering",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:update_rendering",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:texture_descriptor_for_canvas_and_configuration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:expire_current_texture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:context_configuration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:pending_texture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:resize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:get_image_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:Configure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucanvascontext.rs",
+      "target": "function:components/script/dom/webgpu/gpucanvascontext.rs:GetCurrentTexture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucolorwrite.rs",
+      "target": "class:components/script/dom/webgpu/gpucolorwrite.rs:GPUColorWrite",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucolorwrite.rs",
+      "target": "class:components/script/dom/webgpu/gpucolorwrite.rs:GPUColorWrite",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "target": "class:components/script/dom/webgpu/gpucommandbuffer.rs:GPUCommandBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "target": "class:components/script/dom/webgpu/gpucommandbuffer.rs:GPUCommandBuffer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandbuffer.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandbuffer.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandbuffer.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandbuffer.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandbuffer.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandbuffer.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "class:components/script/dom/webgpu/gpucommandencoder.rs:GPUCommandEncoder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "class:components/script/dom/webgpu/gpucommandencoder.rs:GPUCommandEncoder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:device_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:device_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:BeginComputePass",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:BeginRenderPass",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:CopyBufferToBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:CopyBufferToTexture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:CopyTextureToBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:CopyTextureToTexture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:Finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:PushDebugGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:PopDebugGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:InsertDebugMarker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "function:components/script/dom/webgpu/gpucommandencoder.rs:ResolveQuerySet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "target": "class:components/script/dom/webgpu/gpucompilationinfo.rs:GPUCompilationInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "target": "class:components/script/dom/webgpu/gpucompilationinfo.rs:GPUCompilationInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "target": "function:components/script/dom/webgpu/gpucompilationinfo.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "target": "function:components/script/dom/webgpu/gpucompilationinfo.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "target": "function:components/script/dom/webgpu/gpucompilationinfo.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "target": "function:components/script/dom/webgpu/gpucompilationinfo.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "target": "function:components/script/dom/webgpu/gpucompilationinfo.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucompilationinfo.rs",
+      "target": "function:components/script/dom/webgpu/gpucompilationinfo.rs:from",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "file:components/script/dom/webgpu/gpubuffer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "file:components/script/dom/webgpu/gpucommandbuffer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "file:components/script/dom/webgpu/gpucomputepassencoder.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/webgpu/gpucommandencoder.rs",
+      "target": "file:components/script/dom/webgpu/gpudevice.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

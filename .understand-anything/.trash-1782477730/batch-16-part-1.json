@@ -1,0 +1,1038 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/html/htmlheadingelement.rs",
+      "type": "file",
+      "name": "htmlheadingelement.rs",
+      "filePath": "components/script/dom/html/htmlheadingelement.rs",
+      "summary": "Implements the DOM interface for HTML heading elements (h1-h6), managing heading level enumeration and element construction.",
+      "tags": [
+        "dom",
+        "html-element",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlheadingelement.rs:HeadingLevel",
+      "type": "class",
+      "name": "HeadingLevel",
+      "filePath": "components/script/dom/html/htmlheadingelement.rs",
+      "lineRange": [
+        15,
+        22
+      ],
+      "summary": "Enumeration of heading levels (h1-h6) used by HTMLHeadingElement.",
+      "tags": [
+        "dom",
+        "rust",
+        "enumeration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlheadingelement.rs:HTMLHeadingElement",
+      "type": "class",
+      "name": "HTMLHeadingElement",
+      "filePath": "components/script/dom/html/htmlheadingelement.rs",
+      "lineRange": [
+        25,
+        28
+      ],
+      "summary": "DOM implementation of the HTMLHeadingElement WebIDL interface, defining the struct and methods for this HTML element type.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlheadingelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmlheadingelement.rs",
+      "lineRange": [
+        31,
+        41
+      ],
+      "summary": "Initializes the inherited DOM element struct fields with default values.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlheadingelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlheadingelement.rs",
+      "lineRange": [
+        43,
+        59
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/html/htmlhrelement.rs",
+      "type": "file",
+      "name": "htmlhrelement.rs",
+      "filePath": "components/script/dom/html/htmlhrelement.rs",
+      "summary": "Implements the DOM interface for the HTML horizontal rule element (hr), handling deprecated presentational attributes (color, width, size, noshade) through presentational hints.",
+      "tags": [
+        "dom",
+        "html-element",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlhrelement.rs:HTMLHRElement",
+      "type": "class",
+      "name": "HTMLHRElement",
+      "filePath": "components/script/dom/html/htmlhrelement.rs",
+      "lineRange": [
+        29,
+        31
+      ],
+      "summary": "DOM implementation of the HTMLHRElement WebIDL interface, defining the struct and methods for this HTML element type.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlhrelement.rs:SizePresentationalHint",
+      "type": "class",
+      "name": "SizePresentationalHint",
+      "filePath": "components/script/dom/html/htmlhrelement.rs",
+      "lineRange": [
+        96,
+        100
+      ],
+      "summary": "Presentational hints for the deprecated hr element size-related attributes, controlling border widths and height.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhrelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlhrelement.rs",
+      "lineRange": [
+        44,
+        57
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhrelement.rs:get_color",
+      "type": "function",
+      "name": "get_color",
+      "filePath": "components/script/dom/html/htmlhrelement.rs",
+      "lineRange": [
+        103,
+        108
+      ],
+      "summary": "Attribute getter for the color property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhrelement.rs:get_width",
+      "type": "function",
+      "name": "get_width",
+      "filePath": "components/script/dom/html/htmlhrelement.rs",
+      "lineRange": [
+        110,
+        116
+      ],
+      "summary": "Attribute getter for the width property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhrelement.rs:get_size_info",
+      "type": "function",
+      "name": "get_size_info",
+      "filePath": "components/script/dom/html/htmlhrelement.rs",
+      "lineRange": [
+        118,
+        145
+      ],
+      "summary": "Attribute getter for the size_info property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhrelement.rs:parse_plain_attribute",
+      "type": "function",
+      "name": "parse_plain_attribute",
+      "filePath": "components/script/dom/html/htmlhrelement.rs",
+      "lineRange": [
+        163,
+        173
+      ],
+      "summary": "Parses an HTML attribute value into the internal DOM representation for this element type.",
+      "tags": [
+        "dom",
+        "rust",
+        "attribute",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/html/htmlhtmlelement.rs",
+      "type": "file",
+      "name": "htmlhtmlelement.rs",
+      "filePath": "components/script/dom/html/htmlhtmlelement.rs",
+      "summary": "Implements the DOM interface for the HTML root element (html), providing element construction with special parser insertion mode handling.",
+      "tags": [
+        "dom",
+        "html-element",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlhtmlelement.rs:HTMLHtmlElement",
+      "type": "class",
+      "name": "HTMLHtmlElement",
+      "filePath": "components/script/dom/html/htmlhtmlelement.rs",
+      "lineRange": [
+        16,
+        18
+      ],
+      "summary": "DOM implementation of the HTMLHtmlElement WebIDL interface, defining the struct and methods for this HTML element type.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhtmlelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlhtmlelement.rs",
+      "lineRange": [
+        32,
+        48
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "type": "file",
+      "name": "htmlhyperlinkelementutils.rs",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "summary": "Provides the shared hyperlink URL manipulation trait used by anchor and area elements, implementing getter/setter methods for all URL components (hash, host, href, origin, password, pathname, port, protocol, search, username).",
+      "tags": [
+        "dom",
+        "html-element",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlhyperlinkelementutils.rs:HyperlinkElement",
+      "type": "class",
+      "name": "HyperlinkElement",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        17,
+        19
+      ],
+      "summary": "Trait for element types that support URL hyperlink behavior, providing URL storage and reinitialization.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlhyperlinkelementutils.rs:HyperlinkElementTraits",
+      "type": "class",
+      "name": "HyperlinkElementTraits",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        22,
+        47
+      ],
+      "summary": "Trait defining URL component getter/setter methods shared by anchor and area elements, implementing the HTMLHyperlinkElementUtils mixin.",
+      "tags": [
+        "dom",
+        "rust",
+        "trait"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_hash",
+      "type": "function",
+      "name": "get_hash",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        53,
+        70
+      ],
+      "summary": "Attribute getter for the hash property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_hash",
+      "type": "function",
+      "name": "set_hash",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        73,
+        96
+      ],
+      "summary": "Attribute setter for the hash property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_host",
+      "type": "function",
+      "name": "get_host",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        99,
+        118
+      ],
+      "summary": "Attribute getter for the host property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_host",
+      "type": "function",
+      "name": "set_host",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        121,
+        140
+      ],
+      "summary": "Attribute setter for the host property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_hostname",
+      "type": "function",
+      "name": "get_hostname",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        143,
+        156
+      ],
+      "summary": "Attribute getter for the hostname property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_hostname",
+      "type": "function",
+      "name": "set_hostname",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        159,
+        178
+      ],
+      "summary": "Attribute setter for the hostname property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_href",
+      "type": "function",
+      "name": "get_href",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        181,
+        198
+      ],
+      "summary": "Attribute getter for the href property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_origin",
+      "type": "function",
+      "name": "get_origin",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        209,
+        219
+      ],
+      "summary": "Attribute getter for the origin property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_password",
+      "type": "function",
+      "name": "get_password",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        222,
+        233
+      ],
+      "summary": "Attribute getter for the password property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_password",
+      "type": "function",
+      "name": "set_password",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        236,
+        254
+      ],
+      "summary": "Attribute setter for the password property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_pathname",
+      "type": "function",
+      "name": "get_pathname",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        257,
+        268
+      ],
+      "summary": "Attribute getter for the pathname property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_pathname",
+      "type": "function",
+      "name": "set_pathname",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        271,
+        290
+      ],
+      "summary": "Attribute setter for the pathname property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_port",
+      "type": "function",
+      "name": "get_port",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        293,
+        304
+      ],
+      "summary": "Attribute getter for the port property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_port",
+      "type": "function",
+      "name": "set_port",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        307,
+        332
+      ],
+      "summary": "Attribute setter for the port property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_protocol",
+      "type": "function",
+      "name": "get_protocol",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        335,
+        345
+      ],
+      "summary": "Attribute getter for the protocol property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_protocol",
+      "type": "function",
+      "name": "set_protocol",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        348,
+        365
+      ],
+      "summary": "Attribute setter for the protocol property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_search",
+      "type": "function",
+      "name": "get_search",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        368,
+        381
+      ],
+      "summary": "Attribute getter for the search property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_search",
+      "type": "function",
+      "name": "set_search",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        384,
+        403
+      ],
+      "summary": "Attribute setter for the search property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_username",
+      "type": "function",
+      "name": "get_username",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        406,
+        416
+      ],
+      "summary": "Attribute getter for the username property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_url",
+      "type": "function",
+      "name": "set_url",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        419,
+        442
+      ],
+      "summary": "Attribute setter for the url property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_username",
+      "type": "function",
+      "name": "set_username",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        445,
+        463
+      ],
+      "summary": "Attribute setter for the username property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:reinitialize_url",
+      "type": "function",
+      "name": "reinitialize_url",
+      "filePath": "components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "lineRange": [
+        475,
+        485
+      ],
+      "summary": "Implements DOM behavior for the reinitialize_url method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/html/htmlheadingelement.rs",
+      "target": "class:components/script/dom/html/htmlheadingelement.rs:HeadingLevel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlheadingelement.rs",
+      "target": "class:components/script/dom/html/htmlheadingelement.rs:HeadingLevel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlheadingelement.rs",
+      "target": "class:components/script/dom/html/htmlheadingelement.rs:HTMLHeadingElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlheadingelement.rs",
+      "target": "class:components/script/dom/html/htmlheadingelement.rs:HTMLHeadingElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlheadingelement.rs",
+      "target": "function:components/script/dom/html/htmlheadingelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlheadingelement.rs",
+      "target": "function:components/script/dom/html/htmlheadingelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlheadingelement.rs",
+      "target": "function:components/script/dom/html/htmlheadingelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "class:components/script/dom/html/htmlhrelement.rs:HTMLHRElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "class:components/script/dom/html/htmlhrelement.rs:HTMLHRElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "class:components/script/dom/html/htmlhrelement.rs:SizePresentationalHint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "class:components/script/dom/html/htmlhrelement.rs:SizePresentationalHint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:get_color",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:get_color",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:get_width",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:get_width",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:get_size_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:get_size_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhrelement.rs",
+      "target": "function:components/script/dom/html/htmlhrelement.rs:parse_plain_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhtmlelement.rs",
+      "target": "class:components/script/dom/html/htmlhtmlelement.rs:HTMLHtmlElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhtmlelement.rs",
+      "target": "class:components/script/dom/html/htmlhtmlelement.rs:HTMLHtmlElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhtmlelement.rs",
+      "target": "function:components/script/dom/html/htmlhtmlelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhtmlelement.rs",
+      "target": "function:components/script/dom/html/htmlhtmlelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "class:components/script/dom/html/htmlhyperlinkelementutils.rs:HyperlinkElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "class:components/script/dom/html/htmlhyperlinkelementutils.rs:HyperlinkElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "class:components/script/dom/html/htmlhyperlinkelementutils.rs:HyperlinkElementTraits",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "class:components/script/dom/html/htmlhyperlinkelementutils.rs:HyperlinkElementTraits",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_host",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_host",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_hostname",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_hostname",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_href",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_origin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_password",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_password",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_pathname",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_pathname",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_port",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_port",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_protocol",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_protocol",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_search",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_search",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:get_username",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:set_username",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlhyperlinkelementutils.rs",
+      "target": "function:components/script/dom/html/htmlhyperlinkelementutils.rs:reinitialize_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

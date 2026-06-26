@@ -1,0 +1,909 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/canvas/peniko_conversions.rs",
+      "type": "file",
+      "name": "peniko_conversions.rs",
+      "filePath": "components/canvas/peniko_conversions.rs",
+      "summary": "Implements the Convert trait across multiple types to translate Servo's canvas internal types (colors, gradients, line options, brushes, images) into peniko and kurbo equivalents used by the Vello rendering pipeline.",
+      "tags": ["type-conversion", "peniko", "rendering-pipeline"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/peniko_conversions.rs:convert",
+      "type": "function",
+      "name": "convert",
+      "filePath": "components/canvas/peniko_conversions.rs",
+      "lineRange": [14, 240],
+      "summary": "Implements Convert for 16 different type pairs including FontData, Color, CompositionStyle, LineOptions, FillOrStrokeStyle, ColorStops, and snapshot-to-image conversions, bridging Servo canvas types to peniko rendering types.",
+      "tags": ["type-conversion", "trait-impl", "bridging"],
+      "complexity": "moderate",
+      "languageNotes": "Rust trait implementation with multiple impl blocks for different source/target type pairs, all named convert via method dispatch."
+    },
+    {
+      "id": "file:components/canvas/vello_backend.rs",
+      "type": "file",
+      "name": "vello_backend.rs",
+      "filePath": "components/canvas/vello_backend.rs",
+      "summary": "GPU-accelerated canvas drawing backend using the Vello renderer with wgpu. Implements GenericDrawTarget with scene graph composition, texture-based rendering, font caching, and GPU readback for snapshots.",
+      "tags": ["gpu-rendering", "vello", "wgpu", "canvas-backend"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/canvas/vello_backend.rs:VelloDrawTarget",
+      "type": "class",
+      "name": "VelloDrawTarget",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [48, 61],
+      "summary": "GPU-backed draw target using Vello's scene graph renderer with wgpu. Manages device resources, render textures, buffer readback, and provides the full drawing API for canvas operations.",
+      "tags": ["gpu-rendering", "vello", "scene-graph", "drawing-surface"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/canvas/vello_backend.rs:State",
+      "type": "class",
+      "name": "State",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [64, 72],
+      "summary": "Enum tracking the render state machine transitions: Drawing, RenderedToTexture, and RenderedToBuffer, ensuring proper resource lifecycle for GPU operations.",
+      "tags": ["state-machine", "render-lifecycle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:new_with_renderer",
+      "type": "function",
+      "name": "new_with_renderer",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [75, 133],
+      "summary": "Constructs a VelloDrawTarget from an existing wgpu device, queue, and renderer, setting up render textures, buffers, and default scene state.",
+      "tags": ["constructor", "gpu-initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:with_composition",
+      "type": "function",
+      "name": "with_composition",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [135, 155],
+      "summary": "Wraps a drawing operation in a scene layer that applies composition or blending effects via push/pop layer on the Vello scene.",
+      "tags": ["composition", "layer-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:ignore_clips",
+      "type": "function",
+      "name": "ignore_clips",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [157, 168],
+      "summary": "Temporarily removes clip layers before executing a function, then restores them, used for full-canvas operations like clear and copy.",
+      "tags": ["clipping", "layer-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:is_viewport_cleared",
+      "type": "function",
+      "name": "is_viewport_cleared",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [170, 184],
+      "summary": "Checks whether a clear rect with transform covers the full viewport by testing against clip bounds.",
+      "tags": ["optimization", "viewport-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:ensure_drawing",
+      "type": "function",
+      "name": "ensure_drawing",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [186, 198],
+      "summary": "Transitions the state to Drawing and initializes the scene with a transparent clear fill, ensuring the draw target is ready for new operations.",
+      "tags": ["state-management", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [204, 240],
+      "summary": "Creates a fully initialized VelloDrawTarget by discovering a wgpu device, creating a renderer, and setting up all GPU resources with fallback backend selection.",
+      "tags": ["constructor", "gpu-initialization", "device-discovery"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:clear_rect",
+      "type": "function",
+      "name": "clear_rect",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [242, 269],
+      "summary": "Clears a rectangular region by either resetting the entire scene (full viewport) or drawing a solid fill rect with clear composition.",
+      "tags": ["rect-drawing", "clearing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:copy_surface",
+      "type": "function",
+      "name": "copy_surface",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [271, 309],
+      "summary": "Copies a surface (image buffer) to the draw target at a specified destination with optional source rect, handling alpha premultiplication and transform.",
+      "tags": ["surface-copy", "image-blitting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:draw_surface",
+      "type": "function",
+      "name": "draw_surface",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [320, 365],
+      "summary": "Draws a surface onto the canvas with composition blending, image filter, and transform, creating a peniko image from the source data.",
+      "tags": ["surface-drawing", "composition", "image-rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:draw_surface_with_shadow",
+      "type": "function",
+      "name": "draw_surface_with_shadow",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [367, 381],
+      "summary": "Stub implementation for drawing a surface with shadow effects - currently panics as shadow rendering is not yet supported in the Vello backend.",
+      "tags": ["unimplemented", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:fill",
+      "type": "function",
+      "name": "fill",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [383, 401],
+      "summary": "Fills a path on the scene graph with the given style and composition, converting fill rules and transforms to peniko types.",
+      "tags": ["path-fill", "scene-graph", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:fill_text",
+      "type": "function",
+      "name": "fill_text",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [403, 450],
+      "summary": "Fills text glyphs onto the scene graph by looking up fonts from a thread-local cache, converting font data to peniko, and drawing glyphs with the specified brush.",
+      "tags": ["text-rendering", "glyph-drawing", "font-cache"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:fill_rect",
+      "type": "function",
+      "name": "fill_rect",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [452, 468],
+      "summary": "Fills a rectangle on the scene graph using the converted brush style with composition and transform.",
+      "tags": ["rect-fill", "scene-graph", "drawing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:push_clip_rect",
+      "type": "function",
+      "name": "push_clip_rect",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [488, 498],
+      "summary": "Pushes a rectangular clip region by creating a path from the rect and delegating to push_clip with identity transform.",
+      "tags": ["clipping", "path-creation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:stroke",
+      "type": "function",
+      "name": "stroke",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [500, 518],
+      "summary": "Strokes a path on the scene graph with line options, brush style, composition, and transform.",
+      "tags": ["path-stroke", "scene-graph", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:stroke_text",
+      "type": "function",
+      "name": "stroke_text",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [520, 569],
+      "summary": "Strokes text glyphs on the scene graph with line options, font cache lookup, and brush style, converting font data to peniko format.",
+      "tags": ["text-rendering", "glyph-stroke", "font-cache"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:stroke_rect",
+      "type": "function",
+      "name": "stroke_rect",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [571, 590],
+      "summary": "Strokes a rectangle outline on the scene graph with line options, brush, composition, and transform.",
+      "tags": ["rect-stroke", "scene-graph", "drawing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:image_descriptor_and_serializable_data",
+      "type": "function",
+      "name": "image_descriptor_and_serializable_data",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [592, 614],
+      "summary": "Reads back the rendered buffer via GPU map_read and produces an image descriptor with serializable pixel data for transfer to the compositor.",
+      "tags": ["gpu-readback", "serialization", "image-transfer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:snapshot",
+      "type": "function",
+      "name": "snapshot",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [616, 639],
+      "summary": "Captures the current rendered state by mapping the GPU buffer and converting it into a Snapshot, removing row padding for the unpadded pixel data.",
+      "tags": ["snapshot", "gpu-readback", "pixel-data"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:render_to_texture",
+      "type": "function",
+      "name": "render_to_texture",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [673, 704],
+      "summary": "Renders the Vello scene graph to a GPU texture via wgpu, applying antialiasing and resetting the scene for subsequent drawing operations.",
+      "tags": ["gpu-rendering", "scene-render", "texture"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:render_to_buffer",
+      "type": "function",
+      "name": "render_to_buffer",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [706, 733],
+      "summary": "Renders the scene to a GPU texture then copies the texture to a staging buffer for CPU readback, coordinating the GPU copy and queue submission.",
+      "tags": ["gpu-rendering", "buffer-copy", "readback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_backend.rs:map_read",
+      "type": "function",
+      "name": "map_read",
+      "filePath": "components/canvas/vello_backend.rs",
+      "lineRange": [735, 752],
+      "summary": "Maps the GPU staging buffer for reading, using oneshot channel signaling to synchronize the async map_async operation, then runs a provided closure on the mapped range.",
+      "tags": ["gpu-readback", "async-sync", "buffer-mapping"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/canvas/vello_cpu_backend.rs",
+      "type": "file",
+      "name": "vello_cpu_backend.rs",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "summary": "CPU-based canvas drawing backend using the vello_cpu rasterizer. Implements GenericDrawTarget with software rendering, pixmap management, font caching, and snapshot generation for systems without GPU support.",
+      "tags": ["cpu-rendering", "vello-cpu", "software-rasterizer", "canvas-backend"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/canvas/vello_cpu_backend.rs:VelloCPUDrawTarget",
+      "type": "class",
+      "name": "VelloCPUDrawTarget",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [40, 54],
+      "summary": "CPU-powered draw target using vello_cpu's software renderer with pixmap backing. Provides the full GenericDrawTarget API through CPU-based scene composition and rasterization.",
+      "tags": ["cpu-rendering", "vello-cpu", "software-rasterizer", "drawing-surface"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/canvas/vello_cpu_backend.rs:State",
+      "type": "class",
+      "name": "State",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [31, 38],
+      "summary": "Enum tracking render state: Drawing or Rendered, ensuring correct resource lifecycle for CPU rasterization.",
+      "tags": ["state-machine", "render-lifecycle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:with_composition",
+      "type": "function",
+      "name": "with_composition",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [57, 71],
+      "summary": "Wraps a drawing operation in a blend layer using vello_cpu's push/pop layer mechanism for composition and blending effects.",
+      "tags": ["composition", "layer-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:ignore_clips",
+      "type": "function",
+      "name": "ignore_clips",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [73, 84],
+      "summary": "Temporarily removes clip layers for full-canvas operations by saving/restoring the clip stack around a function call.",
+      "tags": ["clipping", "layer-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:ensure_drawing",
+      "type": "function",
+      "name": "ensure_drawing",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [86, 109],
+      "summary": "Transitions state to Drawing, clears the pixmap with a transparent fill, and prepares the CPU render context for new operations.",
+      "tags": ["state-management", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:pixmap",
+      "type": "function",
+      "name": "pixmap",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [111, 124],
+      "summary": "Renders the current CPU scene to the pixmap, flushes pending operations, then returns a byte slice of the rendered pixel data.",
+      "tags": ["rasterization", "pixmap", "rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:is_viewport_cleared",
+      "type": "function",
+      "name": "is_viewport_cleared",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [130, 146],
+      "summary": "Checks whether a clear rect covers the full viewport by testing against clip bounds, using bezier path bounding boxes for clip intersection.",
+      "tags": ["optimization", "viewport-check"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [152, 161],
+      "summary": "Creates a new VelloCPUDrawTarget with a sized pixmap, CPU render context, and resource manager.",
+      "tags": ["constructor", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:clear_rect",
+      "type": "function",
+      "name": "clear_rect",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [163, 185],
+      "summary": "Clears a rectangular region by resetting the scene for full viewport or drawing a filled clip path with clear blending.",
+      "tags": ["rect-drawing", "clearing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:copy_surface",
+      "type": "function",
+      "name": "copy_surface",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [187, 215],
+      "summary": "Copies a surface to the draw target using CPU pixel operations with transform and image source setup via vello_cpu.",
+      "tags": ["surface-copy", "image-blitting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:draw_surface",
+      "type": "function",
+      "name": "draw_surface",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [221, 262],
+      "summary": "Draws a surface onto the canvas with alpha premultiplication, composition, paint transform, and image filtering via vello_cpu.",
+      "tags": ["surface-drawing", "composition", "image-rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:draw_surface_with_shadow",
+      "type": "function",
+      "name": "draw_surface_with_shadow",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [264, 278],
+      "summary": "Stub implementation for drawing surfaces with shadow - currently panics as shadow rendering is not yet supported in the CPU backend.",
+      "tags": ["unimplemented", "stub"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:fill",
+      "type": "function",
+      "name": "fill",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [280, 296],
+      "summary": "Fills a path on the CPU render context with fill rule, brush paint, transform, and composition.",
+      "tags": ["path-fill", "cpu-rendering", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:fill_text",
+      "type": "function",
+      "name": "fill_text",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [298, 338],
+      "summary": "Fills text glyphs using vello_cpu's glyph_run API with font cache lookup, brush paint, composition effects, and transform.",
+      "tags": ["text-rendering", "glyph-drawing", "font-cache"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:fill_rect",
+      "type": "function",
+      "name": "fill_rect",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [340, 353],
+      "summary": "Fills a rectangle on the CPU render context with brush paint, transform, and composition.",
+      "tags": ["rect-fill", "cpu-rendering", "drawing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:push_clip_rect",
+      "type": "function",
+      "name": "push_clip_rect",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [374, 384],
+      "summary": "Pushes a rectangular clip by creating a path from the rect and delegating to push_clip with identity transform.",
+      "tags": ["clipping", "path-creation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:stroke",
+      "type": "function",
+      "name": "stroke",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [386, 401],
+      "summary": "Strokes a path on the CPU render context with line options, brush paint, transform, and composition.",
+      "tags": ["path-stroke", "cpu-rendering", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:stroke_text",
+      "type": "function",
+      "name": "stroke_text",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [403, 445],
+      "summary": "Strokes text glyphs using vello_cpu's glyph_run with stroke API, font cache, brush paint, line options, composition, and transform.",
+      "tags": ["text-rendering", "glyph-stroke", "font-cache"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:stroke_rect",
+      "type": "function",
+      "name": "stroke_rect",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [447, 462],
+      "summary": "Strokes a rectangle outline on the CPU render context with line options, brush paint, transform, and composition.",
+      "tags": ["rect-stroke", "cpu-rendering", "drawing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:image_descriptor_and_serializable_data",
+      "type": "function",
+      "name": "image_descriptor_and_serializable_data",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [464, 476],
+      "summary": "Produces an image descriptor and serializable pixel data from the rendered pixmap for transfer to the compositor.",
+      "tags": ["serialization", "image-transfer", "pixmap"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:snapshot",
+      "type": "function",
+      "name": "snapshot",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [478, 487],
+      "summary": "Captures the current rendered pixmap as a Snapshot with proper size and pixel data.",
+      "tags": ["snapshot", "pixmap", "pixel-data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:snapshot_as_pixmap",
+      "type": "function",
+      "name": "snapshot_as_pixmap",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [503, 517],
+      "summary": "Converts a pixel Snapshot into a vello_cpu Pixmap by applying alpha premultiplication and casting pixel data.",
+      "tags": ["conversion", "pixmap", "alpha-premultiplication"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:convert",
+      "type": "function",
+      "name": "convert",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [520, 564],
+      "summary": "Implements Convert for FillOrStrokeStyle to vello_cpu PaintType, handling solid colors, linear/radial gradients, and image brushes.",
+      "tags": ["type-conversion", "vello-cpu", "brush"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/vello_cpu_backend.rs:paint",
+      "type": "function",
+      "name": "paint",
+      "filePath": "components/canvas/vello_cpu_backend.rs",
+      "lineRange": [567, 591],
+      "summary": "Converts a FillOrStrokeStyle with alpha multiplier to a vello_cpu PaintType, handling alpha blending for solid colors, gradients, and images.",
+      "tags": ["type-conversion", "alpha-blending", "brush"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/canvas/peniko_conversions.rs",
+      "target": "function:components/canvas/peniko_conversions.rs:convert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "class:components/canvas/vello_backend.rs:VelloDrawTarget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "class:components/canvas/vello_backend.rs:State",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:new_with_renderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:with_composition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:ignore_clips",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:is_viewport_cleared",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:ensure_drawing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:clear_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:copy_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:draw_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:draw_surface_with_shadow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:fill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:fill_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:fill_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:push_clip_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:stroke",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:stroke_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:stroke_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:image_descriptor_and_serializable_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:render_to_texture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:render_to_buffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "function:components/canvas/vello_backend.rs:map_read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "class:components/canvas/vello_backend.rs:VelloDrawTarget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "file:components/canvas/backend.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/canvas/vello_backend.rs",
+      "target": "file:components/canvas/peniko_conversions.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "class:components/canvas/vello_cpu_backend.rs:VelloCPUDrawTarget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "class:components/canvas/vello_cpu_backend.rs:State",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:with_composition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:ignore_clips",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:ensure_drawing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:pixmap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:is_viewport_cleared",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:clear_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:copy_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:draw_surface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:draw_surface_with_shadow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:fill",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:fill_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:fill_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:push_clip_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:stroke",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:stroke_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:stroke_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:image_descriptor_and_serializable_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:snapshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:snapshot_as_pixmap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:convert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "function:components/canvas/vello_cpu_backend.rs:paint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "class:components/canvas/vello_cpu_backend.rs:VelloCPUDrawTarget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "file:components/canvas/backend.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/canvas/vello_cpu_backend.rs",
+      "target": "file:components/canvas/peniko_conversions.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}
