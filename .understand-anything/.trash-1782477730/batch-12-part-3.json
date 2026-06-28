@@ -1,0 +1,1241 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/indexeddb.rs",
+      "type": "file",
+      "name": "indexeddb.rs",
+      "filePath": "components/script/indexeddb.rs",
+      "summary": "Implements IndexedDB key operations including key validation, conversion between JS values and IDB keys, key path evaluation, and key extraction from values.",
+      "tags": [
+        "indexeddb",
+        "key-management",
+        "database",
+        "structured-data"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:key_type_to_jsval",
+      "type": "function",
+      "name": "key_type_to_jsval",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        41,
+        148
+      ],
+      "summary": "Converts an IndexedDB key type to its corresponding JS value representation.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:is_valid_key_path",
+      "type": "function",
+      "name": "is_valid_key_path",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        151,
+        208
+      ],
+      "summary": "Validates whether a given key path string or array is a valid IndexedDB key path.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:into_result",
+      "type": "function",
+      "name": "into_result",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        216,
+        221
+      ],
+      "summary": "Converts the conversion result into an optional extracted JS value.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:convert_value_to_key",
+      "type": "function",
+      "name": "convert_value_to_key",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        226,
+        390
+      ],
+      "summary": "Converts a JS value into an IndexedDB key according to the structured clone algorithm, handling circular references.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:convert_value_to_key_range",
+      "type": "function",
+      "name": "convert_value_to_key_range",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        394,
+        434
+      ],
+      "summary": "Converts a JS value into an IDBKeyRange or single key, optionally disallowing null.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:map_backend_error_to_dom_error",
+      "type": "function",
+      "name": "map_backend_error_to_dom_error",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        436,
+        447
+      ],
+      "summary": "Maps internal IndexedDB backend errors to DOMException error names.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:evaluate_key_path_on_value",
+      "type": "function",
+      "name": "evaluate_key_path_on_value",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        458,
+        653
+      ],
+      "summary": "Evaluates a key path expression on a JS value and extracts the result.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:can_inject_key_into_value",
+      "type": "function",
+      "name": "can_inject_key_into_value",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        664,
+        719
+      ],
+      "summary": "Checks whether a key can be injected into a value at the given key path.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:inject_key_into_value",
+      "type": "function",
+      "name": "inject_key_into_value",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        723,
+        819
+      ],
+      "summary": "Injects a key value into an object at the specified key path.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/indexeddb.rs:extract_key",
+      "type": "function",
+      "name": "extract_key",
+      "filePath": "components/script/indexeddb.rs",
+      "lineRange": [
+        822,
+        855
+      ],
+      "summary": "Extracts a key from a value using the given key path and multi-entry flag.",
+      "tags": [
+        "indexeddb",
+        "key-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/init.rs",
+      "type": "file",
+      "name": "init.rs",
+      "filePath": "components/script/init.rs",
+      "summary": "Performs platform-specific initialization for the script engine, including JIT configuration, sandbox setup, and security policy enforcement.",
+      "tags": [
+        "initialization",
+        "platform",
+        "jit",
+        "sandbox"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/init.rs:perform_platform_specific_initialization",
+      "type": "function",
+      "name": "perform_platform_specific_initialization",
+      "filePath": "components/script/init.rs",
+      "lineRange": [
+        15,
+        51
+      ],
+      "summary": "Configures platform-specific settings such as macOS crash reporting and Linux sandboxing.",
+      "tags": [
+        "initialization",
+        "platform"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/init.rs:jit_forbidden",
+      "type": "function",
+      "name": "jit_forbidden",
+      "filePath": "components/script/init.rs",
+      "lineRange": [
+        70,
+        155
+      ],
+      "summary": "Returns whether JIT compilation is forbidden based on security preferences and platform support.",
+      "tags": [
+        "initialization",
+        "platform"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/init.rs:init",
+      "type": "function",
+      "name": "init",
+      "filePath": "components/script/init.rs",
+      "lineRange": [
+        164,
+        191
+      ],
+      "summary": "Performs platform-specific initialization including JIT configuration and preference-driven security settings.",
+      "tags": [
+        "initialization",
+        "platform"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/layout_dom/iterators.rs",
+      "type": "file",
+      "name": "iterators.rs",
+      "filePath": "components/script/layout_dom/iterators.rs",
+      "summary": "Provides DOM tree traversal iterators for layout operations, supporting reverse children, flat-tree children, and DOM descendant iteration.",
+      "tags": [
+        "dom-traversal",
+        "iterator",
+        "layout",
+        "tree-walking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/iterators.rs:new_for_flat_tree",
+      "type": "function",
+      "name": "new_for_flat_tree",
+      "filePath": "components/script/layout_dom/iterators.rs",
+      "lineRange": [
+        36,
+        51
+      ],
+      "summary": "Creates a new iterator for flat-tree children of a layout node.",
+      "tags": [
+        "layout",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/iterators.rs:new_for_dom_tree",
+      "type": "function",
+      "name": "new_for_dom_tree",
+      "filePath": "components/script/layout_dom/iterators.rs",
+      "lineRange": [
+        54,
+        56
+      ],
+      "summary": "Creates a new iterator for DOM tree children of a layout node.",
+      "tags": [
+        "layout",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/iterators.rs:next",
+      "type": "function",
+      "name": "next",
+      "filePath": "components/script/layout_dom/iterators.rs",
+      "lineRange": [
+        62,
+        71
+      ],
+      "summary": "Advances the iterator and returns the next node in traversal.",
+      "tags": [
+        "layout",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/layout_dom/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/layout_dom/mod.rs",
+      "summary": "Re-exports layout DOM type bundle definition and its submodules for use across the layout and script components.",
+      "tags": [
+        "barrel",
+        "module",
+        "re-export",
+        "layout-dom"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "type": "file",
+      "name": "servo_dangerous_style_document.rs",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_document.rs",
+      "summary": "Provides unsafe style accessors for Document nodes, including element-by-ID lookup, style lock access, and shadow root stylesheet flushing.",
+      "tags": [
+        "style",
+        "unsafe-access",
+        "document",
+        "shadow-dom"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_document.rs:elements_with_id",
+      "type": "function",
+      "name": "elements_with_id",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_document.rs",
+      "lineRange": [
+        55,
+        74
+      ],
+      "summary": "Finds elements by ID within the document for style matching.",
+      "tags": [
+        "style",
+        "document",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_document.rs:root_element",
+      "type": "function",
+      "name": "root_element",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_document.rs",
+      "lineRange": [
+        79,
+        85
+      ],
+      "summary": "Returns the root element of the document for style traversal roots.",
+      "tags": [
+        "style",
+        "document",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_document.rs:shared_style_locks",
+      "type": "function",
+      "name": "shared_style_locks",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_document.rs",
+      "lineRange": [
+        88,
+        90
+      ],
+      "summary": "Returns the shared style locks structure for parallelism.",
+      "tags": [
+        "style",
+        "document",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_document.rs:flush_shadow_root_stylesheets_if_necessary",
+      "type": "function",
+      "name": "flush_shadow_root_stylesheets_if_necessary",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_document.rs",
+      "lineRange": [
+        93,
+        100
+      ],
+      "summary": "Flushes shadow root stylesheets before style recalculation.",
+      "tags": [
+        "style",
+        "document",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "type": "file",
+      "name": "servo_dangerous_style_element.rs",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "summary": "Provides unsafe style accessors for Element nodes, implementing selector matching, layout damage computation, pseudo-class matching, and presentational hints for legacy SVG/HTML attributes.",
+      "tags": [
+        "style",
+        "selector-matching",
+        "unsafe-access",
+        "element"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust impl block with extensive style system trait implementations for selector matching and layout damage computation."
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:rooted",
+      "type": "function",
+      "name": "rooted",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        71,
+        73
+      ],
+      "summary": "Creates a rooted reference to this element for use by the style system.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:get_attr",
+      "type": "function",
+      "name": "get_attr",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        91,
+        101
+      ],
+      "summary": "Gets an attribute value from the element by namespace and local name.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:traversal_children",
+      "type": "function",
+      "name": "traversal_children",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        112,
+        128
+      ],
+      "summary": "Returns the traversal children of this element for style recalc traversal.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:inheritance_parent",
+      "type": "function",
+      "name": "inheritance_parent",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        134,
+        146
+      ],
+      "summary": "Returns the style inheritance parent for this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:animation_rule",
+      "type": "function",
+      "name": "animation_rule",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        184,
+        195
+      ],
+      "summary": "Returns the CSS animation rules applicable to this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:transition_rule",
+      "type": "function",
+      "name": "transition_rule",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        197,
+        208
+      ],
+      "summary": "Returns the CSS transition rules applicable to this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:each_class",
+      "type": "function",
+      "name": "each_class",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        220,
+        229
+      ],
+      "summary": "Iterates over each CSS class of this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:each_part",
+      "type": "function",
+      "name": "each_part",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        240,
+        249
+      ],
+      "summary": "Iterates over each shadow part of this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:each_exported_part",
+      "type": "function",
+      "name": "each_exported_part",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        251,
+        264
+      ],
+      "summary": "Iterates over each exported shadow part of this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:match_element_lang",
+      "type": "function",
+      "name": "match_element_lang",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        406,
+        430
+      ],
+      "summary": "Checks whether this element matches a given language override.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:synthesize_presentational_hints_for_legacy_attributes",
+      "type": "function",
+      "name": "synthesize_presentational_hints_for_legacy_attributes",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        436,
+        445
+      ],
+      "summary": "Generates presentational hints from legacy SVG/HTML attributes.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:implicit_scope_for_sheet_in_shadow_root",
+      "type": "function",
+      "name": "implicit_scope_for_sheet_in_shadow_root",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        490,
+        505
+      ],
+      "summary": "Returns the implicit scope for a stylesheet within a shadow root.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:slotted_nodes",
+      "type": "function",
+      "name": "slotted_nodes",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        507,
+        523
+      ],
+      "summary": "Returns the slotted child nodes assigned to this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:compute_layout_damage",
+      "type": "function",
+      "name": "compute_layout_damage",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        525,
+        660
+      ],
+      "summary": "Computes layout damage flags by diffing old and new style struct data.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:prev_sibling_element",
+      "type": "function",
+      "name": "prev_sibling_element",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        699,
+        708
+      ],
+      "summary": "Returns the previous sibling element for traversal.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:next_sibling_element",
+      "type": "function",
+      "name": "next_sibling_element",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        710,
+        719
+      ],
+      "summary": "Returns the next sibling element for traversal.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:attr_matches",
+      "type": "function",
+      "name": "attr_matches",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        727,
+        743
+      ],
+      "summary": "Checks if an attribute matches a selector operation for this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:is_empty",
+      "type": "function",
+      "name": "is_empty",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        749,
+        759
+      ],
+      "summary": "Returns true if this element has no child nodes.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:match_non_ts_pseudo_class",
+      "type": "function",
+      "name": "match_non_ts_pseudo_class",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        777,
+        834
+      ],
+      "summary": "Matches non-tree-structural pseudo-classes against this element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:is_link",
+      "type": "function",
+      "name": "is_link",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        845,
+        859
+      ],
+      "summary": "Returns true if this element is an HTML link element.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_element.rs:apply_selector_flags",
+      "type": "function",
+      "name": "apply_selector_flags",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_element.rs",
+      "lineRange": [
+        911,
+        925
+      ],
+      "summary": "Applies selector-related flags for optimization hints.",
+      "tags": [
+        "style",
+        "element",
+        "unsafe"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:key_type_to_jsval",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:key_type_to_jsval",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:is_valid_key_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:is_valid_key_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:into_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:into_result",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:convert_value_to_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:convert_value_to_key",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:convert_value_to_key_range",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:convert_value_to_key_range",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:map_backend_error_to_dom_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:map_backend_error_to_dom_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:evaluate_key_path_on_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:evaluate_key_path_on_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:can_inject_key_into_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:can_inject_key_into_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:inject_key_into_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:inject_key_into_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:extract_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/indexeddb.rs",
+      "target": "function:components/script/indexeddb.rs:extract_key",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/init.rs",
+      "target": "function:components/script/init.rs:perform_platform_specific_initialization",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/init.rs",
+      "target": "function:components/script/init.rs:jit_forbidden",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/init.rs",
+      "target": "function:components/script/init.rs:init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/init.rs",
+      "target": "function:components/script/init.rs:init",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/iterators.rs",
+      "target": "function:components/script/layout_dom/iterators.rs:new_for_flat_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/iterators.rs",
+      "target": "function:components/script/layout_dom/iterators.rs:new_for_flat_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/iterators.rs",
+      "target": "function:components/script/layout_dom/iterators.rs:new_for_dom_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/iterators.rs",
+      "target": "function:components/script/layout_dom/iterators.rs:new_for_dom_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/iterators.rs",
+      "target": "function:components/script/layout_dom/iterators.rs:next",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/iterators.rs",
+      "target": "function:components/script/layout_dom/iterators.rs:next",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_document.rs:elements_with_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_document.rs:root_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_document.rs:root_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_document.rs:shared_style_locks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_document.rs:shared_style_locks",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_document.rs:flush_shadow_root_stylesheets_if_necessary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_document.rs:flush_shadow_root_stylesheets_if_necessary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:rooted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:rooted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:get_attr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:traversal_children",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:inheritance_parent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:animation_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:transition_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:each_class",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:each_part",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:each_exported_part",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:match_element_lang",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:synthesize_presentational_hints_for_legacy_attributes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:implicit_scope_for_sheet_in_shadow_root",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:slotted_nodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:compute_layout_damage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:prev_sibling_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:next_sibling_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:attr_matches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:is_empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:match_non_ts_pseudo_class",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:is_link",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_element.rs:apply_selector_flags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/mod.rs",
+      "target": "file:components/script/layout_dom/iterators.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/layout_dom/mod.rs",
+      "target": "file:components/script/layout_dom/servo_dangerous_style_document.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/layout_dom/mod.rs",
+      "target": "file:components/script/layout_dom/servo_dangerous_style_element.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/layout_dom/mod.rs",
+      "target": "file:components/script/layout_dom/servo_dangerous_style_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/layout_dom/mod.rs",
+      "target": "file:components/script/layout_dom/servo_dangerous_style_shadow_root.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/layout_dom/mod.rs",
+      "target": "file:components/script/layout_dom/servo_layout_element.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/layout_dom/mod.rs",
+      "target": "file:components/script/layout_dom/servo_layout_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/layout_dom/mod.rs",
+      "target": "file:components/script/layout_dom/iterators.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

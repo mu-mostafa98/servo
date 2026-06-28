@@ -1,0 +1,3784 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 23,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/script/dom/webgl/extensions/ext/angleinstancedarrays.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 84,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 25,
+          "endLine": 30,
+          "params": [
+            "ctx"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 36,
+          "endLine": 42,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 44,
+          "endLine": 46,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 48,
+          "endLine": 55,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 57,
+          "endLine": 61,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 63,
+          "endLine": 65,
+          "params": []
+        },
+        {
+          "name": "DrawArraysInstancedANGLE",
+          "startLine": 70,
+          "endLine": 76,
+          "params": [
+            "mode",
+            "first",
+            "count",
+            "primcount"
+          ]
+        },
+        {
+          "name": "DrawElementsInstancedANGLE",
+          "startLine": 79,
+          "endLine": 92,
+          "params": [
+            "mode",
+            "count",
+            "type_",
+            "offset",
+            "primcount"
+          ]
+        },
+        {
+          "name": "VertexAttribDivisorANGLE",
+          "startLine": 94,
+          "endLine": 96,
+          "params": [
+            "index",
+            "divisor"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ANGLEInstancedArrays",
+          "startLine": 19,
+          "endLine": 22,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name",
+            "DrawArraysInstancedANGLE",
+            "DrawElementsInstancedANGLE",
+            "VertexAttribDivisorANGLE"
+          ],
+          "properties": [
+            "reflector_",
+            "ctx"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ANGLEInstancedArrays",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 27
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 28
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 37
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 38
+        },
+        {
+          "caller": "new",
+          "callee": "ANGLEInstancedArrays::new_inherited",
+          "lineNumber": 38
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 39
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 45
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_any_gl_extension",
+          "lineNumber": 49
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_get_vertex_attrib_name",
+          "lineNumber": 58
+        },
+        {
+          "caller": "VertexAttribDivisorANGLE",
+          "callee": "self.ctx.vertex_attrib_divisor",
+          "lineNumber": 95
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 9,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/extblendminmax.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 50,
+      "nonEmptyLines": 40,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 21,
+          "endLine": 25,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 41,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 43,
+          "endLine": 45,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 47,
+          "endLine": 49,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "EXTBlendMinmax",
+          "startLine": 16,
+          "endLine": 18,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EXTBlendMinmax",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 23
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_gl_extension",
+          "lineNumber": 40
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_blend_minmax",
+          "lineNumber": 44
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/extcolorbufferhalffloat.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 22,
+          "endLine": 26,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 41,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 43,
+          "endLine": 43,
+          "params": [
+            "_ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 45,
+          "endLine": 47,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "EXTColorBufferHalfFloat",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EXTColorBufferHalfFloat",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 24
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "OESTextureHalfFloat::is_supported",
+          "lineNumber": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/extfragdepth.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 65,
+      "nonEmptyLines": 55,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 21,
+          "endLine": 25,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 58,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 60,
+          "endLine": 60,
+          "params": [
+            "_ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 62,
+          "endLine": 64,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "EXTFragDepth",
+          "startLine": 16,
+          "endLine": 18,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EXTFragDepth",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 23
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.is_gles",
+          "lineNumber": 40
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.is_gles",
+          "lineNumber": 49
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.is_min_glsl_version_satisfied",
+          "lineNumber": 50
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_gl_extension",
+          "lineNumber": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/extshadertexturelod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 49,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 21,
+          "endLine": 25,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 42,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 44,
+          "endLine": 44,
+          "params": [
+            "_ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 46,
+          "endLine": 48,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "EXTShaderTextureLod",
+          "startLine": 16,
+          "endLine": 18,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EXTShaderTextureLod",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 23
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.is_gles",
+          "lineNumber": 41
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_gl_extension",
+          "lineNumber": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/exttexturefilteranisotropic.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 56,
+      "nonEmptyLines": 46,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 22,
+          "endLine": 26,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 32,
+          "endLine": 34,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 36,
+          "endLine": 38,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 40,
+          "endLine": 42,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 44,
+          "endLine": 51,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 53,
+          "endLine": 55,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "EXTTextureFilterAnisotropic",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "EXTTextureFilterAnisotropic",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 24
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 33
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 33
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 33
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 33
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 37
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_gl_extension",
+          "lineNumber": 41
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_get_tex_parameter_name",
+          "lineNumber": 45
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_get_parameter_name",
+          "lineNumber": 48
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 23,
+      "nonEmptyLines": 21,
+      "metrics": {
+        "importCount": 16,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/oeselementindexuint.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 51,
+      "nonEmptyLines": 41,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 21,
+          "endLine": 25,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 42,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 44,
+          "endLine": 46,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 48,
+          "endLine": 50,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "OESElementIndexUint",
+          "startLine": 16,
+          "endLine": 18,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OESElementIndexUint",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 23
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.is_gles",
+          "lineNumber": 41
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_gl_extension",
+          "lineNumber": 41
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_element_index_uint",
+          "lineNumber": 45
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/oesstandardderivatives.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 56,
+      "nonEmptyLines": 47,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 22,
+          "endLine": 26,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 42,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 44,
+          "endLine": 51,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 53,
+          "endLine": 55,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "OESStandardDerivatives",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OESStandardDerivatives",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 24
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.is_gles",
+          "lineNumber": 41
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_any_gl_extension",
+          "lineNumber": 41
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_hint_target",
+          "lineNumber": 45
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_get_parameter_name",
+          "lineNumber": 48
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/oestexturefloat.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 66,
+      "nonEmptyLines": 57,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 21,
+          "endLine": 25,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 30,
+          "endLine": 32,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 34,
+          "endLine": 36,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 38,
+          "endLine": 44,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 46,
+          "endLine": 61,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 63,
+          "endLine": 65,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "OESTextureFloat",
+          "startLine": 16,
+          "endLine": 18,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OESTextureFloat",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 23
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 31
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 35
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_any_gl_extension",
+          "lineNumber": 39
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_tex_type",
+          "lineNumber": 47
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 48
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 49
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 50
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 55
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 56
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/oestexturefloatlinear.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 20,
+          "endLine": 24,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 29,
+          "endLine": 31,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 33,
+          "endLine": 35,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 37,
+          "endLine": 39,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 41,
+          "endLine": 43,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 45,
+          "endLine": 47,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "OESTextureFloatLinear",
+          "startLine": 15,
+          "endLine": 17,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OESTextureFloatLinear",
+          "line": 15,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 22
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 30
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 30
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 30
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 30
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_any_gl_extension",
+          "lineNumber": 38
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_filterable_tex_type",
+          "lineNumber": 42
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/oestexturehalffloat.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 65,
+      "nonEmptyLines": 56,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 22,
+          "endLine": 26,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 46,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 48,
+          "endLine": 60,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 62,
+          "endLine": 64,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "OESTextureHalfFloat",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OESTextureHalfFloat",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 24
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_any_gl_extension",
+          "lineNumber": 40
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_tex_type",
+          "lineNumber": 50
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 51
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 52
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 53
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 54
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_effective_tex_internal_format",
+          "lineNumber": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/oestexturehalffloatlinear.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 53,
+      "nonEmptyLines": 44,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 21,
+          "endLine": 25,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 30,
+          "endLine": 32,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 34,
+          "endLine": 36,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 38,
+          "endLine": 44,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 46,
+          "endLine": 48,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 50,
+          "endLine": 52,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "OESTextureHalfFloatLinear",
+          "startLine": 16,
+          "endLine": 18,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OESTextureHalfFloatLinear",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 23
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 31
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_any_gl_extension",
+          "lineNumber": 39
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_filterable_tex_type",
+          "lineNumber": 47
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/oesvertexarrayobject.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 85,
+      "nonEmptyLines": 72,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 26,
+          "endLine": 31,
+          "params": [
+            "ctx"
+          ]
+        },
+        {
+          "name": "CreateVertexArrayOES",
+          "startLine": 36,
+          "endLine": 38,
+          "params": []
+        },
+        {
+          "name": "DeleteVertexArrayOES",
+          "startLine": 41,
+          "endLine": 43,
+          "params": [
+            "vao"
+          ]
+        },
+        {
+          "name": "IsVertexArrayOES",
+          "startLine": 46,
+          "endLine": 48,
+          "params": [
+            "vao"
+          ]
+        },
+        {
+          "name": "BindVertexArrayOES",
+          "startLine": 51,
+          "endLine": 53,
+          "params": [
+            "vao"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 58,
+          "endLine": 64,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 66,
+          "endLine": 68,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 70,
+          "endLine": 76,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 78,
+          "endLine": 80,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 82,
+          "endLine": 84,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "OESVertexArrayObject",
+          "startLine": 20,
+          "endLine": 23,
+          "methods": [
+            "new_inherited",
+            "CreateVertexArrayOES",
+            "DeleteVertexArrayOES",
+            "IsVertexArrayOES",
+            "BindVertexArrayOES",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_",
+            "ctx"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "OESVertexArrayObject",
+          "line": 20,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 28
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 29
+        },
+        {
+          "caller": "CreateVertexArrayOES",
+          "callee": "self.ctx.create_vertex_array",
+          "lineNumber": 37
+        },
+        {
+          "caller": "DeleteVertexArrayOES",
+          "callee": "self.ctx.delete_vertex_array",
+          "lineNumber": 42
+        },
+        {
+          "caller": "IsVertexArrayOES",
+          "callee": "self.ctx.is_vertex_array",
+          "lineNumber": 47
+        },
+        {
+          "caller": "BindVertexArrayOES",
+          "callee": "self.ctx.bind_vertex_array",
+          "lineNumber": 52
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 60
+        },
+        {
+          "caller": "new",
+          "callee": "OESVertexArrayObject::new_inherited",
+          "lineNumber": 60
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 61
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 67
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_any_gl_extension",
+          "lineNumber": 71
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.enable_get_parameter_name",
+          "lineNumber": 79
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 10,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/webglcolorbufferfloat.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 39,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 22,
+          "endLine": 26,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 41,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 43,
+          "endLine": 43,
+          "params": [
+            "_ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 45,
+          "endLine": 47,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "WEBGLColorBufferFloat",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WEBGLColorBufferFloat",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 24
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "OESTextureFloat::is_supported",
+          "lineNumber": 40
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/webglcompressedtextureetc1.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 56,
+      "nonEmptyLines": 47,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 22,
+          "endLine": 26,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 41,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 43,
+          "endLine": 51,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 53,
+          "endLine": 55,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "WEBGLCompressedTextureETC1",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WEBGLCompressedTextureETC1",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 24
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_gl_extension",
+          "lineNumber": 40
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_tex_compression_formats",
+          "lineNumber": 44
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/ext/webglcompressedtextures3tc.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 84,
+      "nonEmptyLines": 75,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 22,
+          "endLine": 26,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "cx",
+            "ctx"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 35,
+          "endLine": 37,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 39,
+          "endLine": 46,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "enable",
+          "startLine": 48,
+          "endLine": 79,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 81,
+          "endLine": 83,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "WEBGLCompressedTextureS3TC",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "new_inherited",
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WEBGLCompressedTextureS3TC",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 24
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "ctx.global",
+          "lineNumber": 32
+        },
+        {
+          "caller": "spec",
+          "callee": "WebGLExtensionSpec::Specific",
+          "lineNumber": 36
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_gl_extension",
+          "lineNumber": 40
+        },
+        {
+          "caller": "is_supported",
+          "callee": "ext.supports_all_gl_extension",
+          "lineNumber": 41
+        },
+        {
+          "caller": "enable",
+          "callee": "ext.add_tex_compression_formats",
+          "lineNumber": 49
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/extension.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 43,
+      "nonEmptyLines": 34,
+      "classes": [
+        {
+          "name": "WebGLExtension",
+          "startLine": 15,
+          "endLine": 36,
+          "methods": [
+            "new",
+            "spec",
+            "is_supported",
+            "enable",
+            "name"
+          ],
+          "properties": []
+        },
+        {
+          "name": "WebGLExtensionSpec",
+          "startLine": 38,
+          "endLine": 43,
+          "methods": [],
+          "properties": [
+            "All",
+            "Specific"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WebGLExtension",
+          "line": 15,
+          "isDefault": false
+        },
+        {
+          "name": "WebGLExtensionSpec",
+          "line": 38,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/extensions.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 480,
+      "nonEmptyLines": 428,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 109,
+          "endLine": 166,
+          "params": [
+            "webgl_version"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 184,
+          "endLine": 196,
+          "params": [
+            "webgl_version",
+            "api_type",
+            "glsl_version"
+          ]
+        },
+        {
+          "name": "init_once",
+          "startLine": 198,
+          "endLine": 208,
+          "params": [
+            "cb"
+          ]
+        },
+        {
+          "name": "register",
+          "startLine": 210,
+          "endLine": 215,
+          "params": []
+        },
+        {
+          "name": "get_supported_extensions",
+          "startLine": 217,
+          "endLine": 231,
+          "params": []
+        },
+        {
+          "name": "get_or_init_extension",
+          "startLine": 233,
+          "endLine": 247,
+          "params": [
+            "cx",
+            "name",
+            "ctx"
+          ]
+        },
+        {
+          "name": "is_enabled",
+          "startLine": 249,
+          "endLine": 258,
+          "params": []
+        },
+        {
+          "name": "supports_gl_extension",
+          "startLine": 260,
+          "endLine": 262,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "supports_any_gl_extension",
+          "startLine": 264,
+          "endLine": 269,
+          "params": [
+            "names"
+          ]
+        },
+        {
+          "name": "supports_all_gl_extension",
+          "startLine": 271,
+          "endLine": 276,
+          "params": [
+            "names"
+          ]
+        },
+        {
+          "name": "enable_tex_type",
+          "startLine": 278,
+          "endLine": 283,
+          "params": [
+            "data_type"
+          ]
+        },
+        {
+          "name": "is_tex_type_enabled",
+          "startLine": 285,
+          "endLine": 291,
+          "params": [
+            "data_type"
+          ]
+        },
+        {
+          "name": "add_effective_tex_internal_format",
+          "startLine": 293,
+          "endLine": 304,
+          "params": [
+            "source_internal_format",
+            "source_data_type",
+            "effective_internal_format"
+          ]
+        },
+        {
+          "name": "get_effective_tex_internal_format",
+          "startLine": 306,
+          "endLine": 318,
+          "params": [
+            "source_internal_format",
+            "source_data_type"
+          ]
+        },
+        {
+          "name": "enable_filterable_tex_type",
+          "startLine": 320,
+          "endLine": 325,
+          "params": [
+            "text_data_type"
+          ]
+        },
+        {
+          "name": "is_filterable",
+          "startLine": 327,
+          "endLine": 333,
+          "params": [
+            "text_data_type"
+          ]
+        },
+        {
+          "name": "enable_hint_target",
+          "startLine": 335,
+          "endLine": 337,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "is_hint_target_enabled",
+          "startLine": 339,
+          "endLine": 341,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "enable_get_parameter_name",
+          "startLine": 343,
+          "endLine": 348,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "is_get_parameter_name_enabled",
+          "startLine": 350,
+          "endLine": 356,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "enable_get_tex_parameter_name",
+          "startLine": 358,
+          "endLine": 363,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "is_get_tex_parameter_name_enabled",
+          "startLine": 365,
+          "endLine": 371,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "enable_get_vertex_attrib_name",
+          "startLine": 373,
+          "endLine": 378,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "is_get_vertex_attrib_name_enabled",
+          "startLine": 380,
+          "endLine": 386,
+          "params": [
+            "name"
+          ]
+        },
+        {
+          "name": "add_tex_compression_formats",
+          "startLine": 388,
+          "endLine": 398,
+          "params": [
+            "formats"
+          ]
+        },
+        {
+          "name": "get_tex_compression_format",
+          "startLine": 400,
+          "endLine": 406,
+          "params": [
+            "format_id"
+          ]
+        },
+        {
+          "name": "get_tex_compression_ids",
+          "startLine": 408,
+          "endLine": 415,
+          "params": []
+        },
+        {
+          "name": "register_all_extensions",
+          "startLine": 417,
+          "endLine": 434,
+          "params": []
+        },
+        {
+          "name": "enable_element_index_uint",
+          "startLine": 436,
+          "endLine": 438,
+          "params": []
+        },
+        {
+          "name": "is_element_index_uint_enabled",
+          "startLine": 440,
+          "endLine": 442,
+          "params": []
+        },
+        {
+          "name": "enable_blend_minmax",
+          "startLine": 444,
+          "endLine": 446,
+          "params": []
+        },
+        {
+          "name": "is_blend_minmax_enabled",
+          "startLine": 448,
+          "endLine": 450,
+          "params": []
+        },
+        {
+          "name": "is_float_buffer_renderable",
+          "startLine": 452,
+          "endLine": 454,
+          "params": []
+        },
+        {
+          "name": "is_min_glsl_version_satisfied",
+          "startLine": 456,
+          "endLine": 458,
+          "params": [
+            "min_glsl_version"
+          ]
+        },
+        {
+          "name": "is_half_float_buffer_renderable",
+          "startLine": 460,
+          "endLine": 462,
+          "params": []
+        },
+        {
+          "name": "effective_type",
+          "startLine": 464,
+          "endLine": 471,
+          "params": [
+            "type_"
+          ]
+        },
+        {
+          "name": "is_gles",
+          "startLine": 473,
+          "endLine": 475,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "WebGLExtensionFeatures",
+          "startLine": 86,
+          "endLine": 106,
+          "methods": [
+            "new"
+          ],
+          "properties": [
+            "gl_extensions",
+            "disabled_tex_types",
+            "not_filterable_tex_types",
+            "effective_tex_internal_formats",
+            "hint_targets",
+            "disabled_get_parameter_names",
+            "disabled_get_tex_parameter_names",
+            "disabled_get_vertex_attrib_names",
+            "element_index_uint_enabled",
+            "blend_minmax_enabled",
+            "tex_compression_formats"
+          ]
+        },
+        {
+          "name": "WebGLExtensions",
+          "startLine": 172,
+          "endLine": 181,
+          "methods": [
+            "new",
+            "init_once",
+            "register",
+            "get_supported_extensions",
+            "get_or_init_extension",
+            "is_enabled",
+            "supports_gl_extension",
+            "supports_any_gl_extension",
+            "supports_all_gl_extension",
+            "enable_tex_type",
+            "is_tex_type_enabled",
+            "add_effective_tex_internal_format",
+            "get_effective_tex_internal_format",
+            "enable_filterable_tex_type",
+            "is_filterable",
+            "enable_hint_target",
+            "is_hint_target_enabled",
+            "enable_get_parameter_name",
+            "is_get_parameter_name_enabled",
+            "enable_get_tex_parameter_name",
+            "is_get_tex_parameter_name_enabled",
+            "enable_get_vertex_attrib_name",
+            "is_get_vertex_attrib_name_enabled",
+            "add_tex_compression_formats",
+            "get_tex_compression_format",
+            "get_tex_compression_ids",
+            "register_all_extensions",
+            "enable_element_index_uint",
+            "is_element_index_uint_enabled",
+            "enable_blend_minmax",
+            "is_blend_minmax_enabled",
+            "is_float_buffer_renderable",
+            "is_min_glsl_version_satisfied",
+            "is_half_float_buffer_renderable",
+            "effective_type",
+            "is_gles"
+          ],
+          "properties": [
+            "extensions",
+            "features",
+            "webgl_version",
+            "api_type",
+            "glsl_version"
+          ]
+        },
+        {
+          "name": "TexFormatType",
+          "startLine": 480,
+          "endLine": 480,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "WebGLExtensions",
+          "line": 172,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 184,
+          "isDefault": false
+        },
+        {
+          "name": "init_once",
+          "line": 198,
+          "isDefault": false
+        },
+        {
+          "name": "register",
+          "line": 210,
+          "isDefault": false
+        },
+        {
+          "name": "get_supported_extensions",
+          "line": 217,
+          "isDefault": false
+        },
+        {
+          "name": "get_or_init_extension",
+          "line": 233,
+          "isDefault": false
+        },
+        {
+          "name": "is_enabled",
+          "line": 249,
+          "isDefault": false
+        },
+        {
+          "name": "supports_gl_extension",
+          "line": 260,
+          "isDefault": false
+        },
+        {
+          "name": "supports_any_gl_extension",
+          "line": 264,
+          "isDefault": false
+        },
+        {
+          "name": "supports_all_gl_extension",
+          "line": 271,
+          "isDefault": false
+        },
+        {
+          "name": "enable_tex_type",
+          "line": 278,
+          "isDefault": false
+        },
+        {
+          "name": "is_tex_type_enabled",
+          "line": 285,
+          "isDefault": false
+        },
+        {
+          "name": "add_effective_tex_internal_format",
+          "line": 293,
+          "isDefault": false
+        },
+        {
+          "name": "get_effective_tex_internal_format",
+          "line": 306,
+          "isDefault": false
+        },
+        {
+          "name": "enable_filterable_tex_type",
+          "line": 320,
+          "isDefault": false
+        },
+        {
+          "name": "is_filterable",
+          "line": 327,
+          "isDefault": false
+        },
+        {
+          "name": "enable_hint_target",
+          "line": 335,
+          "isDefault": false
+        },
+        {
+          "name": "is_hint_target_enabled",
+          "line": 339,
+          "isDefault": false
+        },
+        {
+          "name": "enable_get_parameter_name",
+          "line": 343,
+          "isDefault": false
+        },
+        {
+          "name": "is_get_parameter_name_enabled",
+          "line": 350,
+          "isDefault": false
+        },
+        {
+          "name": "enable_get_tex_parameter_name",
+          "line": 358,
+          "isDefault": false
+        },
+        {
+          "name": "is_get_tex_parameter_name_enabled",
+          "line": 365,
+          "isDefault": false
+        },
+        {
+          "name": "enable_get_vertex_attrib_name",
+          "line": 373,
+          "isDefault": false
+        },
+        {
+          "name": "is_get_vertex_attrib_name_enabled",
+          "line": 380,
+          "isDefault": false
+        },
+        {
+          "name": "add_tex_compression_formats",
+          "line": 388,
+          "isDefault": false
+        },
+        {
+          "name": "get_tex_compression_format",
+          "line": 400,
+          "isDefault": false
+        },
+        {
+          "name": "get_tex_compression_ids",
+          "line": 408,
+          "isDefault": false
+        },
+        {
+          "name": "enable_element_index_uint",
+          "line": 436,
+          "isDefault": false
+        },
+        {
+          "name": "is_element_index_uint_enabled",
+          "line": 440,
+          "isDefault": false
+        },
+        {
+          "name": "enable_blend_minmax",
+          "line": 444,
+          "isDefault": false
+        },
+        {
+          "name": "is_blend_minmax_enabled",
+          "line": 448,
+          "isDefault": false
+        },
+        {
+          "name": "is_float_buffer_renderable",
+          "line": 452,
+          "isDefault": false
+        },
+        {
+          "name": "is_min_glsl_version_satisfied",
+          "line": 456,
+          "isDefault": false
+        },
+        {
+          "name": "is_half_float_buffer_renderable",
+          "line": 460,
+          "isDefault": false
+        },
+        {
+          "name": "effective_type",
+          "line": 464,
+          "isDefault": false
+        },
+        {
+          "name": "is_gles",
+          "line": 473,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_TEX_TYPES_WEBGL1.iter().cloned().collect",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_TEX_TYPES_WEBGL1.iter().cloned",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_TEX_TYPES_WEBGL1.iter",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_PARAMETER_NAMES_WEBGL1\n                    .iter()\n                    .cloned().collect",
+          "lineNumber": 121
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_PARAMETER_NAMES_WEBGL1\n                    .iter().cloned",
+          "lineNumber": 121
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_PARAMETER_NAMES_WEBGL1.iter",
+          "lineNumber": 121
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_TEX_PARAMETER_NAMES_WEBGL1\n                    .iter()\n                    .cloned().collect",
+          "lineNumber": 125
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_TEX_PARAMETER_NAMES_WEBGL1\n                    .iter().cloned",
+          "lineNumber": 125
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_TEX_PARAMETER_NAMES_WEBGL1.iter",
+          "lineNumber": 125
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_VERTEX_ATTRIB_NAMES_WEBGL1\n                    .iter()\n                    .cloned().collect",
+          "lineNumber": 129
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_VERTEX_ATTRIB_NAMES_WEBGL1\n                    .iter().cloned",
+          "lineNumber": 129
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_VERTEX_ATTRIB_NAMES_WEBGL1.iter",
+          "lineNumber": 129
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_NOT_FILTERABLE_TEX_TYPES.iter().cloned().collect",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_NOT_FILTERABLE_TEX_TYPES.iter().cloned",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_NOT_FILTERABLE_TEX_TYPES.iter",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 138
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_PARAMETER_NAMES_WEBGL2\n                    .iter()\n                    .cloned().collect",
+          "lineNumber": 139
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_PARAMETER_NAMES_WEBGL2\n                    .iter().cloned",
+          "lineNumber": 139
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_PARAMETER_NAMES_WEBGL2.iter",
+          "lineNumber": 139
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_TEX_PARAMETER_NAMES_WEBGL2\n                    .iter()\n                    .cloned().collect",
+          "lineNumber": 143
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_TEX_PARAMETER_NAMES_WEBGL2\n                    .iter().cloned",
+          "lineNumber": 143
+        },
+        {
+          "caller": "new",
+          "callee": "DEFAULT_DISABLED_GET_TEX_PARAMETER_NAMES_WEBGL2.iter",
+          "lineNumber": 143
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 147
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 148
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 154
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 157
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 158
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 164
+        },
+        {
+          "caller": "new",
+          "callee": "DomRefCell::new",
+          "lineNumber": 190
+        },
+        {
+          "caller": "new",
+          "callee": "HashMap::new",
+          "lineNumber": 190
+        },
+        {
+          "caller": "new",
+          "callee": "DomRefCell::new",
+          "lineNumber": 191
+        },
+        {
+          "caller": "new",
+          "callee": "WebGLExtensionFeatures::new",
+          "lineNumber": 191
+        },
+        {
+          "caller": "init_once",
+          "callee": "self.extensions.borrow().is_empty",
+          "lineNumber": 202
+        },
+        {
+          "caller": "init_once",
+          "callee": "self.extensions.borrow",
+          "lineNumber": 202
+        },
+        {
+          "caller": "init_once",
+          "callee": "cb",
+          "lineNumber": 203
+        },
+        {
+          "caller": "init_once",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 204
+        },
+        {
+          "caller": "init_once",
+          "callee": "FxHashSet::from_iter",
+          "lineNumber": 205
+        },
+        {
+          "caller": "init_once",
+          "callee": "gl_str.split(&[',', ' '][..]).map",
+          "lineNumber": 205
+        },
+        {
+          "caller": "init_once",
+          "callee": "gl_str.split",
+          "lineNumber": 205
+        },
+        {
+          "caller": "init_once",
+          "callee": "s.into",
+          "lineNumber": 205
+        },
+        {
+          "caller": "init_once",
+          "callee": "self.register_all_extensions",
+          "lineNumber": 206
+        },
+        {
+          "caller": "register",
+          "callee": "T::name().to_uppercase",
+          "lineNumber": 211
+        },
+        {
+          "caller": "register",
+          "callee": "T::name",
+          "lineNumber": 211
+        },
+        {
+          "caller": "register",
+          "callee": "self.extensions\n            .borrow_mut().insert",
+          "lineNumber": 212
+        },
+        {
+          "caller": "register",
+          "callee": "self.extensions.borrow_mut",
+          "lineNumber": 212
+        },
+        {
+          "caller": "register",
+          "callee": "Box::new",
+          "lineNumber": 214
+        },
+        {
+          "caller": "register",
+          "callee": "TypedWebGLExtensionWrapper::<T>::new",
+          "lineNumber": 214
+        },
+        {
+          "caller": "get_supported_extensions",
+          "callee": "self.extensions\n            .borrow()\n            .iter()\n            .filter(|v| {\n                if let WebGLExtensionSpec::Specific(version) = v.1.spec() &&\n                    self.webgl_version != version\n                {\n                    return false;\n                }\n                v.1.is_supported(self)\n            })\n            .map(|ref v| v.1.name()).collect",
+          "lineNumber": 218
+        },
+        {
+          "caller": "get_supported_extensions",
+          "callee": "self.extensions\n            .borrow()\n            .iter()\n            .filter(|v| {\n                if let WebGLExtensionSpec::Specific(version) = v.1.spec() &&\n                    self.webgl_version != version\n                {\n                    return false;\n                }\n                v.1.is_supported(self)\n            }).map",
+          "lineNumber": 218
+        },
+        {
+          "caller": "get_supported_extensions",
+          "callee": "self.extensions\n            .borrow()\n            .iter().filter",
+          "lineNumber": 218
+        },
+        {
+          "caller": "get_supported_extensions",
+          "callee": "self.extensions\n            .borrow().iter",
+          "lineNumber": 218
+        },
+        {
+          "caller": "get_supported_extensions",
+          "callee": "self.extensions.borrow",
+          "lineNumber": 218
+        },
+        {
+          "caller": "get_supported_extensions",
+          "callee": "v.1.spec",
+          "lineNumber": 222
+        },
+        {
+          "caller": "get_supported_extensions",
+          "callee": "v.1.is_supported",
+          "lineNumber": 227
+        },
+        {
+          "caller": "get_supported_extensions",
+          "callee": "v.1.name",
+          "lineNumber": 229
+        },
+        {
+          "caller": "get_or_init_extension",
+          "callee": "name.to_uppercase",
+          "lineNumber": 239
+        },
+        {
+          "caller": "get_or_init_extension",
+          "callee": "self.extensions.borrow().get(&name).and_then",
+          "lineNumber": 240
+        },
+        {
+          "caller": "get_or_init_extension",
+          "callee": "self.extensions.borrow().get",
+          "lineNumber": 240
+        },
+        {
+          "caller": "get_or_init_extension",
+          "callee": "self.extensions.borrow",
+          "lineNumber": 240
+        },
+        {
+          "caller": "get_or_init_extension",
+          "callee": "extension.is_supported",
+          "lineNumber": 241
+        },
+        {
+          "caller": "get_or_init_extension",
+          "callee": "Some",
+          "lineNumber": 242
+        },
+        {
+          "caller": "get_or_init_extension",
+          "callee": "extension.instance_or_init",
+          "lineNumber": 242
+        },
+        {
+          "caller": "is_enabled",
+          "callee": "T::name().to_uppercase",
+          "lineNumber": 253
+        },
+        {
+          "caller": "is_enabled",
+          "callee": "T::name",
+          "lineNumber": 253
+        },
+        {
+          "caller": "is_enabled",
+          "callee": "self.extensions\n            .borrow()\n            .get(&name).is_some_and",
+          "lineNumber": 254
+        },
+        {
+          "caller": "is_enabled",
+          "callee": "self.extensions\n            .borrow().get",
+          "lineNumber": 254
+        },
+        {
+          "caller": "is_enabled",
+          "callee": "self.extensions.borrow",
+          "lineNumber": 254
+        },
+        {
+          "caller": "is_enabled",
+          "callee": "ext.is_enabled",
+          "lineNumber": 257
+        },
+        {
+          "caller": "supports_gl_extension",
+          "callee": "self.features.borrow().gl_extensions.contains",
+          "lineNumber": 261
+        },
+        {
+          "caller": "supports_gl_extension",
+          "callee": "self.features.borrow",
+          "lineNumber": 261
+        },
+        {
+          "caller": "supports_any_gl_extension",
+          "callee": "self.features.borrow",
+          "lineNumber": 265
+        },
+        {
+          "caller": "supports_any_gl_extension",
+          "callee": "names\n            .iter().any",
+          "lineNumber": 266
+        },
+        {
+          "caller": "supports_any_gl_extension",
+          "callee": "names.iter",
+          "lineNumber": 266
+        },
+        {
+          "caller": "supports_any_gl_extension",
+          "callee": "features.gl_extensions.contains",
+          "lineNumber": 268
+        },
+        {
+          "caller": "supports_all_gl_extension",
+          "callee": "self.features.borrow",
+          "lineNumber": 272
+        },
+        {
+          "caller": "supports_all_gl_extension",
+          "callee": "names\n            .iter().all",
+          "lineNumber": 273
+        },
+        {
+          "caller": "supports_all_gl_extension",
+          "callee": "names.iter",
+          "lineNumber": 273
+        },
+        {
+          "caller": "supports_all_gl_extension",
+          "callee": "features.gl_extensions.contains",
+          "lineNumber": 275
+        },
+        {
+          "caller": "enable_tex_type",
+          "callee": "self.features\n            .borrow_mut()\n            .disabled_tex_types.remove",
+          "lineNumber": 279
+        },
+        {
+          "caller": "enable_tex_type",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 279
+        },
+        {
+          "caller": "is_tex_type_enabled",
+          "callee": "self\n            .features\n            .borrow()\n            .disabled_tex_types.contains",
+          "lineNumber": 286
+        },
+        {
+          "caller": "is_tex_type_enabled",
+          "callee": "self\n            .features.borrow",
+          "lineNumber": 286
+        },
+        {
+          "caller": "add_effective_tex_internal_format",
+          "callee": "TexFormatType",
+          "lineNumber": 299
+        },
+        {
+          "caller": "add_effective_tex_internal_format",
+          "callee": "self.features\n            .borrow_mut()\n            .effective_tex_internal_formats.insert",
+          "lineNumber": 300
+        },
+        {
+          "caller": "add_effective_tex_internal_format",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 300
+        },
+        {
+          "caller": "get_effective_tex_internal_format",
+          "callee": "TexFormatType",
+          "lineNumber": 311
+        },
+        {
+          "caller": "get_effective_tex_internal_format",
+          "callee": "self\n            .features\n            .borrow()\n            .effective_tex_internal_formats\n            .get(&format).unwrap_or",
+          "lineNumber": 312
+        },
+        {
+          "caller": "get_effective_tex_internal_format",
+          "callee": "self\n            .features\n            .borrow()\n            .effective_tex_internal_formats.get",
+          "lineNumber": 312
+        },
+        {
+          "caller": "get_effective_tex_internal_format",
+          "callee": "self\n            .features.borrow",
+          "lineNumber": 312
+        },
+        {
+          "caller": "enable_filterable_tex_type",
+          "callee": "self.features\n            .borrow_mut()\n            .not_filterable_tex_types.remove",
+          "lineNumber": 321
+        },
+        {
+          "caller": "enable_filterable_tex_type",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 321
+        },
+        {
+          "caller": "is_filterable",
+          "callee": "self\n            .features\n            .borrow()\n            .not_filterable_tex_types.contains",
+          "lineNumber": 328
+        },
+        {
+          "caller": "is_filterable",
+          "callee": "self\n            .features.borrow",
+          "lineNumber": 328
+        },
+        {
+          "caller": "enable_hint_target",
+          "callee": "self.features.borrow_mut().hint_targets.insert",
+          "lineNumber": 336
+        },
+        {
+          "caller": "enable_hint_target",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 336
+        },
+        {
+          "caller": "is_hint_target_enabled",
+          "callee": "self.features.borrow().hint_targets.contains",
+          "lineNumber": 340
+        },
+        {
+          "caller": "is_hint_target_enabled",
+          "callee": "self.features.borrow",
+          "lineNumber": 340
+        },
+        {
+          "caller": "enable_get_parameter_name",
+          "callee": "self.features\n            .borrow_mut()\n            .disabled_get_parameter_names.remove",
+          "lineNumber": 344
+        },
+        {
+          "caller": "enable_get_parameter_name",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 344
+        },
+        {
+          "caller": "is_get_parameter_name_enabled",
+          "callee": "self\n            .features\n            .borrow()\n            .disabled_get_parameter_names.contains",
+          "lineNumber": 351
+        },
+        {
+          "caller": "is_get_parameter_name_enabled",
+          "callee": "self\n            .features.borrow",
+          "lineNumber": 351
+        },
+        {
+          "caller": "enable_get_tex_parameter_name",
+          "callee": "self.features\n            .borrow_mut()\n            .disabled_get_tex_parameter_names.remove",
+          "lineNumber": 359
+        },
+        {
+          "caller": "enable_get_tex_parameter_name",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 359
+        },
+        {
+          "caller": "is_get_tex_parameter_name_enabled",
+          "callee": "self\n            .features\n            .borrow()\n            .disabled_get_tex_parameter_names.contains",
+          "lineNumber": 366
+        },
+        {
+          "caller": "is_get_tex_parameter_name_enabled",
+          "callee": "self\n            .features.borrow",
+          "lineNumber": 366
+        },
+        {
+          "caller": "enable_get_vertex_attrib_name",
+          "callee": "self.features\n            .borrow_mut()\n            .disabled_get_vertex_attrib_names.remove",
+          "lineNumber": 374
+        },
+        {
+          "caller": "enable_get_vertex_attrib_name",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 374
+        },
+        {
+          "caller": "is_get_vertex_attrib_name_enabled",
+          "callee": "self\n            .features\n            .borrow()\n            .disabled_get_vertex_attrib_names.contains",
+          "lineNumber": 381
+        },
+        {
+          "caller": "is_get_vertex_attrib_name_enabled",
+          "callee": "self\n            .features.borrow",
+          "lineNumber": 381
+        },
+        {
+          "caller": "add_tex_compression_formats",
+          "callee": "formats\n            .iter()\n            .map(|&compression| (compression.format.as_gl_constant(), compression)).collect",
+          "lineNumber": 389
+        },
+        {
+          "caller": "add_tex_compression_formats",
+          "callee": "formats\n            .iter().map",
+          "lineNumber": 389
+        },
+        {
+          "caller": "add_tex_compression_formats",
+          "callee": "formats.iter",
+          "lineNumber": 389
+        },
+        {
+          "caller": "add_tex_compression_formats",
+          "callee": "compression.format.as_gl_constant",
+          "lineNumber": 391
+        },
+        {
+          "caller": "add_tex_compression_formats",
+          "callee": "self.features\n            .borrow_mut()\n            .tex_compression_formats.extend",
+          "lineNumber": 394
+        },
+        {
+          "caller": "add_tex_compression_formats",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 394
+        },
+        {
+          "caller": "add_tex_compression_formats",
+          "callee": "formats.iter",
+          "lineNumber": 397
+        },
+        {
+          "caller": "get_tex_compression_format",
+          "callee": "self.features\n            .borrow()\n            .tex_compression_formats\n            .get(&format_id).cloned",
+          "lineNumber": 401
+        },
+        {
+          "caller": "get_tex_compression_format",
+          "callee": "self.features\n            .borrow()\n            .tex_compression_formats.get",
+          "lineNumber": 401
+        },
+        {
+          "caller": "get_tex_compression_format",
+          "callee": "self.features.borrow",
+          "lineNumber": 401
+        },
+        {
+          "caller": "get_tex_compression_ids",
+          "callee": "self.features\n            .borrow()\n            .tex_compression_formats\n            .keys()\n            .copied().collect",
+          "lineNumber": 409
+        },
+        {
+          "caller": "get_tex_compression_ids",
+          "callee": "self.features\n            .borrow()\n            .tex_compression_formats\n            .keys().copied",
+          "lineNumber": 409
+        },
+        {
+          "caller": "get_tex_compression_ids",
+          "callee": "self.features\n            .borrow()\n            .tex_compression_formats.keys",
+          "lineNumber": 409
+        },
+        {
+          "caller": "get_tex_compression_ids",
+          "callee": "self.features.borrow",
+          "lineNumber": 409
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::angleinstancedarrays::ANGLEInstancedArrays>",
+          "lineNumber": 418
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::extblendminmax::EXTBlendMinmax>",
+          "lineNumber": 419
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::extcolorbufferhalffloat::EXTColorBufferHalfFloat>",
+          "lineNumber": 420
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::extfragdepth::EXTFragDepth>",
+          "lineNumber": 421
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::extshadertexturelod::EXTShaderTextureLod>",
+          "lineNumber": 422
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::exttexturefilteranisotropic::EXTTextureFilterAnisotropic>",
+          "lineNumber": 423
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::oeselementindexuint::OESElementIndexUint>",
+          "lineNumber": 424
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::oesstandardderivatives::OESStandardDerivatives>",
+          "lineNumber": 425
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::oestexturefloat::OESTextureFloat>",
+          "lineNumber": 426
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::oestexturefloatlinear::OESTextureFloatLinear>",
+          "lineNumber": 427
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::oestexturehalffloat::OESTextureHalfFloat>",
+          "lineNumber": 428
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::oestexturehalffloatlinear::OESTextureHalfFloatLinear>",
+          "lineNumber": 429
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::oesvertexarrayobject::OESVertexArrayObject>",
+          "lineNumber": 430
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::webglcolorbufferfloat::WEBGLColorBufferFloat>",
+          "lineNumber": 431
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::webglcompressedtextureetc1::WEBGLCompressedTextureETC1>",
+          "lineNumber": 432
+        },
+        {
+          "caller": "register_all_extensions",
+          "callee": "self.register::<ext::webglcompressedtextures3tc::WEBGLCompressedTextureS3TC>",
+          "lineNumber": 433
+        },
+        {
+          "caller": "enable_element_index_uint",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 437
+        },
+        {
+          "caller": "is_element_index_uint_enabled",
+          "callee": "self.features.borrow",
+          "lineNumber": 441
+        },
+        {
+          "caller": "enable_blend_minmax",
+          "callee": "self.features.borrow_mut",
+          "lineNumber": 445
+        },
+        {
+          "caller": "is_blend_minmax_enabled",
+          "callee": "self.features.borrow",
+          "lineNumber": 449
+        },
+        {
+          "caller": "is_float_buffer_renderable",
+          "callee": "self.is_enabled::<WEBGLColorBufferFloat>",
+          "lineNumber": 453
+        },
+        {
+          "caller": "is_float_buffer_renderable",
+          "callee": "self.is_enabled::<OESTextureFloat>",
+          "lineNumber": 453
+        },
+        {
+          "caller": "is_half_float_buffer_renderable",
+          "callee": "self.is_enabled::<EXTColorBufferHalfFloat>",
+          "lineNumber": 461
+        },
+        {
+          "caller": "is_half_float_buffer_renderable",
+          "callee": "self.is_enabled::<OESTextureHalfFloat>",
+          "lineNumber": 461
+        },
+        {
+          "caller": "effective_type",
+          "callee": "self.supports_gl_extension",
+          "lineNumber": 466
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 36,
+        "functionCount": 37,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 13,
+      "nonEmptyLines": 11,
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/extensions/wrapper.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 90,
+      "nonEmptyLines": 78,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 42,
+          "endLine": 46,
+          "params": []
+        },
+        {
+          "name": "instance_or_init",
+          "startLine": 54,
+          "endLine": 69,
+          "params": [
+            "cx",
+            "ctx",
+            "ext"
+          ]
+        },
+        {
+          "name": "spec",
+          "startLine": 71,
+          "endLine": 73,
+          "params": []
+        },
+        {
+          "name": "is_supported",
+          "startLine": 75,
+          "endLine": 77,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "is_enabled",
+          "startLine": 79,
+          "endLine": 81,
+          "params": []
+        },
+        {
+          "name": "enable",
+          "startLine": 83,
+          "endLine": 85,
+          "params": [
+            "ext"
+          ]
+        },
+        {
+          "name": "name",
+          "startLine": 87,
+          "endLine": 89,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "WebGLExtensionWrapper",
+          "startLine": 19,
+          "endLine": 31,
+          "methods": [
+            "instance_or_init",
+            "spec",
+            "is_supported",
+            "is_enabled",
+            "enable",
+            "name"
+          ],
+          "properties": []
+        },
+        {
+          "name": "TypedWebGLExtensionWrapper",
+          "startLine": 35,
+          "endLine": 37,
+          "methods": [],
+          "properties": [
+            "extension"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WebGLExtensionWrapper",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "TypedWebGLExtensionWrapper",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 42,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "MutNullableDom::new",
+          "lineNumber": 44
+        },
+        {
+          "caller": "instance_or_init",
+          "callee": "self.extension.or_init",
+          "lineNumber": 61
+        },
+        {
+          "caller": "instance_or_init",
+          "callee": "T::new",
+          "lineNumber": 63
+        },
+        {
+          "caller": "instance_or_init",
+          "callee": "self.enable",
+          "lineNumber": 66
+        },
+        {
+          "caller": "instance_or_init",
+          "callee": "NonNull::new_unchecked",
+          "lineNumber": 68
+        },
+        {
+          "caller": "instance_or_init",
+          "callee": "extension.reflector().get_jsobject().get",
+          "lineNumber": 68
+        },
+        {
+          "caller": "instance_or_init",
+          "callee": "extension.reflector().get_jsobject",
+          "lineNumber": 68
+        },
+        {
+          "caller": "instance_or_init",
+          "callee": "extension.reflector",
+          "lineNumber": 68
+        },
+        {
+          "caller": "spec",
+          "callee": "T::spec",
+          "lineNumber": 72
+        },
+        {
+          "caller": "is_supported",
+          "callee": "self.is_enabled",
+          "lineNumber": 76
+        },
+        {
+          "caller": "is_supported",
+          "callee": "T::is_supported",
+          "lineNumber": 76
+        },
+        {
+          "caller": "is_enabled",
+          "callee": "self.extension.get().is_some",
+          "lineNumber": 80
+        },
+        {
+          "caller": "is_enabled",
+          "callee": "self.extension.get",
+          "lineNumber": 80
+        },
+        {
+          "caller": "enable",
+          "callee": "T::enable",
+          "lineNumber": 84
+        },
+        {
+          "caller": "name",
+          "callee": "T::name",
+          "lineNumber": 88
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 7,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 25,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/webgl/validations/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 14,
+      "nonEmptyLines": 11,
+      "classes": [
+        {
+          "name": "WebGLValidator",
+          "startLine": 5,
+          "endLine": 10,
+          "methods": [
+            "validate"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "WebGLValidator",
+          "line": 5,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    }
+  ]
+}

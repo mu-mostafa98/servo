@@ -1,0 +1,625 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/shared/constellation/structured_data/serializable.rs",
+      "type": "file",
+      "name": "serializable.rs",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "summary": "Implements the serialization and broadcast-clone protocol for structured data types, including files, blobs, DOM geometry types (point, rect, quad, matrix), exceptions, image bitmaps, image data, and crypto keys with full key algorithm support.",
+      "tags": ["serialization", "structured-clone", "data-types", "crypto", "blob"],
+      "complexity": "complex",
+      "languageNotes": "Rust traits (BroadcastClone, Serializable) with blanket impls for each serializable DOM type, supporting deep-copy for cross-context broadcast."
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:BroadcastClone",
+      "type": "class",
+      "name": "BroadcastClone",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [30, 43],
+      "summary": "Trait defining a deep-clone protocol for inter-context broadcast, with methods for extracting source data, inserting into destination storage, and performing the clone.",
+      "tags": ["trait", "cloning", "broadcast", "protocol"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:Serializable",
+      "type": "class",
+      "name": "Serializable",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [50, 81],
+      "summary": "Trait for types that can participate in structured serialization, with variants for File, FileList, Blob, DomPoint, DomRect, DomQuad, DomMatrix, DomException, ImageBitmap, ImageData, CryptoKey, and quota exceeded errors.",
+      "tags": ["trait", "serialization", "data-type", "enum"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:BroadcastChannelMsg",
+      "type": "class",
+      "name": "BroadcastChannelMsg",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [125, 132],
+      "summary": "A broadcast channel message containing the origin, channel name, and serialized structured data payload, with Clone and BroadcastClone implementations.",
+      "tags": ["broadcast-channel", "message", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:SerializableFile",
+      "type": "class",
+      "name": "SerializableFile",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [145, 150],
+      "summary": "Serializable representation of a File object with a blob implementation, name, last-modified timestamp, and webkit relative path, supporting broadcast cloning.",
+      "tags": ["file", "serialization", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:SerializableFileList",
+      "type": "class",
+      "name": "SerializableFileList",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [175, 177],
+      "summary": "A serializable list of File objects that supports broadcast cloning by cloning each contained file entry.",
+      "tags": ["file", "serialization", "collection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:FileBlob",
+      "type": "class",
+      "name": "FileBlob",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [202, 207],
+      "summary": "A file-backed blob with a unique ID, file name, optional cached bytes, and size, providing accessors for ID, size, cache, and byte caching.",
+      "tags": ["blob", "file", "caching", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:BlobImpl",
+      "type": "class",
+      "name": "BlobImpl",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [272, 281],
+      "summary": "The Blob implementation with a blob ID, type string, data content, and optional slices, supporting creation from bytes, files, or slicing, and broadcast cloning.",
+      "tags": ["blob", "implementation", "data-structure"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:BlobData",
+      "type": "class",
+      "name": "BlobData",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [285, 295],
+      "summary": "Enumeration of blob data storage variants: file-backed, memory-backed, or sliced from a parent blob.",
+      "tags": ["blob", "enum", "data-storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:DomPoint",
+      "type": "class",
+      "name": "DomPoint",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [362, 371],
+      "summary": "Serializable representation of a DOM point with x, y, z, and w coordinates, supporting broadcast cloning.",
+      "tags": ["dom", "geometry", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:DomRect",
+      "type": "class",
+      "name": "DomRect",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [391, 400],
+      "summary": "Serializable representation of a DOM rectangle with x, y, width, and height, supporting broadcast cloning.",
+      "tags": ["dom", "geometry", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:DomQuad",
+      "type": "class",
+      "name": "DomQuad",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [420, 429],
+      "summary": "Serializable representation of a DOM quad defined by four points (p1, p2, p3, p4), supporting broadcast cloning.",
+      "tags": ["dom", "geometry", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:DomMatrix",
+      "type": "class",
+      "name": "DomMatrix",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [449, 454],
+      "summary": "Serializable representation of a DOM matrix with matrix data and a 2D flag, supporting broadcast cloning.",
+      "tags": ["dom", "geometry", "matrix", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:DomException",
+      "type": "class",
+      "name": "DomException",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [474, 477],
+      "summary": "Serializable representation of a DOM exception with message and name fields, supporting broadcast cloning.",
+      "tags": ["dom", "exception", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:SerializableQuotaExceededError",
+      "type": "class",
+      "name": "SerializableQuotaExceededError",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [497, 501],
+      "summary": "Serializable representation of a QuotaExceededError containing a DOM exception component, quota value, and requested amount.",
+      "tags": ["error", "quota", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:SerializableImageBitmap",
+      "type": "class",
+      "name": "SerializableImageBitmap",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [521, 523],
+      "summary": "Serializable representation of an ImageBitmap containing raw bitmap data, supporting broadcast cloning.",
+      "tags": ["image", "bitmap", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:SerializableImageData",
+      "type": "class",
+      "name": "SerializableImageData",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [542, 546],
+      "summary": "Serializable representation of ImageData with pixel data buffer, width, and height, supporting broadcast cloning.",
+      "tags": ["image", "pixel-data", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/serializable.rs:SerializableCryptoKey",
+      "type": "class",
+      "name": "SerializableCryptoKey",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [695, 701],
+      "summary": "Serializable representation of a CryptoKey with key type, extractability flag, algorithm, usages, and a handle that supports RSA, EC, AES, HMAC, Ed25519, X25519, ML-KEM, ML-DSA, ChaCha20Poly1305, and Argon2 key types.",
+      "tags": ["crypto", "key", "serialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/constellation/structured_data/serializable.rs:clone_values",
+      "type": "function",
+      "name": "clone_values",
+      "filePath": "components/shared/constellation/structured_data/serializable.rs",
+      "lineRange": [84, 120],
+      "summary": "Implements the core serialization dispatch: given a Serializable variant, clones its underlying value and wraps it back into a Serializable enum variant, with special handling for Blob, File, and FileList types.",
+      "tags": ["cloning", "serialization", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/shared/constellation/structured_data/transferable.rs",
+      "type": "file",
+      "name": "transferable.rs",
+      "filePath": "components/shared/constellation/structured_data/transferable.rs",
+      "summary": "Implements transferable object types for structured serialization, including the MessagePortImpl with full lifecycle management (creation, entangling, disentangling, message queuing, transfer completion, and shutdown).",
+      "tags": ["transferable", "message-port", "structured-clone", "lifecycle"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/transferable.rs:TransformStreamData",
+      "type": "class",
+      "name": "TransformStreamData",
+      "filePath": "components/shared/constellation/structured_data/transferable.rs",
+      "lineRange": [19, 22],
+      "summary": "Data for a transferable TransformStream, containing readable and writable stream internal slot references.",
+      "tags": ["stream", "transferable", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/transferable.rs:Transferrable",
+      "type": "class",
+      "name": "Transferrable",
+      "filePath": "components/shared/constellation/structured_data/transferable.rs",
+      "lineRange": [26, 39],
+      "summary": "Enumeration of all transferable types: ImageBitmap, MessagePort, OffscreenCanvas, ReadableStream, WritableStream, and TransformStream.",
+      "tags": ["transferable", "enum", "type-system"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/transferable.rs:MessagePortImpl",
+      "type": "class",
+      "name": "MessagePortImpl",
+      "filePath": "components/shared/constellation/structured_data/transferable.rs",
+      "lineRange": [57, 69],
+      "summary": "The MessagePort implementation with state management (detached/enabled/disabled), entangled port tracking, message buffering, and methods for lifecycle operations including entangle, disentangle, transfer completion, incoming message handling, start, and close.",
+      "tags": ["message-port", "implementation", "lifecycle", "state-machine"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/transferable.rs:TransferableOffscreenCanvas",
+      "type": "class",
+      "name": "TransferableOffscreenCanvas",
+      "filePath": "components/shared/constellation/structured_data/transferable.rs",
+      "lineRange": [195, 198],
+      "summary": "Transferable representation of an OffscreenCanvas carrying its width and height dimensions.",
+      "tags": ["canvas", "transferable", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/constellation/structured_data/transferable.rs:complete_transfer",
+      "type": "function",
+      "name": "complete_transfer",
+      "filePath": "components/shared/constellation/structured_data/transferable.rs",
+      "lineRange": [121, 140],
+      "summary": "Completes a message port transfer by enabling or disabling the port based on shipping state, draining the pending task queue into the message buffer.",
+      "tags": ["message-port", "transfer", "state-transition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/constellation/structured_data/transferable.rs:handle_incoming",
+      "type": "function",
+      "name": "handle_incoming",
+      "filePath": "components/shared/constellation/structured_data/transferable.rs",
+      "lineRange": [144, 166],
+      "summary": "Handles an incoming message port task by either queueing it in the message buffer if the port is already started, or creating the buffer on demand and queueing the task.",
+      "tags": ["message-port", "message-handling", "queueing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/constellation/structured_data/transferable.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "components/shared/constellation/structured_data/transferable.rs",
+      "lineRange": [170, 182],
+      "summary": "Starts the message port by enabling it and draining any queued messages from the buffer, returning them for dispatch.",
+      "tags": ["message-port", "start", "drain", "state-transition"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:BroadcastClone",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:Serializable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:BroadcastChannelMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableFile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableFileList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:FileBlob",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:BlobImpl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:BlobData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomPoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomRect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomQuad",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomMatrix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomException",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableQuotaExceededError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableImageBitmap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableImageData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableCryptoKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "function:components/shared/constellation/structured_data/serializable.rs:clone_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:BroadcastClone",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:Serializable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:BroadcastChannelMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableFile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableFileList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:FileBlob",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:BlobImpl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:BlobData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomPoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomRect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomQuad",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomMatrix",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:DomException",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableQuotaExceededError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableImageBitmap",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableImageData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "class:components/shared/constellation/structured_data/serializable.rs:SerializableCryptoKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/serializable.rs",
+      "target": "function:components/shared/constellation/structured_data/serializable.rs:clone_values",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "class:components/shared/constellation/structured_data/transferable.rs:TransformStreamData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "class:components/shared/constellation/structured_data/transferable.rs:Transferrable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "class:components/shared/constellation/structured_data/transferable.rs:MessagePortImpl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "class:components/shared/constellation/structured_data/transferable.rs:TransferableOffscreenCanvas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "function:components/shared/constellation/structured_data/transferable.rs:complete_transfer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "function:components/shared/constellation/structured_data/transferable.rs:handle_incoming",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "function:components/shared/constellation/structured_data/transferable.rs:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "class:components/shared/constellation/structured_data/transferable.rs:TransformStreamData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "class:components/shared/constellation/structured_data/transferable.rs:Transferrable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "class:components/shared/constellation/structured_data/transferable.rs:MessagePortImpl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "class:components/shared/constellation/structured_data/transferable.rs:TransferableOffscreenCanvas",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "function:components/shared/constellation/structured_data/transferable.rs:complete_transfer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "function:components/shared/constellation/structured_data/transferable.rs:handle_incoming",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/transferable.rs",
+      "target": "function:components/shared/constellation/structured_data/transferable.rs:start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

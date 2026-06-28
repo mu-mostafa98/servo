@@ -1,0 +1,1734 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "type": "file",
+      "name": "htmlcanvaselement.rs",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "DOM implementation of the HTMLCanvasElement interface, providing 2D, WebGL, WebGL2, WebGPU, and bitmap renderer context creation, image data extraction, and canvas rendering.",
+      "tags": [
+        "dom",
+        "html-element",
+        "canvas",
+        "rendering",
+        "graphics"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlcanvaselement.rs:HTMLCanvasElement",
+      "type": "class",
+      "name": "HTMLCanvasElement",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "DOM class for <canvas> elements providing 2D, WebGL, WebGPU, and bitmap renderer context creation, image data access, and offscreen canvas support.",
+      "tags": [
+        "dom",
+        "canvas",
+        "rendering",
+        "graphics"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        72,
+        90
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Initializes shared canvas element state for dimensions and rendering context.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        93,
+        105
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Constructs a new HTMLCanvasElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        107,
+        122
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:data",
+      "type": "function",
+      "name": "data",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Returns raw canvas pixel data as a byte vector for image extraction.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        169,
+        181
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:set_rendering_context",
+      "type": "function",
+      "name": "set_rendering_context",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Associates a rendering context (2D, WebGL, WebGPU, bitmap) with the canvas element.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        189,
+        213
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_2d_context",
+      "type": "function",
+      "name": "get_or_init_2d_context",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Lazily initializes and returns the CanvasRenderingContext2D for 2D drawing.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        215,
+        236
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_bitmaprenderer_context",
+      "type": "function",
+      "name": "get_or_init_bitmaprenderer_context",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Lazily initializes and returns the ImageBitmapRenderingContext for bitmap display.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        239,
+        265
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_webgl_context",
+      "type": "function",
+      "name": "get_or_init_webgl_context",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Lazily initializes and returns a WebGLRenderingContext for 3D rendering.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        267,
+        287
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_webgl2_context",
+      "type": "function",
+      "name": "get_or_init_webgl2_context",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Lazily initializes and returns a WebGL2RenderingContext for advanced 3D rendering.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        289,
+        312
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_webgpu_context",
+      "type": "function",
+      "name": "get_or_init_webgpu_context",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Lazily initializes and returns a WebGPU rendering context.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        320,
+        345
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:get_gl_attributes",
+      "type": "function",
+      "name": "get_gl_attributes",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Parses and returns WebGL context creation attributes from a JS object.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        357,
+        374
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:get_image_data",
+      "type": "function",
+      "name": "get_image_data",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Extracts image pixel data from the canvas as an ImageData object.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        380,
+        398
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:update_rendering",
+      "type": "function",
+      "name": "update_rendering",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Triggers a re-render of the canvas content, regenerating display lists.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        408,
+        425
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:SetWidth",
+      "type": "function",
+      "name": "SetWidth",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "IDL setter for the width attribute, updating canvas dimensions.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        433,
+        449
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:SetHeight",
+      "type": "function",
+      "name": "SetHeight",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "IDL setter for the height attribute, updating canvas dimensions.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        455,
+        471
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:GetContext",
+      "type": "function",
+      "name": "GetContext",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "IDL method returning a rendering context by type string (2d, webgl, webgpu, bitmaprenderer).",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        474,
+        504
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:ToDataURL",
+      "type": "function",
+      "name": "ToDataURL",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Converts canvas content to a data URL in the specified image format.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        507,
+        553
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:ToBlob",
+      "type": "function",
+      "name": "ToBlob",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Converts canvas content to a Blob object in the specified image format with callback.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        556,
+        628
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:TransferControlToOffscreen",
+      "type": "function",
+      "name": "TransferControlToOffscreen",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Transfers canvas rendering control to an OffscreenCanvas and returns it.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        631,
+        660
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:CaptureStream",
+      "type": "function",
+      "name": "CaptureStream",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Creates a CanvasCaptureMediaStream for real-time canvas recording.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        663,
+        674
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcanvaselement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmlcanvaselement.rs",
+      "summary": "Handles canvas attribute changes for width/height, triggering context re-initialization.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        682,
+        698
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlcollection.rs",
+      "type": "file",
+      "name": "htmlcollection.rs",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "DOM implementation of HTMLCollection providing indexed and named access to element collections with filtering, caching, and live update support.",
+      "tags": [
+        "dom",
+        "collection",
+        "live-list",
+        "iterable"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlcollection.rs:HTMLCollection",
+      "type": "class",
+      "name": "HTMLCollection",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Live, ordered collection of DOM elements providing indexed and named access with automatic cache invalidation on document mutations.",
+      "tags": [
+        "dom",
+        "collection",
+        "live-list"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        79,
+        91
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:new_inherited_with_kind",
+      "type": "function",
+      "name": "new_inherited_with_kind",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Creates an HTMLCollection with a predefined collection kind (children, tag name, class name, etc.).",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        94,
+        105
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:always_empty",
+      "type": "function",
+      "name": "always_empty",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Creates a static always-empty HTMLCollection for consistent return values.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        122,
+        136
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:new_with_filter_fn",
+      "type": "function",
+      "name": "new_with_filter_fn",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Creates an HTMLCollection using a custom filter function for dynamic element matching.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        148,
+        173
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:new_with_source",
+      "type": "function",
+      "name": "new_with_source",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Creates an HTMLCollection from a pre-defined Vec of element sources.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        185,
+        196
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:validate_cache",
+      "type": "function",
+      "name": "validate_cache",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Checks if the cached element list is still valid based on the root node's mutation count.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        198,
+        209
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:set_cached_cursor",
+      "type": "function",
+      "name": "set_cached_cursor",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Updates the cached cursor position for indexed element access.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        211,
+        223
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:by_qualified_name",
+      "type": "function",
+      "name": "by_qualified_name",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Filters HTMLCollection elements by qualified name matching tag local name and namespace.",
+      "tags": [
+        "dom",
+        "api",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        226,
+        268
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:by_tag_name_ns",
+      "type": "function",
+      "name": "by_tag_name_ns",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Creates an HTMLCollection filtered by tag name and namespace.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        281,
+        292
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:by_qual_tag_name",
+      "type": "function",
+      "name": "by_qual_tag_name",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Creates an HTMLCollection filtered by qualified tag name with namespace handling.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        294,
+        314
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:by_class_name",
+      "type": "function",
+      "name": "by_class_name",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Creates an HTMLCollection filtered by class name string.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        316,
+        326
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:by_atomic_class_name",
+      "type": "function",
+      "name": "by_atomic_class_name",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Creates an HTMLCollection filtered by an atomic (interned) class name.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        328,
+        358
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:filter_iter_after",
+      "type": "function",
+      "name": "filter_iter_after",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Returns an iterator yielding elements matching the collection filter starting after a given node.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        372,
+        382
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:filter_iter_before",
+      "type": "function",
+      "name": "filter_iter_before",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Returns an iterator yielding elements matching the collection filter preceding a given node.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        386,
+        399
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:elements_iter",
+      "type": "function",
+      "name": "elements_iter",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Returns the base iterator over all elements in the root, before filter application.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        401,
+        411
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:Length",
+      "type": "function",
+      "name": "Length",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Returns the number of elements in the collection.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        420,
+        432
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:Item",
+      "type": "function",
+      "name": "Item",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Returns the element at the specified index in the collection.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        435,
+        480
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:NamedItem",
+      "type": "function",
+      "name": "NamedItem",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Returns the first element whose id or name matches the given name string.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        483,
+        499
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlcollection.rs:SupportedPropertyNames",
+      "type": "function",
+      "name": "SupportedPropertyNames",
+      "filePath": "components/script/dom/html/htmlcollection.rs",
+      "summary": "Returns an array of all named property names (id/name values) in the collection.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        512,
+        538
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmldataelement.rs",
+      "type": "file",
+      "name": "htmldataelement.rs",
+      "filePath": "components/script/dom/html/htmldataelement.rs",
+      "summary": "DOM implementation of the HTMLDataElement interface for machine-readable data representation.",
+      "tags": [
+        "dom",
+        "html-element",
+        "data"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmldataelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmldataelement.rs",
+      "summary": "Constructs a new HTMLDataElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        32,
+        45
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmldatalistelement.rs",
+      "type": "file",
+      "name": "htmldatalistelement.rs",
+      "filePath": "components/script/dom/html/htmldatalistelement.rs",
+      "summary": "DOM implementation of the HTMLDataListElement interface providing predefined option lists for input elements.",
+      "tags": [
+        "dom",
+        "html-element",
+        "datalist",
+        "autocomplete"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmldatalistelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmldatalistelement.rs",
+      "summary": "Constructs a new HTMLDataListElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        34,
+        49
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmldetailselement.rs",
+      "type": "file",
+      "name": "htmldetailselement.rs",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "DOM implementation of the HTMLDetailsElement interface with shadow DOM management, summary element discovery, and exclusive-accordion group support.",
+      "tags": [
+        "dom",
+        "html-element",
+        "details",
+        "disclosure",
+        "shadow-dom"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmldetailselement.rs:HTMLDetailsElement",
+      "type": "class",
+      "name": "HTMLDetailsElement",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "DOM class for <details> disclosure elements with shadow DOM content management, summary element discovery, and exclusive-accordion group coordination.",
+      "tags": [
+        "dom",
+        "details",
+        "disclosure",
+        "shadow-dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        58,
+        64
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:register_details_element",
+      "type": "function",
+      "name": "register_details_element",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Registers a details element in the name-groups map for exclusive-accordion coordination.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        85,
+        96
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:unregister_details_element",
+      "type": "function",
+      "name": "unregister_details_element",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Removes a details element from the name-groups map on unbind or attribute change.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        98,
+        114
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:group_members_for",
+      "type": "function",
+      "name": "group_members_for",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Returns all registered details elements sharing the same group name.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        117,
+        128
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Initializes shared details element state including open state and name group.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        132,
+        142
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Constructs a new HTMLDetailsElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        144,
+        159
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:create_shadow_tree",
+      "type": "function",
+      "name": "create_shadow_tree",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Creates the shadow DOM subtree for the details disclosure widget.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        175,
+        238
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:update_shadow_tree_contents",
+      "type": "function",
+      "name": "update_shadow_tree_contents",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Refreshes the shadow DOM content to reflect current open/closed state and slotting.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        249,
+        273
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:update_shadow_tree_styles",
+      "type": "function",
+      "name": "update_shadow_tree_styles",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Updates the shadow DOM styles to match the element's open/closed toggle state.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        275,
+        295
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:ensure_details_exclusivity",
+      "type": "function",
+      "name": "ensure_details_exclusivity",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Coordinates exclusive-accordion behavior, closing other same-name details when one opens.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        299,
+        375
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Handles open/name attribute changes, triggering shadow DOM updates and exclusivity resolution.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        398,
+        498
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:bind_to_tree",
+      "type": "function",
+      "name": "bind_to_tree",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Registers the details element in name groups when inserted into the document.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        507,
+        530
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldetailselement.rs:unbind_from_tree",
+      "type": "function",
+      "name": "unbind_from_tree",
+      "filePath": "components/script/dom/html/htmldetailselement.rs",
+      "summary": "Unregisters the details element from name groups when removed from the document.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        532,
+        550
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmldialogelement.rs",
+      "type": "file",
+      "name": "htmldialogelement.rs",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "DOM implementation of the HTMLDialogElement interface with modal dialog management, focus stepping, toggle event queuing, and escape-key handling.",
+      "tags": [
+        "dom",
+        "html-element",
+        "dialog",
+        "modal",
+        "focus-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmldialogelement.rs:HTMLDialogElement",
+      "type": "class",
+      "name": "HTMLDialogElement",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "DOM class for <dialog> elements with modal/open dialog management, focus stepping, and toggle event lifecycle.",
+      "tags": [
+        "dom",
+        "dialog",
+        "modal",
+        "focus-management"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        31,
+        34
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldialogelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "Constructs a new HTMLDialogElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        48,
+        63
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldialogelement.rs:show_a_modal",
+      "type": "function",
+      "name": "show_a_modal",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "Implements dialog.showModal(), setting up modal dialog layer with focus trap and inert background.",
+      "tags": [
+        "dom",
+        "api",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        66,
+        161
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldialogelement.rs:close_the_dialog",
+      "type": "function",
+      "name": "close_the_dialog",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "Implements dialog.close(), cleaning up modal state and returning to previous focus.",
+      "tags": [
+        "dom",
+        "api",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        164,
+        229
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldialogelement.rs:queue_dialog_toggle_event_task",
+      "type": "function",
+      "name": "queue_dialog_toggle_event_task",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "Queues a dialog toggle event as a DOM task for async event dispatch.",
+      "tags": [
+        "dom",
+        "api",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        232,
+        278
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldialogelement.rs:run_dialog_focusing_steps",
+      "type": "function",
+      "name": "run_dialog_focusing_steps",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "Performs the dialog focus sequence, finding the first focusable element or focusing the dialog itself.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        281,
+        313
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldialogelement.rs:Show",
+      "type": "function",
+      "name": "Show",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "IDL method for opening a non-modal dialog with optional return value.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        335,
+        394
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmldialogelement.rs:command_steps",
+      "type": "function",
+      "name": "command_steps",
+      "filePath": "components/script/dom/html/htmldialogelement.rs",
+      "summary": "Handles the dialog's response to Escape key events for modal dismissal.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        427,
+        464
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmldirectoryelement.rs",
+      "type": "file",
+      "name": "htmldirectoryelement.rs",
+      "filePath": "components/script/dom/html/htmldirectoryelement.rs",
+      "summary": "DOM implementation of the HTMLDirectoryElement interface for legacy directory list element construction.",
+      "tags": [
+        "dom",
+        "html-element",
+        "directory",
+        "legacy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmldirectoryelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmldirectoryelement.rs",
+      "summary": "Constructs a new HTMLDirectoryElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        30,
+        45
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "class:components/script/dom/html/htmlcanvaselement.rs:HTMLCanvasElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "class:components/script/dom/html/htmlcanvaselement.rs:HTMLCanvasElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:set_rendering_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_2d_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_bitmaprenderer_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_webgl_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_webgl2_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:get_or_init_webgpu_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:get_gl_attributes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:get_image_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:get_image_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:update_rendering",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:update_rendering",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:SetWidth",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:SetHeight",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:GetContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:ToDataURL",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:ToBlob",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:TransferControlToOffscreen",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:CaptureStream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcanvaselement.rs",
+      "target": "function:components/script/dom/html/htmlcanvaselement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "class:components/script/dom/html/htmlcollection.rs:HTMLCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "class:components/script/dom/html/htmlcollection.rs:HTMLCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:new_inherited_with_kind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:always_empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:always_empty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:new_with_filter_fn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:new_with_filter_fn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:new_with_source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:new_with_source",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:validate_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:set_cached_cursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_qualified_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_qualified_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_tag_name_ns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_tag_name_ns",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_qual_tag_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_qual_tag_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_class_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_class_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_atomic_class_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:by_atomic_class_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:filter_iter_after",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:filter_iter_before",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:elements_iter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:elements_iter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:Length",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:Item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:NamedItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlcollection.rs",
+      "target": "function:components/script/dom/html/htmlcollection.rs:SupportedPropertyNames",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldataelement.rs",
+      "target": "function:components/script/dom/html/htmldataelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldataelement.rs",
+      "target": "function:components/script/dom/html/htmldataelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldatalistelement.rs",
+      "target": "function:components/script/dom/html/htmldatalistelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldatalistelement.rs",
+      "target": "function:components/script/dom/html/htmldatalistelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "class:components/script/dom/html/htmldetailselement.rs:HTMLDetailsElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "class:components/script/dom/html/htmldetailselement.rs:HTMLDetailsElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:register_details_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:unregister_details_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:group_members_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:create_shadow_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:update_shadow_tree_contents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:update_shadow_tree_styles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:ensure_details_exclusivity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:bind_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldetailselement.rs",
+      "target": "function:components/script/dom/html/htmldetailselement.rs:unbind_from_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "class:components/script/dom/html/htmldialogelement.rs:HTMLDialogElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "class:components/script/dom/html/htmldialogelement.rs:HTMLDialogElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:show_a_modal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:show_a_modal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:close_the_dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:close_the_dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:queue_dialog_toggle_event_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:queue_dialog_toggle_event_task",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:run_dialog_focusing_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:Show",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldialogelement.rs",
+      "target": "function:components/script/dom/html/htmldialogelement.rs:command_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldirectoryelement.rs",
+      "target": "function:components/script/dom/html/htmldirectoryelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmldirectoryelement.rs",
+      "target": "function:components/script/dom/html/htmldirectoryelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

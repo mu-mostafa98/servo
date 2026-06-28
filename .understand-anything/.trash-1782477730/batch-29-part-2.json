@@ -1,0 +1,1181 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script_bindings/mem.rs",
+      "type": "file",
+      "name": "mem.rs",
+      "filePath": "components/script_bindings/mem.rs",
+      "summary": "Implements memory size measurement for DOM objects via the malloc_size_of trait, enabling accurate memory accounting.",
+      "tags": [
+        "rust",
+        "script-bindings",
+        "memory-tracking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/mem.rs:malloc_size_of_including_raw_self",
+      "type": "function",
+      "name": "malloc_size_of_including_raw_self",
+      "filePath": "components/script_bindings/mem.rs",
+      "lineRange": [
+        15,
+        20
+      ],
+      "summary": "Measures the heap allocation size of a DOM object including itself for memory accounting.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script_bindings/principals.rs",
+      "type": "file",
+      "name": "principals.rs",
+      "filePath": "components/script_bindings/principals.rs",
+      "summary": "Implements ServoJSPrincipals and ServoJSPrincipalsRef for managing SpiderMonkey JS principal references with lifetime tracking.",
+      "tags": [
+        "rust",
+        "script-bindings",
+        "security-principals"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/principals.rs:ServoJSPrincipals",
+      "type": "class",
+      "name": "ServoJSPrincipals",
+      "filePath": "components/script_bindings/principals.rs",
+      "lineRange": [
+        20,
+        20
+      ],
+      "summary": "SpiderMonkey JS principals wrapper with origin tracking and reference counting.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/principals.rs:ServoJSPrincipalsRef",
+      "type": "class",
+      "name": "ServoJSPrincipalsRef",
+      "filePath": "components/script_bindings/principals.rs",
+      "lineRange": [
+        84,
+        84
+      ],
+      "summary": "Borrowed reference wrapper for ServoJSPrincipals with ManuallyDrop semantics.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/principals.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script_bindings/principals.rs",
+      "lineRange": [
+        23,
+        34
+      ],
+      "summary": "Creates a new ServoJSPrincipals from an origin string.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/principals.rs:from_raw_nonnull",
+      "type": "function",
+      "name": "from_raw_nonnull",
+      "filePath": "components/script_bindings/principals.rs",
+      "lineRange": [
+        42,
+        45
+      ],
+      "summary": "Creates from a non-null raw pointer, holding a JS reference to the principals.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/principals.rs:origin",
+      "type": "function",
+      "name": "origin",
+      "filePath": "components/script_bindings/principals.rs",
+      "lineRange": [
+        48,
+        53
+      ],
+      "summary": "Returns the origin string from the JS principals.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/principals.rs:as_raw_nonnull",
+      "type": "function",
+      "name": "as_raw_nonnull",
+      "filePath": "components/script_bindings/principals.rs",
+      "lineRange": [
+        56,
+        58
+      ],
+      "summary": "Returns the raw non-null pointer.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/principals.rs:as_raw",
+      "type": "function",
+      "name": "as_raw",
+      "filePath": "components/script_bindings/principals.rs",
+      "lineRange": [
+        61,
+        63
+      ],
+      "summary": "Returns the raw pointer.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/principals.rs:from_raw_unchecked",
+      "type": "function",
+      "name": "from_raw_unchecked",
+      "filePath": "components/script_bindings/principals.rs",
+      "lineRange": [
+        109,
+        111
+      ],
+      "summary": "Creates from a raw pointer without null check.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script_bindings/root.rs",
+      "type": "file",
+      "name": "root.rs",
+      "filePath": "components/script_bindings/root.rs",
+      "summary": "Provides Root, DomRoot, RootCollection, and DomSlice types for safe rooting and garbage collection management of DOM objects in SpiderMonkey.",
+      "tags": [
+        "rust",
+        "script-bindings",
+        "memory-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script_bindings/root.rs:Root",
+      "type": "class",
+      "name": "Root",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        23,
+        28
+      ],
+      "summary": "Smart pointer that roots a DOM traceable object in SpiderMonkey heap, preventing GC collection.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/root.rs:StableTraceObject",
+      "type": "class",
+      "name": "StableTraceObject",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        63,
+        67
+      ],
+      "summary": "Trait providing stable trace targets for rooted DOM objects.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/root.rs:Dom",
+      "type": "class",
+      "name": "Dom",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        160,
+        162
+      ],
+      "summary": "Non-nullable reference-counted pointer to a traceable DOM object.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/root.rs:MaybeUnreflectedDom",
+      "type": "class",
+      "name": "MaybeUnreflectedDom",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        245,
+        247
+      ],
+      "summary": "Nullable smart pointer for DOM objects that may not yet have a JS reflector.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/root.rs:RootCollection",
+      "type": "class",
+      "name": "RootCollection",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        383,
+        385
+      ],
+      "summary": "Thread-local collection managing all stack roots for GC tracing.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/root.rs:DomSlice",
+      "type": "class",
+      "name": "DomSlice",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        447,
+        453
+      ],
+      "summary": "Typed wrapper for rooted slices of DOM objects.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        39,
+        50
+      ],
+      "summary": "Creates a new Root containing a traceable value, adding to root list.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:from_ref",
+      "type": "function",
+      "name": "from_ref",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        202,
+        207
+      ],
+      "summary": "Creates a Dom reference from an existing object reference.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:as_rooted",
+      "type": "function",
+      "name": "as_rooted",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        210,
+        212
+      ],
+      "summary": "Converts a Dom to a DomRoot by rooting.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:as_ptr",
+      "type": "function",
+      "name": "as_ptr",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        214,
+        216
+      ],
+      "summary": "as_ptr function for DOM binding infrastructure.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:from_box",
+      "type": "function",
+      "name": "from_box",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        257,
+        261
+      ],
+      "summary": "Creates from a boxed value by leaking.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:reflect_with",
+      "type": "function",
+      "name": "reflect_with",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        281,
+        287
+      ],
+      "summary": "Reflects an unreflected DOM box into JS.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:upcast",
+      "type": "function",
+      "name": "upcast",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        295,
+        301
+      ],
+      "summary": "Transmutes DomRoot<T> to DomRoot<U> for inheritance upcasting.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:downcast",
+      "type": "function",
+      "name": "downcast",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        304,
+        313
+      ],
+      "summary": "Safely downcasts DomRoot with runtime type checking.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:as_traced",
+      "type": "function",
+      "name": "as_traced",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        328,
+        330
+      ],
+      "summary": "Converts to DomRoot for tracing.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:trace_roots",
+      "type": "function",
+      "name": "trace_roots",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        434,
+        444
+      ],
+      "summary": "Traces all stack-rooted DOM objects for GC.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/root.rs:rooted_heap_handle",
+      "type": "function",
+      "name": "rooted_heap_handle",
+      "filePath": "components/script_bindings/root.rs",
+      "lineRange": [
+        470,
+        478
+      ],
+      "summary": "Creates a rooted heap handle for DOM operations.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script_bindings/str.rs",
+      "type": "file",
+      "name": "str.rs",
+      "filePath": "components/script_bindings/str.rs",
+      "summary": "Provides ByteString and USVString types for WebIDL string conversions, including JSON serialization helpers.",
+      "tags": [
+        "rust",
+        "script-bindings",
+        "string-types"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/str.rs:ByteString",
+      "type": "class",
+      "name": "ByteString",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        22,
+        22
+      ],
+      "summary": "Byte string type for WebIDL ByteString conversions with ASCII case operations.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/str.rs:USVString",
+      "type": "class",
+      "name": "USVString",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        81,
+        81
+      ],
+      "summary": "Unicode scalar value string type for WebIDL USVString conversions.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/str.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        26,
+        28
+      ],
+      "summary": "Creates a ByteString from a byte vector.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/str.rs:as_str",
+      "type": "function",
+      "name": "as_str",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        32,
+        34
+      ],
+      "summary": "Tries to interpret the byte string as UTF-8.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/str.rs:len",
+      "type": "function",
+      "name": "len",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        37,
+        39
+      ],
+      "summary": "Returns the byte string length.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/str.rs:is_empty",
+      "type": "function",
+      "name": "is_empty",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        42,
+        44
+      ],
+      "summary": "Checks if the byte string is empty.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/str.rs:to_lower",
+      "type": "function",
+      "name": "to_lower",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        47,
+        49
+      ],
+      "summary": "Returns a lowercased copy of the byte string.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/str.rs:is_token",
+      "type": "function",
+      "name": "is_token",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        137,
+        151
+      ],
+      "summary": "Validates whether a string is an ASCII token.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/str.rs:serialize_jsval_to_json_utf8",
+      "type": "function",
+      "name": "serialize_jsval_to_json_utf8",
+      "filePath": "components/script_bindings/str.rs",
+      "lineRange": [
+        158,
+        206
+      ],
+      "summary": "Serializes a JS value to JSON string using SpiderMonkey JSON.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/wrap.rs",
+      "type": "file",
+      "name": "wrap.rs",
+      "filePath": "components/script_bindings/wrap.rs",
+      "summary": "Provides the WrapConfig struct and wrap function for creating JS wrapper objects (regular or proxy) around DOM objects.",
+      "tags": [
+        "rust",
+        "script-bindings",
+        "dom-wrapping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/wrap.rs:WrapConfig",
+      "type": "class",
+      "name": "WrapConfig",
+      "filePath": "components/script_bindings/wrap.rs",
+      "lineRange": [
+        31,
+        42
+      ],
+      "summary": "Configuration for wrapping a DOM object into a JS wrapper, specifying proxy, protos, and unforgeable members.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/wrap.rs:wrap",
+      "type": "function",
+      "name": "wrap",
+      "filePath": "components/script_bindings/wrap.rs",
+      "lineRange": [
+        45,
+        155
+      ],
+      "summary": "Creates a JS wrapper object for a DOM object, handling proxy and regular object paths.",
+      "tags": [
+        "dom-binding",
+        "rust"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script_bindings/mem.rs",
+      "target": "function:components/script_bindings/mem.rs:malloc_size_of_including_raw_self",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/mem.rs",
+      "target": "function:components/script_bindings/mem.rs:malloc_size_of_including_raw_self",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "class:components/script_bindings/principals.rs:ServoJSPrincipals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "class:components/script_bindings/principals.rs:ServoJSPrincipals",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "class:components/script_bindings/principals.rs:ServoJSPrincipalsRef",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "class:components/script_bindings/principals.rs:ServoJSPrincipalsRef",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:from_raw_nonnull",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:from_raw_nonnull",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:origin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:origin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:as_raw_nonnull",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:as_raw_nonnull",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:as_raw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:as_raw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:from_raw_unchecked",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/principals.rs",
+      "target": "function:components/script_bindings/principals.rs:from_raw_unchecked",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:Root",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:Root",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:StableTraceObject",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:StableTraceObject",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:Dom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:Dom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:MaybeUnreflectedDom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:MaybeUnreflectedDom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:RootCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:RootCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:DomSlice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "class:components/script_bindings/root.rs:DomSlice",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:from_ref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:from_ref",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:as_rooted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:as_rooted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:as_ptr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:as_ptr",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:from_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:from_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:reflect_with",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:reflect_with",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:upcast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:upcast",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:downcast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:downcast",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:as_traced",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:as_traced",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:trace_roots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:trace_roots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:rooted_heap_handle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/root.rs",
+      "target": "function:components/script_bindings/root.rs:rooted_heap_handle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "class:components/script_bindings/str.rs:ByteString",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "class:components/script_bindings/str.rs:ByteString",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "class:components/script_bindings/str.rs:USVString",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "class:components/script_bindings/str.rs:USVString",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:as_str",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:as_str",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:len",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:len",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:is_empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:is_empty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:to_lower",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:to_lower",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:is_token",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:is_token",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:serialize_jsval_to_json_utf8",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/str.rs",
+      "target": "function:components/script_bindings/str.rs:serialize_jsval_to_json_utf8",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/wrap.rs",
+      "target": "class:components/script_bindings/wrap.rs:WrapConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/wrap.rs",
+      "target": "class:components/script_bindings/wrap.rs:WrapConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/wrap.rs",
+      "target": "function:components/script_bindings/wrap.rs:wrap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script_bindings/wrap.rs",
+      "target": "function:components/script_bindings/wrap.rs:wrap",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

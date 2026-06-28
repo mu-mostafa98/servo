@@ -1,0 +1,692 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/storage/shared/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/storage/shared/mod.rs",
+      "summary": "Provides shared utility functions for the storage crate, including SQLite disk-full error detection used by both IndexedDB and WebStorage engines.",
+      "tags": [
+        "utility",
+        "error-handling",
+        "sqlite"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/storage/storage_thread.rs",
+      "type": "file",
+      "name": "storage_thread.rs",
+      "filePath": "components/storage/storage_thread.rs",
+      "summary": "Initializes and spawns the storage thread groups for client storage, IndexedDB, and WebStorage, composing them into a StorageThreads structure.",
+      "tags": [
+        "threading",
+        "initialization",
+        "orchestration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/storage/webstorage/engines/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/storage/webstorage/engines/mod.rs",
+      "summary": "Defines the WebStorageEngine trait with load, clear, delete, set, and save methods for web storage backend implementations.",
+      "tags": [
+        "trait",
+        "abstraction",
+        "webstorage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/storage/webstorage/engines/sqlite.rs",
+      "type": "file",
+      "name": "sqlite.rs",
+      "filePath": "components/storage/webstorage/engines/sqlite.rs",
+      "summary": "SQLite-backed implementation of the WebStorageEngine trait providing local and session storage persistence with init, load, set, delete, and save operations.",
+      "tags": [
+        "sqlite",
+        "webstorage",
+        "storage-engine",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/storage/webstorage/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "summary": "Implements the WebStorage (localStorage/sessionStorage) manager with origin-based data management, storage operations, and memory reporting.",
+      "tags": [
+        "webstorage",
+        "localstorage",
+        "sessionstorage",
+        "origin"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/storage/shared/mod.rs:is_sqlite_disk_full_error",
+      "type": "function",
+      "name": "is_sqlite_disk_full_error",
+      "filePath": "components/storage/shared/mod.rs",
+      "lineRange": [
+        28,
+        72
+      ],
+      "summary": "Checks whether an error indicates a SQLite disk-full condition by inspecting the error chain for ENOSPC or SQLITE_FULL errors.",
+      "tags": [
+        "utility",
+        "error-handling",
+        "sqlite"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/storage_thread.rs:new_storage_thread_group",
+      "type": "function",
+      "name": "new_storage_thread_group",
+      "filePath": "components/storage/storage_thread.rs",
+      "lineRange": [
+        16,
+        35
+      ],
+      "summary": "Creates a storage thread group with client storage, IndexedDB, and web storage thread factories, composing them into a StorageThreads structure.",
+      "tags": [
+        "threading",
+        "initialization",
+        "factory"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/storage_thread.rs:new_storage_threads",
+      "type": "function",
+      "name": "new_storage_threads",
+      "filePath": "components/storage/storage_thread.rs",
+      "lineRange": [
+        37,
+        52
+      ],
+      "summary": "Top-level entry point that creates storage thread groups for all available labels.",
+      "tags": [
+        "entry-point",
+        "initialization",
+        "threading"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/storage/webstorage/engines/mod.rs:WebStorageEngine",
+      "type": "class",
+      "name": "WebStorageEngine",
+      "filePath": "components/storage/webstorage/engines/mod.rs",
+      "lineRange": [
+        9,
+        16
+      ],
+      "summary": "Trait defining the web storage engine interface with load, clear, delete, set, and save methods for backend implementations.",
+      "tags": [
+        "trait",
+        "abstraction",
+        "webstorage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/storage/webstorage/engines/sqlite.rs:SqliteEngine",
+      "type": "class",
+      "name": "SqliteEngine",
+      "filePath": "components/storage/webstorage/engines/sqlite.rs",
+      "lineRange": [
+        16,
+        18
+      ],
+      "summary": "SQLite-backed implementation of the WebStorageEngine trait providing persistent key-value storage for local and session data.",
+      "tags": [
+        "sqlite",
+        "webstorage",
+        "engine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/webstorage/engines/sqlite.rs:init_db",
+      "type": "function",
+      "name": "init_db",
+      "filePath": "components/storage/webstorage/engines/sqlite.rs",
+      "lineRange": [
+        32,
+        60
+      ],
+      "summary": "Initializes the SQLite database for web storage, creating the database directory, setting pragmas, and creating the schema table.",
+      "tags": [
+        "initialization",
+        "sqlite",
+        "webstorage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/webstorage/engines/sqlite.rs:load",
+      "type": "function",
+      "name": "load",
+      "filePath": "components/storage/webstorage/engines/sqlite.rs",
+      "lineRange": [
+        66,
+        80
+      ],
+      "summary": "Loads all stored key-value pairs from the SQLite database into a HashMap.",
+      "tags": [
+        "crud",
+        "read",
+        "webstorage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/storage/webstorage/engines/sqlite.rs:set",
+      "type": "function",
+      "name": "set",
+      "filePath": "components/storage/webstorage/engines/sqlite.rs",
+      "lineRange": [
+        93,
+        105
+      ],
+      "summary": "Inserts or updates a key-value pair in the web storage database within a transaction.",
+      "tags": [
+        "crud",
+        "write",
+        "webstorage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/storage/webstorage/engines/sqlite.rs:save",
+      "type": "function",
+      "name": "save",
+      "filePath": "components/storage/webstorage/engines/sqlite.rs",
+      "lineRange": [
+        107,
+        122
+      ],
+      "summary": "Replaces the entire data set in the database by clearing existing entries and inserting all provided key-value pairs within a transaction.",
+      "tags": [
+        "crud",
+        "write",
+        "webstorage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/storage/webstorage/mod.rs:WebStorageThreadFactory",
+      "type": "class",
+      "name": "WebStorageThreadFactory",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        37,
+        43
+      ],
+      "summary": "Factory struct that creates and spawns the WebStorage manager thread with memory profiling.",
+      "tags": [
+        "factory",
+        "threading",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/storage/webstorage/mod.rs:StorageOrigins",
+      "type": "class",
+      "name": "StorageOrigins",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        70,
+        74
+      ],
+      "summary": "Manages a collection of origin descriptors with methods for ensuring entries, retrieving descriptors, and filtering by sites.",
+      "tags": [
+        "data-model",
+        "origin",
+        "webstorage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/storage/webstorage/mod.rs:OriginEntry",
+      "type": "class",
+      "name": "OriginEntry",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        130,
+        133
+      ],
+      "summary": "Represents a storage entry for a single origin, wrapping a BTree-based data structure with size tracking.",
+      "tags": [
+        "data-model",
+        "origin",
+        "webstorage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/storage/webstorage/mod.rs:WebStorageManager",
+      "type": "class",
+      "name": "WebStorageManager",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        207,
+        215
+      ],
+      "summary": "Core manager struct orchestrating WebStorage (localStorage/sessionStorage) operations including origin management, data selection, and memory reporting.",
+      "tags": [
+        "manager",
+        "webstorage",
+        "orchestration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        239,
+        296
+      ],
+      "summary": "Main event loop for WebStorageManager processing incoming messages for storage operations and memory reports.",
+      "tags": [
+        "event-loop",
+        "dispatcher",
+        "webstorage"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:select_data",
+      "type": "function",
+      "name": "select_data",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        386,
+        414
+      ],
+      "summary": "Selects and retrieves data for a given storage type, webview, and origin, creating the environment if it does not exist.",
+      "tags": [
+        "data-access",
+        "webstorage",
+        "lookup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:select_data_mut",
+      "type": "function",
+      "name": "select_data_mut",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        416,
+        444
+      ],
+      "summary": "Selects data with mutable access for a given storage type, webview, and origin, creating the environment if needed.",
+      "tags": [
+        "data-access",
+        "webstorage",
+        "lookup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:set_item",
+      "type": "function",
+      "name": "set_item",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        524,
+        567
+      ],
+      "summary": "Sets a storage item for a given origin, handling both local and session storage with size tracking and persistence.",
+      "tags": [
+        "crud",
+        "write",
+        "webstorage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:remove_item",
+      "type": "function",
+      "name": "remove_item",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        584,
+        600
+      ],
+      "summary": "Removes a storage item by name for a given origin, updating size tracking and triggering persistence.",
+      "tags": [
+        "crud",
+        "delete",
+        "webstorage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:clear",
+      "type": "function",
+      "name": "clear",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        602,
+        625
+      ],
+      "summary": "Clears all storage data for a given origin, storage type, and webview, resetting size and persisting changes.",
+      "tags": [
+        "crud",
+        "delete",
+        "webstorage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:clear_data_for_sites",
+      "type": "function",
+      "name": "clear_data_for_sites",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        644,
+        681
+      ],
+      "summary": "Clears storage data for specified sites by iterating matching origins, removing their data, and triggering save operations.",
+      "tags": [
+        "privacy",
+        "cleanup",
+        "webstorage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:take_origins_for_sites",
+      "type": "function",
+      "name": "take_origins_for_sites",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        102,
+        126
+      ],
+      "summary": "Retrieves and removes origin descriptors that match the given site list.",
+      "tags": [
+        "origin",
+        "webstorage",
+        "filtering"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/storage/webstorage/mod.rs:collect_memory_reports",
+      "type": "function",
+      "name": "collect_memory_reports",
+      "filePath": "components/storage/webstorage/mod.rs",
+      "lineRange": [
+        298,
+        314
+      ],
+      "summary": "Collects memory usage reports for all active storage environments and origins.",
+      "tags": [
+        "memory",
+        "profiling",
+        "webstorage"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/storage/webstorage/engines/mod.rs",
+      "target": "file:components/storage/webstorage/engines/sqlite.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "file:components/storage/webstorage/engines/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/storage/shared/mod.rs",
+      "target": "function:components/storage/shared/mod.rs:is_sqlite_disk_full_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/shared/mod.rs",
+      "target": "function:components/storage/shared/mod.rs:is_sqlite_disk_full_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/storage/storage_thread.rs",
+      "target": "function:components/storage/storage_thread.rs:new_storage_thread_group",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/storage_thread.rs",
+      "target": "function:components/storage/storage_thread.rs:new_storage_threads",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/storage_thread.rs",
+      "target": "function:components/storage/storage_thread.rs:new_storage_threads",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/mod.rs",
+      "target": "class:components/storage/webstorage/engines/mod.rs:WebStorageEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/mod.rs",
+      "target": "class:components/storage/webstorage/engines/mod.rs:WebStorageEngine",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/sqlite.rs",
+      "target": "class:components/storage/webstorage/engines/sqlite.rs:SqliteEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/sqlite.rs",
+      "target": "function:components/storage/webstorage/engines/sqlite.rs:init_db",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/sqlite.rs",
+      "target": "function:components/storage/webstorage/engines/sqlite.rs:load",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/sqlite.rs",
+      "target": "function:components/storage/webstorage/engines/sqlite.rs:set",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/sqlite.rs",
+      "target": "function:components/storage/webstorage/engines/sqlite.rs:save",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/sqlite.rs",
+      "target": "class:components/storage/webstorage/engines/sqlite.rs:SqliteEngine",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/storage/webstorage/engines/sqlite.rs",
+      "target": "function:components/storage/webstorage/engines/sqlite.rs:init_db",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "class:components/storage/webstorage/mod.rs:WebStorageThreadFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "class:components/storage/webstorage/mod.rs:StorageOrigins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "class:components/storage/webstorage/mod.rs:OriginEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "class:components/storage/webstorage/mod.rs:WebStorageManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:select_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:select_data_mut",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:set_item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:remove_item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:clear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:clear_data_for_sites",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:take_origins_for_sites",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "function:components/storage/webstorage/mod.rs:collect_memory_reports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "class:components/storage/webstorage/mod.rs:WebStorageThreadFactory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "class:components/storage/webstorage/mod.rs:StorageOrigins",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/storage/webstorage/mod.rs",
+      "target": "class:components/storage/webstorage/mod.rs:OriginEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/storage/storage_thread.rs",
+      "target": "file:components/storage/client_storage.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/storage/storage_thread.rs",
+      "target": "file:components/storage/indexeddb/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/storage/storage_thread.rs",
+      "target": "file:components/storage/webstorage/mod.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

@@ -1,0 +1,1028 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "type": "file",
+      "name": "tex_image_2d.rs",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "summary": "Validates texImage2D and texStorage2D operations including compressed texture variants, providing validation errors and structured results.",
+      "tags": [
+        "webgl",
+        "validation",
+        "texture-2d"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:fmt",
+      "type": "function",
+      "name": "fmt",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        63,
+        88
+      ],
+      "summary": "Formats TexImageValidationError variants as human-readable error descriptions.",
+      "tags": [
+        "webgl",
+        "error-formatting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l114",
+      "type": "function",
+      "name": "validate",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        114,
+        226
+      ],
+      "summary": "Validates common 2D texture parameters: target binding, level range, texture format compatibility, and power-of-two constraints.",
+      "tags": [
+        "webgl",
+        "validation",
+        "texture-target"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l230",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        230,
+        248
+      ],
+      "summary": "Constructs CommonTexImage2DValidator for basic 2D texture parameter validation.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l260",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        260,
+        284
+      ],
+      "summary": "Constructs TexImage2DValidator with format and data type for full texImage2D validation.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l307",
+      "type": "function",
+      "name": "validate",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        307,
+        382
+      ],
+      "summary": "Validates texImage2D format and data type combination, ensuring pixel data format matches internal format.",
+      "tags": [
+        "webgl",
+        "validation",
+        "format-checking"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l392",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        392,
+        414
+      ],
+      "summary": "Constructs CommonCompressedTexImage2DValidator for compressed texture validation.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "compressed"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:valid_compressed_data_len",
+      "type": "function",
+      "name": "valid_compressed_data_len",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        430,
+        445
+      ],
+      "summary": "Checks that compressed texture data length matches expected size for the compression format.",
+      "tags": [
+        "webgl",
+        "validation",
+        "compressed",
+        "data-size"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:is_subimage_blockaligned",
+      "type": "function",
+      "name": "is_subimage_blockaligned",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        447,
+        461
+      ],
+      "summary": "Verifies subimage offsets and dimensions are aligned to compressed block boundaries.",
+      "tags": [
+        "webgl",
+        "validation",
+        "alignment",
+        "compressed"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l467",
+      "type": "function",
+      "name": "validate",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        467,
+        507
+      ],
+      "summary": "Validates compressed texImage2D parameters including compression format support and data length.",
+      "tags": [
+        "webgl",
+        "validation",
+        "compressed-texture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l516",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        516,
+        538
+      ],
+      "summary": "Constructs CompressedTexImage2DValidator delegating to common compressed validation.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "compressed"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l545",
+      "type": "function",
+      "name": "validate",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        545,
+        582
+      ],
+      "summary": "Validates compressed texSubImage2D parameters including offset alignment for block-compressed formats.",
+      "tags": [
+        "webgl",
+        "validation",
+        "subimage",
+        "compressed"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l593",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        593,
+        618
+      ],
+      "summary": "Constructs CompressedTexSubImage2DValidator with sub-image offset parameters.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "subimage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l625",
+      "type": "function",
+      "name": "validate",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        625,
+        690
+      ],
+      "summary": "Validates texStorage2D parameters: immutable texture size, levels and format consistency.",
+      "tags": [
+        "webgl",
+        "validation",
+        "immutable-texture"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l711",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        711,
+        734
+      ],
+      "summary": "Constructs TexStorageValidator for immutable texture storage validation.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "texture-storage"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l741",
+      "type": "function",
+      "name": "validate",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        741,
+        801
+      ],
+      "summary": "Validates texStorage2D with cube map array support and per-face dimension checking.",
+      "tags": [
+        "webgl",
+        "validation",
+        "texture-storage"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImageValidationError",
+      "type": "class",
+      "name": "TexImageValidationError",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        20,
+        58
+      ],
+      "summary": "WebGL TexImageValidationError type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonTexImage2DValidator",
+      "type": "class",
+      "name": "CommonTexImage2DValidator",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        91,
+        99
+      ],
+      "summary": "WebGL CommonTexImage2DValidator type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonTexImage2DValidatorResult",
+      "type": "class",
+      "name": "CommonTexImage2DValidatorResult",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        101,
+        109
+      ],
+      "summary": "WebGL CommonTexImage2DValidatorResult type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImage2DValidator",
+      "type": "class",
+      "name": "TexImage2DValidator",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        251,
+        255
+      ],
+      "summary": "WebGL TexImage2DValidator type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImage2DValidatorResult",
+      "type": "class",
+      "name": "TexImage2DValidatorResult",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        288,
+        299
+      ],
+      "summary": "WebGL TexImage2DValidatorResult type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonCompressedTexImage2DValidator",
+      "type": "class",
+      "name": "CommonCompressedTexImage2DValidator",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        385,
+        388
+      ],
+      "summary": "WebGL CommonCompressedTexImage2DValidator type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonCompressedTexImage2DValidatorResult",
+      "type": "class",
+      "name": "CommonCompressedTexImage2DValidatorResult",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        417,
+        424
+      ],
+      "summary": "WebGL CommonCompressedTexImage2DValidatorResult type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CompressedTexImage2DValidator",
+      "type": "class",
+      "name": "CompressedTexImage2DValidator",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        510,
+        512
+      ],
+      "summary": "WebGL CompressedTexImage2DValidator type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CompressedTexSubImage2DValidator",
+      "type": "class",
+      "name": "CompressedTexSubImage2DValidator",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        585,
+        589
+      ],
+      "summary": "WebGL CompressedTexSubImage2DValidator type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexStorageValidator",
+      "type": "class",
+      "name": "TexStorageValidator",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        693,
+        697
+      ],
+      "summary": "WebGL TexStorageValidator type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexStorageValidatorResult",
+      "type": "class",
+      "name": "TexStorageValidatorResult",
+      "filePath": "components/script/dom/webgl/validations/tex_image_2d.rs",
+      "lineRange": [
+        699,
+        707
+      ],
+      "summary": "WebGL TexStorageValidatorResult type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "type": "file",
+      "name": "tex_image_3d.rs",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "summary": "Validates texImage3D operations for WebGL2, providing 3D texture validation with format and dimension checking.",
+      "tags": [
+        "webgl",
+        "validation",
+        "texture-3d",
+        "webgl2"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_3d.rs:validate_l42",
+      "type": "function",
+      "name": "validate",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "lineRange": [
+        42,
+        131
+      ],
+      "summary": "Validates common 3D texture parameters including target, level, depth, and format for texImage3D operations.",
+      "tags": [
+        "webgl",
+        "validation",
+        "3d-texture"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_3d.rs:new_l136",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "lineRange": [
+        136,
+        156
+      ],
+      "summary": "Constructs CommonTexImage3DValidator for basic 3D texture validation.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "3d-texture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_3d.rs:new_l169",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "lineRange": [
+        169,
+        197
+      ],
+      "summary": "Constructs TexImage3DValidator with format and type parameters for full 3D validation.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "3d-texture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/tex_image_3d.rs:validate_l221",
+      "type": "function",
+      "name": "validate",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "lineRange": [
+        221,
+        310
+      ],
+      "summary": "Validates texImage3D parameters with format and data type checking for 3D texture uploads.",
+      "tags": [
+        "webgl",
+        "validation",
+        "3d-texture",
+        "format"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_3d.rs:CommonTexImage3DValidator",
+      "type": "class",
+      "name": "CommonTexImage3DValidator",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "lineRange": [
+        17,
+        26
+      ],
+      "summary": "WebGL CommonTexImage3DValidator type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_3d.rs:CommonTexImage3DValidatorResult",
+      "type": "class",
+      "name": "CommonTexImage3DValidatorResult",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "lineRange": [
+        28,
+        37
+      ],
+      "summary": "WebGL CommonTexImage3DValidatorResult type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_3d.rs:TexImage3DValidator",
+      "type": "class",
+      "name": "TexImage3DValidator",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "lineRange": [
+        159,
+        164
+      ],
+      "summary": "WebGL TexImage3DValidator type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/validations/tex_image_3d.rs:TexImage3DValidatorResult",
+      "type": "class",
+      "name": "TexImage3DValidatorResult",
+      "filePath": "components/script/dom/webgl/validations/tex_image_3d.rs",
+      "lineRange": [
+        201,
+        213
+      ],
+      "summary": "WebGL TexImage3DValidatorResult type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgl/validations/types.rs",
+      "type": "file",
+      "name": "types.rs",
+      "filePath": "components/script/dom/webgl/validations/types.rs",
+      "summary": "Defines TexImageTarget enum with dimension and cubemap detection helpers used across texImage validators.",
+      "tags": [
+        "webgl",
+        "validation",
+        "types",
+        "enums"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/validations/types.rs:dimensions",
+      "type": "function",
+      "name": "dimensions",
+      "filePath": "components/script/dom/webgl/validations/types.rs",
+      "lineRange": [
+        30,
+        35
+      ],
+      "summary": "Returns the number of dimensions (1, 2, or 3) for a given texture target type.",
+      "tags": [
+        "webgl",
+        "target",
+        "dimensions"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:fmt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l114",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l230",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l230",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l260",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l260",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l307",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l392",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l392",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:valid_compressed_data_len",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:is_subimage_blockaligned",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l467",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l516",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l516",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l545",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l593",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l593",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l625",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l711",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:new_l711",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_2d.rs:validate_l741",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImageValidationError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImageValidationError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonTexImage2DValidator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonTexImage2DValidator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonTexImage2DValidatorResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonTexImage2DValidatorResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImage2DValidator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImage2DValidator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImage2DValidatorResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexImage2DValidatorResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonCompressedTexImage2DValidator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonCompressedTexImage2DValidator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonCompressedTexImage2DValidatorResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CommonCompressedTexImage2DValidatorResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CompressedTexImage2DValidator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CompressedTexImage2DValidator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CompressedTexSubImage2DValidator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:CompressedTexSubImage2DValidator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexStorageValidator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexStorageValidator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexStorageValidatorResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_2d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_2d.rs:TexStorageValidatorResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_3d.rs:validate_l42",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_3d.rs:new_l136",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_3d.rs:new_l136",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_3d.rs:new_l169",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_3d.rs:new_l169",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "function:components/script/dom/webgl/validations/tex_image_3d.rs:validate_l221",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_3d.rs:CommonTexImage3DValidator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_3d.rs:CommonTexImage3DValidator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_3d.rs:CommonTexImage3DValidatorResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_3d.rs:CommonTexImage3DValidatorResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_3d.rs:TexImage3DValidator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_3d.rs:TexImage3DValidator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_3d.rs:TexImage3DValidatorResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/tex_image_3d.rs",
+      "target": "class:components/script/dom/webgl/validations/tex_image_3d.rs:TexImage3DValidatorResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/types.rs",
+      "target": "function:components/script/dom/webgl/validations/types.rs:dimensions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/validations/types.rs",
+      "target": "function:components/script/dom/webgl/validations/types.rs:dimensions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

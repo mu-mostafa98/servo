@@ -1,0 +1,1558 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/event/eventtarget.rs",
+      "type": "file",
+      "name": "eventtarget.rs",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "summary": "DOM EventTarget implementation managing event listener registration, removal, handler compilation, and event dispatch targeting.",
+      "tags": [
+        "event-system",
+        "dom-api",
+        "listener-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/event/eventtarget.rs:CommonEventHandler",
+      "type": "class",
+      "name": "CommonEventHandler",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        90,
+        96
+      ],
+      "summary": "Enum representing compiled event handler variants for standard, error, and beforeunload events.",
+      "tags": [
+        "event-system",
+        "handler",
+        "enum"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/event/eventtarget.rs:ListenerPhase",
+      "type": "class",
+      "name": "ListenerPhase",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        109,
+        112
+      ],
+      "summary": "Enum distinguishing capturing-phase from bubbling-phase event listeners.",
+      "tags": [
+        "event-system",
+        "listener",
+        "phase"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/event/eventtarget.rs:CompiledEventListener",
+      "type": "class",
+      "name": "CompiledEventListener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        183,
+        186
+      ],
+      "summary": "Enum wrapping either an IDL event listener or a compiled event handler for invocation.",
+      "tags": [
+        "event-system",
+        "listener",
+        "compilation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/event/eventtarget.rs:EventListenerEntry",
+      "type": "class",
+      "name": "EventListenerEntry",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        328,
+        334
+      ],
+      "summary": "Struct holding a registered event listener with phase, once flag, passive flag, and removal state.",
+      "tags": [
+        "event-system",
+        "listener",
+        "registration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/event/eventtarget.rs:EventListeners",
+      "type": "class",
+      "name": "EventListeners",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        368,
+        370
+      ],
+      "summary": "Newtype wrapper around Vec<EventListenerEntry> providing inline listener lookup and listener presence checks.",
+      "tags": [
+        "event-system",
+        "listener",
+        "collection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/event/eventtarget.rs:EventTarget",
+      "type": "class",
+      "name": "EventTarget",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        410,
+        413
+      ],
+      "summary": "DOM EventTarget class managing event listener registration and removal, handler compilation, and event dispatch targeting.",
+      "tags": [
+        "event-system",
+        "listener-management",
+        "dom-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:get_compiled_handler",
+      "type": "function",
+      "name": "get_compiled_handler",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        134,
+        155
+      ],
+      "summary": "Compiles an inline event listener, replacing uncompiled source with the compiled result.",
+      "tags": [
+        "event-system",
+        "listener",
+        "compilation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:get_compiled_listener",
+      "type": "function",
+      "name": "get_compiled_listener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        164,
+        178
+      ],
+      "summary": "Retrieves a compiled event listener, compiling inline handlers if needed.",
+      "tags": [
+        "event-system",
+        "listener",
+        "compilation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:associated_global",
+      "type": "function",
+      "name": "associated_global",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        190,
+        204
+      ],
+      "summary": "Returns the global scope associated with this compiled event listener.",
+      "tags": [
+        "event-system",
+        "listener",
+        "global-scope"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:call_or_handle_event",
+      "type": "function",
+      "name": "call_or_handle_event",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        207,
+        321
+      ],
+      "summary": "Invokes a compiled event listener on the target, handling error/beforeunload special cases and return value processing.",
+      "tags": [
+        "event-system",
+        "listener-invocation",
+        "handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:phase",
+      "type": "function",
+      "name": "phase",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        337,
+        339
+      ],
+      "summary": "Handler for Phase on eventtarget.",
+      "tags": [
+        "event-system",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:once",
+      "type": "function",
+      "name": "once",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        341,
+        343
+      ],
+      "summary": "Handler for Once on eventtarget.",
+      "tags": [
+        "event-system",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:removed",
+      "type": "function",
+      "name": "removed",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        345,
+        347
+      ],
+      "summary": "Handler for Removed on eventtarget.",
+      "tags": [
+        "event-system",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:get_inline_listener",
+      "type": "function",
+      "name": "get_inline_listener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        387,
+        402
+      ],
+      "summary": "Handler for Get_inline_listener on eventtarget.",
+      "tags": [
+        "event-system",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        416,
+        421
+      ],
+      "summary": "Internal constructor initializing inherited fields for the event struct.",
+      "tags": [
+        "event-system",
+        "constructor",
+        "internal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        423,
+        434
+      ],
+      "summary": "Public Rust constructor creating a fully initialized event instance.",
+      "tags": [
+        "event-system",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:has_listeners_for",
+      "type": "function",
+      "name": "has_listeners_for",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        462,
+        467
+      ],
+      "summary": "Checks if there are any listeners registered for a specific event type.",
+      "tags": [
+        "event-system",
+        "listener",
+        "presence-check"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:get_listeners_for",
+      "type": "function",
+      "name": "get_listeners_for",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        469,
+        474
+      ],
+      "summary": "Returns the set of listeners registered for a specific event type.",
+      "tags": [
+        "event-system",
+        "listener",
+        "retrieval"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:remove_all_listeners",
+      "type": "function",
+      "name": "remove_all_listeners",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        476,
+        486
+      ],
+      "summary": "Removes all event listeners from this target.",
+      "tags": [
+        "event-system",
+        "listener",
+        "cleanup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:default_passive_value",
+      "type": "function",
+      "name": "default_passive_value",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        489,
+        522
+      ],
+      "summary": "Determines the default passive value for event listeners based on event type and target element context.",
+      "tags": [
+        "event-system",
+        "passive",
+        "defaults"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:set_inline_event_listener",
+      "type": "function",
+      "name": "set_inline_event_listener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        525,
+        561
+      ],
+      "summary": "Sets an inline event listener (on-event handler) on the event target.",
+      "tags": [
+        "event-system",
+        "listener",
+        "inline-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:remove_listener",
+      "type": "function",
+      "name": "remove_listener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        563,
+        572
+      ],
+      "summary": "Removes an inline event listener entry by type and position matching.",
+      "tags": [
+        "event-system",
+        "listener",
+        "removal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:is_passive",
+      "type": "function",
+      "name": "is_passive",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        575,
+        577
+      ],
+      "summary": "Checks whether a specific listener entry is passive.",
+      "tags": [
+        "event-system",
+        "listener",
+        "passive"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:has_non_passive_listener",
+      "type": "function",
+      "name": "has_non_passive_listener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        580,
+        584
+      ],
+      "summary": "Checks if there are any non-passive listeners registered for a given event type.",
+      "tags": [
+        "event-system",
+        "listener",
+        "passive-check"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:get_inline_event_listener",
+      "type": "function",
+      "name": "get_inline_event_listener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        586,
+        595
+      ],
+      "summary": "Retrieves the inline event listener for a given event type.",
+      "tags": [
+        "event-system",
+        "listener",
+        "inline-listener"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:set_event_handler_uncompiled",
+      "type": "function",
+      "name": "set_event_handler_uncompiled",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        599,
+        632
+      ],
+      "summary": "Registers an uncompiled inline event handler with source text, performing CSP checks and deferred compilation.",
+      "tags": [
+        "event-system",
+        "handler",
+        "compilation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:get_compiled_event_handler",
+      "type": "function",
+      "name": "get_compiled_event_handler",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        637,
+        746
+      ],
+      "summary": "Compiles and caches an inline event handler source string into a JS function, building the scope chain.",
+      "tags": [
+        "event-system",
+        "handler",
+        "js-compilation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:set_event_handler_common",
+      "type": "function",
+      "name": "set_event_handler_common",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        749,
+        761
+      ],
+      "summary": "Sets an event handler of a common type on the target.",
+      "tags": [
+        "event-system",
+        "handler",
+        "registration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:set_error_event_handler",
+      "type": "function",
+      "name": "set_error_event_handler",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        764,
+        776
+      ],
+      "summary": "Sets an error event handler specifically for onerror handling with ErrorEvent.",
+      "tags": [
+        "event-system",
+        "handler",
+        "error-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:set_beforeunload_event_handler",
+      "type": "function",
+      "name": "set_beforeunload_event_handler",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        779,
+        791
+      ],
+      "summary": "Sets a beforeunload event handler specifically for unload confirmation.",
+      "tags": [
+        "event-system",
+        "handler",
+        "beforeunload"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:get_event_handler_common",
+      "type": "function",
+      "name": "get_event_handler_common",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        794,
+        805
+      ],
+      "summary": "Retrieves a compiled event handler for standard event types.",
+      "tags": [
+        "event-system",
+        "handler",
+        "retrieval"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:has_handlers",
+      "type": "function",
+      "name": "has_handlers",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        807,
+        809
+      ],
+      "summary": "Returns whether this EventTarget has any registered handlers.",
+      "tags": [
+        "event-system",
+        "listener",
+        "presence-check"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:fire_event",
+      "type": "function",
+      "name": "fire_event",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        812,
+        820
+      ],
+      "summary": "Convenience method creating and dispatching an event on the target with configurable propagation settings.",
+      "tags": [
+        "event-system",
+        "event-firing",
+        "dispatch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:fire_bubbling_event",
+      "type": "function",
+      "name": "fire_bubbling_event",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        823,
+        831
+      ],
+      "summary": "Convenience method creating and dispatching an event on the target with configurable propagation settings.",
+      "tags": [
+        "event-system",
+        "event-firing",
+        "dispatch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:fire_cancelable_event",
+      "type": "function",
+      "name": "fire_cancelable_event",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        834,
+        846
+      ],
+      "summary": "Convenience method creating and dispatching an event on the target with configurable propagation settings.",
+      "tags": [
+        "event-system",
+        "event-firing",
+        "dispatch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:fire_bubbling_cancelable_event",
+      "type": "function",
+      "name": "fire_bubbling_cancelable_event",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        849,
+        861
+      ],
+      "summary": "Convenience method creating and dispatching an event on the target with configurable propagation settings.",
+      "tags": [
+        "event-system",
+        "event-firing",
+        "dispatch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:fire_event_with_params",
+      "type": "function",
+      "name": "fire_event_with_params",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        864,
+        875
+      ],
+      "summary": "Convenience method creating and dispatching an event on the target with configurable propagation settings.",
+      "tags": [
+        "event-system",
+        "event-firing",
+        "dispatch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:add_event_listener",
+      "type": "function",
+      "name": "add_event_listener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        879,
+        933
+      ],
+      "summary": "Registers an event listener with phase, passive, once, and signal abort options.",
+      "tags": [
+        "event-system",
+        "listener",
+        "registration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:remove_event_listener",
+      "type": "function",
+      "name": "remove_event_listener",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        937,
+        964
+      ],
+      "summary": "Removes a previously registered event listener by type and reference matching.",
+      "tags": [
+        "event-system",
+        "listener",
+        "removal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:get_the_parent",
+      "type": "function",
+      "name": "get_the_parent",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        967,
+        1015
+      ],
+      "summary": "Computes the parent EventTarget in the DOM hierarchy for event propagation, handling documents, shadow roots, nodes, and IDB objects.",
+      "tags": [
+        "event-system",
+        "propagation",
+        "parent-traversal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:retarget",
+      "type": "function",
+      "name": "retarget",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        1020,
+        1051
+      ],
+      "summary": "Retargets an EventTarget across shadow DOM boundaries for event dispatch.",
+      "tags": [
+        "event-system",
+        "shadow-dom",
+        "targeting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:is_content_event_handler",
+      "type": "function",
+      "name": "is_content_event_handler",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        1054,
+        1056
+      ],
+      "summary": "Checks whether a given attribute name is a recognized content event handler.",
+      "tags": [
+        "event-system",
+        "handler",
+        "attribute-detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:summarize_event_listeners_for_devtools",
+      "type": "function",
+      "name": "summarize_event_listeners_for_devtools",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        1058,
+        1072
+      ],
+      "summary": "Compiles a summary of registered event listeners for DevTools inspection.",
+      "tags": [
+        "event-system",
+        "devtools",
+        "listener-inspection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/eventtarget.rs:convert",
+      "type": "function",
+      "name": "convert",
+      "filePath": "components/script/dom/event/eventtarget.rs",
+      "lineRange": [
+        1123,
+        1138
+      ],
+      "summary": "Converts AddEventListenerOptions to EventListenerOptions or boolean.",
+      "tags": [
+        "event-system",
+        "options",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/event/focusevent.rs",
+      "type": "file",
+      "name": "focusevent.rs",
+      "filePath": "components/script/dom/event/focusevent.rs",
+      "summary": "FocusEvent implementation extending UIEvent for focus/blur tracking with related target support.",
+      "tags": [
+        "event-system",
+        "focus-events",
+        "ui-events"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/event/focusevent.rs:FocusEventType",
+      "type": "class",
+      "name": "FocusEventType",
+      "filePath": "components/script/dom/event/focusevent.rs",
+      "lineRange": [
+        24,
+        29
+      ],
+      "summary": "Enum distinguishing focus vs blur event types.",
+      "tags": [
+        "event-system",
+        "enum",
+        "focus"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/event/focusevent.rs:FocusEvent",
+      "type": "class",
+      "name": "FocusEvent",
+      "filePath": "components/script/dom/event/focusevent.rs",
+      "lineRange": [
+        32,
+        34
+      ],
+      "summary": "DOM FocusEvent class for focus and blur tracking with related target identification.",
+      "tags": [
+        "event-system",
+        "focus-events",
+        "ui-events"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/focusevent.rs:new_uninitialized",
+      "type": "function",
+      "name": "new_uninitialized",
+      "filePath": "components/script/dom/event/focusevent.rs",
+      "lineRange": [
+        43,
+        45
+      ],
+      "summary": "Creates a new DOM-reflected event instance without fully initializing event properties.",
+      "tags": [
+        "event-system",
+        "constructor",
+        "uninitialized"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/focusevent.rs:new_uninitialized_with_proto",
+      "type": "function",
+      "name": "new_uninitialized_with_proto",
+      "filePath": "components/script/dom/event/focusevent.rs",
+      "lineRange": [
+        47,
+        58
+      ],
+      "summary": "Creates a new DOM-reflected event instance without fully initializing event properties.",
+      "tags": [
+        "event-system",
+        "constructor",
+        "uninitialized"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/event/focusevent.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/event/focusevent.rs",
+      "lineRange": [
+        61,
+        82
+      ],
+      "summary": "Public Rust constructor creating a fully initialized event instance.",
+      "tags": [
+        "event-system",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/focusevent.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/event/focusevent.rs",
+      "lineRange": [
+        85,
+        106
+      ],
+      "summary": "Creates a new DOM-reflected event instance with an optional prototype chain.",
+      "tags": [
+        "event-system",
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/event/focusevent.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/event/focusevent.rs",
+      "lineRange": [
+        111,
+        135
+      ],
+      "summary": "JavaScript-accessible constructor for focusevent with WebIDL init dictionary handling.",
+      "tags": [
+        "event-system",
+        "constructor",
+        "webidl"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:CommonEventHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:CommonEventHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:ListenerPhase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:ListenerPhase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:CompiledEventListener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:CompiledEventListener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:EventListenerEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:EventListenerEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:EventListeners",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:EventListeners",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:EventTarget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "class:components/script/dom/event/eventtarget.rs:EventTarget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_compiled_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_compiled_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_compiled_listener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:associated_global",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:associated_global",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:call_or_handle_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:call_or_handle_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:phase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:phase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:once",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:once",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:removed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:removed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_compiled_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_compiled_listener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_inline_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:has_listeners_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:has_listeners_for",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_listeners_for",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_listeners_for",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:remove_all_listeners",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:remove_all_listeners",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:default_passive_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_inline_event_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:remove_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:remove_listener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:is_passive",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:is_passive",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:has_non_passive_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:has_non_passive_listener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_inline_event_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_event_handler_uncompiled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_event_handler_uncompiled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_compiled_event_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_event_handler_common",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_event_handler_common",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_error_event_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_error_event_handler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_beforeunload_event_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:set_beforeunload_event_handler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_event_handler_common",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_event_handler_common",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:has_handlers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:has_handlers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_bubbling_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_bubbling_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_cancelable_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_cancelable_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_bubbling_cancelable_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_bubbling_cancelable_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_event_with_params",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:fire_event_with_params",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:add_event_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:add_event_listener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:remove_event_listener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:remove_event_listener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_the_parent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:get_the_parent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:retarget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:retarget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:is_content_event_handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:is_content_event_handler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:summarize_event_listeners_for_devtools",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:summarize_event_listeners_for_devtools",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/eventtarget.rs",
+      "target": "function:components/script/dom/event/eventtarget.rs:convert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "class:components/script/dom/event/focusevent.rs:FocusEventType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "class:components/script/dom/event/focusevent.rs:FocusEventType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "class:components/script/dom/event/focusevent.rs:FocusEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "class:components/script/dom/event/focusevent.rs:FocusEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "function:components/script/dom/event/focusevent.rs:new_uninitialized",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "function:components/script/dom/event/focusevent.rs:new_uninitialized",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "function:components/script/dom/event/focusevent.rs:new_uninitialized_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "function:components/script/dom/event/focusevent.rs:new_uninitialized_with_proto",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "function:components/script/dom/event/focusevent.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "function:components/script/dom/event/focusevent.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "function:components/script/dom/event/focusevent.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/event/focusevent.rs",
+      "target": "function:components/script/dom/event/focusevent.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "class:components/script/dom/event/focusevent.rs:FocusEvent",
+      "target": "class:components/script/dom/event/uievent.rs:UIEvent",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    }
+  ]
+}

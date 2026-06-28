@@ -1,0 +1,1204 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/html/htmlanchorelement.rs",
+      "type": "file",
+      "name": "htmlanchorelement.rs",
+      "filePath": "components/script/dom/html/htmlanchorelement.rs",
+      "summary": "DOM implementation of the HTMLAnchorElement interface, providing hyperlink handling with URL component accessors, rel-list management, referrer policy, and click activation behavior.",
+      "tags": [
+        "dom",
+        "html-element",
+        "anchor",
+        "hyperlink",
+        "navigation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlanchorelement.rs:HTMLAnchorElement",
+      "type": "class",
+      "name": "HTMLAnchorElement",
+      "filePath": "components/script/dom/html/htmlanchorelement.rs",
+      "summary": "DOM class for <a> hyperlink elements with URL component accessors, rel-list management, referrer policy, and click activation behavior for navigation.",
+      "tags": [
+        "dom",
+        "anchor",
+        "hyperlink"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        41,
+        48
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlanchorelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmlanchorelement.rs",
+      "summary": "Initializes shared anchor element state including rel-list tracking and URL storage.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        51,
+        62
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlanchorelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlanchorelement.rs",
+      "summary": "Constructs a new HTMLAnchorElement DOM node with proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        64,
+        79
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlanchorelement.rs:full_href_url_for_user_interface",
+      "type": "function",
+      "name": "full_href_url_for_user_interface",
+      "filePath": "components/script/dom/html/htmlanchorelement.rs",
+      "summary": "Returns the resolved absolute URL for display in the user interface, considering the href attribute and document base URL.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        83,
+        88
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlanchorelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmlanchorelement.rs",
+      "summary": "Responds to anchor-specific attribute changes, updating link state and URL on href/rel mutations.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        112,
+        132
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlanchorelement.rs:RelList",
+      "type": "function",
+      "name": "RelList",
+      "filePath": "components/script/dom/html/htmlanchorelement.rs",
+      "summary": "Returns the DOMTokenList for the rel attribute, lazily initialized.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        157,
+        170
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlanchorelement.rs:activation_behavior",
+      "type": "function",
+      "name": "activation_behavior",
+      "filePath": "components/script/dom/html/htmlanchorelement.rs",
+      "summary": "Handles click activation on anchors by resolving the href, checking target element types, and triggering hyperlink navigation.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        349,
+        377
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlareaelement.rs",
+      "type": "file",
+      "name": "htmlareaelement.rs",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "DOM implementation of the HTMLAreaElement interface with coordinate parsing (circle, rectangle, polygon shapes), hit-testing, and hyperlink activation for image map areas.",
+      "tags": [
+        "dom",
+        "html-element",
+        "area",
+        "image-map",
+        "hit-test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlareaelement.rs:Area",
+      "type": "class",
+      "name": "Area",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Coordinate-based shape representation for HTML area elements, supporting circle, rectangle, and polygon shape parsing and hit-testing.",
+      "tags": [
+        "shape",
+        "coordinate",
+        "geometry"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        39,
+        54
+      ]
+    },
+    {
+      "id": "class:components/script/dom/html/htmlareaelement.rs:HTMLAreaElement",
+      "type": "class",
+      "name": "HTMLAreaElement",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "DOM class for <area> image map elements with hyperlink URL handling and coordinate-based shape definitions.",
+      "tags": [
+        "dom",
+        "area",
+        "image-map"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        266,
+        273
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlareaelement.rs:parse",
+      "type": "function",
+      "name": "parse",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Parses coordinate strings into circle, rectangle, or polygon shape definitions based on coordinate count.",
+      "tags": [
+        "dom",
+        "api",
+        "core-logic"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        65,
+        191
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlareaelement.rs:hit_test",
+      "type": "function",
+      "name": "hit_test",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Tests whether a given point falls within the area element's defined shape boundary.",
+      "tags": [
+        "dom",
+        "api",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        193,
+        232
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlareaelement.rs:absolute_coords",
+      "type": "function",
+      "name": "absolute_coords",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Converts relative shape coordinates to absolute pixel values using the element's layout position.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        234,
+        262
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlareaelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Initializes shared area element state including rel-list and URL storage.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        276,
+        287
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlareaelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Constructs a new HTMLAreaElement DOM node with proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        289,
+        302
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlareaelement.rs:get_shape_from_coords",
+      "type": "function",
+      "name": "get_shape_from_coords",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Retrieves and parses the shape and coords attributes into a parsed Area shape definition.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        304,
+        322
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlareaelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Handles attribute changes affecting area element state and link relations.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        346,
+        366
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlareaelement.rs:RelList",
+      "type": "function",
+      "name": "RelList",
+      "filePath": "components/script/dom/html/htmlareaelement.rs",
+      "summary": "Returns the lazily-initialized DOMTokenList for the rel attribute.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        386,
+        399
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlaudioelement.rs",
+      "type": "file",
+      "name": "htmlaudioelement.rs",
+      "filePath": "components/script/dom/html/htmlaudioelement.rs",
+      "summary": "DOM implementation of the HTMLAudioElement interface providing the Audio() constructor for creating audio elements programmatically.",
+      "tags": [
+        "dom",
+        "html-element",
+        "audio",
+        "media",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlaudioelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlaudioelement.rs",
+      "summary": "Constructs a new HTMLAudioElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        38,
+        53
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlaudioelement.rs:Audio",
+      "type": "function",
+      "name": "Audio",
+      "filePath": "components/script/dom/html/htmlaudioelement.rs",
+      "summary": "Implements the Audio() constructor, creating an audio element with optional src and preload attributes.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        58,
+        95
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlbaseelement.rs",
+      "type": "file",
+      "name": "htmlbaseelement.rs",
+      "filePath": "components/script/dom/html/htmlbaseelement.rs",
+      "summary": "DOM implementation of the HTMLBaseElement interface, managing the document's frozen base URL for relative URL resolution with CSP validation.",
+      "tags": [
+        "dom",
+        "html-element",
+        "base",
+        "url-resolution",
+        "csp"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlbaseelement.rs:HTMLBaseElement",
+      "type": "class",
+      "name": "HTMLBaseElement",
+      "filePath": "components/script/dom/html/htmlbaseelement.rs",
+      "summary": "DOM class for <base> elements that sets the document base URL for relative link resolution, with CSP policy validation.",
+      "tags": [
+        "dom",
+        "base",
+        "url-resolution"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        26,
+        32
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbaseelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlbaseelement.rs",
+      "summary": "Constructs a new HTMLBaseElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        46,
+        59
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbaseelement.rs:set_frozen_base_url",
+      "type": "function",
+      "name": "set_frozen_base_url",
+      "filePath": "components/script/dom/html/htmlbaseelement.rs",
+      "summary": "Computes and freezes the base URL from the href attribute, validating against CSP and URL scheme requirements.",
+      "tags": [
+        "dom",
+        "api",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        66,
+        100
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbaseelement.rs:Href",
+      "type": "function",
+      "name": "Href",
+      "filePath": "components/script/dom/html/htmlbaseelement.rs",
+      "summary": "Returns the resolved href attribute value, combined with the document's fallback base URL when the base element's URL is set.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        113,
+        137
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbaseelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmlbaseelement.rs",
+      "summary": "Recomputes the frozen base URL on href attribute changes and notifies the document.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        148,
+        170
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlbodyelement.rs",
+      "type": "file",
+      "name": "htmlbodyelement.rs",
+      "filePath": "components/script/dom/html/htmlbodyelement.rs",
+      "summary": "DOM implementation of the HTMLBodyElement interface, handling presentational attributes for background color and text color on the body element.",
+      "tags": [
+        "dom",
+        "html-element",
+        "body",
+        "presentational-hints"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlbodyelement.rs:HTMLBodyElement",
+      "type": "class",
+      "name": "HTMLBodyElement",
+      "filePath": "components/script/dom/html/htmlbodyelement.rs",
+      "summary": "DOM class for <body> elements handling legacy presentational attributes and tree binding lifecycle.",
+      "tags": [
+        "dom",
+        "body"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        27,
+        29
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbodyelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlbodyelement.rs",
+      "summary": "Constructs a new HTMLBodyElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        42,
+        55
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbodyelement.rs:bind_to_tree",
+      "type": "function",
+      "name": "bind_to_tree",
+      "filePath": "components/script/dom/html/htmlbodyelement.rs",
+      "summary": "Called when the body element is inserted into the document tree, registering event handlers.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        117,
+        134
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbodyelement.rs:parse_plain_attribute",
+      "type": "function",
+      "name": "parse_plain_attribute",
+      "filePath": "components/script/dom/html/htmlbodyelement.rs",
+      "summary": "Parses body-specific attributes like background and text color values.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        136,
+        146
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbodyelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmlbodyelement.rs",
+      "summary": "Handles attribute mutations on the body element, updating presentational hints.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        148,
+        212
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlbrelement.rs",
+      "type": "file",
+      "name": "htmlbrelement.rs",
+      "filePath": "components/script/dom/html/htmlbrelement.rs",
+      "summary": "DOM implementation of the HTMLBRElement interface for line break element construction.",
+      "tags": [
+        "dom",
+        "html-element",
+        "line-break"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbrelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlbrelement.rs",
+      "summary": "Constructs a new HTMLBRElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        30,
+        43
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "type": "file",
+      "name": "htmlbuttonelement.rs",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "DOM implementation of the HTMLButtonElement interface with command handling, form datum submission, type management, and activation behavior.",
+      "tags": [
+        "dom",
+        "html-element",
+        "button",
+        "form-control",
+        "command"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlbuttonelement.rs:HTMLButtonElement",
+      "type": "class",
+      "name": "HTMLButtonElement",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "DOM class for <button> elements with form submission, command dispatch, and type management.",
+      "tags": [
+        "dom",
+        "button",
+        "form-control"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        53,
+        59
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Initializes shared button element state including type and disabled-attribute tracking.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        62,
+        79
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Constructs a new HTMLButtonElement DOM node via proto reflection.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        81,
+        96
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:Command",
+      "type": "function",
+      "name": "Command",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Returns the command element associated with this button via the commandfor/command attributes.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        106,
+        119
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:form_datum",
+      "type": "function",
+      "name": "form_datum",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Builds the form submission datum for this button, including name/value/type.",
+      "tags": [
+        "dom",
+        "api"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        236,
+        263
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:set_type",
+      "type": "function",
+      "name": "set_type",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Updates the button type attribute on attribute change.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        265,
+        284
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:command_for_element",
+      "type": "function",
+      "name": "command_for_element",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Resolves the element referenced by the commandfor attribute within the same root node.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        286,
+        302
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:command_state",
+      "type": "function",
+      "name": "command_state",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Determines the command state (disabled/active) for command-based invocation.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        304,
+        320
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:determine_if_command_is_valid_for_target",
+      "type": "function",
+      "name": "determine_if_command_is_valid_for_target",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Validates whether the button command can be dispatched to the target element.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        323,
+        347
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Handles button-specific attribute changes for type, disabled, and command-* attributes.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        364,
+        409
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:unbind_from_tree",
+      "type": "function",
+      "name": "unbind_from_tree",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Cleans up button state when removed from the document tree.",
+      "tags": [
+        "dom"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        420,
+        433
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmlbuttonelement.rs:activation_behavior",
+      "type": "function",
+      "name": "activation_behavior",
+      "filePath": "components/script/dom/html/htmlbuttonelement.rs",
+      "summary": "Implements button click activation, handling form submission and command dispatching.",
+      "tags": [
+        "dom",
+        "core-logic"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        481,
+        585
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "class:components/script/dom/html/htmlanchorelement.rs:HTMLAnchorElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "class:components/script/dom/html/htmlanchorelement.rs:HTMLAnchorElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "function:components/script/dom/html/htmlanchorelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "function:components/script/dom/html/htmlanchorelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "function:components/script/dom/html/htmlanchorelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "function:components/script/dom/html/htmlanchorelement.rs:full_href_url_for_user_interface",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "function:components/script/dom/html/htmlanchorelement.rs:full_href_url_for_user_interface",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "function:components/script/dom/html/htmlanchorelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "function:components/script/dom/html/htmlanchorelement.rs:RelList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlanchorelement.rs",
+      "target": "function:components/script/dom/html/htmlanchorelement.rs:activation_behavior",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "class:components/script/dom/html/htmlareaelement.rs:Area",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "class:components/script/dom/html/htmlareaelement.rs:Area",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "class:components/script/dom/html/htmlareaelement.rs:HTMLAreaElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "class:components/script/dom/html/htmlareaelement.rs:HTMLAreaElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:parse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:parse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:hit_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:hit_test",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:absolute_coords",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:absolute_coords",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:get_shape_from_coords",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:get_shape_from_coords",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlareaelement.rs",
+      "target": "function:components/script/dom/html/htmlareaelement.rs:RelList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlaudioelement.rs",
+      "target": "function:components/script/dom/html/htmlaudioelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlaudioelement.rs",
+      "target": "function:components/script/dom/html/htmlaudioelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlaudioelement.rs",
+      "target": "function:components/script/dom/html/htmlaudioelement.rs:Audio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbaseelement.rs",
+      "target": "class:components/script/dom/html/htmlbaseelement.rs:HTMLBaseElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbaseelement.rs",
+      "target": "class:components/script/dom/html/htmlbaseelement.rs:HTMLBaseElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbaseelement.rs",
+      "target": "function:components/script/dom/html/htmlbaseelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbaseelement.rs",
+      "target": "function:components/script/dom/html/htmlbaseelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbaseelement.rs",
+      "target": "function:components/script/dom/html/htmlbaseelement.rs:set_frozen_base_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbaseelement.rs",
+      "target": "function:components/script/dom/html/htmlbaseelement.rs:set_frozen_base_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbaseelement.rs",
+      "target": "function:components/script/dom/html/htmlbaseelement.rs:Href",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbaseelement.rs",
+      "target": "function:components/script/dom/html/htmlbaseelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbodyelement.rs",
+      "target": "class:components/script/dom/html/htmlbodyelement.rs:HTMLBodyElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbodyelement.rs",
+      "target": "class:components/script/dom/html/htmlbodyelement.rs:HTMLBodyElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbodyelement.rs",
+      "target": "function:components/script/dom/html/htmlbodyelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbodyelement.rs",
+      "target": "function:components/script/dom/html/htmlbodyelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbodyelement.rs",
+      "target": "function:components/script/dom/html/htmlbodyelement.rs:bind_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbodyelement.rs",
+      "target": "function:components/script/dom/html/htmlbodyelement.rs:parse_plain_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbodyelement.rs",
+      "target": "function:components/script/dom/html/htmlbodyelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbrelement.rs",
+      "target": "function:components/script/dom/html/htmlbrelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbrelement.rs",
+      "target": "function:components/script/dom/html/htmlbrelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "class:components/script/dom/html/htmlbuttonelement.rs:HTMLButtonElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "class:components/script/dom/html/htmlbuttonelement.rs:HTMLButtonElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:Command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:form_datum",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:form_datum",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:set_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:command_for_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:command_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:determine_if_command_is_valid_for_target",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:unbind_from_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlbuttonelement.rs",
+      "target": "function:components/script/dom/html/htmlbuttonelement.rs:activation_behavior",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

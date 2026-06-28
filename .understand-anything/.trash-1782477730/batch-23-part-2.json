@@ -1,0 +1,3126 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "type": "file",
+      "name": "vertexarrayobject.rs",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "summary": "Implements VertexArrayObject and VertexAttribData types managing vertex attribute state for WebGL rendering.",
+      "tags": [
+        "webgl",
+        "vertex-array",
+        "rendering",
+        "state-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/vertexarrayobject.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        32,
+        42
+      ],
+      "summary": "Creates a new VertexArrayObject with the specified render context.",
+      "tags": [
+        "webgl",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/vertexarrayobject.rs:delete",
+      "type": "function",
+      "name": "delete",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        52,
+        74
+      ],
+      "summary": "Marks the vertex array object for GPU-side deletion.",
+      "tags": [
+        "webgl",
+        "gpu-resource",
+        "deletion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/vertexarrayobject.rs:get_vertex_attrib",
+      "type": "function",
+      "name": "get_vertex_attrib",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        88,
+        93
+      ],
+      "summary": "WebGL get_vertex_attrib operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/vertexarrayobject.rs:vertex_attrib_pointer",
+      "type": "function",
+      "name": "vertex_attrib_pointer",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        99,
+        181
+      ],
+      "summary": "Configures a vertex attribute pointer with format, stride, offset and type for rendering.",
+      "tags": [
+        "webgl",
+        "vertex-attrib",
+        "rendering",
+        "state"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/vertexarrayobject.rs:unbind_buffer",
+      "type": "function",
+      "name": "unbind_buffer",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        191,
+        209
+      ],
+      "summary": "Removes buffer bindings from all vertex attributes that reference a specific buffer during deletion.",
+      "tags": [
+        "webgl",
+        "buffer",
+        "cleanup",
+        "vertex-attrib"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/vertexarrayobject.rs:validate_for_draw",
+      "type": "function",
+      "name": "validate_for_draw",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        211,
+        259
+      ],
+      "summary": "Validates the VAO state is complete and consistent before a draw call.",
+      "tags": [
+        "webgl",
+        "validation",
+        "draw-state"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/vertexarrayobject.rs:default",
+      "type": "function",
+      "name": "default",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        285,
+        297
+      ],
+      "summary": "WebGL default operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/vertexarrayobject.rs:max_vertices",
+      "type": "function",
+      "name": "max_vertices",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        305,
+        320
+      ],
+      "summary": "Calculates the maximum vertex count that can be drawn from the bound element array buffer.",
+      "tags": [
+        "webgl",
+        "rendering",
+        "vertex-count"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgl/vertexarrayobject.rs:VertexArrayObject",
+      "type": "class",
+      "name": "VertexArrayObject",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        21,
+        29
+      ],
+      "summary": "WebGL VertexArrayObject type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/vertexarrayobject.rs:VertexAttribData",
+      "type": "class",
+      "name": "VertexAttribData",
+      "filePath": "components/script/dom/webgl/vertexarrayobject.rs",
+      "lineRange": [
+        272,
+        282
+      ],
+      "summary": "WebGL VertexAttribData type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "type": "file",
+      "name": "webgl2renderingcontext.rs",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "summary": "WebGL2RenderingContext implementation providing the full WebGL 2.0 API including 3D textures, transform feedback, samplers, queries, and uniform buffers.",
+      "tags": [
+        "webgl",
+        "webgl2",
+        "rendering-context",
+        "api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:new_l88",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        88,
+        94
+      ],
+      "summary": "WebGL new operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        133,
+        179
+      ],
+      "summary": "WebGL new_inherited operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:new_l181",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        181,
+        190
+      ],
+      "summary": "WebGL new operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:is_webgl2_enabled_l197",
+      "type": "function",
+      "name": "is_webgl2_enabled",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        197,
+        211
+      ],
+      "summary": "WebGL is_webgl2_enabled operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:validate_uniform_block_for_draw",
+      "type": "function",
+      "name": "validate_uniform_block_for_draw",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        223,
+        263
+      ],
+      "summary": "Validates uniform block bindings are complete before a draw call.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:validate_vertex_attribs_for_draw",
+      "type": "function",
+      "name": "validate_vertex_attribs_for_draw",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        265,
+        323
+      ],
+      "summary": "Validates all vertex attribute bindings are current and valid before drawing.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:bound_buffer",
+      "type": "function",
+      "name": "bound_buffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        329,
+        340
+      ],
+      "summary": "WebGL bound_buffer operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:buffer_usage",
+      "type": "function",
+      "name": "buffer_usage",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        342,
+        352
+      ],
+      "summary": "WebGL buffer_usage operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:calc_read_pixel_formats",
+      "type": "function",
+      "name": "calc_read_pixel_formats",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        361,
+        394
+      ],
+      "summary": "Calculates the valid pixel format conversions for readPixels operations.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:calc_read_pixel_sizes",
+      "type": "function",
+      "name": "calc_read_pixel_sizes",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        396,
+        460
+      ],
+      "summary": "Calculates pixel size in bytes for various format/type combinations.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:read_pixels_into",
+      "type": "function",
+      "name": "read_pixels_into",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        464,
+        574
+      ],
+      "summary": "Reads pixel data from the framebuffer into an ArrayBuffer with format validation.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:uniform_vec_section_uint",
+      "type": "function",
+      "name": "uniform_vec_section_uint",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        576,
+        590
+      ],
+      "summary": "WebGL uniform_vec_section_uint operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:get_default_fb_attachment_param",
+      "type": "function",
+      "name": "get_default_fb_attachment_param",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        592,
+        655
+      ],
+      "summary": "Returns a framebuffer attachment parameter for the default framebuffer.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:get_specific_fb_attachment_param",
+      "type": "function",
+      "name": "get_specific_fb_attachment_param",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        657,
+        749
+      ],
+      "summary": "Returns an attachment parameter for a specific framebuffer object.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:clearbuffer_array_size",
+      "type": "function",
+      "name": "clearbuffer_array_size",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        751,
+        767
+      ],
+      "summary": "WebGL clearbuffer_array_size operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:clear_buffer",
+      "type": "function",
+      "name": "clear_buffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        769,
+        795
+      ],
+      "summary": "Clears individual buffers via the WebGL2 ClearBuffer* API.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:valid_fb_attachment_values",
+      "type": "function",
+      "name": "valid_fb_attachment_values",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        797,
+        840
+      ],
+      "summary": "Validates framebuffer attachment values for correctness.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:vertex_attrib_i",
+      "type": "function",
+      "name": "vertex_attrib_i",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        842,
+        851
+      ],
+      "summary": "WebGL vertex_attrib_i operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:vertex_attrib_u",
+      "type": "function",
+      "name": "vertex_attrib_u",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        853,
+        862
+      ],
+      "summary": "WebGL vertex_attrib_u operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:tex_storage",
+      "type": "function",
+      "name": "tex_storage",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        865,
+        911
+      ],
+      "summary": "Allocates immutable texture storage for 2D and cube map textures.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:tex_image_3d",
+      "type": "function",
+      "name": "tex_image_3d",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        914,
+        971
+      ],
+      "summary": "Uploads 3D texture image data for volumetric textures.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetBufferParameter",
+      "type": "function",
+      "name": "GetBufferParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1029,
+        1042
+      ],
+      "summary": "Returns a buffer parameter value for the currently bound buffer. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetParameter",
+      "type": "function",
+      "name": "GetParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1045,
+        1250
+      ],
+      "summary": "Returns the current value of a WebGL context state parameter. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetFramebufferAttachmentParameter",
+      "type": "function",
+      "name": "GetFramebufferAttachmentParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1288,
+        1335
+      ],
+      "summary": "Returns a framebuffer attachment parameter value. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetRenderbufferParameter",
+      "type": "function",
+      "name": "GetRenderbufferParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1338,
+        1347
+      ],
+      "summary": "WebGL GetRenderbufferParameter operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindBuffer",
+      "type": "function",
+      "name": "BindBuffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1396,
+        1412
+      ],
+      "summary": "Binds a buffer object to a buffer binding target. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindFramebuffer",
+      "type": "function",
+      "name": "BindFramebuffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1415,
+        1442
+      ],
+      "summary": "Binds a framebuffer object to the draw or read framebuffer target. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BufferData__",
+      "type": "function",
+      "name": "BufferData__",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1477,
+        1517
+      ],
+      "summary": "Uploads buffer data with WebGL2 support for buffer ranges.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BufferSubData_",
+      "type": "function",
+      "name": "BufferSubData_",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1529,
+        1578
+      ],
+      "summary": "Sub-uploads data to a buffer at a specific offset with WebGL2 support.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CopyBufferSubData",
+      "type": "function",
+      "name": "CopyBufferSubData",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1581,
+        1634
+      ],
+      "summary": "Copies data between GPU buffers.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetBufferSubData",
+      "type": "function",
+      "name": "GetBufferSubData",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1638,
+        1691
+      ],
+      "summary": "Reads buffer data back from the GPU to the CPU.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CompressedTexImage2D",
+      "type": "function",
+      "name": "CompressedTexImage2D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1695,
+        1726
+      ],
+      "summary": "Uploads compressed texture data creating a 2D texture image. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CompressedTexSubImage2D",
+      "type": "function",
+      "name": "CompressedTexSubImage2D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1730,
+        1756
+      ],
+      "summary": "Uploads compressed texture data to a region of an existing 2D texture. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CopyTexImage2D",
+      "type": "function",
+      "name": "CopyTexImage2D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1759,
+        1772
+      ],
+      "summary": "Copies pixel data from the framebuffer to create a 2D texture image. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CopyTexSubImage2D",
+      "type": "function",
+      "name": "CopyTexSubImage2D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1775,
+        1788
+      ],
+      "summary": "Copies pixel data from the framebuffer to a region of an existing 2D texture. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DeleteBuffer",
+      "type": "function",
+      "name": "DeleteBuffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        1902,
+        1928
+      ],
+      "summary": "Deletes a buffer object, freeing GPU memory. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetProgramParameter",
+      "type": "function",
+      "name": "GetProgramParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2019,
+        2044
+      ],
+      "summary": "Returns a program parameter value (link status, active uniforms count, etc). (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetIndexedParameter",
+      "type": "function",
+      "name": "GetIndexedParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2073,
+        2118
+      ],
+      "summary": "Returns an indexed GL parameter value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:PixelStorei",
+      "type": "function",
+      "name": "PixelStorei",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2194,
+        2205
+      ],
+      "summary": "Sets pixel storage modes for unpacking/packing of pixel data. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ReadPixels",
+      "type": "function",
+      "name": "ReadPixels",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2213,
+        2227
+      ],
+      "summary": "Reads pixel data from the framebuffer into a typed array. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ReadPixels_",
+      "type": "function",
+      "name": "ReadPixels_",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2230,
+        2318
+      ],
+      "summary": "Reads pixels into an ArrayBuffer with WebGL2 format conversion.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ReadPixels__",
+      "type": "function",
+      "name": "ReadPixels__",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2321,
+        2342
+      ],
+      "summary": "Reads pixels from framebuffer with WebGL2 format and type support.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform1ui",
+      "type": "function",
+      "name": "Uniform1ui",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2421,
+        2431
+      ],
+      "summary": "Uploads an unsigned integer uniform value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform1uiv",
+      "type": "function",
+      "name": "Uniform1uiv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2434,
+        2471
+      ],
+      "summary": "Uploads unsigned integer vector uniform values.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform2ui",
+      "type": "function",
+      "name": "Uniform2ui",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2517,
+        2527
+      ],
+      "summary": "WebGL Uniform2ui operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform2uiv",
+      "type": "function",
+      "name": "Uniform2uiv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2530,
+        2547
+      ],
+      "summary": "WebGL Uniform2uiv operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform3ui",
+      "type": "function",
+      "name": "Uniform3ui",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2582,
+        2592
+      ],
+      "summary": "WebGL Uniform3ui operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform3uiv",
+      "type": "function",
+      "name": "Uniform3uiv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2595,
+        2612
+      ],
+      "summary": "WebGL Uniform3uiv operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform4ui",
+      "type": "function",
+      "name": "Uniform4ui",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2631,
+        2641
+      ],
+      "summary": "WebGL Uniform4ui operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform4uiv",
+      "type": "function",
+      "name": "Uniform4uiv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2644,
+        2661
+      ],
+      "summary": "WebGL Uniform4uiv operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix2fv",
+      "type": "function",
+      "name": "UniformMatrix2fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2680,
+        2690
+      ],
+      "summary": "WebGL UniformMatrix2fv operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix3fv",
+      "type": "function",
+      "name": "UniformMatrix3fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2693,
+        2703
+      ],
+      "summary": "WebGL UniformMatrix3fv operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix4fv",
+      "type": "function",
+      "name": "UniformMatrix4fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2706,
+        2716
+      ],
+      "summary": "WebGL UniformMatrix4fv operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix3x2fv",
+      "type": "function",
+      "name": "UniformMatrix3x2fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2719,
+        2744
+      ],
+      "summary": "Uploads a 3x2 matrix uniform value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix4x2fv",
+      "type": "function",
+      "name": "UniformMatrix4x2fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2747,
+        2772
+      ],
+      "summary": "Uploads a 4x2 matrix uniform value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix2x3fv",
+      "type": "function",
+      "name": "UniformMatrix2x3fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2775,
+        2800
+      ],
+      "summary": "Uploads a 2x3 matrix uniform value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix4x3fv",
+      "type": "function",
+      "name": "UniformMatrix4x3fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2803,
+        2828
+      ],
+      "summary": "Uploads a 4x3 matrix uniform value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix2x4fv",
+      "type": "function",
+      "name": "UniformMatrix2x4fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2831,
+        2856
+      ],
+      "summary": "Uploads a 2x4 matrix uniform value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix3x4fv",
+      "type": "function",
+      "name": "UniformMatrix3x4fv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2859,
+        2884
+      ],
+      "summary": "Uploads a 3x4 matrix uniform value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetUniform",
+      "type": "function",
+      "name": "GetUniform",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        2888,
+        2976
+      ],
+      "summary": "Returns the current value of a uniform variable.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:VertexAttribI4iv",
+      "type": "function",
+      "name": "VertexAttribI4iv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3034,
+        3043
+      ],
+      "summary": "WebGL VertexAttribI4iv operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:VertexAttribI4uiv",
+      "type": "function",
+      "name": "VertexAttribI4uiv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3051,
+        3060
+      ],
+      "summary": "WebGL VertexAttribI4uiv operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:VertexAttribPointer",
+      "type": "function",
+      "name": "VertexAttribPointer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3063,
+        3074
+      ],
+      "summary": "Defines how vertex attribute data is read from a buffer. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:VertexAttribIPointer",
+      "type": "function",
+      "name": "VertexAttribIPointer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3077,
+        3089
+      ],
+      "summary": "Defines layout for integer vertex attributes.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage3D",
+      "type": "function",
+      "name": "TexImage3D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3101,
+        3233
+      ],
+      "summary": "Uploads 3D texture image data from JavaScript array, ImageData, or DOM element.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D",
+      "type": "function",
+      "name": "TexImage2D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3236,
+        3259
+      ],
+      "summary": "Uploads 2D texture image data from various sources. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D_",
+      "type": "function",
+      "name": "TexImage2D_",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3262,
+        3273
+      ],
+      "summary": "WebGL TexImage2D_ operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D__",
+      "type": "function",
+      "name": "TexImage2D__",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3276,
+        3351
+      ],
+      "summary": "WebGL TexImage2D__ operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D___",
+      "type": "function",
+      "name": "TexImage2D___",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3354,
+        3419
+      ],
+      "summary": "WebGL TexImage2D___ operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D____",
+      "type": "function",
+      "name": "TexImage2D____",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3423,
+        3527
+      ],
+      "summary": "WebGL TexImage2D____ operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexSubImage2D",
+      "type": "function",
+      "name": "TexSubImage2D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3530,
+        3545
+      ],
+      "summary": "Uploads 2D texture sub-image data to a region of an existing texture. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexSubImage2D_",
+      "type": "function",
+      "name": "TexSubImage2D_",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3548,
+        3560
+      ],
+      "summary": "WebGL TexSubImage2D_ operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CheckFramebufferStatus",
+      "type": "function",
+      "name": "CheckFramebufferStatus",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3573,
+        3588
+      ],
+      "summary": "Returns the framebuffer completeness status. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BlitFramebuffer",
+      "type": "function",
+      "name": "BlitFramebuffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3597,
+        3695
+      ],
+      "summary": "Transfers a rectangle of pixels between framebuffers.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:FramebufferRenderbuffer",
+      "type": "function",
+      "name": "FramebufferRenderbuffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3698,
+        3737
+      ],
+      "summary": "Attaches a renderbuffer to a framebuffer attachment point. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:FramebufferTexture2D",
+      "type": "function",
+      "name": "FramebufferTexture2D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3740,
+        3766
+      ],
+      "summary": "Attaches a 2D texture to a framebuffer attachment point. (WebGL2 override with expanded parameter support.)",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DrawElementsInstanced",
+      "type": "function",
+      "name": "DrawElementsInstanced",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3785,
+        3800
+      ],
+      "summary": "Renders indexed primitives with instancing.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DrawRangeElements",
+      "type": "function",
+      "name": "DrawRangeElements",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3803,
+        3823
+      ],
+      "summary": "Renders indexed primitives within a vertex range for optimization.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DeleteQuery",
+      "type": "function",
+      "name": "DeleteQuery",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3836,
+        3857
+      ],
+      "summary": "Deletes a query object.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DeleteSampler",
+      "type": "function",
+      "name": "DeleteSampler",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3873,
+        3883
+      ],
+      "summary": "Deletes a sampler object.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BeginQuery",
+      "type": "function",
+      "name": "BeginQuery",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3894,
+        3916
+      ],
+      "summary": "Begins an asynchronous GPU query.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:EndQuery",
+      "type": "function",
+      "name": "EndQuery",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3919,
+        3939
+      ],
+      "summary": "Ends an active GPU query.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetQuery",
+      "type": "function",
+      "name": "GetQuery",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3942,
+        3963
+      ],
+      "summary": "Returns a query object by target.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetQueryParameter",
+      "type": "function",
+      "name": "GetQueryParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3966,
+        3989
+      ],
+      "summary": "Returns a query result parameter.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:FenceSync",
+      "type": "function",
+      "name": "FenceSync",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        3992,
+        4003
+      ],
+      "summary": "Creates a new fence sync object for GPU-CPU synchronization.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:IsSync",
+      "type": "function",
+      "name": "IsSync",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4006,
+        4033
+      ],
+      "summary": "Checks if a value is a valid sync object.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClientWaitSync",
+      "type": "function",
+      "name": "ClientWaitSync",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4036,
+        4059
+      ],
+      "summary": "Blocks on the CPU waiting for a sync object signal.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:WaitSync",
+      "type": "function",
+      "name": "WaitSync",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4062,
+        4079
+      ],
+      "summary": "Waits on the GPU for a sync object signal.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetSyncParameter",
+      "type": "function",
+      "name": "GetSyncParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4082,
+        4114
+      ],
+      "summary": "Returns a sync object parameter value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindSampler",
+      "type": "function",
+      "name": "BindSampler",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4125,
+        4140
+      ],
+      "summary": "Binds a sampler object to a texture unit.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetSamplerParameter",
+      "type": "function",
+      "name": "GetSamplerParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4168,
+        4190
+      ],
+      "summary": "Returns a sampler parameter value.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DeleteTransformFeedback",
+      "type": "function",
+      "name": "DeleteTransformFeedback",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4201,
+        4211
+      ],
+      "summary": "Deletes a transform feedback object.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:IsTransformFeedback",
+      "type": "function",
+      "name": "IsTransformFeedback",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4214,
+        4242
+      ],
+      "summary": "Checks if a value is a valid transform feedback object.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindTransformFeedback",
+      "type": "function",
+      "name": "BindTransformFeedback",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4245,
+        4276
+      ],
+      "summary": "Binds a transform feedback object as active.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BeginTransformFeedback",
+      "type": "function",
+      "name": "BeginTransformFeedback",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4280,
+        4311
+      ],
+      "summary": "Begins transform feedback capture mode.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TransformFeedbackVaryings",
+      "type": "function",
+      "name": "TransformFeedbackVaryings",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4348,
+        4390
+      ],
+      "summary": "Specifies the vertex shader outputs to capture.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetTransformFeedbackVarying",
+      "type": "function",
+      "name": "GetTransformFeedbackVarying",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4393,
+        4427
+      ],
+      "summary": "Returns info about a captured transform feedback varying.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindBufferBase",
+      "type": "function",
+      "name": "BindBufferBase",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4430,
+        4474
+      ],
+      "summary": "Binds a buffer to a generic indexed binding point.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindBufferRange",
+      "type": "function",
+      "name": "BindBufferRange",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4477,
+        4552
+      ],
+      "summary": "Binds a range of a buffer to an indexed binding point.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetUniformIndices",
+      "type": "function",
+      "name": "GetUniformIndices",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4555,
+        4567
+      ],
+      "summary": "WebGL GetUniformIndices operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetActiveUniforms",
+      "type": "function",
+      "name": "GetActiveUniforms",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4570,
+        4604
+      ],
+      "summary": "WebGL GetActiveUniforms operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetUniformBlockIndex",
+      "type": "function",
+      "name": "GetUniformBlockIndex",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4607,
+        4618
+      ],
+      "summary": "WebGL GetUniformBlockIndex operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetActiveUniformBlockParameter",
+      "type": "function",
+      "name": "GetActiveUniformBlockParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4622,
+        4660
+      ],
+      "summary": "WebGL GetActiveUniformBlockParameter operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetActiveUniformBlockName",
+      "type": "function",
+      "name": "GetActiveUniformBlockName",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4663,
+        4679
+      ],
+      "summary": "WebGL GetActiveUniformBlockName operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformBlockBinding",
+      "type": "function",
+      "name": "UniformBlockBinding",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4682,
+        4693
+      ],
+      "summary": "WebGL UniformBlockBinding operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClearBufferfv",
+      "type": "function",
+      "name": "ClearBufferfv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4696,
+        4715
+      ],
+      "summary": "Clears a buffer with float values.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClearBufferiv",
+      "type": "function",
+      "name": "ClearBufferiv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4718,
+        4737
+      ],
+      "summary": "Clears a buffer with integer values.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClearBufferuiv",
+      "type": "function",
+      "name": "ClearBufferuiv",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4740,
+        4759
+      ],
+      "summary": "Clears a buffer with unsigned integer values.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClearBufferfi",
+      "type": "function",
+      "name": "ClearBufferfi",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4762,
+        4779
+      ],
+      "summary": "Clears a buffer with float and integer values (depth/stencil).",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:InvalidateSubFramebuffer",
+      "type": "function",
+      "name": "InvalidateSubFramebuffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4792,
+        4818
+      ],
+      "summary": "Invalidates a region of framebuffer attachments.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:FramebufferTextureLayer",
+      "type": "function",
+      "name": "FramebufferTextureLayer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4821,
+        4848
+      ],
+      "summary": "Attaches a single layer of a 3D/array texture to a framebuffer.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetInternalformatParameter",
+      "type": "function",
+      "name": "GetInternalformatParameter",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4852,
+        4890
+      ],
+      "summary": "Returns internal format-specific parameters like max samples.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:RenderbufferStorageMultisample",
+      "type": "function",
+      "name": "RenderbufferStorageMultisample",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4893,
+        4903
+      ],
+      "summary": "Allocates multisampled renderbuffer storage.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ReadBuffer",
+      "type": "function",
+      "name": "ReadBuffer",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4906,
+        4924
+      ],
+      "summary": "Sets the read buffer source for readPixels operations.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DrawBuffers",
+      "type": "function",
+      "name": "DrawBuffers",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4927,
+        4943
+      ],
+      "summary": "Sets the draw buffer targets for fragment shader output.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexStorage2D",
+      "type": "function",
+      "name": "TexStorage2D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4946,
+        4955
+      ],
+      "summary": "Allocates immutable 2D texture storage.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexStorage3D",
+      "type": "function",
+      "name": "TexStorage3D",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        4958,
+        4968
+      ],
+      "summary": "Allocates immutable 3D texture storage.",
+      "tags": [
+        "webgl2",
+        "webgl-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgl2renderingcontext.rs:WebGL2RenderingContext",
+      "type": "class",
+      "name": "WebGL2RenderingContext",
+      "filePath": "components/script/dom/webgl/webgl2renderingcontext.rs",
+      "lineRange": [
+        98,
+        119
+      ],
+      "summary": "WebGL WebGL2RenderingContext type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webgl/webglactiveinfo.rs",
+      "type": "file",
+      "name": "webglactiveinfo.rs",
+      "filePath": "components/script/dom/webgl/webglactiveinfo.rs",
+      "summary": "Represents WebGLActiveInfo holding the name, size, and type of an active shader attribute or uniform.",
+      "tags": [
+        "webgl",
+        "shader",
+        "reflection",
+        "active-info"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webglactiveinfo.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/webglactiveinfo.rs",
+      "lineRange": [
+        34,
+        46
+      ],
+      "summary": "Creates a new WebGLActiveInfo with name, size, type from GPU reflection data.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "shader-reflection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webglactiveinfo.rs:WebGLActiveInfo",
+      "type": "class",
+      "name": "WebGLActiveInfo",
+      "filePath": "components/script/dom/webgl/webglactiveinfo.rs",
+      "lineRange": [
+        16,
+        22
+      ],
+      "summary": "WebGL WebGLActiveInfo type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:delete",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:delete",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:get_vertex_attrib",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:get_vertex_attrib",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:vertex_attrib_pointer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:vertex_attrib_pointer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:unbind_buffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:unbind_buffer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:validate_for_draw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:validate_for_draw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:default",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:max_vertices",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "function:components/script/dom/webgl/vertexarrayobject.rs:max_vertices",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "class:components/script/dom/webgl/vertexarrayobject.rs:VertexArrayObject",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "class:components/script/dom/webgl/vertexarrayobject.rs:VertexArrayObject",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "class:components/script/dom/webgl/vertexarrayobject.rs:VertexAttribData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/vertexarrayobject.rs",
+      "target": "class:components/script/dom/webgl/vertexarrayobject.rs:VertexAttribData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:new_l88",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:new_l88",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:new_l181",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:new_l181",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:is_webgl2_enabled_l197",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:is_webgl2_enabled_l197",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:validate_uniform_block_for_draw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:validate_uniform_block_for_draw",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:validate_vertex_attribs_for_draw",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:bound_buffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:buffer_usage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:buffer_usage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:calc_read_pixel_formats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:calc_read_pixel_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:read_pixels_into",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:uniform_vec_section_uint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:get_default_fb_attachment_param",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:get_specific_fb_attachment_param",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:clearbuffer_array_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:clear_buffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:valid_fb_attachment_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:vertex_attrib_i",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:vertex_attrib_u",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:tex_storage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:tex_image_3d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetBufferParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetFramebufferAttachmentParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetRenderbufferParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindFramebuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BufferData__",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BufferSubData_",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CopyBufferSubData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetBufferSubData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CompressedTexImage2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CompressedTexSubImage2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CopyTexImage2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CopyTexSubImage2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DeleteBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetProgramParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetIndexedParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:PixelStorei",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ReadPixels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ReadPixels_",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ReadPixels__",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform1ui",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform1uiv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform2ui",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform2uiv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform3ui",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform3uiv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform4ui",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:Uniform4uiv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix2fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix3fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix4fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix3x2fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix4x2fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix2x3fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix4x3fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix2x4fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformMatrix3x4fv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetUniform",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:VertexAttribI4iv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:VertexAttribI4uiv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:VertexAttribPointer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:VertexAttribIPointer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage3D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D_",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D__",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D___",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexImage2D____",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexSubImage2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexSubImage2D_",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:CheckFramebufferStatus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BlitFramebuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:FramebufferRenderbuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:FramebufferTexture2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DrawElementsInstanced",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DrawRangeElements",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DeleteQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DeleteSampler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BeginQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:EndQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetQuery",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetQueryParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:FenceSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:IsSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClientWaitSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:WaitSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetSyncParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindSampler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetSamplerParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DeleteTransformFeedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:IsTransformFeedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindTransformFeedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BeginTransformFeedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TransformFeedbackVaryings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetTransformFeedbackVarying",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindBufferBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:BindBufferRange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetUniformIndices",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetActiveUniforms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetUniformBlockIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetActiveUniformBlockParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetActiveUniformBlockName",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:UniformBlockBinding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClearBufferfv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClearBufferiv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClearBufferuiv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ClearBufferfi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:InvalidateSubFramebuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:FramebufferTextureLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:GetInternalformatParameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:RenderbufferStorageMultisample",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:ReadBuffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:DrawBuffers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexStorage2D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "function:components/script/dom/webgl/webgl2renderingcontext.rs:TexStorage3D",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "class:components/script/dom/webgl/webgl2renderingcontext.rs:WebGL2RenderingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgl2renderingcontext.rs",
+      "target": "class:components/script/dom/webgl/webgl2renderingcontext.rs:WebGL2RenderingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webglactiveinfo.rs",
+      "target": "function:components/script/dom/webgl/webglactiveinfo.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webglactiveinfo.rs",
+      "target": "function:components/script/dom/webgl/webglactiveinfo.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webglactiveinfo.rs",
+      "target": "class:components/script/dom/webgl/webglactiveinfo.rs:WebGLActiveInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webglactiveinfo.rs",
+      "target": "class:components/script/dom/webgl/webglactiveinfo.rs:WebGLActiveInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

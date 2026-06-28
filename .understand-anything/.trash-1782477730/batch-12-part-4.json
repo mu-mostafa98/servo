@@ -1,0 +1,894 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/layout_dom/servo_dangerous_style_node.rs",
+      "type": "file",
+      "name": "servo_dangerous_style_node.rs",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_node.rs",
+      "summary": "Provides unsafe style accessors for Node types, implementing scope-based CSS selector matching for the style system.",
+      "tags": [
+        "style",
+        "selector-matching",
+        "unsafe-access",
+        "node"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_dangerous_style_node.rs:scope_match_a_selectors_string",
+      "type": "function",
+      "name": "scope_match_a_selectors_string",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_node.rs",
+      "lineRange": [
+        38,
+        68
+      ],
+      "summary": "Checks whether a CSS selector string matches this node within a scope context.",
+      "tags": [
+        "style",
+        "selector",
+        "unsafe"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/layout_dom/servo_dangerous_style_shadow_root.rs",
+      "type": "file",
+      "name": "servo_dangerous_style_shadow_root.rs",
+      "filePath": "components/script/layout_dom/servo_dangerous_style_shadow_root.rs",
+      "summary": "Provides unsafe style accessors for ShadowRoot nodes during style recalculation.",
+      "tags": [
+        "style",
+        "shadow-dom",
+        "unsafe-access",
+        "recalc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/layout_dom/servo_layout_element.rs",
+      "type": "file",
+      "name": "servo_layout_element.rs",
+      "filePath": "components/script/layout_dom/servo_layout_element.rs",
+      "summary": "Implements the layout-specific wrapper for Element nodes, providing style computation, pseudo-element handling, and layout data initialization.",
+      "tags": [
+        "layout",
+        "element",
+        "style-computation",
+        "pseudo-element"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_element.rs:is_html_element",
+      "type": "function",
+      "name": "is_html_element",
+      "filePath": "components/script/layout_dom/servo_layout_element.rs",
+      "lineRange": [
+        54,
+        56
+      ],
+      "summary": "Returns whether this layout element is an HTML element.",
+      "tags": [
+        "layout",
+        "element"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_element.rs:shadow_root",
+      "type": "function",
+      "name": "shadow_root",
+      "filePath": "components/script/layout_dom/servo_layout_element.rs",
+      "lineRange": [
+        61,
+        63
+      ],
+      "summary": "Returns the shadow root of this element if it is a shadow host.",
+      "tags": [
+        "layout",
+        "element"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_element.rs:with_pseudo",
+      "type": "function",
+      "name": "with_pseudo",
+      "filePath": "components/script/layout_dom/servo_layout_element.rs",
+      "lineRange": [
+        78,
+        107
+      ],
+      "summary": "Returns a layout node wrapped with the specified pseudo-element type.",
+      "tags": [
+        "layout",
+        "element"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_element.rs:initialize_style_and_layout_data",
+      "type": "function",
+      "name": "initialize_style_and_layout_data",
+      "filePath": "components/script/layout_dom/servo_layout_element.rs",
+      "lineRange": [
+        120,
+        129
+      ],
+      "summary": "Ensures style and layout data structures are initialized for this element.",
+      "tags": [
+        "layout",
+        "element"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_element.rs:style",
+      "type": "function",
+      "name": "style",
+      "filePath": "components/script/layout_dom/servo_layout_element.rs",
+      "lineRange": [
+        163,
+        215
+      ],
+      "summary": "Computes and returns the style for this layout element.",
+      "tags": [
+        "layout",
+        "element"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/layout_dom/servo_layout_node.rs",
+      "type": "file",
+      "name": "servo_layout_node.rs",
+      "filePath": "components/script/layout_dom/servo_layout_node.rs",
+      "summary": "Implements the layout-specific wrapper for DOM nodes, providing style access, traversal, layout data management, and font metrics.",
+      "tags": [
+        "layout",
+        "dom-node",
+        "style-computation",
+        "traversal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_node.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/layout_dom/servo_layout_node.rs",
+      "lineRange": [
+        69,
+        71
+      ],
+      "summary": "Creates a new ServoLayoutNode from a raw node address.",
+      "tags": [
+        "layout",
+        "node"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_first_child",
+      "type": "function",
+      "name": "dangerous_first_child",
+      "filePath": "components/script/layout_dom/servo_layout_node.rs",
+      "lineRange": [
+        80,
+        82
+      ],
+      "summary": "Provides unsafe first child access for layout traversal.",
+      "tags": [
+        "layout",
+        "node"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_next_sibling",
+      "type": "function",
+      "name": "dangerous_next_sibling",
+      "filePath": "components/script/layout_dom/servo_layout_node.rs",
+      "lineRange": [
+        91,
+        93
+      ],
+      "summary": "Provides unsafe next sibling access for layout traversal.",
+      "tags": [
+        "layout",
+        "node"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_previous_sibling",
+      "type": "function",
+      "name": "dangerous_previous_sibling",
+      "filePath": "components/script/layout_dom/servo_layout_node.rs",
+      "lineRange": [
+        102,
+        104
+      ],
+      "summary": "Provides unsafe previous sibling access for layout traversal.",
+      "tags": [
+        "layout",
+        "node"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_node.rs:style",
+      "type": "function",
+      "name": "style",
+      "filePath": "components/script/layout_dom/servo_layout_node.rs",
+      "lineRange": [
+        165,
+        174
+      ],
+      "summary": "Returns the computed style for this layout node.",
+      "tags": [
+        "layout",
+        "node"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_node.rs:parent_style",
+      "type": "function",
+      "name": "parent_style",
+      "filePath": "components/script/layout_dom/servo_layout_node.rs",
+      "lineRange": [
+        176,
+        185
+      ],
+      "summary": "Returns the parent node style for inheritance purposes.",
+      "tags": [
+        "layout",
+        "node"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_dom/servo_layout_node.rs:selected_style",
+      "type": "function",
+      "name": "selected_style",
+      "filePath": "components/script/layout_dom/servo_layout_node.rs",
+      "lineRange": [
+        187,
+        214
+      ],
+      "summary": "Returns the primary style or pseudo-element style for this node.",
+      "tags": [
+        "layout",
+        "node"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/layout_image.rs",
+      "type": "file",
+      "name": "layout_image.rs",
+      "filePath": "components/script/layout_image.rs",
+      "summary": "Manages image fetching for layout operations, processing response chunks and EOF for image resources using the core resource thread.",
+      "tags": [
+        "image",
+        "layout",
+        "fetch",
+        "resource-loading"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/layout_image.rs:LayoutImageContext",
+      "type": "class",
+      "name": "LayoutImageContext",
+      "filePath": "components/script/layout_image.rs",
+      "lineRange": [
+        28,
+        33
+      ],
+      "summary": "Defines the LayoutImageContext type with 7 methods and 4 properties.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_image.rs:process_response",
+      "type": "function",
+      "name": "process_response",
+      "filePath": "components/script/layout_image.rs",
+      "lineRange": [
+        37,
+        47
+      ],
+      "summary": "Processes the response metadata for a layout image fetch.",
+      "tags": [
+        "image",
+        "layout",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_image.rs:process_response_chunk",
+      "type": "function",
+      "name": "process_response_chunk",
+      "filePath": "components/script/layout_image.rs",
+      "lineRange": [
+        49,
+        59
+      ],
+      "summary": "Processes a chunk of image data from the fetch response.",
+      "tags": [
+        "image",
+        "layout",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_image.rs:process_response_eof",
+      "type": "function",
+      "name": "process_response_eof",
+      "filePath": "components/script/layout_image.rs",
+      "lineRange": [
+        61,
+        73
+      ],
+      "summary": "Handles the end-of-stream signal for layout image fetch, processing the completed image data.",
+      "tags": [
+        "image",
+        "layout",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/layout_image.rs:fetch_image_for_layout",
+      "type": "function",
+      "name": "fetch_image_for_layout",
+      "filePath": "components/script/layout_image.rs",
+      "lineRange": [
+        91,
+        118
+      ],
+      "summary": "Fetches an image resource for layout with caching and response processing.",
+      "tags": [
+        "image",
+        "layout",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/script/lib.rs",
+      "summary": "Root module for the script crate, re-exporting all public submodules and establishing the crate structure.",
+      "tags": [
+        "crate-root",
+        "barrel",
+        "re-exports",
+        "module"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_node.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_node.rs:scope_match_a_selectors_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_dangerous_style_node.rs",
+      "target": "function:components/script/layout_dom/servo_dangerous_style_node.rs:scope_match_a_selectors_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_element.rs",
+      "target": "function:components/script/layout_dom/servo_layout_element.rs:is_html_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_element.rs",
+      "target": "function:components/script/layout_dom/servo_layout_element.rs:is_html_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_element.rs",
+      "target": "function:components/script/layout_dom/servo_layout_element.rs:shadow_root",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_element.rs",
+      "target": "function:components/script/layout_dom/servo_layout_element.rs:shadow_root",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_element.rs",
+      "target": "function:components/script/layout_dom/servo_layout_element.rs:with_pseudo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_element.rs",
+      "target": "function:components/script/layout_dom/servo_layout_element.rs:initialize_style_and_layout_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_element.rs",
+      "target": "function:components/script/layout_dom/servo_layout_element.rs:style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_first_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_first_child",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_next_sibling",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_next_sibling",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_previous_sibling",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:dangerous_previous_sibling",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:parent_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_dom/servo_layout_node.rs",
+      "target": "function:components/script/layout_dom/servo_layout_node.rs:selected_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_image.rs",
+      "target": "class:components/script/layout_image.rs:LayoutImageContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_image.rs",
+      "target": "function:components/script/layout_image.rs:process_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_image.rs",
+      "target": "function:components/script/layout_image.rs:process_response_chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_image.rs",
+      "target": "function:components/script/layout_image.rs:process_response_eof",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_image.rs",
+      "target": "function:components/script/layout_image.rs:fetch_image_for_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/layout_image.rs",
+      "target": "function:components/script/layout_image.rs:fetch_image_for_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/animations.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/body.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/clipboard_provider.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/conversions.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/css.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/devtools.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/document_collection.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/document_loader.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/dom/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/drag_data_store.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/fetch.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/iframe_collection.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/image_animation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/indexeddb.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/init.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/layout_dom/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/layout_image.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/links.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/messaging.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/microtask.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/mime_multipart.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/mime.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/module_loading.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/navigation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/network_listener.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/realms.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/routed_promise.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/script_module.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/script_mutation_observers.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/script_runtime.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/script_thread.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/script_window_proxies.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/serviceworker_manager.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/stylesheet_loader.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/stylesheet_set.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/task_manager.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/task_queue.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/task_source.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/task.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/test.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/textinput.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/timers.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/unminify.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/url.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/webdriver_handlers.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/window_named_properties.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/lib.rs",
+      "target": "file:components/script/xpath.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

@@ -1,0 +1,1982 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/media/backends/gstreamer/media_stream.rs",
+      "type": "file",
+      "name": "media_stream.rs",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "summary": "Implements GStreamer media stream types, wrapping audio/video pipeline elements that can be attached to a GStreamer pipeline and produce encoded output for RTP transmission.",
+      "tags": [
+        "media-stream",
+        "gstreamer",
+        "pipeline",
+        "rtp"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/backends/gstreamer/media_stream_source.rs",
+      "type": "file",
+      "name": "media_stream_source.rs",
+      "filePath": "components/media/backends/gstreamer/media_stream_source.rs",
+      "summary": "Provides a custom GStreamer source element (ServoMediaStreamSrc) that bridges servo-media streams into the GStreamer pipeline as a source pad, handling stream attachment and buffer pushing.",
+      "tags": [
+        "gstreamer",
+        "source-element",
+        "stream-bridge"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/backends/gstreamer/player.rs",
+      "type": "file",
+      "name": "player.rs",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "summary": "Implements a comprehensive GStreamer-based media player supporting playback control (play/pause/seek/volume), audio/video track management, metadata extraction, and renderer integration for multiple platforms.",
+      "tags": [
+        "player",
+        "gstreamer",
+        "playback",
+        "media"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/backends/gstreamer/registry_scanner.rs",
+      "type": "file",
+      "name": "registry_scanner.rs",
+      "filePath": "components/media/backends/gstreamer/registry_scanner.rs",
+      "summary": "Lazily scans the GStreamer registry to determine which container formats and codecs are supported by the host system, providing capability queries for media type matching.",
+      "tags": [
+        "gstreamer",
+        "registry",
+        "codec-support",
+        "capability"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/backends/gstreamer/render.rs",
+      "type": "file",
+      "name": "render.rs",
+      "filePath": "components/media/backends/gstreamer/render.rs",
+      "summary": "Provides GStreamer video frame rendering abstraction with platform-specific implementations for Linux/Unix and Android, converting GStreamer samples into renderable video frames.",
+      "tags": [
+        "video-render",
+        "gstreamer",
+        "frame",
+        "platform"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/media/backends/gstreamer/source.rs",
+      "type": "file",
+      "name": "source.rs",
+      "filePath": "components/media/backends/gstreamer/source.rs",
+      "summary": "Implements a custom GStreamer source element (ServoSrc) using the GStreamer subclassing API, providing a configurable data source with seek support for media playback.",
+      "tags": [
+        "gstreamer",
+        "source-element",
+        "subclass",
+        "data-source"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/backends/gstreamer/webrtc.rs",
+      "type": "file",
+      "name": "webrtc.rs",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "summary": "Implements a GStreamer WebRTC controller that manages WebRTC peer connections, including SDP negotiation, ICE candidate handling, media stream linking, and data channel management.",
+      "tags": [
+        "webrtc",
+        "gstreamer",
+        "sdp",
+        "peer-connection",
+        "signalling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/media/backends/gstreamer/media_stream.rs:GStreamerMediaStream",
+      "type": "class",
+      "name": "GStreamerMediaStream",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        32,
+        37
+      ],
+      "summary": "GStreamer implementation of a media stream, managing a collection of pipeline elements that can produce encoded audio/video data for transmission.",
+      "tags": [
+        "media-stream",
+        "gstreamer",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/backends/gstreamer/media_stream.rs:GstreamerMediaSocket",
+      "type": "class",
+      "name": "GstreamerMediaSocket",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        274,
+        276
+      ],
+      "summary": "A proxy media socket that delegates sink operations to an internal audio socket.",
+      "tags": [
+        "socket",
+        "proxy",
+        "audio"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        58,
+        65
+      ],
+      "summary": "Creates a new GStreamerMediaStream with the given stream type and pipeline elements.",
+      "tags": [
+        "constructor",
+        "media-stream"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:caps",
+      "type": "function",
+      "name": "caps",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        67,
+        72
+      ],
+      "summary": "Builds and returns the GStreamer caps representing the combined capabilities of all stream elements.",
+      "tags": [
+        "capabilities",
+        "gstreamer",
+        "caps"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:caps_with_payload",
+      "type": "function",
+      "name": "caps_with_payload",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        74,
+        87
+      ],
+      "summary": "Builds stream caps including the payload type for RTP encoding configuration.",
+      "tags": [
+        "caps",
+        "rtp",
+        "payload"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:attach_to_pipeline",
+      "type": "function",
+      "name": "attach_to_pipeline",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        93,
+        102
+      ],
+      "summary": "Adds all stream elements to a GStreamer pipeline and links them in sequence.",
+      "tags": [
+        "pipeline",
+        "linking",
+        "gstreamer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:pipeline_or_new",
+      "type": "function",
+      "name": "pipeline_or_new",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        104,
+        118
+      ],
+      "summary": "Returns the existing pipeline or creates a new one, adding stream elements to it.",
+      "tags": [
+        "pipeline",
+        "lazy-init"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:create_video",
+      "type": "function",
+      "name": "create_video",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        120,
+        127
+      ],
+      "summary": "Creates video pipeline elements for encoded video output with configurable codec parameters.",
+      "tags": [
+        "video",
+        "encoding",
+        "pipeline"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:encoded",
+      "type": "function",
+      "name": "encoded",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        130,
+        177
+      ],
+      "summary": "Creates the encoded media output by building the encoding pipeline with appropriate encoders, payloaders, and RTP caps.",
+      "tags": [
+        "encoding",
+        "rtp",
+        "pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:create_video_from",
+      "type": "function",
+      "name": "create_video_from",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        179,
+        189
+      ],
+      "summary": "Creates a video stream from an existing source element with encoding pipeline setup.",
+      "tags": [
+        "video",
+        "encoding",
+        "source"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:create_audio",
+      "type": "function",
+      "name": "create_audio",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        191,
+        199
+      ],
+      "summary": "Creates audio pipeline elements for encoded audio output with Opus encoding configuration.",
+      "tags": [
+        "audio",
+        "encoding",
+        "opus"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:create_audio_from",
+      "type": "function",
+      "name": "create_audio_from",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        201,
+        215
+      ],
+      "summary": "Creates an audio stream from an existing source element with Opus encoding pipeline.",
+      "tags": [
+        "audio",
+        "encoding",
+        "source"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:create_proxy",
+      "type": "function",
+      "name": "create_proxy",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        217,
+        231
+      ],
+      "summary": "Creates a proxy media socket connecting the stream output to a downstream consumer.",
+      "tags": [
+        "proxy",
+        "socket",
+        "audio"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream.rs:add_stream",
+      "type": "function",
+      "name": "add_stream",
+      "filePath": "components/media/backends/gstreamer/media_stream.rs",
+      "lineRange": [
+        248,
+        271
+      ],
+      "summary": "Adds a media stream to the MediaSink for output routing.",
+      "tags": [
+        "stream",
+        "sink",
+        "management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream_source.rs:set_stream",
+      "type": "function",
+      "name": "set_stream",
+      "filePath": "components/media/backends/gstreamer/media_stream_source.rs",
+      "lineRange": [
+        325,
+        332
+      ],
+      "summary": "Attaches a servo-media stream to the GStreamer source element as the data provider.",
+      "tags": [
+        "stream",
+        "source-element",
+        "gstreamer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/media_stream_source.rs:register_servo_media_stream_src",
+      "type": "function",
+      "name": "register_servo_media_stream_src",
+      "filePath": "components/media/backends/gstreamer/media_stream_source.rs",
+      "lineRange": [
+        338,
+        345
+      ],
+      "summary": "Registers the ServoMediaStreamSrc GStreamer element type in the GStreamer registry for pipeline construction.",
+      "tags": [
+        "registration",
+        "gstreamer",
+        "element-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/backends/gstreamer/player.rs:PlayerInner",
+      "type": "class",
+      "name": "PlayerInner",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        125,
+        142
+      ],
+      "summary": "Internal player state managing the GStreamer playbin element, stream selection, buffering, seeking, and media metadata.",
+      "tags": [
+        "player",
+        "internal-state",
+        "gstreamer",
+        "playbin"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/backends/gstreamer/player.rs:SeekChannel",
+      "type": "class",
+      "name": "SeekChannel",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        410,
+        413
+      ],
+      "summary": "IPC channel wrapper for coordinating seek operations between the player and backend threads.",
+      "tags": [
+        "seeking",
+        "ipc",
+        "synchronization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/backends/gstreamer/player.rs:GStreamerPlayer",
+      "type": "class",
+      "name": "GStreamerPlayer",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        435,
+        453
+      ],
+      "summary": "Public player interface wrapping PlayerInner with setup, lifecycle management, and platform-specific renderer integration.",
+      "tags": [
+        "player",
+        "gstreamer",
+        "playback",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:metadata_from_media_info",
+      "type": "function",
+      "name": "metadata_from_media_info",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        46,
+        110
+      ],
+      "summary": "Extracts media metadata (duration, audio/video tracks) from a GStreamer PlayMediaInfo structure.",
+      "tags": [
+        "metadata",
+        "extraction",
+        "media-info"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:set_input_size",
+      "type": "function",
+      "name": "set_input_size",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        145,
+        157
+      ],
+      "summary": "Sets the expected input data size for stream playback.",
+      "tags": [
+        "stream",
+        "size",
+        "configuration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:set_seekable",
+      "type": "function",
+      "name": "set_seekable",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        159,
+        165
+      ],
+      "summary": "Enables or disables seeking capability on the player stream.",
+      "tags": [
+        "seek",
+        "configuration",
+        "stream"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:set_mute",
+      "type": "function",
+      "name": "set_mute",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        167,
+        175
+      ],
+      "summary": "Mutes or unmutes the audio output of the player.",
+      "tags": [
+        "audio",
+        "mute",
+        "control"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:set_playback_rate",
+      "type": "function",
+      "name": "set_playback_rate",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        181,
+        200
+      ],
+      "summary": "Sets the playback speed factor, with rate limiting to 8x maximum.",
+      "tags": [
+        "playback",
+        "rate",
+        "control"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:play",
+      "type": "function",
+      "name": "play",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        206,
+        215
+      ],
+      "summary": "Starts or resumes media playback from the current position.",
+      "tags": [
+        "playback",
+        "control",
+        "media"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:stop",
+      "type": "function",
+      "name": "stop",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        217,
+        224
+      ],
+      "summary": "Stops media playback and resets the player state.",
+      "tags": [
+        "playback",
+        "control",
+        "stop"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:pause",
+      "type": "function",
+      "name": "pause",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        226,
+        235
+      ],
+      "summary": "Pauses media playback at the current position.",
+      "tags": [
+        "playback",
+        "control",
+        "pause"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:end_of_stream",
+      "type": "function",
+      "name": "end_of_stream",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        245,
+        259
+      ],
+      "summary": "Marks the end of the input stream and waits for pipeline playback to complete.",
+      "tags": [
+        "stream",
+        "end",
+        "playback"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:seek",
+      "type": "function",
+      "name": "seek",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        261,
+        277
+      ],
+      "summary": "Seeks to a specific time position in the media, waiting for the seek operation to complete via IPC.",
+      "tags": [
+        "seeking",
+        "control",
+        "playback"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:set_volume",
+      "type": "function",
+      "name": "set_volume",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        279,
+        287
+      ],
+      "summary": "Sets the audio volume level for playback.",
+      "tags": [
+        "audio",
+        "volume",
+        "control"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:push_data",
+      "type": "function",
+      "name": "push_data",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        293,
+        304
+      ],
+      "summary": "Pushes a data buffer into the player appsrc element for processing.",
+      "tags": [
+        "data",
+        "push",
+        "stream"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:buffered",
+      "type": "function",
+      "name": "buffered",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        310,
+        343
+      ],
+      "summary": "Returns the buffered time ranges available for seeking in the media.",
+      "tags": [
+        "buffering",
+        "query",
+        "time-ranges"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:seekable",
+      "type": "function",
+      "name": "seekable",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        345,
+        359
+      ],
+      "summary": "Reports whether the current media stream supports seeking operations.",
+      "tags": [
+        "seek",
+        "capability",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:set_stream",
+      "type": "function",
+      "name": "set_stream",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        361,
+        385
+      ],
+      "summary": "Configures the player to play from a servo-media stream by attaching stream source elements.",
+      "tags": [
+        "stream",
+        "configuration",
+        "source"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:new@2",
+      "type": "function",
+      "name": "new@2",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        457,
+        485
+      ],
+      "summary": "Creates a new GStreamerPlayer with the given ID, context, communication channels, and renderer instances.",
+      "tags": [
+        "constructor",
+        "player"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:setup",
+      "type": "function",
+      "name": "setup",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        487,
+        928
+      ],
+      "summary": "Sets up the complete GStreamer playback pipeline with playbin, source elements, video/audio sinks, renderers, and signal handlers.",
+      "tags": [
+        "setup",
+        "pipeline",
+        "gstreamer",
+        "playbin"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/player.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/media/backends/gstreamer/player.rs",
+      "lineRange": [
+        1025,
+        1038
+      ],
+      "summary": "Destructor that stops the player, sends shutdown events, and tears down the GStreamer pipeline.",
+      "tags": [
+        "destructor",
+        "cleanup",
+        "teardown"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/backends/gstreamer/registry_scanner.rs:GStreamerRegistryScanner",
+      "type": "class",
+      "name": "GStreamerRegistryScanner",
+      "filePath": "components/media/backends/gstreamer/registry_scanner.rs",
+      "lineRange": [
+        15,
+        18
+      ],
+      "summary": "Caches supported MIME types and codecs by scanning the GStreamer plugin registry.",
+      "tags": [
+        "registry",
+        "gstreamer",
+        "capability",
+        "codec"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/registry_scanner.rs:initialize",
+      "type": "function",
+      "name": "initialize",
+      "filePath": "components/media/backends/gstreamer/registry_scanner.rs",
+      "lineRange": [
+        42,
+        247
+      ],
+      "summary": "Scans the GStreamer registry to discover all available decoder, demuxer, and parser elements, building sets of supported MIME types and codecs.",
+      "tags": [
+        "registry",
+        "scan",
+        "gstreamer",
+        "initialization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/registry_scanner.rs:has_element_for_media_type",
+      "type": "function",
+      "name": "has_element_for_media_type",
+      "filePath": "components/media/backends/gstreamer/registry_scanner.rs",
+      "lineRange": [
+        250,
+        265
+      ],
+      "summary": "Checks if GStreamer has an element capable of handling a specific media type by registry factory lookup.",
+      "tags": [
+        "capability",
+        "query",
+        "gstreamer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/backends/gstreamer/render.rs:GStreamerRender",
+      "type": "class",
+      "name": "GStreamerRender",
+      "filePath": "components/media/backends/gstreamer/render.rs",
+      "lineRange": [
+        94,
+        96
+      ],
+      "summary": "Platform-specific GStreamer video renderer that extracts video frames from GStreamer samples and delivers them for display.",
+      "tags": [
+        "video",
+        "renderer",
+        "gstreamer",
+        "platform"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/render.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/media/backends/gstreamer/render.rs",
+      "lineRange": [
+        99,
+        103
+      ],
+      "summary": "Creates a new GStreamer renderer with the given GL context, using the platform-specific implementation.",
+      "tags": [
+        "constructor",
+        "renderer",
+        "gl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/render.rs:is_gl",
+      "type": "function",
+      "name": "is_gl",
+      "filePath": "components/media/backends/gstreamer/render.rs",
+      "lineRange": [
+        105,
+        111
+      ],
+      "summary": "Returns whether the renderer uses OpenGL for video frame rendering.",
+      "tags": [
+        "opengl",
+        "capability",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/render.rs:get_frame_from_sample",
+      "type": "function",
+      "name": "get_frame_from_sample",
+      "filePath": "components/media/backends/gstreamer/render.rs",
+      "lineRange": [
+        113,
+        128
+      ],
+      "summary": "Extracts a video frame from a GStreamer sample, converting it to the renderer frame format and copying buffer data.",
+      "tags": [
+        "video",
+        "frame",
+        "extraction",
+        "gstreamer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/render.rs:setup_video_sink",
+      "type": "function",
+      "name": "setup_video_sink",
+      "filePath": "components/media/backends/gstreamer/render.rs",
+      "lineRange": [
+        130,
+        153
+      ],
+      "summary": "Configures a GStreamer video sink element with the renderer GL context and frame callback for displaying video output.",
+      "tags": [
+        "video",
+        "sink",
+        "configuration",
+        "gstreamer"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/source.rs:push_buffer",
+      "type": "function",
+      "name": "push_buffer",
+      "filePath": "components/media/backends/gstreamer/source.rs",
+      "lineRange": [
+        415,
+        420
+      ],
+      "summary": "Pushes a data buffer into the GStreamer appsrc for downstream processing in the pipeline.",
+      "tags": [
+        "data",
+        "buffer",
+        "gstreamer",
+        "source"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/source.rs:register_servo_src",
+      "type": "function",
+      "name": "register_servo_src",
+      "filePath": "components/media/backends/gstreamer/source.rs",
+      "lineRange": [
+        434,
+        441
+      ],
+      "summary": "Registers the ServoSrc GStreamer element type in the GStreamer type system for use in pipeline construction.",
+      "tags": [
+        "registration",
+        "gstreamer",
+        "element-type",
+        "subclass"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/backends/gstreamer/webrtc.rs:GStreamerWebRtcController",
+      "type": "class",
+      "name": "GStreamerWebRtcController",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        45,
+        90
+      ],
+      "summary": "GStreamer WebRTC controller managing peer connection state, SDP offer/answer exchange, ICE candidate handling, media stream linking, and data channels.",
+      "tags": [
+        "webrtc",
+        "controller",
+        "gstreamer",
+        "peer-connection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:create_offer",
+      "type": "function",
+      "name": "create_offer",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        117,
+        131
+      ],
+      "summary": "Creates a WebRTC SDP offer by triggering negotiation on the GStreamer webrtcbin element.",
+      "tags": [
+        "webrtc",
+        "sdp",
+        "offer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:create_answer",
+      "type": "function",
+      "name": "create_answer",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        133,
+        145
+      ],
+      "summary": "Creates a WebRTC SDP answer in response to a received offer from the remote peer.",
+      "tags": [
+        "webrtc",
+        "sdp",
+        "answer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:add_stream",
+      "type": "function",
+      "name": "add_stream",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        147,
+        161
+      ],
+      "summary": "Adds a media stream to the WebRTC pipeline, linking it to the webrtcbin element for transmission.",
+      "tags": [
+        "webrtc",
+        "stream",
+        "media"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:close_data_channel",
+      "type": "function",
+      "name": "close_data_channel",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        171,
+        188
+      ],
+      "summary": "Closes a WebRTC data channel by ID, notifying the event target and updating the internal channel tracking.",
+      "tags": [
+        "webrtc",
+        "data-channel",
+        "close"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:send_data_channel_message",
+      "type": "function",
+      "name": "send_data_channel_message",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        190,
+        205
+      ],
+      "summary": "Sends a binary or text message on a specific WebRTC data channel.",
+      "tags": [
+        "webrtc",
+        "data-channel",
+        "messaging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:internal_event",
+      "type": "function",
+      "name": "internal_event",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        215,
+        335
+      ],
+      "summary": "Processes internal WebRTC events including SDP offers, ICE candidates, stream additions, and data channel requests.",
+      "tags": [
+        "webrtc",
+        "event",
+        "dispatch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:set_description",
+      "type": "function",
+      "name": "set_description",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        345,
+        383
+      ],
+      "summary": "Sets a local or remote SDP description on the webrtcbin element.",
+      "tags": [
+        "webrtc",
+        "sdp",
+        "description"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:store_remote_mline_info",
+      "type": "function",
+      "name": "store_remote_mline_info",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        385,
+        429
+      ],
+      "summary": "Parses a remote SDP offer to extract media line caps and payload types for stream matching.",
+      "tags": [
+        "webrtc",
+        "sdp",
+        "m-line",
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:link_stream",
+      "type": "function",
+      "name": "link_stream",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        443,
+        508
+      ],
+      "summary": "Links a local media stream to the WebRTC peer connection by matching stream types to remote m-lines and connecting pads.",
+      "tags": [
+        "webrtc",
+        "stream",
+        "linking",
+        "pad"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:flush_pending_streams",
+      "type": "function",
+      "name": "flush_pending_streams",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        511,
+        524
+      ],
+      "summary": "Processes and links any streams queued during negotiation setup.",
+      "tags": [
+        "webrtc",
+        "stream",
+        "queue"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:start_pipeline",
+      "type": "function",
+      "name": "start_pipeline",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        526,
+        649
+      ],
+      "summary": "Starts the GStreamer pipeline and the WebRTC signalling handshake, creating offers or processing pending streams.",
+      "tags": [
+        "webrtc",
+        "pipeline",
+        "start",
+        "signalling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:construct",
+      "type": "function",
+      "name": "construct",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        652,
+        684
+      ],
+      "summary": "Constructs a new GStreamerWebRtcController by setting up the webrtcbin element, pads, and event handlers.",
+      "tags": [
+        "constructor",
+        "webrtc",
+        "gstreamer",
+        "pipeline"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:on_offer_or_answer_created",
+      "type": "function",
+      "name": "on_offer_or_answer_created",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        686,
+        712
+      ],
+      "summary": "Handles SDP offer/answer creation events by setting the generated session description on the webrtcbin.",
+      "tags": [
+        "webrtc",
+        "sdp",
+        "event-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:on_incoming_stream",
+      "type": "function",
+      "name": "on_incoming_stream",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        714,
+        744
+      ],
+      "summary": "Handles incoming media streams from the remote peer by associating them with GStreamerMediaStream instances.",
+      "tags": [
+        "webrtc",
+        "stream",
+        "incoming",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:on_incoming_decodebin_stream",
+      "type": "function",
+      "name": "on_incoming_decodebin_stream",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        746,
+        780
+      ],
+      "summary": "Handles decodebin streams from incoming WebRTC media by creating a media stream with appropriate RTP depayloader.",
+      "tags": [
+        "webrtc",
+        "decodebin",
+        "stream",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:process_new_stream",
+      "type": "function",
+      "name": "process_new_stream",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        782,
+        792
+      ],
+      "summary": "Integrates a newly received media stream into the internal stream tracking system.",
+      "tags": [
+        "webrtc",
+        "stream",
+        "registration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:candidate",
+      "type": "function",
+      "name": "candidate",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        794,
+        805
+      ],
+      "summary": "Processes an ICE candidate received from the remote peer and adds it to the webrtcbin.",
+      "tags": [
+        "webrtc",
+        "ice",
+        "candidate"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/backends/gstreamer/webrtc.rs:register_data_channel",
+      "type": "function",
+      "name": "register_data_channel",
+      "filePath": "components/media/backends/gstreamer/webrtc.rs",
+      "lineRange": [
+        807,
+        822
+      ],
+      "summary": "Creates and registers a new data channel from a GStreamer WebRTC data channel, linking it to servo-media data channel types.",
+      "tags": [
+        "webrtc",
+        "data-channel",
+        "registration"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "class:components/media/backends/gstreamer/media_stream.rs:GStreamerMediaStream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "class:components/media/backends/gstreamer/media_stream.rs:GStreamerMediaStream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "class:components/media/backends/gstreamer/media_stream.rs:GstreamerMediaSocket",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "class:components/media/backends/gstreamer/media_stream.rs:GstreamerMediaSocket",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:caps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:caps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:caps_with_payload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:caps_with_payload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:attach_to_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:attach_to_pipeline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:pipeline_or_new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:pipeline_or_new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_video",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_video",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:encoded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:encoded",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_video_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_video_from",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_audio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_audio",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_audio_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_audio_from",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_proxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:create_proxy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream.rs:add_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream_source.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream_source.rs:set_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream_source.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream_source.rs:set_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream_source.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream_source.rs:register_servo_media_stream_src",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/media_stream_source.rs",
+      "target": "function:components/media/backends/gstreamer/media_stream_source.rs:register_servo_media_stream_src",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "class:components/media/backends/gstreamer/player.rs:PlayerInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "class:components/media/backends/gstreamer/player.rs:SeekChannel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "class:components/media/backends/gstreamer/player.rs:GStreamerPlayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "class:components/media/backends/gstreamer/player.rs:GStreamerPlayer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:metadata_from_media_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_input_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_input_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_seekable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_seekable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_mute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_mute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_playback_rate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_playback_rate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:play",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:play",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:stop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:stop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:pause",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:pause",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:end_of_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:end_of_stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:seek",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:seek",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_volume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_volume",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:push_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:push_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:buffered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:buffered",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:seekable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:seekable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:set_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:new@2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:new@2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:setup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/player.rs",
+      "target": "function:components/media/backends/gstreamer/player.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/registry_scanner.rs",
+      "target": "class:components/media/backends/gstreamer/registry_scanner.rs:GStreamerRegistryScanner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/registry_scanner.rs",
+      "target": "class:components/media/backends/gstreamer/registry_scanner.rs:GStreamerRegistryScanner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/registry_scanner.rs",
+      "target": "function:components/media/backends/gstreamer/registry_scanner.rs:initialize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/registry_scanner.rs",
+      "target": "function:components/media/backends/gstreamer/registry_scanner.rs:has_element_for_media_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "class:components/media/backends/gstreamer/render.rs:GStreamerRender",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "class:components/media/backends/gstreamer/render.rs:GStreamerRender",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "function:components/media/backends/gstreamer/render.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "function:components/media/backends/gstreamer/render.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "function:components/media/backends/gstreamer/render.rs:is_gl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "function:components/media/backends/gstreamer/render.rs:is_gl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "function:components/media/backends/gstreamer/render.rs:get_frame_from_sample",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "function:components/media/backends/gstreamer/render.rs:get_frame_from_sample",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "function:components/media/backends/gstreamer/render.rs:setup_video_sink",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/render.rs",
+      "target": "function:components/media/backends/gstreamer/render.rs:setup_video_sink",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/source.rs",
+      "target": "function:components/media/backends/gstreamer/source.rs:push_buffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/source.rs",
+      "target": "function:components/media/backends/gstreamer/source.rs:push_buffer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/source.rs",
+      "target": "function:components/media/backends/gstreamer/source.rs:register_servo_src",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/source.rs",
+      "target": "function:components/media/backends/gstreamer/source.rs:register_servo_src",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "class:components/media/backends/gstreamer/webrtc.rs:GStreamerWebRtcController",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "class:components/media/backends/gstreamer/webrtc.rs:GStreamerWebRtcController",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:create_offer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:create_answer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:add_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:close_data_channel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:send_data_channel_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:internal_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:set_description",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:store_remote_mline_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:link_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:flush_pending_streams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:start_pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:construct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:construct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:on_offer_or_answer_created",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:on_incoming_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:on_incoming_decodebin_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:process_new_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/media/backends/gstreamer/webrtc.rs",
+      "target": "function:components/media/backends/gstreamer/webrtc.rs:register_data_channel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

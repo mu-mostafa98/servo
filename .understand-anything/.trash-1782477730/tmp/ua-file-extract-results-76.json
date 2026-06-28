@@ -1,0 +1,1946 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/script/dom/trustedtypes/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 9,
+      "nonEmptyLines": 8,
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/trustedtypes/trustedhtml.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 104,
+      "nonEmptyLines": 90,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 32,
+          "endLine": 37,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 39,
+          "endLine": 45,
+          "params": [
+            "cx",
+            "data",
+            "global"
+          ]
+        },
+        {
+          "name": "get_trusted_type_compliant_string",
+          "startLine": 47,
+          "endLine": 67,
+          "params": [
+            "cx",
+            "global",
+            "value",
+            "sink"
+          ]
+        },
+        {
+          "name": "data",
+          "startLine": 69,
+          "endLine": 71,
+          "params": []
+        },
+        {
+          "name": "fmt",
+          "startLine": 76,
+          "endLine": 78,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "Stringifier",
+          "startLine": 83,
+          "endLine": 85,
+          "params": []
+        },
+        {
+          "name": "ToJSON",
+          "startLine": 88,
+          "endLine": 90,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 94,
+          "endLine": 103,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "TrustedHTML",
+          "startLine": 25,
+          "endLine": 29,
+          "methods": [
+            "new_inherited",
+            "new",
+            "get_trusted_type_compliant_string",
+            "data",
+            "fmt",
+            "Stringifier",
+            "ToJSON"
+          ],
+          "properties": [
+            "reflector_",
+            "data"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TrustedHTML",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "get_trusted_type_compliant_string",
+          "line": 47,
+          "isDefault": false
+        },
+        {
+          "name": "data",
+          "line": 69,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 44
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "TrustedTypePolicyFactory::get_trusted_type_compliant_string",
+          "lineNumber": 55
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "Ok",
+          "lineNumber": 65
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "trusted_html.data.clone",
+          "lineNumber": 65
+        },
+        {
+          "caller": "fmt",
+          "callee": "f.write_str",
+          "lineNumber": 77
+        },
+        {
+          "caller": "fmt",
+          "callee": "self.data.str",
+          "lineNumber": 77
+        },
+        {
+          "caller": "Stringifier",
+          "callee": "self.data.clone",
+          "lineNumber": 84
+        },
+        {
+          "caller": "ToJSON",
+          "callee": "self.data.clone",
+          "lineNumber": 89
+        },
+        {
+          "caller": "convert",
+          "callee": "TrustedHTMLOrString::TrustedHTML",
+          "lineNumber": 97
+        },
+        {
+          "caller": "convert",
+          "callee": "TrustedHTMLOrString::String",
+          "lineNumber": 100
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/trustedtypes/trustedscript.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 175,
+      "nonEmptyLines": 162,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 32,
+          "endLine": 37,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 39,
+          "endLine": 41,
+          "params": [
+            "cx",
+            "data",
+            "global"
+          ]
+        },
+        {
+          "name": "get_trusted_type_compliant_string",
+          "startLine": 43,
+          "endLine": 63,
+          "params": [
+            "cx",
+            "global",
+            "value",
+            "sink"
+          ]
+        },
+        {
+          "name": "data",
+          "startLine": 65,
+          "endLine": 67,
+          "params": []
+        },
+        {
+          "name": "can_compile_string_with_trusted_type",
+          "startLine": 71,
+          "endLine": 155,
+          "params": [
+            "cx",
+            "global",
+            "code_string",
+            "compilation_type",
+            "parameter_strings",
+            "body_string",
+            "parameter_args",
+            "body_arg"
+          ]
+        },
+        {
+          "name": "fmt",
+          "startLine": 160,
+          "endLine": 162,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "Stringifier",
+          "startLine": 167,
+          "endLine": 169,
+          "params": []
+        },
+        {
+          "name": "ToJSON",
+          "startLine": 172,
+          "endLine": 174,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "TrustedScript",
+          "startLine": 25,
+          "endLine": 29,
+          "methods": [
+            "new_inherited",
+            "new",
+            "get_trusted_type_compliant_string",
+            "data",
+            "can_compile_string_with_trusted_type",
+            "fmt",
+            "Stringifier",
+            "ToJSON"
+          ],
+          "properties": [
+            "reflector_",
+            "data"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TrustedScript",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "get_trusted_type_compliant_string",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "data",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "can_compile_string_with_trusted_type",
+          "line": 71,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 40
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 40
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 40
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "TrustedTypePolicyFactory::get_trusted_type_compliant_string",
+          "lineNumber": 51
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "Ok",
+          "lineNumber": 61
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "trusted_script.data.clone",
+          "lineNumber": 61
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "TrustedTypePolicyFactory::is_trusted_script",
+          "lineNumber": 90
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "cx.into",
+          "lineNumber": 90
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "parameter_args.len",
+          "lineNumber": 104
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "trusted_script.data",
+          "lineNumber": 111
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "TrustedScript::get_trusted_type_compliant_string",
+          "lineNumber": 133
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "TrustedScriptOrString::String",
+          "lineNumber": 136
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "code_string.clone",
+          "lineNumber": 136
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "global\n            .get_csp_list().is_js_evaluation_allowed",
+          "lineNumber": 152
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "global.get_csp_list",
+          "lineNumber": 152
+        },
+        {
+          "caller": "can_compile_string_with_trusted_type",
+          "callee": "source_string.str",
+          "lineNumber": 154
+        },
+        {
+          "caller": "fmt",
+          "callee": "f.write_str",
+          "lineNumber": 161
+        },
+        {
+          "caller": "fmt",
+          "callee": "self.data.str",
+          "lineNumber": 161
+        },
+        {
+          "caller": "Stringifier",
+          "callee": "self.data.clone",
+          "lineNumber": 168
+        },
+        {
+          "caller": "ToJSON",
+          "callee": "self.data.clone",
+          "lineNumber": 173
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/trustedtypes/trustedscripturl.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 89,
+      "nonEmptyLines": 77,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 29,
+          "endLine": 34,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 36,
+          "endLine": 42,
+          "params": [
+            "cx",
+            "data",
+            "global"
+          ]
+        },
+        {
+          "name": "get_trusted_type_compliant_string",
+          "startLine": 44,
+          "endLine": 65,
+          "params": [
+            "cx",
+            "global",
+            "value",
+            "sink"
+          ]
+        },
+        {
+          "name": "data",
+          "startLine": 67,
+          "endLine": 69,
+          "params": []
+        },
+        {
+          "name": "fmt",
+          "startLine": 74,
+          "endLine": 76,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "Stringifier",
+          "startLine": 81,
+          "endLine": 83,
+          "params": []
+        },
+        {
+          "name": "ToJSON",
+          "startLine": 86,
+          "endLine": 88,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "TrustedScriptURL",
+          "startLine": 22,
+          "endLine": 26,
+          "methods": [
+            "new_inherited",
+            "new",
+            "get_trusted_type_compliant_string",
+            "data",
+            "fmt",
+            "Stringifier",
+            "ToJSON"
+          ],
+          "properties": [
+            "reflector_",
+            "data"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TrustedScriptURL",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "get_trusted_type_compliant_string",
+          "line": 44,
+          "isDefault": false
+        },
+        {
+          "name": "data",
+          "line": 67,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 41
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "TrustedTypePolicyFactory::get_trusted_type_compliant_string",
+          "lineNumber": 52
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "value.as_ref().into",
+          "lineNumber": 56
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "value.as_ref",
+          "lineNumber": 56
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "Ok",
+          "lineNumber": 62
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "trusted_script_url.data.clone",
+          "lineNumber": 62
+        },
+        {
+          "caller": "fmt",
+          "callee": "f.write_str",
+          "lineNumber": 75
+        },
+        {
+          "caller": "fmt",
+          "callee": "self.data.str",
+          "lineNumber": 75
+        },
+        {
+          "caller": "Stringifier",
+          "callee": "self.data.clone",
+          "lineNumber": 82
+        },
+        {
+          "caller": "ToJSON",
+          "callee": "self.data.clone",
+          "lineNumber": 87
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 7,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/trustedtypes/trustedtypepolicy.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 240,
+      "nonEmptyLines": 226,
+      "functions": [
+        {
+          "name": "matches_idl_trusted_type",
+          "startLine": 50,
+          "endLine": 62,
+          "params": [
+            "idl_trusted_type"
+          ]
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 66,
+          "endLine": 74,
+          "params": [
+            "name",
+            "options"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 76,
+          "endLine": 83,
+          "params": [
+            "cx",
+            "name",
+            "options",
+            "global"
+          ]
+        },
+        {
+          "name": "check_callback_if_missing",
+          "startLine": 86,
+          "endLine": 94,
+          "params": [
+            "throw_if_missing"
+          ]
+        },
+        {
+          "name": "get_trusted_type_policy_value",
+          "startLine": 97,
+          "endLine": 143,
+          "params": [
+            "cx",
+            "expected_type",
+            "input",
+            "arguments",
+            "throw_if_missing"
+          ]
+        },
+        {
+          "name": "create_trusted_type",
+          "startLine": 156,
+          "endLine": 187,
+          "params": [
+            "cx",
+            "expected_type",
+            "input",
+            "arguments",
+            "trusted_type_creation_callback"
+          ]
+        },
+        {
+          "name": "Name",
+          "startLine": 192,
+          "endLine": 194,
+          "params": []
+        },
+        {
+          "name": "CreateHTML",
+          "startLine": 196,
+          "endLine": 209,
+          "params": [
+            "cx",
+            "input",
+            "arguments"
+          ]
+        },
+        {
+          "name": "CreateScript",
+          "startLine": 211,
+          "endLine": 224,
+          "params": [
+            "cx",
+            "input",
+            "arguments"
+          ]
+        },
+        {
+          "name": "CreateScriptURL",
+          "startLine": 226,
+          "endLine": 239,
+          "params": [
+            "cx",
+            "input",
+            "arguments"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "TrustedTypePolicy",
+          "startLine": 29,
+          "endLine": 40,
+          "methods": [
+            "new_inherited",
+            "new",
+            "check_callback_if_missing",
+            "get_trusted_type_policy_value",
+            "create_trusted_type",
+            "Name",
+            "CreateHTML",
+            "CreateScript",
+            "CreateScriptURL"
+          ],
+          "properties": [
+            "reflector_",
+            "name",
+            "create_html",
+            "create_script",
+            "create_script_url"
+          ]
+        },
+        {
+          "name": "TrustedType",
+          "startLine": 43,
+          "endLine": 47,
+          "methods": [
+            "matches_idl_trusted_type"
+          ],
+          "properties": [
+            "TrustedHTML",
+            "TrustedScript",
+            "TrustedScriptURL"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TrustedTypePolicy",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "TrustedType",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "matches_idl_trusted_type",
+          "line": 50,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "get_trusted_type_policy_value",
+          "line": 97,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "options.createHTML.clone",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "options.createScript.clone",
+          "lineNumber": 71
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "options.createScriptURL.clone",
+          "lineNumber": 72
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 82
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 82
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 82
+        },
+        {
+          "caller": "check_callback_if_missing",
+          "callee": "Err",
+          "lineNumber": 89
+        },
+        {
+          "caller": "check_callback_if_missing",
+          "callee": "Type",
+          "lineNumber": 89
+        },
+        {
+          "caller": "check_callback_if_missing",
+          "callee": "c\"Cannot find type\".to_owned",
+          "lineNumber": 89
+        },
+        {
+          "caller": "check_callback_if_missing",
+          "callee": "Ok",
+          "lineNumber": 92
+        },
+        {
+          "caller": "get_trusted_type_policy_value",
+          "callee": "TrustedTypePolicy::check_callback_if_missing",
+          "lineNumber": 109
+        },
+        {
+          "caller": "get_trusted_type_policy_value",
+          "callee": "callback.Call__",
+          "lineNumber": 115
+        },
+        {
+          "caller": "get_trusted_type_policy_value",
+          "callee": "TrustedTypePolicy::check_callback_if_missing",
+          "lineNumber": 120
+        },
+        {
+          "caller": "get_trusted_type_policy_value",
+          "callee": "callback.Call__",
+          "lineNumber": 126
+        },
+        {
+          "caller": "get_trusted_type_policy_value",
+          "callee": "TrustedTypePolicy::check_callback_if_missing",
+          "lineNumber": 131
+        },
+        {
+          "caller": "get_trusted_type_policy_value",
+          "callee": "callback\n                        .Call__(cx, input, arguments, ExceptionHandling::Rethrow).map",
+          "lineNumber": 137
+        },
+        {
+          "caller": "get_trusted_type_policy_value",
+          "callee": "callback.Call__",
+          "lineNumber": 137
+        },
+        {
+          "caller": "get_trusted_type_policy_value",
+          "callee": "result.map",
+          "lineNumber": 139
+        },
+        {
+          "caller": "create_trusted_type",
+          "callee": "self.get_trusted_type_policy_value",
+          "lineNumber": 171
+        },
+        {
+          "caller": "create_trusted_type",
+          "callee": "Err",
+          "lineNumber": 174
+        },
+        {
+          "caller": "create_trusted_type",
+          "callee": "DOMString::new",
+          "lineNumber": 180
+        },
+        {
+          "caller": "create_trusted_type",
+          "callee": "Ok",
+          "lineNumber": 184
+        },
+        {
+          "caller": "create_trusted_type",
+          "callee": "trusted_type_creation_callback",
+          "lineNumber": 184
+        },
+        {
+          "caller": "Name",
+          "callee": "DOMString::from",
+          "lineNumber": 193
+        },
+        {
+          "caller": "CreateHTML",
+          "callee": "self.create_trusted_type",
+          "lineNumber": 202
+        },
+        {
+          "caller": "CreateHTML",
+          "callee": "TrustedHTML::new",
+          "lineNumber": 207
+        },
+        {
+          "caller": "CreateHTML",
+          "callee": "self.global",
+          "lineNumber": 207
+        },
+        {
+          "caller": "CreateScript",
+          "callee": "self.create_trusted_type",
+          "lineNumber": 217
+        },
+        {
+          "caller": "CreateScript",
+          "callee": "TrustedScript::new",
+          "lineNumber": 222
+        },
+        {
+          "caller": "CreateScript",
+          "callee": "self.global",
+          "lineNumber": 222
+        },
+        {
+          "caller": "CreateScriptURL",
+          "callee": "self.create_trusted_type",
+          "lineNumber": 232
+        },
+        {
+          "caller": "CreateScriptURL",
+          "callee": "TrustedScriptURL::new",
+          "lineNumber": 237
+        },
+        {
+          "caller": "CreateScriptURL",
+          "callee": "self.global",
+          "lineNumber": 237
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 10,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/trustedtypes/trustedtypepolicyfactory.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 499,
+      "nonEmptyLines": 479,
+      "functions": [
+        {
+          "name": "convert",
+          "startLine": 50,
+          "endLine": 59,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 63,
+          "endLine": 69,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 71,
+          "endLine": 73,
+          "params": [
+            "cx",
+            "global"
+          ]
+        },
+        {
+          "name": "create_trusted_type_policy",
+          "startLine": 76,
+          "endLine": 121,
+          "params": [
+            "cx",
+            "policy_name",
+            "options",
+            "global"
+          ]
+        },
+        {
+          "name": "get_trusted_type_data_for_attribute",
+          "startLine": 125,
+          "endLine": 189,
+          "params": [
+            "element_namespace",
+            "element_name",
+            "attribute",
+            "attribute_namespace"
+          ]
+        },
+        {
+          "name": "get_trusted_types_compliant_attribute_value",
+          "startLine": 192,
+          "endLine": 243,
+          "params": [
+            "cx",
+            "element_namespace",
+            "element_name",
+            "attribute",
+            "attribute_namespace",
+            "new_value",
+            "global"
+          ]
+        },
+        {
+          "name": "process_value_with_default_policy",
+          "startLine": 246,
+          "endLine": 290,
+          "params": [
+            "cx",
+            "expected_type",
+            "global",
+            "input",
+            "sink"
+          ]
+        },
+        {
+          "name": "get_trusted_type_compliant_string",
+          "startLine": 293,
+          "endLine": 349,
+          "params": [
+            "cx",
+            "expected_type",
+            "global",
+            "input",
+            "sink",
+            "sink_group"
+          ]
+        },
+        {
+          "name": "is_trusted_script",
+          "startLine": 352,
+          "endLine": 357,
+          "params": [
+            "cx",
+            "value"
+          ]
+        },
+        {
+          "name": "CreatePolicy",
+          "startLine": 362,
+          "endLine": 369,
+          "params": [
+            "cx",
+            "policy_name",
+            "options"
+          ]
+        },
+        {
+          "name": "IsHTML",
+          "startLine": 371,
+          "endLine": 373,
+          "params": [
+            "cx",
+            "value"
+          ]
+        },
+        {
+          "name": "IsScript",
+          "startLine": 375,
+          "endLine": 377,
+          "params": [
+            "cx",
+            "value"
+          ]
+        },
+        {
+          "name": "IsScriptURL",
+          "startLine": 379,
+          "endLine": 381,
+          "params": [
+            "cx",
+            "value"
+          ]
+        },
+        {
+          "name": "EmptyHTML",
+          "startLine": 383,
+          "endLine": 385,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "EmptyScript",
+          "startLine": 387,
+          "endLine": 389,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "GetAttributeType",
+          "startLine": 391,
+          "endLine": 426,
+          "params": [
+            "tag_name",
+            "attribute",
+            "element_namespace",
+            "attribute_namespace"
+          ]
+        },
+        {
+          "name": "GetPropertyType",
+          "startLine": 429,
+          "endLine": 482,
+          "params": [
+            "tag_name",
+            "property",
+            "element_namespace"
+          ]
+        },
+        {
+          "name": "GetDefaultPolicy",
+          "startLine": 484,
+          "endLine": 486,
+          "params": []
+        },
+        {
+          "name": "trusted_types",
+          "startLine": 490,
+          "endLine": 498,
+          "params": [
+            "cx"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "TrustedTypePolicyFactory",
+          "startLine": 38,
+          "endLine": 43,
+          "methods": [
+            "new_inherited",
+            "new",
+            "create_trusted_type_policy",
+            "get_trusted_type_data_for_attribute",
+            "get_trusted_types_compliant_attribute_value",
+            "process_value_with_default_policy",
+            "get_trusted_type_compliant_string",
+            "is_trusted_script",
+            "CreatePolicy",
+            "IsHTML",
+            "IsScript",
+            "IsScriptURL",
+            "EmptyHTML",
+            "EmptyScript",
+            "GetAttributeType",
+            "GetPropertyType",
+            "GetDefaultPolicy"
+          ],
+          "properties": [
+            "reflector_",
+            "default_policy",
+            "policy_names"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TrustedTypePolicyFactory",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "get_trusted_types_compliant_attribute_value",
+          "line": 192,
+          "isDefault": false
+        },
+        {
+          "name": "process_value_with_default_policy",
+          "line": 246,
+          "isDefault": false
+        },
+        {
+          "name": "get_trusted_type_compliant_string",
+          "line": 293,
+          "isDefault": false
+        },
+        {
+          "name": "is_trusted_script",
+          "line": 352,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "convert",
+          "callee": "trusted_html.data().clone",
+          "lineNumber": 52
+        },
+        {
+          "caller": "convert",
+          "callee": "trusted_html.data",
+          "lineNumber": 52
+        },
+        {
+          "caller": "convert",
+          "callee": "trusted_script.data().clone",
+          "lineNumber": 53
+        },
+        {
+          "caller": "convert",
+          "callee": "trusted_script.data",
+          "lineNumber": 53
+        },
+        {
+          "caller": "convert",
+          "callee": "trusted_script_url.data().clone",
+          "lineNumber": 55
+        },
+        {
+          "caller": "convert",
+          "callee": "trusted_script_url.data",
+          "lineNumber": 55
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 66
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "RefCell::new",
+          "lineNumber": 67
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 72
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 72
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 72
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "self.policy_names.borrow",
+          "lineNumber": 87
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "policy_names.iter().map(String::as_ref).collect",
+          "lineNumber": 88
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "policy_names.iter().map",
+          "lineNumber": 88
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "policy_names.iter",
+          "lineNumber": 88
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "global\n                .get_csp_list().is_trusted_type_policy_creation_allowed",
+          "lineNumber": 89
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "global.get_csp_list",
+          "lineNumber": 89
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "Err",
+          "lineNumber": 95
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "Error::Type",
+          "lineNumber": 95
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "c\"Not allowed by CSP\".to_owned",
+          "lineNumber": 95
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "self.default_policy.get().is_some",
+          "lineNumber": 101
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "self.default_policy.get",
+          "lineNumber": 101
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "Err",
+          "lineNumber": 102
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "Error::Type",
+          "lineNumber": 102
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "c\"Already set default policy for factory\".to_owned",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "TrustedTypePolicy::new",
+          "lineNumber": 112
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "policy_name.clone",
+          "lineNumber": 112
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "self.default_policy.set",
+          "lineNumber": 115
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "Some",
+          "lineNumber": 115
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "self.policy_names.borrow_mut().push",
+          "lineNumber": 118
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "self.policy_names.borrow_mut",
+          "lineNumber": 118
+        },
+        {
+          "caller": "create_trusted_type_policy",
+          "callee": "Ok",
+          "lineNumber": 120
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "attribute_namespace.is_none",
+          "lineNumber": 136
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "EventTarget::is_content_event_handler",
+          "lineNumber": 138
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "Some",
+          "lineNumber": 141
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "\"Element \".to_owned",
+          "lineNumber": 143
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "attribute_namespace.is_none",
+          "lineNumber": 152
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "Some",
+          "lineNumber": 155
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "\"HTMLIFrameElement srcdoc\".to_owned",
+          "lineNumber": 157
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "attribute_namespace.is_none",
+          "lineNumber": 161
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "Some",
+          "lineNumber": 164
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "\"HTMLScriptElement src\".to_owned",
+          "lineNumber": 166
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "attribute_namespace.is_none",
+          "lineNumber": 170
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "Some",
+          "lineNumber": 173
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "\"SVGScriptElement href\".to_owned",
+          "lineNumber": 175
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "Some",
+          "lineNumber": 179
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "Some",
+          "lineNumber": 182
+        },
+        {
+          "caller": "get_trusted_type_data_for_attribute",
+          "callee": "\"SVGScriptElement href\".to_owned",
+          "lineNumber": 184
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "attribute_namespace.and_then",
+          "lineNumber": 203
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "Some",
+          "lineNumber": 203
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "Self::get_trusted_type_data_for_attribute",
+          "lineNumber": 206
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "Ok",
+          "lineNumber": 216
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "new_value.convert",
+          "lineNumber": 216
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "expected_type.matches_idl_trusted_type",
+          "lineNumber": 228
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "Ok",
+          "lineNumber": 229
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "new_value.convert",
+          "lineNumber": 229
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "new_value.convert",
+          "lineNumber": 231
+        },
+        {
+          "caller": "get_trusted_types_compliant_attribute_value",
+          "callee": "Self::get_trusted_type_compliant_string",
+          "lineNumber": 235
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "global.trusted_types",
+          "lineNumber": 254
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "global_policy_factory.default_policy.get",
+          "lineNumber": 255
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "Ok",
+          "lineNumber": 256
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "expected_type.as_ref().safe_to_jsval",
+          "lineNumber": 262
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "expected_type.as_ref",
+          "lineNumber": 262
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "cx.into",
+          "lineNumber": 263
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "trusted_type_name_value.handle_mut",
+          "lineNumber": 264
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 265
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "sink.safe_to_jsval",
+          "lineNumber": 269
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "cx.into",
+          "lineNumber": 269
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "sink_value.handle_mut",
+          "lineNumber": 269
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 269
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "default_policy.get_trusted_type_policy_value",
+          "lineNumber": 272
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "Err",
+          "lineNumber": 281
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "Ok",
+          "lineNumber": 284
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "Ok",
+          "lineNumber": 289
+        },
+        {
+          "caller": "process_value_with_default_policy",
+          "callee": "Some",
+          "lineNumber": 289
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "global\n            .get_csp_list().does_sink_type_require_trusted_types",
+          "lineNumber": 303
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "global.get_csp_list",
+          "lineNumber": 303
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "Ok",
+          "lineNumber": 308
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "TrustedTypePolicyFactory::process_value_with_default_policy",
+          "lineNumber": 312
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "input.clone",
+          "lineNumber": 316
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "global\n                    .get_csp_list().should_sink_type_mismatch_violation_be_blocked_by_csp",
+          "lineNumber": 326
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "global.get_csp_list",
+          "lineNumber": 326
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "input.str",
+          "lineNumber": 332
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "Ok",
+          "lineNumber": 336
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "Err",
+          "lineNumber": 339
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "Error::Type",
+          "lineNumber": 339
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "c\"Cannot set value, expected trusted type\".to_owned",
+          "lineNumber": 340
+        },
+        {
+          "caller": "get_trusted_type_compliant_string",
+          "callee": "Ok",
+          "lineNumber": 345
+        },
+        {
+          "caller": "is_trusted_script",
+          "callee": "root_from_handlevalue::<TrustedScript>",
+          "lineNumber": 356
+        },
+        {
+          "caller": "CreatePolicy",
+          "callee": "self.create_trusted_type_policy",
+          "lineNumber": 368
+        },
+        {
+          "caller": "CreatePolicy",
+          "callee": "String::from",
+          "lineNumber": 368
+        },
+        {
+          "caller": "CreatePolicy",
+          "callee": "self.global",
+          "lineNumber": 368
+        },
+        {
+          "caller": "IsHTML",
+          "callee": "root_from_handlevalue::<TrustedHTML>(value, cx).is_ok",
+          "lineNumber": 372
+        },
+        {
+          "caller": "IsHTML",
+          "callee": "root_from_handlevalue::<TrustedHTML>",
+          "lineNumber": 372
+        },
+        {
+          "caller": "IsScript",
+          "callee": "TrustedTypePolicyFactory::is_trusted_script(cx, value).is_ok",
+          "lineNumber": 376
+        },
+        {
+          "caller": "IsScript",
+          "callee": "TrustedTypePolicyFactory::is_trusted_script",
+          "lineNumber": 376
+        },
+        {
+          "caller": "IsScriptURL",
+          "callee": "root_from_handlevalue::<TrustedScriptURL>(value, cx).is_ok",
+          "lineNumber": 380
+        },
+        {
+          "caller": "IsScriptURL",
+          "callee": "root_from_handlevalue::<TrustedScriptURL>",
+          "lineNumber": 380
+        },
+        {
+          "caller": "EmptyHTML",
+          "callee": "TrustedHTML::new",
+          "lineNumber": 384
+        },
+        {
+          "caller": "EmptyHTML",
+          "callee": "DOMString::new",
+          "lineNumber": 384
+        },
+        {
+          "caller": "EmptyHTML",
+          "callee": "self.global",
+          "lineNumber": 384
+        },
+        {
+          "caller": "EmptyScript",
+          "callee": "TrustedScript::new",
+          "lineNumber": 388
+        },
+        {
+          "caller": "EmptyScript",
+          "callee": "DOMString::new",
+          "lineNumber": 388
+        },
+        {
+          "caller": "EmptyScript",
+          "callee": "self.global",
+          "lineNumber": 388
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "tag_name.to_ascii_lowercase",
+          "lineNumber": 399
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "attribute.to_ascii_lowercase",
+          "lineNumber": 401
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "namespace.is_empty",
+          "lineNumber": 404
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "Namespace::from",
+          "lineNumber": 404
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "namespace.is_empty",
+          "lineNumber": 409
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "Some",
+          "lineNumber": 409
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "Namespace::from",
+          "lineNumber": 409
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "TrustedTypePolicyFactory::get_trusted_type_data_for_attribute(\n            &element_namespace,\n            &LocalName::from(local_name),\n            &attribute,\n            attribute_namespace.as_ref(),\n        ).map",
+          "lineNumber": 419
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "TrustedTypePolicyFactory::get_trusted_type_data_for_attribute",
+          "lineNumber": 419
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "LocalName::from",
+          "lineNumber": 421
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "attribute_namespace.as_ref",
+          "lineNumber": 423
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "DOMString::from",
+          "lineNumber": 425
+        },
+        {
+          "caller": "GetAttributeType",
+          "callee": "tuple.0.as_ref",
+          "lineNumber": 425
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "tag_name.to_ascii_lowercase",
+          "lineNumber": 436
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "namespace.is_empty",
+          "lineNumber": 439
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "Namespace::from",
+          "lineNumber": 439
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "QualName::new",
+          "lineNumber": 443
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "LocalName::from",
+          "lineNumber": 443
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "property.str",
+          "lineNumber": 449
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "Some",
+          "lineNumber": 454
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "DOMString::from",
+          "lineNumber": 454
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "Some",
+          "lineNumber": 459
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "DOMString::from",
+          "lineNumber": 459
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "Some",
+          "lineNumber": 464
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "DOMString::from",
+          "lineNumber": 464
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "Some",
+          "lineNumber": 469
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "DOMString::from",
+          "lineNumber": 469
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "Some",
+          "lineNumber": 474
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "DOMString::from",
+          "lineNumber": 474
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "Some",
+          "lineNumber": 476
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "DOMString::from",
+          "lineNumber": 476
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "Some",
+          "lineNumber": 478
+        },
+        {
+          "caller": "GetPropertyType",
+          "callee": "DOMString::from",
+          "lineNumber": 478
+        },
+        {
+          "caller": "GetDefaultPolicy",
+          "callee": "self.default_policy.get",
+          "lineNumber": 485
+        },
+        {
+          "caller": "trusted_types",
+          "callee": "self.downcast::<Window>",
+          "lineNumber": 491
+        },
+        {
+          "caller": "trusted_types",
+          "callee": "window.TrustedTypes",
+          "lineNumber": 492
+        },
+        {
+          "caller": "trusted_types",
+          "callee": "self.downcast::<WorkerGlobalScope>",
+          "lineNumber": 494
+        },
+        {
+          "caller": "trusted_types",
+          "callee": "worker.TrustedTypes",
+          "lineNumber": 495
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 19,
+        "classCount": 1
+      }
+    }
+  ]
+}

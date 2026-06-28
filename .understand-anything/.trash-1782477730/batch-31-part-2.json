@@ -1,0 +1,1338 @@
+{
+  "nodes": [
+    {
+      "id": "file:ports/servoshell/egl/host_trait.rs",
+      "type": "file",
+      "name": "host_trait.rs",
+      "filePath": "ports/servoshell/egl/host_trait.rs",
+      "summary": "Defines the HostTrait interface that embedders must implement to receive callbacks from Servo, including alerts, load status, title/URL changes, IME events, media session, and select element prompts.",
+      "tags": [
+        "trait",
+        "interface",
+        "embedder-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/egl/log.rs",
+      "type": "file",
+      "name": "log.rs",
+      "filePath": "ports/servoshell/egl/log.rs",
+      "summary": "Redirects stdout and stderr to the logging system via a pipe-based mechanism for environments like Android where console output is not available, running a dedicated reader thread.",
+      "tags": [
+        "logging",
+        "stdout-redirect",
+        "pipe"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/egl/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "ports/servoshell/egl/mod.rs",
+      "summary": "Barrel module that re-exports the EGL submodules for Android and OpenHarmony, along with shared app, host_trait, and log modules.",
+      "tags": [
+        "barrel",
+        "module",
+        "egl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/egl/ohos/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OpenHarmony (OHOS) native bridge providing the interface between ArkUI/JS and the Servo engine, handling surface management, touch/key input, IME, vsync, and lifecycle callbacks.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "platform-bridge",
+        "input-handling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:ports/servoshell/egl/host_trait.rs:HostTrait",
+      "type": "class",
+      "name": "HostTrait",
+      "filePath": "ports/servoshell/egl/host_trait.rs",
+      "summary": "Trait defining the embedder callback interface for Servo events including alerts, load status, title/URL changes, IME, media session, and select element prompts.",
+      "tags": [
+        "trait",
+        "embedder-api",
+        "interface"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        8,
+        45
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/log.rs:redirect_stdout_and_stderr",
+      "type": "function",
+      "name": "redirect_stdout_and_stderr",
+      "filePath": "ports/servoshell/egl/log.rs",
+      "summary": "Redirects stdout and stderr to the logging system by creating a pipe and spawning a reader thread that forwards output to the log framework.",
+      "tags": [
+        "logging",
+        "stdout-redirect",
+        "pipe",
+        "thread"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        20,
+        104
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:get_raw_window_handle",
+      "type": "function",
+      "name": "get_raw_window_handle",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Extracts native window handle from XComponent.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        130,
+        142
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:get_display_density",
+      "type": "function",
+      "name": "get_display_density",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS bridge function.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        153,
+        166
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:get_native_values",
+      "type": "function",
+      "name": "get_native_values",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Retrieves OHOS system values (cache, density, device info).",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        169,
+        192
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:init_app",
+      "type": "function",
+      "name": "init_app",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Initializes Servo on OHOS with event loop, prefs, and window system.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        195,
+        288
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:fmt",
+      "type": "function",
+      "name": "fmt",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Formats ServoAction for display.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        359,
+        403
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:do_action",
+      "type": "function",
+      "name": "do_action",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Dispatches ServoAction (navigation, touch, key, IME, resize) to Servo.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        418,
+        524
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:request_vsync_callback",
+      "type": "function",
+      "name": "request_vsync_callback",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Requests OHOS native vsync callback.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        531,
+        538
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_vsync_cb",
+      "type": "function",
+      "name": "on_vsync_cb",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "VSync callback notifying Servo refresh driver.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        541,
+        550
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:main_thread",
+      "type": "function",
+      "name": "main_thread",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS main thread entry creating app and starting event loop.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        552,
+        571
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_surface_created_cb",
+      "type": "function",
+      "name": "on_surface_created_cb",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS surface creation callback, setting up rendering window.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        574,
+        602
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:get_xcomponent_offset",
+      "type": "function",
+      "name": "get_xcomponent_offset",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Retrieves XComponent offset relative to window.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        610,
+        627
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:get_xcomponent_size",
+      "type": "function",
+      "name": "get_xcomponent_size",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Retrieves XComponent dimensions.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        635,
+        657
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_surface_changed_cb",
+      "type": "function",
+      "name": "on_surface_changed_cb",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS surface resize callback.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        659,
+        675
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_dispatch_touch_event_cb",
+      "type": "function",
+      "name": "on_dispatch_touch_event_cb",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS touch event callback, converting coordinates and dispatching.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        681,
+        712
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_dispatch_key_event",
+      "type": "function",
+      "name": "on_dispatch_key_event",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS key event callback, converting keycodes and dispatching.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        714,
+        745
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:initialize_logging_once",
+      "type": "function",
+      "name": "initialize_logging_once",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Initializes OHOS logging with configurable filters.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        774,
+        817
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:set_log_filter",
+      "type": "function",
+      "name": "set_log_filter",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Sets OHOS log filter.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        819,
+        836
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:register_xcomponent_callbacks",
+      "type": "function",
+      "name": "register_xcomponent_callbacks",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Registers OHOS XComponent native callbacks.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        838,
+        875
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:debug_jsobject",
+      "type": "function",
+      "name": "debug_jsobject",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS bridge function.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        878,
+        889
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:init",
+      "type": "function",
+      "name": "init",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Initializes OHOS NAPI exports.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        892,
+        902
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:load_url",
+      "type": "function",
+      "name": "load_url",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS bridge function.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        905,
+        908
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:go_back",
+      "type": "function",
+      "name": "go_back",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS bridge function.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        911,
+        913
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:go_forward",
+      "type": "function",
+      "name": "go_forward",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS bridge function.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        916,
+        918
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:register_url_callback",
+      "type": "function",
+      "name": "register_url_callback",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Registers JS URL change callback.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        921,
+        933
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:register_terminate_callback",
+      "type": "function",
+      "name": "register_terminate_callback",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Registers JS termination callback.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        936,
+        942
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:register_prompt_toast_callback",
+      "type": "function",
+      "name": "register_prompt_toast_callback",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Registers JS prompt/toast callback.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        945,
+        953
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:init_servo",
+      "type": "function",
+      "name": "init_servo",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Initializes Servo engine on OHOS.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        956,
+        962
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:convert_ime_options",
+      "type": "function",
+      "name": "convert_ime_options",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Converts OHOS IME options to Servo InputMethodControl.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        989,
+        1026
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS bridge function.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1034,
+        1036
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS bridge function.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1064,
+        1068
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:try_create_ime_proxy",
+      "type": "function",
+      "name": "try_create_ime_proxy",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Creates OHOS IME proxy for text input.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1070,
+        1084
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:show_alert",
+      "type": "function",
+      "name": "show_alert",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Shows alert dialog via OHOS JS callback.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        1112,
+        1133
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:notify_load_status_changed",
+      "type": "function",
+      "name": "notify_load_status_changed",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Notifies OHOS JS about load status.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        1135,
+        1151
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_url_changed",
+      "type": "function",
+      "name": "on_url_changed",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Notifies OHOS JS about URL changes.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1157,
+        1168
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_ime_show",
+      "type": "function",
+      "name": "on_ime_show",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Shows IME keyboard on OHOS.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        1186,
+        1206
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_ime_hide",
+      "type": "function",
+      "name": "on_ime_hide",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Hides IME keyboard on OHOS.",
+      "tags": [
+        "ohos",
+        "openharmony",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1208,
+        1219
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:InitOpts",
+      "type": "class",
+      "name": "InitOpts",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS struct.",
+      "tags": [
+        "ohos",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        292,
+        297
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:XComponentWrapper",
+      "type": "class",
+      "name": "XComponentWrapper",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS struct.",
+      "tags": [
+        "ohos",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        315,
+        315
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:WindowWrapper",
+      "type": "class",
+      "name": "WindowWrapper",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS struct.",
+      "tags": [
+        "ohos",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        318,
+        318
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:TouchEventType",
+      "type": "class",
+      "name": "TouchEventType",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS struct.",
+      "tags": [
+        "ohos",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        323,
+        329
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:ServoAction",
+      "type": "class",
+      "name": "ServoAction",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Enum of actions dispatched to the OHOS Servo bridge.",
+      "tags": [
+        "ohos",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        331,
+        356
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:WakeupCallback",
+      "type": "class",
+      "name": "WakeupCallback",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "Channel-based event loop waker for OHOS.",
+      "tags": [
+        "ohos",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1029,
+        1031
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:HostCallbacks",
+      "type": "class",
+      "name": "HostCallbacks",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS host callback forwarding to JS layer.",
+      "tags": [
+        "ohos",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        1052,
+        1054
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:ServoIme",
+      "type": "class",
+      "name": "ServoIme",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OHOS IME interface.",
+      "tags": [
+        "ohos",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1087,
+        1089
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:ports/servoshell/egl/host_trait.rs",
+      "target": "class:ports/servoshell/egl/host_trait.rs:HostTrait",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/host_trait.rs",
+      "target": "class:ports/servoshell/egl/host_trait.rs:HostTrait",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/log.rs",
+      "target": "function:ports/servoshell/egl/log.rs:redirect_stdout_and_stderr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/log.rs",
+      "target": "function:ports/servoshell/egl/log.rs:redirect_stdout_and_stderr",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:get_raw_window_handle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:get_raw_window_handle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:get_display_density",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:get_native_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:init_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:fmt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:do_action",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:request_vsync_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:request_vsync_callback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_vsync_cb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:main_thread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_surface_created_cb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:get_xcomponent_offset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:get_xcomponent_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_surface_changed_cb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_dispatch_touch_event_cb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_dispatch_key_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:initialize_logging_once",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:set_log_filter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:set_log_filter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:register_xcomponent_callbacks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:debug_jsobject",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:load_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:load_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:go_back",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:go_back",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:go_forward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:go_forward",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:register_url_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:register_url_callback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:register_terminate_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:register_terminate_callback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:register_prompt_toast_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:register_prompt_toast_callback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:init_servo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:init_servo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:convert_ime_options",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:try_create_ime_proxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:show_alert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:notify_load_status_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_url_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_ime_show",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_ime_hide",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:InitOpts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:InitOpts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:XComponentWrapper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:XComponentWrapper",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:WindowWrapper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:WindowWrapper",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:TouchEventType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:TouchEventType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:ServoAction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:ServoAction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:WakeupCallback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:WakeupCallback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:HostCallbacks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:ServoIme",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/mod.rs",
+      "target": "file:ports/servoshell/egl/android/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/mod.rs",
+      "target": "file:ports/servoshell/egl/app.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/mod.rs",
+      "target": "file:ports/servoshell/egl/host_trait.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/mod.rs",
+      "target": "file:ports/servoshell/egl/log.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/mod.rs",
+      "target": "file:ports/servoshell/egl/ohos/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "file:ports/servoshell/egl/app.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "file:ports/servoshell/egl/host_trait.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "file:ports/servoshell/egl/ohos/resources.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

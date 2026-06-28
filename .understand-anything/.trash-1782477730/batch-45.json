@@ -1,0 +1,1203 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/ansic/clex.py",
+      "type": "file",
+      "name": "clex.py",
+      "filePath": "components/script_bindings/third_party/ply/example/ansic/clex.py",
+      "summary": "PLY lexer for ANSI C that tokenizes C source code into language tokens including identifiers, keywords, preprocessor directives, comments, and operators, using a reserved word map for keyword detection.",
+      "tags": ["lexer", "ansi-c", "tokenizer", "ply"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "language": "python",
+      "type": "file",
+      "name": "cparse.py",
+      "filePath": "components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "summary": "PLY parser for ANSI C grammar implementing the full C language specification with 170 production rules covering declarations, expressions, statements, and control flow constructs.",
+      "tags": ["parser", "ansi-c", "grammar", "ply"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/calc/calc.py",
+      "type": "file",
+      "name": "calc.py",
+      "filePath": "components/script_bindings/third_party/ply/example/calc/calc.py",
+      "summary": "Simple PLY calculator example demonstrating basic arithmetic expression parsing with variables, precedence handling, and a read-eval-print loop.",
+      "tags": ["example", "calculator", "ply", "parser-demo"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/calcdebug/calc.py",
+      "type": "file",
+      "name": "calc.py",
+      "filePath": "components/script_bindings/third_party/ply/example/calcdebug/calc.py",
+      "summary": "PLY calculator example with debug mode enabled, demonstrating how to trace parser construction and parsing steps for educational purposes.",
+      "tags": ["example", "calculator", "ply", "debug"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/calceof/calc.py",
+      "type": "file",
+      "name": "calc.py",
+      "filePath": "components/script_bindings/third_party/ply/example/calceof/calc.py",
+      "summary": "PLY calculator example with EOF handling support, allowing multi-line input by prompting for continuation when the end of input is reached.",
+      "tags": ["example", "calculator", "ply", "eof-handling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "type": "file",
+      "name": "calc.py",
+      "filePath": "components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "summary": "PLY calculator example using a class-based approach where lex and grammar rules are encapsulated within a Calc class, demonstrating object-oriented parser organization.",
+      "tags": ["example", "calculator", "ply", "class-based"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/hedit/hedit.py",
+      "type": "file",
+      "name": "hedit.py",
+      "filePath": "components/script_bindings/third_party/ply/example/hedit/hedit.py",
+      "summary": "Minimal PLY lexer example implementing H-edit descriptor tokenization for processing hexadecimal edit commands.",
+      "tags": ["example", "lexer", "ply", "hedit"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "type": "file",
+      "name": "calc.py",
+      "filePath": "components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "summary": "PLY calculator using the new-style class-based API where lex and yacc rules are defined as class methods, demonstrating the recommended PLY pattern for modular parser construction.",
+      "tags": ["example", "calculator", "ply", "class-based"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/optcalc/calc.py",
+      "type": "file",
+      "name": "calc.py",
+      "filePath": "components/script_bindings/third_party/ply/example/optcalc/calc.py",
+      "summary": "PLY calculator example with optimization enabled, demonstrating how to use the optimize flag for faster parser table generation using cached tables.",
+      "tags": ["example", "calculator", "ply", "optimized"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/example/unicalc/calc.py",
+      "type": "file",
+      "name": "calc.py",
+      "filePath": "components/script_bindings/third_party/ply/example/unicalc/calc.py",
+      "summary": "PLY unit-aware calculator example demonstrating how to implement expression parsing with dimensional analysis and unit conversions.",
+      "tags": ["example", "calculator", "ply", "unit-conversion"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "file",
+      "name": "lex.py",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "summary": "Core PLY lexer module providing tokenization infrastructure including the Lexer class, LexerReflect introspection, state management, regex-based token matching, and lextab-based optimization. This is the foundational lexical analysis engine for the PLY parser generator.",
+      "tags": ["lexer", "tokenizer", "ply-core", "regex", "state-machine"],
+      "complexity": "complex",
+      "languageNotes": "Python implementation using regex named groups for token dispatch, with support for lexer states, EOF handlers, and optional lextab module caching."
+    },
+    {
+      "id": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "file",
+      "name": "yacc.py",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "summary": "Core PLY LALR(1) parser generator implementing grammar specification, LR table construction, shift-reduce parsing with error recovery, precedence handling, and parser table serialization. This is the foundational parsing engine for the PLY library.",
+      "tags": ["parser", "lalr", "ply-core", "grammar", "parser-generator"],
+      "complexity": "complex",
+      "languageNotes": "Complete LALR(1) parser generator with LR(0) item sets, LALR lookahead computation, and multiple parse modes (debug, optimized, no-track)."
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_type_specifier",
+      "type": "function",
+      "name": "p_type_specifier",
+      "filePath": "components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "lineRange": [131, 145],
+      "summary": "Grammar rule handling ANSI C type specifiers including void, char, short, int, long, float, double, signed, unsigned, and struct/union/enum specifiers.",
+      "tags": ["grammar-rule", "c-types", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_assignment_operator",
+      "type": "function",
+      "name": "p_assignment_operator",
+      "filePath": "components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "lineRange": [715, 729],
+      "summary": "Grammar rule defining all C assignment operators including simple assignment and compound assignments like +=, -=, *=, and bitwise operators.",
+      "tags": ["grammar-rule", "c-operators", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_statement",
+      "type": "function",
+      "name": "p_statement",
+      "filePath": "components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "lineRange": [553, 562],
+      "summary": "Grammar rule dispatching between labeled, expression, compound, selection, iteration, and jump statement types for ANSI C.",
+      "tags": ["grammar-rule", "c-statements", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/calc/calc.py:p_expression_binop",
+      "type": "function",
+      "name": "p_expression_binop",
+      "filePath": "components/script_bindings/third_party/ply/example/calc/calc.py",
+      "lineRange": [68, 80],
+      "summary": "Grammar rule for binary arithmetic expressions handling addition, subtraction, multiplication, division, and modulo with proper operator precedence.",
+      "tags": ["grammar-rule", "arithmetic", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/calcdebug/calc.py:p_expression_binop",
+      "type": "function",
+      "name": "p_expression_binop",
+      "filePath": "components/script_bindings/third_party/ply/example/calcdebug/calc.py",
+      "lineRange": [68, 80],
+      "summary": "Grammar rule for binary arithmetic expressions handling addition, subtraction, multiplication, division, and modulo with proper operator precedence.",
+      "tags": ["grammar-rule", "arithmetic", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/calceof/calc.py:p_expression_binop",
+      "type": "function",
+      "name": "p_expression_binop",
+      "filePath": "components/script_bindings/third_party/ply/example/calceof/calc.py",
+      "lineRange": [77, 89],
+      "summary": "Grammar rule for binary arithmetic expressions handling addition, subtraction, multiplication, division, and modulo with proper operator precedence.",
+      "tags": ["grammar-rule", "arithmetic", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/optcalc/calc.py:p_expression_binop",
+      "type": "function",
+      "name": "p_expression_binop",
+      "filePath": "components/script_bindings/third_party/ply/example/optcalc/calc.py",
+      "lineRange": [79, 93],
+      "summary": "Grammar rule for binary arithmetic expressions handling addition, subtraction, multiplication, division, and modulo with proper operator precedence.",
+      "tags": ["grammar-rule", "arithmetic", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/unicalc/calc.py:p_expression_binop",
+      "type": "function",
+      "name": "p_expression_binop",
+      "filePath": "components/script_bindings/third_party/ply/example/unicalc/calc.py",
+      "lineRange": [78, 90],
+      "summary": "Grammar rule for binary arithmetic expressions handling addition, subtraction, multiplication, division, and modulo with proper operator precedence.",
+      "tags": ["grammar-rule", "arithmetic", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/example/hedit/hedit.py:t_H_EDIT_DESCRIPTOR",
+      "type": "function",
+      "name": "t_H_EDIT_DESCRIPTOR",
+      "filePath": "components/script_bindings/third_party/ply/example/hedit/hedit.py",
+      "lineRange": [29, 38],
+      "summary": "Token rule for H-edit descriptors that parses hexadecimal address and byte count from indexed edit commands.",
+      "tags": ["token-rule", "hex-edit", "ply"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/lex.py:lex",
+      "type": "function",
+      "name": "lex",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [863, 1047],
+      "summary": "Main PLY lexer entry point that reads module-level token specifications, builds the Lexer instance, validates rules, compiles regex patterns, and optionally writes or reads cached lextab modules for faster startup.",
+      "tags": ["entry-point", "lexer", "ply-core", "initialization"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/lex.py:_form_master_re",
+      "type": "function",
+      "name": "_form_master_re",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [493, 523],
+      "summary": "Internal helper that compiles individual token regex patterns into a combined master regular expression per lexer state, handling named groups and function-based token dispatch.",
+      "tags": ["regex", "internal-helper", "ply-core"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/lex.py:_statetoken",
+      "type": "function",
+      "name": "_statetoken",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [533, 549],
+      "summary": "Internal helper that parses state-qualified token names (e.g., 'INITIAL,token_name') to extract state and token components for conditional lexer rules.",
+      "tags": ["internal-helper", "state-management", "ply-core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/lex.py:runmain",
+      "type": "function",
+      "name": "runmain",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [1055, 1080],
+      "summary": "Interactive lexer test harness that reads input from a file or stdin and prints token stream output, useful for debugging token definitions.",
+      "tags": ["utility", "debugging", "ply-core"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/lex.py:TOKEN",
+      "type": "function",
+      "name": "TOKEN",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [1089, 1096],
+      "summary": "Decorator that attaches a regex pattern string to a token function, enabling inline regex specification for complex token patterns.",
+      "tags": ["decorator", "regex", "ply-core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/yacc.py:yacc",
+      "type": "function",
+      "name": "yacc",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [3214, 3494],
+      "summary": "Main PLY parser generator entry point that reads grammar rules from a module, constructs the Grammar, builds LALR parse tables via LRGeneratedTable, creates the LRParser, and optionally serializes tables to disk.",
+      "tags": ["entry-point", "parser-generator", "ply-core", "lalr"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/yacc.py:call_errorfunc",
+      "type": "function",
+      "name": "call_errorfunc",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [188, 198],
+      "summary": "Error function dispatcher that wraps user-provided p_error functions, handling both bound and unbound method signatures consistently.",
+      "tags": ["error-handling", "ply-core", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/yacc.py:digraph",
+      "type": "function",
+      "name": "digraph",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [2055, 2064],
+      "summary": "Implements the digraph algorithm for LALR lookahead set computation, traversing the lookback relation graph to compute read and follow sets.",
+      "tags": ["algorithm", "lalr", "ply-core", "graph-algorithm"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/yacc.py:traverse",
+      "type": "function",
+      "name": "traverse",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [2066, 2087],
+      "summary": "Recursive graph traversal helper used by the digraph algorithm to compute transitive closures for LALR lookahead propagation.",
+      "tags": ["algorithm", "lalr", "ply-core"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script_bindings/third_party/ply/ply/yacc.py:parse_grammar",
+      "type": "function",
+      "name": "parse_grammar",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [2895, 2927],
+      "summary": "Alternative grammar specification parser that extracts production rules from docstrings, supporting C-style grammar notation within Python strings.",
+      "tags": ["grammar-parsing", "ply-core", "alternative-api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/example/classcalc/calc.py:Parser",
+      "type": "class",
+      "name": "Parser",
+      "filePath": "components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "lineRange": [23, 57],
+      "summary": "Abstract parser base class for the class-based PLY calculator, providing initialization from a module path and a run loop for interactive input.",
+      "tags": ["base-class", "calculator", "ply"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/example/classcalc/calc.py:Calc",
+      "type": "class",
+      "name": "Calc",
+      "filePath": "components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "lineRange": [60, 161],
+      "summary": "Main calculator class encapsulating lexer token rules and parser grammar productions as class methods, demonstrating the class-based PLY pattern for arithmetic expression evaluation.",
+      "tags": ["calculator", "parser", "ply"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/example/newclasscalc/calc.py:Parser",
+      "type": "class",
+      "name": "Parser",
+      "filePath": "components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "lineRange": [25, 59],
+      "summary": "Abstract parser base class for the new-style PLY calculator, providing initialization with automatic lex/yacc construction and an interactive run loop.",
+      "tags": ["base-class", "calculator", "ply"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/example/newclasscalc/calc.py:Calc",
+      "type": "class",
+      "name": "Calc",
+      "filePath": "components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "lineRange": [62, 163],
+      "summary": "New-style calculator class with lexer tokens and parser grammar as class methods, demonstrating the recommended PLY pattern for modular parser construction.",
+      "tags": ["calculator", "parser", "ply"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/lex.py:Lexer",
+      "type": "class",
+      "name": "Lexer",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [115, 424],
+      "summary": "Core lexer runtime class implementing input buffering, token-by-token scanning via compiled regex dispatch, lexer state management (push/pop), error handling, and EOF management. The primary workhorse of the PLY lexer.",
+      "tags": ["core-class", "lexer", "state-machine", "ply-core"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/lex.py:LexerReflect",
+      "type": "class",
+      "name": "LexerReflect",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [558, 856],
+      "summary": "Reflection/introspection class that scans a user module for PLY lexer specifications -- tokens lists, literals, state declarations, and token rules with regex patterns -- and validates them for correctness.",
+      "tags": ["reflection", "validation", "ply-core", "introspection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/lex.py:LexToken",
+      "type": "class",
+      "name": "LexToken",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [64, 69],
+      "summary": "Simple container class for lexer tokens storing type, value, line number, and lexer position with string representation methods.",
+      "tags": ["data-class", "token", "ply-core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/lex.py:PlyLogger",
+      "type": "class",
+      "name": "PlyLogger",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [75, 89],
+      "summary": "Logger wrapper that writes PLY diagnostic messages (critical, warning, error) to an output file, used for debugging lexer construction.",
+      "tags": ["logging", "utility", "ply-core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/lex.py:NullLogger",
+      "type": "class",
+      "name": "NullLogger",
+      "filePath": "components/script_bindings/third_party/ply/ply/lex.py",
+      "lineRange": [93, 98],
+      "summary": "Silent logger that discards all messages by returning itself via __getattribute__, used as a default when no debug logging is requested.",
+      "tags": ["logging", "utility", "ply-core", "null-object"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRParser",
+      "type": "class",
+      "name": "LRParser",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [285, 1273],
+      "summary": "Core LALR parser runtime implementing three parsing modes: debug (verbose tracing), optimized (fast with error tracking), and notrack (fastest without tracking). Manages parse stack, action/goto tables, error recovery, and lookahead handling.",
+      "tags": ["core-class", "parser", "lalr", "ply-core"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:Grammar",
+      "type": "class",
+      "name": "Grammar",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [1473, 1958],
+      "summary": "Grammar representation class that stores all productions, terminals, nonterminals, precedence rules, and start symbol. Provides validation methods including unreachable symbol detection, infinite cycle checking, and FIRST/FOLLOW set computation.",
+      "tags": ["core-class", "grammar", "validation", "ply-core"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRGeneratedTable",
+      "type": "class",
+      "name": "LRGeneratedTable",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [2099, 2866],
+      "summary": "LR table generator class that computes LR(0) item sets, closure/goto operations, LALR lookahead sets using the digraph algorithm, and constructs the full action/goto parse tables with conflict warnings.",
+      "tags": ["core-class", "table-generation", "lalr", "ply-core"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:ParserReflect",
+      "type": "class",
+      "name": "ParserReflect",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [2936, 3206],
+      "summary": "Reflection/introspection class that scans a user module for PLY parser specifications -- grammar functions, tokens, precedence, start symbol, and error handler -- and validates them before parser construction.",
+      "tags": ["reflection", "validation", "ply-core", "introspection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:Production",
+      "type": "class",
+      "name": "Production",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [1309, 1375],
+      "summary": "Grammar production rule representation storing LHS nonterminal, RHS symbols, precedence, and the associated callable. Supports LR item generation and symbol binding.",
+      "tags": ["grammar", "production", "ply-core"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:YaccProduction",
+      "type": "class",
+      "name": "YaccProduction",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [233, 277],
+      "summary": "Parser production value container passed to grammar action functions, providing indexed access to symbol values, line number tracking, and slice operations similar to PLY's parser input semantics.",
+      "tags": ["data-class", "parser-semantics", "ply-core"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRTable",
+      "type": "class",
+      "name": "LRTable",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [1971, 2028],
+      "summary": "Base class for LR parse tables providing serialization and deserialization via Python pickle and module-based table loading from generated parser modules.",
+      "tags": ["table", "serialization", "ply-core"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:YaccSymbol",
+      "type": "class",
+      "name": "YaccSymbol",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [217, 222],
+      "summary": "Container class for grammar symbols on the parse stack, storing the symbol type and optional value with string representation.",
+      "tags": ["data-class", "parser-semantics", "ply-core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRItem",
+      "type": "class",
+      "name": "LRItem",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [1427, 1447],
+      "summary": "LR(0) item representation storing a production with a dot position, used during LR table construction for closure and goto computation.",
+      "tags": ["data-class", "lr-item", "ply-core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:MiniProduction",
+      "type": "class",
+      "name": "MiniProduction",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [1381, 1400],
+      "summary": "Lightweight production representation used during grammar debugging and informational display, providing a compact string view of production rules.",
+      "tags": ["data-class", "grammar", "ply-core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:PlyLogger",
+      "type": "class",
+      "name": "PlyLogger",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [109, 124],
+      "summary": "Logger wrapper that writes PLY diagnostic messages (debug, warning, error) to an output file, used during parser construction and debugging.",
+      "tags": ["logging", "utility", "ply-core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script_bindings/third_party/ply/ply/yacc.py:NullLogger",
+      "type": "class",
+      "name": "NullLogger",
+      "filePath": "components/script_bindings/third_party/ply/ply/yacc.py",
+      "lineRange": [127, 132],
+      "summary": "Silent logger that discards all PLY parser diagnostic messages, used as a default no-op logger when debug is disabled.",
+      "tags": ["logging", "utility", "ply-core", "null-object"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/clex.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "target": "file:components/script_bindings/third_party/ply/example/ansic/clex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calcdebug/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calcdebug/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calceof/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calceof/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/hedit/hedit.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/optcalc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/optcalc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/unicalc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/unicalc/calc.py",
+      "target": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_type_specifier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_assignment_operator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_statement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calc/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/calc/calc.py:p_expression_binop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calcdebug/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/calcdebug/calc.py:p_expression_binop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calceof/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/calceof/calc.py:p_expression_binop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/optcalc/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/optcalc/calc.py:p_expression_binop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/unicalc/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/unicalc/calc.py:p_expression_binop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/hedit/hedit.py",
+      "target": "function:components/script_bindings/third_party/ply/example/hedit/hedit.py:t_H_EDIT_DESCRIPTOR",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "target": "class:components/script_bindings/third_party/ply/example/classcalc/calc.py:Parser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "target": "class:components/script_bindings/third_party/ply/example/classcalc/calc.py:Calc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "target": "class:components/script_bindings/third_party/ply/example/newclasscalc/calc.py:Parser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "target": "class:components/script_bindings/third_party/ply/example/newclasscalc/calc.py:Calc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:Lexer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:LexerReflect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:LexToken",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:PlyLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:NullLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:lex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:_form_master_re",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:_statetoken",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:runmain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:TOKEN",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:yacc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:call_errorfunc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:digraph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:traverse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:parse_grammar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRParser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:Grammar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRGeneratedTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:ParserReflect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:Production",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:YaccProduction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRTable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:YaccSymbol",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:MiniProduction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:PlyLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:NullLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_type_specifier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_assignment_operator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/ansic/cparse.py",
+      "target": "function:components/script_bindings/third_party/ply/example/ansic/cparse.py:p_statement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calc/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/calc/calc.py:p_expression_binop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calcdebug/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/calcdebug/calc.py:p_expression_binop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/calceof/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/calceof/calc.py:p_expression_binop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/optcalc/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/optcalc/calc.py:p_expression_binop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/unicalc/calc.py",
+      "target": "function:components/script_bindings/third_party/ply/example/unicalc/calc.py:p_expression_binop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/hedit/hedit.py",
+      "target": "function:components/script_bindings/third_party/ply/example/hedit/hedit.py:t_H_EDIT_DESCRIPTOR",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "target": "class:components/script_bindings/third_party/ply/example/classcalc/calc.py:Parser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/classcalc/calc.py",
+      "target": "class:components/script_bindings/third_party/ply/example/classcalc/calc.py:Calc",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "target": "class:components/script_bindings/third_party/ply/example/newclasscalc/calc.py:Parser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/example/newclasscalc/calc.py",
+      "target": "class:components/script_bindings/third_party/ply/example/newclasscalc/calc.py:Calc",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:Lexer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:LexerReflect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:LexToken",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:PlyLogger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/lex.py:NullLogger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:lex",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:_form_master_re",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:_statetoken",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:runmain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/lex.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/lex.py:TOKEN",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:yacc",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:call_errorfunc",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:digraph",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:traverse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "function:components/script_bindings/third_party/ply/ply/yacc.py:parse_grammar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRParser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:Grammar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRGeneratedTable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:ParserReflect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:Production",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:YaccProduction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRTable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:YaccSymbol",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:LRItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:MiniProduction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:PlyLogger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script_bindings/third_party/ply/ply/yacc.py",
+      "target": "class:components/script_bindings/third_party/ply/ply/yacc.py:NullLogger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

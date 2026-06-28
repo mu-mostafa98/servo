@@ -1,0 +1,1805 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "ffi/capi/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 257,
+      "nonEmptyLines": 233,
+      "functions": [
+        {
+          "name": "default_event_loop_waker_wake_callback",
+          "startLine": 61,
+          "endLine": 61,
+          "params": []
+        },
+        {
+          "name": "default",
+          "startLine": 64,
+          "endLine": 68,
+          "params": []
+        },
+        {
+          "name": "clone_box",
+          "startLine": 72,
+          "endLine": 74,
+          "params": []
+        },
+        {
+          "name": "wake",
+          "startLine": 76,
+          "endLine": 78,
+          "params": []
+        },
+        {
+          "name": "servo_builder_create",
+          "startLine": 88,
+          "endLine": 90,
+          "params": []
+        },
+        {
+          "name": "servo_builder_set_preferences",
+          "startLine": 113,
+          "endLine": 128,
+          "params": [
+            "builder",
+            "preferences"
+          ]
+        },
+        {
+          "name": "servo_builder_set_options",
+          "startLine": 151,
+          "endLine": 163,
+          "params": [
+            "builder",
+            "options"
+          ]
+        },
+        {
+          "name": "servo_builder_set_event_loop_waker",
+          "startLine": 185,
+          "endLine": 196,
+          "params": [
+            "builder",
+            "event_loop_waker"
+          ]
+        },
+        {
+          "name": "servo_builder_build",
+          "startLine": 215,
+          "endLine": 235,
+          "params": [
+            "builder"
+          ]
+        },
+        {
+          "name": "servo_builder_free",
+          "startLine": 249,
+          "endLine": 257,
+          "params": [
+            "builder"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ServoBuilder",
+          "startLine": 32,
+          "endLine": 36,
+          "methods": [],
+          "properties": [
+            "options",
+            "event_loop_waker",
+            "preferences"
+          ]
+        },
+        {
+          "name": "ServoEventLoopWaker",
+          "startLine": 55,
+          "endLine": 57,
+          "methods": [
+            "default",
+            "clone_box",
+            "wake"
+          ],
+          "properties": [
+            "wake_callback"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ServoBuilder",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "ServoEventLoopWaker",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "default_event_loop_waker_wake_callback",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "servo_builder_create",
+          "line": 88,
+          "isDefault": false
+        },
+        {
+          "name": "servo_builder_set_preferences",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "servo_builder_set_options",
+          "line": 151,
+          "isDefault": false
+        },
+        {
+          "name": "servo_builder_set_event_loop_waker",
+          "line": 185,
+          "isDefault": false
+        },
+        {
+          "name": "servo_builder_build",
+          "line": 215,
+          "isDefault": false
+        },
+        {
+          "name": "servo_builder_free",
+          "line": 249,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "clone_box",
+          "callee": "Box::new",
+          "lineNumber": 73
+        },
+        {
+          "caller": "wake",
+          "callee": "(self.wake_callback)",
+          "lineNumber": 77
+        },
+        {
+          "caller": "servo_builder_create",
+          "callee": "Box::into_raw",
+          "lineNumber": 89
+        },
+        {
+          "caller": "servo_builder_create",
+          "callee": "Box::new",
+          "lineNumber": 89
+        },
+        {
+          "caller": "servo_builder_create",
+          "callee": "ServoBuilder::default",
+          "lineNumber": 89
+        },
+        {
+          "caller": "servo_builder_set_preferences",
+          "callee": "Some",
+          "lineNumber": 126
+        },
+        {
+          "caller": "servo_builder_set_preferences",
+          "callee": "Box::from_raw",
+          "lineNumber": 126
+        },
+        {
+          "caller": "servo_builder_set_options",
+          "callee": "Some",
+          "lineNumber": 161
+        },
+        {
+          "caller": "servo_builder_set_options",
+          "callee": "Box::from_raw",
+          "lineNumber": 161
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "servo_api::ServoBuilder::default",
+          "lineNumber": 217
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "builder.options.take",
+          "lineNumber": 223
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "rust_builder.opts",
+          "lineNumber": 224
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "builder.preferences.take",
+          "lineNumber": 227
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "rust_builder.preferences",
+          "lineNumber": 228
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "rust_builder.event_loop_waker",
+          "lineNumber": 231
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "Box::new",
+          "lineNumber": 231
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "rust_builder.build",
+          "lineNumber": 233
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "Box::into_raw",
+          "lineNumber": 234
+        },
+        {
+          "caller": "servo_builder_build",
+          "callee": "Box::new",
+          "lineNumber": 234
+        },
+        {
+          "caller": "servo_builder_free",
+          "callee": "Box::from_raw",
+          "lineNumber": 255
+        }
+      ],
+      "metrics": {
+        "importCount": 6,
+        "exportCount": 9,
+        "functionCount": 10,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "ffi/capi/options.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 610,
+      "nonEmptyLines": 559,
+      "functions": [
+        {
+          "name": "servo_options_create",
+          "startLine": 32,
+          "endLine": 35,
+          "params": []
+        },
+        {
+          "name": "servo_options_enable_time_profiling_to_file",
+          "startLine": 57,
+          "endLine": 74,
+          "params": [
+            "options",
+            "file_path"
+          ]
+        },
+        {
+          "name": "servo_options_set_time_profiler_trace_path",
+          "startLine": 97,
+          "endLine": 114,
+          "params": [
+            "options",
+            "trace_path"
+          ]
+        },
+        {
+          "name": "servo_options_enable_time_profiling_to_stdout",
+          "startLine": 129,
+          "endLine": 138,
+          "params": [
+            "options",
+            "interval_seconds"
+          ]
+        },
+        {
+          "name": "servo_options_set_hard_fail",
+          "startLine": 153,
+          "endLine": 159,
+          "params": [
+            "options",
+            "hard_fail"
+          ]
+        },
+        {
+          "name": "servo_options_set_multiprocess",
+          "startLine": 173,
+          "endLine": 182,
+          "params": [
+            "options",
+            "multiprocess"
+          ]
+        },
+        {
+          "name": "servo_options_set_force_ipc",
+          "startLine": 198,
+          "endLine": 204,
+          "params": [
+            "options",
+            "force_ipc"
+          ]
+        },
+        {
+          "name": "servo_options_set_background_hang_monitor",
+          "startLine": 218,
+          "endLine": 227,
+          "params": [
+            "options",
+            "background_hang_monitor"
+          ]
+        },
+        {
+          "name": "servo_options_set_sandbox",
+          "startLine": 241,
+          "endLine": 247,
+          "params": [
+            "options",
+            "sandbox"
+          ]
+        },
+        {
+          "name": "servo_options_set_temporary_storage",
+          "startLine": 262,
+          "endLine": 271,
+          "params": [
+            "options",
+            "temporary_storage"
+          ]
+        },
+        {
+          "name": "servo_options_set_ignore_certificate_errors",
+          "startLine": 286,
+          "endLine": 295,
+          "params": [
+            "options",
+            "ignore_certificate_errors"
+          ]
+        },
+        {
+          "name": "servo_options_set_unminify_js",
+          "startLine": 309,
+          "endLine": 318,
+          "params": [
+            "options",
+            "unminify_js"
+          ]
+        },
+        {
+          "name": "servo_options_set_unminify_css",
+          "startLine": 332,
+          "endLine": 341,
+          "params": [
+            "options",
+            "unminify_css"
+          ]
+        },
+        {
+          "name": "servo_options_set_certificate_path",
+          "startLine": 363,
+          "endLine": 383,
+          "params": [
+            "options",
+            "certificate_path"
+          ]
+        },
+        {
+          "name": "servo_options_set_local_script_source",
+          "startLine": 405,
+          "endLine": 425,
+          "params": [
+            "options",
+            "local_script_source"
+          ]
+        },
+        {
+          "name": "servo_options_set_shaders_path",
+          "startLine": 446,
+          "endLine": 466,
+          "params": [
+            "options",
+            "shaders_path"
+          ]
+        },
+        {
+          "name": "servo_options_set_config_dir",
+          "startLine": 487,
+          "endLine": 504,
+          "params": [
+            "options",
+            "config_dir"
+          ]
+        },
+        {
+          "name": "servo_options_set_random_pipeline_closure_probability",
+          "startLine": 519,
+          "endLine": 528,
+          "params": [
+            "options",
+            "probability"
+          ]
+        },
+        {
+          "name": "servo_options_set_random_pipeline_closure_seed",
+          "startLine": 544,
+          "endLine": 553,
+          "params": [
+            "options",
+            "seed"
+          ]
+        },
+        {
+          "name": "servo_options_set_debug_option",
+          "startLine": 569,
+          "endLine": 585,
+          "params": [
+            "options",
+            "option",
+            "enabled"
+          ]
+        },
+        {
+          "name": "servo_options_free",
+          "startLine": 599,
+          "endLine": 610,
+          "params": [
+            "servo_options"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "servo_options_create",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_enable_time_profiling_to_file",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_time_profiler_trace_path",
+          "line": 97,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_enable_time_profiling_to_stdout",
+          "line": 129,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_hard_fail",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_multiprocess",
+          "line": 173,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_force_ipc",
+          "line": 198,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_background_hang_monitor",
+          "line": 218,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_sandbox",
+          "line": 241,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_temporary_storage",
+          "line": 262,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_ignore_certificate_errors",
+          "line": 286,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_unminify_js",
+          "line": 309,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_unminify_css",
+          "line": 332,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_certificate_path",
+          "line": 363,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_local_script_source",
+          "line": 405,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_shaders_path",
+          "line": 446,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_config_dir",
+          "line": 487,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_random_pipeline_closure_probability",
+          "line": 519,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_random_pipeline_closure_seed",
+          "line": 544,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_set_debug_option",
+          "line": 569,
+          "isDefault": false
+        },
+        {
+          "name": "servo_options_free",
+          "line": 599,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "servo_options_create",
+          "callee": "Box::new",
+          "lineNumber": 33
+        },
+        {
+          "caller": "servo_options_create",
+          "callee": "servo::Opts::default",
+          "lineNumber": 33
+        },
+        {
+          "caller": "servo_options_create",
+          "callee": "Box::into_raw",
+          "lineNumber": 34
+        },
+        {
+          "caller": "servo_options_enable_time_profiling_to_file",
+          "callee": "unsafe { CStr::from_ptr(file_path) }\n        .to_str()\n        .expect(\"invalid time profiler file path\").to_string",
+          "lineNumber": 66
+        },
+        {
+          "caller": "servo_options_enable_time_profiling_to_file",
+          "callee": "unsafe { CStr::from_ptr(file_path) }\n        .to_str().expect",
+          "lineNumber": 66
+        },
+        {
+          "caller": "servo_options_enable_time_profiling_to_file",
+          "callee": "unsafe { CStr::from_ptr(file_path) }.to_str",
+          "lineNumber": 66
+        },
+        {
+          "caller": "servo_options_enable_time_profiling_to_file",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 66
+        },
+        {
+          "caller": "servo_options_enable_time_profiling_to_file",
+          "callee": "Some",
+          "lineNumber": 73
+        },
+        {
+          "caller": "servo_options_enable_time_profiling_to_file",
+          "callee": "servo::OutputOptions::FileName",
+          "lineNumber": 73
+        },
+        {
+          "caller": "servo_options_set_time_profiler_trace_path",
+          "callee": "unsafe { CStr::from_ptr(trace_path) }\n        .to_str()\n        .expect(\"invalid time profiler trace path\").to_string",
+          "lineNumber": 106
+        },
+        {
+          "caller": "servo_options_set_time_profiler_trace_path",
+          "callee": "unsafe { CStr::from_ptr(trace_path) }\n        .to_str().expect",
+          "lineNumber": 106
+        },
+        {
+          "caller": "servo_options_set_time_profiler_trace_path",
+          "callee": "unsafe { CStr::from_ptr(trace_path) }.to_str",
+          "lineNumber": 106
+        },
+        {
+          "caller": "servo_options_set_time_profiler_trace_path",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 106
+        },
+        {
+          "caller": "servo_options_set_time_profiler_trace_path",
+          "callee": "Some",
+          "lineNumber": 113
+        },
+        {
+          "caller": "servo_options_enable_time_profiling_to_stdout",
+          "callee": "Some",
+          "lineNumber": 137
+        },
+        {
+          "caller": "servo_options_enable_time_profiling_to_stdout",
+          "callee": "servo::OutputOptions::Stdout",
+          "lineNumber": 137
+        },
+        {
+          "caller": "servo_options_set_certificate_path",
+          "callee": "unsafe { CStr::from_ptr(certificate_path) }\n        .to_str()\n        .expect(\"invalid certificate path\").to_string",
+          "lineNumber": 375
+        },
+        {
+          "caller": "servo_options_set_certificate_path",
+          "callee": "unsafe { CStr::from_ptr(certificate_path) }\n        .to_str().expect",
+          "lineNumber": 375
+        },
+        {
+          "caller": "servo_options_set_certificate_path",
+          "callee": "unsafe { CStr::from_ptr(certificate_path) }.to_str",
+          "lineNumber": 375
+        },
+        {
+          "caller": "servo_options_set_certificate_path",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 375
+        },
+        {
+          "caller": "servo_options_set_certificate_path",
+          "callee": "Some",
+          "lineNumber": 382
+        },
+        {
+          "caller": "servo_options_set_local_script_source",
+          "callee": "unsafe { CStr::from_ptr(local_script_source) }\n        .to_str()\n        .expect(\"invalid local script source path\").to_string",
+          "lineNumber": 417
+        },
+        {
+          "caller": "servo_options_set_local_script_source",
+          "callee": "unsafe { CStr::from_ptr(local_script_source) }\n        .to_str().expect",
+          "lineNumber": 417
+        },
+        {
+          "caller": "servo_options_set_local_script_source",
+          "callee": "unsafe { CStr::from_ptr(local_script_source) }.to_str",
+          "lineNumber": 417
+        },
+        {
+          "caller": "servo_options_set_local_script_source",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 417
+        },
+        {
+          "caller": "servo_options_set_local_script_source",
+          "callee": "Some",
+          "lineNumber": 424
+        },
+        {
+          "caller": "servo_options_set_shaders_path",
+          "callee": "unsafe { CStr::from_ptr(shaders_path) }\n        .to_str()\n        .expect(\"invalid shaders path\").to_string",
+          "lineNumber": 458
+        },
+        {
+          "caller": "servo_options_set_shaders_path",
+          "callee": "unsafe { CStr::from_ptr(shaders_path) }\n        .to_str().expect",
+          "lineNumber": 458
+        },
+        {
+          "caller": "servo_options_set_shaders_path",
+          "callee": "unsafe { CStr::from_ptr(shaders_path) }.to_str",
+          "lineNumber": 458
+        },
+        {
+          "caller": "servo_options_set_shaders_path",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 458
+        },
+        {
+          "caller": "servo_options_set_shaders_path",
+          "callee": "Some",
+          "lineNumber": 465
+        },
+        {
+          "caller": "servo_options_set_shaders_path",
+          "callee": "PathBuf::from",
+          "lineNumber": 465
+        },
+        {
+          "caller": "servo_options_set_config_dir",
+          "callee": "unsafe { CStr::from_ptr(config_dir) }\n        .to_str()\n        .expect(\"invalid config directory path\").to_string",
+          "lineNumber": 496
+        },
+        {
+          "caller": "servo_options_set_config_dir",
+          "callee": "unsafe { CStr::from_ptr(config_dir) }\n        .to_str().expect",
+          "lineNumber": 496
+        },
+        {
+          "caller": "servo_options_set_config_dir",
+          "callee": "unsafe { CStr::from_ptr(config_dir) }.to_str",
+          "lineNumber": 496
+        },
+        {
+          "caller": "servo_options_set_config_dir",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 496
+        },
+        {
+          "caller": "servo_options_set_config_dir",
+          "callee": "Some",
+          "lineNumber": 503
+        },
+        {
+          "caller": "servo_options_set_config_dir",
+          "callee": "PathBuf::from",
+          "lineNumber": 503
+        },
+        {
+          "caller": "servo_options_set_random_pipeline_closure_probability",
+          "callee": "Some",
+          "lineNumber": 527
+        },
+        {
+          "caller": "servo_options_set_random_pipeline_closure_seed",
+          "callee": "Some",
+          "lineNumber": 552
+        },
+        {
+          "caller": "servo_options_set_debug_option",
+          "callee": "DiagnosticsLoggingOption::try_from",
+          "lineNumber": 575
+        },
+        {
+          "caller": "servo_options_set_debug_option",
+          "callee": "unsafe { &mut *options }\n        .debug.toggle_option",
+          "lineNumber": 582
+        },
+        {
+          "caller": "servo_options_set_debug_option",
+          "callee": "diagnostics_option.into",
+          "lineNumber": 584
+        },
+        {
+          "caller": "servo_options_free",
+          "callee": "Box::from_raw",
+          "lineNumber": 608
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 21,
+        "functionCount": 21,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "ffi/capi/preferences.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 490,
+      "nonEmptyLines": 452,
+      "functions": [
+        {
+          "name": "servo_preferences_create",
+          "startLine": 29,
+          "endLine": 32,
+          "params": []
+        },
+        {
+          "name": "servo_preferences_free",
+          "startLine": 46,
+          "endLine": 57,
+          "params": [
+            "preferences"
+          ]
+        },
+        {
+          "name": "servo_preferences_set_bool",
+          "startLine": 78,
+          "endLine": 104,
+          "params": [
+            "preferences",
+            "name",
+            "value"
+          ]
+        },
+        {
+          "name": "servo_preferences_get_bool",
+          "startLine": 125,
+          "endLine": 153,
+          "params": [
+            "preferences",
+            "name"
+          ]
+        },
+        {
+          "name": "servo_preferences_set_string",
+          "startLine": 178,
+          "endLine": 212,
+          "params": [
+            "preferences",
+            "name",
+            "value"
+          ]
+        },
+        {
+          "name": "servo_preferences_get_string",
+          "startLine": 239,
+          "endLine": 267,
+          "params": [
+            "preferences",
+            "name"
+          ]
+        },
+        {
+          "name": "create_libc_string",
+          "startLine": 272,
+          "endLine": 298,
+          "params": [
+            "string"
+          ]
+        },
+        {
+          "name": "servo_preferences_set_i64",
+          "startLine": 319,
+          "endLine": 345,
+          "params": [
+            "preferences",
+            "name",
+            "value"
+          ]
+        },
+        {
+          "name": "servo_preferences_get_i64",
+          "startLine": 366,
+          "endLine": 394,
+          "params": [
+            "preferences",
+            "name"
+          ]
+        },
+        {
+          "name": "servo_preferences_set_u64",
+          "startLine": 415,
+          "endLine": 441,
+          "params": [
+            "preferences",
+            "name",
+            "value"
+          ]
+        },
+        {
+          "name": "servo_preferences_get_u64",
+          "startLine": 462,
+          "endLine": 490,
+          "params": [
+            "preferences",
+            "name"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "servo_preferences_create",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_free",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_set_bool",
+          "line": 78,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_get_bool",
+          "line": 125,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_set_string",
+          "line": 178,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_get_string",
+          "line": 239,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_set_i64",
+          "line": 319,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_get_i64",
+          "line": 366,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_set_u64",
+          "line": 415,
+          "isDefault": false
+        },
+        {
+          "name": "servo_preferences_get_u64",
+          "line": 462,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "servo_preferences_create",
+          "callee": "Box::new",
+          "lineNumber": 30
+        },
+        {
+          "caller": "servo_preferences_create",
+          "callee": "servo::Preferences::default",
+          "lineNumber": 30
+        },
+        {
+          "caller": "servo_preferences_create",
+          "callee": "Box::into_raw",
+          "lineNumber": 31
+        },
+        {
+          "caller": "servo_preferences_free",
+          "callee": "Box::from_raw",
+          "lineNumber": 55
+        },
+        {
+          "caller": "servo_preferences_set_bool",
+          "callee": "unsafe { CStr::from_ptr(name) }\n        .to_str().expect",
+          "lineNumber": 91
+        },
+        {
+          "caller": "servo_preferences_set_bool",
+          "callee": "unsafe { CStr::from_ptr(name) }.to_str",
+          "lineNumber": 91
+        },
+        {
+          "caller": "servo_preferences_set_bool",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 91
+        },
+        {
+          "caller": "servo_preferences_set_bool",
+          "callee": "unsafe { &mut *preferences }.set_value",
+          "lineNumber": 103
+        },
+        {
+          "caller": "servo_preferences_set_bool",
+          "callee": "PrefValue::Bool",
+          "lineNumber": 103
+        },
+        {
+          "caller": "servo_preferences_get_bool",
+          "callee": "unsafe { CStr::from_ptr(name) }\n        .to_str().expect",
+          "lineNumber": 137
+        },
+        {
+          "caller": "servo_preferences_get_bool",
+          "callee": "unsafe { CStr::from_ptr(name) }.to_str",
+          "lineNumber": 137
+        },
+        {
+          "caller": "servo_preferences_get_bool",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 137
+        },
+        {
+          "caller": "servo_preferences_get_bool",
+          "callee": "unsafe { &*preferences }.get_value",
+          "lineNumber": 149
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "unsafe { CStr::from_ptr(name) }\n        .to_str().expect",
+          "lineNumber": 192
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "unsafe { CStr::from_ptr(name) }.to_str",
+          "lineNumber": 192
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 192
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "unsafe { CStr::from_ptr(value) }\n        .to_str()\n        .expect(\"invalid string value\").to_string",
+          "lineNumber": 198
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "unsafe { CStr::from_ptr(value) }\n        .to_str().expect",
+          "lineNumber": 198
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "unsafe { CStr::from_ptr(value) }.to_str",
+          "lineNumber": 198
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 198
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "unsafe { &mut *preferences }.set_value",
+          "lineNumber": 211
+        },
+        {
+          "caller": "servo_preferences_set_string",
+          "callee": "PrefValue::Str",
+          "lineNumber": 211
+        },
+        {
+          "caller": "servo_preferences_get_string",
+          "callee": "unsafe { CStr::from_ptr(name) }\n        .to_str().expect",
+          "lineNumber": 251
+        },
+        {
+          "caller": "servo_preferences_get_string",
+          "callee": "unsafe { CStr::from_ptr(name) }.to_str",
+          "lineNumber": 251
+        },
+        {
+          "caller": "servo_preferences_get_string",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 251
+        },
+        {
+          "caller": "servo_preferences_get_string",
+          "callee": "unsafe { &*preferences }.get_value",
+          "lineNumber": 263
+        },
+        {
+          "caller": "servo_preferences_get_string",
+          "callee": "create_libc_string",
+          "lineNumber": 264
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "string.len().checked_add",
+          "lineNumber": 273
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "string.len",
+          "lineNumber": 273
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "ptr::null_mut",
+          "lineNumber": 274
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "libc::malloc",
+          "lineNumber": 278
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "dest_buffer.is_null",
+          "lineNumber": 280
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "ptr::null_mut",
+          "lineNumber": 281
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "string.as_ptr",
+          "lineNumber": 284
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "ptr::copy_nonoverlapping",
+          "lineNumber": 293
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "dest_buffer.add(buffer_size - 1).write",
+          "lineNumber": 294
+        },
+        {
+          "caller": "create_libc_string",
+          "callee": "dest_buffer.add",
+          "lineNumber": 294
+        },
+        {
+          "caller": "servo_preferences_set_i64",
+          "callee": "unsafe { CStr::from_ptr(name) }\n        .to_str().expect",
+          "lineNumber": 332
+        },
+        {
+          "caller": "servo_preferences_set_i64",
+          "callee": "unsafe { CStr::from_ptr(name) }.to_str",
+          "lineNumber": 332
+        },
+        {
+          "caller": "servo_preferences_set_i64",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 332
+        },
+        {
+          "caller": "servo_preferences_set_i64",
+          "callee": "unsafe { &mut *preferences }.set_value",
+          "lineNumber": 344
+        },
+        {
+          "caller": "servo_preferences_set_i64",
+          "callee": "PrefValue::Int",
+          "lineNumber": 344
+        },
+        {
+          "caller": "servo_preferences_get_i64",
+          "callee": "unsafe { CStr::from_ptr(name) }\n        .to_str().expect",
+          "lineNumber": 378
+        },
+        {
+          "caller": "servo_preferences_get_i64",
+          "callee": "unsafe { CStr::from_ptr(name) }.to_str",
+          "lineNumber": 378
+        },
+        {
+          "caller": "servo_preferences_get_i64",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 378
+        },
+        {
+          "caller": "servo_preferences_get_i64",
+          "callee": "unsafe { &*preferences }.get_value",
+          "lineNumber": 390
+        },
+        {
+          "caller": "servo_preferences_set_u64",
+          "callee": "unsafe { CStr::from_ptr(name) }\n        .to_str().expect",
+          "lineNumber": 428
+        },
+        {
+          "caller": "servo_preferences_set_u64",
+          "callee": "unsafe { CStr::from_ptr(name) }.to_str",
+          "lineNumber": 428
+        },
+        {
+          "caller": "servo_preferences_set_u64",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 428
+        },
+        {
+          "caller": "servo_preferences_set_u64",
+          "callee": "unsafe { &mut *preferences }.set_value",
+          "lineNumber": 440
+        },
+        {
+          "caller": "servo_preferences_set_u64",
+          "callee": "PrefValue::UInt",
+          "lineNumber": 440
+        },
+        {
+          "caller": "servo_preferences_get_u64",
+          "callee": "unsafe { CStr::from_ptr(name) }\n        .to_str().expect",
+          "lineNumber": 474
+        },
+        {
+          "caller": "servo_preferences_get_u64",
+          "callee": "unsafe { CStr::from_ptr(name) }.to_str",
+          "lineNumber": 474
+        },
+        {
+          "caller": "servo_preferences_get_u64",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 474
+        },
+        {
+          "caller": "servo_preferences_get_u64",
+          "callee": "unsafe { &*preferences }.get_value",
+          "lineNumber": 486
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 11,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "ffi/capi/rendering_context.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 72,
+      "nonEmptyLines": 66,
+      "functions": [
+        {
+          "name": "servo_rendering_context_create_software",
+          "startLine": 34,
+          "endLine": 48,
+          "params": [
+            "width",
+            "height"
+          ]
+        },
+        {
+          "name": "servo_rendering_context_free",
+          "startLine": 64,
+          "endLine": 72,
+          "params": [
+            "context"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "RenderingContext",
+          "startLine": 22,
+          "endLine": 24,
+          "methods": [],
+          "properties": [
+            "inner"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RenderingContext",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "servo_rendering_context_create_software",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "servo_rendering_context_free",
+          "line": 64,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "servo_rendering_context_create_software",
+          "callee": "dpi::PhysicalSize::new",
+          "lineNumber": 38
+        },
+        {
+          "caller": "servo_rendering_context_create_software",
+          "callee": "SoftwareRenderingContext::new",
+          "lineNumber": 39
+        },
+        {
+          "caller": "servo_rendering_context_create_software",
+          "callee": "Box::into_raw",
+          "lineNumber": 40
+        },
+        {
+          "caller": "servo_rendering_context_create_software",
+          "callee": "Box::new",
+          "lineNumber": 40
+        },
+        {
+          "caller": "servo_rendering_context_create_software",
+          "callee": "Rc::new",
+          "lineNumber": 41
+        },
+        {
+          "caller": "servo_rendering_context_create_software",
+          "callee": "std::ptr::null_mut",
+          "lineNumber": 45
+        },
+        {
+          "caller": "servo_rendering_context_free",
+          "callee": "Box::from_raw",
+          "lineNumber": 70
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "ffi/capi/servo.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 84,
+      "nonEmptyLines": 75,
+      "functions": [
+        {
+          "name": "servo_free",
+          "startLine": 24,
+          "endLine": 32,
+          "params": [
+            "servo"
+          ]
+        },
+        {
+          "name": "servo_spin_event_loop",
+          "startLine": 51,
+          "endLine": 59,
+          "params": [
+            "servo"
+          ]
+        },
+        {
+          "name": "servo_setup_logging",
+          "startLine": 76,
+          "endLine": 84,
+          "params": [
+            "servo"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "servo_free",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "servo_spin_event_loop",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "servo_setup_logging",
+          "line": 76,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "servo_free",
+          "callee": "Box::from_raw",
+          "lineNumber": 30
+        },
+        {
+          "caller": "servo_spin_event_loop",
+          "callee": "servo.spin_event_loop",
+          "lineNumber": 58
+        },
+        {
+          "caller": "servo_setup_logging",
+          "callee": "servo.setup_logging",
+          "lineNumber": 83
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "ffi/capi/webview.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 422,
+      "nonEmptyLines": 388,
+      "functions": [
+        {
+          "name": "servo_webview_builder_create",
+          "startLine": 61,
+          "endLine": 82,
+          "params": [
+            "servo",
+            "context"
+          ]
+        },
+        {
+          "name": "servo_webview_builder_set_url",
+          "startLine": 106,
+          "endLine": 128,
+          "params": [
+            "builder",
+            "url"
+          ]
+        },
+        {
+          "name": "servo_webview_builder_set_delegate",
+          "startLine": 152,
+          "endLine": 159,
+          "params": [
+            "builder",
+            "delegate"
+          ]
+        },
+        {
+          "name": "servo_webview_builder_build",
+          "startLine": 180,
+          "endLine": 200,
+          "params": [
+            "builder"
+          ]
+        },
+        {
+          "name": "servo_webview_builder_free",
+          "startLine": 216,
+          "endLine": 224,
+          "params": [
+            "builder"
+          ]
+        },
+        {
+          "name": "servo_webview_paint",
+          "startLine": 247,
+          "endLine": 255,
+          "params": [
+            "webview"
+          ]
+        },
+        {
+          "name": "servo_webview_load",
+          "startLine": 281,
+          "endLine": 300,
+          "params": [
+            "webview",
+            "url"
+          ]
+        },
+        {
+          "name": "servo_webview_take_screenshot",
+          "startLine": 349,
+          "endLine": 396,
+          "params": [
+            "webview",
+            "callback",
+            "user_data"
+          ]
+        },
+        {
+          "name": "servo_webview_free",
+          "startLine": 414,
+          "endLine": 422,
+          "params": [
+            "webview"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ServoWebViewBuilder",
+          "startLine": 25,
+          "endLine": 30,
+          "methods": [],
+          "properties": [
+            "servo",
+            "rendering_context",
+            "url",
+            "delegate"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ServoWebViewBuilder",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_builder_create",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_builder_set_url",
+          "line": 106,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_builder_set_delegate",
+          "line": 152,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_builder_build",
+          "line": 180,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_builder_free",
+          "line": 216,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_paint",
+          "line": 247,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_load",
+          "line": 281,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_take_screenshot",
+          "line": 349,
+          "isDefault": false
+        },
+        {
+          "name": "servo_webview_free",
+          "line": 414,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "servo_webview_builder_create",
+          "callee": "Box::from_raw",
+          "lineNumber": 74
+        },
+        {
+          "caller": "servo_webview_builder_create",
+          "callee": "Box::into_raw",
+          "lineNumber": 76
+        },
+        {
+          "caller": "servo_webview_builder_create",
+          "callee": "Box::new",
+          "lineNumber": 76
+        },
+        {
+          "caller": "servo_webview_builder_create",
+          "callee": "servo.clone",
+          "lineNumber": 77
+        },
+        {
+          "caller": "servo_webview_builder_set_url",
+          "callee": "unsafe { CStr::from_ptr(url) }.to_str().unwrap",
+          "lineNumber": 119
+        },
+        {
+          "caller": "servo_webview_builder_set_url",
+          "callee": "unsafe { CStr::from_ptr(url) }.to_str",
+          "lineNumber": 119
+        },
+        {
+          "caller": "servo_webview_builder_set_url",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 119
+        },
+        {
+          "caller": "servo_webview_builder_set_url",
+          "callee": "url::Url::parse",
+          "lineNumber": 121
+        },
+        {
+          "caller": "servo_webview_builder_set_url",
+          "callee": "Some",
+          "lineNumber": 123
+        },
+        {
+          "caller": "servo_webview_builder_set_delegate",
+          "callee": "Some",
+          "lineNumber": 158
+        },
+        {
+          "caller": "servo_webview_builder_build",
+          "callee": "Box::from_raw",
+          "lineNumber": 187
+        },
+        {
+          "caller": "servo_webview_builder_build",
+          "callee": "WebViewBuilder::new",
+          "lineNumber": 189
+        },
+        {
+          "caller": "servo_webview_builder_build",
+          "callee": "webview_builder.url",
+          "lineNumber": 192
+        },
+        {
+          "caller": "servo_webview_builder_build",
+          "callee": "webview_builder.delegate",
+          "lineNumber": 196
+        },
+        {
+          "caller": "servo_webview_builder_build",
+          "callee": "std::rc::Rc::new",
+          "lineNumber": 196
+        },
+        {
+          "caller": "servo_webview_builder_build",
+          "callee": "Box::into_raw",
+          "lineNumber": 199
+        },
+        {
+          "caller": "servo_webview_builder_build",
+          "callee": "Box::new",
+          "lineNumber": 199
+        },
+        {
+          "caller": "servo_webview_builder_build",
+          "callee": "webview_builder.build",
+          "lineNumber": 199
+        },
+        {
+          "caller": "servo_webview_builder_free",
+          "callee": "Box::from_raw",
+          "lineNumber": 222
+        },
+        {
+          "caller": "servo_webview_paint",
+          "callee": "webview.paint",
+          "lineNumber": 254
+        },
+        {
+          "caller": "servo_webview_load",
+          "callee": "unsafe { CStr::from_ptr(url) }.to_str().unwrap",
+          "lineNumber": 291
+        },
+        {
+          "caller": "servo_webview_load",
+          "callee": "unsafe { CStr::from_ptr(url) }.to_str",
+          "lineNumber": 291
+        },
+        {
+          "caller": "servo_webview_load",
+          "callee": "CStr::from_ptr",
+          "lineNumber": 291
+        },
+        {
+          "caller": "servo_webview_load",
+          "callee": "url::Url::parse",
+          "lineNumber": 293
+        },
+        {
+          "caller": "servo_webview_load",
+          "callee": "webview.load",
+          "lineNumber": 295
+        },
+        {
+          "caller": "servo_webview_take_screenshot",
+          "callee": "webview.take_screenshot",
+          "lineNumber": 372
+        },
+        {
+          "caller": "servo_webview_take_screenshot",
+          "callee": "image.dimensions",
+          "lineNumber": 375
+        },
+        {
+          "caller": "servo_webview_take_screenshot",
+          "callee": "image.into_raw",
+          "lineNumber": 376
+        },
+        {
+          "caller": "servo_webview_take_screenshot",
+          "callee": "callback",
+          "lineNumber": 382
+        },
+        {
+          "caller": "servo_webview_take_screenshot",
+          "callee": "data.as_ptr",
+          "lineNumber": 382
+        },
+        {
+          "caller": "servo_webview_take_screenshot",
+          "callee": "callback",
+          "lineNumber": 391
+        },
+        {
+          "caller": "servo_webview_take_screenshot",
+          "callee": "std::ptr::null",
+          "lineNumber": 391
+        },
+        {
+          "caller": "servo_webview_free",
+          "callee": "Box::from_raw",
+          "lineNumber": 420
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 9,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "ffi/capi/webview_delegate.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 90,
+      "nonEmptyLines": 80,
+      "functions": [
+        {
+          "name": "notify_load_status_changed",
+          "startLine": 65,
+          "endLine": 77,
+          "params": [
+            "webview",
+            "load_status"
+          ]
+        },
+        {
+          "name": "notify_new_frame_ready",
+          "startLine": 79,
+          "endLine": 89,
+          "params": [
+            "webview"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ServoWebViewDelegate",
+          "startLine": 47,
+          "endLine": 62,
+          "methods": [
+            "notify_load_status_changed",
+            "notify_new_frame_ready"
+          ],
+          "properties": [
+            "user_data",
+            "notify_load_status_changed",
+            "notify_new_frame_ready"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ServoWebViewDelegate",
+          "line": 47,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "notify_load_status_changed",
+          "callee": "callback",
+          "lineNumber": 76
+        },
+        {
+          "caller": "notify_new_frame_ready",
+          "callee": "callback",
+          "lineNumber": 88
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    }
+  ]
+}

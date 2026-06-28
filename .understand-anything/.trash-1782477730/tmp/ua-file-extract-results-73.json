@@ -1,0 +1,1965 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/background_hang_monitor/background_hang_monitor.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 512,
+      "nonEmptyLines": 480,
+      "functions": [
+        {
+          "name": "init",
+          "startLine": 31,
+          "endLine": 59,
+          "params": [
+            "constellation_chan",
+            "control_port",
+            "monitoring_enabled"
+          ]
+        },
+        {
+          "name": "register_component",
+          "startLine": 66,
+          "endLine": 87,
+          "params": [
+            "component_id",
+            "transient_hang_timeout",
+            "permanent_hang_timeout",
+            "exit_signal"
+          ]
+        },
+        {
+          "name": "clone_box",
+          "startLine": 91,
+          "endLine": 93,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 124,
+          "endLine": 134,
+          "params": [
+            "sender",
+            "component_id",
+            "monitoring_enabled"
+          ]
+        },
+        {
+          "name": "send",
+          "startLine": 136,
+          "endLine": 140,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "notify_activity",
+          "startLine": 144,
+          "endLine": 149,
+          "params": [
+            "annotation"
+          ]
+        },
+        {
+          "name": "notify_wait",
+          "startLine": 150,
+          "endLine": 155,
+          "params": []
+        },
+        {
+          "name": "unregister",
+          "startLine": 156,
+          "endLine": 159,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 196,
+          "endLine": 218,
+          "params": [
+            "constellation_chan",
+            "control_port",
+            "port",
+            "monitoring_enabled"
+          ]
+        },
+        {
+          "name": "finish_sampled_profile",
+          "startLine": 220,
+          "endLine": 257,
+          "params": []
+        },
+        {
+          "name": "run",
+          "startLine": 259,
+          "endLine": 385,
+          "params": []
+        },
+        {
+          "name": "handle_msg",
+          "startLine": 387,
+          "endLine": 455,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "perform_a_hang_monitor_checkpoint",
+          "startLine": 457,
+          "endLine": 494,
+          "params": []
+        },
+        {
+          "name": "sample",
+          "startLine": 496,
+          "endLine": 511,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "HangMonitorRegister",
+          "startLine": 23,
+          "endLine": 26,
+          "methods": [
+            "init",
+            "register_component",
+            "clone_box"
+          ],
+          "properties": [
+            "sender",
+            "monitoring_enabled"
+          ]
+        },
+        {
+          "name": "MonitoredComponentMsg",
+          "startLine": 97,
+          "endLine": 112,
+          "methods": [],
+          "properties": [
+            "Register",
+            "Unregister",
+            "NotifyActivity",
+            "NotifyWait"
+          ]
+        },
+        {
+          "name": "BackgroundHangMonitorChan",
+          "startLine": 117,
+          "endLine": 121,
+          "methods": [
+            "new",
+            "send",
+            "notify_activity",
+            "notify_wait",
+            "unregister"
+          ],
+          "properties": [
+            "sender",
+            "component_id",
+            "monitoring_enabled"
+          ]
+        },
+        {
+          "name": "MonitoredComponent",
+          "startLine": 162,
+          "endLine": 172,
+          "methods": [],
+          "properties": [
+            "sampler",
+            "last_activity",
+            "last_annotation",
+            "transient_hang_timeout",
+            "permanent_hang_timeout",
+            "sent_transient_alert",
+            "sent_permanent_alert",
+            "is_waiting",
+            "exit_signal"
+          ]
+        },
+        {
+          "name": "Sample",
+          "startLine": 174,
+          "endLine": 174,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "BackgroundHangMonitorWorker",
+          "startLine": 176,
+          "endLine": 190,
+          "methods": [
+            "new",
+            "finish_sampled_profile",
+            "run",
+            "handle_msg",
+            "perform_a_hang_monitor_checkpoint",
+            "sample"
+          ],
+          "properties": [
+            "component_names",
+            "monitored_components",
+            "constellation_chan",
+            "port",
+            "control_port",
+            "sampling_duration",
+            "sampling_max_duration",
+            "last_sample",
+            "creation",
+            "sampling_baseline",
+            "samples",
+            "monitoring_enabled",
+            "shutting_down"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "HangMonitorRegister",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "init",
+          "line": 31,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "init",
+          "callee": "unbounded",
+          "lineNumber": 36
+        },
+        {
+          "caller": "init",
+          "callee": "Builder::new()\n            .name(\"BackgroundHangMonitor\".to_owned())\n            .spawn(move || {\n                let mut monitor = BackgroundHangMonitorWorker::new(\n                    constellation_chan,\n                    control_port,\n                    port,\n                    monitoring_enabled,\n                );\n                while monitor.run() {\n                    // Monitoring until all senders have been dropped...\n                }\n            }).expect",
+          "lineNumber": 38
+        },
+        {
+          "caller": "init",
+          "callee": "Builder::new()\n            .name(\"BackgroundHangMonitor\".to_owned()).spawn",
+          "lineNumber": 38
+        },
+        {
+          "caller": "init",
+          "callee": "Builder::new().name",
+          "lineNumber": 38
+        },
+        {
+          "caller": "init",
+          "callee": "Builder::new",
+          "lineNumber": 38
+        },
+        {
+          "caller": "init",
+          "callee": "\"BackgroundHangMonitor\".to_owned",
+          "lineNumber": 39
+        },
+        {
+          "caller": "init",
+          "callee": "BackgroundHangMonitorWorker::new",
+          "lineNumber": 41
+        },
+        {
+          "caller": "init",
+          "callee": "monitor.run",
+          "lineNumber": 47
+        },
+        {
+          "caller": "init",
+          "callee": "Box::new",
+          "lineNumber": 53
+        },
+        {
+          "caller": "register_component",
+          "callee": "BackgroundHangMonitorChan::new",
+          "lineNumber": 73
+        },
+        {
+          "caller": "register_component",
+          "callee": "self.sender.clone",
+          "lineNumber": 74
+        },
+        {
+          "caller": "register_component",
+          "callee": "bhm_chan.send",
+          "lineNumber": 79
+        },
+        {
+          "caller": "register_component",
+          "callee": "MonitoredComponentMsg::Register",
+          "lineNumber": 79
+        },
+        {
+          "caller": "register_component",
+          "callee": "SamplerImpl::default",
+          "lineNumber": 80
+        },
+        {
+          "caller": "register_component",
+          "callee": "thread::current().name().map",
+          "lineNumber": 81
+        },
+        {
+          "caller": "register_component",
+          "callee": "thread::current().name",
+          "lineNumber": 81
+        },
+        {
+          "caller": "register_component",
+          "callee": "thread::current",
+          "lineNumber": 81
+        },
+        {
+          "caller": "register_component",
+          "callee": "Box::new",
+          "lineNumber": 86
+        },
+        {
+          "caller": "clone_box",
+          "callee": "Box::new",
+          "lineNumber": 92
+        },
+        {
+          "caller": "clone_box",
+          "callee": "self.clone",
+          "lineNumber": 92
+        },
+        {
+          "caller": "send",
+          "callee": "self.sender\n            .send((self.component_id.clone(), msg)).expect",
+          "lineNumber": 137
+        },
+        {
+          "caller": "send",
+          "callee": "self.sender.send",
+          "lineNumber": 137
+        },
+        {
+          "caller": "send",
+          "callee": "self.component_id.clone",
+          "lineNumber": 138
+        },
+        {
+          "caller": "notify_activity",
+          "callee": "MonitoredComponentMsg::NotifyActivity",
+          "lineNumber": 146
+        },
+        {
+          "caller": "notify_activity",
+          "callee": "self.send",
+          "lineNumber": 147
+        },
+        {
+          "caller": "notify_wait",
+          "callee": "self.send",
+          "lineNumber": 153
+        },
+        {
+          "caller": "unregister",
+          "callee": "self.send",
+          "lineNumber": 158
+        },
+        {
+          "caller": "new",
+          "callee": "control_port.route_preserving_errors",
+          "lineNumber": 202
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 204
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 205
+        },
+        {
+          "caller": "new",
+          "callee": "Some",
+          "lineNumber": 208
+        },
+        {
+          "caller": "new",
+          "callee": "Instant::now",
+          "lineNumber": 211
+        },
+        {
+          "caller": "new",
+          "callee": "Instant::now",
+          "lineNumber": 212
+        },
+        {
+          "caller": "new",
+          "callee": "Instant::now",
+          "lineNumber": 213
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 214
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 216
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "bytes.extend",
+          "lineNumber": 222
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "format!(\n                \"{{ \\\"rate\\\": {}, \\\"start\\\": {}, \\\"data\\\": [\\n\",\n                self.sampling_duration.unwrap().as_millis(),\n                (self.sampling_baseline - self.creation).as_millis(),\n            ).as_bytes",
+          "lineNumber": 223
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "self.samples.len",
+          "lineNumber": 232
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "self.samples.drain(..).enumerate",
+          "lineNumber": 233
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "self.samples.drain",
+          "lineNumber": 233
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "stack.to_hangprofile",
+          "lineNumber": 235
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "self.component_names.get",
+          "lineNumber": 236
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "\"null\".to_string",
+          "lineNumber": 238
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "bytes.extend",
+          "lineNumber": 249
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "json.as_bytes",
+          "lineNumber": 249
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "bytes.extend",
+          "lineNumber": 253
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "self\n            .constellation_chan.send",
+          "lineNumber": 254
+        },
+        {
+          "caller": "finish_sampled_profile",
+          "callee": "HangMonitorAlert::Profile",
+          "lineNumber": 256
+        },
+        {
+          "caller": "run",
+          "callee": "duration\n                .checked_sub(Instant::now() - self.last_sample).unwrap_or_else",
+          "lineNumber": 261
+        },
+        {
+          "caller": "run",
+          "callee": "duration.checked_sub",
+          "lineNumber": 261
+        },
+        {
+          "caller": "run",
+          "callee": "Instant::now",
+          "lineNumber": 262
+        },
+        {
+          "caller": "run",
+          "callee": "Duration::from_millis",
+          "lineNumber": 263
+        },
+        {
+          "caller": "run",
+          "callee": "after",
+          "lineNumber": 264
+        },
+        {
+          "caller": "run",
+          "callee": "after",
+          "lineNumber": 266
+        },
+        {
+          "caller": "run",
+          "callee": "Duration::from_millis",
+          "lineNumber": 266
+        },
+        {
+          "caller": "run",
+          "callee": "never",
+          "lineNumber": 268
+        },
+        {
+          "caller": "run",
+          "callee": "self.sampling_duration.is_some",
+          "lineNumber": 324
+        },
+        {
+          "caller": "run",
+          "callee": "self.finish_sampled_profile",
+          "lineNumber": 326
+        },
+        {
+          "caller": "run",
+          "callee": "Some",
+          "lineNumber": 330
+        },
+        {
+          "caller": "run",
+          "callee": "Some",
+          "lineNumber": 331
+        },
+        {
+          "caller": "run",
+          "callee": "Instant::now",
+          "lineNumber": 332
+        },
+        {
+          "caller": "run",
+          "callee": "self.monitored_components.values_mut",
+          "lineNumber": 336
+        },
+        {
+          "caller": "run",
+          "callee": "component.exit_signal.signal_to_exit",
+          "lineNumber": 337
+        },
+        {
+          "caller": "run",
+          "callee": "self.monitored_components.values_mut",
+          "lineNumber": 356
+        },
+        {
+          "caller": "run",
+          "callee": "component.exit_signal.signal_to_exit",
+          "lineNumber": 357
+        },
+        {
+          "caller": "run",
+          "callee": "self.handle_msg",
+          "lineNumber": 364
+        },
+        {
+          "caller": "run",
+          "callee": "self.port.try_recv",
+          "lineNumber": 365
+        },
+        {
+          "caller": "run",
+          "callee": "self.handle_msg",
+          "lineNumber": 367
+        },
+        {
+          "caller": "run",
+          "callee": "Instant::now",
+          "lineNumber": 376
+        },
+        {
+          "caller": "run",
+          "callee": "self.sample",
+          "lineNumber": 378
+        },
+        {
+          "caller": "run",
+          "callee": "self.perform_a_hang_monitor_checkpoint",
+          "lineNumber": 382
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "exit_signal.signal_to_exit",
+          "lineNumber": 404
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "Instant::now",
+          "lineNumber": 409
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.component_names.insert",
+          "lineNumber": 419
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "component_id.clone",
+          "lineNumber": 419
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.monitored_components\n                    .remove_entry(&component_id).expect",
+          "lineNumber": 429
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self.monitored_components.remove_entry",
+          "lineNumber": 429
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self\n                    .monitored_components\n                    .get_mut(&component_id).expect",
+          "lineNumber": 434
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self\n                    .monitored_components.get_mut",
+          "lineNumber": 434
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "Instant::now",
+          "lineNumber": 438
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "Some",
+          "lineNumber": 439
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self\n                    .monitored_components\n                    .get_mut(&component_id).expect",
+          "lineNumber": 445
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "self\n                    .monitored_components.get_mut",
+          "lineNumber": 445
+        },
+        {
+          "caller": "handle_msg",
+          "callee": "Instant::now",
+          "lineNumber": 449
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "self.monitored_components.iter_mut",
+          "lineNumber": 458
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "monitored.last_annotation.unwrap",
+          "lineNumber": 462
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "monitored.last_activity.elapsed",
+          "lineNumber": 463
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "monitored.sampler.suspend_and_sample_thread",
+          "lineNumber": 467
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "Some",
+          "lineNumber": 468
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "native_stack.to_hangprofile",
+          "lineNumber": 468
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "self\n                    .constellation_chan.send",
+          "lineNumber": 471
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "HangMonitorAlert::Hang",
+          "lineNumber": 473
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "HangAlert::Permanent",
+          "lineNumber": 473
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "component_id.clone",
+          "lineNumber": 474
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "monitored.last_activity.elapsed",
+          "lineNumber": 481
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "self\n                    .constellation_chan.send",
+          "lineNumber": 485
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "HangMonitorAlert::Hang",
+          "lineNumber": 487
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "HangAlert::Transient",
+          "lineNumber": 487
+        },
+        {
+          "caller": "perform_a_hang_monitor_checkpoint",
+          "callee": "component_id.clone",
+          "lineNumber": 488
+        },
+        {
+          "caller": "sample",
+          "callee": "self.monitored_components.iter_mut",
+          "lineNumber": 497
+        },
+        {
+          "caller": "sample",
+          "callee": "Instant::now",
+          "lineNumber": 498
+        },
+        {
+          "caller": "sample",
+          "callee": "monitored.sampler.suspend_and_sample_thread",
+          "lineNumber": 499
+        },
+        {
+          "caller": "sample",
+          "callee": "self.sampling_baseline.elapsed",
+          "lineNumber": 500
+        },
+        {
+          "caller": "sample",
+          "callee": "self.sampling_max_duration.expect",
+          "lineNumber": 501
+        },
+        {
+          "caller": "sample",
+          "callee": "self.samples.pop_front",
+          "lineNumber": 505
+        },
+        {
+          "caller": "sample",
+          "callee": "self.samples.push_back",
+          "lineNumber": 507
+        },
+        {
+          "caller": "sample",
+          "callee": "Sample",
+          "lineNumber": 508
+        },
+        {
+          "caller": "sample",
+          "callee": "component_id.clone",
+          "lineNumber": 508
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 14,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "components/background_hang_monitor/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 63,
+      "nonEmptyLines": 60,
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/background_hang_monitor/sampler.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 86,
+      "nonEmptyLines": 75,
+      "functions": [
+        {
+          "name": "suspend_and_sample_thread",
+          "startLine": 20,
+          "endLine": 22,
+          "params": []
+        },
+        {
+          "name": "default",
+          "startLine": 32,
+          "endLine": 38,
+          "params": []
+        },
+        {
+          "name": "process_register",
+          "startLine": 43,
+          "endLine": 55,
+          "params": [
+            "instruction_ptr",
+            "stack_ptr"
+          ]
+        },
+        {
+          "name": "to_hangprofile",
+          "startLine": 57,
+          "endLine": 85,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "Sampler",
+          "startLine": 12,
+          "endLine": 14,
+          "methods": [
+            "suspend_and_sample_thread"
+          ],
+          "properties": []
+        },
+        {
+          "name": "NativeStack",
+          "startLine": 25,
+          "endLine": 29,
+          "methods": [
+            "default",
+            "process_register",
+            "to_hangprofile"
+          ],
+          "properties": [
+            "instruction_ptrs",
+            "stack_ptrs",
+            "count"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Sampler",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "NativeStack",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "process_register",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "to_hangprofile",
+          "line": 57,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "Err",
+          "lineNumber": 21
+        },
+        {
+          "caller": "default",
+          "callee": "ptr::null_mut",
+          "lineNumber": 34
+        },
+        {
+          "caller": "default",
+          "callee": "ptr::null_mut",
+          "lineNumber": 35
+        },
+        {
+          "caller": "process_register",
+          "callee": "Err",
+          "lineNumber": 49
+        },
+        {
+          "caller": "process_register",
+          "callee": "Ok",
+          "lineNumber": 54
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "Vec::new",
+          "lineNumber": 59
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "self.instruction_ptrs.iter().rev",
+          "lineNumber": 61
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "self.instruction_ptrs.iter",
+          "lineNumber": 61
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "ip.is_null",
+          "lineNumber": 62
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "backtrace::resolve",
+          "lineNumber": 65
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "symbol\n                    .name().map",
+          "lineNumber": 66
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "symbol.name",
+          "lineNumber": 66
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "String::from_utf8_lossy(n.as_bytes()).to_string",
+          "lineNumber": 68
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "String::from_utf8_lossy",
+          "lineNumber": 68
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "n.as_bytes",
+          "lineNumber": 68
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "name.map",
+          "lineNumber": 73
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "rustc_demangle::demangle(&n).to_string",
+          "lineNumber": 73
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "rustc_demangle::demangle",
+          "lineNumber": 73
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "symbol.filename().map",
+          "lineNumber": 75
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "symbol.filename",
+          "lineNumber": 75
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "n.to_string_lossy().to_string",
+          "lineNumber": 75
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "n.to_string_lossy",
+          "lineNumber": 75
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "symbol.lineno",
+          "lineNumber": 76
+        },
+        {
+          "caller": "to_hangprofile",
+          "callee": "profile.backtrace.push",
+          "lineNumber": 77
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/background_hang_monitor/sampler_linux.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 244,
+      "nonEmptyLines": 208,
+      "functions": [
+        {
+          "name": "clear_shared_state",
+          "startLine": 35,
+          "endLine": 45,
+          "params": []
+        },
+        {
+          "name": "reset_shared_state",
+          "startLine": 47,
+          "endLine": 55,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 62,
+          "endLine": 73,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "post",
+          "startLine": 75,
+          "endLine": 81,
+          "params": []
+        },
+        {
+          "name": "wait",
+          "startLine": 83,
+          "endLine": 89,
+          "params": []
+        },
+        {
+          "name": "wait_through_intr",
+          "startLine": 93,
+          "endLine": 107,
+          "params": []
+        },
+        {
+          "name": "drop",
+          "startLine": 114,
+          "endLine": 116,
+          "params": []
+        },
+        {
+          "name": "default",
+          "startLine": 126,
+          "endLine": 140,
+          "params": []
+        },
+        {
+          "name": "suspend_and_sample_thread",
+          "startLine": 145,
+          "endLine": 202,
+          "params": []
+        },
+        {
+          "name": "drop",
+          "startLine": 206,
+          "endLine": 210,
+          "params": []
+        },
+        {
+          "name": "sigprof_handler",
+          "startLine": 213,
+          "endLine": 238,
+          "params": [
+            "sig",
+            "_info",
+            "_ctx"
+          ]
+        },
+        {
+          "name": "send_sigprof",
+          "startLine": 240,
+          "endLine": 244,
+          "params": [
+            "to"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "UncheckedSyncUnsafeCell",
+          "startLine": 14,
+          "endLine": 14,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "SharedState",
+          "startLine": 28,
+          "endLine": 33,
+          "methods": [],
+          "properties": [
+            "msg2",
+            "msg3",
+            "msg4"
+          ]
+        },
+        {
+          "name": "PosixSemaphore",
+          "startLine": 57,
+          "endLine": 59,
+          "methods": [
+            "new",
+            "post",
+            "wait",
+            "wait_through_intr",
+            "drop"
+          ],
+          "properties": [
+            "sem"
+          ]
+        },
+        {
+          "name": "LinuxSampler",
+          "startLine": 119,
+          "endLine": 122,
+          "methods": [
+            "default",
+            "suspend_and_sample_thread",
+            "drop"
+          ],
+          "properties": [
+            "thread_id",
+            "old_handler"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "new",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "post",
+          "line": 75,
+          "isDefault": false
+        },
+        {
+          "name": "wait",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "wait_through_intr",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "LinuxSampler",
+          "line": 119,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "clear_shared_state",
+          "callee": "SHARED_STATE.0.get",
+          "lineNumber": 40
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "SHARED_STATE.0.get",
+          "lineNumber": 50
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "Some",
+          "lineNumber": 51
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "PosixSemaphore::new(0).expect",
+          "lineNumber": 51
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "PosixSemaphore::new",
+          "lineNumber": 51
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "Some",
+          "lineNumber": 52
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "PosixSemaphore::new(0).expect",
+          "lineNumber": 52
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "PosixSemaphore::new",
+          "lineNumber": 52
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "Some",
+          "lineNumber": 53
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "PosixSemaphore::new(0).expect",
+          "lineNumber": 53
+        },
+        {
+          "caller": "reset_shared_state",
+          "callee": "PosixSemaphore::new",
+          "lineNumber": 53
+        },
+        {
+          "caller": "new",
+          "callee": "mem::MaybeUninit::uninit",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new",
+          "callee": "libc::sem_init",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new",
+          "callee": "sem.as_mut_ptr",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new",
+          "callee": "Err",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new",
+          "callee": "io::Error::last_os_error",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new",
+          "callee": "Ok",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new",
+          "callee": "UnsafeCell::new",
+          "lineNumber": 71
+        },
+        {
+          "caller": "new",
+          "callee": "sem.assume_init",
+          "lineNumber": 71
+        },
+        {
+          "caller": "post",
+          "callee": "libc::sem_post",
+          "lineNumber": 76
+        },
+        {
+          "caller": "post",
+          "callee": "self.sem.get",
+          "lineNumber": 76
+        },
+        {
+          "caller": "post",
+          "callee": "Ok",
+          "lineNumber": 77
+        },
+        {
+          "caller": "post",
+          "callee": "Err",
+          "lineNumber": 79
+        },
+        {
+          "caller": "post",
+          "callee": "io::Error::last_os_error",
+          "lineNumber": 79
+        },
+        {
+          "caller": "wait",
+          "callee": "libc::sem_wait",
+          "lineNumber": 84
+        },
+        {
+          "caller": "wait",
+          "callee": "self.sem.get",
+          "lineNumber": 84
+        },
+        {
+          "caller": "wait",
+          "callee": "Ok",
+          "lineNumber": 85
+        },
+        {
+          "caller": "wait",
+          "callee": "Err",
+          "lineNumber": 87
+        },
+        {
+          "caller": "wait",
+          "callee": "io::Error::last_os_error",
+          "lineNumber": 87
+        },
+        {
+          "caller": "wait_through_intr",
+          "callee": "self.wait",
+          "lineNumber": 95
+        },
+        {
+          "caller": "wait_through_intr",
+          "callee": "os_error.raw_os_error().expect",
+          "lineNumber": 97
+        },
+        {
+          "caller": "wait_through_intr",
+          "callee": "os_error.raw_os_error",
+          "lineNumber": 97
+        },
+        {
+          "caller": "wait_through_intr",
+          "callee": "thread::yield_now",
+          "lineNumber": 99
+        },
+        {
+          "caller": "wait_through_intr",
+          "callee": "Err",
+          "lineNumber": 102
+        },
+        {
+          "caller": "wait_through_intr",
+          "callee": "Ok",
+          "lineNumber": 104
+        },
+        {
+          "caller": "drop",
+          "callee": "libc::sem_destroy",
+          "lineNumber": 115
+        },
+        {
+          "caller": "drop",
+          "callee": "self.sem.get",
+          "lineNumber": 115
+        },
+        {
+          "caller": "default",
+          "callee": "libc::syscall",
+          "lineNumber": 127
+        },
+        {
+          "caller": "default",
+          "callee": "SigHandler::SigAction",
+          "lineNumber": 128
+        },
+        {
+          "caller": "default",
+          "callee": "SigAction::new",
+          "lineNumber": 129
+        },
+        {
+          "caller": "default",
+          "callee": "SigSet::empty",
+          "lineNumber": 132
+        },
+        {
+          "caller": "default",
+          "callee": "Box::new",
+          "lineNumber": 135
+        },
+        {
+          "caller": "default",
+          "callee": "sigaction(Signal::SIGPROF, &action).expect",
+          "lineNumber": 135
+        },
+        {
+          "caller": "default",
+          "callee": "sigaction",
+          "lineNumber": 135
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "reset_shared_state",
+          "lineNumber": 152
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "send_sigprof",
+          "lineNumber": 155
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "SHARED_STATE.0.get",
+          "lineNumber": 161
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg2\n                .as_ref()\n                .unwrap()\n                .wait_through_intr().expect",
+          "lineNumber": 162
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg2\n                .as_ref()\n                .unwrap().wait_through_intr",
+          "lineNumber": 162
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg2\n                .as_ref().unwrap",
+          "lineNumber": 162
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg2.as_ref",
+          "lineNumber": 162
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "NativeStack::default",
+          "lineNumber": 169
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "backtrace::trace_unsynchronized",
+          "lineNumber": 171
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "frame.ip",
+          "lineNumber": 172
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "frame.sp",
+          "lineNumber": 173
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "native_stack.process_register(ip, sp).is_ok",
+          "lineNumber": 176
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "native_stack.process_register",
+          "lineNumber": 176
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "Ok",
+          "lineNumber": 179
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg3\n                .as_ref()\n                .unwrap()\n                .post().expect",
+          "lineNumber": 182
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg3\n                .as_ref()\n                .unwrap().post",
+          "lineNumber": 182
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg3\n                .as_ref().unwrap",
+          "lineNumber": 182
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg3.as_ref",
+          "lineNumber": 182
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg4\n                .as_ref()\n                .unwrap()\n                .wait_through_intr().expect",
+          "lineNumber": 190
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg4\n                .as_ref()\n                .unwrap().wait_through_intr",
+          "lineNumber": 190
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg4\n                .as_ref().unwrap",
+          "lineNumber": 190
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "shared_state\n                .msg4.as_ref",
+          "lineNumber": 190
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "clear_shared_state",
+          "lineNumber": 198
+        },
+        {
+          "caller": "drop",
+          "callee": "sigaction(Signal::SIGPROF, &self.old_handler).expect",
+          "lineNumber": 208
+        },
+        {
+          "caller": "drop",
+          "callee": "sigaction",
+          "lineNumber": 208
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "SHARED_STATE.0.get",
+          "lineNumber": 222
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state.msg2.as_ref().unwrap().post().expect",
+          "lineNumber": 225
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state.msg2.as_ref().unwrap().post",
+          "lineNumber": 225
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state.msg2.as_ref().unwrap",
+          "lineNumber": 225
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state.msg2.as_ref",
+          "lineNumber": 225
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state\n        .msg3\n        .as_ref()\n        .unwrap()\n        .wait_through_intr().expect",
+          "lineNumber": 228
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state\n        .msg3\n        .as_ref()\n        .unwrap().wait_through_intr",
+          "lineNumber": 228
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state\n        .msg3\n        .as_ref().unwrap",
+          "lineNumber": 228
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state\n        .msg3.as_ref",
+          "lineNumber": 228
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state.msg4.as_ref().unwrap().post().expect",
+          "lineNumber": 236
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state.msg4.as_ref().unwrap().post",
+          "lineNumber": 236
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state.msg4.as_ref().unwrap",
+          "lineNumber": 236
+        },
+        {
+          "caller": "sigprof_handler",
+          "callee": "shared_state.msg4.as_ref",
+          "lineNumber": 236
+        },
+        {
+          "caller": "send_sigprof",
+          "callee": "libc::syscall",
+          "lineNumber": 242
+        },
+        {
+          "caller": "send_sigprof",
+          "callee": "process::id",
+          "lineNumber": 242
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 12,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "components/background_hang_monitor/sampler_mac.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 164,
+      "nonEmptyLines": 152,
+      "functions": [
+        {
+          "name": "default",
+          "startLine": 30,
+          "endLine": 33,
+          "params": []
+        },
+        {
+          "name": "suspend_and_sample_thread",
+          "startLine": 38,
+          "endLine": 66,
+          "params": []
+        },
+        {
+          "name": "check_kern_return",
+          "startLine": 69,
+          "endLine": 74,
+          "params": [
+            "kret"
+          ]
+        },
+        {
+          "name": "suspend_thread",
+          "startLine": 77,
+          "endLine": 79,
+          "params": [
+            "thread_id"
+          ]
+        },
+        {
+          "name": "get_registers",
+          "startLine": 82,
+          "endLine": 121,
+          "params": [
+            "thread_id"
+          ]
+        },
+        {
+          "name": "resume_thread",
+          "startLine": 123,
+          "endLine": 125,
+          "params": [
+            "thread_id"
+          ]
+        },
+        {
+          "name": "frame_pointer_stack_walk",
+          "startLine": 128,
+          "endLine": 164,
+          "params": [
+            "regs"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Registers",
+          "startLine": 15,
+          "endLine": 22,
+          "methods": [],
+          "properties": [
+            "instruction_ptr",
+            "stack_ptr",
+            "frame_ptr"
+          ]
+        },
+        {
+          "name": "MacOsSampler",
+          "startLine": 24,
+          "endLine": 26,
+          "methods": [
+            "default",
+            "suspend_and_sample_thread"
+          ],
+          "properties": [
+            "thread_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "MacOsSampler",
+          "line": 24,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "default",
+          "callee": "mach2::mach_init::mach_thread_self",
+          "lineNumber": 31
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "panic::take_hook",
+          "lineNumber": 44
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "panic::set_hook",
+          "lineNumber": 45
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "Box::new",
+          "lineNumber": 45
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "process::abort",
+          "lineNumber": 47
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "suspend_thread",
+          "lineNumber": 50
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "panic::set_hook",
+          "lineNumber": 51
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "Err",
+          "lineNumber": 52
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "get_registers",
+          "lineNumber": 54
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "Ok",
+          "lineNumber": 55
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "frame_pointer_stack_walk",
+          "lineNumber": 55
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "Err",
+          "lineNumber": 56
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "resume_thread",
+          "lineNumber": 58
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "process::abort",
+          "lineNumber": 59
+        },
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "panic::set_hook",
+          "lineNumber": 63
+        },
+        {
+          "caller": "check_kern_return",
+          "callee": "Err",
+          "lineNumber": 71
+        },
+        {
+          "caller": "check_kern_return",
+          "callee": "Ok",
+          "lineNumber": 73
+        },
+        {
+          "caller": "suspend_thread",
+          "callee": "check_kern_return",
+          "lineNumber": 78
+        },
+        {
+          "caller": "suspend_thread",
+          "callee": "mach2::thread_act::thread_suspend",
+          "lineNumber": 78
+        },
+        {
+          "caller": "get_registers",
+          "callee": "mach2::structs::x86_thread_state64_t::new",
+          "lineNumber": 85
+        },
+        {
+          "caller": "get_registers",
+          "callee": "mach2::structs::x86_thread_state64_t::count",
+          "lineNumber": 86
+        },
+        {
+          "caller": "get_registers",
+          "callee": "mach2::thread_act::thread_get_state",
+          "lineNumber": 88
+        },
+        {
+          "caller": "get_registers",
+          "callee": "check_kern_return",
+          "lineNumber": 95
+        },
+        {
+          "caller": "get_registers",
+          "callee": "Ok",
+          "lineNumber": 96
+        },
+        {
+          "caller": "get_registers",
+          "callee": "mach2::structs::arm_thread_state64_t::new",
+          "lineNumber": 104
+        },
+        {
+          "caller": "get_registers",
+          "callee": "mach2::structs::arm_thread_state64_t::count",
+          "lineNumber": 105
+        },
+        {
+          "caller": "get_registers",
+          "callee": "mach2::thread_act::thread_get_state",
+          "lineNumber": 107
+        },
+        {
+          "caller": "get_registers",
+          "callee": "check_kern_return",
+          "lineNumber": 114
+        },
+        {
+          "caller": "get_registers",
+          "callee": "Ok",
+          "lineNumber": 115
+        },
+        {
+          "caller": "resume_thread",
+          "callee": "check_kern_return",
+          "lineNumber": 124
+        },
+        {
+          "caller": "resume_thread",
+          "callee": "mach2::thread_act::thread_resume",
+          "lineNumber": 124
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "NativeStack::default",
+          "lineNumber": 132
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "libc::pthread_self",
+          "lineNumber": 134
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "libc::pthread_get_stackaddr_np",
+          "lineNumber": 135
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "libc::pthread_get_stacksize_np",
+          "lineNumber": 136
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "native_stack.process_register",
+          "lineNumber": 139
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "current.is_null",
+          "lineNumber": 141
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "stackaddr.add",
+          "lineNumber": 146
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "current.add",
+          "lineNumber": 152
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "current.add",
+          "lineNumber": 153
+        },
+        {
+          "caller": "frame_pointer_stack_walk",
+          "callee": "native_stack.process_register",
+          "lineNumber": 154
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 7,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/background_hang_monitor/sampler_windows.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 39,
+      "nonEmptyLines": 32,
+      "functions": [
+        {
+          "name": "default",
+          "startLine": 15,
+          "endLine": 18,
+          "params": []
+        },
+        {
+          "name": "suspend_and_sample_thread",
+          "startLine": 22,
+          "endLine": 38,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "WindowsSampler",
+          "startLine": 10,
+          "endLine": 12,
+          "methods": [
+            "default",
+            "suspend_and_sample_thread"
+          ],
+          "properties": [
+            "thread_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WindowsSampler",
+          "line": 10,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "suspend_and_sample_thread",
+          "callee": "Err",
+          "lineNumber": 37
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    }
+  ]
+}

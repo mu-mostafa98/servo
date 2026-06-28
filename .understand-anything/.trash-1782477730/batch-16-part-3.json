@@ -1,0 +1,3623 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/html/htmllielement.rs",
+      "type": "file",
+      "name": "htmllielement.rs",
+      "filePath": "components/script/dom/html/htmllielement.rs",
+      "summary": "Implements the DOM interface for the HTML list item element (li), managing the value attribute for ordered list numbering.",
+      "tags": [
+        "dom",
+        "html-element",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmllielement.rs:HTMLLIElement",
+      "type": "class",
+      "name": "HTMLLIElement",
+      "filePath": "components/script/dom/html/htmllielement.rs",
+      "lineRange": [
+        20,
+        22
+      ],
+      "summary": "DOM implementation of the HTMLLIElement WebIDL interface, defining the struct and methods for this HTML element type.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllielement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmllielement.rs",
+      "lineRange": [
+        35,
+        48
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/html/htmllinkelement.rs",
+      "type": "file",
+      "name": "htmllinkelement.rs",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "summary": "Implements the DOM interface for the HTML link element (link), managing stylesheet loading, prefetch/preload/modulepreload resource hints, favicon fetching, and render-blocking behavior.",
+      "tags": [
+        "dom",
+        "html-element",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmllinkelement.rs:RequestGenerationId",
+      "type": "class",
+      "name": "RequestGenerationId",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        69,
+        69
+      ],
+      "summary": "Unique identifier for tracking request generations in link element resource fetching.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmllinkelement.rs:HTMLLinkElement",
+      "type": "class",
+      "name": "HTMLLinkElement",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        78,
+        115
+      ],
+      "summary": "DOM implementation of the HTMLLinkElement WebIDL interface, defining the struct and methods for this HTML element type.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmllinkelement.rs:FaviconFetchContext",
+      "type": "class",
+      "name": "FaviconFetchContext",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        1250,
+        1258
+      ],
+      "summary": "Snapshot context for favicon fetch response processing within the link element.",
+      "tags": [
+        "dom",
+        "rust",
+        "context",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        118,
+        140
+      ],
+      "summary": "Initializes the inherited DOM element struct fields with default values.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        142,
+        158
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:get_request_generation_id",
+      "type": "function",
+      "name": "get_request_generation_id",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        160,
+        162
+      ],
+      "summary": "Attribute getter for the request_generation_id property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:remove_stylesheet",
+      "type": "function",
+      "name": "remove_stylesheet",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        165,
+        175
+      ],
+      "summary": "Implements DOM behavior for the remove_stylesheet method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "lifecycle",
+        "dom-tree"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:set_stylesheet",
+      "type": "function",
+      "name": "set_stylesheet",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        180,
+        193
+      ],
+      "summary": "Attribute setter for the stylesheet property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:get_stylesheet",
+      "type": "function",
+      "name": "get_stylesheet",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        195,
+        197
+      ],
+      "summary": "Attribute getter for the stylesheet property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:get_cssom_stylesheet",
+      "type": "function",
+      "name": "get_cssom_stylesheet",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        199,
+        214
+      ],
+      "summary": "Attribute getter for the cssom_stylesheet property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:is_alternate",
+      "type": "function",
+      "name": "is_alternate",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        216,
+        222
+      ],
+      "summary": "Implements DOM behavior for the is_alternate method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:is_effectively_disabled",
+      "type": "function",
+      "name": "is_effectively_disabled",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        224,
+        228
+      ],
+      "summary": "Implements DOM behavior for the is_effectively_disabled method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        243,
+        428
+      ],
+      "summary": "Handles attribute change notifications, triggering element-specific behavior when attributes are modified.",
+      "tags": [
+        "dom",
+        "rust",
+        "attribute",
+        "lifecycle"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:bind_to_tree",
+      "type": "function",
+      "name": "bind_to_tree",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        440,
+        479
+      ],
+      "summary": "Lifecycle hook called when the element is inserted into the DOM tree.",
+      "tags": [
+        "dom",
+        "rust",
+        "lifecycle",
+        "dom-tree"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:processing_options",
+      "type": "function",
+      "name": "processing_options",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        501,
+        550
+      ],
+      "summary": "Implements DOM behavior for the processing_options method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:default_fetch_and_process_the_linked_resource",
+      "type": "function",
+      "name": "default_fetch_and_process_the_linked_resource",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        556,
+        579
+      ],
+      "summary": "Implements DOM behavior for the default_fetch_and_process_the_linked_resource method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:linked_resource_fetch_setup",
+      "type": "function",
+      "name": "linked_resource_fetch_setup",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        582,
+        619
+      ],
+      "summary": "Implements DOM behavior for the linked_resource_fetch_setup method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:fetch_and_process_prefetch_link",
+      "type": "function",
+      "name": "fetch_and_process_prefetch_link",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        622,
+        658
+      ],
+      "summary": "Implements DOM behavior for the fetch_and_process_prefetch_link method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:handle_stylesheet_url",
+      "type": "function",
+      "name": "handle_stylesheet_url",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        661,
+        721
+      ],
+      "summary": "Implements DOM behavior for the handle_stylesheet_url method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:handle_disabled_attribute_change",
+      "type": "function",
+      "name": "handle_disabled_attribute_change",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        724,
+        734
+      ],
+      "summary": "Implements DOM behavior for the handle_disabled_attribute_change method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:handle_favicon_url",
+      "type": "function",
+      "name": "handle_favicon_url",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        736,
+        800
+      ],
+      "summary": "Implements DOM behavior for the handle_favicon_url method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:register_image_cache_callback",
+      "type": "function",
+      "name": "register_image_cache_callback",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        802,
+        836
+      ],
+      "summary": "Registers a callback for image cache event notifications.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:process_favicon_response",
+      "type": "function",
+      "name": "process_favicon_response",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        839,
+        892
+      ],
+      "summary": "Implements DOM behavior for the process_favicon_response method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:handle_preload_url",
+      "type": "function",
+      "name": "handle_preload_url",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        896,
+        925
+      ],
+      "summary": "Implements DOM behavior for the handle_preload_url method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:fire_event_after_response",
+      "type": "function",
+      "name": "fire_event_after_response",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        928,
+        940
+      ],
+      "summary": "Implements DOM behavior for the fire_event_after_response method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:fetch_and_process_modulepreload",
+      "type": "function",
+      "name": "fetch_and_process_modulepreload",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        943,
+        1049
+      ],
+      "summary": "Implements DOM behavior for the fetch_and_process_modulepreload method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:load_finished",
+      "type": "function",
+      "name": "load_finished",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        1057,
+        1071
+      ],
+      "summary": "Implements DOM behavior for the load_finished method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:potentially_render_blocking",
+      "type": "function",
+      "name": "potentially_render_blocking",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        1078,
+        1089
+      ],
+      "summary": "Implements DOM behavior for the potentially_render_blocking method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "rendering",
+        "video"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:RelList",
+      "type": "function",
+      "name": "RelList",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        1168,
+        1193
+      ],
+      "summary": "Implements DOM behavior for the RelList method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:Blocking",
+      "type": "function",
+      "name": "Blocking",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        1214,
+        1223
+      ],
+      "summary": "Implements DOM behavior for the Blocking method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:process_response",
+      "type": "function",
+      "name": "process_response",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        1263,
+        1273
+      ],
+      "summary": "Fetch response processing for resource loading (initial response, data chunks, completion, CSP violations).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:process_response_chunk",
+      "type": "function",
+      "name": "process_response_chunk",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        1275,
+        1285
+      ],
+      "summary": "Fetch response processing for resource loading (initial response, data chunks, completion, CSP violations).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmllinkelement.rs:process_response_eof",
+      "type": "function",
+      "name": "process_response_eof",
+      "filePath": "components/script/dom/html/htmllinkelement.rs",
+      "lineRange": [
+        1287,
+        1299
+      ],
+      "summary": "Fetch response processing for resource loading (initial response, data chunks, completion, CSP violations).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/html/htmlmapelement.rs",
+      "type": "file",
+      "name": "htmlmapelement.rs",
+      "filePath": "components/script/dom/html/htmlmapelement.rs",
+      "summary": "Implements the DOM interface for the HTML map element (map), managing associated image map area elements for client-side image mapping.",
+      "tags": [
+        "dom",
+        "html-element",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmapelement.rs:HTMLMapElement",
+      "type": "class",
+      "name": "HTMLMapElement",
+      "filePath": "components/script/dom/html/htmlmapelement.rs",
+      "lineRange": [
+        22,
+        26
+      ],
+      "summary": "DOM implementation of the HTMLMapElement WebIDL interface, defining the struct and methods for this HTML element type.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmapelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmlmapelement.rs",
+      "lineRange": [
+        29,
+        38
+      ],
+      "summary": "Initializes the inherited DOM element struct fields with default values.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmapelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlmapelement.rs",
+      "lineRange": [
+        40,
+        53
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmapelement.rs:get_area_elements",
+      "type": "function",
+      "name": "get_area_elements",
+      "filePath": "components/script/dom/html/htmlmapelement.rs",
+      "lineRange": [
+        55,
+        60
+      ],
+      "summary": "Attribute getter for the area_elements property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmapelement.rs:Areas",
+      "type": "function",
+      "name": "Areas",
+      "filePath": "components/script/dom/html/htmlmapelement.rs",
+      "lineRange": [
+        71,
+        82
+      ],
+      "summary": "Returns the collection of area elements associated with this map element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/html/htmlmediaelement.rs",
+      "type": "file",
+      "name": "htmlmediaelement.rs",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "summary": "Implements the DOM interface for the HTML media element (audio/video), managing resource selection, playback control, seek operations, media player lifecycle, and render loop for video frames.",
+      "tags": [
+        "dom",
+        "html-element",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:FrameHolder",
+      "type": "class",
+      "name": "FrameHolder",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        131,
+        134
+      ],
+      "summary": "Container for a single decoded video frame with its presentation metadata.",
+      "tags": [
+        "dom",
+        "rust",
+        "rendering",
+        "frame"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:MediaFrameRenderer",
+      "type": "class",
+      "name": "MediaFrameRenderer",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        177,
+        190
+      ],
+      "summary": "Renderer abstraction for presenting decoded video frames to the compositor or surface.",
+      "tags": [
+        "dom",
+        "rust",
+        "rendering",
+        "frame"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElement",
+      "type": "class",
+      "name": "HTMLMediaElement",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        520,
+        616
+      ],
+      "summary": "DOM implementation of the HTMLMediaElement WebIDL interface, the base type for audio and video elements with playback, seeking, and media resource management.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:NetworkState",
+      "type": "class",
+      "name": "NetworkState",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        621,
+        626
+      ],
+      "summary": "Enumeration of media element network states tracking resource availability.",
+      "tags": [
+        "dom",
+        "rust",
+        "state",
+        "enumeration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:ReadyState",
+      "type": "class",
+      "name": "ReadyState",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        632,
+        638
+      ],
+      "summary": "Enumeration of media element ready states indicating how much data is available for playback.",
+      "tags": [
+        "dom",
+        "rust",
+        "state",
+        "enumeration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:MediaElementMicrotask",
+      "type": "class",
+      "name": "MediaElementMicrotask",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3474,
+        3496
+      ],
+      "summary": "Microtask wrapper for deferred media element operations.",
+      "tags": [
+        "dom",
+        "rust",
+        "microtask"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:BufferedDataSource",
+      "type": "class",
+      "name": "BufferedDataSource",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3571,
+        3579
+      ],
+      "summary": "Manages the buffered data flow from fetched media responses to the media player decoder.",
+      "tags": [
+        "dom",
+        "rust",
+        "source",
+        "responsive-image",
+        "buffer",
+        "data"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElementFetchContext",
+      "type": "class",
+      "name": "HTMLMediaElementFetchContext",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3650,
+        3664
+      ],
+      "summary": "Snapshot context for media element fetch response processing.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface",
+        "context",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElementFetchListener",
+      "type": "class",
+      "name": "HTMLMediaElementFetchListener",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3719,
+        3738
+      ],
+      "summary": "Fetch listener implementation handling media resource response events (response, chunk, EOF, CSP violations).",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElementEventHandler",
+      "type": "class",
+      "name": "HTMLMediaElementEventHandler",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        4027,
+        4029
+      ],
+      "summary": "Handler for media element events dispatched during playback lifecycle.",
+      "tags": [
+        "dom",
+        "rust",
+        "html-element",
+        "interface",
+        "event-handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:get",
+      "type": "function",
+      "name": "get",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        159,
+        169
+      ],
+      "summary": "Implements DOM behavior for the get method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        193,
+        210
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:setup",
+      "type": "function",
+      "name": "setup",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        212,
+        278
+      ],
+      "summary": "Implements DOM behavior for the setup method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:reset",
+      "type": "function",
+      "name": "reset",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        280,
+        308
+      ],
+      "summary": "Resets the element state to its default value.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:set_poster_frame",
+      "type": "function",
+      "name": "set_poster_frame",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        310,
+        318
+      ],
+      "summary": "Attribute setter for the poster_frame property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter",
+        "rendering",
+        "video"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        328,
+        463
+      ],
+      "summary": "Renders the current video frame to the compositor surface.",
+      "tags": [
+        "dom",
+        "rust",
+        "rendering",
+        "video"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        648,
+        700
+      ],
+      "summary": "Initializes the inherited DOM element struct fields with default values.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:network_state",
+      "type": "function",
+      "name": "network_state",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        702,
+        704
+      ],
+      "summary": "Implements DOM behavior for the network_state method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:get_ready_state",
+      "type": "function",
+      "name": "get_ready_state",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        706,
+        708
+      ],
+      "summary": "Attribute getter for the ready_state property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:update_media_state",
+      "type": "function",
+      "name": "update_media_state",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        719,
+        746
+      ],
+      "summary": "Implements DOM behavior for the update_media_state method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:delay_load_event",
+      "type": "function",
+      "name": "delay_load_event",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        754,
+        765
+      ],
+      "summary": "Implements DOM behavior for the delay_load_event method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:time_marches_on",
+      "type": "function",
+      "name": "time_marches_on",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        768,
+        779
+      ],
+      "summary": "Implements DOM behavior for the time_marches_on method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:internal_play_steps",
+      "type": "function",
+      "name": "internal_play_steps",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        782,
+        864
+      ],
+      "summary": "Core playback control steps for media element play/pause with promise management.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:internal_pause_steps",
+      "type": "function",
+      "name": "internal_pause_steps",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        867,
+        911
+      ],
+      "summary": "Core playback control steps for media element play/pause with promise management.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:notify_about_playing",
+      "type": "function",
+      "name": "notify_about_playing",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        919,
+        944
+      ],
+      "summary": "Manages play promise lifecycle for media element asynchronous playback start.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:change_ready_state",
+      "type": "function",
+      "name": "change_ready_state",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        951,
+        1063
+      ],
+      "summary": "Updates the media element ready state and fires appropriate events.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:invoke_resource_selection_algorithm",
+      "type": "function",
+      "name": "invoke_resource_selection_algorithm",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1066,
+        1094
+      ],
+      "summary": "Main resource selection algorithm for media elements, choosing and loading the appropriate media source.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:resource_selection_algorithm_sync",
+      "type": "function",
+      "name": "resource_selection_algorithm_sync",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1097,
+        1168
+      ],
+      "summary": "Main resource selection algorithm for media elements, choosing and loading the appropriate media source.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:load_from_src_object",
+      "type": "function",
+      "name": "load_from_src_object",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1171,
+        1183
+      ],
+      "summary": "Loads media resource from different sources (src attribute, srcObject, source child elements).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:load_from_src_attribute",
+      "type": "function",
+      "name": "load_from_src_attribute",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1186,
+        1214
+      ],
+      "summary": "Loads media resource from different sources (src attribute, srcObject, source child elements).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:load_from_source_child",
+      "type": "function",
+      "name": "load_from_source_child",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1217,
+        1287
+      ],
+      "summary": "Loads media resource from different sources (src attribute, srcObject, source child elements).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:load_from_source_child_failure_steps",
+      "type": "function",
+      "name": "load_from_source_child_failure_steps",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1290,
+        1317
+      ],
+      "summary": "Implements DOM behavior for the load_from_source_child_failure_steps method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:select_next_source_child",
+      "type": "function",
+      "name": "select_next_source_child",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1320,
+        1403
+      ],
+      "summary": "Implements DOM behavior for the select_next_source_child method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:resource_selection_algorithm_failure_steps",
+      "type": "function",
+      "name": "resource_selection_algorithm_failure_steps",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1406,
+        1431
+      ],
+      "summary": "Implements DOM behavior for the resource_selection_algorithm_failure_steps method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:fetch_request",
+      "type": "function",
+      "name": "fetch_request",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1433,
+        1494
+      ],
+      "summary": "Initiates an image fetch request through the resource loader.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:eligible_for_autoplay",
+      "type": "function",
+      "name": "eligible_for_autoplay",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1497,
+        1519
+      ],
+      "summary": "Implements DOM behavior for the eligible_for_autoplay method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:resource_fetch_algorithm",
+      "type": "function",
+      "name": "resource_fetch_algorithm",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1522,
+        1615
+      ],
+      "summary": "Implements DOM behavior for the resource_fetch_algorithm method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:queue_dedicated_media_source_failure_steps",
+      "type": "function",
+      "name": "queue_dedicated_media_source_failure_steps",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1620,
+        1668
+      ],
+      "summary": "Error handling steps for media source loading or decoding failures.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:media_element_load_algorithm",
+      "type": "function",
+      "name": "media_element_load_algorithm",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1704,
+        1812
+      ],
+      "summary": "Main load algorithm for media elements, orchestrating resource selection and playback readiness.",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:queue_media_element_task_to_fire_event",
+      "type": "function",
+      "name": "queue_media_element_task_to_fire_event",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1816,
+        1831
+      ],
+      "summary": "Implements DOM behavior for the queue_media_element_task_to_fire_event method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:fulfill_in_flight_play_promises",
+      "type": "function",
+      "name": "fulfill_in_flight_play_promises",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1865,
+        1881
+      ],
+      "summary": "Manages play promise lifecycle for media element asynchronous playback start.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:handle_source_child_insertion",
+      "type": "function",
+      "name": "handle_source_child_insertion",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1883,
+        1919
+      ],
+      "summary": "Implements DOM behavior for the handle_source_child_insertion method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:select_next_source_child_after_wait",
+      "type": "function",
+      "name": "select_next_source_child_after_wait",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1922,
+        1932
+      ],
+      "summary": "Implements DOM behavior for the select_next_source_child_after_wait method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:media_data_processing_fatal_steps",
+      "type": "function",
+      "name": "media_data_processing_fatal_steps",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1951,
+        1979
+      ],
+      "summary": "Error handling steps for media source loading or decoding failures.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:seek",
+      "type": "function",
+      "name": "seek",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        1982,
+        2080
+      ],
+      "summary": "Implements the media element seeking algorithm to a specified time position.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:seek_end",
+      "type": "function",
+      "name": "seek_end",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2083,
+        2104
+      ],
+      "summary": "Implements the media element seeking algorithm to a specified time position.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:set_poster_frame",
+      "type": "function",
+      "name": "set_poster_frame",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2107,
+        2115
+      ],
+      "summary": "Attribute setter for the poster_frame property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter",
+        "rendering",
+        "video"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:create_media_player",
+      "type": "function",
+      "name": "create_media_player",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2124,
+        2212
+      ],
+      "summary": "Implements DOM behavior for the create_media_player method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:reset_media_player",
+      "type": "function",
+      "name": "reset_media_player",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2214,
+        2232
+      ],
+      "summary": "Implements DOM behavior for the reset_media_player method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:set_audio_track",
+      "type": "function",
+      "name": "set_audio_track",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2234,
+        2240
+      ],
+      "summary": "Attribute setter for the audio_track property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:set_video_track",
+      "type": "function",
+      "name": "set_video_track",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2242,
+        2248
+      ],
+      "summary": "Attribute setter for the video_track property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:ended_playback",
+      "type": "function",
+      "name": "ended_playback",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2262,
+        2284
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:end_of_playback_in_forwards_direction",
+      "type": "function",
+      "name": "end_of_playback_in_forwards_direction",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2287,
+        2343
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_end",
+      "type": "function",
+      "name": "playback_end",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2356,
+        2366
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_error",
+      "type": "function",
+      "name": "playback_error",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2368,
+        2387
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_metadata_updated",
+      "type": "function",
+      "name": "playback_metadata_updated",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2389,
+        2627
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_duration_changed",
+      "type": "function",
+      "name": "playback_duration_changed",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2629,
+        2651
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_video_frame_updated",
+      "type": "function",
+      "name": "playback_video_frame_updated",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2653,
+        2681
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback",
+        "rendering",
+        "video"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_need_data",
+      "type": "function",
+      "name": "playback_need_data",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2683,
+        2719
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_enough_data",
+      "type": "function",
+      "name": "playback_enough_data",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2721,
+        2731
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_position_changed",
+      "type": "function",
+      "name": "playback_position_changed",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2733,
+        2754
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_seek_done",
+      "type": "function",
+      "name": "playback_seek_done",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2756,
+        2772
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:playback_state_changed",
+      "type": "function",
+      "name": "playback_state_changed",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2774,
+        2804
+      ],
+      "summary": "Playback state management for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:seekable",
+      "type": "function",
+      "name": "seekable",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2806,
+        2815
+      ],
+      "summary": "Implements DOM behavior for the seekable method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:render_controls",
+      "type": "function",
+      "name": "render_controls",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2824,
+        2885
+      ],
+      "summary": "Toggles the display of built-in media controls for the element.",
+      "tags": [
+        "dom",
+        "rust",
+        "rendering",
+        "video"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:get_current_frame",
+      "type": "function",
+      "name": "get_current_frame",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2894,
+        2901
+      ],
+      "summary": "Attribute getter for the current_frame property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter",
+        "rendering",
+        "video"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:get_current_frame_to_present",
+      "type": "function",
+      "name": "get_current_frame_to_present",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2905,
+        2918
+      ],
+      "summary": "Attribute getter for the current_frame_to_present property.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter",
+        "rendering",
+        "video"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:set_audio_renderer",
+      "type": "function",
+      "name": "set_audio_renderer",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2924,
+        2945
+      ],
+      "summary": "Attribute setter for the audio_renderer property.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter",
+        "rendering",
+        "video"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:origin_is_clean",
+      "type": "function",
+      "name": "origin_is_clean",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2957,
+        2976
+      ],
+      "summary": "Implements DOM behavior for the origin_is_clean method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:NetworkState",
+      "type": "function",
+      "name": "NetworkState",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2981,
+        2983
+      ],
+      "summary": "Implements DOM behavior for the NetworkState method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:ReadyState",
+      "type": "function",
+      "name": "ReadyState",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        2986,
+        2988
+      ],
+      "summary": "Implements DOM behavior for the ReadyState method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:SetMuted",
+      "type": "function",
+      "name": "SetMuted",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3031,
+        3053
+      ],
+      "summary": "Implements DOM behavior for the SetMuted method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:GetSrcObject",
+      "type": "function",
+      "name": "GetSrcObject",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3056,
+        3065
+      ],
+      "summary": "Implements DOM behavior for the GetSrcObject method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:Play",
+      "type": "function",
+      "name": "Play",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3111,
+        3138
+      ],
+      "summary": "Playback control method for media element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:Pause",
+      "type": "function",
+      "name": "Pause",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3141,
+        3150
+      ],
+      "summary": "Playback control method for media element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:SetDefaultPlaybackRate",
+      "type": "function",
+      "name": "SetDefaultPlaybackRate",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3163,
+        3183
+      ],
+      "summary": "Playback rate property accessor for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:SetPlaybackRate",
+      "type": "function",
+      "name": "SetPlaybackRate",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3191,
+        3222
+      ],
+      "summary": "Playback rate property accessor for media element.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:CurrentTime",
+      "type": "function",
+      "name": "CurrentTime",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3230,
+        3242
+      ],
+      "summary": "Time-related property accessor for media element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:Buffered",
+      "type": "function",
+      "name": "Buffered",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3289,
+        3298
+      ],
+      "summary": "Playback state property accessor for media element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:AddTextTrack",
+      "type": "function",
+      "name": "AddTextTrack",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3322,
+        3346
+      ],
+      "summary": "Track management method for media element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:SetVolume",
+      "type": "function",
+      "name": "SetVolume",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3354,
+        3386
+      ],
+      "summary": "Volume property accessor for audio output.",
+      "tags": [
+        "dom",
+        "rust",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3394,
+        3435
+      ],
+      "summary": "Handles attribute change notifications, triggering element-specific behavior when attributes are modified.",
+      "tags": [
+        "dom",
+        "rust",
+        "attribute",
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:unbind_from_tree",
+      "type": "function",
+      "name": "unbind_from_tree",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3438,
+        3452
+      ],
+      "summary": "Lifecycle hook called when the element is removed from the DOM tree.",
+      "tags": [
+        "dom",
+        "rust",
+        "lifecycle",
+        "dom-tree"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:adopting_steps",
+      "type": "function",
+      "name": "adopting_steps",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3454,
+        3470
+      ],
+      "summary": "Lifecycle hook handling document adoption or element movement between documents.",
+      "tags": [
+        "dom",
+        "rust",
+        "lifecycle",
+        "dom-tree"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:handler",
+      "type": "function",
+      "name": "handler",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3499,
+        3544
+      ],
+      "summary": "Microtask or event handler infrastructure for deferred DOM operations.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:enter_realm",
+      "type": "function",
+      "name": "enter_realm",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3546,
+        3556
+      ],
+      "summary": "Microtask or event handler infrastructure for deferred DOM operations.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:process_into_player_from_queue",
+      "type": "function",
+      "name": "process_into_player_from_queue",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3603,
+        3630
+      ],
+      "summary": "Implements DOM behavior for the process_into_player_from_queue method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3667,
+        3679
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:origin_is_clean",
+      "type": "function",
+      "name": "origin_is_clean",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3693,
+        3695
+      ],
+      "summary": "Implements DOM behavior for the origin_is_clean method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:process_response",
+      "type": "function",
+      "name": "process_response",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3743,
+        3834
+      ],
+      "summary": "Fetch response processing for resource loading (initial response, data chunks, completion, CSP violations).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:process_response_chunk",
+      "type": "function",
+      "name": "process_response_chunk",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3836,
+        3889
+      ],
+      "summary": "Fetch response processing for resource loading (initial response, data chunks, completion, CSP violations).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:process_response_eof",
+      "type": "function",
+      "name": "process_response_eof",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3891,
+        3956
+      ],
+      "summary": "Fetch response processing for resource loading (initial response, data chunks, completion, CSP violations).",
+      "tags": [
+        "dom",
+        "rust",
+        "loading",
+        "fetch"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:should_invoke",
+      "type": "function",
+      "name": "should_invoke",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3963,
+        3988
+      ],
+      "summary": "Implements DOM behavior for the should_invoke method of this element.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:resource_timing_information",
+      "type": "function",
+      "name": "resource_timing_information",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        3992,
+        4001
+      ],
+      "summary": "Resource Timing API integration for this element's resource loading.",
+      "tags": [
+        "dom",
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        4009,
+        4020
+      ],
+      "summary": "Constructor that creates a new DOM element instance, reflecting it into the JavaScript realm.",
+      "tags": [
+        "dom",
+        "rust",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/html/htmlmediaelement.rs:handle_player_event",
+      "type": "function",
+      "name": "handle_player_event",
+      "filePath": "components/script/dom/html/htmlmediaelement.rs",
+      "lineRange": [
+        4041,
+        4068
+      ],
+      "summary": "Implements DOM behavior for the handle_player_event method of this element.",
+      "tags": [
+        "dom",
+        "rust",
+        "media",
+        "playback"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/html/htmllielement.rs",
+      "target": "class:components/script/dom/html/htmllielement.rs:HTMLLIElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllielement.rs",
+      "target": "class:components/script/dom/html/htmllielement.rs:HTMLLIElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllielement.rs",
+      "target": "function:components/script/dom/html/htmllielement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllielement.rs",
+      "target": "function:components/script/dom/html/htmllielement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "class:components/script/dom/html/htmllinkelement.rs:RequestGenerationId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "class:components/script/dom/html/htmllinkelement.rs:RequestGenerationId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "class:components/script/dom/html/htmllinkelement.rs:HTMLLinkElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "class:components/script/dom/html/htmllinkelement.rs:HTMLLinkElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "class:components/script/dom/html/htmllinkelement.rs:FaviconFetchContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:get_request_generation_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:get_request_generation_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:remove_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:set_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:set_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:get_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:get_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:get_cssom_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:get_cssom_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:is_alternate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:is_alternate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:is_effectively_disabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:is_effectively_disabled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:bind_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:processing_options",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:default_fetch_and_process_the_linked_resource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:linked_resource_fetch_setup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:fetch_and_process_prefetch_link",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:handle_stylesheet_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:handle_disabled_attribute_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:handle_favicon_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:register_image_cache_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:process_favicon_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:handle_preload_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:fire_event_after_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:fire_event_after_response",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:fetch_and_process_modulepreload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:load_finished",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:potentially_render_blocking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:RelList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:Blocking",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:process_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:process_response_chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmllinkelement.rs",
+      "target": "function:components/script/dom/html/htmllinkelement.rs:process_response_eof",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmapelement.rs",
+      "target": "class:components/script/dom/html/htmlmapelement.rs:HTMLMapElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmapelement.rs",
+      "target": "class:components/script/dom/html/htmlmapelement.rs:HTMLMapElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmapelement.rs",
+      "target": "function:components/script/dom/html/htmlmapelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmapelement.rs",
+      "target": "function:components/script/dom/html/htmlmapelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmapelement.rs",
+      "target": "function:components/script/dom/html/htmlmapelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmapelement.rs",
+      "target": "function:components/script/dom/html/htmlmapelement.rs:get_area_elements",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmapelement.rs",
+      "target": "function:components/script/dom/html/htmlmapelement.rs:get_area_elements",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmapelement.rs",
+      "target": "function:components/script/dom/html/htmlmapelement.rs:Areas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:FrameHolder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:MediaFrameRenderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:MediaFrameRenderer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:NetworkState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:NetworkState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:ReadyState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:ReadyState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:MediaElementMicrotask",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:MediaElementMicrotask",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:BufferedDataSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElementFetchContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElementFetchContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElementFetchListener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "class:components/script/dom/html/htmlmediaelement.rs:HTMLMediaElementEventHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:get",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:setup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:reset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_poster_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_poster_frame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:network_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:network_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:get_ready_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:get_ready_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:update_media_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:delay_load_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:delay_load_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:time_marches_on",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:internal_play_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:internal_pause_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:notify_about_playing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:change_ready_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:invoke_resource_selection_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:resource_selection_algorithm_sync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:load_from_src_object",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:load_from_src_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:load_from_source_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:load_from_source_child_failure_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:select_next_source_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:resource_selection_algorithm_failure_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:fetch_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:eligible_for_autoplay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:resource_fetch_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:queue_dedicated_media_source_failure_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:media_element_load_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:queue_media_element_task_to_fire_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:fulfill_in_flight_play_promises",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:handle_source_child_insertion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:handle_source_child_insertion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:select_next_source_child_after_wait",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:media_data_processing_fatal_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:seek",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:seek_end",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_poster_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_poster_frame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:create_media_player",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:reset_media_player",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_audio_track",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_audio_track",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_video_track",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_video_track",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:ended_playback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:end_of_playback_in_forwards_direction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_end",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_metadata_updated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_duration_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_video_frame_updated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_need_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_enough_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_position_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_seek_done",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:playback_state_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:seekable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:render_controls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:get_current_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:get_current_frame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:get_current_frame_to_present",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:get_current_frame_to_present",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_audio_renderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:set_audio_renderer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:origin_is_clean",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:origin_is_clean",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:NetworkState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:NetworkState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:ReadyState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:ReadyState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:SetMuted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:GetSrcObject",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:Play",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:Pause",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:SetDefaultPlaybackRate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:SetPlaybackRate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:CurrentTime",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:Buffered",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:AddTextTrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:SetVolume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:unbind_from_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:adopting_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:handler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:enter_realm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:process_into_player_from_queue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:origin_is_clean",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:origin_is_clean",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:process_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:process_response_chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:process_response_eof",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:should_invoke",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:resource_timing_information",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmlmediaelement.rs",
+      "target": "function:components/script/dom/html/htmlmediaelement.rs:handle_player_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

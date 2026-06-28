@@ -1,0 +1,743 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "type": "file",
+      "name": "readablestreamdefaultreader.rs",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "summary": "Implements the ReadableStreamDefaultReader for reading chunks from default readable streams, managing read requests, release logic, and byte tee closed promise handlers.",
+      "tags": [
+        "streams-api",
+        "default-reader",
+        "read-request"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestreamdefaultreader.rs:ReadRequest",
+      "type": "class",
+      "name": "ReadRequest",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        87,
+        110
+      ],
+      "summary": "The ReadRequest class implementing stream operations within the readablestreamdefaultreader module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestreamdefaultreader.rs:ReadableStreamDefaultReader",
+      "type": "class",
+      "name": "ReadableStreamDefaultReader",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        332,
+        343
+      ],
+      "summary": "The ReadableStreamDefaultReader class implementing stream operations within the readablestreamdefaultreader module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:read_loop",
+      "type": "function",
+      "name": "read_loop",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        65,
+        83
+      ],
+      "summary": "Implements the read_loop operation within the stream protocol.",
+      "tags": [
+        "function",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:chunk_steps",
+      "type": "function",
+      "name": "chunk_steps",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        114,
+        183
+      ],
+      "summary": "Stream step handler for chunk operations.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:close_steps",
+      "type": "function",
+      "name": "close_steps",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        186,
+        225
+      ],
+      "summary": "Stream step handler for close operations.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:error_steps",
+      "type": "function",
+      "name": "error_steps",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        228,
+        256
+      ],
+      "summary": "Stream step handler for error operations.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:callback@280",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        280,
+        296
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:callback@317",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        317,
+        327
+      ],
+      "summary": "Implements the callback operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        346,
+        357
+      ],
+      "summary": "Internal constructor initializing the DOM object with reflector setup.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        368,
+        373
+      ],
+      "summary": "Constructor creating a new DOM-wrapped instance of the enclosing struct.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:set_up",
+      "type": "function",
+      "name": "set_up",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        376,
+        394
+      ],
+      "summary": "Setter for up property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:close",
+      "type": "function",
+      "name": "close",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        397,
+        409
+      ],
+      "summary": "Closes the stream, signaling completion to consumers.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:add_read_request",
+      "type": "function",
+      "name": "add_read_request",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        412,
+        416
+      ],
+      "summary": "Implements the add_read_request operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:get_num_read_requests",
+      "type": "function",
+      "name": "get_num_read_requests",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        419,
+        421
+      ],
+      "summary": "Getter for num read requests property.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:error",
+      "type": "function",
+      "name": "error",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        424,
+        433
+      ],
+      "summary": "Errors the stream, rejecting pending promises and propagating state.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:remove_read_request",
+      "type": "function",
+      "name": "remove_read_request",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        436,
+        441
+      ],
+      "summary": "Implements the remove_read_request operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:release",
+      "type": "function",
+      "name": "release",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        444,
+        458
+      ],
+      "summary": "Implements the release operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:read",
+      "type": "function",
+      "name": "read",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        476,
+        502
+      ],
+      "summary": "Implements the read operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:byte_tee_append_native_handler_to_closed_promise",
+      "type": "function",
+      "name": "byte_tee_append_native_handler_to_closed_promise",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        507,
+        544
+      ],
+      "summary": "Implements the byte_tee_append_native_handler_to_closed_promise operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:default_tee_append_native_handler_to_closed_promise",
+      "type": "function",
+      "name": "default_tee_append_native_handler_to_closed_promise",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        547,
+        580
+      ],
+      "summary": "Implements the default_tee_append_native_handler_to_closed_promise operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:read_all_bytes",
+      "type": "function",
+      "name": "read_all_bytes",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        583,
+        594
+      ],
+      "summary": "Implements the read_all_bytes operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:process_read_requests",
+      "type": "function",
+      "name": "process_read_requests",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        597,
+        619
+      ],
+      "summary": "Implements the process_read_requests operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        624,
+        636
+      ],
+      "summary": "WebIDL-binding constructor invoked from JavaScript.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/stream/readablestreamdefaultreader.rs:Read",
+      "type": "function",
+      "name": "Read",
+      "filePath": "components/script/dom/stream/readablestreamdefaultreader.rs",
+      "lineRange": [
+        639,
+        673
+      ],
+      "summary": "Implements the Read operation within the stream protocol.",
+      "tags": [
+        "method",
+        "streams-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/stream/readablestreamgenericreader.rs",
+      "type": "file",
+      "name": "readablestreamgenericreader.rs",
+      "filePath": "components/script/dom/stream/readablestreamgenericreader.rs",
+      "summary": "Provides the shared ReadableStreamGenericReader trait implemented by both default and BYOB readers, defining generic reader initialization, cancellation, and release operations.",
+      "tags": [
+        "streams-api",
+        "trait",
+        "reader"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/stream/readablestreamgenericreader.rs:ReadableStreamGenericReader",
+      "type": "class",
+      "name": "ReadableStreamGenericReader",
+      "filePath": "components/script/dom/stream/readablestreamgenericreader.rs",
+      "lineRange": [
+        22,
+        173
+      ],
+      "summary": "The ReadableStreamGenericReader class implementing stream operations within the readablestreamgenericreader module.",
+      "tags": [
+        "class",
+        "streams-api",
+        "dom-struct"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "class:components/script/dom/stream/readablestreamdefaultreader.rs:ReadRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "class:components/script/dom/stream/readablestreamdefaultreader.rs:ReadRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "class:components/script/dom/stream/readablestreamdefaultreader.rs:ReadableStreamDefaultReader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "class:components/script/dom/stream/readablestreamdefaultreader.rs:ReadableStreamDefaultReader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:read_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:chunk_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:chunk_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:close_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:close_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:error_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:error_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:callback@280",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:callback@317",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:set_up",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:set_up",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:close",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:add_read_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:add_read_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:get_num_read_requests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:get_num_read_requests",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:remove_read_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:remove_read_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:release",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:release",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:read",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:byte_tee_append_native_handler_to_closed_promise",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:byte_tee_append_native_handler_to_closed_promise",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:default_tee_append_native_handler_to_closed_promise",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:default_tee_append_native_handler_to_closed_promise",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:read_all_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:read_all_bytes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:process_read_requests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:process_read_requests",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamdefaultreader.rs",
+      "target": "function:components/script/dom/stream/readablestreamdefaultreader.rs:Read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamgenericreader.rs",
+      "target": "class:components/script/dom/stream/readablestreamgenericreader.rs:ReadableStreamGenericReader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/stream/readablestreamgenericreader.rs",
+      "target": "class:components/script/dom/stream/readablestreamgenericreader.rs:ReadableStreamGenericReader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

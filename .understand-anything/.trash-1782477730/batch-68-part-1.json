@@ -1,0 +1,820 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/canvas/backend.rs",
+      "type": "file",
+      "name": "backend.rs",
+      "filePath": "components/canvas/backend.rs",
+      "summary": "Defines the GenericDrawTarget trait and Convert trait that form the abstract drawing interface for all canvas backends, with method signatures derived from Servo's legacy Azure backend.",
+      "tags": ["trait-definition", "abstraction", "canvas-backend"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/canvas/backend.rs:GenericDrawTarget",
+      "type": "class",
+      "name": "GenericDrawTarget",
+      "filePath": "components/canvas/backend.rs",
+      "lineRange": [17, 102],
+      "summary": "Abstract trait defining the complete drawing surface API including fill, stroke, text rendering, clipping, shadows, and snapshot operations. Implemented by both GPU (Vello) and CPU (VelloCPU) backends.",
+      "tags": ["trait", "abstraction", "drawing-surface"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/canvas/backend.rs:Convert",
+      "type": "class",
+      "name": "Convert",
+      "filePath": "components/canvas/backend.rs",
+      "lineRange": [106, 108],
+      "summary": "Conversion trait implemented by multiple types across the canvas module to convert between Servo's internal canvas types and peniko/vello rendering types.",
+      "tags": ["trait", "type-conversion"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/canvas/canvas_data.rs",
+      "type": "file",
+      "name": "canvas_data.rs",
+      "filePath": "components/canvas/canvas_data.rs",
+      "summary": "Core canvas drawing data and operations layer that manages a draw target, provides all drawing primitives (rect, path, text, image, shadows, clipping), and handles image key management with the paint API.",
+      "tags": ["drawing", "canvas-api", "painting"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/canvas/canvas_data.rs:CanvasData",
+      "type": "class",
+      "name": "CanvasData",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [24, 28],
+      "summary": "Core data structure holding a draw target, paint API reference, and optional image key. Acts as the central state holder for all canvas drawing operations.",
+      "tags": ["data-structure", "canvas-state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [31, 40],
+      "summary": "Creates a new CanvasData with a draw target sized to the given dimensions, ensuring minimum image dimensions.",
+      "tags": ["constructor", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:set_image_key",
+      "type": "function",
+      "filePath": "components/canvas/canvas_data.rs",
+      "name": "set_image_key",
+      "lineRange": [42, 49],
+      "summary": "Replaces the image key associated with this canvas, registering the new image with the paint API and removing the old one.",
+      "tags": ["image-management", "paint-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:draw_image",
+      "type": "function",
+      "name": "draw_image",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [52, 98],
+      "summary": "Draws a snapshot image onto the canvas with optional source/dest rect clipping, smoothing, shadow effects, composition, and transform.",
+      "tags": ["image-rendering", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:fill_text",
+      "type": "function",
+      "name": "fill_text",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [100, 120],
+      "summary": "Fills text at the specified bounds using the given fill/stroke style, optional shadow, composition mode, and transform.",
+      "tags": ["text-rendering", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:stroke_text",
+      "type": "function",
+      "name": "stroke_text",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [122, 147],
+      "summary": "Strokes text outlines using the specified style and line options, with shadow, composition, and transform support.",
+      "tags": ["text-rendering", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:fill_rect",
+      "type": "function",
+      "name": "fill_rect",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [149, 184],
+      "summary": "Fills a rectangular area with optional shadow effects, composition blending, and transform. Handles zero-size gradient edge cases.",
+      "tags": ["rect-drawing", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:clear_rect",
+      "type": "function",
+      "name": "clear_rect",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [186, 188],
+      "summary": "Clears a rectangular area by delegating to the underlying draw target's clear_rect method.",
+      "tags": ["rect-drawing", "clearing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:stroke_rect",
+      "type": "function",
+      "name": "stroke_rect",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [190, 236],
+      "summary": "Strokes a rectangular outline with line options, optional shadow effects, composition blending, and transform.",
+      "tags": ["rect-drawing", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:fill_path",
+      "type": "function",
+      "name": "fill_path",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [238, 262],
+      "summary": "Fills a path using the specified fill rule and style, with shadow, composition, and transform support.",
+      "tags": ["path-drawing", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:stroke_path",
+      "type": "function",
+      "name": "stroke_path",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [264, 288],
+      "summary": "Strokes a path using the specified style, line options, shadow, composition, and transform.",
+      "tags": ["path-drawing", "drawing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:clip_path",
+      "type": "function",
+      "name": "clip_path",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [290, 297],
+      "summary": "Pushes a path-based clip region onto the draw target's clip stack.",
+      "tags": ["clipping", "drawing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:recreate",
+      "type": "function",
+      "name": "recreate",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [300, 311],
+      "summary": "Recreates the underlying draw target with a new size, preserving the paint API and re-applying image rendering settings.",
+      "tags": ["resizing", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:update_image_rendering",
+      "type": "function",
+      "name": "update_image_rendering",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [314, 327],
+      "summary": "Updates the image rendered by the paint API from the current draw target state, keyed by the canvas epoch for synchronization.",
+      "tags": ["image-management", "paint-api", "synchronization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:put_image_data",
+      "type": "function",
+      "name": "put_image_data",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [330, 341],
+      "summary": "Writes raw image data into the draw target by creating a temporary surface and copying it into place.",
+      "tags": ["image-data", "drawing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:read_pixels",
+      "type": "function",
+      "name": "read_pixels",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [415, 431],
+      "summary": "Reads pixel data from the draw target within a specified rectangle, returning a snapshot with proper bounds checking.",
+      "tags": ["pixel-reading", "snapshot"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:pop_clips",
+      "type": "function",
+      "name": "pop_clips",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [433, 437],
+      "summary": "Pops a specified number of clip regions from the draw target's clip stack.",
+      "tags": ["clipping", "stack-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_data.rs:write_image",
+      "type": "function",
+      "name": "write_image",
+      "filePath": "components/canvas/canvas_data.rs",
+      "lineRange": [455, 491],
+      "summary": "Helper function that draws a snapshot onto a draw target with smoothing, composition, and optional shadow effects, managing source surface creation and image placement.",
+      "tags": ["image-rendering", "internal-helper"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/canvas/canvas_paint_thread.rs",
+      "type": "file",
+      "name": "canvas_paint_thread.rs",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "summary": "Implements the Canvas paint thread that manages multiple canvas instances, processes commands from the constellation, and dispatches drawing operations to the appropriate backend (Vello GPU or Vello CPU).",
+      "tags": ["paint-thread", "canvas", "rendering", "dispatch"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/canvas/canvas_paint_thread.rs:CanvasPaintThread",
+      "type": "class",
+      "name": "CanvasPaintThread",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [22, 26],
+      "summary": "Main paint thread struct holding a map of active canvases, the next canvas ID counter, and the paint API reference. Spawns a dedicated OS thread for canvas message processing.",
+      "tags": ["thread", "paint-api", "canvas-manager"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/canvas/canvas_paint_thread.rs:Canvas",
+      "type": "class",
+      "name": "Canvas",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [306, 310],
+      "summary": "Enum dispatching drawing operations to either the Vello GPU backend or the Vello CPU backend, wrapping a CanvasData instance for each variant.",
+      "tags": ["enum", "dispatch", "backend-selection"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:start",
+      "type": "function",
+      "name": "start",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [39, 89],
+      "summary": "Spawns the canvas paint thread, setting up message receivers for canvas commands and constellation-level messages (create/exit), then enters the message loop.",
+      "tags": ["thread-spawning", "message-loop", "entry-point"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:create_canvas",
+      "type": "function",
+      "name": "create_canvas",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [92, 100],
+      "summary": "Creates a new Canvas instance with the specified size, inserts it into the canvas map, and returns the assigned CanvasId.",
+      "tags": ["canvas-creation", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:process_command",
+      "type": "function",
+      "name": "process_command",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [106, 299],
+      "summary": "Main command dispatcher that processes all canvas operations (resize, remove, set image key, fill/stroke text/rect/path, clip, draw image, read/write pixels) by delegating to the target canvas's methods.",
+      "tags": ["command-dispatcher", "message-handling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [313, 322],
+      "summary": "Creates a new Canvas instance selecting the Vello or VelloCPU backend based on the dom_canvas_backend preference.",
+      "tags": ["constructor", "backend-selection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:stroke_text",
+      "type": "function",
+      "name": "stroke_text",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [340, 371],
+      "summary": "Dispatches stroke text operation to the active backend's CanvasData with shadow, composition, and transform parameters.",
+      "tags": ["text-rendering", "stroke", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:fill_text",
+      "type": "function",
+      "name": "fill_text",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [373, 401],
+      "summary": "Dispatches fill text operation to the active backend's CanvasData with shadow, composition, and transform parameters.",
+      "tags": ["text-rendering", "fill", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:fill_rect",
+      "type": "function",
+      "name": "fill_rect",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [403, 420],
+      "summary": "Dispatches fill rect operation to the active backend's CanvasData with style, shadow, composition, and transform parameters.",
+      "tags": ["rect-drawing", "fill", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:stroke_rect",
+      "type": "function",
+      "name": "stroke_rect",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [422, 450],
+      "summary": "Dispatches stroke rect operation to the active backend's CanvasData with line options, shadow, composition, and transform parameters.",
+      "tags": ["rect-drawing", "stroke", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:fill_path",
+      "type": "function",
+      "name": "fill_path",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [452, 480],
+      "summary": "Dispatches fill path operation to the active backend's CanvasData with fill rule, style, shadow, composition, and transform parameters.",
+      "tags": ["path-drawing", "fill", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:stroke_path",
+      "type": "function",
+      "name": "stroke_path",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [482, 510],
+      "summary": "Dispatches stroke path operation to the active backend's CanvasData with line options, style, shadow, composition, and transform parameters.",
+      "tags": ["path-drawing", "stroke", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/canvas/canvas_paint_thread.rs:draw_image",
+      "type": "function",
+      "name": "draw_image",
+      "filePath": "components/canvas/canvas_paint_thread.rs",
+      "lineRange": [521, 552],
+      "summary": "Dispatches draw image operation to the active backend's CanvasData with source/dest rects, smoothing, shadow, composition, and transform.",
+      "tags": ["image-rendering", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/canvas/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/canvas/lib.rs",
+      "summary": "Crate root for the canvas component that declares all submodules (backend, canvas_data, canvas_paint_thread, peniko_conversions, vello_backend, vello_cpu_backend) and exposes the public canvas_data and canvas_paint_thread modules.",
+      "tags": ["crate-root", "module-declaration", "entry-point"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/canvas/backend.rs",
+      "target": "class:components/canvas/backend.rs:GenericDrawTarget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/backend.rs",
+      "target": "class:components/canvas/backend.rs:Convert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/backend.rs",
+      "target": "class:components/canvas/backend.rs:GenericDrawTarget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/backend.rs",
+      "target": "class:components/canvas/backend.rs:Convert",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "class:components/canvas/canvas_data.rs:CanvasData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:set_image_key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:draw_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:fill_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:stroke_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:fill_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:clear_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:stroke_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:fill_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:stroke_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:clip_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:recreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:update_image_rendering",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:put_image_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:read_pixels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:pop_clips",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:write_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "class:components/canvas/canvas_data.rs:CanvasData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:set_image_key",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:draw_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:fill_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:stroke_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:fill_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:clear_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:stroke_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:fill_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:stroke_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:clip_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:recreate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:update_image_rendering",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:put_image_data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:read_pixels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_data.rs",
+      "target": "function:components/canvas/canvas_data.rs:pop_clips",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "class:components/canvas/canvas_paint_thread.rs:CanvasPaintThread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "class:components/canvas/canvas_paint_thread.rs:Canvas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:start",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:create_canvas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:process_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:stroke_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:fill_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:fill_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:stroke_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:fill_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:stroke_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:draw_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "class:components/canvas/canvas_paint_thread.rs:CanvasPaintThread",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:start",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "function:components/canvas/canvas_paint_thread.rs:create_canvas",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/canvas/lib.rs",
+      "target": "file:components/canvas/backend.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/canvas/lib.rs",
+      "target": "file:components/canvas/canvas_data.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/canvas/lib.rs",
+      "target": "file:components/canvas/canvas_paint_thread.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/canvas/lib.rs",
+      "target": "file:components/canvas/peniko_conversions.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/canvas/lib.rs",
+      "target": "file:components/canvas/vello_backend.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/canvas/lib.rs",
+      "target": "file:components/canvas/vello_cpu_backend.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "file:components/canvas/canvas_data.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "file:components/canvas/vello_backend.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/canvas/canvas_paint_thread.rs",
+      "target": "file:components/canvas/vello_cpu_backend.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

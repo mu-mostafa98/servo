@@ -1,0 +1,944 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/media/mediadeviceinfo.rs",
+      "type": "file",
+      "name": "mediadeviceinfo.rs",
+      "filePath": "components/script/dom/media/mediadeviceinfo.rs",
+      "summary": "Provides the MediaDeviceInfo DOM type representing a single media input or output device with properties for device ID, kind, label, and group ID.",
+      "tags": ["media", "device-info", "webidl", "dom-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/media/mediadeviceinfo.rs:MediaDeviceInfo",
+      "type": "class",
+      "name": "MediaDeviceInfo",
+      "filePath": "components/script/dom/media/mediadeviceinfo.rs",
+      "lineRange": [19, 25],
+      "summary": "DOM reflector for a media device descriptor, providing getter accessors for device ID, kind, label, and group ID.",
+      "tags": ["media", "device-info", "dom-node"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediadeviceinfo.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/media/mediadeviceinfo.rs",
+      "lineRange": [28, 41],
+      "summary": "Internal constructor that initializes a MediaDeviceInfo with device ID, kind, label, and group ID.",
+      "tags": ["constructor", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediadeviceinfo.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/media/mediadeviceinfo.rs",
+      "lineRange": [43, 58],
+      "summary": "Public constructor wrapping new_inherited with DOM object reflection via reflect_dom_object_with_cx.",
+      "tags": ["constructor", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/media/mediadevices.rs",
+      "type": "file",
+      "name": "mediadevices.rs",
+      "filePath": "components/script/dom/media/mediadevices.rs",
+      "summary": "Implements the MediaDevices DOM interface providing getUserMedia and enumerateDevices APIs for accessing audio and video input devices.",
+      "tags": ["media", "devices", "api-handler", "webidl", "user-media"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/media/mediadevices.rs:MediaDevices",
+      "type": "class",
+      "name": "MediaDevices",
+      "filePath": "components/script/dom/media/mediadevices.rs",
+      "lineRange": [34, 36],
+      "summary": "DOM reflector for navigator.mediaDevices providing getUserMedia and EnumerateDevices methods.",
+      "tags": ["media", "devices", "dom-node", "api-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/mediadevices.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/media/mediadevices.rs",
+      "lineRange": [45, 47],
+      "summary": "Public constructor wrapping new_inherited with DOM object reflection.",
+      "tags": ["constructor", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediadevices.rs:GetUserMedia",
+      "type": "function",
+      "name": "GetUserMedia",
+      "filePath": "components/script/dom/media/mediadevices.rs",
+      "lineRange": [52, 75],
+      "summary": "Implements navigator.mediaDevices.getUserMedia: creates a Promise, requests audio/video input streams from the media backend, and resolves with a MediaStream.",
+      "tags": ["media", "api-handler", "promise"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/mediadevices.rs:EnumerateDevices",
+      "type": "function",
+      "name": "EnumerateDevices",
+      "filePath": "components/script/dom/media/mediadevices.rs",
+      "lineRange": [78, 114],
+      "summary": "Implements navigator.mediaDevices.enumerateDevices: queries device monitor and maps results to MediaDeviceInfo objects.",
+      "tags": ["media", "api-handler", "promise", "enumeration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/mediadevices.rs:convert_constraints",
+      "type": "function",
+      "name": "convert_constraints",
+      "filePath": "components/script/dom/media/mediadevices.rs",
+      "lineRange": [117, 129],
+      "summary": "Converts JS MediaStreamConstraints into ServoMedia's MediaTrackConstraints with width, height, aspectRatio, frameRate, and sampleRate.",
+      "tags": ["media", "conversion", "constraints"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediadevices.rs:convert_culong",
+      "type": "function",
+      "name": "convert_culong",
+      "filePath": "components/script/dom/media/mediadevices.rs",
+      "lineRange": [131, 146],
+      "summary": "Converts a JS ConstrainULong to a ServoMedia ConstrainULong with Value, Range, or Exact variants.",
+      "tags": ["media", "conversion", "constraints"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediadevices.rs:convert_cdouble",
+      "type": "function",
+      "name": "convert_cdouble",
+      "filePath": "components/script/dom/media/mediadevices.rs",
+      "lineRange": [148, 163],
+      "summary": "Converts a JS ConstrainDouble to a ServoMedia ConstrainDouble with Value, Range, min, max, ideal, and Exact variants.",
+      "tags": ["media", "conversion", "constraints"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/media/mediaerror.rs",
+      "type": "file",
+      "name": "mediaerror.rs",
+      "filePath": "components/script/dom/media/mediaerror.rs",
+      "summary": "Defines the MediaError DOM type representing error codes for media element playback failures with code and message accessors.",
+      "tags": ["media", "error", "webidl", "dom-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/media/mediaerror.rs:MediaError",
+      "type": "class",
+      "name": "MediaError",
+      "filePath": "components/script/dom/media/mediaerror.rs",
+      "lineRange": [15, 18],
+      "summary": "DOM reflector for media element error codes with code and message properties.",
+      "tags": ["media", "error", "dom-node"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediaerror.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/media/mediaerror.rs",
+      "lineRange": [28, 30],
+      "summary": "Public constructor that wraps new_inherited with DOM object reflection.",
+      "tags": ["constructor", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/media/mediafragmentparser.rs",
+      "type": "file",
+      "name": "mediafragmentparser.rs",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "summary": "Implements a parser for the Media Fragments URI specification (W3C), handling temporal (NPT, UTC, HMS) and spatial (xywh) fragment dimensions.",
+      "tags": ["media", "parser", "uri", "temporal", "spatial"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/media/mediafragmentparser.rs:SpatialRegion",
+      "type": "class",
+      "name": "SpatialRegion",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [14, 17],
+      "summary": "Enum representing spatial region types: Pixel or Percent coordinates.",
+      "tags": ["media", "spatial", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/media/mediafragmentparser.rs:SpatialClipping",
+      "type": "class",
+      "name": "SpatialClipping",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [32, 38],
+      "summary": "Struct holding parsed spatial clipping parameters with region, x, y, width, and height fields.",
+      "tags": ["media", "spatial", "struct"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/media/mediafragmentparser.rs:MediaFragmentParser",
+      "type": "class",
+      "name": "MediaFragmentParser",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [41, 47],
+      "summary": "Parser struct for media fragment URIs, holding parsed id, track, spatial, start, and end values.",
+      "tags": ["media", "parser", "struct"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:parse",
+      "type": "function",
+      "name": "parse",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [63, 98],
+      "summary": "Main entry point for parsing a media fragment URI string into its temporal and spatial components.",
+      "tags": ["media", "parser", "public-api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:parse_temporal",
+      "type": "function",
+      "name": "parse_temporal",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [101, 126],
+      "summary": "Parses temporal fragment identifiers, dispatching to UTC timestamp parsing, NPT format, or HMS format.",
+      "tags": ["media", "parser", "temporal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:parse_utc_timestamp",
+      "type": "function",
+      "name": "parse_utc_timestamp",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [128, 159],
+      "summary": "Parses UTC timestamp fragments in YYYYMMDDTHHMMSS format with optional fractional seconds.",
+      "tags": ["media", "parser", "temporal", "utc"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:parse_spatial",
+      "type": "function",
+      "name": "parse_spatial",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [161, 189],
+      "summary": "Parses spatial fragment identifiers (xywh) with pixel or percent region specification.",
+      "tags": ["media", "parser", "spatial"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:split_url",
+      "type": "function",
+      "name": "split_url",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [214, 233],
+      "summary": "Splits a URL into scheme, query, and fragment components for media fragment extraction.",
+      "tags": ["media", "parser", "url"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:split_prefix",
+      "type": "function",
+      "name": "split_prefix",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [239, 250],
+      "summary": "Splits a byte prefix from a string at the position where a non-numeric byte is encountered.",
+      "tags": ["media", "parser", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:parse_npt_minute",
+      "type": "function",
+      "name": "parse_npt_minute",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [259, 270],
+      "summary": "Parses an NPT minute value from a string, validating it is a two-digit number.",
+      "tags": ["media", "parser", "npt", "temporal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:parse_npt_seconds",
+      "type": "function",
+      "name": "parse_npt_seconds",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [272, 292],
+      "summary": "Parses an NPT seconds value from a string, supporting both integer and float formats.",
+      "tags": ["media", "parser", "npt", "temporal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediafragmentparser.rs:parse_hms",
+      "type": "function",
+      "name": "parse_hms",
+      "filePath": "components/script/dom/media/mediafragmentparser.rs",
+      "lineRange": [294, 326],
+      "summary": "Parses an HMS (hours:minutes:seconds) timestamp, handling various formats including NPT and clock variants.",
+      "tags": ["media", "parser", "hms", "temporal"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/media/medialist.rs",
+      "type": "file",
+      "name": "medialist.rs",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "summary": "Implements the MediaList DOM type representing a CSS media query list with parsing, serialization, evaluation, and mutation operations.",
+      "tags": ["media", "css", "media-query", "webidl", "stylesheet"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/media/medialist.rs:MediaList",
+      "type": "class",
+      "name": "MediaList",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "lineRange": [30, 36],
+      "summary": "DOM reflector for CSSStyleSheet.mediaList, managing a collection of CSS media queries with parsing and mutation methods.",
+      "tags": ["media", "css", "media-query", "dom-node"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/medialist.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "lineRange": [39, 48],
+      "summary": "Internal constructor linking a MediaList to its parent stylesheet and initializing media query storage.",
+      "tags": ["constructor", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/medialist.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "lineRange": [50, 61],
+      "summary": "Public constructor wrapping new_inherited with DOM object reflection.",
+      "tags": ["constructor", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/medialist.rs:parse_media_list",
+      "type": "function",
+      "name": "parse_media_list",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "lineRange": [68, 86],
+      "summary": "Parses a CSS media query list string into a StyleMediaList using Servo's CSS parser infrastructure.",
+      "tags": ["media", "css", "parser", "public-api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/medialist.rs:parse_media_query",
+      "type": "function",
+      "name": "parse_media_query",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "lineRange": [89, 104],
+      "summary": "Parses a single CSS media query string into a MediaQuery object.",
+      "tags": ["media", "css", "parser", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/medialist.rs:matches_environment",
+      "type": "function",
+      "name": "matches_environment",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "lineRange": [116, 143],
+      "summary": "Evaluates whether a media query string matches the current document environment, using the layout device and a custom media evaluator.",
+      "tags": ["media", "css", "evaluation", "public-api"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/medialist.rs:AppendMedium",
+      "type": "function",
+      "name": "AppendMedium",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "lineRange": [196, 229],
+      "summary": "Adds a new media query to the list after verifying it is not already present, with stylesheet invalidation notification.",
+      "tags": ["media", "css", "mutation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/medialist.rs:DeleteMedium",
+      "type": "function",
+      "name": "DeleteMedium",
+      "filePath": "components/script/dom/media/medialist.rs",
+      "lineRange": [232, 254],
+      "summary": "Removes a media query from the list by matching its serialized form, with stylesheet invalidation.",
+      "tags": ["media", "css", "mutation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/media/mediametadata.rs",
+      "type": "file",
+      "name": "mediametadata.rs",
+      "filePath": "components/script/dom/media/mediametadata.rs",
+      "summary": "Implements the MediaMetadata DOM type for the Media Session API, holding title, artist, and album metadata with change tracking.",
+      "tags": ["media", "metadata", "media-session", "webidl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/media/mediametadata.rs:MediaMetadata",
+      "type": "class",
+      "name": "MediaMetadata",
+      "filePath": "components/script/dom/media/mediametadata.rs",
+      "lineRange": [21, 27],
+      "summary": "DOM reflector for media session metadata with title, artist, and album properties and session binding.",
+      "tags": ["media", "metadata", "media-session", "dom-node"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediametadata.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/media/mediametadata.rs",
+      "lineRange": [40, 46],
+      "summary": "Public constructor delegating to new_with_proto with default prototype.",
+      "tags": ["constructor", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediametadata.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/media/mediametadata.rs",
+      "lineRange": [48, 60],
+      "summary": "Creates a new MediaMetadata with a specific prototype, initializing fields from a MediaMetadataInit dictionary.",
+      "tags": ["constructor", "internal"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediametadata.rs:set_session",
+      "type": "function",
+      "name": "set_session",
+      "filePath": "components/script/dom/media/mediametadata.rs",
+      "lineRange": [66, 68],
+      "summary": "Binds a MediaSession to this metadata instance for change propagation.",
+      "tags": ["media", "binding", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/media/mediaquerylist.rs",
+      "type": "file",
+      "name": "mediaquerylist.rs",
+      "filePath": "components/script/dom/media/mediaquerylist.rs",
+      "summary": "Implements the MediaQueryList DOM type for evaluating CSS media queries against the document environment and notifying listeners of match state changes.",
+      "tags": ["media", "media-query", "css", "webidl", "event"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/media/mediaquerylist.rs:MediaQueryListMatchState",
+      "type": "class",
+      "name": "MediaQueryListMatchState",
+      "filePath": "components/script/dom/media/mediaquerylist.rs",
+      "lineRange": [26, 29],
+      "summary": "Enum tracking whether the media query match state has changed between evaluations.",
+      "tags": ["media", "media-query", "enum", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/media/mediaquerylist.rs:MediaQueryList",
+      "type": "class",
+      "name": "MediaQueryList",
+      "filePath": "components/script/dom/media/mediaquerylist.rs",
+      "lineRange": [32, 38],
+      "summary": "DOM reflector for matchMedia() results, providing media query evaluation and change event listener management.",
+      "tags": ["media", "media-query", "dom-node", "event-target"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/media/mediaquerylist.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/media/mediaquerylist.rs",
+      "lineRange": [50, 60],
+      "summary": "Public constructor for MediaQueryList, linked to a document and a style media query list.",
+      "tags": ["constructor", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediaquerylist.rs:evaluate_changes",
+      "type": "function",
+      "name": "evaluate_changes",
+      "filePath": "components/script/dom/media/mediaquerylist.rs",
+      "lineRange": [64, 79],
+      "summary": "Evaluates the media query against the document and returns whether the match state changed since last evaluation.",
+      "tags": ["media", "media-query", "evaluation", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediaquerylist.rs:evaluate",
+      "type": "function",
+      "name": "evaluate",
+      "filePath": "components/script/dom/media/mediaquerylist.rs",
+      "lineRange": [81, 88],
+      "summary": "Evaluates the media query list against the current document quirks mode and layout device.",
+      "tags": ["media", "media-query", "evaluation", "public-api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/media/mediaquerylist.rs:AddListener",
+      "type": "function",
+      "name": "AddListener",
+      "filePath": "components/script/dom/media/mediaquerylist.rs",
+      "lineRange": [106, 117],
+      "summary": "Registers a change event listener on the MediaQueryList's event target.",
+      "tags": ["media", "media-query", "event", "listener"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/media/mediadeviceinfo.rs",
+      "target": "class:components/script/dom/media/mediadeviceinfo.rs:MediaDeviceInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadeviceinfo.rs",
+      "target": "function:components/script/dom/media/mediadeviceinfo.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadeviceinfo.rs",
+      "target": "function:components/script/dom/media/mediadeviceinfo.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadeviceinfo.rs",
+      "target": "class:components/script/dom/media/mediadeviceinfo.rs:MediaDeviceInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediadeviceinfo.rs",
+      "target": "function:components/script/dom/media/mediadeviceinfo.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "class:components/script/dom/media/mediadevices.rs:MediaDevices",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "function:components/script/dom/media/mediadevices.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "function:components/script/dom/media/mediadevices.rs:GetUserMedia",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "function:components/script/dom/media/mediadevices.rs:EnumerateDevices",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "function:components/script/dom/media/mediadevices.rs:convert_constraints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "function:components/script/dom/media/mediadevices.rs:convert_culong",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "function:components/script/dom/media/mediadevices.rs:convert_cdouble",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "class:components/script/dom/media/mediadevices.rs:MediaDevices",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediadevices.rs",
+      "target": "function:components/script/dom/media/mediadevices.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediaerror.rs",
+      "target": "class:components/script/dom/media/mediaerror.rs:MediaError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediaerror.rs",
+      "target": "function:components/script/dom/media/mediaerror.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediaerror.rs",
+      "target": "class:components/script/dom/media/mediaerror.rs:MediaError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediaerror.rs",
+      "target": "function:components/script/dom/media/mediaerror.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "class:components/script/dom/media/mediafragmentparser.rs:SpatialRegion",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "class:components/script/dom/media/mediafragmentparser.rs:SpatialClipping",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "class:components/script/dom/media/mediafragmentparser.rs:MediaFragmentParser",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:parse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:parse_temporal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:parse_utc_timestamp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:parse_spatial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:split_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:split_prefix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:parse_npt_minute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:parse_npt_seconds",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:parse_hms",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "class:components/script/dom/media/mediafragmentparser.rs:SpatialRegion",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "class:components/script/dom/media/mediafragmentparser.rs:SpatialClipping",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "class:components/script/dom/media/mediafragmentparser.rs:MediaFragmentParser",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediafragmentparser.rs",
+      "target": "function:components/script/dom/media/mediafragmentparser.rs:parse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "class:components/script/dom/media/medialist.rs:MediaList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:parse_media_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:parse_media_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:matches_environment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:AppendMedium",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:DeleteMedium",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "class:components/script/dom/media/medialist.rs:MediaList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:parse_media_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:parse_media_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/medialist.rs",
+      "target": "function:components/script/dom/media/medialist.rs:matches_environment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediametadata.rs",
+      "target": "class:components/script/dom/media/mediametadata.rs:MediaMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediametadata.rs",
+      "target": "function:components/script/dom/media/mediametadata.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediametadata.rs",
+      "target": "function:components/script/dom/media/mediametadata.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediametadata.rs",
+      "target": "function:components/script/dom/media/mediametadata.rs:set_session",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediametadata.rs",
+      "target": "class:components/script/dom/media/mediametadata.rs:MediaMetadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediametadata.rs",
+      "target": "function:components/script/dom/media/mediametadata.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediametadata.rs",
+      "target": "function:components/script/dom/media/mediametadata.rs:set_session",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "class:components/script/dom/media/mediaquerylist.rs:MediaQueryListMatchState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "class:components/script/dom/media/mediaquerylist.rs:MediaQueryList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "function:components/script/dom/media/mediaquerylist.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "function:components/script/dom/media/mediaquerylist.rs:evaluate_changes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "function:components/script/dom/media/mediaquerylist.rs:evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "function:components/script/dom/media/mediaquerylist.rs:AddListener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "class:components/script/dom/media/mediaquerylist.rs:MediaQueryListMatchState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "class:components/script/dom/media/mediaquerylist.rs:MediaQueryList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "function:components/script/dom/media/mediaquerylist.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "function:components/script/dom/media/mediaquerylist.rs:evaluate_changes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/media/mediaquerylist.rs",
+      "target": "function:components/script/dom/media/mediaquerylist.rs:evaluate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

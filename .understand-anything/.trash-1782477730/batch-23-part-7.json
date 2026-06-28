@@ -1,0 +1,1220 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webgl/webgltexture.rs",
+      "type": "file",
+      "name": "webgltexture.rs",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "summary": "WebGLTexture implementation managing texture objects with mipmap generation, parameter setting, image info tracking, and compression validation.",
+      "tags": [
+        "webgl",
+        "texture",
+        "gpu-resource",
+        "mipmap",
+        "compression"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:delete_l76",
+      "type": "function",
+      "name": "delete",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        76,
+        105
+      ],
+      "summary": "Marks the texture for GPU-side deletion with unbind cleanup.",
+      "tags": [
+        "webgl",
+        "gpu-resource",
+        "deletion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        136,
+        163
+      ],
+      "summary": "WebGL new_inherited operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:maybe_new",
+      "type": "function",
+      "name": "maybe_new",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        165,
+        172
+      ],
+      "summary": "WebGL maybe_new operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        174,
+        189
+      ],
+      "summary": "Creates a new texture object on the GPU.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "texture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:new_webxr",
+      "type": "function",
+      "name": "new_webxr",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        192,
+        203
+      ],
+      "summary": "WebGL new_webxr operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:bind",
+      "type": "function",
+      "name": "bind",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        212,
+        236
+      ],
+      "summary": "Binds the texture to the specified target on the active texture unit.",
+      "tags": [
+        "webgl",
+        "texture",
+        "binding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:initialize",
+      "type": "function",
+      "name": "initialize",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        239,
+        267
+      ],
+      "summary": "Initializes the texture with default parameters on the GPU.",
+      "tags": [
+        "webgl",
+        "texture",
+        "initialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:generate_mipmap",
+      "type": "function",
+      "name": "generate_mipmap",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        269,
+        302
+      ],
+      "summary": "Generates complete mipmap chain for the bound texture.",
+      "tags": [
+        "webgl",
+        "texture",
+        "mipmap",
+        "generation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:is_invalid",
+      "type": "function",
+      "name": "is_invalid",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        308,
+        318
+      ],
+      "summary": "Checks if the texture has been marked as invalid.",
+      "tags": [
+        "webgl",
+        "texture",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:maybe_get_tex_parameter",
+      "type": "function",
+      "name": "maybe_get_tex_parameter",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        328,
+        338
+      ],
+      "summary": "Returns a texture parameter value, checking validity.",
+      "tags": [
+        "webgl",
+        "texture",
+        "introspection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:tex_parameter",
+      "type": "function",
+      "name": "tex_parameter",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        342,
+        437
+      ],
+      "summary": "Sets a texture parameter (filter, wrap, compare mode) with validation.",
+      "tags": [
+        "webgl",
+        "texture",
+        "parameter",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:is_using_linear_filtering",
+      "type": "function",
+      "name": "is_using_linear_filtering",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        447,
+        458
+      ],
+      "summary": "WebGL is_using_linear_filtering operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:populate_mip_chain",
+      "type": "function",
+      "name": "populate_mip_chain",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        460,
+        493
+      ],
+      "summary": "Populates the mipmap chain entries with base level image info.",
+      "tags": [
+        "webgl",
+        "texture",
+        "mipmap"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:is_cube_complete",
+      "type": "function",
+      "name": "is_cube_complete",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        495,
+        522
+      ],
+      "summary": "Checks if all six cube map faces have matching image info for completeness.",
+      "tags": [
+        "webgl",
+        "cubemap",
+        "completeness"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:face_index_for_target",
+      "type": "function",
+      "name": "face_index_for_target",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        524,
+        534
+      ],
+      "summary": "WebGL face_index_for_target operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:image_info_for_target",
+      "type": "function",
+      "name": "image_info_for_target",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        536,
+        543
+      ],
+      "summary": "WebGL image_info_for_target operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:image_info_at_face",
+      "type": "function",
+      "name": "image_info_at_face",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        545,
+        548
+      ],
+      "summary": "WebGL image_info_at_face operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:update_size",
+      "type": "function",
+      "name": "update_size",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        562,
+        571
+      ],
+      "summary": "WebGL update_size operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:storage",
+      "type": "function",
+      "name": "storage",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        587,
+        639
+      ],
+      "summary": "Allocates immutable texture storage for all levels.",
+      "tags": [
+        "webgl",
+        "texture",
+        "storage",
+        "allocation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltexture.rs:physical_size",
+      "type": "function",
+      "name": "physical_size",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        690,
+        695
+      ],
+      "summary": "WebGL physical_size operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgltexture.rs:TexParameterValue",
+      "type": "class",
+      "name": "TexParameterValue",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        37,
+        41
+      ],
+      "summary": "WebGL TexParameterValue type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgltexture.rs:DroppableWebGLTexture",
+      "type": "class",
+      "name": "DroppableWebGLTexture",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        58,
+        64
+      ],
+      "summary": "WebGL DroppableWebGLTexture type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgltexture.rs:WebGLTexture",
+      "type": "class",
+      "name": "WebGLTexture",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        115,
+        133
+      ],
+      "summary": "WebGL WebGLTexture type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgltexture.rs:ImageInfo",
+      "type": "class",
+      "name": "ImageInfo",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        643,
+        651
+      ],
+      "summary": "WebGL ImageInfo type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgltexture.rs:TexCompressionValidation",
+      "type": "class",
+      "name": "TexCompressionValidation",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        699,
+        702
+      ],
+      "summary": "WebGL TexCompressionValidation type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgltexture.rs:TexCompression",
+      "type": "class",
+      "name": "TexCompression",
+      "filePath": "components/script/dom/webgl/webgltexture.rs",
+      "lineRange": [
+        705,
+        712
+      ],
+      "summary": "WebGL TexCompression type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "type": "file",
+      "name": "webgltransformfeedback.rs",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "summary": "WebGLTransformFeedback implementation for WebGL2 transform feedback operations capturing vertex shader outputs to buffers.",
+      "tags": [
+        "webgl",
+        "transform-feedback",
+        "webgl2",
+        "capture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:delete_l36",
+      "type": "function",
+      "name": "delete",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        36,
+        44
+      ],
+      "summary": "WebGL delete operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        71,
+        83
+      ],
+      "summary": "WebGL new_inherited operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        85,
+        95
+      ],
+      "summary": "Creates a new transform feedback object.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "transform-feedback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:bind",
+      "type": "function",
+      "name": "bind",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        99,
+        102
+      ],
+      "summary": "WebGL bind operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:begin",
+      "type": "function",
+      "name": "begin",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        104,
+        109
+      ],
+      "summary": "Begins transform feedback capture with the specified primitive mode.",
+      "tags": [
+        "webgl",
+        "transform-feedback",
+        "begin"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:end",
+      "type": "function",
+      "name": "end",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        111,
+        119
+      ],
+      "summary": "Ends the current transform feedback capture.",
+      "tags": [
+        "webgl",
+        "transform-feedback",
+        "end"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:resume",
+      "type": "function",
+      "name": "resume",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        121,
+        126
+      ],
+      "summary": "Resumes paused transform feedback capture.",
+      "tags": [
+        "webgl",
+        "transform-feedback",
+        "resume"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:pause",
+      "type": "function",
+      "name": "pause",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        128,
+        133
+      ],
+      "summary": "Pauses active transform feedback capture.",
+      "tags": [
+        "webgl",
+        "transform-feedback",
+        "pause"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:set_active",
+      "type": "function",
+      "name": "set_active",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        155,
+        159
+      ],
+      "summary": "WebGL set_active operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgltransformfeedback.rs:set_pause",
+      "type": "function",
+      "name": "set_pause",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        161,
+        165
+      ],
+      "summary": "WebGL set_pause operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgltransformfeedback.rs:DroppableWebGLTransformFeedback",
+      "type": "class",
+      "name": "DroppableWebGLTransformFeedback",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        20,
+        24
+      ],
+      "summary": "WebGL DroppableWebGLTransformFeedback type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgltransformfeedback.rs:WebGLTransformFeedback",
+      "type": "class",
+      "name": "WebGLTransformFeedback",
+      "filePath": "components/script/dom/webgl/webgltransformfeedback.rs",
+      "lineRange": [
+        62,
+        68
+      ],
+      "summary": "WebGL WebGLTransformFeedback type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webgl/webgluniformlocation.rs",
+      "type": "file",
+      "name": "webgluniformlocation.rs",
+      "filePath": "components/script/dom/webgl/webgluniformlocation.rs",
+      "summary": "Represents WebGLUniformLocation holding location, program, context association and link generation for uniform variable binding.",
+      "tags": [
+        "webgl",
+        "uniform",
+        "shader-reflection",
+        "location"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgluniformlocation.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webgl/webgluniformlocation.rs",
+      "lineRange": [
+        28,
+        45
+      ],
+      "summary": "WebGL new_inherited operation.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webgl/webgluniformlocation.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webgl/webgluniformlocation.rs",
+      "lineRange": [
+        48,
+        70
+      ],
+      "summary": "Creates a new WebGLUniformLocation tracking program, context, and link generation for validation.",
+      "tags": [
+        "webgl",
+        "constructor",
+        "uniform",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webgl/webgluniformlocation.rs:WebGLUniformLocation",
+      "type": "class",
+      "name": "WebGLUniformLocation",
+      "filePath": "components/script/dom/webgl/webgluniformlocation.rs",
+      "lineRange": [
+        15,
+        25
+      ],
+      "summary": "WebGL WebGLUniformLocation type.",
+      "tags": [
+        "webgl"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:delete_l76",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:delete_l76",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:maybe_new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:maybe_new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:new_webxr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:new_webxr",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:bind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:bind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:initialize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:initialize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:generate_mipmap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:generate_mipmap",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:is_invalid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:is_invalid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:maybe_get_tex_parameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:maybe_get_tex_parameter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:tex_parameter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:tex_parameter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:is_using_linear_filtering",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:is_using_linear_filtering",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:populate_mip_chain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:populate_mip_chain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:is_cube_complete",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:face_index_for_target",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:image_info_for_target",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:image_info_for_target",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:image_info_at_face",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:image_info_at_face",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:update_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:storage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:storage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:physical_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "function:components/script/dom/webgl/webgltexture.rs:physical_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:TexParameterValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:TexParameterValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:DroppableWebGLTexture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:WebGLTexture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:WebGLTexture",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:ImageInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:ImageInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:TexCompressionValidation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:TexCompressionValidation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:TexCompression",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltexture.rs",
+      "target": "class:components/script/dom/webgl/webgltexture.rs:TexCompression",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:delete_l36",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:delete_l36",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:bind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:bind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:begin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:begin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:end",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:end",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:resume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:resume",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:pause",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:pause",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:set_active",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:set_active",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:set_pause",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "function:components/script/dom/webgl/webgltransformfeedback.rs:set_pause",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "class:components/script/dom/webgl/webgltransformfeedback.rs:DroppableWebGLTransformFeedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "class:components/script/dom/webgl/webgltransformfeedback.rs:WebGLTransformFeedback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgltransformfeedback.rs",
+      "target": "class:components/script/dom/webgl/webgltransformfeedback.rs:WebGLTransformFeedback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgluniformlocation.rs",
+      "target": "function:components/script/dom/webgl/webgluniformlocation.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgluniformlocation.rs",
+      "target": "function:components/script/dom/webgl/webgluniformlocation.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgluniformlocation.rs",
+      "target": "function:components/script/dom/webgl/webgluniformlocation.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgluniformlocation.rs",
+      "target": "class:components/script/dom/webgl/webgluniformlocation.rs:WebGLUniformLocation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webgl/webgluniformlocation.rs",
+      "target": "class:components/script/dom/webgl/webgluniformlocation.rs:WebGLUniformLocation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

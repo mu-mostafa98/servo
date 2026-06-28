@@ -1,0 +1,484 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/xpath/src/ast.rs",
+      "type": "file",
+      "name": "ast.rs",
+      "filePath": "components/xpath/src/ast.rs",
+      "summary": "Defines the XPath abstract syntax tree (AST) data structures including expression types, binary operators, path expressions, XPath axes, node tests, kind tests, literals, and core function identifiers used across the XPath evaluation system.",
+      "tags": ["data-model", "type-definition", "xpath", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/xpath/src/ast.rs:Expression",
+      "type": "class",
+      "name": "Expression",
+      "filePath": "components/xpath/src/ast.rs",
+      "lineRange": [9, 21],
+      "summary": "Core XPath expression AST enum with variants for binary operations, path expressions, location steps, filters, literals, variables, context items, and function calls.",
+      "tags": ["enum", "ast-node", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/xpath/src/ast.rs:BinaryOperator",
+      "type": "class",
+      "name": "BinaryOperator",
+      "filePath": "components/xpath/src/ast.rs",
+      "lineRange": [24, 50],
+      "summary": "Enumeration of all XPath binary operators including boolean (or/and), set union, equality, relational, and arithmetic operators.",
+      "tags": ["enum", "operator", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/xpath/src/ast.rs:PathExpression",
+      "type": "class",
+      "name": "PathExpression",
+      "filePath": "components/xpath/src/ast.rs",
+      "lineRange": [53, 62],
+      "summary": "XPath path expression consisting of an absolute/relative flag, an implicit descendant-or-self step indicator, and a sequence of location steps.",
+      "tags": ["struct", "path-expression", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/xpath/src/ast.rs:Axis",
+      "type": "class",
+      "name": "Axis",
+      "filePath": "components/xpath/src/ast.rs",
+      "lineRange": [84, 98],
+      "summary": "Enumeration of all XPath axes including child, descendant, attribute, self, descendant-or-self, following-sibling, following, namespace, parent, ancestor, preceding-sibling, preceding, and ancestor-or-self.",
+      "tags": ["enum", "axis", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/xpath/src/ast.rs:CoreFunction",
+      "type": "class",
+      "name": "CoreFunction",
+      "filePath": "components/xpath/src/ast.rs",
+      "lineRange": [139, 201],
+      "summary": "Enumeration of all XPath 1.0 core functions including string, numeric, boolean, and node-set functions with associated argument expressions.",
+      "tags": ["enum", "core-functions", "xpath"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/xpath/src/context.rs",
+      "type": "file",
+      "name": "context.rs",
+      "filePath": "components/xpath/src/context.rs",
+      "summary": "Defines evaluation context structures for XPath processing, including the root evaluation context with a context node and predicate-specific context tracking position and size within a predicate.",
+      "tags": ["context", "evaluation", "xpath", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/xpath/src/eval.rs",
+      "type": "file",
+      "name": "eval.rs",
+      "filePath": "components/xpath/src/eval.rs",
+      "summary": "Implements XPath expression evaluation logic including binary operations, path expressions with steps and axes, node test filtering, predicate application, and recursive descent through parsed AST nodes.",
+      "tags": ["evaluation", "xpath", "expression", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/xpath/src/eval.rs:try_extract_nodeset",
+      "type": "function",
+      "name": "try_extract_nodeset",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [18, 23],
+      "summary": "Attempts to extract a NodeSet from a Value, returning an error if the value is not a nodeset.",
+      "tags": ["utility", "type-conversion", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/xpath/src/eval.rs:Expression.evaluate",
+      "type": "function",
+      "name": "Expression.evaluate",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [26, 112],
+      "summary": "Dispatches evaluation of an XPath Expression by matching its variant, handling binary operators, path expressions, location steps, filters, literals, variable references, context items, and function calls.",
+      "tags": ["evaluation", "dispatch", "xpath"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/xpath/src/eval.rs:PathExpression.evaluate",
+      "type": "function",
+      "name": "PathExpression.evaluate",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [116, 169],
+      "summary": "Evaluates a path expression by traversing steps from the context node or document root, computing the accumulated node set at each step with proper axis traversal.",
+      "tags": ["evaluation", "path-expression", "xpath"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/xpath/src/eval.rs:element_name_test",
+      "type": "function",
+      "name": "element_name_test",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [180, 200],
+      "summary": "Compares an element's qualified name against an expected name with case-sensitive or case-insensitive comparison modes for XHTML vs HTML documents.",
+      "tags": ["matching", "node-test", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/xpath/src/eval.rs:apply_node_test",
+      "type": "function",
+      "name": "apply_node_test",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [202, 250],
+      "summary": "Applies a node test (name test or kind test) against a given DOM node to determine if it matches, handling elements, attributes, processing instructions, comments, and text nodes.",
+      "tags": ["matching", "node-test", "xpath"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/xpath/src/eval.rs:LocationStepExpression.evaluate",
+      "type": "function",
+      "name": "LocationStepExpression.evaluate",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [253, 326],
+      "summary": "Evaluates a location step by gathering candidate nodes from the specified axis, filtering them through the node test and predicate list, and returning the sorted result.",
+      "tags": ["evaluation", "location-step", "xpath"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/xpath/src/eval.rs:apply",
+      "type": "function",
+      "name": "apply",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [330, 363],
+      "summary": "Applies predicate expressions to filter a matched node set, evaluating each predicate as boolean or positional numeric per XPath semantics.",
+      "tags": ["filtering", "predicate", "xpath"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/xpath/src/eval.rs:FilterExpression.evaluate",
+      "type": "function",
+      "name": "FilterExpression.evaluate",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [367, 379],
+      "summary": "Evaluates a filter expression by first evaluating the inner expression, then applying predicate filters to the result set.",
+      "tags": ["evaluation", "filter", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/xpath/src/eval.rs:NameTestComparisonMode",
+      "type": "class",
+      "name": "NameTestComparisonMode",
+      "filePath": "components/xpath/src/eval.rs",
+      "lineRange": [173, 178],
+      "summary": "Enum controlling whether element name comparisons use case-sensitive (XHTML) or case-insensitive (HTML) matching, adapting XPath for HTML documents.",
+      "tags": ["enum", "comparison", "html", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/xpath/src/functions.rs",
+      "type": "file",
+      "name": "functions.rs",
+      "filePath": "components/xpath/src/functions.rs",
+      "summary": "Implements XPath 1.0 core library functions including string manipulation (substring, concat, normalize-space, translate), node introspection (local-name, name, namespace-uri), numeric operations (sum, floor, ceiling, round), boolean logic, and the lang() function.",
+      "tags": ["xpath", "core-functions", "string-manipulation", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/xpath/src/functions.rs:substring",
+      "type": "function",
+      "name": "substring",
+      "filePath": "components/xpath/src/functions.rs",
+      "lineRange": [51, 61],
+      "summary": "Extracts a substring from a source string starting at a given 1-based position with an optional length, following XPath 1.0 substring semantics with character indexing.",
+      "tags": ["string", "substring", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/xpath/src/functions.rs:normalize_space",
+      "type": "function",
+      "name": "normalize_space",
+      "filePath": "components/xpath/src/functions.rs",
+      "lineRange": [64, 81],
+      "summary": "Normalizes whitespace by trimming leading and trailing whitespace and collapsing internal runs of whitespace characters into single spaces.",
+      "tags": ["string", "whitespace", "normalization", "xpath"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/xpath/src/functions.rs:lang_matches",
+      "type": "function",
+      "name": "lang_matches",
+      "filePath": "components/xpath/src/functions.rs",
+      "lineRange": [84, 106],
+      "summary": "Determines if a context language matches or is a sublanguage of a target language per XPath lang() semantics with case-insensitive comparison.",
+      "tags": ["string", "language", "matching", "xpath"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/xpath/src/functions.rs:translate",
+      "type": "function",
+      "name": "translate",
+      "filePath": "components/xpath/src/functions.rs",
+      "lineRange": [109, 125],
+      "summary": "Performs character-by-character translation on an input string, replacing characters from the 'from' set with corresponding characters in the 'to' set.",
+      "tags": ["string", "translation", "character", "xpath"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/xpath/src/functions.rs:CoreFunction.evaluate",
+      "type": "function",
+      "name": "CoreFunction.evaluate",
+      "filePath": "components/xpath/src/functions.rs",
+      "lineRange": [128, 322],
+      "summary": "Dispatches XPath core function evaluation by matching the CoreFunction variant to the appropriate implementation, handling all 27 XPath 1.0 core functions.",
+      "tags": ["evaluation", "dispatch", "core-functions", "xpath"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:Expression",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:BinaryOperator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:PathExpression",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:Axis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:CoreFunction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:try_extract_nodeset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:Expression.evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:PathExpression.evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:element_name_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:apply_node_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:LocationStepExpression.evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:apply",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:FilterExpression.evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "class:components/xpath/src/eval.rs:NameTestComparisonMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "function:components/xpath/src/functions.rs:substring",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "function:components/xpath/src/functions.rs:normalize_space",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "function:components/xpath/src/functions.rs:lang_matches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "function:components/xpath/src/functions.rs:translate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "function:components/xpath/src/functions.rs:CoreFunction.evaluate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "file:components/xpath/src/ast.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "file:components/xpath/src/context.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "file:components/xpath/src/ast.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "file:components/xpath/src/context.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "file:components/xpath/src/eval.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "file:components/xpath/src/value.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:Expression",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:BinaryOperator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:PathExpression",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:Axis",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/ast.rs",
+      "target": "class:components/xpath/src/ast.rs:CoreFunction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:try_extract_nodeset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:Expression.evaluate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "class:components/xpath/src/eval.rs:NameTestComparisonMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/eval.rs",
+      "target": "function:components/xpath/src/eval.rs:element_name_test",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "function:components/xpath/src/functions.rs:normalize_space",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/xpath/src/functions.rs",
+      "target": "function:components/xpath/src/functions.rs:CoreFunction.evaluate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

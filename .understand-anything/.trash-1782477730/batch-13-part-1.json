@@ -1,0 +1,1129 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/css/css.rs",
+      "type": "file",
+      "name": "css.rs",
+      "filePath": "components/script/dom/css/css.rs",
+      "summary": "Implements the CSS namespace object with static methods for property escaping, @supports condition evaluation, paint worklet access, and custom property registration.",
+      "tags": [
+        "dom-binding",
+        "css-namespace",
+        "static-methods"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/css.rs:CSS",
+      "type": "class",
+      "name": "CSS",
+      "filePath": "components/script/dom/css/css.rs",
+      "lineRange": [
+        26,
+        28
+      ],
+      "summary": "Static namespace providing CSS.escape(), CSS.supports(), and CSS.registerProperty() methods.",
+      "tags": [
+        "css-namespace",
+        "static-methods"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/css.rs:Supports",
+      "type": "function",
+      "name": "Supports",
+      "filePath": "components/script/dom/css/css.rs",
+      "lineRange": [
+        39,
+        52
+      ],
+      "summary": "Evaluates a CSS property-value pair against the @supports condition parser.",
+      "tags": [
+        "css-supports",
+        "condition-evaluation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/css.rs:Supports_",
+      "type": "function",
+      "name": "Supports_",
+      "filePath": "components/script/dom/css/css.rs",
+      "lineRange": [
+        55,
+        71
+      ],
+      "summary": "Parses and evaluates a raw @supports condition string.",
+      "tags": [
+        "css-supports",
+        "condition-parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/css.rs:RegisterProperty",
+      "type": "function",
+      "name": "RegisterProperty",
+      "filePath": "components/script/dom/css/css.rs",
+      "lineRange": [
+        79,
+        101
+      ],
+      "summary": "Registers a custom CSS property with its syntax, initial value, and inherits flag.",
+      "tags": [
+        "custom-property",
+        "registration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/cssconditionrule.rs",
+      "type": "file",
+      "name": "cssconditionrule.rs",
+      "filePath": "components/script/dom/css/cssconditionrule.rs",
+      "summary": "Implements CSSConditionRule base class for conditional @-rules, providing condition text access and rule list management.",
+      "tags": [
+        "dom-binding",
+        "css-condition-rule",
+        "base-class"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssconditionrule.rs:CSSConditionRule",
+      "type": "class",
+      "name": "CSSConditionRule",
+      "filePath": "components/script/dom/css/cssconditionrule.rs",
+      "lineRange": [
+        21,
+        26
+      ],
+      "summary": "Base class for conditional @-rules (CSSMediaRule, CSSSupportsRule) with condition text and rule list.",
+      "tags": [
+        "cssom",
+        "base-class",
+        "conditional-rules"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssconditionrule.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/cssconditionrule.rs",
+      "lineRange": [
+        29,
+        37
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssconditionrule.rs:parent_stylesheet",
+      "type": "function",
+      "name": "parent_stylesheet",
+      "filePath": "components/script/dom/css/cssconditionrule.rs",
+      "lineRange": [
+        39,
+        41
+      ],
+      "summary": "Returns the parent stylesheet reference.",
+      "tags": [
+        "getter",
+        "parent-link"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssconditionrule.rs:shared_lock",
+      "type": "function",
+      "name": "shared_lock",
+      "filePath": "components/script/dom/css/cssconditionrule.rs",
+      "lineRange": [
+        43,
+        45
+      ],
+      "summary": "Returns the shared stylesheet lock for synchronized rule access.",
+      "tags": [
+        "synchronization",
+        "lock"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssconditionrule.rs:clone_rules",
+      "type": "function",
+      "name": "clone_rules",
+      "filePath": "components/script/dom/css/cssconditionrule.rs",
+      "lineRange": [
+        47,
+        49
+      ],
+      "summary": "Returns a cloned copy of the currently held rules vector.",
+      "tags": [
+        "rule-cloning",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssconditionrule.rs:update_rules",
+      "type": "function",
+      "name": "update_rules",
+      "filePath": "components/script/dom/css/cssconditionrule.rs",
+      "lineRange": [
+        51,
+        58
+      ],
+      "summary": "Replaces the entire rule collection with new parsed rules under a shared lock guard.",
+      "tags": [
+        "rule-update",
+        "bulk"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/cssfontfacerule.rs",
+      "type": "file",
+      "name": "cssfontfacerule.rs",
+      "filePath": "components/script/dom/css/cssfontfacerule.rs",
+      "summary": "Implements CSSFontFaceRule DOM type for @font-face at-rules with font face descriptor access and CSS serialization.",
+      "tags": [
+        "dom-binding",
+        "css-font-face",
+        "at-rule"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssfontfacerule.rs:CSSFontFaceRule",
+      "type": "class",
+      "name": "CSSFontFaceRule",
+      "filePath": "components/script/dom/css/cssfontfacerule.rs",
+      "lineRange": [
+        21,
+        26
+      ],
+      "summary": "Represents a @font-face rule with font descriptor access and CSS serialization.",
+      "tags": [
+        "cssom",
+        "font-face",
+        "at-rule"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssfontfacerule.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/cssfontfacerule.rs",
+      "lineRange": [
+        39,
+        53
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssfontfacerule.rs:update_rule",
+      "type": "function",
+      "name": "update_rule",
+      "filePath": "components/script/dom/css/cssfontfacerule.rs",
+      "lineRange": [
+        55,
+        57
+      ],
+      "summary": "Updates the internal rule data with new parsed rule content.",
+      "tags": [
+        "rule-update",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/cssgroupingrule.rs",
+      "type": "file",
+      "name": "cssgroupingrule.rs",
+      "filePath": "components/script/dom/css/cssgroupingrule.rs",
+      "summary": "Implements CSSGroupingRule base class for @-rules that contain nested rules, providing rule list access and rule insertion/deletion.",
+      "tags": [
+        "dom-binding",
+        "css-grouping-rule",
+        "base-class"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssgroupingrule.rs:CSSGroupingRule",
+      "type": "class",
+      "name": "CSSGroupingRule",
+      "filePath": "components/script/dom/css/cssgroupingrule.rs",
+      "lineRange": [
+        25,
+        28
+      ],
+      "summary": "Base class for @-rules containing nested rules, with rule list and insertion/deletion operations.",
+      "tags": [
+        "cssom",
+        "base-class",
+        "grouping-rules"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssgroupingrule.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/cssgroupingrule.rs",
+      "lineRange": [
+        31,
+        36
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssgroupingrule.rs:rulelist",
+      "type": "function",
+      "name": "rulelist",
+      "filePath": "components/script/dom/css/cssgroupingrule.rs",
+      "lineRange": [
+        38,
+        57
+      ],
+      "summary": "Constructs and returns the CSSRuleList for this grouping rule.",
+      "tags": [
+        "rule-list",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssgroupingrule.rs:parent_stylesheet",
+      "type": "function",
+      "name": "parent_stylesheet",
+      "filePath": "components/script/dom/css/cssgroupingrule.rs",
+      "lineRange": [
+        59,
+        61
+      ],
+      "summary": "Returns the parent stylesheet reference.",
+      "tags": [
+        "getter",
+        "parent-link"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssgroupingrule.rs:shared_lock",
+      "type": "function",
+      "name": "shared_lock",
+      "filePath": "components/script/dom/css/cssgroupingrule.rs",
+      "lineRange": [
+        63,
+        65
+      ],
+      "summary": "Returns the shared stylesheet lock for synchronized rule access.",
+      "tags": [
+        "synchronization",
+        "lock"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssgroupingrule.rs:update_rules",
+      "type": "function",
+      "name": "update_rules",
+      "filePath": "components/script/dom/css/cssgroupingrule.rs",
+      "lineRange": [
+        67,
+        75
+      ],
+      "summary": "Replaces the entire rule collection with new parsed rules under a shared lock guard.",
+      "tags": [
+        "rule-update",
+        "bulk"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssgroupingrule.rs:InsertRule",
+      "type": "function",
+      "name": "InsertRule",
+      "filePath": "components/script/dom/css/cssgroupingrule.rs",
+      "lineRange": [
+        86,
+        101
+      ],
+      "summary": "Web-exposed insertRule() method for inserting a rule at a given index.",
+      "tags": [
+        "web-exposed",
+        "rule-insertion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/cssimportrule.rs",
+      "type": "file",
+      "name": "cssimportrule.rs",
+      "filePath": "components/script/dom/css/cssimportrule.rs",
+      "summary": "Implements CSSImportRule DOM type for @import at-rules with href, media, and layer name access.",
+      "tags": [
+        "dom-binding",
+        "css-import",
+        "at-rule"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssimportrule.rs:CSSImportRule",
+      "type": "class",
+      "name": "CSSImportRule",
+      "filePath": "components/script/dom/css/cssimportrule.rs",
+      "lineRange": [
+        24,
+        29
+      ],
+      "summary": "Represents a @import rule with href and media query properties.",
+      "tags": [
+        "cssom",
+        "import",
+        "at-rule"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssimportrule.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/cssimportrule.rs",
+      "lineRange": [
+        42,
+        53
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssimportrule.rs:update_rule",
+      "type": "function",
+      "name": "update_rule",
+      "filePath": "components/script/dom/css/cssimportrule.rs",
+      "lineRange": [
+        55,
+        57
+      ],
+      "summary": "Updates the internal rule data with new parsed rule content.",
+      "tags": [
+        "rule-update",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/csskeyframerule.rs",
+      "type": "file",
+      "name": "csskeyframerule.rs",
+      "filePath": "components/script/dom/css/csskeyframerule.rs",
+      "summary": "Implements CSSKeyframeRule DOM type for individual @keyframe entries with key text and style declaration access.",
+      "tags": [
+        "dom-binding",
+        "css-keyframe",
+        "animation"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/csskeyframerule.rs:CSSKeyframeRule",
+      "type": "class",
+      "name": "CSSKeyframeRule",
+      "filePath": "components/script/dom/css/csskeyframerule.rs",
+      "lineRange": [
+        26,
+        32
+      ],
+      "summary": "Represents a single keyframe entry within @keyframes with key text and style declaration.",
+      "tags": [
+        "cssom",
+        "keyframe",
+        "animation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframerule.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/csskeyframerule.rs",
+      "lineRange": [
+        35,
+        44
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframerule.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/csskeyframerule.rs",
+      "lineRange": [
+        46,
+        60
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframerule.rs:update_rule",
+      "type": "function",
+      "name": "update_rule",
+      "filePath": "components/script/dom/css/csskeyframerule.rs",
+      "lineRange": [
+        62,
+        71
+      ],
+      "summary": "Updates the internal rule data with new parsed rule content.",
+      "tags": [
+        "rule-update",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframerule.rs:Style",
+      "type": "function",
+      "name": "Style",
+      "filePath": "components/script/dom/css/csskeyframerule.rs",
+      "lineRange": [
+        76,
+        90
+      ],
+      "summary": "Returns the CSSStyleDeclaration for this rule.",
+      "tags": [
+        "style-declaration",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/csskeyframesrule.rs",
+      "type": "file",
+      "name": "csskeyframesrule.rs",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "summary": "Implements CSSKeyframesRule DOM type for @keyframes at-rules with named rule collection, appending, and name manipulation.",
+      "tags": [
+        "dom-binding",
+        "css-keyframes",
+        "animation"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/csskeyframesrule.rs:CSSKeyframesRule",
+      "type": "class",
+      "name": "CSSKeyframesRule",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        30,
+        36
+      ],
+      "summary": "Represents a @keyframes rule with named keyframe collection, append/delete/name operations.",
+      "tags": [
+        "cssom",
+        "keyframes",
+        "animation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframesrule.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        39,
+        48
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframesrule.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        50,
+        64
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframesrule.rs:rulelist",
+      "type": "function",
+      "name": "rulelist",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        66,
+        76
+      ],
+      "summary": "Constructs and returns the CSSRuleList for this grouping rule.",
+      "tags": [
+        "rule-list",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframesrule.rs:find_rule",
+      "type": "function",
+      "name": "find_rule",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        79,
+        96
+      ],
+      "summary": "Finds a keyframe rule by its selector key text within the keyframes collection.",
+      "tags": [
+        "keyframe-lookup",
+        "selector"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframesrule.rs:update_rule",
+      "type": "function",
+      "name": "update_rule",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        98,
+        108
+      ],
+      "summary": "Updates the internal rule data with new parsed rule content.",
+      "tags": [
+        "rule-update",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframesrule.rs:AppendRule",
+      "type": "function",
+      "name": "AppendRule",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        118,
+        145
+      ],
+      "summary": "Appends a new keyframe rule to the end of the @keyframes block.",
+      "tags": [
+        "keyframe-append",
+        "mutation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframesrule.rs:Name",
+      "type": "function",
+      "name": "Name",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        166,
+        176
+      ],
+      "summary": "Returns the animation name of this @keyframes rule.",
+      "tags": [
+        "animation-name",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csskeyframesrule.rs:SetName",
+      "type": "function",
+      "name": "SetName",
+      "filePath": "components/script/dom/css/csskeyframesrule.rs",
+      "lineRange": [
+        179,
+        189
+      ],
+      "summary": "Sets the animation name, updating the underlying keyframes rule data.",
+      "tags": [
+        "animation-name",
+        "setter"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/css/css.rs",
+      "target": "class:components/script/dom/css/css.rs:CSS",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/css.rs",
+      "target": "class:components/script/dom/css/css.rs:CSS",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/css.rs",
+      "target": "function:components/script/dom/css/css.rs:Supports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/css.rs",
+      "target": "function:components/script/dom/css/css.rs:Supports_",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/css.rs",
+      "target": "function:components/script/dom/css/css.rs:RegisterProperty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "class:components/script/dom/css/cssconditionrule.rs:CSSConditionRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "class:components/script/dom/css/cssconditionrule.rs:CSSConditionRule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:parent_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:parent_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:shared_lock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:shared_lock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:clone_rules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:clone_rules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:update_rules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssconditionrule.rs",
+      "target": "function:components/script/dom/css/cssconditionrule.rs:update_rules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssfontfacerule.rs",
+      "target": "class:components/script/dom/css/cssfontfacerule.rs:CSSFontFaceRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssfontfacerule.rs",
+      "target": "class:components/script/dom/css/cssfontfacerule.rs:CSSFontFaceRule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssfontfacerule.rs",
+      "target": "function:components/script/dom/css/cssfontfacerule.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssfontfacerule.rs",
+      "target": "function:components/script/dom/css/cssfontfacerule.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssfontfacerule.rs",
+      "target": "function:components/script/dom/css/cssfontfacerule.rs:update_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssfontfacerule.rs",
+      "target": "function:components/script/dom/css/cssfontfacerule.rs:update_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "class:components/script/dom/css/cssgroupingrule.rs:CSSGroupingRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "class:components/script/dom/css/cssgroupingrule.rs:CSSGroupingRule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:rulelist",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:parent_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:parent_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:shared_lock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:shared_lock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:update_rules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:update_rules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssgroupingrule.rs",
+      "target": "function:components/script/dom/css/cssgroupingrule.rs:InsertRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssimportrule.rs",
+      "target": "class:components/script/dom/css/cssimportrule.rs:CSSImportRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssimportrule.rs",
+      "target": "class:components/script/dom/css/cssimportrule.rs:CSSImportRule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssimportrule.rs",
+      "target": "function:components/script/dom/css/cssimportrule.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssimportrule.rs",
+      "target": "function:components/script/dom/css/cssimportrule.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssimportrule.rs",
+      "target": "function:components/script/dom/css/cssimportrule.rs:update_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssimportrule.rs",
+      "target": "function:components/script/dom/css/cssimportrule.rs:update_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframerule.rs",
+      "target": "class:components/script/dom/css/csskeyframerule.rs:CSSKeyframeRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframerule.rs",
+      "target": "class:components/script/dom/css/csskeyframerule.rs:CSSKeyframeRule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframerule.rs",
+      "target": "function:components/script/dom/css/csskeyframerule.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframerule.rs",
+      "target": "function:components/script/dom/css/csskeyframerule.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframerule.rs",
+      "target": "function:components/script/dom/css/csskeyframerule.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframerule.rs",
+      "target": "function:components/script/dom/css/csskeyframerule.rs:update_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframerule.rs",
+      "target": "function:components/script/dom/css/csskeyframerule.rs:update_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframerule.rs",
+      "target": "function:components/script/dom/css/csskeyframerule.rs:Style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "class:components/script/dom/css/csskeyframesrule.rs:CSSKeyframesRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "class:components/script/dom/css/csskeyframesrule.rs:CSSKeyframesRule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:rulelist",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:find_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:update_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:update_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:AppendRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:Name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csskeyframesrule.rs",
+      "target": "function:components/script/dom/css/csskeyframesrule.rs:SetName",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

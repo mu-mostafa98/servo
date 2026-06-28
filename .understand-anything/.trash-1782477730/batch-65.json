@@ -1,0 +1,539 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/shared/webgpu/error.rs",
+      "type": "file",
+      "name": "error.rs",
+      "filePath": "components/shared/webgpu/error.rs",
+      "summary": "Defines WebGPU error types and error scope management including ErrorScope, ErrorFilter, Error enum, and PopError, with conversion from wgpu-core errors.",
+      "tags": ["webgpu", "error-handling", "gpu-error", "serialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/shared/webgpu/ids.rs",
+      "type": "file",
+      "name": "ids.rs",
+      "filePath": "components/shared/webgpu/ids.rs",
+      "summary": "Defines typed WebGPU resource ID wrappers (WebGPUAdapter, WebGPUBuffer, etc.) via a macro, re-exporting wgpu-core marker types with MallocSizeOf and serde support.",
+      "tags": ["webgpu", "type-definition", "resource-ids", "serialization"],
+      "complexity": "simple",
+      "languageNotes": "Uses a declarative macro (webgpu_resource!) to generate 19 newtype wrapper structs with shared trait implementations."
+    },
+    {
+      "id": "file:components/shared/webgpu/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "summary": "Root module for shared WebGPU types, re-exporting error, ids, messages, and render_commands submodules, and defining core data structures (WebGPU, Adapter, ContextConfiguration, ShaderCompilationInfo, RequestDeviceError).",
+      "tags": ["webgpu", "entry-point", "re-exports", "data-model"],
+      "complexity": "moderate",
+      "languageNotes": "Rust barrel module using pub use crate::* re-exports with type aliases for async responses."
+    },
+    {
+      "id": "file:components/shared/webgpu/messages/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/shared/webgpu/messages/mod.rs",
+      "summary": "Barrel module that declares and re-exports the recv, to_dom, and to_script IPC message submodules.",
+      "tags": ["webgpu", "barrel", "ipc", "message-definitions"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/webgpu/messages/recv.rs",
+      "type": "file",
+      "name": "recv.rs",
+      "filePath": "components/shared/webgpu/messages/recv.rs",
+      "summary": "Defines all WebGPURequest IPC enum variants received by the WebGPU thread, covering buffer/texture operations, compute/render passes, resource creation and destruction, error scopes, and query sets.",
+      "tags": ["webgpu", "ipc", "message-definitions", "request-types"],
+      "complexity": "complex",
+      "languageNotes": "Large enum with 70+ variants using named fields and tuple variants for serializable IPC commands."
+    },
+    {
+      "id": "file:components/shared/webgpu/messages/to_dom.rs",
+      "type": "file",
+      "name": "to_dom.rs",
+      "filePath": "components/shared/webgpu/messages/to_dom.rs",
+      "summary": "Defines the WebGPUDeviceResponse type alias sent as IPC responses to WebGPU DOM objects, containing device, queue, and descriptor or error.",
+      "tags": ["webgpu", "type-definition", "ipc", "response-types"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/webgpu/messages/to_script.rs",
+      "type": "file",
+      "name": "to_script.rs",
+      "filePath": "components/shared/webgpu/messages/to_script.rs",
+      "summary": "Defines the WebGPUMsg IPC enum for messages sent back to the ScriptThread, including resource cleanup notifications, uncaptured errors, device lost events, and exit signal.",
+      "tags": ["webgpu", "ipc", "message-definitions", "event-types"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/shared/webgpu/render_commands.rs",
+      "type": "file",
+      "name": "render_commands.rs",
+      "filePath": "components/shared/webgpu/render_commands.rs",
+      "summary": "Defines the RenderCommand enum for serializable render pass operations and the apply_render_command function that dispatches commands to the wgpu Global render pass API.",
+      "tags": ["webgpu", "render-pipeline", "command-pattern"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/webgpu/error.rs:ErrorScope",
+      "type": "class",
+      "name": "ErrorScope",
+      "filePath": "components/shared/webgpu/error.rs",
+      "lineRange": [14, 17],
+      "summary": "Represents a GPU error scope holding a list of errors and a filter type, per the WebGPU spec.",
+      "tags": ["webgpu", "error-scope", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/error.rs:ErrorFilter",
+      "type": "class",
+      "name": "ErrorFilter",
+      "filePath": "components/shared/webgpu/error.rs",
+      "lineRange": [30, 34],
+      "summary": "Enum of GPU error filter types: Validation, OutOfMemory, and Internal.",
+      "tags": ["webgpu", "error-filter", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/error.rs:Error",
+      "type": "class",
+      "name": "Error",
+      "filePath": "components/shared/webgpu/error.rs",
+      "lineRange": [38, 42],
+      "summary": "WebGPU error enum with Validation, OutOfMemory, and Internal variants, implementing Display and Error traits with filter and message accessors.",
+      "tags": ["webgpu", "gpu-error", "error-handling"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/webgpu/error.rs:PopError",
+      "type": "class",
+      "name": "PopError",
+      "filePath": "components/shared/webgpu/error.rs",
+      "lineRange": [87, 90],
+      "summary": "Enum representing possible outcomes when popping an error scope: Lost or Empty.",
+      "tags": ["webgpu", "error-scope", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:WebGPU",
+      "type": "class",
+      "name": "WebGPU",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [42, 42],
+      "summary": "Newtype wrapper around GenericSender<WebGPURequest> providing an exit method to signal the WebGPU thread.",
+      "tags": ["webgpu", "channel", "sender"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:Adapter",
+      "type": "class",
+      "name": "Adapter",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [53, 59],
+      "summary": "Data structure for a WebGPU adapter holding info, ID, features, limits, and communication channel.",
+      "tags": ["webgpu", "adapter", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:ContextConfiguration",
+      "type": "class",
+      "name": "ContextConfiguration",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [62, 68],
+      "summary": "Configuration for a WebGPU context including device/queue IDs, format, opacity, and size, with stride and buffer_size calculation methods.",
+      "tags": ["webgpu", "context", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:DeviceLostReason",
+      "type": "class",
+      "name": "DeviceLostReason",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [99, 102],
+      "summary": "Enum of device lost reasons: Unknown and Destroyed, per the WebGPU spec.",
+      "tags": ["webgpu", "device", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:ShaderCompilationInfo",
+      "type": "class",
+      "name": "ShaderCompilationInfo",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [105, 111],
+      "summary": "Shader compilation info with UTF-16 code-unit location offsets (line_number, line_pos, offset, length) and error message, converted from Naga source locations.",
+      "tags": ["webgpu", "shader", "compilation", "error-location"],
+      "complexity": "simple",
+      "languageNotes": "Converts Naga UTF-8 code-unit locations to WebGPU-spec UTF-16 code units via len_utf16 helper."
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:Pipeline",
+      "type": "class",
+      "name": "Pipeline",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [147, 150],
+      "summary": "Generic pipeline struct parameterized by the pipeline ID type, holding an id and a label.",
+      "tags": ["webgpu", "pipeline", "generic"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:Mapping",
+      "type": "class",
+      "name": "Mapping",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [153, 157],
+      "summary": "Buffer mapping result containing shared memory data, access mode, and byte range.",
+      "tags": ["webgpu", "buffer", "memory-mapping"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:RequestDeviceError",
+      "type": "class",
+      "name": "RequestDeviceError",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [166, 170],
+      "summary": "Enum of device request errors: LimitsExceeded, UnsupportedFeature, and Other, with From conversion from wgpu-core's error type.",
+      "tags": ["webgpu", "device", "error", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/messages/recv.rs:PendingTexture",
+      "type": "class",
+      "name": "PendingTexture",
+      "filePath": "components/shared/webgpu/messages/recv.rs",
+      "lineRange": [59, 64],
+      "summary": "Tracks a pending texture with its texture, encoder, and command buffer IDs along with context configuration for presentation.",
+      "tags": ["webgpu", "texture", "pending", "presentation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/messages/recv.rs:WebGPURequest",
+      "type": "class",
+      "name": "WebGPURequest",
+      "filePath": "components/shared/webgpu/messages/recv.rs",
+      "lineRange": [67, 406],
+      "summary": "Large enum defining all IPC request variants sent to the WebGPU thread, covering buffer operations, texture copies, compute/render passes, resource lifecycle, error scopes, and query sets.",
+      "tags": ["webgpu", "ipc", "enum", "request-types"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/webgpu/messages/to_script.rs:WebGPUMsg",
+      "type": "class",
+      "name": "WebGPUMsg",
+      "filePath": "components/shared/webgpu/messages/to_script.rs",
+      "lineRange": [19, 55],
+      "summary": "Enum of IPC messages sent from the WebGPU thread to the ScriptThread, including resource cleanup notifications, uncaptured errors, device lost events, and exit signal.",
+      "tags": ["webgpu", "ipc", "enum", "events"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/webgpu/render_commands.rs:RenderCommand",
+      "type": "class",
+      "name": "RenderCommand",
+      "filePath": "components/shared/webgpu/render_commands.rs",
+      "lineRange": [14, 74],
+      "summary": "Enum of serializable render pass commands including pipeline/bind-group binding, viewport/scissor, draw calls, and debug markers.",
+      "tags": ["webgpu", "render-pipeline", "enum", "command-pattern"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/webgpu/render_commands.rs:apply_render_command",
+      "type": "function",
+      "name": "apply_render_command",
+      "filePath": "components/shared/webgpu/render_commands.rs",
+      "lineRange": [76, 165],
+      "summary": "Dispatches a RenderCommand to the wgpu Global render pass API by matching each variant and calling the corresponding method on the global object.",
+      "tags": ["webgpu", "render-pipeline", "dispatcher"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "file:components/shared/webgpu/error.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "file:components/shared/webgpu/ids.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "file:components/shared/webgpu/messages/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "file:components/shared/webgpu/render_commands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/mod.rs",
+      "target": "file:components/shared/webgpu/messages/recv.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/mod.rs",
+      "target": "file:components/shared/webgpu/messages/to_dom.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/mod.rs",
+      "target": "file:components/shared/webgpu/messages/to_script.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/webgpu/error.rs",
+      "target": "class:components/shared/webgpu/error.rs:ErrorScope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/error.rs",
+      "target": "class:components/shared/webgpu/error.rs:ErrorFilter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/error.rs",
+      "target": "class:components/shared/webgpu/error.rs:Error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/error.rs",
+      "target": "class:components/shared/webgpu/error.rs:PopError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:WebGPU",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:Adapter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:ContextConfiguration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:DeviceLostReason",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:ShaderCompilationInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:Pipeline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:Mapping",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:RequestDeviceError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/recv.rs",
+      "target": "class:components/shared/webgpu/messages/recv.rs:PendingTexture",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/recv.rs",
+      "target": "class:components/shared/webgpu/messages/recv.rs:WebGPURequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/to_script.rs",
+      "target": "class:components/shared/webgpu/messages/to_script.rs:WebGPUMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/render_commands.rs",
+      "target": "class:components/shared/webgpu/render_commands.rs:RenderCommand",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/render_commands.rs",
+      "target": "function:components/shared/webgpu/render_commands.rs:apply_render_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/error.rs",
+      "target": "class:components/shared/webgpu/error.rs:ErrorScope",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/error.rs",
+      "target": "class:components/shared/webgpu/error.rs:ErrorFilter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/error.rs",
+      "target": "class:components/shared/webgpu/error.rs:Error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/error.rs",
+      "target": "class:components/shared/webgpu/error.rs:PopError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:WebGPU",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:Adapter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:ContextConfiguration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:DeviceLostReason",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:ShaderCompilationInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:Pipeline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:Mapping",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:RequestDeviceError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/recv.rs",
+      "target": "class:components/shared/webgpu/messages/recv.rs:PendingTexture",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/recv.rs",
+      "target": "class:components/shared/webgpu/messages/recv.rs:WebGPURequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/messages/to_script.rs",
+      "target": "class:components/shared/webgpu/messages/to_script.rs:WebGPUMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/render_commands.rs",
+      "target": "class:components/shared/webgpu/render_commands.rs:RenderCommand",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/render_commands.rs",
+      "target": "function:components/shared/webgpu/render_commands.rs:apply_render_command",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

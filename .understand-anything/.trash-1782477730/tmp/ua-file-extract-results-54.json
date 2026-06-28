@@ -1,0 +1,4559 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 10,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/script/dom/serviceworker/client.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 157,
+      "nonEmptyLines": 139,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 47,
+          "endLine": 60,
+          "params": [
+            "swmanager_sender",
+            "url",
+            "frame_type",
+            "worker_id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 62,
+          "endLine": 80,
+          "params": [
+            "global",
+            "swmanager_sender",
+            "url",
+            "frame_type",
+            "worker_id",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "post_message_impl",
+          "startLine": 83,
+          "endLine": 110,
+          "params": [
+            "cx",
+            "message",
+            "transfer"
+          ]
+        },
+        {
+          "name": "PostMessage",
+          "startLine": 115,
+          "endLine": 122,
+          "params": [
+            "cx",
+            "message",
+            "transfer"
+          ]
+        },
+        {
+          "name": "PostMessage_",
+          "startLine": 125,
+          "endLine": 141,
+          "params": [
+            "cx",
+            "message",
+            "options"
+          ]
+        },
+        {
+          "name": "Url",
+          "startLine": 144,
+          "endLine": 146,
+          "params": []
+        },
+        {
+          "name": "FrameType",
+          "startLine": 149,
+          "endLine": 151,
+          "params": []
+        },
+        {
+          "name": "Id",
+          "startLine": 154,
+          "endLine": 156,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "Client",
+          "startLine": 28,
+          "endLine": 44,
+          "methods": [
+            "new_inherited",
+            "new",
+            "post_message_impl",
+            "PostMessage",
+            "PostMessage_",
+            "Url",
+            "FrameType",
+            "Id"
+          ],
+          "properties": [
+            "reflector_",
+            "swmanager_sender",
+            "url",
+            "frame_type",
+            "worker_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Client",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 62,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 54
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 71
+        },
+        {
+          "caller": "new",
+          "callee": "Client::new_inherited",
+          "lineNumber": 71
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.reflector_.global",
+          "lineNumber": 93
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "global.origin",
+          "lineNumber": 97
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "structuredclone::write",
+          "lineNumber": 99
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "Some",
+          "lineNumber": 99
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.swmanager_sender\n            .send(ServiceWorkerMsg::ForwardWorkerMessage {\n                data,\n                source: self.worker_id,\n                url: self.url.clone(),\n                origin: origin.immutable().clone(),\n            }).map_err",
+          "lineNumber": 100
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.swmanager_sender.send",
+          "lineNumber": 100
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.url.clone",
+          "lineNumber": 104
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "origin.immutable().clone",
+          "lineNumber": 105
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "origin.immutable",
+          "lineNumber": 105
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "Error::Type",
+          "lineNumber": 108
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "c\"Failed to send message to service worker manager\".to_owned",
+          "lineNumber": 108
+        },
+        {
+          "caller": "PostMessage",
+          "callee": "self.post_message_impl",
+          "lineNumber": 121
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "CustomAutoRooter::new",
+          "lineNumber": 131
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "options\n                .transfer\n                .iter()\n                .map(|js: &RootedTraceableBox<Heap<*mut JSObject>>| js.get()).collect",
+          "lineNumber": 132
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "options\n                .transfer\n                .iter().map",
+          "lineNumber": 132
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "options\n                .transfer.iter",
+          "lineNumber": 132
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "js.get",
+          "lineNumber": 135
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "CustomAutoRooterGuard::new",
+          "lineNumber": 139
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "cx.raw_cx",
+          "lineNumber": 139
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "self.post_message_impl",
+          "lineNumber": 140
+        },
+        {
+          "caller": "Url",
+          "callee": "USVString",
+          "lineNumber": 145
+        },
+        {
+          "caller": "Url",
+          "callee": "self.url.as_str().to_owned",
+          "lineNumber": 145
+        },
+        {
+          "caller": "Url",
+          "callee": "self.url.as_str",
+          "lineNumber": 145
+        },
+        {
+          "caller": "Id",
+          "callee": "format!(\"{}\", self.worker_id).into",
+          "lineNumber": 155
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/extendableevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 104,
+      "nonEmptyLines": 95,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 31,
+          "endLine": 36,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 38,
+          "endLine": 46,
+          "params": [
+            "cx",
+            "worker",
+            "type_",
+            "bubbles",
+            "cancelable"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 48,
+          "endLine": 67,
+          "params": [
+            "cx",
+            "worker",
+            "proto",
+            "type_",
+            "bubbles",
+            "cancelable"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 72,
+          "endLine": 87,
+          "params": [
+            "cx",
+            "worker",
+            "proto",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "WaitUntil",
+          "startLine": 90,
+          "endLine": 98,
+          "params": [
+            "_cx",
+            "_val"
+          ]
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 101,
+          "endLine": 103,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "ExtendableEvent",
+          "startLine": 25,
+          "endLine": 28,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "WaitUntil",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "extensions_allowed"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ExtendableEvent",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 38,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 33
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 45
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "ExtendableEvent::new_inherited",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "ev.upcast::<Event>",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.init_event",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 79
+        },
+        {
+          "caller": "Constructor",
+          "callee": "ExtendableEvent::new_with_proto",
+          "lineNumber": 79
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 83
+        },
+        {
+          "caller": "WaitUntil",
+          "callee": "Err",
+          "lineNumber": 93
+        },
+        {
+          "caller": "WaitUntil",
+          "callee": "Error::InvalidState",
+          "lineNumber": 93
+        },
+        {
+          "caller": "WaitUntil",
+          "callee": "Ok",
+          "lineNumber": 97
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 102
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/extendablemessageevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 296,
+      "nonEmptyLines": 276,
+      "functions": [
+        {
+          "name": "from",
+          "startLine": 41,
+          "endLine": 51,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 55,
+          "endLine": 67,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 71,
+          "endLine": 81,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 106,
+          "endLine": 124,
+          "params": [
+            "origin",
+            "lastEventId",
+            "source",
+            "ports"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 127,
+          "endLine": 152,
+          "params": [
+            "cx",
+            "global",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "data",
+            "origin",
+            "lastEventId",
+            "source",
+            "ports"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 155,
+          "endLine": 182,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "data",
+            "origin",
+            "lastEventId",
+            "source",
+            "ports"
+          ]
+        },
+        {
+          "name": "dispatch_jsval",
+          "startLine": 187,
+          "endLine": 208,
+          "params": [
+            "cx",
+            "target",
+            "scope",
+            "message",
+            "source",
+            "ports"
+          ]
+        },
+        {
+          "name": "dispatch_error",
+          "startLine": 210,
+          "endLine": 227,
+          "params": [
+            "cx",
+            "target",
+            "scope"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 232,
+          "endLine": 256,
+          "params": [
+            "cx",
+            "worker",
+            "proto",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "Data",
+          "startLine": 259,
+          "endLine": 261,
+          "params": [
+            "_cx",
+            "retval"
+          ]
+        },
+        {
+          "name": "Origin",
+          "startLine": 264,
+          "endLine": 266,
+          "params": []
+        },
+        {
+          "name": "LastEventId",
+          "startLine": 269,
+          "endLine": 271,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 274,
+          "endLine": 276,
+          "params": []
+        },
+        {
+          "name": "GetSource",
+          "startLine": 279,
+          "endLine": 281,
+          "params": []
+        },
+        {
+          "name": "Ports",
+          "startLine": 284,
+          "endLine": 295,
+          "params": [
+            "cx",
+            "retval"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "MessageSource",
+          "startLine": 34,
+          "endLine": 38,
+          "methods": [
+            "from",
+            "from"
+          ],
+          "properties": [
+            "Client",
+            "ServiceWorker",
+            "MessagePort"
+          ]
+        },
+        {
+          "name": "ExtendableMessageEvent",
+          "startLine": 86,
+          "endLine": 102,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "dispatch_jsval",
+            "dispatch_error",
+            "Constructor",
+            "Data",
+            "Origin",
+            "LastEventId",
+            "IsTrusted",
+            "GetSource",
+            "Ports"
+          ],
+          "properties": [
+            "event",
+            "data",
+            "origin",
+            "lastEventId",
+            "source",
+            "ports",
+            "frozen_ports"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "MessageSource",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "ExtendableMessageEvent",
+          "line": 86,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 106,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 127,
+          "isDefault": false
+        },
+        {
+          "name": "dispatch_jsval",
+          "line": 187,
+          "isDefault": false
+        },
+        {
+          "name": "dispatch_error",
+          "line": 210,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "from",
+          "callee": "MessageSource::Client",
+          "lineNumber": 43
+        },
+        {
+          "caller": "from",
+          "callee": "MessageSource::ServiceWorker",
+          "lineNumber": 45
+        },
+        {
+          "caller": "from",
+          "callee": "MessageSource::MessagePort",
+          "lineNumber": 48
+        },
+        {
+          "caller": "from",
+          "callee": "MessageSource::Client",
+          "lineNumber": 58
+        },
+        {
+          "caller": "from",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 58
+        },
+        {
+          "caller": "from",
+          "callee": "MessageSource::ServiceWorker",
+          "lineNumber": 61
+        },
+        {
+          "caller": "from",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 61
+        },
+        {
+          "caller": "from",
+          "callee": "MessageSource::MessagePort",
+          "lineNumber": 64
+        },
+        {
+          "caller": "from",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 64
+        },
+        {
+          "caller": "from",
+          "callee": "ClientOrServiceWorkerOrMessagePort::Client",
+          "lineNumber": 73
+        },
+        {
+          "caller": "from",
+          "callee": "ClientOrServiceWorkerOrMessagePort::ServiceWorker",
+          "lineNumber": 75
+        },
+        {
+          "caller": "from",
+          "callee": "ClientOrServiceWorkerOrMessagePort::MessagePort",
+          "lineNumber": 78
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "ExtendableEvent::new_inherited",
+          "lineNumber": 113
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Heap::default",
+          "lineNumber": 114
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "ports\n                .into_iter()\n                .map(|port| Dom::from_ref(&*port)).collect",
+          "lineNumber": 118
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "ports\n                .into_iter().map",
+          "lineNumber": 118
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "ports.into_iter",
+          "lineNumber": 118
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "CachedFrozenArray::new",
+          "lineNumber": 122
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 139
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 168
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "ExtendableMessageEvent::new_inherited",
+          "lineNumber": 168
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 174
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "ev.upcast::<Event>",
+          "lineNumber": 176
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.init_event",
+          "lineNumber": 177
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "ev.data.set",
+          "lineNumber": 179
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "data.get",
+          "lineNumber": 179
+        },
+        {
+          "caller": "dispatch_jsval",
+          "callee": "ExtendableMessageEvent::new",
+          "lineNumber": 195
+        },
+        {
+          "caller": "dispatch_jsval",
+          "callee": "DOMString::new",
+          "lineNumber": 202
+        },
+        {
+          "caller": "dispatch_jsval",
+          "callee": "DOMString::new",
+          "lineNumber": 203
+        },
+        {
+          "caller": "dispatch_jsval",
+          "callee": "Extendablemessageevent.upcast::<Event>().fire",
+          "lineNumber": 207
+        },
+        {
+          "caller": "dispatch_jsval",
+          "callee": "Extendablemessageevent.upcast::<Event>",
+          "lineNumber": 207
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "ExtendableMessageEventBinding::ExtendableMessageEventInit::empty",
+          "lineNumber": 211
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "ExtendableMessageEvent::new",
+          "lineNumber": 212
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "init.data.handle",
+          "lineNumber": 218
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "init.origin.clone",
+          "lineNumber": 219
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "init.lastEventId.clone",
+          "lineNumber": 220
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "init.source\n                .as_ref().and_then",
+          "lineNumber": 221
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "init.source.as_ref",
+          "lineNumber": 221
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "s.as_ref().map",
+          "lineNumber": 223
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "s.as_ref",
+          "lineNumber": 223
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "s.into",
+          "lineNumber": 223
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "init.ports.clone",
+          "lineNumber": 224
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "ExtendableMsgEvent.upcast::<Event>().fire",
+          "lineNumber": 226
+        },
+        {
+          "caller": "dispatch_error",
+          "callee": "ExtendableMsgEvent.upcast::<Event>",
+          "lineNumber": 226
+        },
+        {
+          "caller": "Constructor",
+          "callee": "worker.upcast::<GlobalScope>",
+          "lineNumber": 239
+        },
+        {
+          "caller": "Constructor",
+          "callee": "ExtendableMessageEvent::new_with_proto",
+          "lineNumber": 240
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 244
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.data.handle",
+          "lineNumber": 247
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.origin.clone",
+          "lineNumber": 248
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.lastEventId.clone",
+          "lineNumber": 249
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.source\n                .as_ref().and_then",
+          "lineNumber": 250
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.source.as_ref",
+          "lineNumber": 250
+        },
+        {
+          "caller": "Constructor",
+          "callee": "s.as_ref().map",
+          "lineNumber": 252
+        },
+        {
+          "caller": "Constructor",
+          "callee": "s.as_ref",
+          "lineNumber": 252
+        },
+        {
+          "caller": "Constructor",
+          "callee": "s.into",
+          "lineNumber": 252
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 255
+        },
+        {
+          "caller": "Data",
+          "callee": "retval.set",
+          "lineNumber": 260
+        },
+        {
+          "caller": "Data",
+          "callee": "self.data.get",
+          "lineNumber": 260
+        },
+        {
+          "caller": "Origin",
+          "callee": "self.origin.clone",
+          "lineNumber": 265
+        },
+        {
+          "caller": "LastEventId",
+          "callee": "self.lastEventId.clone",
+          "lineNumber": 270
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 275
+        },
+        {
+          "caller": "GetSource",
+          "callee": "self.source.clone().map",
+          "lineNumber": 280
+        },
+        {
+          "caller": "GetSource",
+          "callee": "self.source.clone",
+          "lineNumber": 280
+        },
+        {
+          "caller": "GetSource",
+          "callee": "s.into",
+          "lineNumber": 280
+        },
+        {
+          "caller": "Ports",
+          "callee": "self.frozen_ports.get_or_init",
+          "lineNumber": 285
+        },
+        {
+          "caller": "Ports",
+          "callee": "self.ports\n                    .iter()\n                    .map(|port| DomRoot::from_ref(&**port)).collect",
+          "lineNumber": 288
+        },
+        {
+          "caller": "Ports",
+          "callee": "self.ports\n                    .iter().map",
+          "lineNumber": 288
+        },
+        {
+          "caller": "Ports",
+          "callee": "self.ports.iter",
+          "lineNumber": 288
+        },
+        {
+          "caller": "Ports",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 290
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 15,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 18,
+      "nonEmptyLines": 17,
+      "metrics": {
+        "importCount": 9,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/navigationpreloadmanager.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 134,
+      "nonEmptyLines": 111,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 31,
+          "endLine": 36,
+          "params": [
+            "registration"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 39,
+          "endLine": 46,
+          "params": [
+            "cx",
+            "global",
+            "registration"
+          ]
+        },
+        {
+          "name": "Enable",
+          "startLine": 51,
+          "endLine": 68,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "Disable",
+          "startLine": 71,
+          "endLine": 88,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "SetHeaderValue",
+          "startLine": 91,
+          "endLine": 108,
+          "params": [
+            "cx",
+            "value"
+          ]
+        },
+        {
+          "name": "GetState",
+          "startLine": 111,
+          "endLine": 133,
+          "params": [
+            "cx"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "NavigationPreloadManager",
+          "startLine": 25,
+          "endLine": 28,
+          "methods": [
+            "new_inherited",
+            "new",
+            "Enable",
+            "Disable",
+            "SetHeaderValue",
+            "GetState"
+          ],
+          "properties": [
+            "reflector_",
+            "serviceworker_registration"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "NavigationPreloadManager",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 39,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 33
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new",
+          "callee": "NavigationPreloadManager::new_inherited",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 45
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 45
+        },
+        {
+          "caller": "Enable",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 52
+        },
+        {
+          "caller": "Enable",
+          "callee": "self.serviceworker_registration.is_active",
+          "lineNumber": 55
+        },
+        {
+          "caller": "Enable",
+          "callee": "DOMException::new",
+          "lineNumber": 56
+        },
+        {
+          "caller": "Enable",
+          "callee": "self.global",
+          "lineNumber": 56
+        },
+        {
+          "caller": "Enable",
+          "callee": "promise.reject_native",
+          "lineNumber": 57
+        },
+        {
+          "caller": "Enable",
+          "callee": "self.serviceworker_registration.set_navigation_preload_enabled",
+          "lineNumber": 60
+        },
+        {
+          "caller": "Enable",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Enable",
+          "callee": "UndefinedValue",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Disable",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 72
+        },
+        {
+          "caller": "Disable",
+          "callee": "self.serviceworker_registration.is_active",
+          "lineNumber": 75
+        },
+        {
+          "caller": "Disable",
+          "callee": "DOMException::new",
+          "lineNumber": 76
+        },
+        {
+          "caller": "Disable",
+          "callee": "self.global",
+          "lineNumber": 76
+        },
+        {
+          "caller": "Disable",
+          "callee": "promise.reject_native",
+          "lineNumber": 77
+        },
+        {
+          "caller": "Disable",
+          "callee": "self.serviceworker_registration.set_navigation_preload_enabled",
+          "lineNumber": 80
+        },
+        {
+          "caller": "Disable",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 84
+        },
+        {
+          "caller": "Disable",
+          "callee": "UndefinedValue",
+          "lineNumber": 84
+        },
+        {
+          "caller": "SetHeaderValue",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 92
+        },
+        {
+          "caller": "SetHeaderValue",
+          "callee": "self.serviceworker_registration.is_active",
+          "lineNumber": 95
+        },
+        {
+          "caller": "SetHeaderValue",
+          "callee": "DOMException::new",
+          "lineNumber": 96
+        },
+        {
+          "caller": "SetHeaderValue",
+          "callee": "self.global",
+          "lineNumber": 96
+        },
+        {
+          "caller": "SetHeaderValue",
+          "callee": "promise.reject_native",
+          "lineNumber": 97
+        },
+        {
+          "caller": "SetHeaderValue",
+          "callee": "self.serviceworker_registration.set_navigation_preload_header_value",
+          "lineNumber": 100
+        },
+        {
+          "caller": "SetHeaderValue",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 104
+        },
+        {
+          "caller": "SetHeaderValue",
+          "callee": "UndefinedValue",
+          "lineNumber": 104
+        },
+        {
+          "caller": "GetState",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 112
+        },
+        {
+          "caller": "GetState",
+          "callee": "NavigationPreloadState::empty",
+          "lineNumber": 114
+        },
+        {
+          "caller": "GetState",
+          "callee": "self.serviceworker_registration.is_active",
+          "lineNumber": 117
+        },
+        {
+          "caller": "GetState",
+          "callee": "self.serviceworker_registration.get_navigation_preload_enabled",
+          "lineNumber": 118
+        },
+        {
+          "caller": "GetState",
+          "callee": "self\n            .serviceworker_registration.get_navigation_preload_header_value",
+          "lineNumber": 125
+        },
+        {
+          "caller": "GetState",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 130
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/serviceworker.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 169,
+      "nonEmptyLines": 152,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 49,
+          "endLine": 61,
+          "params": [
+            "script_url",
+            "scope_url",
+            "worker_id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 63,
+          "endLine": 79,
+          "params": [
+            "global",
+            "script_url",
+            "scope_url",
+            "worker_id",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "dispatch_simple_error",
+          "startLine": 81,
+          "endLine": 84,
+          "params": [
+            "cx",
+            "address"
+          ]
+        },
+        {
+          "name": "get_script_url",
+          "startLine": 86,
+          "endLine": 88,
+          "params": []
+        },
+        {
+          "name": "post_message_impl",
+          "startLine": 91,
+          "endLine": 114,
+          "params": [
+            "cx",
+            "message",
+            "transfer"
+          ]
+        },
+        {
+          "name": "State",
+          "startLine": 119,
+          "endLine": 121,
+          "params": []
+        },
+        {
+          "name": "ScriptURL",
+          "startLine": 124,
+          "endLine": 126,
+          "params": []
+        },
+        {
+          "name": "PostMessage",
+          "startLine": 129,
+          "endLine": 136,
+          "params": [
+            "cx",
+            "message",
+            "transfer"
+          ]
+        },
+        {
+          "name": "PostMessage_",
+          "startLine": 139,
+          "endLine": 155,
+          "params": [
+            "cx",
+            "message",
+            "options"
+          ]
+        },
+        {
+          "name": "run_once",
+          "startLine": 166,
+          "endLine": 168,
+          "params": [
+            "cx"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ServiceWorker",
+          "startLine": 38,
+          "endLine": 46,
+          "methods": [
+            "new_inherited",
+            "new",
+            "dispatch_simple_error",
+            "get_script_url",
+            "post_message_impl",
+            "State",
+            "ScriptURL",
+            "PostMessage",
+            "PostMessage_"
+          ],
+          "properties": [
+            "eventtarget",
+            "script_url",
+            "scope_url",
+            "state",
+            "worker_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ServiceWorker",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 63,
+          "isDefault": false
+        },
+        {
+          "name": "dispatch_simple_error",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "get_script_url",
+          "line": 86,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "EventTarget::new_inherited",
+          "lineNumber": 55
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "String::from",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 71
+        },
+        {
+          "caller": "new",
+          "callee": "ServiceWorker::new_inherited",
+          "lineNumber": 71
+        },
+        {
+          "caller": "new",
+          "callee": "script_url.as_str",
+          "lineNumber": 72
+        },
+        {
+          "caller": "dispatch_simple_error",
+          "callee": "address.root",
+          "lineNumber": 82
+        },
+        {
+          "caller": "dispatch_simple_error",
+          "callee": "service_worker.upcast().fire_event",
+          "lineNumber": 83
+        },
+        {
+          "caller": "dispatch_simple_error",
+          "callee": "service_worker.upcast",
+          "lineNumber": 83
+        },
+        {
+          "caller": "get_script_url",
+          "callee": "ServoUrl::parse(&self.script_url.borrow().clone()).unwrap",
+          "lineNumber": 87
+        },
+        {
+          "caller": "get_script_url",
+          "callee": "ServoUrl::parse",
+          "lineNumber": 87
+        },
+        {
+          "caller": "get_script_url",
+          "callee": "self.script_url.borrow().clone",
+          "lineNumber": 87
+        },
+        {
+          "caller": "get_script_url",
+          "callee": "self.script_url.borrow",
+          "lineNumber": 87
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.state.get",
+          "lineNumber": 98
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "Err",
+          "lineNumber": 99
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "Error::InvalidState",
+          "lineNumber": 99
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "structuredclone::write",
+          "lineNumber": 102
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "Some",
+          "lineNumber": 102
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "GlobalScope::incumbent().expect",
+          "lineNumber": 103
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "GlobalScope::incumbent",
+          "lineNumber": 103
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "incumbent.pipeline_id",
+          "lineNumber": 104
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "incumbent.origin().immutable().clone",
+          "lineNumber": 106
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "incumbent.origin().immutable",
+          "lineNumber": 106
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "incumbent.origin",
+          "lineNumber": 106
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.global().script_to_constellation_chan().send",
+          "lineNumber": 110
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.global().script_to_constellation_chan",
+          "lineNumber": 110
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.global",
+          "lineNumber": 110
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "ScriptToConstellationMessage::ForwardDOMMessage",
+          "lineNumber": 111
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "self.scope_url.clone",
+          "lineNumber": 111
+        },
+        {
+          "caller": "post_message_impl",
+          "callee": "Ok",
+          "lineNumber": 113
+        },
+        {
+          "caller": "State",
+          "callee": "self.state.get",
+          "lineNumber": 120
+        },
+        {
+          "caller": "ScriptURL",
+          "callee": "USVString",
+          "lineNumber": 125
+        },
+        {
+          "caller": "ScriptURL",
+          "callee": "self.script_url.borrow().clone",
+          "lineNumber": 125
+        },
+        {
+          "caller": "ScriptURL",
+          "callee": "self.script_url.borrow",
+          "lineNumber": 125
+        },
+        {
+          "caller": "PostMessage",
+          "callee": "self.post_message_impl",
+          "lineNumber": 135
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "CustomAutoRooter::new",
+          "lineNumber": 145
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "options\n                .transfer\n                .iter()\n                .map(|js: &RootedTraceableBox<Heap<*mut JSObject>>| js.get()).collect",
+          "lineNumber": 146
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "options\n                .transfer\n                .iter().map",
+          "lineNumber": 146
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "options\n                .transfer.iter",
+          "lineNumber": 146
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "js.get",
+          "lineNumber": 149
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "CustomAutoRooterGuard::new",
+          "lineNumber": 153
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "cx.raw_cx",
+          "lineNumber": 153
+        },
+        {
+          "caller": "PostMessage_",
+          "callee": "self.post_message_impl",
+          "lineNumber": 154
+        },
+        {
+          "caller": "run_once",
+          "callee": "ServiceWorker::dispatch_simple_error",
+          "lineNumber": 167
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 10,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/serviceworkercontainer.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 527,
+      "nonEmptyLines": 477,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 56,
+          "endLine": 63,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 65,
+          "endLine": 71,
+          "params": [
+            "cx",
+            "global"
+          ]
+        },
+        {
+          "name": "handle_job_result",
+          "startLine": 75,
+          "endLine": 132,
+          "params": [
+            "cx",
+            "result",
+            "promise"
+          ]
+        },
+        {
+          "name": "handle_match_registration_result",
+          "startLine": 136,
+          "endLine": 163,
+          "params": [
+            "cx",
+            "registration_info",
+            "promise"
+          ]
+        },
+        {
+          "name": "handle_algorithm_result",
+          "startLine": 165,
+          "endLine": 225,
+          "params": [
+            "cx",
+            "result"
+          ]
+        },
+        {
+          "name": "get_or_setup_callback",
+          "startLine": 228,
+          "endLine": 267,
+          "params": [
+            "promise"
+          ]
+        },
+        {
+          "name": "create_and_schedule_unregister_job",
+          "startLine": 271,
+          "endLine": 315,
+          "params": [
+            "cx",
+            "storage_key",
+            "scope",
+            "script_url",
+            "promise"
+          ]
+        },
+        {
+          "name": "GetController",
+          "startLine": 320,
+          "endLine": 322,
+          "params": []
+        },
+        {
+          "name": "Register",
+          "startLine": 326,
+          "endLine": 461,
+          "params": [
+            "realm",
+            "script_url",
+            "options"
+          ]
+        },
+        {
+          "name": "GetRegistration",
+          "startLine": 464,
+          "endLine": 526,
+          "params": [
+            "realm",
+            "client_url"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ServiceWorkerContainer",
+          "startLine": 41,
+          "endLine": 53,
+          "methods": [
+            "new_inherited",
+            "new",
+            "handle_job_result",
+            "handle_match_registration_result",
+            "handle_algorithm_result",
+            "get_or_setup_callback",
+            "create_and_schedule_unregister_job",
+            "GetController",
+            "Register",
+            "GetRegistration"
+          ],
+          "properties": [
+            "eventtarget",
+            "controller",
+            "pending_algorithm_results",
+            "callback"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ServiceWorkerContainer",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "create_and_schedule_unregister_job",
+          "line": 271,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "EventTarget::new_inherited",
+          "lineNumber": 58
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 60
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 61
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 66
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 67
+        },
+        {
+          "caller": "new",
+          "callee": "ServiceWorkerContainer::new_inherited",
+          "lineNumber": 67
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "self.global",
+          "lineNumber": 76
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "promise.reject_error",
+          "lineNumber": 86
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "Error::Type",
+          "lineNumber": 88
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "c\"Failed to register a ServiceWorker\".to_owned",
+          "lineNumber": 88
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "promise.reject_error",
+          "lineNumber": 92
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "Error::Security",
+          "lineNumber": 92
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 99
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "global.get_serviceworker_registration",
+          "lineNumber": 114
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 121
+        },
+        {
+          "caller": "handle_job_result",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 127
+        },
+        {
+          "caller": "handle_match_registration_result",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 147
+        },
+        {
+          "caller": "handle_match_registration_result",
+          "callee": "self.global().get_serviceworker_registration",
+          "lineNumber": 153
+        },
+        {
+          "caller": "handle_match_registration_result",
+          "callee": "self.global",
+          "lineNumber": 153
+        },
+        {
+          "caller": "handle_match_registration_result",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 160
+        },
+        {
+          "caller": "handle_match_registration_result",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 162
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "self.pending_algorithm_results.borrow_mut().pop_front",
+          "lineNumber": 168
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "self.pending_algorithm_results.borrow_mut",
+          "lineNumber": 168
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "self.handle_job_result",
+          "lineNumber": 172
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "self.pending_algorithm_results.borrow_mut().pop_front",
+          "lineNumber": 175
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "self.pending_algorithm_results.borrow_mut",
+          "lineNumber": 175
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "self.handle_match_registration_result",
+          "lineNumber": 179
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "self.global",
+          "lineNumber": 193
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "global.get_serviceworker",
+          "lineNumber": 199
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 199
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "structuredclone::read",
+          "lineNumber": 206
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "message_val.handle_mut",
+          "lineNumber": 206
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "MessageEvent::dispatch_jsval",
+          "lineNumber": 211
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "self.upcast",
+          "lineNumber": 213
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "message_val.handle",
+          "lineNumber": 215
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "Some",
+          "lineNumber": 216
+        },
+        {
+          "caller": "handle_algorithm_result",
+          "callee": "origin.ascii_serialization",
+          "lineNumber": 216
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "self.pending_algorithm_results\n            .borrow_mut().push_back",
+          "lineNumber": 232
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "self.pending_algorithm_results.borrow_mut",
+          "lineNumber": 232
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "self.callback.borrow_mut().as_ref",
+          "lineNumber": 235
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "self.callback.borrow_mut",
+          "lineNumber": 235
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "cb.clone",
+          "lineNumber": 236
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "self.global",
+          "lineNumber": 239
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "Trusted::new",
+          "lineNumber": 240
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "global\n            .task_manager()\n            .dom_manipulation_task_source().to_sendable",
+          "lineNumber": 242
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "global\n            .task_manager().dom_manipulation_task_source",
+          "lineNumber": 242
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "global.task_manager",
+          "lineNumber": 242
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "GenericCallback::new(move |message| {\n            let response_listener = response_listener.clone();\n            let response = match message {\n                Ok(inner) => inner,\n                Err(err) => {\n                    return error!(\n                        \"Error in Service worker algorithm result handlings {:?}.\",\n                        err\n                    );\n                },\n            };\n            task_source.queue(task!(set_request_result_to_database: move |cx| {\n                let container = response_listener.root();\n                container.handle_algorithm_result(cx, response)\n            }));\n        }).expect",
+          "lineNumber": 246
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "GenericCallback::new",
+          "lineNumber": 246
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "response_listener.clone",
+          "lineNumber": 247
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "task_source.queue",
+          "lineNumber": 257
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "self.callback.borrow_mut",
+          "lineNumber": 264
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "Some",
+          "lineNumber": 264
+        },
+        {
+          "caller": "get_or_setup_callback",
+          "callee": "callback.clone",
+          "lineNumber": 264
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "self.global",
+          "lineNumber": 279
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "self.get_or_setup_callback",
+          "lineNumber": 280
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "Job::create_job",
+          "lineNumber": 285
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "global.creation_url",
+          "lineNumber": 290
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "global\n            .script_to_constellation_chan()\n            .send(ScriptToConstellationMessage::ServiceWorkerAlgorithm(\n                ServiceWorkerAlgorithm::Unregister(job),\n            )).is_err",
+          "lineNumber": 296
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "global\n            .script_to_constellation_chan().send",
+          "lineNumber": 296
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "global.script_to_constellation_chan",
+          "lineNumber": 296
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "ScriptToConstellationMessage::ServiceWorkerAlgorithm",
+          "lineNumber": 298
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "ServiceWorkerAlgorithm::Unregister",
+          "lineNumber": 299
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "self.pending_algorithm_results.borrow_mut().pop_back",
+          "lineNumber": 304
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "self.pending_algorithm_results.borrow_mut",
+          "lineNumber": 304
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "self.handle_algorithm_result",
+          "lineNumber": 310
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "ServiceWorkerAlgorithmResult::Job",
+          "lineNumber": 312
+        },
+        {
+          "caller": "create_and_schedule_unregister_job",
+          "callee": "JobResult::RejectPromise",
+          "lineNumber": 312
+        },
+        {
+          "caller": "Register",
+          "callee": "self.global",
+          "lineNumber": 333
+        },
+        {
+          "caller": "Register",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 336
+        },
+        {
+          "caller": "Register",
+          "callee": "global.api_base_url",
+          "lineNumber": 340
+        },
+        {
+          "caller": "Register",
+          "callee": "api_base_url.join",
+          "lineNumber": 341
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.reject_error",
+          "lineNumber": 345
+        },
+        {
+          "caller": "Register",
+          "callee": "Error::Type",
+          "lineNumber": 345
+        },
+        {
+          "caller": "Register",
+          "callee": "c\"Invalid script URL\".to_owned",
+          "lineNumber": 345
+        },
+        {
+          "caller": "Register",
+          "callee": "api_base_url.join",
+          "lineNumber": 354
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.reject_error",
+          "lineNumber": 357
+        },
+        {
+          "caller": "Register",
+          "callee": "Error::Type",
+          "lineNumber": 357
+        },
+        {
+          "caller": "Register",
+          "callee": "c\"Invalid scope URL\".to_owned",
+          "lineNumber": 357
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.join(\"./\").unwrap",
+          "lineNumber": 362
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.join",
+          "lineNumber": 362
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.scheme",
+          "lineNumber": 368
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.reject_error",
+          "lineNumber": 371
+        },
+        {
+          "caller": "Register",
+          "callee": "Error::Type",
+          "lineNumber": 373
+        },
+        {
+          "caller": "Register",
+          "callee": "c\"Only secure origins are allowed\".to_owned",
+          "lineNumber": 373
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.path().to_ascii_lowercase().contains",
+          "lineNumber": 379
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.path().to_ascii_lowercase",
+          "lineNumber": 379
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.path",
+          "lineNumber": 379
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.path().to_ascii_lowercase().contains",
+          "lineNumber": 380
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.path().to_ascii_lowercase",
+          "lineNumber": 380
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.path",
+          "lineNumber": 380
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.reject_error",
+          "lineNumber": 382
+        },
+        {
+          "caller": "Register",
+          "callee": "Error::Type",
+          "lineNumber": 384
+        },
+        {
+          "caller": "Register",
+          "callee": "c\"Script URL contains forbidden characters\".to_owned",
+          "lineNumber": 384
+        },
+        {
+          "caller": "Register",
+          "callee": "scope.scheme",
+          "lineNumber": 390
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.reject_error",
+          "lineNumber": 393
+        },
+        {
+          "caller": "Register",
+          "callee": "Error::Type",
+          "lineNumber": 395
+        },
+        {
+          "caller": "Register",
+          "callee": "c\"Only secure origins are allowed\".to_owned",
+          "lineNumber": 395
+        },
+        {
+          "caller": "Register",
+          "callee": "scope.path().to_ascii_lowercase().contains",
+          "lineNumber": 401
+        },
+        {
+          "caller": "Register",
+          "callee": "scope.path().to_ascii_lowercase",
+          "lineNumber": 401
+        },
+        {
+          "caller": "Register",
+          "callee": "scope.path",
+          "lineNumber": 401
+        },
+        {
+          "caller": "Register",
+          "callee": "scope.path().to_ascii_lowercase().contains",
+          "lineNumber": 402
+        },
+        {
+          "caller": "Register",
+          "callee": "scope.path().to_ascii_lowercase",
+          "lineNumber": 402
+        },
+        {
+          "caller": "Register",
+          "callee": "scope.path",
+          "lineNumber": 402
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.reject_error",
+          "lineNumber": 404
+        },
+        {
+          "caller": "Register",
+          "callee": "Error::Type",
+          "lineNumber": 406
+        },
+        {
+          "caller": "Register",
+          "callee": "c\"Scope URL contains forbidden characters\".to_owned",
+          "lineNumber": 406
+        },
+        {
+          "caller": "Register",
+          "callee": "self.get_or_setup_callback",
+          "lineNumber": 411
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.clone",
+          "lineNumber": 411
+        },
+        {
+          "caller": "Register",
+          "callee": "ServiceWorkerRegistration::create_scope_things",
+          "lineNumber": 414
+        },
+        {
+          "caller": "Register",
+          "callee": "script_url.clone",
+          "lineNumber": 414
+        },
+        {
+          "caller": "Register",
+          "callee": "global.obtain_storage_key",
+          "lineNumber": 419
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.reject_error",
+          "lineNumber": 420
+        },
+        {
+          "caller": "Register",
+          "callee": "Error::Type",
+          "lineNumber": 422
+        },
+        {
+          "caller": "Register",
+          "callee": "c\"Failed to obtain a storage key\".to_owned",
+          "lineNumber": 422
+        },
+        {
+          "caller": "Register",
+          "callee": "self.pending_algorithm_results.borrow_mut().pop_back",
+          "lineNumber": 425
+        },
+        {
+          "caller": "Register",
+          "callee": "self.pending_algorithm_results.borrow_mut",
+          "lineNumber": 425
+        },
+        {
+          "caller": "Register",
+          "callee": "Job::create_job",
+          "lineNumber": 429
+        },
+        {
+          "caller": "Register",
+          "callee": "global.creation_url",
+          "lineNumber": 434
+        },
+        {
+          "caller": "Register",
+          "callee": "Some",
+          "lineNumber": 435
+        },
+        {
+          "caller": "Register",
+          "callee": "global\n            .script_to_constellation_chan()\n            .send(ScriptToConstellationMessage::ServiceWorkerAlgorithm(\n                ServiceWorkerAlgorithm::StartRegister(job),\n            )).is_err",
+          "lineNumber": 440
+        },
+        {
+          "caller": "Register",
+          "callee": "global\n            .script_to_constellation_chan().send",
+          "lineNumber": 440
+        },
+        {
+          "caller": "Register",
+          "callee": "global.script_to_constellation_chan",
+          "lineNumber": 440
+        },
+        {
+          "caller": "Register",
+          "callee": "ScriptToConstellationMessage::ServiceWorkerAlgorithm",
+          "lineNumber": 442
+        },
+        {
+          "caller": "Register",
+          "callee": "ServiceWorkerAlgorithm::StartRegister",
+          "lineNumber": 443
+        },
+        {
+          "caller": "Register",
+          "callee": "self.pending_algorithm_results.borrow_mut().pop_back",
+          "lineNumber": 448
+        },
+        {
+          "caller": "Register",
+          "callee": "self.pending_algorithm_results.borrow_mut",
+          "lineNumber": 448
+        },
+        {
+          "caller": "Register",
+          "callee": "promise.reject_error",
+          "lineNumber": 453
+        },
+        {
+          "caller": "Register",
+          "callee": "Error::Type",
+          "lineNumber": 455
+        },
+        {
+          "caller": "Register",
+          "callee": "c\"Failed to register a ServiceWorker\".to_owned",
+          "lineNumber": 455
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "self.global",
+          "lineNumber": 466
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 470
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "global.obtain_storage_key",
+          "lineNumber": 473
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "promise.reject_error",
+          "lineNumber": 474
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "Error::Type",
+          "lineNumber": 476
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "c\"Failed to obtain a storage key\".to_owned",
+          "lineNumber": 476
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "global.api_base_url().join",
+          "lineNumber": 482
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "global.api_base_url",
+          "lineNumber": 482
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "promise.reject_error",
+          "lineNumber": 486
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "Error::Type",
+          "lineNumber": 486
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "c\"Failed to parse clientURL\".to_owned",
+          "lineNumber": 486
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "client_url.set_fragment",
+          "lineNumber": 492
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "client_url.origin",
+          "lineNumber": 495
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "global.origin().immutable",
+          "lineNumber": 495
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "global.origin",
+          "lineNumber": 495
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "promise.reject_error",
+          "lineNumber": 496
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "Error::Security",
+          "lineNumber": 496
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "self.get_or_setup_callback",
+          "lineNumber": 500
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "promise.clone",
+          "lineNumber": 500
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "global\n            .script_to_constellation_chan()\n            .send(ScriptToConstellationMessage::ServiceWorkerAlgorithm(\n                ServiceWorkerAlgorithm::MatchServiceWorkerRegistration {\n                    client_url,\n                    storage_key,\n                    result_handler,\n                },\n            )).is_err",
+          "lineNumber": 505
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "global\n            .script_to_constellation_chan().send",
+          "lineNumber": 505
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "global.script_to_constellation_chan",
+          "lineNumber": 505
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "ScriptToConstellationMessage::ServiceWorkerAlgorithm",
+          "lineNumber": 507
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "self.pending_algorithm_results.borrow_mut().pop_back",
+          "lineNumber": 517
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "self.pending_algorithm_results.borrow_mut",
+          "lineNumber": 517
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "promise.reject_error",
+          "lineNumber": 518
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "Error::Type",
+          "lineNumber": 520
+        },
+        {
+          "caller": "GetRegistration",
+          "callee": "c\"Failed to send MatchServiceWorkerRegistration algorithm\".to_owned",
+          "lineNumber": 520
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 10,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/serviceworkerglobalscope.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 602,
+      "nonEmptyLines": 537,
+      "functions": [
+        {
+          "name": "task_source_name",
+          "startLine": 78,
+          "endLine": 89,
+          "params": []
+        },
+        {
+          "name": "pipeline_id",
+          "startLine": 91,
+          "endLine": 95,
+          "params": []
+        },
+        {
+          "name": "into_queued_task",
+          "startLine": 97,
+          "endLine": 115,
+          "params": []
+        },
+        {
+          "name": "from_queued_task",
+          "startLine": 117,
+          "endLine": 125,
+          "params": [
+            "queued_task"
+          ]
+        },
+        {
+          "name": "inactive_msg",
+          "startLine": 127,
+          "endLine": 130,
+          "params": []
+        },
+        {
+          "name": "wake_up_msg",
+          "startLine": 132,
+          "endLine": 134,
+          "params": []
+        },
+        {
+          "name": "is_wake_up",
+          "startLine": 136,
+          "endLine": 138,
+          "params": []
+        },
+        {
+          "name": "process_csp_violations",
+          "startLine": 157,
+          "endLine": 157,
+          "params": [
+            "_violations"
+          ]
+        },
+        {
+          "name": "task_queue",
+          "startLine": 197,
+          "endLine": 199,
+          "params": []
+        },
+        {
+          "name": "handle_event",
+          "startLine": 201,
+          "endLine": 203,
+          "params": [
+            "event",
+            "cx"
+          ]
+        },
+        {
+          "name": "handle_worker_post_event",
+          "startLine": 205,
+          "endLine": 210,
+          "params": [
+            "_worker"
+          ]
+        },
+        {
+          "name": "from_control_msg",
+          "startLine": 212,
+          "endLine": 214,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "from_worker_msg",
+          "startLine": 216,
+          "endLine": 218,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "from_devtools_msg",
+          "startLine": 220,
+          "endLine": 222,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "from_timer_msg",
+          "startLine": 224,
+          "endLine": 226,
+          "params": []
+        },
+        {
+          "name": "control_receiver",
+          "startLine": 228,
+          "endLine": 230,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 235,
+          "endLine": 273,
+          "params": [
+            "init",
+            "worker_url",
+            "from_devtools_receiver",
+            "runtime",
+            "own_sender",
+            "receiver",
+            "time_out_port",
+            "swmanager_sender",
+            "scope_url",
+            "control_receiver",
+            "closing",
+            "font_context",
+            "worker_id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 276,
+          "endLine": 314,
+          "params": [
+            "init",
+            "worker_url",
+            "from_devtools_receiver",
+            "runtime",
+            "own_sender",
+            "receiver",
+            "time_out_port",
+            "swmanager_sender",
+            "scope_url",
+            "control_receiver",
+            "closing",
+            "font_context",
+            "debugger_global",
+            "worker_id",
+            "cx"
+          ]
+        },
+        {
+          "name": "run_serviceworker_scope",
+          "startLine": 319,
+          "endLine": 498,
+          "params": [
+            "scope_things",
+            "own_sender",
+            "receiver",
+            "devtools_receiver",
+            "swmanager_sender",
+            "scope_url",
+            "control_receiver",
+            "context_sender",
+            "closing",
+            "font_context",
+            "worker_id"
+          ]
+        },
+        {
+          "name": "handle_mixed_message",
+          "startLine": 500,
+          "endLine": 514,
+          "params": [
+            "msg",
+            "cx"
+          ]
+        },
+        {
+          "name": "has_timed_out",
+          "startLine": 516,
+          "endLine": 519,
+          "params": []
+        },
+        {
+          "name": "handle_script_event",
+          "startLine": 521,
+          "endLine": 568,
+          "params": [
+            "msg",
+            "cx"
+          ]
+        },
+        {
+          "name": "event_loop_sender",
+          "startLine": 570,
+          "endLine": 572,
+          "params": []
+        },
+        {
+          "name": "dispatch_activate",
+          "startLine": 574,
+          "endLine": 578,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "interrupt_callback",
+          "startLine": 582,
+          "endLine": 594,
+          "params": [
+            "cx"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ServiceWorkerScriptMsg",
+          "startLine": 68,
+          "endLine": 75,
+          "methods": [
+            "task_source_name",
+            "pipeline_id",
+            "into_queued_task",
+            "from_queued_task",
+            "inactive_msg",
+            "wake_up_msg",
+            "is_wake_up"
+          ],
+          "properties": [
+            "CommonWorker",
+            "Response",
+            "WakeUp"
+          ]
+        },
+        {
+          "name": "ServiceWorkerControlMsg",
+          "startLine": 142,
+          "endLine": 145,
+          "methods": [],
+          "properties": [
+            "Exit"
+          ]
+        },
+        {
+          "name": "MixedMessage",
+          "startLine": 147,
+          "endLine": 152,
+          "methods": [],
+          "properties": [
+            "ServiceWorker",
+            "Devtools",
+            "Control",
+            "Timer"
+          ]
+        },
+        {
+          "name": "ServiceWorkerCspProcessor",
+          "startLine": 154,
+          "endLine": 154,
+          "methods": [
+            "process_csp_violations"
+          ],
+          "properties": []
+        },
+        {
+          "name": "ServiceWorkerGlobalScope",
+          "startLine": 161,
+          "endLine": 190,
+          "methods": [
+            "task_queue",
+            "handle_event",
+            "handle_worker_post_event",
+            "from_control_msg",
+            "from_worker_msg",
+            "from_devtools_msg",
+            "from_timer_msg",
+            "control_receiver",
+            "new_inherited",
+            "new",
+            "run_serviceworker_scope",
+            "handle_mixed_message",
+            "has_timed_out",
+            "handle_script_event",
+            "event_loop_sender",
+            "dispatch_activate"
+          ],
+          "properties": [
+            "workerglobalscope",
+            "task_queue",
+            "own_sender",
+            "time_out_port",
+            "swmanager_sender",
+            "scope_url",
+            "control_receiver",
+            "worker_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ServiceWorkerScriptMsg",
+          "line": 68,
+          "isDefault": false
+        },
+        {
+          "name": "ServiceWorkerControlMsg",
+          "line": 142,
+          "isDefault": false
+        },
+        {
+          "name": "MixedMessage",
+          "line": 147,
+          "isDefault": false
+        },
+        {
+          "name": "ServiceWorkerGlobalScope",
+          "line": 161,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 276,
+          "isDefault": false
+        },
+        {
+          "name": "run_serviceworker_scope",
+          "line": 319,
+          "isDefault": false
+        },
+        {
+          "name": "event_loop_sender",
+          "line": 570,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "task_source_name",
+          "callee": "Some",
+          "lineNumber": 85
+        },
+        {
+          "caller": "into_queued_task",
+          "callee": "Some",
+          "lineNumber": 108
+        },
+        {
+          "caller": "from_queued_task",
+          "callee": "CommonScriptMsg::Task",
+          "lineNumber": 118
+        },
+        {
+          "caller": "from_queued_task",
+          "callee": "ServiceWorkerScriptMsg::CommonWorker",
+          "lineNumber": 124
+        },
+        {
+          "caller": "from_queued_task",
+          "callee": "WorkerScriptMsg::Common",
+          "lineNumber": 124
+        },
+        {
+          "caller": "handle_event",
+          "callee": "self.handle_mixed_message",
+          "lineNumber": 202
+        },
+        {
+          "caller": "from_control_msg",
+          "callee": "MixedMessage::Control",
+          "lineNumber": 213
+        },
+        {
+          "caller": "from_worker_msg",
+          "callee": "MixedMessage::ServiceWorker",
+          "lineNumber": 217
+        },
+        {
+          "caller": "from_devtools_msg",
+          "callee": "MixedMessage::Devtools",
+          "lineNumber": 221
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "WorkerGlobalScope::new_inherited",
+          "lineNumber": 251
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DOMString::new",
+          "lineNumber": 253
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Arc::new",
+          "lineNumber": 260
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "IdentityHub::default",
+          "lineNumber": 260
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Some",
+          "lineNumber": 263
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "TaskQueue::new",
+          "lineNumber": 265
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "own_sender.clone",
+          "lineNumber": 265
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 293
+        },
+        {
+          "caller": "new",
+          "callee": "ServiceWorkerGlobalScope::new_inherited",
+          "lineNumber": 293
+        },
+        {
+          "caller": "new",
+          "callee": "ServiceWorkerGlobalScopeBinding::Wrap::<crate::DomTypeHolder>",
+          "lineNumber": 308
+        },
+        {
+          "caller": "new",
+          "callee": "scope\n            .upcast::<WorkerGlobalScope>().init_debugger_global",
+          "lineNumber": 309
+        },
+        {
+          "caller": "new",
+          "callee": "scope\n            .upcast::<WorkerGlobalScope>",
+          "lineNumber": 309
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "script_url.to_string",
+          "lineNumber": 339
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "scope_url.origin",
+          "lineNumber": 340
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "thread::Builder::new()\n            .name(format!(\"SW:{}\", script_url.debug_compact()))\n            .spawn(move || {\n                thread_state::initialize(ThreadState::SCRIPT | ThreadState::IN_WORKER);\n                let runtime = Runtime::new(None);\n                // SAFETY: We are in a new thread, so this first cx.\n                // It is OK to have it separated of runtime here,\n                // because it will never outlive it (runtime destruction happens at the end of this function\n                let mut cx = unsafe { runtime.cx() };\n                let cx = &mut cx;\n                let context_for_interrupt = runtime.thread_safe_js_context();\n                let _ = context_sender.send(context_for_interrupt);\n\n                let WorkerScriptLoadOrigin {\n                    referrer_url,\n                    referrer_policy,\n                    pipeline_id,\n                } = worker_load_origin;\n\n                let debugger_global = DebuggerGlobalScope::new(\n                    pipeline_id,\n                    init.to_devtools_sender.clone(),\n                    init.from_devtools_sender\n                        .clone()\n                        .expect(\"Guaranteed by update_serviceworker\"),\n                    init.mem_profiler_chan.clone(),\n                    init.time_profiler_chan.clone(),\n                    init.script_to_constellation_chan.clone(),\n                    init.script_to_embedder_chan.clone(),\n                    init.resource_threads.clone(),\n                    init.storage_threads.clone(),\n                    #[cfg(feature = \"webgpu\")]\n                    Arc::new(IdentityHub::default()),\n                    cx,\n                );\n                debugger_global.execute(cx);\n\n                // Service workers are time limited\n                // https://w3c.github.io/ServiceWorker/#service-worker-lifetime\n                let sw_lifetime_timeout = pref!(dom_serviceworker_timeout_seconds) as u64;\n                let time_out_port = after(Duration::new(sw_lifetime_timeout, 0));\n\n                let devtools_mpsc_port = devtools_receiver.route_preserving_errors();\n\n                let resource_threads_sender = init.resource_threads.sender();\n                let devtools_enabled = init.to_devtools_sender.is_some();\n                let global = ServiceWorkerGlobalScope::new(\n                    init,\n                    script_url.clone(),\n                    devtools_mpsc_port,\n                    runtime,\n                    own_sender,\n                    receiver,\n                    time_out_port,\n                    swmanager_sender,\n                    scope_url,\n                    control_receiver,\n                    closing,\n                    font_context,\n                    &debugger_global,\n                    worker_id,\n                    cx,\n                );\n\n                let worker_scope = global.upcast::<WorkerGlobalScope>();\n                let global_scope = global.upcast::<GlobalScope>();\n\n                if devtools_enabled {\n                    debugger_global.fire_add_debuggee(\n                        cx,\n                        global_scope,\n                        pipeline_id,\n                        Some(worker_scope.worker_id()),\n                    );\n                }\n\n                let referrer = referrer_url\n                    .map(Referrer::ReferrerUrl)\n                    .unwrap_or_else(|| global_scope.get_referrer());\n\n                let request = RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker)\n                .credentials_mode(CredentialsMode::Include)\n                .parser_metadata(ParserMetadata::NotParserInserted)\n                .use_url_credentials(true)\n                .pipeline_id(Some(pipeline_id))\n                .referrer_policy(referrer_policy)\n                .insecure_requests_policy(worker_scope.insecure_requests_policy())\n                // TODO: Use policy container from ScopeThings\n                .policy_container(global_scope.policy_container())\n                .origin(origin);\n\n                let (url, source) = match load_whole_resource(\n                    request,\n                    &resource_threads_sender,\n                    global.upcast(),\n                    &ServiceWorkerCspProcessor {},\n                    cx,\n                ) {\n                    Err(_) => {\n                        error!(\"error loading script {}\", serialized_worker_url);\n                        worker_scope.clear_js_runtime();\n                        return;\n                    },\n                    Ok((metadata, bytes, _)) => (metadata.final_url, bytes),\n                };\n\n                unsafe {\n                    // Handle interrupt requests\n                    JS_AddInterruptCallback(cx.raw_cx(), Some(interrupt_callback));\n                }\n\n                {\n                    // TODO: use AutoWorkerReset as in dedicated worker?\n                    let mut realm = enter_auto_realm(cx, worker_scope);\n                    let mut realm = realm.current_realm();\n                    define_all_exposed_interfaces(&mut realm, global_scope);\n\n                    let script = global_scope.create_a_classic_script(\n                        &mut realm,\n                        String::from_utf8_lossy(&source),\n                        url,\n                        ScriptFetchOptions::default_classic_script(),\n                        ErrorReporting::Unmuted,\n                        Some(IntroductionType::WORKER),\n                        1,\n                        true,\n                    );\n                    _ = global_scope.run_a_classic_script(&mut realm, script, RethrowErrors::No);\n                    global.dispatch_activate(&mut realm);\n                }\n\n                let reporter_name = format!(\"service-worker-reporter-{}\", random::<u64>());\n                global_scope.mem_profiler_chan().run_with_memory_reporting(\n                    || {\n                        // Step 18, Run the responsible event loop specified\n                        // by inside settings until it is destroyed.\n                        // The worker processing model remains on this step\n                        // until the event loop is destroyed,\n                        // which happens after the closing flag is set to true,\n                        // or until the worker has run beyond its allocated time.\n                        while !worker_scope.is_closing() && !global.has_timed_out() {\n                            run_worker_event_loop(&*global, None, cx);\n                        }\n                    },\n                    reporter_name,\n                    global.event_loop_sender(),\n                    CommonScriptMsg::CollectReports,\n                );\n\n                worker_scope.clear_js_runtime();\n            }).expect",
+          "lineNumber": 341
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "thread::Builder::new()\n            .name(format!(\"SW:{}\", script_url.debug_compact())).spawn",
+          "lineNumber": 341
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "thread::Builder::new().name",
+          "lineNumber": 341
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "thread::Builder::new",
+          "lineNumber": 341
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "thread_state::initialize",
+          "lineNumber": 344
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "Runtime::new",
+          "lineNumber": 345
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "runtime.cx",
+          "lineNumber": 349
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "runtime.thread_safe_js_context",
+          "lineNumber": 351
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "context_sender.send",
+          "lineNumber": 352
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "DebuggerGlobalScope::new",
+          "lineNumber": 360
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.to_devtools_sender.clone",
+          "lineNumber": 362
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.from_devtools_sender\n                        .clone().expect",
+          "lineNumber": 363
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.from_devtools_sender.clone",
+          "lineNumber": 363
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.mem_profiler_chan.clone",
+          "lineNumber": 366
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.time_profiler_chan.clone",
+          "lineNumber": 367
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.script_to_constellation_chan.clone",
+          "lineNumber": 368
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.script_to_embedder_chan.clone",
+          "lineNumber": 369
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.resource_threads.clone",
+          "lineNumber": 370
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.storage_threads.clone",
+          "lineNumber": 371
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "Arc::new",
+          "lineNumber": 373
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "IdentityHub::default",
+          "lineNumber": 373
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "debugger_global.execute",
+          "lineNumber": 376
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "after",
+          "lineNumber": 381
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "Duration::new",
+          "lineNumber": 381
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "devtools_receiver.route_preserving_errors",
+          "lineNumber": 383
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.resource_threads.sender",
+          "lineNumber": 385
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "init.to_devtools_sender.is_some",
+          "lineNumber": 386
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "ServiceWorkerGlobalScope::new",
+          "lineNumber": 387
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "script_url.clone",
+          "lineNumber": 389
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global.upcast::<WorkerGlobalScope>",
+          "lineNumber": 405
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global.upcast::<GlobalScope>",
+          "lineNumber": 406
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "debugger_global.fire_add_debuggee",
+          "lineNumber": 409
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "Some",
+          "lineNumber": 413
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "worker_scope.worker_id",
+          "lineNumber": 413
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "referrer_url\n                    .map(Referrer::ReferrerUrl).unwrap_or_else",
+          "lineNumber": 417
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "referrer_url.map",
+          "lineNumber": 417
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global_scope.get_referrer",
+          "lineNumber": 419
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker)\n                .credentials_mode(CredentialsMode::Include)\n                .parser_metadata(ParserMetadata::NotParserInserted)\n                .use_url_credentials(true)\n                .pipeline_id(Some(pipeline_id))\n                .referrer_policy(referrer_policy)\n                .insecure_requests_policy(worker_scope.insecure_requests_policy())\n                // TODO: Use policy container from ScopeThings\n                .policy_container(global_scope.policy_container()).origin",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker)\n                .credentials_mode(CredentialsMode::Include)\n                .parser_metadata(ParserMetadata::NotParserInserted)\n                .use_url_credentials(true)\n                .pipeline_id(Some(pipeline_id))\n                .referrer_policy(referrer_policy)\n                .insecure_requests_policy(worker_scope.insecure_requests_policy()).policy_container",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker)\n                .credentials_mode(CredentialsMode::Include)\n                .parser_metadata(ParserMetadata::NotParserInserted)\n                .use_url_credentials(true)\n                .pipeline_id(Some(pipeline_id))\n                .referrer_policy(referrer_policy).insecure_requests_policy",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker)\n                .credentials_mode(CredentialsMode::Include)\n                .parser_metadata(ParserMetadata::NotParserInserted)\n                .use_url_credentials(true)\n                .pipeline_id(Some(pipeline_id)).referrer_policy",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker)\n                .credentials_mode(CredentialsMode::Include)\n                .parser_metadata(ParserMetadata::NotParserInserted)\n                .use_url_credentials(true).pipeline_id",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker)\n                .credentials_mode(CredentialsMode::Include)\n                .parser_metadata(ParserMetadata::NotParserInserted).use_url_credentials",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker)\n                .credentials_mode(CredentialsMode::Include).parser_metadata",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                )\n                .destination(Destination::ServiceWorker).credentials_mode",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new(\n                    None,\n                    UrlWithBlobClaim::from_url_without_having_claimed_blob(script_url),\n                    referrer,\n                ).destination",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "RequestBuilder::new",
+          "lineNumber": 421
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "UrlWithBlobClaim::from_url_without_having_claimed_blob",
+          "lineNumber": 423
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "Some",
+          "lineNumber": 430
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "worker_scope.insecure_requests_policy",
+          "lineNumber": 432
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global_scope.policy_container",
+          "lineNumber": 434
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "load_whole_resource",
+          "lineNumber": 437
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global.upcast",
+          "lineNumber": 440
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "worker_scope.clear_js_runtime",
+          "lineNumber": 446
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "JS_AddInterruptCallback",
+          "lineNumber": 454
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "cx.raw_cx",
+          "lineNumber": 454
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "Some",
+          "lineNumber": 454
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "enter_auto_realm",
+          "lineNumber": 459
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "realm.current_realm",
+          "lineNumber": 460
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "define_all_exposed_interfaces",
+          "lineNumber": 461
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global_scope.create_a_classic_script",
+          "lineNumber": 463
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "String::from_utf8_lossy",
+          "lineNumber": 465
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "ScriptFetchOptions::default_classic_script",
+          "lineNumber": 467
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "Some",
+          "lineNumber": 469
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global_scope.run_a_classic_script",
+          "lineNumber": 473
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global.dispatch_activate",
+          "lineNumber": 474
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global_scope.mem_profiler_chan().run_with_memory_reporting",
+          "lineNumber": 478
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global_scope.mem_profiler_chan",
+          "lineNumber": 478
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "worker_scope.is_closing",
+          "lineNumber": 486
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global.has_timed_out",
+          "lineNumber": 486
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "run_worker_event_loop",
+          "lineNumber": 487
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "global.event_loop_sender",
+          "lineNumber": 491
+        },
+        {
+          "caller": "run_serviceworker_scope",
+          "callee": "worker_scope.clear_js_runtime",
+          "lineNumber": 495
+        },
+        {
+          "caller": "handle_mixed_message",
+          "callee": "self\n                .upcast::<WorkerGlobalScope>().handle_devtools_message",
+          "lineNumber": 502
+        },
+        {
+          "caller": "handle_mixed_message",
+          "callee": "self\n                .upcast::<WorkerGlobalScope>",
+          "lineNumber": 502
+        },
+        {
+          "caller": "handle_mixed_message",
+          "callee": "self.handle_script_event",
+          "lineNumber": 506
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "self.upcast::<WorkerGlobalScope>",
+          "lineNumber": 526
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "self.upcast",
+          "lineNumber": 527
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "enter_auto_realm",
+          "lineNumber": 529
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "realm.current_realm",
+          "lineNumber": 530
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "Client::new",
+          "lineNumber": 533
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "scope.upcast",
+          "lineNumber": 534
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "self.swmanager_sender.clone",
+          "lineNumber": 535
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "self.scope_url.clone",
+          "lineNumber": 536
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 539
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "structuredclone::read",
+          "lineNumber": 542
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "scope.upcast",
+          "lineNumber": 542
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "message.handle_mut",
+          "lineNumber": 542
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "ExtendableMessageEvent::dispatch_jsval",
+          "lineNumber": 544
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "scope.upcast",
+          "lineNumber": 547
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "message.handle",
+          "lineNumber": 548
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "Some",
+          "lineNumber": 549
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "MessageSource::Client",
+          "lineNumber": 549
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "ExtendableMessageEvent::dispatch_error",
+          "lineNumber": 553
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "scope.upcast",
+          "lineNumber": 553
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "self.upcast::<WorkerGlobalScope>().process_event",
+          "lineNumber": 557
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "self.upcast::<WorkerGlobalScope>",
+          "lineNumber": 557
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "self.upcast::<EventTarget>().fire_event",
+          "lineNumber": 563
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "self.upcast::<EventTarget>",
+          "lineNumber": 563
+        },
+        {
+          "caller": "handle_script_event",
+          "callee": "mediator.response_chan.send",
+          "lineNumber": 564
+        },
+        {
+          "caller": "event_loop_sender",
+          "callee": "ScriptEventLoopSender::ServiceWorker",
+          "lineNumber": 571
+        },
+        {
+          "caller": "event_loop_sender",
+          "callee": "self.own_sender.clone",
+          "lineNumber": 571
+        },
+        {
+          "caller": "dispatch_activate",
+          "callee": "ExtendableEvent::new",
+          "lineNumber": 575
+        },
+        {
+          "caller": "dispatch_activate",
+          "callee": "(*event).upcast::<Event>",
+          "lineNumber": 576
+        },
+        {
+          "caller": "dispatch_activate",
+          "callee": "event.dispatch",
+          "lineNumber": 577
+        },
+        {
+          "caller": "dispatch_activate",
+          "callee": "self.upcast",
+          "lineNumber": 577
+        },
+        {
+          "caller": "interrupt_callback",
+          "callee": "JSContext::from_ptr",
+          "lineNumber": 584
+        },
+        {
+          "caller": "interrupt_callback",
+          "callee": "std::ptr::NonNull::new(cx).unwrap",
+          "lineNumber": 584
+        },
+        {
+          "caller": "interrupt_callback",
+          "callee": "std::ptr::NonNull::new",
+          "lineNumber": 584
+        },
+        {
+          "caller": "interrupt_callback",
+          "callee": "CurrentRealm::assert",
+          "lineNumber": 585
+        },
+        {
+          "caller": "interrupt_callback",
+          "callee": "GlobalScope::from_current_realm",
+          "lineNumber": 587
+        },
+        {
+          "caller": "interrupt_callback",
+          "callee": "DomRoot::downcast::<WorkerGlobalScope>(global).expect",
+          "lineNumber": 589
+        },
+        {
+          "caller": "interrupt_callback",
+          "callee": "DomRoot::downcast::<WorkerGlobalScope>",
+          "lineNumber": 589
+        },
+        {
+          "caller": "interrupt_callback",
+          "callee": "worker.is_closing",
+          "lineNumber": 593
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 25,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/serviceworkerregistration.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 273,
+      "nonEmptyLines": 243,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 56,
+          "endLine": 73,
+          "params": [
+            "scope",
+            "registration_id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 75,
+          "endLine": 89,
+          "params": [
+            "global",
+            "scope",
+            "registration_id",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "is_active",
+          "startLine": 92,
+          "endLine": 94,
+          "params": []
+        },
+        {
+          "name": "set_installing",
+          "startLine": 96,
+          "endLine": 98,
+          "params": [
+            "worker"
+          ]
+        },
+        {
+          "name": "get_navigation_preload_header_value",
+          "startLine": 100,
+          "endLine": 102,
+          "params": []
+        },
+        {
+          "name": "set_navigation_preload_header_value",
+          "startLine": 104,
+          "endLine": 107,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "get_navigation_preload_enabled",
+          "startLine": 109,
+          "endLine": 111,
+          "params": []
+        },
+        {
+          "name": "set_navigation_preload_enabled",
+          "startLine": 113,
+          "endLine": 115,
+          "params": [
+            "flag"
+          ]
+        },
+        {
+          "name": "create_scope_things",
+          "startLine": 117,
+          "endLine": 150,
+          "params": [
+            "global",
+            "script_url"
+          ]
+        },
+        {
+          "name": "get_newest_worker",
+          "startLine": 153,
+          "endLine": 162,
+          "params": []
+        },
+        {
+          "name": "longest_prefix_match",
+          "startLine": 165,
+          "endLine": 180,
+          "params": [
+            "stored_scope",
+            "potential_match"
+          ]
+        },
+        {
+          "name": "GetInstalling",
+          "startLine": 184,
+          "endLine": 189,
+          "params": []
+        },
+        {
+          "name": "Unregister",
+          "startLine": 192,
+          "endLine": 240,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "GetActive",
+          "startLine": 243,
+          "endLine": 248,
+          "params": []
+        },
+        {
+          "name": "GetWaiting",
+          "startLine": 251,
+          "endLine": 256,
+          "params": []
+        },
+        {
+          "name": "Scope",
+          "startLine": 259,
+          "endLine": 261,
+          "params": []
+        },
+        {
+          "name": "UpdateViaCache",
+          "startLine": 264,
+          "endLine": 266,
+          "params": []
+        },
+        {
+          "name": "NavigationPreload",
+          "startLine": 269,
+          "endLine": 272,
+          "params": [
+            "cx"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "ServiceWorkerRegistration",
+          "startLine": 39,
+          "endLine": 53,
+          "methods": [
+            "new_inherited",
+            "new",
+            "is_active",
+            "set_installing",
+            "get_navigation_preload_header_value",
+            "set_navigation_preload_header_value",
+            "get_navigation_preload_enabled",
+            "set_navigation_preload_enabled",
+            "create_scope_things",
+            "get_newest_worker",
+            "GetInstalling",
+            "Unregister",
+            "GetActive",
+            "GetWaiting",
+            "Scope",
+            "UpdateViaCache",
+            "NavigationPreload"
+          ],
+          "properties": [
+            "eventtarget",
+            "active",
+            "installing",
+            "waiting",
+            "navigation_preload",
+            "scope",
+            "navigation_preload_enabled",
+            "navigation_preload_header_value",
+            "update_via_cache",
+            "uninstalling",
+            "registration_id"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ServiceWorkerRegistration",
+          "line": 39,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 75,
+          "isDefault": false
+        },
+        {
+          "name": "is_active",
+          "line": 92,
+          "isDefault": false
+        },
+        {
+          "name": "set_installing",
+          "line": 96,
+          "isDefault": false
+        },
+        {
+          "name": "get_navigation_preload_header_value",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "set_navigation_preload_header_value",
+          "line": 104,
+          "isDefault": false
+        },
+        {
+          "name": "get_navigation_preload_enabled",
+          "line": 109,
+          "isDefault": false
+        },
+        {
+          "name": "set_navigation_preload_enabled",
+          "line": 113,
+          "isDefault": false
+        },
+        {
+          "name": "create_scope_things",
+          "line": 117,
+          "isDefault": false
+        },
+        {
+          "name": "get_newest_worker",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "longest_prefix_match",
+          "line": 165,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "EventTarget::new_inherited",
+          "lineNumber": 61
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 62
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 64
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "MutNullableDom::new",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 67
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object",
+          "lineNumber": 81
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 82
+        },
+        {
+          "caller": "new",
+          "callee": "ServiceWorkerRegistration::new_inherited",
+          "lineNumber": 82
+        },
+        {
+          "caller": "is_active",
+          "callee": "self.active.borrow().is_some",
+          "lineNumber": 93
+        },
+        {
+          "caller": "is_active",
+          "callee": "self.active.borrow",
+          "lineNumber": 93
+        },
+        {
+          "caller": "set_installing",
+          "callee": "self.installing.borrow_mut",
+          "lineNumber": 97
+        },
+        {
+          "caller": "set_installing",
+          "callee": "Some",
+          "lineNumber": 97
+        },
+        {
+          "caller": "set_installing",
+          "callee": "Dom::from_ref",
+          "lineNumber": 97
+        },
+        {
+          "caller": "get_navigation_preload_header_value",
+          "callee": "self.navigation_preload_header_value.borrow().clone",
+          "lineNumber": 101
+        },
+        {
+          "caller": "get_navigation_preload_header_value",
+          "callee": "self.navigation_preload_header_value.borrow",
+          "lineNumber": 101
+        },
+        {
+          "caller": "set_navigation_preload_header_value",
+          "callee": "self.navigation_preload_header_value.borrow_mut",
+          "lineNumber": 105
+        },
+        {
+          "caller": "set_navigation_preload_header_value",
+          "callee": "Some",
+          "lineNumber": 106
+        },
+        {
+          "caller": "get_navigation_preload_enabled",
+          "callee": "self.navigation_preload_enabled.get",
+          "lineNumber": 110
+        },
+        {
+          "caller": "set_navigation_preload_enabled",
+          "callee": "self.navigation_preload_enabled.set",
+          "lineNumber": 114
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global.get_referrer",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "Some",
+          "lineNumber": 120
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "Some",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global.get_referrer_policy",
+          "lineNumber": 124
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global.pipeline_id",
+          "lineNumber": 125
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global\n            .downcast::<Window>().and_then",
+          "lineNumber": 128
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global\n            .downcast::<Window>",
+          "lineNumber": 128
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "window.webgl_chan_value",
+          "lineNumber": 130
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "WorkerId",
+          "lineNumber": 131
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "Uuid::new_v4",
+          "lineNumber": 131
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global.devtools_chan().cloned",
+          "lineNumber": 132
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global.devtools_chan",
+          "lineNumber": 132
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "prepare_workerscope_init",
+          "lineNumber": 133
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "Some",
+          "lineNumber": 133
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global\n            .downcast::<Window>()\n            .map(|w: &Window| w.window_proxy().browsing_context_id()).expect",
+          "lineNumber": 134
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global\n            .downcast::<Window>().map",
+          "lineNumber": 134
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global\n            .downcast::<Window>",
+          "lineNumber": 134
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "w.window_proxy().browsing_context_id",
+          "lineNumber": 136
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "w.window_proxy",
+          "lineNumber": 136
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global\n            .webview_id().expect",
+          "lineNumber": 138
+        },
+        {
+          "caller": "create_scope_things",
+          "callee": "global.webview_id",
+          "lineNumber": 138
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "self.installing.borrow",
+          "lineNumber": 154
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "self.waiting.borrow",
+          "lineNumber": 155
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "self.active.borrow",
+          "lineNumber": 156
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "installing\n            .as_ref()\n            .map(|sw| DomRoot::from_ref(&**sw))\n            .or_else(|| waiting.as_ref().map(|sw| DomRoot::from_ref(&**sw))).or_else",
+          "lineNumber": 157
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "installing\n            .as_ref()\n            .map(|sw| DomRoot::from_ref(&**sw)).or_else",
+          "lineNumber": 157
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "installing\n            .as_ref().map",
+          "lineNumber": 157
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "installing.as_ref",
+          "lineNumber": 157
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 159
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "waiting.as_ref().map",
+          "lineNumber": 160
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "waiting.as_ref",
+          "lineNumber": 160
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 160
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "active.as_ref().map",
+          "lineNumber": 161
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "active.as_ref",
+          "lineNumber": 161
+        },
+        {
+          "caller": "get_newest_worker",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 161
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "stored_scope.origin",
+          "lineNumber": 166
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "potential_match.origin",
+          "lineNumber": 166
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "stored_scope.path().chars",
+          "lineNumber": 169
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "stored_scope.path",
+          "lineNumber": 169
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "potential_match.path().chars",
+          "lineNumber": 170
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "potential_match.path",
+          "lineNumber": 170
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "scope_chars.count",
+          "lineNumber": 171
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "matching_chars.count",
+          "lineNumber": 171
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "stored_scope\n        .path()\n        .chars()\n        .zip(potential_match.path().chars()).all",
+          "lineNumber": 175
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "stored_scope\n        .path()\n        .chars().zip",
+          "lineNumber": 175
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "stored_scope\n        .path().chars",
+          "lineNumber": 175
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "stored_scope.path",
+          "lineNumber": 175
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "potential_match.path().chars",
+          "lineNumber": 178
+        },
+        {
+          "caller": "longest_prefix_match",
+          "callee": "potential_match.path",
+          "lineNumber": 178
+        },
+        {
+          "caller": "GetInstalling",
+          "callee": "self.installing\n            .borrow()\n            .as_ref().map",
+          "lineNumber": 185
+        },
+        {
+          "caller": "GetInstalling",
+          "callee": "self.installing\n            .borrow().as_ref",
+          "lineNumber": 185
+        },
+        {
+          "caller": "GetInstalling",
+          "callee": "self.installing.borrow",
+          "lineNumber": 185
+        },
+        {
+          "caller": "GetInstalling",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 188
+        },
+        {
+          "caller": "Unregister",
+          "callee": "Promise::new",
+          "lineNumber": 197
+        },
+        {
+          "caller": "Unregister",
+          "callee": "self.global",
+          "lineNumber": 197
+        },
+        {
+          "caller": "Unregister",
+          "callee": "self.get_newest_worker",
+          "lineNumber": 199
+        },
+        {
+          "caller": "Unregister",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 200
+        },
+        {
+          "caller": "Unregister",
+          "callee": "self.global",
+          "lineNumber": 204
+        },
+        {
+          "caller": "Unregister",
+          "callee": "global.downcast::<Window>",
+          "lineNumber": 205
+        },
+        {
+          "caller": "Unregister",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 207
+        },
+        {
+          "caller": "Unregister",
+          "callee": "window.Navigator().ServiceWorker",
+          "lineNumber": 210
+        },
+        {
+          "caller": "Unregister",
+          "callee": "window.Navigator",
+          "lineNumber": 210
+        },
+        {
+          "caller": "Unregister",
+          "callee": "global.obtain_storage_key",
+          "lineNumber": 217
+        },
+        {
+          "caller": "Unregister",
+          "callee": "promise.reject_error",
+          "lineNumber": 218
+        },
+        {
+          "caller": "Unregister",
+          "callee": "Error::Type",
+          "lineNumber": 220
+        },
+        {
+          "caller": "Unregister",
+          "callee": "c\"Failed to obtain a storage key\".to_owned",
+          "lineNumber": 220
+        },
+        {
+          "caller": "Unregister",
+          "callee": "service_worker_container.create_and_schedule_unregister_job",
+          "lineNumber": 224
+        },
+        {
+          "caller": "Unregister",
+          "callee": "self.scope.clone",
+          "lineNumber": 227
+        },
+        {
+          "caller": "Unregister",
+          "callee": "worker.get_script_url",
+          "lineNumber": 228
+        },
+        {
+          "caller": "Unregister",
+          "callee": "promise.clone",
+          "lineNumber": 229
+        },
+        {
+          "caller": "Unregister",
+          "callee": "self.installing.borrow_mut",
+          "lineNumber": 234
+        },
+        {
+          "caller": "Unregister",
+          "callee": "self.waiting.borrow_mut",
+          "lineNumber": 235
+        },
+        {
+          "caller": "Unregister",
+          "callee": "self.active.borrow_mut",
+          "lineNumber": 236
+        },
+        {
+          "caller": "GetActive",
+          "callee": "self.active\n            .borrow()\n            .as_ref().map",
+          "lineNumber": 244
+        },
+        {
+          "caller": "GetActive",
+          "callee": "self.active\n            .borrow().as_ref",
+          "lineNumber": 244
+        },
+        {
+          "caller": "GetActive",
+          "callee": "self.active.borrow",
+          "lineNumber": 244
+        },
+        {
+          "caller": "GetActive",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 247
+        },
+        {
+          "caller": "GetWaiting",
+          "callee": "self.waiting\n            .borrow()\n            .as_ref().map",
+          "lineNumber": 252
+        },
+        {
+          "caller": "GetWaiting",
+          "callee": "self.waiting\n            .borrow().as_ref",
+          "lineNumber": 252
+        },
+        {
+          "caller": "GetWaiting",
+          "callee": "self.waiting.borrow",
+          "lineNumber": 252
+        },
+        {
+          "caller": "GetWaiting",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 255
+        },
+        {
+          "caller": "Scope",
+          "callee": "USVString",
+          "lineNumber": 260
+        },
+        {
+          "caller": "Scope",
+          "callee": "self.scope.as_str().to_owned",
+          "lineNumber": 260
+        },
+        {
+          "caller": "Scope",
+          "callee": "self.scope.as_str",
+          "lineNumber": 260
+        },
+        {
+          "caller": "NavigationPreload",
+          "callee": "self.navigation_preload.or_init",
+          "lineNumber": 270
+        },
+        {
+          "caller": "NavigationPreload",
+          "callee": "NavigationPreloadManager::new",
+          "lineNumber": 271
+        },
+        {
+          "caller": "NavigationPreload",
+          "callee": "self.global",
+          "lineNumber": 271
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 11,
+        "functionCount": 18,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/serviceworker/windowclient.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 33,
+      "nonEmptyLines": 27,
+      "functions": [
+        {
+          "name": "Focus",
+          "startLine": 23,
+          "endLine": 26,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "Navigate",
+          "startLine": 29,
+          "endLine": 32,
+          "params": [
+            "cx",
+            "_url"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "WindowClient",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "Focus",
+            "Navigate"
+          ],
+          "properties": [
+            "client"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WindowClient",
+          "line": 17,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "Focus",
+          "callee": "Promise::new",
+          "lineNumber": 25
+        },
+        {
+          "caller": "Focus",
+          "callee": "self.global",
+          "lineNumber": 25
+        },
+        {
+          "caller": "Navigate",
+          "callee": "Promise::new",
+          "lineNumber": 31
+        },
+        {
+          "caller": "Navigate",
+          "callee": "self.global",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,1097 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/media/audio/analyser_node.rs",
+      "type": "file",
+      "name": "analyser_node.rs",
+      "filePath": "components/media/audio/analyser_node.rs",
+      "summary": "Implements the Web Audio API AnalyserNode, providing real-time frequency and time-domain analysis of audio data using FFT with Blackman windowing.",
+      "tags": ["audio", "analysis", "fft", "webaudio"],
+      "complexity": "complex",
+      "languageNotes": "Uses a custom FFT implementation with configurable FFT size, smoothing, and decibel range, matching the Web Audio API specification."
+    },
+    {
+      "id": "class:components/media/audio/analyser_node.rs:AnalyserNode",
+      "type": "class",
+      "name": "AnalyserNode",
+      "filePath": "components/media/audio/analyser_node.rs",
+      "lineRange": [14, 17],
+      "summary": "Audio graph node that captures audio data for frequency and time-domain analysis, delegating computation to AnalysisEngine.",
+      "tags": ["audio", "analysis", "node"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/audio/analyser_node.rs:AnalysisEngine",
+      "type": "class",
+      "name": "AnalysisEngine",
+      "filePath": "components/media/audio/analyser_node.rs",
+      "lineRange": [54, 77],
+      "summary": "Core FFT analysis engine that manages sample buffers, computes Blackman windows, performs FFT, and outputs frequency/time-domain data.",
+      "tags": ["audio", "analysis", "fft", "signal-processing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/media/audio/analyser_node.rs:compute_fft",
+      "type": "function",
+      "name": "compute_fft",
+      "filePath": "components/media/audio/analyser_node.rs",
+      "lineRange": [216, 241],
+      "summary": "Applies Blackman window to buffered samples, then computes FFT magnitude spectrum with smoothing for frequency analysis output.",
+      "tags": ["audio", "fft", "signal-processing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/media/audio/biquad_filter_node.rs",
+      "type": "file",
+      "name": "biquad_filter_node.rs",
+      "filePath": "components/media/audio/biquad_filter_node.rs",
+      "summary": "Implements the Web Audio API BiquadFilterNode with eight filter types (low-pass, high-pass, band-pass, etc.) using direct-form biquad IIR filtering.",
+      "tags": ["audio", "filter", "iir", "webaudio"],
+      "complexity": "complex",
+      "languageNotes": "Implements all 8 biquad filter types per the Web Audio API spec with coefficient computation based on sample rate, frequency, Q, and gain parameters."
+    },
+    {
+      "id": "class:components/media/audio/biquad_filter_node.rs:BiquadFilterNode",
+      "type": "class",
+      "name": "BiquadFilterNode",
+      "filePath": "components/media/audio/biquad_filter_node.rs",
+      "lineRange": [78, 109],
+      "summary": "Audio graph node that applies configurable biquad IIR filtering with parameter automation support for frequency, detune, Q, and gain.",
+      "tags": ["audio", "filter", "iir", "node"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/media/audio/biquad_filter_node.rs:update_coefficients",
+      "type": "function",
+      "name": "update_coefficients",
+      "filePath": "components/media/audio/biquad_filter_node.rs",
+      "lineRange": [159, 338],
+      "summary": "Computes biquad filter coefficients (b0, b1, b2, a1, a2) based on current parameter values and filter type, using the standard Web Audio API formulas.",
+      "tags": ["audio", "filter", "dsp", "coefficients"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/block.rs",
+      "type": "file",
+      "name": "block.rs",
+      "filePath": "components/media/audio/block.rs",
+      "summary": "Defines the core audio data structures Block, Chunk, Tick, and FrameIterator that represent interleaved PCM audio buffers and frame-level iteration within the audio rendering pipeline.",
+      "tags": ["audio", "buffer", "data-structure", "pcm"],
+      "complexity": "complex",
+      "languageNotes": "Uses lazy evaluation patterns (silence/repeat tagging) to avoid copying audio data unnecessarily through the processing graph."
+    },
+    {
+      "id": "class:components/media/audio/block.rs:Block",
+      "type": "class",
+      "name": "Block",
+      "filePath": "components/media/audio/block.rs",
+      "lineRange": [67, 80],
+      "summary": "Represents a multi-channel audio block with lazy silence/repeat optimization, supporting mixing, channel manipulation, and interleaving.",
+      "tags": ["audio", "buffer", "multi-channel"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/media/audio/block.rs:Chunk",
+      "type": "class",
+      "name": "Chunk",
+      "filePath": "components/media/audio/block.rs",
+      "lineRange": [34, 36],
+      "summary": "A collection of audio blocks representing the complete input or output of an audio node during one processing cycle.",
+      "tags": ["audio", "buffer", "batch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/media/audio/block.rs:mix",
+      "type": "function",
+      "name": "mix",
+      "filePath": "components/media/audio/block.rs",
+      "lineRange": [243, 449],
+      "summary": "Mixes audio from multiple input channels into this block, handling various channel count and interpretation modes (discrete, speakers) per Web Audio API spec.",
+      "tags": ["audio", "mixing", "channel", "dsp"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/buffer_source_node.rs",
+      "type": "file",
+      "name": "buffer_source_node.rs",
+      "filePath": "components/media/audio/buffer_source_node.rs",
+      "summary": "Implements the Web Audio API AudioBufferSourceNode for scheduled playback of audio buffers with looping, detune, playback rate, and sample-accurate scheduling.",
+      "tags": ["audio", "playback", "source", "webaudio"],
+      "complexity": "complex",
+      "languageNotes": "Supports sample-accurate scheduling with subsample interpolation for smooth playback rate changes and looping."
+    },
+    {
+      "id": "class:components/media/audio/buffer_source_node.rs:AudioBufferSourceNode",
+      "type": "class",
+      "name": "AudioBufferSourceNode",
+      "filePath": "components/media/audio/buffer_source_node.rs",
+      "lineRange": [63, 104],
+      "summary": "Scheduled audio source node that plays back an AudioBuffer with configurable looping, playback rate, detune, and start/stop timing.",
+      "tags": ["audio", "source", "playback", "scheduling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/channel_node.rs",
+      "type": "file",
+      "name": "channel_node.rs",
+      "filePath": "components/media/audio/channel_node.rs",
+      "summary": "Implements ChannelMergerNode and ChannelSplitterNode for combining or splitting multi-channel audio streams in the audio graph.",
+      "tags": ["audio", "channel", "routing", "webaudio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/media/audio/channel_node.rs:ChannelMergerNode",
+      "type": "class",
+      "name": "ChannelMergerNode",
+      "filePath": "components/media/audio/channel_node.rs",
+      "lineRange": [18, 21],
+      "summary": "Combines multiple mono input channels into a single multi-channel output block.",
+      "tags": ["audio", "channel", "merging"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/audio/channel_node.rs:ChannelSplitterNode",
+      "type": "class",
+      "name": "ChannelSplitterNode",
+      "filePath": "components/media/audio/channel_node.rs",
+      "lineRange": [71, 73],
+      "summary": "Splits a multi-channel input into individual mono output channels for separate processing.",
+      "tags": ["audio", "channel", "splitting"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/constant_source_node.rs",
+      "type": "file",
+      "name": "constant_source_node.rs",
+      "filePath": "components/media/audio/constant_source_node.rs",
+      "summary": "Implements the Web Audio API ConstantSourceNode, providing a constant audio output signal with schedulable start/stop and offset parameter automation.",
+      "tags": ["audio", "source", "constant", "webaudio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/media/audio/constant_source_node.rs:ConstantSourceNode",
+      "type": "class",
+      "name": "ConstantSourceNode",
+      "filePath": "components/media/audio/constant_source_node.rs",
+      "lineRange": [26, 32],
+      "summary": "Scheduled audio source node that outputs a constant signal value with parameter automation on the offset parameter.",
+      "tags": ["audio", "source", "constant"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/context.rs",
+      "type": "file",
+      "name": "context.rs",
+      "filePath": "components/media/audio/context.rs",
+      "summary": "Implements the Web Audio API AudioContext, managing the audio processing lifecycle, node creation, graph connections, and communication with the render thread.",
+      "tags": ["audio", "context", "lifecycle", "webaudio"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/media/audio/context.rs:AudioContext",
+      "type": "class",
+      "name": "AudioContext",
+      "filePath": "components/media/audio/context.rs",
+      "lineRange": [114, 134],
+      "summary": "Central audio context that manages node creation, port connections, decoder spawning, and render thread communication via message passing.",
+      "tags": ["audio", "context", "orchestration"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/decoder.rs",
+      "type": "file",
+      "name": "decoder.rs",
+      "filePath": "components/media/audio/decoder.rs",
+      "summary": "Defines the AudioDecoder trait and associated types for decoding compressed audio formats into PCM buffers, with a builder pattern for decoder callbacks.",
+      "tags": ["audio", "decoder", "trait", "builder"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/media/audio/destination_node.rs",
+      "type": "file",
+      "name": "destination_node.rs",
+      "filePath": "components/media/audio/destination_node.rs",
+      "summary": "Implements the audio destination node that collects processed audio output for delivery to the audio sink for playback or recording.",
+      "tags": ["audio", "destination", "output", "webaudio"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/audio/destination_node.rs:DestinationNode",
+      "type": "class",
+      "name": "DestinationNode",
+      "filePath": "components/media/audio/destination_node.rs",
+      "lineRange": [9, 12],
+      "summary": "Terminal node in the audio graph that holds the rendered output chunk for the sink to consume.",
+      "tags": ["audio", "destination", "output"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/gain_node.rs",
+      "type": "file",
+      "name": "gain_node.rs",
+      "filePath": "components/media/audio/gain_node.rs",
+      "summary": "Implements the Web Audio API GainNode for applying a configurable gain value with parameter automation to audio signals.",
+      "tags": ["audio", "gain", "amplitude", "webaudio"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/audio/gain_node.rs:GainNode",
+      "type": "class",
+      "name": "GainNode",
+      "filePath": "components/media/audio/gain_node.rs",
+      "lineRange": [23, 26],
+      "summary": "Audio graph node that multiplies incoming audio samples by the gain value, supporting smooth parameter automation.",
+      "tags": ["audio", "gain", "amplitude"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/graph.rs",
+      "type": "file",
+      "name": "graph.rs",
+      "filePath": "components/media/audio/graph.rs",
+      "summary": "Implements the AudioGraph, a directed graph of audio nodes with port-based connections, supporting topological traversal for sample-accurate processing.",
+      "tags": ["audio", "graph", "topology", "routing"],
+      "complexity": "complex",
+      "languageNotes": "Uses petgraph's StableGraph for node storage and DfsPostOrder for deterministic processing order. Supports multi-port connections with cached audio blocks."
+    },
+    {
+      "id": "class:components/media/audio/graph.rs:AudioGraph",
+      "type": "class",
+      "name": "AudioGraph",
+      "filePath": "components/media/audio/graph.rs",
+      "lineRange": [115, 120],
+      "summary": "Directed graph of audio processing nodes with port-based edge management, supporting connection/disconnection and topological processing order traversal.",
+      "tags": ["audio", "graph", "routing", "topology"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/iir_filter_node.rs",
+      "type": "file",
+      "name": "iir_filter_node.rs",
+      "filePath": "components/media/audio/iir_filter_node.rs",
+      "summary": "Implements the Web Audio API IIRFilterNode with custom feedforward and feedback coefficients for arbitrary infinite impulse response filtering.",
+      "tags": ["audio", "filter", "iir", "webaudio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/media/audio/iir_filter_node.rs:IIRFilterNode",
+      "type": "class",
+      "name": "IIRFilterNode",
+      "filePath": "components/media/audio/iir_filter_node.rs",
+      "lineRange": [85, 88],
+      "summary": "Audio graph node that applies a custom IIR filter with user-defined feedforward and feedback coefficients to each input channel.",
+      "tags": ["audio", "filter", "iir"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/media/audio/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/media/audio/lib.rs",
+      "summary": "Library root for the Servo audio module, re-exporting all audio node types and defining the AudioBackend and AudioStreamReader traits for platform-specific audio I/O.",
+      "tags": ["audio", "barrel", "trait", "module-root"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/listener.rs",
+      "type": "file",
+      "name": "listener.rs",
+      "filePath": "components/media/audio/listener.rs",
+      "summary": "Implements the Web Audio API AudioListener, managing spatial audio parameters (position, forward, up vectors) used by PannerNode for 3D audio positioning.",
+      "tags": ["audio", "spatial", "listener", "position"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/audio/listener.rs:AudioListenerNode",
+      "type": "class",
+      "name": "AudioListenerNode",
+      "filePath": "components/media/audio/listener.rs",
+      "lineRange": [20, 31],
+      "summary": "Audio graph node that exposes 3D position, orientation, and up vectors as audio params for spatial audio calculations.",
+      "tags": ["audio", "spatial", "listener", "3d"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/macros.rs",
+      "type": "file",
+      "name": "macros.rs",
+      "filePath": "components/media/audio/macros.rs",
+      "summary": "Provides Rust macros used across the audio module for code generation and boilerplate reduction.",
+      "tags": ["audio", "macros", "codegen"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/media_element_source_node.rs",
+      "type": "file",
+      "name": "media_element_source_node.rs",
+      "filePath": "components/media/audio/media_element_source_node.rs",
+      "summary": "Implements the Web Audio API MediaElementSourceNode for streaming audio from HTML media elements into the audio processing graph.",
+      "tags": ["audio", "source", "media-element", "webaudio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/media/audio/media_element_source_node.rs:MediaElementSourceNode",
+      "type": "class",
+      "name": "MediaElementSourceNode",
+      "filePath": "components/media/audio/media_element_source_node.rs",
+      "lineRange": [22, 27],
+      "summary": "Audio graph node that streams audio data from an HTML media element by pulling buffers through a shared renderer interface.",
+      "tags": ["audio", "source", "media-element"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/media/audio/media_stream_destination_node.rs",
+      "type": "file",
+      "name": "media_stream_destination_node.rs",
+      "filePath": "components/media/audio/media_stream_destination_node.rs",
+      "summary": "Implements the Web Audio API MediaStreamDestinationNode for routing audio graph output to a media stream sink.",
+      "tags": ["audio", "destination", "stream", "webaudio"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/audio/media_stream_destination_node.rs:MediaStreamDestinationNode",
+      "type": "class",
+      "name": "MediaStreamDestinationNode",
+      "filePath": "components/media/audio/media_stream_destination_node.rs",
+      "lineRange": [12, 15],
+      "summary": "Audio graph node that directs processed audio into an external audio sink for streaming or recording.",
+      "tags": ["audio", "destination", "stream"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/media_stream_source_node.rs",
+      "type": "file",
+      "name": "media_stream_source_node.rs",
+      "filePath": "components/media/audio/media_stream_source_node.rs",
+      "summary": "Implements the Web Audio API MediaStreamSourceNode for capturing audio from an external media stream reader into the audio graph.",
+      "tags": ["audio", "source", "stream", "webaudio"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/media/audio/media_stream_source_node.rs:MediaStreamSourceNode",
+      "type": "class",
+      "name": "MediaStreamSourceNode",
+      "filePath": "components/media/audio/media_stream_source_node.rs",
+      "lineRange": [11, 15],
+      "summary": "Audio graph node that pulls audio data from an external AudioStreamReader and feeds it into the processing graph.",
+      "tags": ["audio", "source", "stream"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/node.rs",
+      "type": "file",
+      "name": "node.rs",
+      "filePath": "components/media/audio/node.rs",
+      "summary": "Defines the core audio node trait (AudioNodeEngine), initialization types, message types, channel configuration enums, and common node infrastructure for the Web Audio API implementation.",
+      "tags": ["audio", "node", "trait", "types", "infrastructure"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/offline_sink.rs",
+      "type": "file",
+      "name": "offline_sink.rs",
+      "filePath": "components/media/audio/offline_sink.rs",
+      "summary": "Implements OfflineAudioSink for rendering audio to a buffer instead of real-time playback, used by OfflineAudioContext for faster-than-realtime processing.",
+      "tags": ["audio", "sink", "offline", "rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/media/audio/offline_sink.rs:OfflineAudioSink",
+      "type": "class",
+      "name": "OfflineAudioSink",
+      "filePath": "components/media/audio/offline_sink.rs",
+      "lineRange": [22, 29],
+      "summary": "Audio sink that accumulates rendered blocks into a buffer and signals completion via a callback when enough data has been collected.",
+      "tags": ["audio", "sink", "offline", "buffer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/media/audio/oscillator_node.rs",
+      "type": "file",
+      "name": "oscillator_node.rs",
+      "filePath": "components/media/audio/oscillator_node.rs",
+      "summary": "Implements the Web Audio API OscillatorNode for generating periodic waveforms (sine, square, sawtooth, triangle, custom) with frequency and detune automation.",
+      "tags": ["audio", "oscillator", "waveform", "webaudio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/media/audio/oscillator_node.rs:OscillatorNode",
+      "type": "class",
+      "name": "OscillatorNode",
+      "filePath": "components/media/audio/oscillator_node.rs",
+      "lineRange": [53, 65],
+      "summary": "Scheduled audio source node that generates periodic waveforms with configurable type, frequency, and detune parameter automation.",
+      "tags": ["audio", "oscillator", "source"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/media/audio/panner_node.rs",
+      "type": "file",
+      "name": "panner_node.rs",
+      "filePath": "components/media/audio/panner_node.rs",
+      "summary": "Implements the Web Audio API PannerNode for 3D spatial audio positioning using equal-power panning with azimuth, elevation, distance, and cone-based attenuation models.",
+      "tags": ["audio", "spatial", "panning", "3d", "webaudio"],
+      "complexity": "complex",
+      "languageNotes": "Implements full 3D spatial audio with equal-power panning, three distance models (linear/inverse/exponential), and cone-based directional sound attenuation."
+    },
+    {
+      "id": "class:components/media/audio/panner_node.rs:PannerNode",
+      "type": "class",
+      "name": "PannerNode",
+      "filePath": "components/media/audio/panner_node.rs",
+      "lineRange": [85, 102],
+      "summary": "Audio graph node that applies 3D spatial positioning to audio, computing per-frame gain based on listener position, source position, orientation, and distance models.",
+      "tags": ["audio", "spatial", "panning", "3d"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/param.rs",
+      "type": "file",
+      "name": "param.rs",
+      "filePath": "components/media/audio/param.rs",
+      "summary": "Implements the Web Audio API AudioParam with full automation support including setValueAtTime, linear/exponential ramps, setTargetAtTime, setValueCurveAtTime, and cancelAndHoldAtTime.",
+      "tags": ["audio", "parameter", "automation", "webaudio"],
+      "complexity": "complex",
+      "languageNotes": "Implements sample-accurate and block-rate parameter automation with a sorted event queue and tick-based scheduling following the Web Audio API spec."
+    },
+    {
+      "id": "class:components/media/audio/param.rs:Param",
+      "type": "class",
+      "name": "Param",
+      "filePath": "components/media/audio/param.rs",
+      "lineRange": [35, 49],
+      "summary": "Audio parameter with automation event scheduling, supporting k-rate and a-rate processing with block-level accumulation and smooth value transitions.",
+      "tags": ["audio", "parameter", "automation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/render_thread.rs",
+      "type": "file",
+      "name": "render_thread.rs",
+      "filePath": "components/media/audio/render_thread.rs",
+      "summary": "Implements the audio render thread that processes the audio graph in a dedicated thread, handling message-based control (create nodes, connect, disconnect, suspend, resume) and real-time audio processing.",
+      "tags": ["audio", "rendering", "thread", "message-loop"],
+      "complexity": "complex",
+      "languageNotes": "Uses a dedicated OS thread with an mpsc channel-based message loop to decouple the audio processing from the main thread, supporting both real-time and offline rendering."
+    },
+    {
+      "id": "class:components/media/audio/render_thread.rs:AudioRenderThread",
+      "type": "class",
+      "name": "AudioRenderThread",
+      "filePath": "components/media/audio/render_thread.rs",
+      "lineRange": [132, 142],
+      "summary": "Dedicated render thread that processes the audio graph in a loop, handling sink management, node creation, and message-driven control.",
+      "tags": ["audio", "rendering", "thread"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/media/audio/sink.rs",
+      "type": "file",
+      "name": "sink.rs",
+      "filePath": "components/media/audio/sink.rs",
+      "summary": "Defines the AudioSink trait for platform-specific audio output, providing an interface for initialization, playback control, and data pushing.",
+      "tags": ["audio", "sink", "trait", "output"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/media/audio/stereo_panner.rs",
+      "type": "file",
+      "name": "stereo_panner.rs",
+      "filePath": "components/media/audio/stereo_panner.rs",
+      "summary": "Implements the Web Audio API StereoPannerNode for equal-power stereo panning with a single pan parameter supporting automation.",
+      "tags": ["audio", "panning", "stereo", "webaudio"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/media/audio/stereo_panner.rs:StereoPannerNode",
+      "type": "class",
+      "name": "StereoPannerNode",
+      "filePath": "components/media/audio/stereo_panner.rs",
+      "lineRange": [25, 28],
+      "summary": "Audio graph node that applies equal-power stereo panning to input audio using the pan parameter with automation support.",
+      "tags": ["audio", "panning", "stereo"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/media/audio/wave_shaper_node.rs",
+      "type": "file",
+      "name": "wave_shaper_node.rs",
+      "filePath": "components/media/audio/wave_shaper_node.rs",
+      "summary": "Implements the Web Audio API WaveShaperNode for applying non-linear distortion effects using a user-defined shaping curve with oversampling options.",
+      "tags": ["audio", "waveshaper", "distortion", "webaudio"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/media/audio/wave_shaper_node.rs:WaveShaperNode",
+      "type": "class",
+      "name": "WaveShaperNode",
+      "filePath": "components/media/audio/wave_shaper_node.rs",
+      "lineRange": [60, 71],
+      "summary": "Audio graph node that applies a shaping curve for distortion with configurable oversampling (none, 2x, 4x) to reduce aliasing artifacts.",
+      "tags": ["audio", "waveshaper", "distortion"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/media/audio/analyser_node.rs",
+      "target": "class:components/media/audio/analyser_node.rs:AnalyserNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/analyser_node.rs",
+      "target": "class:components/media/audio/analyser_node.rs:AnalysisEngine",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/analyser_node.rs",
+      "target": "function:components/media/audio/analyser_node.rs:compute_fft",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/analyser_node.rs",
+      "target": "class:components/media/audio/analyser_node.rs:AnalyserNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/analyser_node.rs",
+      "target": "class:components/media/audio/analyser_node.rs:AnalysisEngine",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/biquad_filter_node.rs",
+      "target": "class:components/media/audio/biquad_filter_node.rs:BiquadFilterNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/biquad_filter_node.rs",
+      "target": "function:components/media/audio/biquad_filter_node.rs:update_coefficients",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/biquad_filter_node.rs",
+      "target": "class:components/media/audio/biquad_filter_node.rs:BiquadFilterNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/block.rs",
+      "target": "class:components/media/audio/block.rs:Block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/block.rs",
+      "target": "class:components/media/audio/block.rs:Chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/block.rs",
+      "target": "function:components/media/audio/block.rs:mix",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/block.rs",
+      "target": "class:components/media/audio/block.rs:Block",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/block.rs",
+      "target": "class:components/media/audio/block.rs:Chunk",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/block.rs",
+      "target": "function:components/media/audio/block.rs:mix",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/buffer_source_node.rs",
+      "target": "class:components/media/audio/buffer_source_node.rs:AudioBufferSourceNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/buffer_source_node.rs",
+      "target": "class:components/media/audio/buffer_source_node.rs:AudioBufferSourceNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/channel_node.rs",
+      "target": "class:components/media/audio/channel_node.rs:ChannelMergerNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/channel_node.rs",
+      "target": "class:components/media/audio/channel_node.rs:ChannelSplitterNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/channel_node.rs",
+      "target": "class:components/media/audio/channel_node.rs:ChannelMergerNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/channel_node.rs",
+      "target": "class:components/media/audio/channel_node.rs:ChannelSplitterNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/constant_source_node.rs",
+      "target": "class:components/media/audio/constant_source_node.rs:ConstantSourceNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/constant_source_node.rs",
+      "target": "class:components/media/audio/constant_source_node.rs:ConstantSourceNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/context.rs",
+      "target": "class:components/media/audio/context.rs:AudioContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/context.rs",
+      "target": "class:components/media/audio/context.rs:AudioContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/destination_node.rs",
+      "target": "class:components/media/audio/destination_node.rs:DestinationNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/destination_node.rs",
+      "target": "class:components/media/audio/destination_node.rs:DestinationNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/gain_node.rs",
+      "target": "class:components/media/audio/gain_node.rs:GainNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/gain_node.rs",
+      "target": "class:components/media/audio/gain_node.rs:GainNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/graph.rs",
+      "target": "class:components/media/audio/graph.rs:AudioGraph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/graph.rs",
+      "target": "class:components/media/audio/graph.rs:AudioGraph",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/iir_filter_node.rs",
+      "target": "class:components/media/audio/iir_filter_node.rs:IIRFilterNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/iir_filter_node.rs",
+      "target": "class:components/media/audio/iir_filter_node.rs:IIRFilterNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/listener.rs",
+      "target": "class:components/media/audio/listener.rs:AudioListenerNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/listener.rs",
+      "target": "class:components/media/audio/listener.rs:AudioListenerNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/media_element_source_node.rs",
+      "target": "class:components/media/audio/media_element_source_node.rs:MediaElementSourceNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/media_element_source_node.rs",
+      "target": "class:components/media/audio/media_element_source_node.rs:MediaElementSourceNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/media_stream_destination_node.rs",
+      "target": "class:components/media/audio/media_stream_destination_node.rs:MediaStreamDestinationNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/media_stream_destination_node.rs",
+      "target": "class:components/media/audio/media_stream_destination_node.rs:MediaStreamDestinationNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/media_stream_source_node.rs",
+      "target": "class:components/media/audio/media_stream_source_node.rs:MediaStreamSourceNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/media_stream_source_node.rs",
+      "target": "class:components/media/audio/media_stream_source_node.rs:MediaStreamSourceNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/offline_sink.rs",
+      "target": "class:components/media/audio/offline_sink.rs:OfflineAudioSink",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/offline_sink.rs",
+      "target": "class:components/media/audio/offline_sink.rs:OfflineAudioSink",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/oscillator_node.rs",
+      "target": "class:components/media/audio/oscillator_node.rs:OscillatorNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/oscillator_node.rs",
+      "target": "class:components/media/audio/oscillator_node.rs:OscillatorNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/panner_node.rs",
+      "target": "class:components/media/audio/panner_node.rs:PannerNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/panner_node.rs",
+      "target": "class:components/media/audio/panner_node.rs:PannerNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/param.rs",
+      "target": "class:components/media/audio/param.rs:Param",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/param.rs",
+      "target": "class:components/media/audio/param.rs:Param",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/render_thread.rs",
+      "target": "class:components/media/audio/render_thread.rs:AudioRenderThread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/render_thread.rs",
+      "target": "class:components/media/audio/render_thread.rs:AudioRenderThread",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/stereo_panner.rs",
+      "target": "class:components/media/audio/stereo_panner.rs:StereoPannerNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/stereo_panner.rs",
+      "target": "class:components/media/audio/stereo_panner.rs:StereoPannerNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/wave_shaper_node.rs",
+      "target": "class:components/media/audio/wave_shaper_node.rs:WaveShaperNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/media/audio/wave_shaper_node.rs",
+      "target": "class:components/media/audio/wave_shaper_node.rs:WaveShaperNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/analyser_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/biquad_filter_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/block.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/buffer_source_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/channel_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/constant_source_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/context.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/decoder.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/destination_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/gain_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/graph.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/iir_filter_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/listener.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/macros.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/media_element_source_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/media_stream_destination_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/media_stream_source_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/offline_sink.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/oscillator_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/panner_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/param.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/render_thread.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/sink.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/stereo_panner.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/media/audio/lib.rs",
+      "target": "file:components/media/audio/wave_shaper_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}
