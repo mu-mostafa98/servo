@@ -9,7 +9,7 @@ use style::attr::AttrValue;
 
 use crate::dom::bindings::inheritance::{
     Castable, DocumentFragmentTypeId, ElementTypeId, HTMLElementTypeId, HTMLMediaElementTypeId,
-    NodeTypeId, SVGElementTypeId, SVGGraphicsElementTypeId,
+    NodeTypeId, SVGElementTypeId, SVGGeometryElementTypeId, SVGGraphicsElementTypeId,
 };
 use crate::dom::bindings::str::DOMString;
 use crate::dom::document::Document;
@@ -65,8 +65,11 @@ use crate::dom::node::{
     BindContext, ChildrenMutation, CloneChildrenFlag, MoveContext, Node, UnbindContext,
 };
 use crate::dom::shadowroot::ShadowRoot;
+use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgelement::SVGElement;
+use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
+use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 
 /// Trait to allow DOM nodes to opt-in to overriding (or adding to) common
@@ -335,8 +338,21 @@ pub(crate) fn vtable_for(node: &Node) -> &dyn VirtualMethods {
             node.downcast::<HTMLTitleElement>().unwrap() as &dyn VirtualMethods
         },
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGGeometryElement(
+                SVGGeometryElementTypeId::SVGCircleElement,
+            ),
+        ))) => node.downcast::<SVGCircleElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGGeometryElement(
+                SVGGeometryElementTypeId::SVGEllipseElement,
+            ),
+        ))) => node.downcast::<SVGEllipseElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
             SVGGraphicsElementTypeId::SVGImageElement,
         ))) => node.downcast::<SVGImageElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGRectElement),
+        ))) => node.downcast::<SVGRectElement>().unwrap() as &dyn VirtualMethods,
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
             SVGGraphicsElementTypeId::SVGSVGElement,
         ))) => node.downcast::<SVGSVGElement>().unwrap() as &dyn VirtualMethods,
