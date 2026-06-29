@@ -2,14 +2,16 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-// SVG Geometric Shapes Reference: https://www.w3.org/TR/SVG2/shapes.html
-// This module defines SVG geometric shape structs based on the SVG 2 specification.
+//! SVG Geometric Shapes Reference: https://www.w3.org/TR/SVG2/shapes.html
+//!
+//! This module defines SVG geometric shape structs based on the SVG 2 specification.
+//! All shapes are pure data with no behavior — rendering is handled by the
+//! [`Render`](crate::renderer::Render) trait implementations in the `renderer` module.
 
 use kurbo::{BezPath, Point};
 
-// ------------------- Geometry ------------------
-
-#[derive(Debug)]
+/// An SVG geometric shape.
+#[derive(Debug, Clone)]
 pub enum Shape {
     Rect(Rectangle),
     Circle(Circle),
@@ -20,7 +22,8 @@ pub enum Shape {
     Path(Path),
 }
 
-#[derive(Debug)]
+/// SVG `<rect>` element.
+#[derive(Debug, Clone, Copy)]
 pub struct Rectangle {
     pub x: f32,
     pub y: f32,
@@ -30,14 +33,16 @@ pub struct Rectangle {
     pub ry: Option<f32>,
 }
 
-#[derive(Debug)]
+/// SVG `<circle>` element.
+#[derive(Debug, Clone, Copy)]
 pub struct Circle {
     pub cx: f32,
     pub cy: f32,
     pub r: f32,
 }
 
-#[derive(Debug)]
+/// SVG `<ellipse>` element.
+#[derive(Debug, Clone, Copy)]
 pub struct Ellipse {
     pub cx: f32,
     pub cy: f32,
@@ -45,7 +50,8 @@ pub struct Ellipse {
     pub ry: f32,
 }
 
-#[derive(Debug)]
+/// SVG `<line>` element.
+#[derive(Debug, Clone, Copy)]
 pub struct Line {
     pub x1: f32,
     pub y1: f32,
@@ -53,17 +59,20 @@ pub struct Line {
     pub y2: f32,
 }
 
-#[derive(Debug)]
+/// SVG `<polyline>` element — an open sequence of connected line segments.
+#[derive(Debug, Clone)]
 pub struct Polyline {
     pub points: Vec<Point>,
 }
 
-#[derive(Debug)]
+/// SVG `<polygon>` element — a closed shape formed by connected line segments.
+#[derive(Debug, Clone)]
 pub struct Polygon {
     pub points: Vec<Point>,
 }
 
-#[derive(Debug)]
+/// SVG `<path>` element with its `d` attribute parsed into a [`BezPath`].
+#[derive(Debug, Clone)]
 pub struct Path {
-    pub path: BezPath, // The 'd' attribute content
+    pub path: BezPath,
 }

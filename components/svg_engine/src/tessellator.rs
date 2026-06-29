@@ -2,19 +2,21 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! Shared fill logic for SVG shapes.
+//! Shared fill logic for polygon-based SVG shapes.
 //!
-//! Tessellates a polygon into triangles using lyon, then each triangle
-//! is rendered via scanline rasterization: for each Y scanline, the
-//! horizontal span inside the triangle is computed and drawn with a
-//! `push_rect`.
+//! Tessellates a polygon into triangles using [lyon](https://docs.rs/lyon/),
+//! then each triangle is rendered via scanline rasterization: for each Y scanline,
+//! the horizontal span inside the triangle is computed and drawn with a `push_rect`.
 //!
 //! This approach uses only `push_rect` which is known to work correctly
 //! in WebRender, avoiding `define_clip_image_mask` which requires a
 //! valid `ImageKey` to function as a polygon clip.
 
 use lyon::math::Point as LyonPoint;
-use lyon::tessellation::{FillTessellator, FillOptions, FillVertex, FillVertexConstructor, VertexBuffers, BuffersBuilder};
+use lyon::tessellation::{
+    FillTessellator, FillOptions, FillVertex, FillVertexConstructor,
+    VertexBuffers, BuffersBuilder,
+};
 use lyon::path::polygon::Polygon;
 use webrender_api::{
     DisplayListBuilder, ClipChainId, SpatialId,
@@ -24,7 +26,7 @@ use webrender_api::{
 
 use crate::styles::FillRule;
 
-/// Vertex constructor that extracts only the position from FillVertex.
+/// Vertex constructor that extracts only the position from `FillVertex`.
 struct PosCtor;
 
 impl FillVertexConstructor<LyonPoint> for PosCtor {
@@ -56,13 +58,16 @@ pub fn tessellate_polygon(
         FillRule::EvenOdd => lyon::path::FillRule::EvenOdd,
     };
 
-    if tessellator.tessellate(
-        polygon.path_events(),
-        &FillOptions::default()
-            .with_fill_rule(lyon_fill_rule)
-            .with_tolerance(0.01),
-        &mut BuffersBuilder::new(&mut buffers, PosCtor),
-    ).is_err() {
+    if tessellator
+        .tessellate(
+            polygon.path_events(),
+            &FillOptions::default()
+                .with_fill_rule(lyon_fill_rule)
+                .with_tolerance(0.01),
+            &mut BuffersBuilder::new(&mut buffers, PosCtor),
+        )
+        .is_err()
+    {
         return;
     }
 
@@ -104,9 +109,21 @@ fn scanline_fill_triangle(
 
     // Pre-compute edge vectors (non-vertical).
     // Edge equations: x = start.x + (y - start.y) * (end.x - start.x) / (end.y - start.y)
-    let inv_dy_tm = if mid.y != top.y { 1.0 / (mid.y - top.y) } else { 0.0 };
-    let inv_dy_tb = if bot.y != top.y { 1.0 / (bot.y - top.y) } else { 0.0 };
-    let inv_dy_mb = if bot.y != mid.y { 1.0 / (bot.y - mid.y) } else { 0.0 };
+    let inv_dy_tm = if mid.y != top.y {
+        1.0 / (mid.y - top.y)
+    } else {
+        0.0
+    };
+    let inv_dy_tb = if bot.y != top.y {
+        1.0 / (bot.y - top.y)
+    } else {
+        0.0
+    };
+    let inv_dy_mb = if bot.y != mid.y {
+        1.0 / (bot.y - mid.y)
+    } else {
+        0.0
+    };
 
     let dx_tm = (mid.x - top.x) * inv_dy_tm;
     let dx_tb = (bot.x - top.x) * inv_dy_tb;
@@ -150,7 +167,11 @@ fn scanline_fill_triangle(
 }
 
 /// Sort three points by their Y coordinate (ascending).
-fn sort_vertices_by_y(a: LyonPoint, b: LyonPoint, c: LyonPoint) -> (LyonPoint, LyonPoint, LyonPoint) {
+fn sort_vertices_by_y(
+    a: LyonPoint,
+    b: LyonPoint,
+    c: LyonPoint,
+) -> (LyonPoint, LyonPoint, LyonPoint) {
     let mut pts = [a, b, c];
     pts.sort_by(|p, q| p.y.partial_cmp(&q.y).unwrap_or(std::cmp::Ordering::Equal));
     (pts[0], pts[1], pts[2])

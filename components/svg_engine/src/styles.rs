@@ -2,15 +2,16 @@
 * License, v. 2.0. If a copy of the MPL was not distributed with this
 * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-// SVG Property Reference: https://www.w3.org/TR/SVG2/propidx.html
-// This module defines style-related enums and structs based on the SVG 2 specification.
+//! SVG Property Reference: https://www.w3.org/TR/SVG2/propidx.html
+//!
+//! This module defines style-related enums and structs based on the SVG 2 specification.
 
 use webrender_api::ColorF;
-use euclid::Transform2D;
 
 // ----------------- Node Style ------------------
 
-#[derive(Debug)]
+/// Combined fill + stroke styling for an SVG render node.
+#[derive(Debug, Clone)]
 pub struct NodeStyle {
     // pub opacity: f32,
     // pub visibility: Visibility,
@@ -30,14 +31,14 @@ impl Default for NodeStyle {
     }
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Visibility {
     Visible,
     Hidden,
     Collapse,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum Display {
     Inline,
     Block,
@@ -45,13 +46,16 @@ pub enum Display {
 }
 
 // ----------------- Fill ------------------
-#[derive(Debug)]
-pub struct  FillParams{
+
+/// SVG fill properties.
+#[derive(Debug, Clone, Copy)]
+pub struct FillParams {
     pub color: Option<ColorF>,
     pub opacity: f32,
     pub fill_rule: FillRule,
 }
 
+/// SVG fill rule: determines how overlapping regions are filled.
 #[derive(Debug, Clone, Copy)]
 pub enum FillRule {
     NonZero,
@@ -60,7 +64,8 @@ pub enum FillRule {
 
 // ----------------- Stroke ------------------
 
-#[derive(Debug)]
+/// SVG stroke properties.
+#[derive(Debug, Clone)]
 pub struct StrokeParams {
     pub color: Option<ColorF>,
     pub opacity: f32,
@@ -72,6 +77,7 @@ pub struct StrokeParams {
     pub dash_offset: f32,
 }
 
+/// SVG line cap style — how the ends of open paths are rendered.
 #[derive(Debug, Clone, Copy)]
 pub enum LineCap {
     Butt,
@@ -79,6 +85,7 @@ pub enum LineCap {
     Square,
 }
 
+/// SVG line join style — how corners are rendered in a polyline/polygon.
 #[derive(Debug, Clone, Copy)]
 pub enum LineJoin {
     Miter,
@@ -88,8 +95,7 @@ pub enum LineJoin {
 
 // ----------------- Render Hints ------------------
 
-
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct RenderHints {
     pub vector_effect: Option<VectorEffect>,
     pub color_rendering: Option<ColorRendering>,
@@ -100,28 +106,27 @@ pub struct RenderHints {
     pub paint_order: Option<PaintOrder>,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum VectorEffect {
     None,
     NonScalingStroke,
 }
 
-
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum ColorRendering {
     Auto,
     OptimizeSpeed,
     OptimizeQuality,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum ColorInterpolation {
     Auto,
     SRGB,
     LinearRGB,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum ShapeRendering {
     Auto,
     OptimizeSpeed,
@@ -129,7 +134,7 @@ pub enum ShapeRendering {
     GeometricPrecision,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum TextRendering {
     Auto,
     OptimizeSpeed,
@@ -137,22 +142,24 @@ pub enum TextRendering {
     GeometricPrecision,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone, Copy)]
 pub enum ImageRendering {
     Auto,
     OptimizeSpeed,
     OptimizeQuality,
 }
 
-#[derive(Debug)]
+/// Rendering order for fill, stroke, and markers.
+#[derive(Debug, Clone, Copy)]
 pub enum PaintOrder {
-    Normal, // Default: fill, stroke, markers
+    Normal,
 }
 
 // ----------------- Node Effects ------------------
-#[derive(Debug)]
+
+#[derive(Debug, Clone)]
 pub struct NodeEffects {
-    pub transform: Option<Transform2D<f32, (), ()>>,
+    pub transform: Option<euclid::Transform2D<f32, (), ()>>,
     pub clip_path: Option<String>,
     pub mask: Option<String>,
 }

@@ -8,8 +8,9 @@ pub mod transform;
 pub mod render_tree;
 
 pub mod extract;
-pub mod render;
-mod renderers;
+mod traversal;
+mod renderer;
+mod tessellator;
 
 pub use extract::extract_node_style;
-pub use render::render_svg_tree; // render_svg_tree(tree, origin, size, spatial_id, clip_chain_id, wr)
+pub use traversal::render_svg_tree;
