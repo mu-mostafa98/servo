@@ -34,7 +34,7 @@ impl FillVertexConstructor<LyonPoint> for PosCtor {
 }
 
 /// Fill an arbitrary polygon using lyon tessellation + scanline rasterization.
-pub fn fill_polygon(
+pub fn tessellate_polygon(
     points: &[LyonPoint],
     fill_rule: FillRule,
     color: webrender_api::ColorF,

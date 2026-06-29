@@ -11,7 +11,7 @@ use webrender_api::{
 use crate::shapes::Line;
 use crate::styles::*;
 
-use crate::renderers::fill::fill_polygon;
+use crate::renderers::polygon_tessellator::tessellate_polygon;
 
 pub fn render_polyline(
     polyline: &crate::shapes::Polyline,
@@ -43,7 +43,7 @@ pub fn render_polyline(
             if let Some(mut color) = fill.color {
                 color.a *= fill.opacity;
 
-                fill_polygon(&shifted_pts, fill.fill_rule, color, spatial_id, clip_chain_id, wr);
+                tessellate_polygon(&shifted_pts, fill.fill_rule, color, spatial_id, clip_chain_id, wr);
             }
         }
     }

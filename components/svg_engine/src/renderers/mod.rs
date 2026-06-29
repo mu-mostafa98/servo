@@ -5,7 +5,7 @@ pub(crate) mod line;
 pub(crate) mod polyline;
 pub(crate) mod polygon;
 pub(crate) mod path;
-pub(crate) mod fill;
+pub(crate) mod polygon_tessellator;
 
 pub(crate) use rect::render_rect;
 pub(crate) use ellipse::render_ellipse;
