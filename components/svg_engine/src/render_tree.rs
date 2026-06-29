@@ -11,14 +11,20 @@ pub struct SvgRenderTree {
     pub viewport: ViewportInfo,
 }
 
+/// A single SVG transform operation, in the order it was specified.
+#[derive(Debug, Clone)]
+pub enum TransformOp {
+    Translate(f32, f32),
+    Scale(f32, f32),
+    Rotate(f32, f32, f32),  // (angle_deg, cx, cy)
+}
+
 #[derive(Debug)]
 pub struct SvgRenderNode {
     pub id: Option<String>,
     pub tag: SvgTag,
     pub style: NodeStyle,
-    pub translate: Option<(f32, f32)>,
-    pub scale: Option<(f32, f32)>,
-    pub rotate: Option<(f32, f32, f32)>,  // (angle_deg, cx, cy)
+    pub transforms: Vec<TransformOp>,
     pub children: Vec<SvgRenderNode>,
 }
 

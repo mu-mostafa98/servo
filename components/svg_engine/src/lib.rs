@@ -11,4 +11,4 @@ pub mod render;
 mod renderers;
 
 pub use extract::extract_node_style;
-pub use render::render_svg_tree;
+pub use render::render_svg_tree; // render_svg_tree(tree, origin, size, spatial_id, clip_chain_id, wr)
