@@ -40,3 +40,20 @@ pub struct ViewportInfo {
     /// Parsed viewBox: `(min_x, min_y, width, height)` in user units.
     pub view_box: Option<(f32, f32, f32, f32)>,
 }
+
+// ======================= ViewBox Parsing =======================
+
+/// Parse the `viewBox` attribute value into `(min_x, min_y, width, height)`.
+/// Expected format: `"0 0 200 200"` or `"0,0 200,200"`.
+pub fn extract_viewbox(value: &str) -> Option<(f32, f32, f32, f32)> {
+    let parts: Vec<f32> = value
+        .split(|c: char| c == ',' || c.is_whitespace())
+        .filter(|s| !s.is_empty())
+        .filter_map(|s| s.trim().parse::<f32>().ok())
+        .collect();
+    if parts.len() == 4 && parts[2] > 0.0 && parts[3] > 0.0 {
+        Some((parts[0], parts[1], parts[2], parts[3]))
+    } else {
+        None
+    }
+}

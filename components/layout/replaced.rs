@@ -35,8 +35,9 @@ use webrender_api::ImageKey;
 
 use web_atoms::ns;
 use html5ever::LocalName;
-use svg_engine::extract::{extract_node_style, extract_tag, extract_transforms, extract_viewbox};
-use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo};
+use svg_engine::extract::{extract_node_style, extract_tag, extract_node_style_from_css};
+use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo, extract_viewbox};
+use svg_engine::transform::extract_transforms;
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
@@ -382,7 +383,7 @@ impl ReplacedContents {
             },
             None => get_attr("style")
                 .as_deref()
-                .map(svg_engine::extract::extract_node_style_from_css)
+                .map(extract_node_style_from_css)
                 .unwrap_or_default(),
         };
         let transforms = extract_transforms(&get_attr);

@@ -5,8 +5,14 @@
 //! SVG Property Reference: https://www.w3.org/TR/SVG2/propidx.html
 //!
 //! This module defines style-related enums and structs based on the SVG 2 specification.
+//! Each style category has its own file — [`fill`] for fill properties, [`stroke`] for
+//! stroke properties, and this module for the top-level [`NodeStyle`] and shared traits.
 
-use webrender_api::ColorF;
+pub(crate) mod fill;
+pub(crate) mod stroke;
+
+pub use self::fill::{FillParams, FillRule};
+pub use self::stroke::{StrokeParams, LineCap, LineJoin};
 
 // ----------------- Node Style ------------------
 
@@ -31,6 +37,8 @@ impl Default for NodeStyle {
     }
 }
 
+// ----------------- Unused stub types (future SVG spec support) ------------------
+
 #[derive(Debug, Clone, Copy)]
 pub enum Visibility {
     Visible,
@@ -44,56 +52,6 @@ pub enum Display {
     Block,
     None,
 }
-
-// ----------------- Fill ------------------
-
-/// SVG fill properties.
-#[derive(Debug, Clone, Copy)]
-pub struct FillParams {
-    pub color: Option<ColorF>,
-    pub opacity: f32,
-    pub fill_rule: FillRule,
-}
-
-/// SVG fill rule: determines how overlapping regions are filled.
-#[derive(Debug, Clone, Copy)]
-pub enum FillRule {
-    NonZero,
-    EvenOdd,
-}
-
-// ----------------- Stroke ------------------
-
-/// SVG stroke properties.
-#[derive(Debug, Clone)]
-pub struct StrokeParams {
-    pub color: Option<ColorF>,
-    pub opacity: f32,
-    pub width: f32,
-    pub line_cap: LineCap,
-    pub line_join: LineJoin,
-    pub miter_limit: f32,
-    pub dash_array: Option<Vec<f32>>,
-    pub dash_offset: f32,
-}
-
-/// SVG line cap style — how the ends of open paths are rendered.
-#[derive(Debug, Clone, Copy)]
-pub enum LineCap {
-    Butt,
-    Round,
-    Square,
-}
-
-/// SVG line join style — how corners are rendered in a polyline/polygon.
-#[derive(Debug, Clone, Copy)]
-pub enum LineJoin {
-    Miter,
-    Round,
-    Bevel,
-}
-
-// ----------------- Render Hints ------------------
 
 #[derive(Debug, Clone)]
 pub struct RenderHints {
@@ -149,17 +107,36 @@ pub enum ImageRendering {
     OptimizeQuality,
 }
 
-/// Rendering order for fill, stroke, and markers.
 #[derive(Debug, Clone, Copy)]
 pub enum PaintOrder {
     Normal,
 }
-
-// ----------------- Node Effects ------------------
 
 #[derive(Debug, Clone)]
 pub struct NodeEffects {
     pub transform: Option<euclid::Transform2D<f32, (), ()>>,
     pub clip_path: Option<String>,
     pub mask: Option<String>,
+}
+
+// ----------------------- FromComputedValues Trait -----------------------
+
+/// Construct a style value from Servo's [`ComputedValues`](style::properties::ComputedValues).
+///
+/// Every SVG style type implements this trait so that construction from
+/// the style system is uniform and dispatchable.
+pub trait FromComputedValues: Sized {
+    type Input;
+    fn from_computed_values(values: &Self::Input) -> Option<Self>;
+}
+
+// ----------------------- FromCssAttrs Trait -----------------------
+
+/// Parse a style value from a CSS `style` attribute string
+/// (e.g. `"fill:red;stroke:blue;stroke-width:2"`).
+///
+/// Used as a fallback when `ComputedValues` aren't available
+/// (e.g. for SVG child elements inside `<g>`).
+pub trait FromCssAttrs: Sized {
+    fn from_css_attrs(style_str: &str) -> Option<Self>;
 }
