@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SVG Line Test</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .section { margin-bottom: 30px; }
+        .section h2 { font-size: 16px; margin-bottom: 8px; }
+        svg { border: 1px solid #ccc; margin-right: 20px; margin-bottom: 20px; }
+
+        .s-black-2  { stroke: black; stroke-width: 2; }
+        .s-black-1  { stroke: black; stroke-width: 1; }
+        .s-black-4  { stroke: black; stroke-width: 4; }
+        .s-black-8  { stroke: black; stroke-width: 8; }
+        .s-red-3    { stroke: red; stroke-width: 3; }
+        .s-green-3  { stroke: green; stroke-width: 3; }
+        .s-blue-3   { stroke: blue; stroke-width: 3; }
+        .s-purple-3 { stroke: purple; stroke-width: 3; }
+        .s-red-8    { stroke: red; stroke-width: 8; }
+        .s-gray-1   { stroke: #333; stroke-width: 1; }
+        .s-red-2    { stroke: red; stroke-width: 2; }
+        .s-green-4  { stroke: green; stroke-width: 4; }
+        .s-blue-6   { stroke: blue; stroke-width: 6; }
+
+        .o-10 { stroke-opacity: 1.0; }
+        .o-06 { stroke-opacity: 0.6; }
+        .o-03 { stroke-opacity: 0.3; }
+        .o-01 { stroke-opacity: 0.1; }
+        .o-05 { stroke-opacity: 0.5; }
+    </style>
+</head>
+<body>
+    <h1>SVG &lt;line&gt; Element Test</h1>
+
+    <div class="section">
+        <h2>Axis-aligned lines</h2>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="20" y1="50" x2="180" y2="50"/>
+        </svg>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="100" y1="20" x2="100" y2="80"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Angled lines</h2>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="10" y1="90" x2="190" y2="10"/>
+        </svg>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="10" y1="10" x2="190" y2="90"/>
+        </svg>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="10" y1="10" x2="190" y2="50"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Varying stroke widths</h2>
+        <svg width="300" height="120">
+            <line class="s-black-1" x1="20" y1="30" x2="280" y2="30"/>
+            <line class="s-black-2" x1="20" y1="50" x2="280" y2="50"/>
+            <line class="s-black-4" x1="20" y1="70" x2="280" y2="70"/>
+            <line class="s-black-8" x1="20" y1="95" x2="280" y2="95"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Stroke colors</h2>
+        <svg width="300" height="120">
+            <line class="s-red-3" x1="20" y1="30" x2="280" y2="30"/>
+            <line class="s-green-3" x1="20" y1="55" x2="280" y2="55"/>
+            <line class="s-blue-3" x1="20" y1="80" x2="280" y2="80"/>
+            <line class="s-purple-3" x1="20" y1="105" x2="280" y2="105"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Stroke opacity</h2>
+        <svg width="300" height="120">
+            <line class="s-red-8 o-10" x1="20" y1="30" x2="280" y2="30"/>
+            <line class="s-red-8 o-06" x1="20" y1="55" x2="280" y2="55"/>
+            <line class="s-red-8 o-03" x1="20" y1="80" x2="280" y2="80"/>
+            <line class="s-red-8 o-01" x1="20" y1="105" x2="280" y2="105"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Grid pattern</h2>
+        <svg width="200" height="200">
+            <line class="s-gray-1" x1="20" y1="20" x2="180" y2="20"/>
+            <line class="s-gray-1" x1="20" y1="60" x2="180" y2="60"/>
+            <line class="s-gray-1" x1="20" y1="100" x2="180" y2="100"/>
+            <line class="s-gray-1" x1="20" y1="140" x2="180" y2="140"/>
+            <line class="s-gray-1" x1="20" y1="180" x2="180" y2="180"/>
+            <line class="s-gray-1" x1="20" y1="20" x2="20" y2="180"/>
+            <line class="s-gray-1" x1="60" y1="20" x2="60" y2="180"/>
+            <line class="s-gray-1" x1="100" y1="20" x2="100" y2="180"/>
+            <line class="s-gray-1" x1="140" y1="20" x2="140" y2="180"/>
+            <line class="s-gray-1" x1="180" y1="20" x2="180" y2="180"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Angled lines with varying stroke width</h2>
+        <svg width="300" height="200">
+            <line class="s-black-1" x1="30" y1="170" x2="270" y2="30"/>
+            <line class="s-red-2" x1="40" y1="170" x2="270" y2="40"/>
+            <line class="s-green-4" x1="55" y1="170" x2="270" y2="55"/>
+            <line class="s-blue-6" x1="80" y1="170" x2="270" y2="80"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Fill vs stroke (line has no fill)</h2>
+        <svg width="200" height="100">
+            <line class="s-black-4 o-05" x1="20" y1="50" x2="180" y2="50"/>
+        </svg>
+    </div>
+</body>
+</html>

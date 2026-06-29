@@ -50,6 +50,7 @@ pub(crate) static EXPERIMENTAL_PREFS: &[&str] = &[
     "layout_container_queries_enabled",
     "layout_grid_enabled",
     "layout_variable_fonts_enabled",
+    "layout_svg_engine_enabled",
 ];
 
 #[cfg_attr(any(target_os = "android", target_env = "ohos"), expect(dead_code))]
@@ -578,6 +579,10 @@ struct CmdArgs {
     /// The url we should load.
     #[bpaf(positional("URL"), fallback(String::from("https://www.servo.org")))]
     url: String,
+
+    ///  Enable the SVG rendering engine.
+    #[bpaf(long)]
+    svg_engine: bool,
 }
 
 fn update_preferences_from_command_line_arguments(
@@ -593,6 +598,10 @@ fn update_preferences_from_command_line_arguments(
         for pref in EXPERIMENTAL_PREFS {
             preferences.set_value(pref, PrefValue::Bool(true));
         }
+    }
+
+    if cmd_args.svg_engine {
+        preferences.layout_svg_engine_enabled = true;
     }
 
     for pref in &cmd_args.pref {

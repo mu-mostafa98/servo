@@ -1,0 +1,42 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+use crate::shapes::Shape;
+use crate::styles::NodeStyle;
+use crate::transform::TransformOp;
+
+#[derive(Debug)]
+pub struct SvgRenderTree {
+    pub root: SvgRenderNode,
+    pub viewport: ViewportInfo,
+}
+
+#[derive(Debug)]
+pub struct SvgRenderNode {
+    pub id: Option<String>,
+    pub tag: SvgTag,
+    pub style: NodeStyle,
+    pub transforms: Vec<TransformOp>,
+    pub children: Vec<SvgRenderNode>,
+}
+
+#[derive(Debug)]
+pub enum SvgTag {
+    Shape(Shape),
+    Container(Container),
+}
+
+#[derive(Debug)]
+pub enum Container {
+    Group,
+    Svg,
+}
+
+#[derive(Debug, Clone)]
+pub struct ViewportInfo {
+    pub width: f32,
+    pub height: f32,
+    /// Parsed viewBox: `(min_x, min_y, width, height)` in user units.
+    pub view_box: Option<(f32, f32, f32, f32)>,
+}
