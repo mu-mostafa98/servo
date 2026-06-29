@@ -32,6 +32,9 @@ use crate::dom::element::{AttributeMutation, Element};
 use crate::dom::node::virtualmethods::VirtualMethods;
 use crate::dom::node::{Node, NodeTraits};
 use crate::dom::scrolling_box::{ScrollAxisState, ScrollRequirement};
+use crate::dom::svg::svgcircleelement::SVGCircleElement;
+use crate::dom::svg::svgellipseelement::SVGEllipseElement;
+use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 
 #[dom_struct]
@@ -347,13 +350,27 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             push,
         );
 
-        self.parse_svg_attribute(&parser_context, "cx", longhands::cx::parse_declared, push);
-        self.parse_svg_attribute(&parser_context, "cy", longhands::cy::parse_declared, push);
-        self.parse_svg_attribute(&parser_context, "r", longhands::r::parse_declared, push);
-        self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
-        self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
-        self.parse_svg_attribute(&parser_context, "x", longhands::x::parse_declared, push);
-        self.parse_svg_attribute(&parser_context, "y", longhands::y::parse_declared, push);
+        // Parse geometry attributes based on element type
+        // <circle>: https://svgwg.org/svg2-draft/shapes.html#CircleElement
+        if element.downcast::<SVGCircleElement>().is_some() {
+            self.parse_svg_attribute(&parser_context, "cx", longhands::cx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "cy", longhands::cy::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "r", longhands::r::parse_declared, push);
+        }
+        // <ellipse>: https://svgwg.org/svg2-draft/shapes.html#EllipseElement
+        if element.downcast::<SVGEllipseElement>().is_some() {
+            self.parse_svg_attribute(&parser_context, "cx", longhands::cx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "cy", longhands::cy::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
+        }
+        // <rect>: https://svgwg.org/svg2-draft/shapes.html#RectElement
+        if element.downcast::<SVGRectElement>().is_some() {
+            self.parse_svg_attribute(&parser_context, "x", longhands::x::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "y", longhands::y::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
+        }
     }
 
     fn parse_svg_attribute<F>(
