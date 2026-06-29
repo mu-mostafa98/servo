@@ -4,19 +4,12 @@
 
 use crate::shapes::Shape;
 use crate::styles::NodeStyle;
+use crate::transform::TransformOp;
 
 #[derive(Debug)]
 pub struct SvgRenderTree {
     pub root: SvgRenderNode,
     pub viewport: ViewportInfo,
-}
-
-/// A single SVG transform operation, in the order it was specified.
-#[derive(Debug, Clone)]
-pub enum TransformOp {
-    Translate(f32, f32),
-    Scale(f32, f32),
-    Rotate(f32, f32, f32),  // (angle_deg, cx, cy)
 }
 
 #[derive(Debug)]

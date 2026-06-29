@@ -4,6 +4,7 @@
 
 mod shapes;
 mod styles;
+pub mod transform;
 pub mod render_tree;
 
 pub mod extract;
