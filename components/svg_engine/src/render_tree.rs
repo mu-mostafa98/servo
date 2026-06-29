@@ -17,6 +17,7 @@ pub struct SvgRenderNode {
     pub tag: SvgTag,
     pub style: NodeStyle,
     pub translate: Option<(f32, f32)>,
+    pub scale: Option<(f32, f32)>,
     pub children: Vec<SvgRenderNode>,
 }
 
