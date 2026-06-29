@@ -35,7 +35,7 @@ use webrender_api::ImageKey;
 
 use web_atoms::ns;
 use html5ever::LocalName;
-use svg_engine::extract::{extract_node_style, extract_tag, extract_transforms};
+use svg_engine::extract::{extract_node_style, extract_tag, extract_transforms, extract_viewbox};
 use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo};
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
@@ -341,9 +341,23 @@ impl ReplacedContents {
         context: &LayoutContext,
     ) -> Option<Arc<SvgRenderTree>> {
         let root = Self::build_svg_render_node(node, context)?;
+
+        // Extract viewBox and dimensions from the SVG element attributes.
+        let element = node.as_element()?;
+        let get_attr = |attr: &str| {
+            element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
+        };
+        let svg_width = get_attr("width").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(300.0);
+        let svg_height = get_attr("height").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(150.0);
+        let view_box = get_attr("viewBox").as_deref().and_then(extract_viewbox);
+
         Some(Arc::new(SvgRenderTree {
             root,
-            viewport: ViewportInfo { width: 300.0, height: 150.0 }
+            viewport: ViewportInfo {
+                width: svg_width,
+                height: svg_height,
+                view_box,
+            },
         }))
     }
 

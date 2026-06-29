@@ -110,7 +110,7 @@ fn build_rotation_transform(angle_deg: f32, cx: f32, cy: f32) -> LayoutTransform
 }
 
 /// Convert a `Transform2D` to a `LayoutTransform` suitable for WebRender.
-fn to_layout_transform(xform: &Transform2D<f32, (), ()>) -> LayoutTransform {
+pub(crate) fn to_layout_transform(xform: &Transform2D<f32, (), ()>) -> LayoutTransform {
     // Transform2D stores column-vector: P' = [m11 m21 m31; m12 m22 m32; 0 0 1] * P
     //   x' = m11*x + m21*y + m31
     //   y' = m12*x + m22*y + m32

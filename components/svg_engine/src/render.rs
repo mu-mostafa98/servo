@@ -2,9 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+use euclid::Transform2D;
 use webrender_api::{
     DisplayListBuilder, ClipChainId, SpatialId,
-    units::{LayoutPoint, LayoutRect, LayoutSize},
+    PropertyBinding, ReferenceFrameKind, TransformStyle,
+    units::{LayoutPoint, LayoutRect, LayoutSize, LayoutTransform},
 };
 
 use crate::render_tree::*;
@@ -30,7 +32,34 @@ pub fn render_svg_tree(
         [svg_clip_id],
     );
 
-    render_node(&tree.root, svg_origin, spatial_id, svg_clip_chain, wr);
+    // Apply viewBox transform if present.
+    // Maps viewBox user-space to the SVG's actual pixel dimensions.
+    let (root_origin, root_spatial_id, pop_frame) = if let Some((vb_min_x, vb_min_y, vb_w, vb_h)) = tree.viewport.view_box {
+        let scale_x = svg_size.width / vb_w;
+        let scale_y = svg_size.height / vb_h;
+        // Combined: translate by (-minX, -minY), then scale
+        let t1: Transform2D<f32, (), ()> = Transform2D::translation(-vb_min_x, -vb_min_y);
+        let s: Transform2D<f32, (), ()> = Transform2D::scale(scale_x, scale_y);
+        let combined = t1.then(&s);
+        let lt = transform::to_layout_transform(&combined);
+        let frame_id = wr.push_reference_frame(
+            *svg_origin, spatial_id,
+            TransformStyle::Flat, PropertyBinding::Value(lt),
+            ReferenceFrameKind::Transform {
+                is_2d_scale_translation: false, should_snap: false,
+                paired_with_perspective: false,
+            },
+        );
+        (LayoutPoint::new(0.0, 0.0), frame_id, true)
+    } else {
+        (*svg_origin, spatial_id, false)
+    };
+
+    render_node(&tree.root, &root_origin, root_spatial_id, svg_clip_chain, wr);
+
+    if pop_frame {
+        wr.pop_reference_frame();
+    }
 }
 
 fn render_node(

@@ -33,8 +33,10 @@ pub enum Container {
     Svg,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct ViewportInfo {
     pub width: f32,
     pub height: f32,
+    /// Parsed viewBox: `(min_x, min_y, width, height)` in user units.
+    pub view_box: Option<(f32, f32, f32, f32)>,
 }

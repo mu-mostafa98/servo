@@ -272,6 +272,21 @@ pub fn extract_transforms(get_attr: &dyn Fn(&str) -> Option<String>) -> Vec<Tran
     ops
 }
 
+/// Parse the `viewBox` attribute value into `(min_x, min_y, width, height)`.
+/// Expected format: `"0 0 200 200"` or `"0,0 200,200"`.
+pub fn extract_viewbox(value: &str) -> Option<(f32, f32, f32, f32)> {
+    let parts: Vec<f32> = value
+        .split(|c: char| c == ',' || c.is_whitespace())
+        .filter(|s| !s.is_empty())
+        .filter_map(|s| s.trim().parse::<f32>().ok())
+        .collect();
+    if parts.len() == 4 && parts[2] > 0.0 && parts[3] > 0.0 {
+        Some((parts[0], parts[1], parts[2], parts[3]))
+    } else {
+        None
+    }
+}
+
 /// Parse a raw CSS `style` attribute string into a NodeStyle.
 ///
 /// Used as a fallback when `ComputedValues` aren't available
