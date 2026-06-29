@@ -1,0 +1,2120 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/display_list/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/display_list/mod.rs",
+      "summary": "Core display list builder that constructs WebRender display items from the layout tree, handling backgrounds, borders, shadows, text, and stacking contexts.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Massive builder pattern implementation with over 2000 non-empty lines, central to Servo's rendering pipeline."
+    },
+    {
+      "id": "class:components/layout/display_list/mod.rs:DisplayListBuilder",
+      "type": "class",
+      "name": "DisplayListBuilder",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        88,
+        130
+      ],
+      "summary": "DisplayListBuilder enum/struct for mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/display_list/mod.rs:InspectorHighlight",
+      "type": "class",
+      "name": "InspectorHighlight",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        132,
+        141
+      ],
+      "summary": "InspectorHighlight with 2 methods for mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:for_node",
+      "type": "function",
+      "name": "for_node",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        158,
+        167
+      ],
+      "summary": "for_node handles for node in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build",
+      "type": "function",
+      "name": "build",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        172,
+        238
+      ],
+      "summary": "build handles build in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:add_all_spatial_nodes",
+      "type": "function",
+      "name": "add_all_spatial_nodes",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        270,
+        327
+      ],
+      "summary": "add_all_spatial_nodes handles add all spatial nodes in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:add_clip_to_display_list",
+      "type": "function",
+      "name": "add_clip_to_display_list",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        336,
+        370
+      ],
+      "summary": "add_clip_to_display_list handles add clip to display list in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:maybe_create_clip",
+      "type": "function",
+      "name": "maybe_create_clip",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        375,
+        393
+      ],
+      "summary": "maybe_create_clip handles maybe create clip in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:push_webrender_stacking_context_if_necessary",
+      "type": "function",
+      "name": "push_webrender_stacking_context_if_necessary",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        395,
+        468
+      ],
+      "summary": "push_webrender_stacking_context_if_necessary handles push webrender stacking context if necessary in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:common_properties",
+      "type": "function",
+      "name": "common_properties",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        470,
+        485
+      ],
+      "summary": "common_properties handles common properties in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:paint_dom_inspector_highlight",
+      "type": "function",
+      "name": "paint_dom_inspector_highlight",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        488,
+        594
+      ],
+      "summary": "paint_dom_inspector_highlight handles paint dom inspector highlight in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:check_if_paintable",
+      "type": "function",
+      "name": "check_if_paintable",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        596,
+        615
+      ],
+      "summary": "check_if_paintable handles check if paintable in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:check_for_lcp_candidate",
+      "type": "function",
+      "name": "check_for_lcp_candidate",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        617,
+        636
+      ],
+      "summary": "check_for_lcp_candidate handles check for lcp candidate in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_stacking_context",
+      "type": "function",
+      "name": "visit_stacking_context",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        642,
+        665
+      ],
+      "summary": "visit_stacking_context handles visit stacking context in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:leave_stacking_context",
+      "type": "function",
+      "name": "leave_stacking_context",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        667,
+        680
+      ],
+      "summary": "leave_stacking_context handles leave stacking context in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_box",
+      "type": "function",
+      "name": "visit_box",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        682,
+        697
+      ],
+      "summary": "visit_box handles visit box in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_iframe",
+      "type": "function",
+      "name": "visit_iframe",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        699,
+        724
+      ],
+      "summary": "visit_iframe handles visit iframe in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_image",
+      "type": "function",
+      "name": "visit_image",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        726,
+        796
+      ],
+      "summary": "visit_image handles visit image in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_text",
+      "type": "function",
+      "name": "visit_text",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        798,
+        811
+      ],
+      "summary": "visit_text handles visit text in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_box_for_root_background",
+      "type": "function",
+      "name": "visit_box_for_root_background",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        822,
+        898
+      ],
+      "summary": "visit_box_for_root_background handles visit box for root background in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_box_for_collapsed_table_borders",
+      "type": "function",
+      "name": "visit_box_for_collapsed_table_borders",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        908,
+        918
+      ],
+      "summary": "visit_box_for_collapsed_table_borders handles visit box for collapsed table borders in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:register_fragment_of_highlighted_dom_node",
+      "type": "function",
+      "name": "register_fragment_of_highlighted_dom_node",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        922,
+        957
+      ],
+      "summary": "register_fragment_of_highlighted_dom_node handles register fragment of highlighted dom node in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_display_list_for_text_fragment",
+      "type": "function",
+      "name": "build_display_list_for_text_fragment",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        961,
+        1109
+      ],
+      "summary": "build_display_list_for_text_fragment handles build display list for text fragment in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_display_list_for_text_decoration",
+      "type": "function",
+      "name": "build_display_list_for_text_decoration",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1111,
+        1174
+      ],
+      "summary": "build_display_list_for_text_decoration handles build display list for text decoration in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_display_list_for_broken_image_border",
+      "type": "function",
+      "name": "build_display_list_for_broken_image_border",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1176,
+        1198
+      ],
+      "summary": "build_display_list_for_broken_image_border handles build display list for broken image border in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_display_list_for_text_selection",
+      "type": "function",
+      "name": "build_display_list_for_text_selection",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1202,
+        1335
+      ],
+      "summary": "build_display_list_for_text_selection handles build display list for text selection in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1352,
+        1371
+      ],
+      "summary": "new handles new in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:border_edge_clip",
+      "type": "function",
+      "name": "border_edge_clip",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1406,
+        1424
+      ],
+      "summary": "border_edge_clip handles border edge clip in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:padding_edge_clip",
+      "type": "function",
+      "name": "padding_edge_clip",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1426,
+        1441
+      ],
+      "summary": "padding_edge_clip handles padding edge clip in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:content_edge_clip",
+      "type": "function",
+      "name": "content_edge_clip",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1443,
+        1461
+      ],
+      "summary": "content_edge_clip handles content edge clip in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_1463",
+      "type": "function",
+      "name": "build",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1463,
+        1505
+      ],
+      "summary": "build handles build in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_hit_test",
+      "type": "function",
+      "name": "build_hit_test",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1507,
+        1528
+      ],
+      "summary": "build_hit_test handles build hit test in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_background_for_painter",
+      "type": "function",
+      "name": "build_background_for_painter",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1530,
+        1567
+      ],
+      "summary": "build_background_for_painter handles build background for painter in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_background_1569",
+      "type": "function",
+      "name": "build_background",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1569,
+        1614
+      ],
+      "summary": "build_background handles build background in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_background_image",
+      "type": "function",
+      "name": "build_background_image",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1616,
+        1826
+      ],
+      "summary": "build_background_image handles build background image in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_border_side",
+      "type": "function",
+      "name": "build_border_side",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1828,
+        1844
+      ],
+      "summary": "build_border_side handles build border side in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_collapsed_table_borders",
+      "type": "function",
+      "name": "build_collapsed_table_borders",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1846,
+        1922
+      ],
+      "summary": "build_collapsed_table_borders handles build collapsed table borders in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_border_1924",
+      "type": "function",
+      "name": "build_border",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1924,
+        1958
+      ],
+      "summary": "build_border handles build border in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_border_image",
+      "type": "function",
+      "name": "build_border_image",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1961,
+        2087
+      ],
+      "summary": "build_border_image handles build border image in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_outline",
+      "type": "function",
+      "name": "build_outline",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2089,
+        2135
+      ],
+      "summary": "build_outline handles build outline in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_box_shadow",
+      "type": "function",
+      "name": "build_box_shadow",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2137,
+        2199
+      ],
+      "summary": "build_box_shadow handles build box shadow in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:glyphs",
+      "type": "function",
+      "name": "glyphs",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2212,
+        2246
+      ],
+      "summary": "glyphs handles glyphs in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:offset_radii",
+      "type": "function",
+      "name": "offset_radii",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2251,
+        2284
+      ],
+      "summary": "offset_radii handles offset radii in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:resolve_border_image_outset",
+      "type": "function",
+      "name": "resolve_border_image_outset",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2287,
+        2304
+      ],
+      "summary": "resolve_border_image_outset handles resolve border image outset in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:resolve_border_image_width",
+      "type": "function",
+      "name": "resolve_border_image_width",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2307,
+        2332
+      ],
+      "summary": "resolve_border_image_width handles resolve border image width in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:resolve_border_image_slice",
+      "type": "function",
+      "name": "resolve_border_image_slice",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2335,
+        2352
+      ],
+      "summary": "resolve_border_image_slice handles resolve border image slice in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:normalize_radii",
+      "type": "function",
+      "name": "normalize_radii",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2354,
+        2372
+      ],
+      "summary": "normalize_radii handles normalize radii in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:compute_margin_box_radius",
+      "type": "function",
+      "name": "compute_margin_box_radius",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2381,
+        2435
+      ],
+      "summary": "compute_margin_box_radius handles compute margin box radius in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:border_radius",
+      "type": "function",
+      "name": "border_radius",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2438,
+        2468
+      ],
+      "summary": "border_radius handles border radius in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_fragment",
+      "type": "function",
+      "name": "visit_fragment",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2472,
+        2488
+      ],
+      "summary": "visit_fragment handles visit fragment in mod.",
+      "tags": [
+        "display-list",
+        "painting",
+        "webrender",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/display_list/paint_timing_handler.rs",
+      "type": "file",
+      "name": "paint_timing_handler.rs",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "summary": "Tracks Largest Contentful Paint (LCP) candidates for performance measurement, computing intersection ratios and paint timing metrics.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/display_list/paint_timing_handler.rs:PaintTimingHandler",
+      "type": "class",
+      "name": "PaintTimingHandler",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        15,
+        25
+      ],
+      "summary": "PaintTimingHandler with 7 methods for paint_timing_handler.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        28,
+        35
+      ],
+      "summary": "new handles new in paint_timing_handler.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:check_bounding_rect",
+      "type": "function",
+      "name": "check_bounding_rect",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        38,
+        49
+      ],
+      "summary": "check_bounding_rect handles check bounding rect in paint_timing_handler.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:calculate_intersection_rect",
+      "type": "function",
+      "name": "calculate_intersection_rect",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        51,
+        73
+      ],
+      "summary": "calculate_intersection_rect handles calculate intersection rect in paint_timing_handler.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:update_lcp_candidate",
+      "type": "function",
+      "name": "update_lcp_candidate",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        75,
+        103
+      ],
+      "summary": "update_lcp_candidate handles update lcp candidate in paint_timing_handler.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:did_lcp_candidate_update",
+      "type": "function",
+      "name": "did_lcp_candidate_update",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        105,
+        107
+      ],
+      "summary": "did_lcp_candidate_update handles did lcp candidate update in paint_timing_handler.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:unset_lcp_candidate_updated",
+      "type": "function",
+      "name": "unset_lcp_candidate_updated",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        109,
+        111
+      ],
+      "summary": "unset_lcp_candidate_updated handles unset lcp candidate updated in paint_timing_handler.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:largest_contentful_paint_candidate",
+      "type": "function",
+      "name": "largest_contentful_paint_candidate",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        113,
+        115
+      ],
+      "summary": "largest_contentful_paint_candidate handles largest contentful paint candidate in paint_timing_handler.",
+      "tags": [
+        "performance",
+        "paint-timing",
+        "lcp",
+        "web-vitals",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/display_list/paint_traversal.rs",
+      "type": "file",
+      "name": "paint_traversal.rs",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "summary": "Implements paint traversal through stacking contexts and fragment trees, dispatching to appropriate handlers for boxes, text, and replaced content.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/display_list/paint_traversal.rs:PaintTraversal",
+      "type": "class",
+      "name": "PaintTraversal",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        21,
+        25
+      ],
+      "summary": "PaintTraversal enum/struct for paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/display_list/paint_traversal.rs:PaintTraversalHandler",
+      "type": "class",
+      "name": "PaintTraversalHandler",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        491,
+        530
+      ],
+      "summary": "PaintTraversalHandler with 10 methods for paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/display_list/paint_traversal.rs:TraversalState",
+      "type": "class",
+      "name": "TraversalState",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        533,
+        538
+      ],
+      "summary": "TraversalState with 4 methods for paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse",
+      "type": "function",
+      "name": "traverse",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        28,
+        35
+      ],
+      "summary": "traverse handles traverse in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_stacking_context",
+      "type": "function",
+      "name": "traverse_stacking_context",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        38,
+        113
+      ],
+      "summary": "traverse_stacking_context handles traverse stacking context in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_stacking_context_inner",
+      "type": "function",
+      "name": "traverse_stacking_context_inner",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        115,
+        167
+      ],
+      "summary": "traverse_stacking_context_inner handles traverse stacking context inner in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_stacking_container",
+      "type": "function",
+      "name": "traverse_stacking_container",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        174,
+        199
+      ],
+      "summary": "traverse_stacking_container handles traverse stacking container in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_block_level_descendants_decorations",
+      "type": "function",
+      "name": "traverse_block_level_descendants_decorations",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        201,
+        281
+      ],
+      "summary": "traverse_block_level_descendants_decorations handles traverse block level descendants decorations in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_line_boxes_and_replaced_for_box",
+      "type": "function",
+      "name": "traverse_line_boxes_and_replaced_for_box",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        283,
+        313
+      ],
+      "summary": "traverse_line_boxes_and_replaced_for_box handles traverse line boxes and replaced for box in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_line_boxes_and_replaced_315",
+      "type": "function",
+      "name": "traverse_line_boxes_and_replaced",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        315,
+        362
+      ],
+      "summary": "traverse_line_boxes_and_replaced handles traverse line boxes and replaced in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_fragment_in_a_line_box",
+      "type": "function",
+      "name": "traverse_fragment_in_a_line_box",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        364,
+        390
+      ],
+      "summary": "traverse_fragment_in_a_line_box handles traverse fragment in a line box in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_box_in_a_line_box",
+      "type": "function",
+      "name": "traverse_box_in_a_line_box",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        393,
+        445
+      ],
+      "summary": "traverse_box_in_a_line_box handles traverse box in a line box in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:traverse_replaced_content",
+      "type": "function",
+      "name": "traverse_replaced_content",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        447,
+        480
+      ],
+      "summary": "traverse_replaced_content handles traverse replaced content in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:push_box_fragment",
+      "type": "function",
+      "name": "push_box_fragment",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        541,
+        585
+      ],
+      "summary": "push_box_fragment handles push box fragment in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:without_text_decorations",
+      "type": "function",
+      "name": "without_text_decorations",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        587,
+        592
+      ],
+      "summary": "without_text_decorations handles without text decorations in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:push_positioning_fragment",
+      "type": "function",
+      "name": "push_positioning_fragment",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        594,
+        604
+      ],
+      "summary": "push_positioning_fragment handles push positioning fragment in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_traversal.rs:push_stacking_context",
+      "type": "function",
+      "name": "push_stacking_context",
+      "filePath": "components/layout/display_list/paint_traversal.rs",
+      "lineRange": [
+        606,
+        613
+      ],
+      "summary": "push_stacking_context handles push stacking context in paint_traversal.",
+      "tags": [
+        "paint-traversal",
+        "stacking-context",
+        "fragment-tree",
+        "rendering",
+        "public-api"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "class:components/layout/display_list/mod.rs:DisplayListBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "class:components/layout/display_list/mod.rs:DisplayListBuilder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "class:components/layout/display_list/mod.rs:InspectorHighlight",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:for_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:add_all_spatial_nodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:add_all_spatial_nodes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:add_clip_to_display_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:add_clip_to_display_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:maybe_create_clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:push_webrender_stacking_context_if_necessary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:common_properties",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:paint_dom_inspector_highlight",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:check_if_paintable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:check_for_lcp_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_stacking_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:leave_stacking_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_iframe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_box_for_root_background",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_box_for_collapsed_table_borders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:register_fragment_of_highlighted_dom_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_display_list_for_text_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_display_list_for_text_decoration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_display_list_for_broken_image_border",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_display_list_for_text_selection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:border_edge_clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:padding_edge_clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:content_edge_clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_1463",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_hit_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_background_for_painter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_background_1569",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_background_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_border_side",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_collapsed_table_borders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_border_1924",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_border_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_outline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_box_shadow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:glyphs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:offset_radii",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:resolve_border_image_outset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:resolve_border_image_width",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:resolve_border_image_slice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:normalize_radii",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:normalize_radii",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:compute_margin_box_radius",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:compute_margin_box_radius",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:border_radius",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "class:components/layout/display_list/paint_timing_handler.rs:PaintTimingHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "class:components/layout/display_list/paint_timing_handler.rs:PaintTimingHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:check_bounding_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:check_bounding_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:calculate_intersection_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:update_lcp_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:update_lcp_candidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:did_lcp_candidate_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:did_lcp_candidate_update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:unset_lcp_candidate_updated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:unset_lcp_candidate_updated",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:largest_contentful_paint_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:largest_contentful_paint_candidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "class:components/layout/display_list/paint_traversal.rs:PaintTraversal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "class:components/layout/display_list/paint_traversal.rs:PaintTraversal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "class:components/layout/display_list/paint_traversal.rs:PaintTraversalHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "class:components/layout/display_list/paint_traversal.rs:PaintTraversalHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "class:components/layout/display_list/paint_traversal.rs:TraversalState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "class:components/layout/display_list/paint_traversal.rs:TraversalState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_stacking_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_stacking_context_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_stacking_container",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_block_level_descendants_decorations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_line_boxes_and_replaced_for_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_line_boxes_and_replaced_315",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_fragment_in_a_line_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_box_in_a_line_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:traverse_replaced_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:push_box_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:push_box_fragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:without_text_decorations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:without_text_decorations",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:push_positioning_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:push_positioning_fragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:push_stacking_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_traversal.rs",
+      "target": "function:components/layout/display_list/paint_traversal.rs:push_stacking_context",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

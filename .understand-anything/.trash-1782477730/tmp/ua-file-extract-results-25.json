@@ -1,0 +1,7144 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 21,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/script/dom/webgpu/gpupipelineerror.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 74,
+      "nonEmptyLines": 66,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 26,
+          "endLine": 31,
+          "params": [
+            "message",
+            "reason"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 33,
+          "endLine": 46,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "message",
+            "reason"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 48,
+          "endLine": 55,
+          "params": [
+            "cx",
+            "global",
+            "message",
+            "reason"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 60,
+          "endLine": 68,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "message",
+            "options"
+          ]
+        },
+        {
+          "name": "Reason",
+          "startLine": 71,
+          "endLine": 73,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPUPipelineError",
+          "startLine": 20,
+          "endLine": 23,
+          "methods": [
+            "new_inherited",
+            "new_with_proto",
+            "new",
+            "Constructor",
+            "Reason"
+          ],
+          "properties": [
+            "exception",
+            "reason"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUPipelineError",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "new_with_proto",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 48,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "DOMException::new_inherited",
+          "lineNumber": 28
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "\"GPUPipelineError\".into",
+          "lineNumber": 28
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 40
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Self::new_inherited",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 54
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 67
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpupipelinelayout.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 156,
+      "nonEmptyLines": 140,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 33,
+          "endLine": 44,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 57,
+          "endLine": 72,
+          "params": [
+            "channel",
+            "pipeline_layout",
+            "label",
+            "bgls"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 74,
+          "endLine": 92,
+          "params": [
+            "cx",
+            "global",
+            "channel",
+            "pipeline_layout",
+            "label",
+            "bgls"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 96,
+          "endLine": 98,
+          "params": []
+        },
+        {
+          "name": "bind_group_layouts",
+          "startLine": 100,
+          "endLine": 102,
+          "params": []
+        },
+        {
+          "name": "create",
+          "startLine": 105,
+          "endLine": 143,
+          "params": [
+            "cx",
+            "device",
+            "descriptor"
+          ]
+        },
+        {
+          "name": "Label",
+          "startLine": 148,
+          "endLine": 150,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 153,
+          "endLine": 155,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPUPipelineLayout",
+          "startLine": 25,
+          "endLine": 30,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "pipeline_layout"
+          ]
+        },
+        {
+          "name": "GPUPipelineLayout",
+          "startLine": 48,
+          "endLine": 54,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "bind_group_layouts",
+            "create",
+            "Label",
+            "SetLabel"
+          ],
+          "properties": [
+            "reflector_",
+            "label",
+            "bind_group_layouts",
+            "droppable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUPipelineLayout",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 96,
+          "isDefault": false
+        },
+        {
+          "name": "bind_group_layouts",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 105,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 34
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropPipelineLayout",
+          "lineNumber": 37
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 64
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 82
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 83
+        },
+        {
+          "caller": "new",
+          "callee": "GPUPipelineLayout::new_inherited",
+          "lineNumber": 83
+        },
+        {
+          "caller": "bind_group_layouts",
+          "callee": "self.bind_group_layouts.clone",
+          "lineNumber": 101
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor\n            .bindGroupLayouts\n            .iter()\n            .map(|each| each.id())\n            .collect::<Vec<_>>",
+          "lineNumber": 110
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor\n            .bindGroupLayouts\n            .iter().map",
+          "lineNumber": 110
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor\n            .bindGroupLayouts.iter",
+          "lineNumber": 110
+        },
+        {
+          "caller": "create",
+          "callee": "each.id",
+          "lineNumber": 113
+        },
+        {
+          "caller": "create",
+          "callee": "(&descriptor.parent).convert",
+          "lineNumber": 117
+        },
+        {
+          "caller": "create",
+          "callee": "Cow::Owned",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create",
+          "callee": "bgls.iter().map(|l| Some(l.0)).collect::<Vec<_>>",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create",
+          "callee": "bgls.iter().map",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create",
+          "callee": "bgls.iter",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create",
+          "callee": "Some",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub().create_pipeline_layout_id",
+          "lineNumber": 123
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub",
+          "lineNumber": 123
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 123
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0\n            .send(WebGPURequest::CreatePipelineLayout {\n                device_id: device.id().0,\n                pipeline_layout_id,\n                descriptor: desc,\n            }).expect",
+          "lineNumber": 124
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0.send",
+          "lineNumber": 124
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 124
+        },
+        {
+          "caller": "create",
+          "callee": "device.id",
+          "lineNumber": 128
+        },
+        {
+          "caller": "create",
+          "callee": "WebGPUPipelineLayout",
+          "lineNumber": 134
+        },
+        {
+          "caller": "create",
+          "callee": "GPUPipelineLayout::new",
+          "lineNumber": 135
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 137
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 138
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.parent.label.clone",
+          "lineNumber": 140
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 149
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 149
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 154
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 8,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpuqueryset.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 163,
+      "nonEmptyLines": 149,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 31,
+          "endLine": 42,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 55,
+          "endLine": 69,
+          "params": [
+            "label",
+            "channel",
+            "query_set",
+            "r#type",
+            "count"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 71,
+          "endLine": 87,
+          "params": [
+            "cx",
+            "global",
+            "label",
+            "channel",
+            "query_set",
+            "r#type",
+            "count"
+          ]
+        },
+        {
+          "name": "create",
+          "startLine": 90,
+          "endLine": 130,
+          "params": [
+            "cx",
+            "device",
+            "descriptor"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 132,
+          "endLine": 134,
+          "params": []
+        },
+        {
+          "name": "Destroy",
+          "startLine": 139,
+          "endLine": 142,
+          "params": []
+        },
+        {
+          "name": "Label",
+          "startLine": 145,
+          "endLine": 147,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 150,
+          "endLine": 152,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "Type",
+          "startLine": 155,
+          "endLine": 157,
+          "params": []
+        },
+        {
+          "name": "Count",
+          "startLine": 160,
+          "endLine": 162,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPUQuerySet",
+          "startLine": 23,
+          "endLine": 28,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "query_set"
+          ]
+        },
+        {
+          "name": "GPUQuerySet",
+          "startLine": 46,
+          "endLine": 52,
+          "methods": [
+            "new_inherited",
+            "new",
+            "create",
+            "id",
+            "Destroy",
+            "Label",
+            "SetLabel",
+            "Type",
+            "Count"
+          ],
+          "properties": [
+            "reflector_",
+            "droppable",
+            "label",
+            "r#type",
+            "count"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUQuerySet",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 55,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 132,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 32
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropQuerySet",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 64
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 80
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 81
+        },
+        {
+          "caller": "new",
+          "callee": "GPUQuerySet::new_inherited",
+          "lineNumber": 81
+        },
+        {
+          "caller": "create",
+          "callee": "device\n                .Features()\n                .wgpu_features().contains",
+          "lineNumber": 97
+        },
+        {
+          "caller": "create",
+          "callee": "device\n                .Features().wgpu_features",
+          "lineNumber": 97
+        },
+        {
+          "caller": "create",
+          "callee": "device.Features",
+          "lineNumber": 97
+        },
+        {
+          "caller": "create",
+          "callee": "Err",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "Error::Type",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "c\"The device does not support timestamp queries\".to_owned",
+          "lineNumber": 104
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub().create_query_set_id",
+          "lineNumber": 108
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub",
+          "lineNumber": 108
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 108
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 110
+        },
+        {
+          "caller": "create",
+          "callee": "channel.0.send",
+          "lineNumber": 111
+        },
+        {
+          "caller": "create",
+          "callee": "device.id",
+          "lineNumber": 112
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.convert",
+          "lineNumber": 114
+        },
+        {
+          "caller": "create",
+          "callee": "Ok",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create",
+          "callee": "Self::new",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.parent.label.clone",
+          "lineNumber": 122
+        },
+        {
+          "caller": "create",
+          "callee": "WebGPUQuerySet",
+          "lineNumber": 124
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 146
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 146
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 151
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 10,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpuqueue.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 415,
+      "nonEmptyLines": 391,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 54,
+          "endLine": 62,
+          "params": [
+            "channel",
+            "queue"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 64,
+          "endLine": 75,
+          "params": [
+            "cx",
+            "global",
+            "channel",
+            "queue"
+          ]
+        },
+        {
+          "name": "set_device",
+          "startLine": 79,
+          "endLine": 81,
+          "params": [
+            "device"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 83,
+          "endLine": 85,
+          "params": []
+        },
+        {
+          "name": "Label",
+          "startLine": 90,
+          "endLine": 92,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 95,
+          "endLine": 97,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "Submit",
+          "startLine": 100,
+          "endLine": 110,
+          "params": [
+            "command_buffers"
+          ]
+        },
+        {
+          "name": "WriteBuffer",
+          "startLine": 114,
+          "endLine": 176,
+          "params": [
+            "buffer",
+            "buffer_offset",
+            "data",
+            "data_offset",
+            "size"
+          ]
+        },
+        {
+          "name": "WriteTexture",
+          "startLine": 179,
+          "endLine": 218,
+          "params": [
+            "destination",
+            "data",
+            "data_layout",
+            "size"
+          ]
+        },
+        {
+          "name": "CopyExternalImageToTexture",
+          "startLine": 225,
+          "endLine": 383,
+          "params": [
+            "source",
+            "destination",
+            "copy_size"
+          ]
+        },
+        {
+          "name": "OnSubmittedWorkDone",
+          "startLine": 386,
+          "endLine": 403,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "handle_response",
+          "startLine": 407,
+          "endLine": 414,
+          "params": [
+            "cx",
+            "_response",
+            "promise"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPUQueue",
+          "startLine": 42,
+          "endLine": 51,
+          "methods": [
+            "new_inherited",
+            "new",
+            "set_device",
+            "id",
+            "Label",
+            "SetLabel",
+            "Submit",
+            "WriteBuffer",
+            "WriteTexture",
+            "CopyExternalImageToTexture",
+            "OnSubmittedWorkDone",
+            "handle_response"
+          ],
+          "properties": [
+            "reflector_",
+            "channel",
+            "device",
+            "label",
+            "queue"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUQueue",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "set_device",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 83,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 58
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "USVString::default",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 71
+        },
+        {
+          "caller": "new",
+          "callee": "GPUQueue::new_inherited",
+          "lineNumber": 71
+        },
+        {
+          "caller": "set_device",
+          "callee": "self.device.borrow_mut",
+          "lineNumber": 80
+        },
+        {
+          "caller": "set_device",
+          "callee": "Some",
+          "lineNumber": 80
+        },
+        {
+          "caller": "set_device",
+          "callee": "Dom::from_ref",
+          "lineNumber": 80
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 91
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 91
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 96
+        },
+        {
+          "caller": "Submit",
+          "callee": "command_buffers.iter().map(|cb| cb.id().0).collect",
+          "lineNumber": 101
+        },
+        {
+          "caller": "Submit",
+          "callee": "command_buffers.iter().map",
+          "lineNumber": 101
+        },
+        {
+          "caller": "Submit",
+          "callee": "command_buffers.iter",
+          "lineNumber": 101
+        },
+        {
+          "caller": "Submit",
+          "callee": "cb.id",
+          "lineNumber": 101
+        },
+        {
+          "caller": "Submit",
+          "callee": "self.channel\n            .0\n            .send(WebGPURequest::Submit {\n                device_id: self.device.borrow().as_ref().unwrap().id().0,\n                queue_id: self.queue.0,\n                command_buffers,\n            }).unwrap",
+          "lineNumber": 102
+        },
+        {
+          "caller": "Submit",
+          "callee": "self.channel\n            .0.send",
+          "lineNumber": 102
+        },
+        {
+          "caller": "Submit",
+          "callee": "self.device.borrow().as_ref().unwrap().id",
+          "lineNumber": 105
+        },
+        {
+          "caller": "Submit",
+          "callee": "self.device.borrow().as_ref().unwrap",
+          "lineNumber": 105
+        },
+        {
+          "caller": "Submit",
+          "callee": "self.device.borrow().as_ref",
+          "lineNumber": 105
+        },
+        {
+          "caller": "Submit",
+          "callee": "self.device.borrow",
+          "lineNumber": 105
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "d.get_array_type().byte_size().unwrap_or",
+          "lineNumber": 125
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "d.get_array_type().byte_size",
+          "lineNumber": 125
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "d.get_array_type",
+          "lineNumber": 125
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "d.len",
+          "lineNumber": 125
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "d.len",
+          "lineNumber": 127
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "(data_size as GPUSize64)\n                .checked_sub(data_offset).ok_or",
+          "lineNumber": 136
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "(data_size as GPUSize64).checked_sub",
+          "lineNumber": 136
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "Error::Operation",
+          "lineNumber": 138
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "(content_size * sizeof_element as u64).is_multiple_of",
+          "lineNumber": 143
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "Err",
+          "lineNumber": 146
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "Error::Operation",
+          "lineNumber": 146
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "GenericSharedMemory::from_bytes",
+          "lineNumber": 156
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "data.as_slice",
+          "lineNumber": 156
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "GenericSharedMemory::from_bytes",
+          "lineNumber": 161
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "data.as_slice",
+          "lineNumber": 161
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "self.channel.0.send",
+          "lineNumber": 164
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "self.device.borrow().as_ref().unwrap().id",
+          "lineNumber": 165
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "self.device.borrow().as_ref().unwrap",
+          "lineNumber": 165
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "self.device.borrow().as_ref",
+          "lineNumber": 165
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "self.device.borrow",
+          "lineNumber": 165
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "buffer.id",
+          "lineNumber": 167
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "Err",
+          "lineNumber": 172
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "Error::Operation",
+          "lineNumber": 172
+        },
+        {
+          "caller": "WriteBuffer",
+          "callee": "Ok",
+          "lineNumber": 175
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "d.to_vec",
+          "lineNumber": 187
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "d.len",
+          "lineNumber": 187
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "d.to_vec",
+          "lineNumber": 188
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "d.len",
+          "lineNumber": 188
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "Err",
+          "lineNumber": 193
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "Error::Operation",
+          "lineNumber": 193
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "destination.try_convert",
+          "lineNumber": 196
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "data_layout.convert",
+          "lineNumber": 197
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "(&size).try_convert",
+          "lineNumber": 198
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "GenericSharedMemory::from_bytes",
+          "lineNumber": 199
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "self.channel.0.send",
+          "lineNumber": 201
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "self.device.borrow().as_ref().unwrap().id",
+          "lineNumber": 202
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "self.device.borrow().as_ref().unwrap",
+          "lineNumber": 202
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "self.device.borrow().as_ref",
+          "lineNumber": 202
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "self.device.borrow",
+          "lineNumber": 202
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "Err",
+          "lineNumber": 214
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "Error::Operation",
+          "lineNumber": 214
+        },
+        {
+          "caller": "WriteTexture",
+          "callee": "Ok",
+          "lineNumber": 217
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "source.origin.try_convert",
+          "lineNumber": 232
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "destination.parent.try_convert",
+          "lineNumber": 234
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "copy_size.try_convert",
+          "lineNumber": 236
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.origin_is_clean",
+          "lineNumber": 241
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.same_origin",
+          "lineNumber": 244
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "GlobalScope::entry().origin",
+          "lineNumber": 244
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "GlobalScope::entry",
+          "lineNumber": 244
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.origin_is_clean",
+          "lineNumber": 246
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.origin_is_clean",
+          "lineNumber": 247
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.origin_is_clean",
+          "lineNumber": 248
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 251
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::Security",
+          "lineNumber": 251
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 251
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"Image source is not origin clean!\".to_string",
+          "lineNumber": 252
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Width",
+          "lineNumber": 257
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Height",
+          "lineNumber": 257
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Width",
+          "lineNumber": 258
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Height",
+          "lineNumber": 258
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Width",
+          "lineNumber": 259
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Height",
+          "lineNumber": 259
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Width",
+          "lineNumber": 260
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Height",
+          "lineNumber": 260
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Width",
+          "lineNumber": 261
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Height",
+          "lineNumber": 261
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Width",
+          "lineNumber": 263
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Height",
+          "lineNumber": 263
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 268
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::Operation",
+          "lineNumber": 268
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 268
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"Source origin x + copy width exceeds source image width\".to_string",
+          "lineNumber": 269
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 274
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::Operation",
+          "lineNumber": 274
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 274
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"Source origin y + copy height exceeds source image height\".to_string",
+          "lineNumber": 275
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 280
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::Operation",
+          "lineNumber": 280
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 280
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"Copy depth or array layers must be less than or equal to 1\".to_string",
+          "lineNumber": 281
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 289
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "bitmap.bitmap_data().clone().ok_or_else",
+          "lineNumber": 289
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "bitmap.bitmap_data().clone",
+          "lineNumber": 289
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "bitmap.bitmap_data",
+          "lineNumber": 289
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::InvalidState",
+          "lineNumber": 290
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 290
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"ImageBitmap is detached\".to_string",
+          "lineNumber": 290
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "data.is_detached",
+          "lineNumber": 295
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 296
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::InvalidState",
+          "lineNumber": 296
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 296
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"ImageData is detached\".to_string",
+          "lineNumber": 297
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 300
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "data.get_snapshot",
+          "lineNumber": 300
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.is_usable",
+          "lineNumber": 303
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.get_raster_image_data",
+          "lineNumber": 304
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.is_usable",
+          "lineNumber": 310
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.get_current_frame_data",
+          "lineNumber": 311
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.is_valid",
+          "lineNumber": 318
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.get_image_data",
+          "lineNumber": 319
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 321
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::InvalidState",
+          "lineNumber": 321
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 321
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"Canvas has zero area\".to_string",
+          "lineNumber": 322
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Width",
+          "lineNumber": 328
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.Height",
+          "lineNumber": 328
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 329
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::InvalidState",
+          "lineNumber": 329
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 329
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"Canvas has zero area\".to_string",
+          "lineNumber": 330
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "inner.get_image_data",
+          "lineNumber": 333
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "destination.parent.texture.wgpu_texture_descriptor",
+          "lineNumber": 338
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 346
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::Operation",
+          "lineNumber": 346
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Some",
+          "lineNumber": 346
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "\"Unsupported texture format for copy\".to_string",
+          "lineNumber": 347
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "usable_snapshot.map",
+          "lineNumber": 351
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "pixels::flip_y_rgba8_image_inplace",
+          "lineNumber": 353
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "snapshot.size",
+          "lineNumber": 353
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "snapshot.as_raw_bytes_mut",
+          "lineNumber": 353
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "snapshot.transform",
+          "lineNumber": 355
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "snapshot.to_shared",
+          "lineNumber": 361
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 364
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "self.device.borrow().as_ref().unwrap().id",
+          "lineNumber": 368
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "self.device.borrow().as_ref().unwrap",
+          "lineNumber": 368
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "self.device.borrow().as_ref",
+          "lineNumber": 368
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "self.device.borrow",
+          "lineNumber": 368
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Err",
+          "lineNumber": 380
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Error::Operation",
+          "lineNumber": 380
+        },
+        {
+          "caller": "CopyExternalImageToTexture",
+          "callee": "Ok",
+          "lineNumber": 382
+        },
+        {
+          "caller": "OnSubmittedWorkDone",
+          "callee": "self.global",
+          "lineNumber": 387
+        },
+        {
+          "caller": "OnSubmittedWorkDone",
+          "callee": "Promise::new",
+          "lineNumber": 388
+        },
+        {
+          "caller": "OnSubmittedWorkDone",
+          "callee": "global.task_manager().dom_manipulation_task_source",
+          "lineNumber": 389
+        },
+        {
+          "caller": "OnSubmittedWorkDone",
+          "callee": "global.task_manager",
+          "lineNumber": 389
+        },
+        {
+          "caller": "OnSubmittedWorkDone",
+          "callee": "callback_promise",
+          "lineNumber": 390
+        },
+        {
+          "caller": "OnSubmittedWorkDone",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 392
+        },
+        {
+          "caller": "handle_response",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 413
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 12,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpurenderbundle.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 103,
+      "nonEmptyLines": 93,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 25,
+          "endLine": 36,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 49,
+          "endLine": 64,
+          "params": [
+            "render_bundle",
+            "device",
+            "channel",
+            "label"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 66,
+          "endLine": 84,
+          "params": [
+            "cx",
+            "global",
+            "render_bundle",
+            "device",
+            "channel",
+            "label"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 88,
+          "endLine": 90,
+          "params": []
+        },
+        {
+          "name": "Label",
+          "startLine": 95,
+          "endLine": 97,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 100,
+          "endLine": 102,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPURenderBundle",
+          "startLine": 17,
+          "endLine": 22,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "render_bundle"
+          ]
+        },
+        {
+          "name": "GPURenderBundle",
+          "startLine": 40,
+          "endLine": 46,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "Label",
+            "SetLabel"
+          ],
+          "properties": [
+            "reflector_",
+            "device",
+            "label",
+            "droppable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPURenderBundle",
+          "line": 40,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 88,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 26
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropRenderBundle",
+          "lineNumber": 29
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 58
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 74
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 75
+        },
+        {
+          "caller": "new",
+          "callee": "GPURenderBundle::new_inherited",
+          "lineNumber": 75
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 96
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 96
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 101
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 6,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpurenderbundleencoder.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 320,
+      "nonEmptyLines": 295,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 46,
+          "endLine": 59,
+          "params": [
+            "render_bundle_encoder",
+            "device",
+            "channel",
+            "label"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 61,
+          "endLine": 79,
+          "params": [
+            "cx",
+            "global",
+            "render_bundle_encoder",
+            "device",
+            "channel",
+            "label"
+          ]
+        },
+        {
+          "name": "create",
+          "startLine": 84,
+          "endLine": 131,
+          "params": [
+            "cx",
+            "device",
+            "descriptor"
+          ]
+        },
+        {
+          "name": "Label",
+          "startLine": 136,
+          "endLine": 138,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 141,
+          "endLine": 143,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "SetBindGroup",
+          "startLine": 147,
+          "endLine": 159,
+          "params": [
+            "index",
+            "bind_group",
+            "dynamic_offsets"
+          ]
+        },
+        {
+          "name": "SetPipeline",
+          "startLine": 162,
+          "endLine": 166,
+          "params": [
+            "pipeline"
+          ]
+        },
+        {
+          "name": "SetIndexBuffer",
+          "startLine": 169,
+          "endLine": 188,
+          "params": [
+            "buffer",
+            "index_format",
+            "offset",
+            "size"
+          ]
+        },
+        {
+          "name": "SetVertexBuffer",
+          "startLine": 191,
+          "endLine": 201,
+          "params": [
+            "slot",
+            "buffer",
+            "offset",
+            "size"
+          ]
+        },
+        {
+          "name": "Draw",
+          "startLine": 204,
+          "endLine": 214,
+          "params": [
+            "vertex_count",
+            "instance_count",
+            "first_vertex",
+            "first_instance"
+          ]
+        },
+        {
+          "name": "DrawIndexed",
+          "startLine": 217,
+          "endLine": 235,
+          "params": [
+            "index_count",
+            "instance_count",
+            "first_index",
+            "base_vertex",
+            "first_instance"
+          ]
+        },
+        {
+          "name": "DrawIndirect",
+          "startLine": 238,
+          "endLine": 246,
+          "params": [
+            "indirect_buffer",
+            "indirect_offset"
+          ]
+        },
+        {
+          "name": "DrawIndexedIndirect",
+          "startLine": 249,
+          "endLine": 257,
+          "params": [
+            "indirect_buffer",
+            "indirect_offset"
+          ]
+        },
+        {
+          "name": "PushDebugGroup",
+          "startLine": 261,
+          "endLine": 268,
+          "params": [
+            "group_label"
+          ]
+        },
+        {
+          "name": "PopDebugGroup",
+          "startLine": 271,
+          "endLine": 275,
+          "params": []
+        },
+        {
+          "name": "InsertDebugMarker",
+          "startLine": 279,
+          "endLine": 286,
+          "params": [
+            "marker_label"
+          ]
+        },
+        {
+          "name": "Finish",
+          "startLine": 289,
+          "endLine": 319,
+          "params": [
+            "cx",
+            "descriptor"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPURenderBundleEncoder",
+          "startLine": 34,
+          "endLine": 43,
+          "methods": [
+            "new_inherited",
+            "new",
+            "create",
+            "Label",
+            "SetLabel",
+            "SetBindGroup",
+            "SetPipeline",
+            "SetIndexBuffer",
+            "SetVertexBuffer",
+            "Draw",
+            "DrawIndexed",
+            "DrawIndirect",
+            "DrawIndexedIndirect",
+            "PushDebugGroup",
+            "PopDebugGroup",
+            "InsertDebugMarker",
+            "Finish"
+          ],
+          "properties": [
+            "reflector_",
+            "channel",
+            "device",
+            "render_bundle_encoder",
+            "label"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPURenderBundleEncoder",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 84,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 53
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 54
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Some",
+          "lineNumber": 54
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 55
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 69
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 70
+        },
+        {
+          "caller": "new",
+          "callee": "GPURenderBundleEncoder::new_inherited",
+          "lineNumber": 70
+        },
+        {
+          "caller": "create",
+          "callee": "(&descriptor.parent.parent).convert",
+          "lineNumber": 90
+        },
+        {
+          "caller": "create",
+          "callee": "Cow::Owned",
+          "lineNumber": 91
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor\n                    .parent\n                    .colorFormats\n                    .iter()\n                    .map(|format| {\n                        device\n                            .validate_texture_format_required_features(format)\n                            .map(Some)\n                    })\n                    .collect::<Fallible<Vec<_>>>",
+          "lineNumber": 92
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor\n                    .parent\n                    .colorFormats\n                    .iter().map",
+          "lineNumber": 92
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor\n                    .parent\n                    .colorFormats.iter",
+          "lineNumber": 92
+        },
+        {
+          "caller": "create",
+          "callee": "device\n                            .validate_texture_format_required_features(format).map",
+          "lineNumber": 97
+        },
+        {
+          "caller": "create",
+          "callee": "device.validate_texture_format_required_features",
+          "lineNumber": 97
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor\n                .parent\n                .depthStencilFormat\n                .map(|dsf| {\n                    device\n                        .validate_texture_format_required_features(&dsf)\n                        .map(|format| wgpu_types::RenderBundleDepthStencil {\n                            format,\n                            depth_read_only: descriptor.depthReadOnly,\n                            stencil_read_only: descriptor.stencilReadOnly,\n                        })\n                }).transpose",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor\n                .parent\n                .depthStencilFormat.map",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "device\n                        .validate_texture_format_required_features(&dsf).map",
+          "lineNumber": 107
+        },
+        {
+          "caller": "create",
+          "callee": "device.validate_texture_format_required_features",
+          "lineNumber": 107
+        },
+        {
+          "caller": "create",
+          "callee": "RenderBundleEncoder::new(&desc, device.id().0).unwrap",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create",
+          "callee": "RenderBundleEncoder::new",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create",
+          "callee": "device.id",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create",
+          "callee": "Ok",
+          "lineNumber": 123
+        },
+        {
+          "caller": "create",
+          "callee": "GPURenderBundleEncoder::new",
+          "lineNumber": 123
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 125
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 128
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.parent.parent.label.clone",
+          "lineNumber": 129
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 137
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 137
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 142
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 148
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 148
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "wgpu_bundle::wgpu_render_bundle_set_bind_group",
+          "lineNumber": 150
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "Some",
+          "lineNumber": 153
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "bind_group.id",
+          "lineNumber": 153
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "dynamic_offsets.as_ptr",
+          "lineNumber": 154
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "dynamic_offsets.len",
+          "lineNumber": 155
+        },
+        {
+          "caller": "SetPipeline",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 163
+        },
+        {
+          "caller": "SetPipeline",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 163
+        },
+        {
+          "caller": "SetPipeline",
+          "callee": "wgpu_bundle::wgpu_render_bundle_set_pipeline",
+          "lineNumber": 164
+        },
+        {
+          "caller": "SetPipeline",
+          "callee": "pipeline.id",
+          "lineNumber": 164
+        },
+        {
+          "caller": "SetIndexBuffer",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 176
+        },
+        {
+          "caller": "SetIndexBuffer",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 176
+        },
+        {
+          "caller": "SetIndexBuffer",
+          "callee": "wgpu_bundle::wgpu_render_bundle_set_index_buffer",
+          "lineNumber": 177
+        },
+        {
+          "caller": "SetIndexBuffer",
+          "callee": "buffer.id",
+          "lineNumber": 179
+        },
+        {
+          "caller": "SetIndexBuffer",
+          "callee": "wgpu_types::BufferSize::new",
+          "lineNumber": 185
+        },
+        {
+          "caller": "SetVertexBuffer",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 192
+        },
+        {
+          "caller": "SetVertexBuffer",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 192
+        },
+        {
+          "caller": "SetVertexBuffer",
+          "callee": "wgpu_bundle::wgpu_render_bundle_set_vertex_buffer",
+          "lineNumber": 193
+        },
+        {
+          "caller": "SetVertexBuffer",
+          "callee": "buffer.id",
+          "lineNumber": 196
+        },
+        {
+          "caller": "SetVertexBuffer",
+          "callee": "wgpu_types::BufferSize::new",
+          "lineNumber": 198
+        },
+        {
+          "caller": "Draw",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 205
+        },
+        {
+          "caller": "Draw",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 205
+        },
+        {
+          "caller": "Draw",
+          "callee": "wgpu_bundle::wgpu_render_bundle_draw",
+          "lineNumber": 206
+        },
+        {
+          "caller": "DrawIndexed",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 225
+        },
+        {
+          "caller": "DrawIndexed",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 225
+        },
+        {
+          "caller": "DrawIndexed",
+          "callee": "wgpu_bundle::wgpu_render_bundle_draw_indexed",
+          "lineNumber": 226
+        },
+        {
+          "caller": "DrawIndirect",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 239
+        },
+        {
+          "caller": "DrawIndirect",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 239
+        },
+        {
+          "caller": "DrawIndirect",
+          "callee": "wgpu_bundle::wgpu_render_bundle_draw_indirect",
+          "lineNumber": 240
+        },
+        {
+          "caller": "DrawIndirect",
+          "callee": "indirect_buffer.id",
+          "lineNumber": 242
+        },
+        {
+          "caller": "DrawIndexedIndirect",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 250
+        },
+        {
+          "caller": "DrawIndexedIndirect",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 250
+        },
+        {
+          "caller": "DrawIndexedIndirect",
+          "callee": "wgpu_bundle::wgpu_render_bundle_draw_indexed_indirect",
+          "lineNumber": 251
+        },
+        {
+          "caller": "DrawIndexedIndirect",
+          "callee": "indirect_buffer.id",
+          "lineNumber": 253
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 262
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 262
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "CString::new(group_label.0).unwrap_or_default",
+          "lineNumber": 263
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "CString::new",
+          "lineNumber": 263
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "wgpu_bundle::wgpu_render_bundle_push_debug_group",
+          "lineNumber": 265
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "label.as_ptr",
+          "lineNumber": 265
+        },
+        {
+          "caller": "PopDebugGroup",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 272
+        },
+        {
+          "caller": "PopDebugGroup",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 272
+        },
+        {
+          "caller": "PopDebugGroup",
+          "callee": "wgpu_bundle::wgpu_render_bundle_pop_debug_group",
+          "lineNumber": 273
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "self.render_bundle_encoder.borrow_mut().as_mut",
+          "lineNumber": 280
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 280
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "CString::new(marker_label.0).unwrap_or_default",
+          "lineNumber": 281
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "CString::new",
+          "lineNumber": 281
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "wgpu_bundle::wgpu_render_bundle_insert_debug_marker",
+          "lineNumber": 283
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "label.as_ptr",
+          "lineNumber": 283
+        },
+        {
+          "caller": "Finish",
+          "callee": "(&descriptor.parent).convert",
+          "lineNumber": 295
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.render_bundle_encoder.borrow_mut().take().unwrap",
+          "lineNumber": 297
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.render_bundle_encoder.borrow_mut().take",
+          "lineNumber": 297
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.render_bundle_encoder.borrow_mut",
+          "lineNumber": 297
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.global().wgpu_id_hub().create_render_bundle_id",
+          "lineNumber": 298
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.global().wgpu_id_hub",
+          "lineNumber": 298
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.global",
+          "lineNumber": 298
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.channel\n            .0\n            .send(WebGPURequest::RenderBundleEncoderFinish {\n                render_bundle_encoder: encoder,\n                descriptor: desc,\n                render_bundle_id,\n                device_id: self.device.id().0,\n            }).expect",
+          "lineNumber": 300
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.channel\n            .0.send",
+          "lineNumber": 300
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.device.id",
+          "lineNumber": 306
+        },
+        {
+          "caller": "Finish",
+          "callee": "WebGPURenderBundle",
+          "lineNumber": 310
+        },
+        {
+          "caller": "Finish",
+          "callee": "GPURenderBundle::new",
+          "lineNumber": 311
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.global",
+          "lineNumber": 313
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.device.id",
+          "lineNumber": 315
+        },
+        {
+          "caller": "Finish",
+          "callee": "self.channel.clone",
+          "lineNumber": 316
+        },
+        {
+          "caller": "Finish",
+          "callee": "descriptor.parent.label.clone",
+          "lineNumber": 317
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 17,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpurenderpassencoder.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 282,
+      "nonEmptyLines": 255,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 35,
+          "endLine": 43,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 54,
+          "endLine": 69,
+          "params": [
+            "channel",
+            "render_pass",
+            "parent",
+            "label"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 71,
+          "endLine": 89,
+          "params": [
+            "cx",
+            "global",
+            "channel",
+            "render_pass",
+            "parent",
+            "label"
+          ]
+        },
+        {
+          "name": "send_render_command",
+          "startLine": 91,
+          "endLine": 104,
+          "params": [
+            "render_command"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 108,
+          "endLine": 110,
+          "params": []
+        },
+        {
+          "name": "Label",
+          "startLine": 115,
+          "endLine": 117,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 120,
+          "endLine": 122,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "SetBindGroup",
+          "startLine": 125,
+          "endLine": 131,
+          "params": [
+            "index",
+            "bind_group",
+            "offsets"
+          ]
+        },
+        {
+          "name": "SetViewport",
+          "startLine": 134,
+          "endLine": 151,
+          "params": [
+            "x",
+            "y",
+            "width",
+            "height",
+            "min_depth",
+            "max_depth"
+          ]
+        },
+        {
+          "name": "SetScissorRect",
+          "startLine": 154,
+          "endLine": 161,
+          "params": [
+            "x",
+            "y",
+            "width",
+            "height"
+          ]
+        },
+        {
+          "name": "SetBlendConstant",
+          "startLine": 164,
+          "endLine": 167,
+          "params": [
+            "color"
+          ]
+        },
+        {
+          "name": "SetStencilReference",
+          "startLine": 170,
+          "endLine": 172,
+          "params": [
+            "reference"
+          ]
+        },
+        {
+          "name": "End",
+          "startLine": 175,
+          "endLine": 182,
+          "params": []
+        },
+        {
+          "name": "SetPipeline",
+          "startLine": 185,
+          "endLine": 187,
+          "params": [
+            "pipeline"
+          ]
+        },
+        {
+          "name": "SetIndexBuffer",
+          "startLine": 190,
+          "endLine": 206,
+          "params": [
+            "buffer",
+            "index_format",
+            "offset",
+            "size"
+          ]
+        },
+        {
+          "name": "SetVertexBuffer",
+          "startLine": 209,
+          "endLine": 216,
+          "params": [
+            "slot",
+            "buffer",
+            "offset",
+            "size"
+          ]
+        },
+        {
+          "name": "Draw",
+          "startLine": 219,
+          "endLine": 226,
+          "params": [
+            "vertex_count",
+            "instance_count",
+            "first_vertex",
+            "first_instance"
+          ]
+        },
+        {
+          "name": "DrawIndexed",
+          "startLine": 229,
+          "endLine": 244,
+          "params": [
+            "index_count",
+            "instance_count",
+            "first_index",
+            "base_vertex",
+            "first_instance"
+          ]
+        },
+        {
+          "name": "DrawIndirect",
+          "startLine": 247,
+          "endLine": 252,
+          "params": [
+            "buffer",
+            "offset"
+          ]
+        },
+        {
+          "name": "DrawIndexedIndirect",
+          "startLine": 255,
+          "endLine": 260,
+          "params": [
+            "buffer",
+            "offset"
+          ]
+        },
+        {
+          "name": "ExecuteBundles",
+          "startLine": 263,
+          "endLine": 266,
+          "params": [
+            "bundles"
+          ]
+        },
+        {
+          "name": "PushDebugGroup",
+          "startLine": 269,
+          "endLine": 271,
+          "params": [
+            "group_label"
+          ]
+        },
+        {
+          "name": "PopDebugGroup",
+          "startLine": 274,
+          "endLine": 276,
+          "params": []
+        },
+        {
+          "name": "InsertDebugMarker",
+          "startLine": 279,
+          "endLine": 281,
+          "params": [
+            "marker_label"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPURenderPassEncoder",
+          "startLine": 27,
+          "endLine": 32,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "render_pass"
+          ]
+        },
+        {
+          "name": "GPURenderPassEncoder",
+          "startLine": 46,
+          "endLine": 51,
+          "methods": [
+            "new_inherited",
+            "new",
+            "send_render_command",
+            "id",
+            "Label",
+            "SetLabel",
+            "SetBindGroup",
+            "SetViewport",
+            "SetScissorRect",
+            "SetBlendConstant",
+            "SetStencilReference",
+            "End",
+            "SetPipeline",
+            "SetIndexBuffer",
+            "SetVertexBuffer",
+            "Draw",
+            "DrawIndexed",
+            "DrawIndirect",
+            "DrawIndexedIndirect",
+            "ExecuteBundles",
+            "PushDebugGroup",
+            "PopDebugGroup",
+            "InsertDebugMarker"
+          ],
+          "properties": [
+            "reflector_",
+            "label",
+            "command_encoder",
+            "droppable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPURenderPassEncoder",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 108,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 36
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropRenderPass",
+          "lineNumber": 39
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 61
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 62
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 79
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 80
+        },
+        {
+          "caller": "new",
+          "callee": "GPURenderPassEncoder::new_inherited",
+          "lineNumber": 80
+        },
+        {
+          "caller": "send_render_command",
+          "callee": "self\n            .droppable\n            .channel\n            .0.send",
+          "lineNumber": 92
+        },
+        {
+          "caller": "send_render_command",
+          "callee": "self.id",
+          "lineNumber": 97
+        },
+        {
+          "caller": "send_render_command",
+          "callee": "self.command_encoder.device_id",
+          "lineNumber": 99
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 116
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 116
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 121
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "self.send_render_command",
+          "lineNumber": 126
+        },
+        {
+          "caller": "SetBindGroup",
+          "callee": "bind_group.id",
+          "lineNumber": 128
+        },
+        {
+          "caller": "SetViewport",
+          "callee": "self.send_render_command",
+          "lineNumber": 143
+        },
+        {
+          "caller": "SetScissorRect",
+          "callee": "self.send_render_command",
+          "lineNumber": 155
+        },
+        {
+          "caller": "SetBlendConstant",
+          "callee": "self.send_render_command",
+          "lineNumber": 165
+        },
+        {
+          "caller": "SetBlendConstant",
+          "callee": "RenderCommand::SetBlendConstant",
+          "lineNumber": 165
+        },
+        {
+          "caller": "SetBlendConstant",
+          "callee": "(&color).try_convert",
+          "lineNumber": 165
+        },
+        {
+          "caller": "SetBlendConstant",
+          "callee": "Ok",
+          "lineNumber": 166
+        },
+        {
+          "caller": "SetStencilReference",
+          "callee": "self.send_render_command",
+          "lineNumber": 171
+        },
+        {
+          "caller": "SetStencilReference",
+          "callee": "RenderCommand::SetStencilReference",
+          "lineNumber": 171
+        },
+        {
+          "caller": "End",
+          "callee": "self.droppable.channel.0.send",
+          "lineNumber": 176
+        },
+        {
+          "caller": "End",
+          "callee": "self.id",
+          "lineNumber": 177
+        },
+        {
+          "caller": "End",
+          "callee": "self.command_encoder.device_id",
+          "lineNumber": 178
+        },
+        {
+          "caller": "SetPipeline",
+          "callee": "self.send_render_command",
+          "lineNumber": 186
+        },
+        {
+          "caller": "SetPipeline",
+          "callee": "RenderCommand::SetPipeline",
+          "lineNumber": 186
+        },
+        {
+          "caller": "SetPipeline",
+          "callee": "pipeline.id",
+          "lineNumber": 186
+        },
+        {
+          "caller": "SetIndexBuffer",
+          "callee": "self.send_render_command",
+          "lineNumber": 197
+        },
+        {
+          "caller": "SetIndexBuffer",
+          "callee": "buffer.id",
+          "lineNumber": 198
+        },
+        {
+          "caller": "SetIndexBuffer",
+          "callee": "wgpu_types::BufferSize::new",
+          "lineNumber": 204
+        },
+        {
+          "caller": "SetVertexBuffer",
+          "callee": "self.send_render_command",
+          "lineNumber": 210
+        },
+        {
+          "caller": "SetVertexBuffer",
+          "callee": "buffer.id",
+          "lineNumber": 212
+        },
+        {
+          "caller": "SetVertexBuffer",
+          "callee": "wgpu_types::BufferSize::new",
+          "lineNumber": 214
+        },
+        {
+          "caller": "Draw",
+          "callee": "self.send_render_command",
+          "lineNumber": 220
+        },
+        {
+          "caller": "DrawIndexed",
+          "callee": "self.send_render_command",
+          "lineNumber": 237
+        },
+        {
+          "caller": "DrawIndirect",
+          "callee": "self.send_render_command",
+          "lineNumber": 248
+        },
+        {
+          "caller": "DrawIndirect",
+          "callee": "buffer.id",
+          "lineNumber": 249
+        },
+        {
+          "caller": "DrawIndexedIndirect",
+          "callee": "self.send_render_command",
+          "lineNumber": 256
+        },
+        {
+          "caller": "DrawIndexedIndirect",
+          "callee": "buffer.id",
+          "lineNumber": 257
+        },
+        {
+          "caller": "ExecuteBundles",
+          "callee": "bundles.iter().map(|b| b.id().0).collect",
+          "lineNumber": 264
+        },
+        {
+          "caller": "ExecuteBundles",
+          "callee": "bundles.iter().map",
+          "lineNumber": 264
+        },
+        {
+          "caller": "ExecuteBundles",
+          "callee": "bundles.iter",
+          "lineNumber": 264
+        },
+        {
+          "caller": "ExecuteBundles",
+          "callee": "b.id",
+          "lineNumber": 264
+        },
+        {
+          "caller": "ExecuteBundles",
+          "callee": "self.send_render_command",
+          "lineNumber": 265
+        },
+        {
+          "caller": "ExecuteBundles",
+          "callee": "RenderCommand::ExecuteBundles",
+          "lineNumber": 265
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "self.send_render_command",
+          "lineNumber": 270
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "RenderCommand::PushDebugGroup",
+          "lineNumber": 270
+        },
+        {
+          "caller": "PushDebugGroup",
+          "callee": "group_label.to_string",
+          "lineNumber": 270
+        },
+        {
+          "caller": "PopDebugGroup",
+          "callee": "self.send_render_command",
+          "lineNumber": 275
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "self.send_render_command",
+          "lineNumber": 280
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "RenderCommand::InsertDebugMarker",
+          "lineNumber": 280
+        },
+        {
+          "caller": "InsertDebugMarker",
+          "callee": "marker_label.to_string",
+          "lineNumber": 280
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 24,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpurenderpipeline.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 161,
+      "nonEmptyLines": 145,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 34,
+          "endLine": 45,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 57,
+          "endLine": 71,
+          "params": [
+            "render_pipeline",
+            "label",
+            "device"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 73,
+          "endLine": 89,
+          "params": [
+            "cx",
+            "global",
+            "render_pipeline",
+            "label",
+            "device"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 93,
+          "endLine": 95,
+          "params": []
+        },
+        {
+          "name": "create",
+          "startLine": 98,
+          "endLine": 117,
+          "params": [
+            "device",
+            "descriptor",
+            "async_sender"
+          ]
+        },
+        {
+          "name": "Label",
+          "startLine": 122,
+          "endLine": 124,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 127,
+          "endLine": 129,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "GetBindGroupLayout",
+          "startLine": 132,
+          "endLine": 160,
+          "params": [
+            "cx",
+            "index"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPURenderPipeline",
+          "startLine": 26,
+          "endLine": 31,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "render_pipeline"
+          ]
+        },
+        {
+          "name": "GPURenderPipeline",
+          "startLine": 49,
+          "endLine": 54,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "create",
+            "Label",
+            "SetLabel",
+            "GetBindGroupLayout"
+          ],
+          "properties": [
+            "reflector_",
+            "label",
+            "device",
+            "droppable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPURenderPipeline",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 98,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 35
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropRenderPipeline",
+          "lineNumber": 38
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 64
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "device.channel",
+          "lineNumber": 67
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 80
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 81
+        },
+        {
+          "caller": "new",
+          "callee": "GPURenderPipeline::new_inherited",
+          "lineNumber": 81
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub().create_render_pipeline_id",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0\n            .send(WebGPURequest::CreateRenderPipeline {\n                device_id: device.id().0,\n                render_pipeline_id,\n                descriptor,\n                async_sender,\n            }).expect",
+          "lineNumber": 105
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0.send",
+          "lineNumber": 105
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 105
+        },
+        {
+          "caller": "create",
+          "callee": "device.id",
+          "lineNumber": 109
+        },
+        {
+          "caller": "create",
+          "callee": "Ok",
+          "lineNumber": 116
+        },
+        {
+          "caller": "create",
+          "callee": "WebGPURenderPipeline",
+          "lineNumber": 116
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 123
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 123
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 128
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "self.global().wgpu_id_hub().create_bind_group_layout_id",
+          "lineNumber": 137
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "self.global().wgpu_id_hub",
+          "lineNumber": 137
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "self.global",
+          "lineNumber": 137
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "self\n            .droppable\n            .channel\n            .0.send",
+          "lineNumber": 139
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "self.device.id",
+          "lineNumber": 144
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "self.id",
+          "lineNumber": 145
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "Ok",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "GPUBindGroupLayout::new",
+          "lineNumber": 153
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "self.global",
+          "lineNumber": 155
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "self.droppable.channel.clone",
+          "lineNumber": 156
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "WebGPUBindGroupLayout",
+          "lineNumber": 157
+        },
+        {
+          "caller": "GetBindGroupLayout",
+          "callee": "USVString::default",
+          "lineNumber": 158
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 8,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpusampler.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 156,
+      "nonEmptyLines": 142,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 31,
+          "endLine": 39,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 53,
+          "endLine": 67,
+          "params": [
+            "channel",
+            "device",
+            "compare_enable",
+            "sampler",
+            "label"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 69,
+          "endLine": 89,
+          "params": [
+            "cx",
+            "global",
+            "channel",
+            "device",
+            "compare_enable",
+            "sampler",
+            "label"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 93,
+          "endLine": 95,
+          "params": []
+        },
+        {
+          "name": "create",
+          "startLine": 98,
+          "endLine": 143,
+          "params": [
+            "cx",
+            "device",
+            "descriptor"
+          ]
+        },
+        {
+          "name": "Label",
+          "startLine": 148,
+          "endLine": 150,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 153,
+          "endLine": 155,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPUSampler",
+          "startLine": 23,
+          "endLine": 28,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "sampler"
+          ]
+        },
+        {
+          "name": "GPUSampler",
+          "startLine": 43,
+          "endLine": 50,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "create",
+            "Label",
+            "SetLabel"
+          ],
+          "properties": [
+            "reflector_",
+            "label",
+            "device",
+            "compare_enable",
+            "dropppable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUSampler",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 98,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 32
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropSampler",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 61
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 62
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 78
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 79
+        },
+        {
+          "caller": "new",
+          "callee": "GPUSampler::new_inherited",
+          "lineNumber": 79
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub().create_sampler_id",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 103
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.compare.is_some",
+          "lineNumber": 104
+        },
+        {
+          "caller": "create",
+          "callee": "(&descriptor.parent).convert",
+          "lineNumber": 106
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.addressModeU.convert",
+          "lineNumber": 108
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.addressModeV.convert",
+          "lineNumber": 109
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.addressModeW.convert",
+          "lineNumber": 110
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.magFilter.convert",
+          "lineNumber": 112
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.minFilter.convert",
+          "lineNumber": 113
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.mipmapFilter.convert",
+          "lineNumber": 114
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.compare.map",
+          "lineNumber": 117
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0\n            .send(WebGPURequest::CreateSampler {\n                device_id: device.id().0,\n                sampler_id,\n                descriptor: desc,\n            }).expect",
+          "lineNumber": 122
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0.send",
+          "lineNumber": 122
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 122
+        },
+        {
+          "caller": "create",
+          "callee": "device.id",
+          "lineNumber": 126
+        },
+        {
+          "caller": "create",
+          "callee": "WebGPUSampler",
+          "lineNumber": 132
+        },
+        {
+          "caller": "create",
+          "callee": "GPUSampler::new",
+          "lineNumber": 134
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 136
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 137
+        },
+        {
+          "caller": "create",
+          "callee": "device.id",
+          "lineNumber": 138
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.parent.label.clone",
+          "lineNumber": 141
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 149
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 149
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 154
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 7,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpushadermodule.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 169,
+      "nonEmptyLines": 155,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 36,
+          "endLine": 47,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 60,
+          "endLine": 75,
+          "params": [
+            "channel",
+            "shader_module",
+            "label",
+            "promise"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 77,
+          "endLine": 95,
+          "params": [
+            "cx",
+            "global",
+            "channel",
+            "shader_module",
+            "label",
+            "promise"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 99,
+          "endLine": 101,
+          "params": []
+        },
+        {
+          "name": "create",
+          "startLine": 104,
+          "endLine": 139,
+          "params": [
+            "cx",
+            "device",
+            "descriptor"
+          ]
+        },
+        {
+          "name": "Label",
+          "startLine": 144,
+          "endLine": 146,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 149,
+          "endLine": 151,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "GetCompilationInfo",
+          "startLine": 154,
+          "endLine": 156,
+          "params": []
+        },
+        {
+          "name": "handle_response",
+          "startLine": 160,
+          "endLine": 168,
+          "params": [
+            "cx",
+            "response",
+            "promise"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPUShaderModule",
+          "startLine": 28,
+          "endLine": 33,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "shader_module"
+          ]
+        },
+        {
+          "name": "GPUShaderModule",
+          "startLine": 51,
+          "endLine": 57,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "create",
+            "Label",
+            "SetLabel",
+            "GetCompilationInfo",
+            "handle_response"
+          ],
+          "properties": [
+            "reflector_",
+            "label",
+            "compilation_info_promise",
+            "droppable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUShaderModule",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 77,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 104,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 37
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropShaderModule",
+          "lineNumber": 40
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 67
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 85
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 86
+        },
+        {
+          "caller": "new",
+          "callee": "GPUShaderModule::new_inherited",
+          "lineNumber": 86
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub().create_shader_module_id",
+          "lineNumber": 109
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub",
+          "lineNumber": 109
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 109
+        },
+        {
+          "caller": "create",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 110
+        },
+        {
+          "caller": "create",
+          "callee": "GPUShaderModule::new",
+          "lineNumber": 111
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 113
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 114
+        },
+        {
+          "caller": "create",
+          "callee": "WebGPUShaderModule",
+          "lineNumber": 115
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.parent.label.clone",
+          "lineNumber": 116
+        },
+        {
+          "caller": "create",
+          "callee": "promise.clone",
+          "lineNumber": 117
+        },
+        {
+          "caller": "create",
+          "callee": "callback_promise",
+          "lineNumber": 119
+        },
+        {
+          "caller": "create",
+          "callee": "device\n                .global()\n                .task_manager().dom_manipulation_task_source",
+          "lineNumber": 122
+        },
+        {
+          "caller": "create",
+          "callee": "device\n                .global().task_manager",
+          "lineNumber": 122
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 122
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0\n            .send(WebGPURequest::CreateShaderModule {\n                device_id: device.id().0,\n                program_id,\n                program: descriptor.code.0.clone(),\n                label: None,\n                callback,\n            }).expect",
+          "lineNumber": 127
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0.send",
+          "lineNumber": 127
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 127
+        },
+        {
+          "caller": "create",
+          "callee": "device.id",
+          "lineNumber": 131
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.code.0.clone",
+          "lineNumber": 133
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 145
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 145
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 150
+        },
+        {
+          "caller": "GetCompilationInfo",
+          "callee": "self.compilation_info_promise.clone",
+          "lineNumber": 155
+        },
+        {
+          "caller": "handle_response",
+          "callee": "GPUCompilationInfo::from",
+          "lineNumber": 166
+        },
+        {
+          "caller": "handle_response",
+          "callee": "self.global",
+          "lineNumber": 166
+        },
+        {
+          "caller": "handle_response",
+          "callee": "promise.resolve_native_with_cx",
+          "lineNumber": 167
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 9,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpushaderstage.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 9,
+      "classes": [
+        {
+          "name": "GPUShaderStage",
+          "startLine": 9,
+          "endLine": 11,
+          "methods": [],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUShaderStage",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpusupportedfeatures.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 189,
+      "nonEmptyLines": 177,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 36,
+          "endLine": 105,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "features"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 108,
+          "endLine": 115,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "features"
+          ]
+        },
+        {
+          "name": "wgpu_features",
+          "startLine": 119,
+          "endLine": 121,
+          "params": []
+        },
+        {
+          "name": "Size",
+          "startLine": 125,
+          "endLine": 127,
+          "params": []
+        },
+        {
+          "name": "gpu_to_wgt_feature",
+          "startLine": 130,
+          "endLine": 154,
+          "params": [
+            "feature"
+          ]
+        },
+        {
+          "name": "get_index",
+          "startLine": 160,
+          "endLine": 164,
+          "params": [
+            "index"
+          ]
+        },
+        {
+          "name": "size",
+          "startLine": 166,
+          "endLine": 168,
+          "params": []
+        },
+        {
+          "name": "add",
+          "startLine": 170,
+          "endLine": 172,
+          "params": [
+            "_key"
+          ]
+        },
+        {
+          "name": "has",
+          "startLine": 174,
+          "endLine": 180,
+          "params": [
+            "key"
+          ]
+        },
+        {
+          "name": "clear",
+          "startLine": 182,
+          "endLine": 184,
+          "params": []
+        },
+        {
+          "name": "delete",
+          "startLine": 186,
+          "endLine": 188,
+          "params": [
+            "_key"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPUSupportedFeatures",
+          "startLine": 25,
+          "endLine": 33,
+          "methods": [
+            "new",
+            "Constructor",
+            "wgpu_features",
+            "Size",
+            "get_index",
+            "size",
+            "add",
+            "has",
+            "clear",
+            "delete"
+          ],
+          "properties": [
+            "reflector",
+            "internal",
+            "features"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUSupportedFeatures",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "Constructor",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "wgpu_features",
+          "line": 119,
+          "isDefault": false
+        },
+        {
+          "name": "gpu_to_wgt_feature",
+          "line": 130,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "IndexSet::new",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 45
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 46
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 48
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 49
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 51
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 52
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 55
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 58
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 61
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 62
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 64
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 65
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 74
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 75
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 77
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 78
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 80
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 81
+        },
+        {
+          "caller": "new",
+          "callee": "features.contains",
+          "lineNumber": 84
+        },
+        {
+          "caller": "new",
+          "callee": "set.insert",
+          "lineNumber": 85
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 95
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 96
+        },
+        {
+          "caller": "new",
+          "callee": "Reflector::new",
+          "lineNumber": 97
+        },
+        {
+          "caller": "new",
+          "callee": "DomRefCell::new",
+          "lineNumber": 98
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 114
+        },
+        {
+          "caller": "Constructor",
+          "callee": "GPUSupportedFeatures::new",
+          "lineNumber": 114
+        },
+        {
+          "caller": "Size",
+          "callee": "self.internal.size",
+          "lineNumber": 126
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 133
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Features::empty",
+          "lineNumber": 133
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 134
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 135
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 136
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 137
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 138
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 139
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 140
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 144
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 145
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 146
+        },
+        {
+          "caller": "gpu_to_wgt_feature",
+          "callee": "Some",
+          "lineNumber": 147
+        },
+        {
+          "caller": "get_index",
+          "callee": "self.internal\n            .get_index(index).map",
+          "lineNumber": 161
+        },
+        {
+          "caller": "get_index",
+          "callee": "self.internal.get_index",
+          "lineNumber": 161
+        },
+        {
+          "caller": "get_index",
+          "callee": "key.as_str().into",
+          "lineNumber": 163
+        },
+        {
+          "caller": "get_index",
+          "callee": "key.as_str",
+          "lineNumber": 163
+        },
+        {
+          "caller": "size",
+          "callee": "self.internal.size",
+          "lineNumber": 167
+        },
+        {
+          "caller": "has",
+          "callee": "key.parse",
+          "lineNumber": 175
+        },
+        {
+          "caller": "has",
+          "callee": "self.internal.has",
+          "lineNumber": 176
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 11,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpusupportedlimits.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 369,
+      "nonEmptyLines": 325,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 26,
+          "endLine": 31,
+          "params": [
+            "limits"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 33,
+          "endLine": 35,
+          "params": [
+            "cx",
+            "global",
+            "limits"
+          ]
+        },
+        {
+          "name": "MaxTextureDimension1D",
+          "startLine": 41,
+          "endLine": 43,
+          "params": []
+        },
+        {
+          "name": "MaxTextureDimension2D",
+          "startLine": 46,
+          "endLine": 48,
+          "params": []
+        },
+        {
+          "name": "MaxTextureDimension3D",
+          "startLine": 51,
+          "endLine": 53,
+          "params": []
+        },
+        {
+          "name": "MaxTextureArrayLayers",
+          "startLine": 56,
+          "endLine": 58,
+          "params": []
+        },
+        {
+          "name": "MaxBindGroups",
+          "startLine": 61,
+          "endLine": 63,
+          "params": []
+        },
+        {
+          "name": "MaxBindGroupsPlusVertexBuffers",
+          "startLine": 66,
+          "endLine": 69,
+          "params": []
+        },
+        {
+          "name": "MaxBindingsPerBindGroup",
+          "startLine": 79,
+          "endLine": 81,
+          "params": []
+        },
+        {
+          "name": "MaxDynamicUniformBuffersPerPipelineLayout",
+          "startLine": 84,
+          "endLine": 86,
+          "params": []
+        },
+        {
+          "name": "MaxDynamicStorageBuffersPerPipelineLayout",
+          "startLine": 89,
+          "endLine": 91,
+          "params": []
+        },
+        {
+          "name": "MaxSampledTexturesPerShaderStage",
+          "startLine": 94,
+          "endLine": 96,
+          "params": []
+        },
+        {
+          "name": "MaxSamplersPerShaderStage",
+          "startLine": 99,
+          "endLine": 101,
+          "params": []
+        },
+        {
+          "name": "MaxStorageBuffersPerShaderStage",
+          "startLine": 104,
+          "endLine": 106,
+          "params": []
+        },
+        {
+          "name": "MaxStorageBuffersInVertexStage",
+          "startLine": 109,
+          "endLine": 112,
+          "params": []
+        },
+        {
+          "name": "MaxStorageBuffersInFragmentStage",
+          "startLine": 115,
+          "endLine": 118,
+          "params": []
+        },
+        {
+          "name": "MaxStorageTexturesPerShaderStage",
+          "startLine": 121,
+          "endLine": 123,
+          "params": []
+        },
+        {
+          "name": "MaxStorageTexturesInVertexStage",
+          "startLine": 126,
+          "endLine": 129,
+          "params": []
+        },
+        {
+          "name": "MaxStorageTexturesInFragmentStage",
+          "startLine": 132,
+          "endLine": 135,
+          "params": []
+        },
+        {
+          "name": "MaxUniformBuffersPerShaderStage",
+          "startLine": 138,
+          "endLine": 140,
+          "params": []
+        },
+        {
+          "name": "MaxUniformBufferBindingSize",
+          "startLine": 143,
+          "endLine": 145,
+          "params": []
+        },
+        {
+          "name": "MaxStorageBufferBindingSize",
+          "startLine": 148,
+          "endLine": 150,
+          "params": []
+        },
+        {
+          "name": "MinUniformBufferOffsetAlignment",
+          "startLine": 153,
+          "endLine": 155,
+          "params": []
+        },
+        {
+          "name": "MinStorageBufferOffsetAlignment",
+          "startLine": 158,
+          "endLine": 160,
+          "params": []
+        },
+        {
+          "name": "MaxVertexBuffers",
+          "startLine": 163,
+          "endLine": 165,
+          "params": []
+        },
+        {
+          "name": "MaxBufferSize",
+          "startLine": 168,
+          "endLine": 170,
+          "params": []
+        },
+        {
+          "name": "MaxVertexAttributes",
+          "startLine": 173,
+          "endLine": 175,
+          "params": []
+        },
+        {
+          "name": "MaxVertexBufferArrayStride",
+          "startLine": 178,
+          "endLine": 180,
+          "params": []
+        },
+        {
+          "name": "MaxInterStageShaderVariables",
+          "startLine": 183,
+          "endLine": 185,
+          "params": []
+        },
+        {
+          "name": "MaxColorAttachments",
+          "startLine": 188,
+          "endLine": 190,
+          "params": []
+        },
+        {
+          "name": "MaxColorAttachmentBytesPerSample",
+          "startLine": 193,
+          "endLine": 195,
+          "params": []
+        },
+        {
+          "name": "MaxComputeWorkgroupStorageSize",
+          "startLine": 198,
+          "endLine": 200,
+          "params": []
+        },
+        {
+          "name": "MaxComputeInvocationsPerWorkgroup",
+          "startLine": 203,
+          "endLine": 205,
+          "params": []
+        },
+        {
+          "name": "MaxComputeWorkgroupSizeX",
+          "startLine": 208,
+          "endLine": 210,
+          "params": []
+        },
+        {
+          "name": "MaxComputeWorkgroupSizeY",
+          "startLine": 213,
+          "endLine": 215,
+          "params": []
+        },
+        {
+          "name": "MaxComputeWorkgroupSizeZ",
+          "startLine": 218,
+          "endLine": 220,
+          "params": []
+        },
+        {
+          "name": "MaxComputeWorkgroupsPerDimension",
+          "startLine": 223,
+          "endLine": 225,
+          "params": []
+        },
+        {
+          "name": "set_limit",
+          "startLine": 229,
+          "endLine": 369,
+          "params": [
+            "limits",
+            "limit",
+            "value"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPUSupportedLimits",
+          "startLine": 18,
+          "endLine": 23,
+          "methods": [
+            "new_inherited",
+            "new",
+            "MaxTextureDimension1D",
+            "MaxTextureDimension2D",
+            "MaxTextureDimension3D",
+            "MaxTextureArrayLayers",
+            "MaxBindGroups",
+            "MaxBindGroupsPlusVertexBuffers",
+            "MaxBindingsPerBindGroup",
+            "MaxDynamicUniformBuffersPerPipelineLayout",
+            "MaxDynamicStorageBuffersPerPipelineLayout",
+            "MaxSampledTexturesPerShaderStage",
+            "MaxSamplersPerShaderStage",
+            "MaxStorageBuffersPerShaderStage",
+            "MaxStorageBuffersInVertexStage",
+            "MaxStorageBuffersInFragmentStage",
+            "MaxStorageTexturesPerShaderStage",
+            "MaxStorageTexturesInVertexStage",
+            "MaxStorageTexturesInFragmentStage",
+            "MaxUniformBuffersPerShaderStage",
+            "MaxUniformBufferBindingSize",
+            "MaxStorageBufferBindingSize",
+            "MinUniformBufferOffsetAlignment",
+            "MinStorageBufferOffsetAlignment",
+            "MaxVertexBuffers",
+            "MaxBufferSize",
+            "MaxVertexAttributes",
+            "MaxVertexBufferArrayStride",
+            "MaxInterStageShaderVariables",
+            "MaxColorAttachments",
+            "MaxColorAttachmentBytesPerSample",
+            "MaxComputeWorkgroupStorageSize",
+            "MaxComputeInvocationsPerWorkgroup",
+            "MaxComputeWorkgroupSizeX",
+            "MaxComputeWorkgroupSizeY",
+            "MaxComputeWorkgroupSizeZ",
+            "MaxComputeWorkgroupsPerDimension"
+          ],
+          "properties": [
+            "reflector_",
+            "limits"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUSupportedLimits",
+          "line": 18,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 33,
+          "isDefault": false
+        },
+        {
+          "name": "set_limit",
+          "line": 229,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 28
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 34
+        },
+        {
+          "caller": "set_maximum",
+          "callee": "T::try_from",
+          "lineNumber": 237
+        },
+        {
+          "caller": "set_maximum",
+          "callee": "value.max",
+          "lineNumber": 238
+        },
+        {
+          "caller": "set_alignment",
+          "callee": "value.is_power_of_two",
+          "lineNumber": 252
+        },
+        {
+          "caller": "set_alignment",
+          "callee": "T::try_from",
+          "lineNumber": 255
+        },
+        {
+          "caller": "set_alignment",
+          "callee": "value.min",
+          "lineNumber": 256
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 265
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 266
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 267
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 268
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 269
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 275
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 277
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 278
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 279
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 283
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 288
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 291
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 294
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 301
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 308
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 311
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 318
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 325
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 328
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 331
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 334
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_alignment",
+          "lineNumber": 337
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_alignment",
+          "lineNumber": 340
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 342
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 343
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 344
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 346
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 349
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 351
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 353
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 356
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 359
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 361
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 362
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 363
+        },
+        {
+          "caller": "set_limit",
+          "callee": "set_maximum",
+          "lineNumber": 365
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 38,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gputexture.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 327,
+      "nonEmptyLines": 295,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 37,
+          "endLine": 48,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 70,
+          "endLine": 95,
+          "params": [
+            "texture",
+            "device",
+            "channel",
+            "texture_size",
+            "mip_level_count",
+            "sample_count",
+            "dimension",
+            "format",
+            "texture_usage",
+            "label"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 98,
+          "endLine": 128,
+          "params": [
+            "cx",
+            "global",
+            "texture",
+            "device",
+            "channel",
+            "texture_size",
+            "mip_level_count",
+            "sample_count",
+            "dimension",
+            "format",
+            "texture_usage",
+            "label"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 132,
+          "endLine": 134,
+          "params": []
+        },
+        {
+          "name": "wgpu_texture_descriptor",
+          "startLine": 136,
+          "endLine": 147,
+          "params": []
+        },
+        {
+          "name": "create",
+          "startLine": 150,
+          "endLine": 185,
+          "params": [
+            "cx",
+            "device",
+            "descriptor"
+          ]
+        },
+        {
+          "name": "get_default_view",
+          "startLine": 187,
+          "endLine": 194,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "Label",
+          "startLine": 199,
+          "endLine": 201,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 204,
+          "endLine": 206,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "CreateView",
+          "startLine": 209,
+          "endLine": 270,
+          "params": [
+            "cx",
+            "descriptor"
+          ]
+        },
+        {
+          "name": "Destroy",
+          "startLine": 273,
+          "endLine": 286,
+          "params": []
+        },
+        {
+          "name": "Width",
+          "startLine": 289,
+          "endLine": 291,
+          "params": []
+        },
+        {
+          "name": "Height",
+          "startLine": 294,
+          "endLine": 296,
+          "params": []
+        },
+        {
+          "name": "DepthOrArrayLayers",
+          "startLine": 299,
+          "endLine": 301,
+          "params": []
+        },
+        {
+          "name": "MipLevelCount",
+          "startLine": 304,
+          "endLine": 306,
+          "params": []
+        },
+        {
+          "name": "SampleCount",
+          "startLine": 309,
+          "endLine": 311,
+          "params": []
+        },
+        {
+          "name": "Dimension",
+          "startLine": 314,
+          "endLine": 316,
+          "params": []
+        },
+        {
+          "name": "Format",
+          "startLine": 319,
+          "endLine": 321,
+          "params": []
+        },
+        {
+          "name": "Usage",
+          "startLine": 324,
+          "endLine": 326,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPUTexture",
+          "startLine": 29,
+          "endLine": 34,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "texture"
+          ]
+        },
+        {
+          "name": "GPUTexture",
+          "startLine": 52,
+          "endLine": 66,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "wgpu_texture_descriptor",
+            "create",
+            "get_default_view",
+            "Label",
+            "SetLabel",
+            "CreateView",
+            "Destroy",
+            "Width",
+            "Height",
+            "DepthOrArrayLayers",
+            "MipLevelCount",
+            "SampleCount",
+            "Dimension",
+            "Format",
+            "Usage"
+          ],
+          "properties": [
+            "reflector_",
+            "label",
+            "device",
+            "texture_size",
+            "mip_level_count",
+            "sample_count",
+            "dimension",
+            "format",
+            "texture_usage",
+            "droppable",
+            "default_view"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUTexture",
+          "line": 52,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 132,
+          "isDefault": false
+        },
+        {
+          "name": "wgpu_texture_descriptor",
+          "line": 136,
+          "isDefault": false
+        },
+        {
+          "name": "create",
+          "line": 150,
+          "isDefault": false
+        },
+        {
+          "name": "get_default_view",
+          "line": 187,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 38
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropTexture",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 83
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 84
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 85
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "MutNullableDom::new",
+          "lineNumber": 93
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 112
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 113
+        },
+        {
+          "caller": "new",
+          "callee": "GPUTexture::new_inherited",
+          "lineNumber": 113
+        },
+        {
+          "caller": "wgpu_texture_descriptor",
+          "callee": "Some",
+          "lineNumber": 138
+        },
+        {
+          "caller": "wgpu_texture_descriptor",
+          "callee": "self.label.borrow().to_string().into",
+          "lineNumber": 138
+        },
+        {
+          "caller": "wgpu_texture_descriptor",
+          "callee": "self.label.borrow().to_string",
+          "lineNumber": 138
+        },
+        {
+          "caller": "wgpu_texture_descriptor",
+          "callee": "self.label.borrow",
+          "lineNumber": 138
+        },
+        {
+          "caller": "wgpu_texture_descriptor",
+          "callee": "self.dimension.convert",
+          "lineNumber": 142
+        },
+        {
+          "caller": "wgpu_texture_descriptor",
+          "callee": "self.format.convert",
+          "lineNumber": 143
+        },
+        {
+          "caller": "wgpu_texture_descriptor",
+          "callee": "wgpu_types::TextureUsages::from_bits_retain",
+          "lineNumber": 144
+        },
+        {
+          "caller": "create",
+          "callee": "convert_texture_descriptor",
+          "lineNumber": 155
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub().create_texture_id",
+          "lineNumber": 157
+        },
+        {
+          "caller": "create",
+          "callee": "device.global().wgpu_id_hub",
+          "lineNumber": 157
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 157
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0\n            .send(WebGPURequest::CreateTexture {\n                device_id: device.id().0,\n                texture_id,\n                descriptor: desc,\n            }).expect",
+          "lineNumber": 159
+        },
+        {
+          "caller": "create",
+          "callee": "device\n            .channel()\n            .0.send",
+          "lineNumber": 159
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 159
+        },
+        {
+          "caller": "create",
+          "callee": "device.id",
+          "lineNumber": 163
+        },
+        {
+          "caller": "create",
+          "callee": "WebGPUTexture",
+          "lineNumber": 169
+        },
+        {
+          "caller": "create",
+          "callee": "Ok",
+          "lineNumber": 171
+        },
+        {
+          "caller": "create",
+          "callee": "GPUTexture::new",
+          "lineNumber": 171
+        },
+        {
+          "caller": "create",
+          "callee": "device.global",
+          "lineNumber": 173
+        },
+        {
+          "caller": "create",
+          "callee": "device.channel",
+          "lineNumber": 176
+        },
+        {
+          "caller": "create",
+          "callee": "descriptor.parent.label.clone",
+          "lineNumber": 183
+        },
+        {
+          "caller": "get_default_view",
+          "callee": "self.default_view\n            .or_init(|| {\n                self.CreateView(cx, &GPUTextureViewDescriptor::default())\n                    .expect(\"Default descriptor should always be valid.\")\n            }).id",
+          "lineNumber": 188
+        },
+        {
+          "caller": "get_default_view",
+          "callee": "self.default_view.or_init",
+          "lineNumber": 188
+        },
+        {
+          "caller": "get_default_view",
+          "callee": "self.CreateView(cx, &GPUTextureViewDescriptor::default()).expect",
+          "lineNumber": 190
+        },
+        {
+          "caller": "get_default_view",
+          "callee": "self.CreateView",
+          "lineNumber": 190
+        },
+        {
+          "caller": "get_default_view",
+          "callee": "GPUTextureViewDescriptor::default",
+          "lineNumber": 190
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 200
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 200
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 205
+        },
+        {
+          "caller": "CreateView",
+          "callee": "Some",
+          "lineNumber": 217
+        },
+        {
+          "caller": "CreateView",
+          "callee": "(&descriptor.parent).convert",
+          "lineNumber": 218
+        },
+        {
+          "caller": "CreateView",
+          "callee": "descriptor\n                    .format\n                    .map(|f| self.device.validate_texture_format_required_features(&f)).transpose",
+          "lineNumber": 219
+        },
+        {
+          "caller": "CreateView",
+          "callee": "descriptor\n                    .format.map",
+          "lineNumber": 219
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.device.validate_texture_format_required_features",
+          "lineNumber": 221
+        },
+        {
+          "caller": "CreateView",
+          "callee": "descriptor.dimension.map",
+          "lineNumber": 223
+        },
+        {
+          "caller": "CreateView",
+          "callee": "dimension.convert",
+          "lineNumber": 223
+        },
+        {
+          "caller": "CreateView",
+          "callee": "Some",
+          "lineNumber": 224
+        },
+        {
+          "caller": "CreateView",
+          "callee": "wgpu_types::TextureUsages::from_bits_retain",
+          "lineNumber": 224
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.device.dispatch_error",
+          "lineNumber": 240
+        },
+        {
+          "caller": "CreateView",
+          "callee": "webgpu_traits::Error::Validation",
+          "lineNumber": 241
+        },
+        {
+          "caller": "CreateView",
+          "callee": "String::from",
+          "lineNumber": 241
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.global().wgpu_id_hub().create_texture_view_id",
+          "lineNumber": 247
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.global().wgpu_id_hub",
+          "lineNumber": 247
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.global",
+          "lineNumber": 247
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.droppable\n            .channel\n            .0\n            .send(WebGPURequest::CreateTextureView {\n                texture_id: self.id().0,\n                texture_view_id,\n                device_id: self.device.id().0,\n                descriptor: desc,\n            }).expect",
+          "lineNumber": 249
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.droppable\n            .channel\n            .0.send",
+          "lineNumber": 249
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.id",
+          "lineNumber": 253
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.device.id",
+          "lineNumber": 255
+        },
+        {
+          "caller": "CreateView",
+          "callee": "WebGPUTextureView",
+          "lineNumber": 260
+        },
+        {
+          "caller": "CreateView",
+          "callee": "Ok",
+          "lineNumber": 262
+        },
+        {
+          "caller": "CreateView",
+          "callee": "GPUTextureView::new",
+          "lineNumber": 262
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.global",
+          "lineNumber": 264
+        },
+        {
+          "caller": "CreateView",
+          "callee": "self.droppable.channel.clone",
+          "lineNumber": 265
+        },
+        {
+          "caller": "CreateView",
+          "callee": "descriptor.parent.label.clone",
+          "lineNumber": 268
+        },
+        {
+          "caller": "Destroy",
+          "callee": "self\n            .droppable\n            .channel\n            .0.send",
+          "lineNumber": 274
+        },
+        {
+          "caller": "Destroy",
+          "callee": "WebGPURequest::DestroyTexture",
+          "lineNumber": 278
+        },
+        {
+          "caller": "Destroy",
+          "callee": "self.id",
+          "lineNumber": 278
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 19,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gputextureusage.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 11,
+      "nonEmptyLines": 9,
+      "classes": [
+        {
+          "name": "GPUTextureUsage",
+          "startLine": 9,
+          "endLine": 11,
+          "methods": [],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUTextureUsage",
+          "line": 9,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gputextureview.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 104,
+      "nonEmptyLines": 94,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 27,
+          "endLine": 38,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 50,
+          "endLine": 65,
+          "params": [
+            "channel",
+            "texture_view",
+            "texture",
+            "label"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 67,
+          "endLine": 85,
+          "params": [
+            "cx",
+            "global",
+            "channel",
+            "texture_view",
+            "texture",
+            "label"
+          ]
+        },
+        {
+          "name": "id",
+          "startLine": 89,
+          "endLine": 91,
+          "params": []
+        },
+        {
+          "name": "Label",
+          "startLine": 96,
+          "endLine": 98,
+          "params": []
+        },
+        {
+          "name": "SetLabel",
+          "startLine": 101,
+          "endLine": 103,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableGPUTextureView",
+          "startLine": 18,
+          "endLine": 24,
+          "methods": [
+            "drop"
+          ],
+          "properties": [
+            "channel",
+            "texture_view"
+          ]
+        },
+        {
+          "name": "GPUTextureView",
+          "startLine": 42,
+          "endLine": 47,
+          "methods": [
+            "new_inherited",
+            "new",
+            "id",
+            "Label",
+            "SetLabel"
+          ],
+          "properties": [
+            "reflector_",
+            "label",
+            "texture",
+            "droppable"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUTextureView",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "id",
+          "line": 89,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self\n            .channel\n            .0.send",
+          "lineNumber": 28
+        },
+        {
+          "caller": "drop",
+          "callee": "WebGPURequest::DropTextureView",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 58
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_cx",
+          "lineNumber": 75
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 76
+        },
+        {
+          "caller": "new",
+          "callee": "GPUTextureView::new_inherited",
+          "lineNumber": 76
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow().clone",
+          "lineNumber": 97
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.borrow",
+          "lineNumber": 97
+        },
+        {
+          "caller": "SetLabel",
+          "callee": "self.label.borrow_mut",
+          "lineNumber": 102
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 6,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpuuncapturederrorevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 86,
+      "nonEmptyLines": 77,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 29,
+          "endLine": 34,
+          "params": [
+            "init"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 36,
+          "endLine": 43,
+          "params": [
+            "cx",
+            "global",
+            "event_type",
+            "init"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 45,
+          "endLine": 62,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "event_type",
+            "init"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 67,
+          "endLine": 75,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "event_type",
+            "init"
+          ]
+        },
+        {
+          "name": "Error",
+          "startLine": 78,
+          "endLine": 80,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 83,
+          "endLine": 85,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPUUncapturedErrorEvent",
+          "startLine": 22,
+          "endLine": 26,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "Error",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "gpu_error"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUUncapturedErrorEvent",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 36,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 52
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 53
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "GPUUncapturedErrorEvent::new_inherited",
+          "lineNumber": 53
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event\n            .event.init_event",
+          "lineNumber": 58
+        },
+        {
+          "caller": "Constructor",
+          "callee": "GPUUncapturedErrorEvent::new_with_proto",
+          "lineNumber": 74
+        },
+        {
+          "caller": "Constructor",
+          "callee": "event_type.into",
+          "lineNumber": 74
+        },
+        {
+          "caller": "Error",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 79
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 84
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/gpuvalidationerror.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 53,
+      "nonEmptyLines": 47,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 22,
+          "endLine": 26,
+          "params": [
+            "message"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 28,
+          "endLine": 40,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "message"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 45,
+          "endLine": 52,
+          "params": [
+            "cx",
+            "global",
+            "proto",
+            "message"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GPUValidationError",
+          "startLine": 17,
+          "endLine": 19,
+          "methods": [
+            "new_inherited",
+            "new_with_proto",
+            "Constructor"
+          ],
+          "properties": [
+            "gpu_error"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "GPUValidationError",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "new_with_proto",
+          "line": 28,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "GPUError::new_inherited",
+          "lineNumber": 24
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Self::new_inherited",
+          "lineNumber": 35
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 51
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 3,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/identityhub.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 219,
+      "nonEmptyLines": 178,
+      "functions": [
+        {
+          "name": "default",
+          "startLine": 42,
+          "endLine": 64,
+          "params": []
+        },
+        {
+          "name": "create_device_id",
+          "startLine": 68,
+          "endLine": 70,
+          "params": []
+        },
+        {
+          "name": "free_device_id",
+          "startLine": 72,
+          "endLine": 74,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_queue_id",
+          "startLine": 76,
+          "endLine": 78,
+          "params": []
+        },
+        {
+          "name": "free_queue_id",
+          "startLine": 80,
+          "endLine": 82,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_adapter_id",
+          "startLine": 84,
+          "endLine": 86,
+          "params": []
+        },
+        {
+          "name": "free_adapter_id",
+          "startLine": 88,
+          "endLine": 90,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_buffer_id",
+          "startLine": 92,
+          "endLine": 94,
+          "params": []
+        },
+        {
+          "name": "free_buffer_id",
+          "startLine": 96,
+          "endLine": 98,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_bind_group_id",
+          "startLine": 100,
+          "endLine": 102,
+          "params": []
+        },
+        {
+          "name": "free_bind_group_id",
+          "startLine": 104,
+          "endLine": 106,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_bind_group_layout_id",
+          "startLine": 108,
+          "endLine": 110,
+          "params": []
+        },
+        {
+          "name": "free_bind_group_layout_id",
+          "startLine": 112,
+          "endLine": 114,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_compute_pipeline_id",
+          "startLine": 116,
+          "endLine": 118,
+          "params": []
+        },
+        {
+          "name": "free_compute_pipeline_id",
+          "startLine": 120,
+          "endLine": 122,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_pipeline_layout_id",
+          "startLine": 124,
+          "endLine": 126,
+          "params": []
+        },
+        {
+          "name": "free_pipeline_layout_id",
+          "startLine": 128,
+          "endLine": 130,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_shader_module_id",
+          "startLine": 132,
+          "endLine": 134,
+          "params": []
+        },
+        {
+          "name": "free_shader_module_id",
+          "startLine": 136,
+          "endLine": 138,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_command_encoder_id",
+          "startLine": 140,
+          "endLine": 142,
+          "params": []
+        },
+        {
+          "name": "free_command_encoder_id",
+          "startLine": 144,
+          "endLine": 146,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_command_buffer_id",
+          "startLine": 148,
+          "endLine": 150,
+          "params": []
+        },
+        {
+          "name": "free_command_buffer_id",
+          "startLine": 152,
+          "endLine": 154,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_sampler_id",
+          "startLine": 156,
+          "endLine": 158,
+          "params": []
+        },
+        {
+          "name": "free_sampler_id",
+          "startLine": 160,
+          "endLine": 162,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_render_pipeline_id",
+          "startLine": 164,
+          "endLine": 166,
+          "params": []
+        },
+        {
+          "name": "free_render_pipeline_id",
+          "startLine": 168,
+          "endLine": 170,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_texture_id",
+          "startLine": 172,
+          "endLine": 174,
+          "params": []
+        },
+        {
+          "name": "free_texture_id",
+          "startLine": 176,
+          "endLine": 178,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_texture_view_id",
+          "startLine": 180,
+          "endLine": 182,
+          "params": []
+        },
+        {
+          "name": "free_texture_view_id",
+          "startLine": 184,
+          "endLine": 186,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_render_bundle_id",
+          "startLine": 188,
+          "endLine": 190,
+          "params": []
+        },
+        {
+          "name": "free_render_bundle_id",
+          "startLine": 192,
+          "endLine": 194,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_compute_pass_id",
+          "startLine": 196,
+          "endLine": 198,
+          "params": []
+        },
+        {
+          "name": "free_compute_pass_id",
+          "startLine": 200,
+          "endLine": 202,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_render_pass_id",
+          "startLine": 204,
+          "endLine": 206,
+          "params": []
+        },
+        {
+          "name": "free_render_pass_id",
+          "startLine": 208,
+          "endLine": 210,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "create_query_set_id",
+          "startLine": 212,
+          "endLine": 214,
+          "params": []
+        },
+        {
+          "name": "free_query_set_id",
+          "startLine": 216,
+          "endLine": 218,
+          "params": [
+            "id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "IdentityHub",
+          "startLine": 19,
+          "endLine": 39,
+          "methods": [
+            "default",
+            "create_device_id",
+            "free_device_id",
+            "create_queue_id",
+            "free_queue_id",
+            "create_adapter_id",
+            "free_adapter_id",
+            "create_buffer_id",
+            "free_buffer_id",
+            "create_bind_group_id",
+            "free_bind_group_id",
+            "create_bind_group_layout_id",
+            "free_bind_group_layout_id",
+            "create_compute_pipeline_id",
+            "free_compute_pipeline_id",
+            "create_pipeline_layout_id",
+            "free_pipeline_layout_id",
+            "create_shader_module_id",
+            "free_shader_module_id",
+            "create_command_encoder_id",
+            "free_command_encoder_id",
+            "create_command_buffer_id",
+            "free_command_buffer_id",
+            "create_sampler_id",
+            "free_sampler_id",
+            "create_render_pipeline_id",
+            "free_render_pipeline_id",
+            "create_texture_id",
+            "free_texture_id",
+            "create_texture_view_id",
+            "free_texture_view_id",
+            "create_render_bundle_id",
+            "free_render_bundle_id",
+            "create_compute_pass_id",
+            "free_compute_pass_id",
+            "create_render_pass_id",
+            "free_render_pass_id",
+            "create_query_set_id",
+            "free_query_set_id"
+          ],
+          "properties": [
+            "adapters",
+            "devices",
+            "queues",
+            "buffers",
+            "bind_groups",
+            "bind_group_layouts",
+            "compute_pipelines",
+            "pipeline_layouts",
+            "shader_modules",
+            "command_encoders",
+            "command_buffers",
+            "textures",
+            "texture_views",
+            "samplers",
+            "render_pipelines",
+            "render_bundles",
+            "compute_passes",
+            "render_passes",
+            "query_sets"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "IdentityHub",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "create_device_id",
+          "line": 68,
+          "isDefault": false
+        },
+        {
+          "name": "free_device_id",
+          "line": 72,
+          "isDefault": false
+        },
+        {
+          "name": "create_queue_id",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "free_queue_id",
+          "line": 80,
+          "isDefault": false
+        },
+        {
+          "name": "create_adapter_id",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "free_adapter_id",
+          "line": 88,
+          "isDefault": false
+        },
+        {
+          "name": "create_buffer_id",
+          "line": 92,
+          "isDefault": false
+        },
+        {
+          "name": "free_buffer_id",
+          "line": 96,
+          "isDefault": false
+        },
+        {
+          "name": "create_bind_group_id",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "free_bind_group_id",
+          "line": 104,
+          "isDefault": false
+        },
+        {
+          "name": "create_bind_group_layout_id",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "free_bind_group_layout_id",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "create_compute_pipeline_id",
+          "line": 116,
+          "isDefault": false
+        },
+        {
+          "name": "free_compute_pipeline_id",
+          "line": 120,
+          "isDefault": false
+        },
+        {
+          "name": "create_pipeline_layout_id",
+          "line": 124,
+          "isDefault": false
+        },
+        {
+          "name": "free_pipeline_layout_id",
+          "line": 128,
+          "isDefault": false
+        },
+        {
+          "name": "create_shader_module_id",
+          "line": 132,
+          "isDefault": false
+        },
+        {
+          "name": "free_shader_module_id",
+          "line": 136,
+          "isDefault": false
+        },
+        {
+          "name": "create_command_encoder_id",
+          "line": 140,
+          "isDefault": false
+        },
+        {
+          "name": "free_command_encoder_id",
+          "line": 144,
+          "isDefault": false
+        },
+        {
+          "name": "create_command_buffer_id",
+          "line": 148,
+          "isDefault": false
+        },
+        {
+          "name": "free_command_buffer_id",
+          "line": 152,
+          "isDefault": false
+        },
+        {
+          "name": "create_sampler_id",
+          "line": 156,
+          "isDefault": false
+        },
+        {
+          "name": "free_sampler_id",
+          "line": 160,
+          "isDefault": false
+        },
+        {
+          "name": "create_render_pipeline_id",
+          "line": 164,
+          "isDefault": false
+        },
+        {
+          "name": "free_render_pipeline_id",
+          "line": 168,
+          "isDefault": false
+        },
+        {
+          "name": "create_texture_id",
+          "line": 172,
+          "isDefault": false
+        },
+        {
+          "name": "free_texture_id",
+          "line": 176,
+          "isDefault": false
+        },
+        {
+          "name": "create_texture_view_id",
+          "line": 180,
+          "isDefault": false
+        },
+        {
+          "name": "free_texture_view_id",
+          "line": 184,
+          "isDefault": false
+        },
+        {
+          "name": "create_render_bundle_id",
+          "line": 188,
+          "isDefault": false
+        },
+        {
+          "name": "free_render_bundle_id",
+          "line": 192,
+          "isDefault": false
+        },
+        {
+          "name": "create_compute_pass_id",
+          "line": 196,
+          "isDefault": false
+        },
+        {
+          "name": "free_compute_pass_id",
+          "line": 200,
+          "isDefault": false
+        },
+        {
+          "name": "create_render_pass_id",
+          "line": 204,
+          "isDefault": false
+        },
+        {
+          "name": "free_render_pass_id",
+          "line": 208,
+          "isDefault": false
+        },
+        {
+          "name": "create_query_set_id",
+          "line": 212,
+          "isDefault": false
+        },
+        {
+          "name": "free_query_set_id",
+          "line": 216,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 44
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 45
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 46
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 47
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 48
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 49
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 50
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 51
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 52
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 53
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 54
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 55
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 56
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 58
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 59
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 60
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 61
+        },
+        {
+          "caller": "default",
+          "callee": "IdentityManager::new",
+          "lineNumber": 62
+        },
+        {
+          "caller": "create_device_id",
+          "callee": "self.devices.process",
+          "lineNumber": 69
+        },
+        {
+          "caller": "free_device_id",
+          "callee": "self.devices.free",
+          "lineNumber": 73
+        },
+        {
+          "caller": "create_queue_id",
+          "callee": "self.queues.process",
+          "lineNumber": 77
+        },
+        {
+          "caller": "free_queue_id",
+          "callee": "self.queues.free",
+          "lineNumber": 81
+        },
+        {
+          "caller": "create_adapter_id",
+          "callee": "self.adapters.process",
+          "lineNumber": 85
+        },
+        {
+          "caller": "free_adapter_id",
+          "callee": "self.adapters.free",
+          "lineNumber": 89
+        },
+        {
+          "caller": "create_buffer_id",
+          "callee": "self.buffers.process",
+          "lineNumber": 93
+        },
+        {
+          "caller": "free_buffer_id",
+          "callee": "self.buffers.free",
+          "lineNumber": 97
+        },
+        {
+          "caller": "create_bind_group_id",
+          "callee": "self.bind_groups.process",
+          "lineNumber": 101
+        },
+        {
+          "caller": "free_bind_group_id",
+          "callee": "self.bind_groups.free",
+          "lineNumber": 105
+        },
+        {
+          "caller": "create_bind_group_layout_id",
+          "callee": "self.bind_group_layouts.process",
+          "lineNumber": 109
+        },
+        {
+          "caller": "free_bind_group_layout_id",
+          "callee": "self.bind_group_layouts.free",
+          "lineNumber": 113
+        },
+        {
+          "caller": "create_compute_pipeline_id",
+          "callee": "self.compute_pipelines.process",
+          "lineNumber": 117
+        },
+        {
+          "caller": "free_compute_pipeline_id",
+          "callee": "self.compute_pipelines.free",
+          "lineNumber": 121
+        },
+        {
+          "caller": "create_pipeline_layout_id",
+          "callee": "self.pipeline_layouts.process",
+          "lineNumber": 125
+        },
+        {
+          "caller": "free_pipeline_layout_id",
+          "callee": "self.pipeline_layouts.free",
+          "lineNumber": 129
+        },
+        {
+          "caller": "create_shader_module_id",
+          "callee": "self.shader_modules.process",
+          "lineNumber": 133
+        },
+        {
+          "caller": "free_shader_module_id",
+          "callee": "self.shader_modules.free",
+          "lineNumber": 137
+        },
+        {
+          "caller": "create_command_encoder_id",
+          "callee": "self.command_encoders.process",
+          "lineNumber": 141
+        },
+        {
+          "caller": "free_command_encoder_id",
+          "callee": "self.command_encoders.free",
+          "lineNumber": 145
+        },
+        {
+          "caller": "create_command_buffer_id",
+          "callee": "self.command_buffers.process",
+          "lineNumber": 149
+        },
+        {
+          "caller": "free_command_buffer_id",
+          "callee": "self.command_buffers.free",
+          "lineNumber": 153
+        },
+        {
+          "caller": "create_sampler_id",
+          "callee": "self.samplers.process",
+          "lineNumber": 157
+        },
+        {
+          "caller": "free_sampler_id",
+          "callee": "self.samplers.free",
+          "lineNumber": 161
+        },
+        {
+          "caller": "create_render_pipeline_id",
+          "callee": "self.render_pipelines.process",
+          "lineNumber": 165
+        },
+        {
+          "caller": "free_render_pipeline_id",
+          "callee": "self.render_pipelines.free",
+          "lineNumber": 169
+        },
+        {
+          "caller": "create_texture_id",
+          "callee": "self.textures.process",
+          "lineNumber": 173
+        },
+        {
+          "caller": "free_texture_id",
+          "callee": "self.textures.free",
+          "lineNumber": 177
+        },
+        {
+          "caller": "create_texture_view_id",
+          "callee": "self.texture_views.process",
+          "lineNumber": 181
+        },
+        {
+          "caller": "free_texture_view_id",
+          "callee": "self.texture_views.free",
+          "lineNumber": 185
+        },
+        {
+          "caller": "create_render_bundle_id",
+          "callee": "self.render_bundles.process",
+          "lineNumber": 189
+        },
+        {
+          "caller": "free_render_bundle_id",
+          "callee": "self.render_bundles.free",
+          "lineNumber": 193
+        },
+        {
+          "caller": "create_compute_pass_id",
+          "callee": "self.compute_passes.process",
+          "lineNumber": 197
+        },
+        {
+          "caller": "free_compute_pass_id",
+          "callee": "self.compute_passes.free",
+          "lineNumber": 201
+        },
+        {
+          "caller": "create_render_pass_id",
+          "callee": "self.render_passes.process",
+          "lineNumber": 205
+        },
+        {
+          "caller": "free_render_pass_id",
+          "callee": "self.render_passes.free",
+          "lineNumber": 209
+        },
+        {
+          "caller": "create_query_set_id",
+          "callee": "self.query_sets.process",
+          "lineNumber": 213
+        },
+        {
+          "caller": "free_query_set_id",
+          "callee": "self.query_sets.free",
+          "lineNumber": 217
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 39,
+        "functionCount": 39,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 48,
+      "nonEmptyLines": 47,
+      "metrics": {
+        "importCount": 42,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/webgpu/wgsllanguagefeatures.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 84,
+      "nonEmptyLines": 76,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 30,
+          "endLine": 48,
+          "params": [
+            "cx",
+            "global",
+            "proto"
+          ]
+        },
+        {
+          "name": "Size",
+          "startLine": 52,
+          "endLine": 54,
+          "params": []
+        },
+        {
+          "name": "get_index",
+          "startLine": 61,
+          "endLine": 63,
+          "params": [
+            "index"
+          ]
+        },
+        {
+          "name": "size",
+          "startLine": 65,
+          "endLine": 67,
+          "params": []
+        },
+        {
+          "name": "add",
+          "startLine": 69,
+          "endLine": 71,
+          "params": [
+            "_key"
+          ]
+        },
+        {
+          "name": "has",
+          "startLine": 73,
+          "endLine": 75,
+          "params": [
+            "key"
+          ]
+        },
+        {
+          "name": "clear",
+          "startLine": 77,
+          "endLine": 79,
+          "params": []
+        },
+        {
+          "name": "delete",
+          "startLine": 81,
+          "endLine": 83,
+          "params": [
+            "_key"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "WGSLLanguageFeatures",
+          "startLine": 22,
+          "endLine": 27,
+          "methods": [
+            "new",
+            "Size",
+            "get_index",
+            "size",
+            "add",
+            "has",
+            "clear",
+            "delete"
+          ],
+          "properties": [
+            "reflector",
+            "internal"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WGSLLanguageFeatures",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 30,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "ImplementedLanguageExtension::all()\n            .iter()\n            .map(|le| le.to_ident().into()).collect",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new",
+          "callee": "ImplementedLanguageExtension::all()\n            .iter().map",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new",
+          "callee": "ImplementedLanguageExtension::all().iter",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new",
+          "callee": "ImplementedLanguageExtension::all",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new",
+          "callee": "le.to_ident().into",
+          "lineNumber": 37
+        },
+        {
+          "caller": "new",
+          "callee": "le.to_ident",
+          "lineNumber": 37
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 39
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 40
+        },
+        {
+          "caller": "new",
+          "callee": "Reflector::new",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new",
+          "callee": "DomRefCell::new",
+          "lineNumber": 42
+        },
+        {
+          "caller": "Size",
+          "callee": "self.internal.size",
+          "lineNumber": 53
+        },
+        {
+          "caller": "get_index",
+          "callee": "self.internal.get_index",
+          "lineNumber": 62
+        },
+        {
+          "caller": "size",
+          "callee": "self.internal.size",
+          "lineNumber": 66
+        },
+        {
+          "caller": "has",
+          "callee": "self.internal.has",
+          "lineNumber": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 8,
+        "classCount": 1
+      }
+    }
+  ]
+}

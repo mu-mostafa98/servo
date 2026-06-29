@@ -1,0 +1,4247 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 12,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/script/dom/webrtc/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 14,
+      "metrics": {
+        "importCount": 11,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcdatachannel.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 432,
+      "nonEmptyLines": 385,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 53,
+          "endLine": 58,
+          "params": [
+            "peer_connection",
+            "servo_media_id"
+          ]
+        },
+        {
+          "name": "get_servo_media_id",
+          "startLine": 60,
+          "endLine": 62,
+          "params": []
+        },
+        {
+          "name": "drop",
+          "startLine": 66,
+          "endLine": 70,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 90,
+          "endLine": 122,
+          "params": [
+            "peer_connection",
+            "label",
+            "options",
+            "servo_media_id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 124,
+          "endLine": 147,
+          "params": [
+            "global",
+            "peer_connection",
+            "label",
+            "options",
+            "servo_media_id",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "get_servo_media_id",
+          "startLine": 149,
+          "endLine": 151,
+          "params": []
+        },
+        {
+          "name": "on_open",
+          "startLine": 153,
+          "endLine": 162,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "on_close",
+          "startLine": 164,
+          "endLine": 176,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "on_error",
+          "startLine": 178,
+          "endLine": 202,
+          "params": [
+            "cx",
+            "error"
+          ]
+        },
+        {
+          "name": "on_message",
+          "startLine": 205,
+          "endLine": 252,
+          "params": [
+            "cx",
+            "channel_message"
+          ]
+        },
+        {
+          "name": "on_state_change",
+          "startLine": 254,
+          "endLine": 266,
+          "params": [
+            "cx",
+            "state"
+          ]
+        },
+        {
+          "name": "send",
+          "startLine": 268,
+          "endLine": 289,
+          "params": [
+            "source"
+          ]
+        },
+        {
+          "name": "Label",
+          "startLine": 318,
+          "endLine": 320,
+          "params": []
+        },
+        {
+          "name": "Ordered",
+          "startLine": 322,
+          "endLine": 324,
+          "params": []
+        },
+        {
+          "name": "GetMaxPacketLifeTime",
+          "startLine": 327,
+          "endLine": 329,
+          "params": []
+        },
+        {
+          "name": "GetMaxRetransmits",
+          "startLine": 332,
+          "endLine": 334,
+          "params": []
+        },
+        {
+          "name": "Protocol",
+          "startLine": 337,
+          "endLine": 339,
+          "params": []
+        },
+        {
+          "name": "Negotiated",
+          "startLine": 342,
+          "endLine": 344,
+          "params": []
+        },
+        {
+          "name": "GetId",
+          "startLine": 347,
+          "endLine": 349,
+          "params": []
+        },
+        {
+          "name": "ReadyState",
+          "startLine": 352,
+          "endLine": 354,
+          "params": []
+        },
+        {
+          "name": "Close",
+          "startLine": 364,
+          "endLine": 370,
+          "params": []
+        },
+        {
+          "name": "BinaryType",
+          "startLine": 373,
+          "endLine": 375,
+          "params": []
+        },
+        {
+          "name": "SetBinaryType",
+          "startLine": 378,
+          "endLine": 384,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "Send",
+          "startLine": 387,
+          "endLine": 389,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "Send_",
+          "startLine": 392,
+          "endLine": 394,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "Send__",
+          "startLine": 397,
+          "endLine": 399,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "Send___",
+          "startLine": 402,
+          "endLine": 404,
+          "params": [
+            "data"
+          ]
+        },
+        {
+          "name": "convert",
+          "startLine": 408,
+          "endLine": 418,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 422,
+          "endLine": 431,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "DroppableRTCDataChannel",
+          "startLine": 46,
+          "endLine": 50,
+          "methods": [
+            "new",
+            "get_servo_media_id",
+            "drop"
+          ],
+          "properties": [
+            "servo_media_id",
+            "peer_connection"
+          ]
+        },
+        {
+          "name": "RTCDataChannel",
+          "startLine": 74,
+          "endLine": 87,
+          "methods": [
+            "new_inherited",
+            "new",
+            "get_servo_media_id",
+            "on_open",
+            "on_close",
+            "on_error",
+            "on_message",
+            "on_state_change",
+            "send",
+            "Label",
+            "Ordered",
+            "GetMaxPacketLifeTime",
+            "GetMaxRetransmits",
+            "Protocol",
+            "Negotiated",
+            "GetId",
+            "ReadyState",
+            "Close",
+            "BinaryType",
+            "SetBinaryType",
+            "Send",
+            "Send_",
+            "Send__",
+            "Send___"
+          ],
+          "properties": [
+            "eventtarget",
+            "label",
+            "ordered",
+            "max_packet_life_time",
+            "max_retransmits",
+            "protocol",
+            "negotiated",
+            "id",
+            "ready_state",
+            "binary_type",
+            "peer_connection",
+            "droppable"
+          ]
+        },
+        {
+          "name": "SendSource",
+          "startLine": 292,
+          "endLine": 297,
+          "methods": [],
+          "properties": [
+            "String",
+            "Blob",
+            "ArrayBuffer",
+            "ArrayBufferView"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "get_servo_media_id",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "RTCDataChannel",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 90,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 124,
+          "isDefault": false
+        },
+        {
+          "name": "get_servo_media_id",
+          "line": 149,
+          "isDefault": false
+        },
+        {
+          "name": "on_open",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "on_close",
+          "line": 164,
+          "isDefault": false
+        },
+        {
+          "name": "on_error",
+          "line": 178,
+          "isDefault": false
+        },
+        {
+          "name": "on_message",
+          "line": 205,
+          "isDefault": false
+        },
+        {
+          "name": "on_state_change",
+          "line": 254,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "drop",
+          "callee": "self.peer_connection.root",
+          "lineNumber": 67
+        },
+        {
+          "caller": "drop",
+          "callee": "root.unregister_data_channel",
+          "lineNumber": 68
+        },
+        {
+          "caller": "drop",
+          "callee": "self.get_servo_media_id",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "options.convert",
+          "lineNumber": 96
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "label.0.clone",
+          "lineNumber": 97
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "peer_connection.get_webrtc_controller().borrow",
+          "lineNumber": 99
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "peer_connection.get_webrtc_controller",
+          "lineNumber": 99
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "servo_media_id.unwrap_or",
+          "lineNumber": 100
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "controller\n                .as_ref()\n                .unwrap()\n                .create_data_channel(init).expect",
+          "lineNumber": 101
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "controller\n                .as_ref()\n                .unwrap().create_data_channel",
+          "lineNumber": 101
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "controller\n                .as_ref().unwrap",
+          "lineNumber": 101
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "controller.as_ref",
+          "lineNumber": 101
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "EventTarget::new_inherited",
+          "lineNumber": 109
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "options.protocol.clone",
+          "lineNumber": 114
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 117
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 118
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DOMString::from",
+          "lineNumber": 118
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 119
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DroppableRTCDataChannel::new",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "WeakRef::new",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object",
+          "lineNumber": 132
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "RTCDataChannel::new_inherited",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "peer_connection.register_data_channel",
+          "lineNumber": 143
+        },
+        {
+          "caller": "new",
+          "callee": "rtc_data_channel.get_servo_media_id",
+          "lineNumber": 144
+        },
+        {
+          "caller": "get_servo_media_id",
+          "callee": "self.droppable.get_servo_media_id",
+          "lineNumber": 150
+        },
+        {
+          "caller": "on_open",
+          "callee": "Event::new",
+          "lineNumber": 154
+        },
+        {
+          "caller": "on_open",
+          "callee": "self.global",
+          "lineNumber": 156
+        },
+        {
+          "caller": "on_open",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 161
+        },
+        {
+          "caller": "on_open",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 161
+        },
+        {
+          "caller": "on_open",
+          "callee": "self.upcast",
+          "lineNumber": 161
+        },
+        {
+          "caller": "on_close",
+          "callee": "Event::new",
+          "lineNumber": 165
+        },
+        {
+          "caller": "on_close",
+          "callee": "self.global",
+          "lineNumber": 167
+        },
+        {
+          "caller": "on_close",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 172
+        },
+        {
+          "caller": "on_close",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 172
+        },
+        {
+          "caller": "on_close",
+          "callee": "self.upcast",
+          "lineNumber": 172
+        },
+        {
+          "caller": "on_close",
+          "callee": "self.peer_connection.unregister_data_channel",
+          "lineNumber": 174
+        },
+        {
+          "caller": "on_close",
+          "callee": "self.get_servo_media_id",
+          "lineNumber": 175
+        },
+        {
+          "caller": "on_error",
+          "callee": "self.global",
+          "lineNumber": 179
+        },
+        {
+          "caller": "on_error",
+          "callee": "global.as_window",
+          "lineNumber": 180
+        },
+        {
+          "caller": "on_error",
+          "callee": "DOMString::from",
+          "lineNumber": 190
+        },
+        {
+          "caller": "on_error",
+          "callee": "RTCError::new",
+          "lineNumber": 192
+        },
+        {
+          "caller": "on_error",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 192
+        },
+        {
+          "caller": "on_error",
+          "callee": "RTCErrorEvent::new",
+          "lineNumber": 193
+        },
+        {
+          "caller": "on_error",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 199
+        },
+        {
+          "caller": "on_error",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 201
+        },
+        {
+          "caller": "on_error",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 201
+        },
+        {
+          "caller": "on_error",
+          "callee": "self.upcast",
+          "lineNumber": 201
+        },
+        {
+          "caller": "on_message",
+          "callee": "self.global",
+          "lineNumber": 206
+        },
+        {
+          "caller": "on_message",
+          "callee": "text.safe_to_jsval",
+          "lineNumber": 211
+        },
+        {
+          "caller": "on_message",
+          "callee": "message.handle_mut",
+          "lineNumber": 211
+        },
+        {
+          "caller": "on_message",
+          "callee": "self.binary_type.borrow",
+          "lineNumber": 214
+        },
+        {
+          "caller": "on_message",
+          "callee": "MessageEvent::dispatch_jsval",
+          "lineNumber": 243
+        },
+        {
+          "caller": "on_message",
+          "callee": "self.upcast",
+          "lineNumber": 245
+        },
+        {
+          "caller": "on_message",
+          "callee": "message.handle",
+          "lineNumber": 247
+        },
+        {
+          "caller": "on_message",
+          "callee": "Some",
+          "lineNumber": 248
+        },
+        {
+          "caller": "on_message",
+          "callee": "global.origin().immutable().ascii_serialization",
+          "lineNumber": 248
+        },
+        {
+          "caller": "on_message",
+          "callee": "global.origin().immutable",
+          "lineNumber": 248
+        },
+        {
+          "caller": "on_message",
+          "callee": "global.origin",
+          "lineNumber": 248
+        },
+        {
+          "caller": "on_state_change",
+          "callee": "Event::new",
+          "lineNumber": 256
+        },
+        {
+          "caller": "on_state_change",
+          "callee": "self.global",
+          "lineNumber": 258
+        },
+        {
+          "caller": "on_state_change",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 263
+        },
+        {
+          "caller": "on_state_change",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 263
+        },
+        {
+          "caller": "on_state_change",
+          "callee": "self.upcast",
+          "lineNumber": 263
+        },
+        {
+          "caller": "on_state_change",
+          "callee": "self.ready_state.set",
+          "lineNumber": 265
+        },
+        {
+          "caller": "on_state_change",
+          "callee": "state.convert",
+          "lineNumber": 265
+        },
+        {
+          "caller": "send",
+          "callee": "self.ready_state.get",
+          "lineNumber": 269
+        },
+        {
+          "caller": "send",
+          "callee": "Err",
+          "lineNumber": 270
+        },
+        {
+          "caller": "send",
+          "callee": "Error::InvalidState",
+          "lineNumber": 270
+        },
+        {
+          "caller": "send",
+          "callee": "DataChannelMessage::Text",
+          "lineNumber": 274
+        },
+        {
+          "caller": "send",
+          "callee": "string.0.clone",
+          "lineNumber": 274
+        },
+        {
+          "caller": "send",
+          "callee": "DataChannelMessage::Binary",
+          "lineNumber": 276
+        },
+        {
+          "caller": "send",
+          "callee": "blob.get_bytes().unwrap_or",
+          "lineNumber": 276
+        },
+        {
+          "caller": "send",
+          "callee": "blob.get_bytes",
+          "lineNumber": 276
+        },
+        {
+          "caller": "send",
+          "callee": "DataChannelMessage::Binary",
+          "lineNumber": 278
+        },
+        {
+          "caller": "send",
+          "callee": "array.to_vec",
+          "lineNumber": 278
+        },
+        {
+          "caller": "send",
+          "callee": "DataChannelMessage::Binary",
+          "lineNumber": 279
+        },
+        {
+          "caller": "send",
+          "callee": "array.to_vec",
+          "lineNumber": 279
+        },
+        {
+          "caller": "send",
+          "callee": "self.peer_connection.get_webrtc_controller().borrow",
+          "lineNumber": 282
+        },
+        {
+          "caller": "send",
+          "callee": "self.peer_connection.get_webrtc_controller",
+          "lineNumber": 282
+        },
+        {
+          "caller": "send",
+          "callee": "controller\n            .as_ref()\n            .unwrap().send_data_channel_message",
+          "lineNumber": 283
+        },
+        {
+          "caller": "send",
+          "callee": "controller\n            .as_ref().unwrap",
+          "lineNumber": 283
+        },
+        {
+          "caller": "send",
+          "callee": "controller.as_ref",
+          "lineNumber": 283
+        },
+        {
+          "caller": "send",
+          "callee": "self.get_servo_media_id",
+          "lineNumber": 286
+        },
+        {
+          "caller": "send",
+          "callee": "Ok",
+          "lineNumber": 288
+        },
+        {
+          "caller": "Label",
+          "callee": "self.label.clone",
+          "lineNumber": 319
+        },
+        {
+          "caller": "Protocol",
+          "callee": "self.protocol.clone",
+          "lineNumber": 338
+        },
+        {
+          "caller": "ReadyState",
+          "callee": "self.ready_state.get",
+          "lineNumber": 353
+        },
+        {
+          "caller": "Close",
+          "callee": "self.peer_connection.get_webrtc_controller().borrow",
+          "lineNumber": 365
+        },
+        {
+          "caller": "Close",
+          "callee": "self.peer_connection.get_webrtc_controller",
+          "lineNumber": 365
+        },
+        {
+          "caller": "Close",
+          "callee": "controller\n            .as_ref()\n            .unwrap().close_data_channel",
+          "lineNumber": 366
+        },
+        {
+          "caller": "Close",
+          "callee": "controller\n            .as_ref().unwrap",
+          "lineNumber": 366
+        },
+        {
+          "caller": "Close",
+          "callee": "controller.as_ref",
+          "lineNumber": 366
+        },
+        {
+          "caller": "Close",
+          "callee": "self.get_servo_media_id",
+          "lineNumber": 369
+        },
+        {
+          "caller": "BinaryType",
+          "callee": "self.binary_type.borrow().clone",
+          "lineNumber": 374
+        },
+        {
+          "caller": "BinaryType",
+          "callee": "self.binary_type.borrow",
+          "lineNumber": 374
+        },
+        {
+          "caller": "SetBinaryType",
+          "callee": "Err",
+          "lineNumber": 380
+        },
+        {
+          "caller": "SetBinaryType",
+          "callee": "Error::Syntax",
+          "lineNumber": 380
+        },
+        {
+          "caller": "SetBinaryType",
+          "callee": "self.binary_type.borrow_mut",
+          "lineNumber": 382
+        },
+        {
+          "caller": "SetBinaryType",
+          "callee": "Ok",
+          "lineNumber": 383
+        },
+        {
+          "caller": "Send",
+          "callee": "self.send",
+          "lineNumber": 388
+        },
+        {
+          "caller": "Send",
+          "callee": "SendSource::String",
+          "lineNumber": 388
+        },
+        {
+          "caller": "Send_",
+          "callee": "self.send",
+          "lineNumber": 393
+        },
+        {
+          "caller": "Send_",
+          "callee": "SendSource::Blob",
+          "lineNumber": 393
+        },
+        {
+          "caller": "Send__",
+          "callee": "self.send",
+          "lineNumber": 398
+        },
+        {
+          "caller": "Send__",
+          "callee": "SendSource::ArrayBuffer",
+          "lineNumber": 398
+        },
+        {
+          "caller": "Send___",
+          "callee": "self.send",
+          "lineNumber": 403
+        },
+        {
+          "caller": "Send___",
+          "callee": "SendSource::ArrayBufferView",
+          "lineNumber": 403
+        },
+        {
+          "caller": "convert",
+          "callee": "String::new",
+          "lineNumber": 410
+        },
+        {
+          "caller": "convert",
+          "callee": "self.protocol.to_string",
+          "lineNumber": 416
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 10,
+        "functionCount": 29,
+        "classCount": 3
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcdatachannelevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 99,
+      "nonEmptyLines": 90,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 29,
+          "endLine": 34,
+          "params": [
+            "channel"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 36,
+          "endLine": 45,
+          "params": [
+            "window",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "channel",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 47,
+          "endLine": 67,
+          "params": [
+            "window",
+            "proto",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "channel",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 72,
+          "endLine": 88,
+          "params": [
+            "window",
+            "proto",
+            "can_gc",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "Channel",
+          "startLine": 91,
+          "endLine": 93,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 96,
+          "endLine": 98,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCDataChannelEvent",
+          "startLine": 23,
+          "endLine": 26,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "Channel",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "channel"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCDataChannelEvent",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 36,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "RTCDataChannelEvent::new_inherited",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.init_event",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Constructor",
+          "callee": "RTCDataChannelEvent::new_with_proto",
+          "lineNumber": 79
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 82
+        },
+        {
+          "caller": "Channel",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 92
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 97
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcerror.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 108,
+      "nonEmptyLines": 95,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 30,
+          "endLine": 40,
+          "params": [
+            "init",
+            "message"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 42,
+          "endLine": 49,
+          "params": [
+            "window",
+            "init",
+            "message",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 51,
+          "endLine": 64,
+          "params": [
+            "window",
+            "proto",
+            "init",
+            "message",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 69,
+          "endLine": 77,
+          "params": [
+            "window",
+            "proto",
+            "can_gc",
+            "init",
+            "message"
+          ]
+        },
+        {
+          "name": "ErrorDetail",
+          "startLine": 80,
+          "endLine": 82,
+          "params": []
+        },
+        {
+          "name": "GetSdpLineNumber",
+          "startLine": 85,
+          "endLine": 87,
+          "params": []
+        },
+        {
+          "name": "GetHttpRequestStatusCode",
+          "startLine": 90,
+          "endLine": 92,
+          "params": []
+        },
+        {
+          "name": "GetSctpCauseCode",
+          "startLine": 95,
+          "endLine": 97,
+          "params": []
+        },
+        {
+          "name": "GetReceivedAlert",
+          "startLine": 100,
+          "endLine": 102,
+          "params": []
+        },
+        {
+          "name": "GetSentAlert",
+          "startLine": 105,
+          "endLine": 107,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCError",
+          "startLine": 19,
+          "endLine": 27,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "ErrorDetail",
+            "GetSdpLineNumber",
+            "GetHttpRequestStatusCode",
+            "GetSctpCauseCode",
+            "GetReceivedAlert",
+            "GetSentAlert"
+          ],
+          "properties": [
+            "exception",
+            "error_detail",
+            "sdp_line_number",
+            "http_request_status_code",
+            "sctp_cause_code",
+            "received_alert",
+            "sent_alert"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCError",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 42,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "DOMException::new_inherited",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "\"OperationError\".into",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 48
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto",
+          "lineNumber": 58
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 59
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "RTCError::new_inherited",
+          "lineNumber": 59
+        },
+        {
+          "caller": "Constructor",
+          "callee": "RTCError::new_with_proto",
+          "lineNumber": 76
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 10,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcerrorevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 99,
+      "nonEmptyLines": 90,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 29,
+          "endLine": 34,
+          "params": [
+            "error"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 36,
+          "endLine": 45,
+          "params": [
+            "window",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "error",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 47,
+          "endLine": 67,
+          "params": [
+            "window",
+            "proto",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "error",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 72,
+          "endLine": 88,
+          "params": [
+            "window",
+            "proto",
+            "can_gc",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "Error",
+          "startLine": 91,
+          "endLine": 93,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 96,
+          "endLine": 98,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCErrorEvent",
+          "startLine": 23,
+          "endLine": 26,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "Error",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "error"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCErrorEvent",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 36,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 32
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "RTCErrorEvent::new_inherited",
+          "lineNumber": 57
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.init_event",
+          "lineNumber": 64
+        },
+        {
+          "caller": "Constructor",
+          "callee": "RTCErrorEvent::new_with_proto",
+          "lineNumber": 79
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 82
+        },
+        {
+          "caller": "Error",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 92
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 97
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcicecandidate.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 138,
+      "nonEmptyLines": 126,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 28,
+          "endLine": 41,
+          "params": [
+            "candidate",
+            "sdp_m_id",
+            "sdp_m_line_index",
+            "username_fragment"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 43,
+          "endLine": 60,
+          "params": [
+            "window",
+            "candidate",
+            "sdp_m_id",
+            "sdp_m_line_index",
+            "username_fragment",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 62,
+          "endLine": 82,
+          "params": [
+            "window",
+            "proto",
+            "candidate",
+            "sdp_m_id",
+            "sdp_m_line_index",
+            "username_fragment",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 87,
+          "endLine": 107,
+          "params": [
+            "window",
+            "proto",
+            "can_gc",
+            "config"
+          ]
+        },
+        {
+          "name": "Candidate",
+          "startLine": 110,
+          "endLine": 112,
+          "params": []
+        },
+        {
+          "name": "GetSdpMid",
+          "startLine": 115,
+          "endLine": 117,
+          "params": []
+        },
+        {
+          "name": "GetSdpMLineIndex",
+          "startLine": 120,
+          "endLine": 122,
+          "params": []
+        },
+        {
+          "name": "GetUsernameFragment",
+          "startLine": 125,
+          "endLine": 127,
+          "params": []
+        },
+        {
+          "name": "ToJSON",
+          "startLine": 130,
+          "endLine": 137,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCIceCandidate",
+          "startLine": 19,
+          "endLine": 25,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "Candidate",
+            "GetSdpMid",
+            "GetSdpMLineIndex",
+            "GetUsernameFragment",
+            "ToJSON"
+          ],
+          "properties": [
+            "reflector",
+            "candidate",
+            "sdp_m_id",
+            "sdp_m_line_index",
+            "username_fragment"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCIceCandidate",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 28,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 43,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 51
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto",
+          "lineNumber": 71
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 72
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "RTCIceCandidate::new_inherited",
+          "lineNumber": 72
+        },
+        {
+          "caller": "Constructor",
+          "callee": "config.sdpMid.is_none",
+          "lineNumber": 93
+        },
+        {
+          "caller": "Constructor",
+          "callee": "config.sdpMLineIndex.is_none",
+          "lineNumber": 93
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Err",
+          "lineNumber": 94
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Error::Type",
+          "lineNumber": 94
+        },
+        {
+          "caller": "Constructor",
+          "callee": "c\"one of sdpMid and sdpMLineIndex must be set\".to_owned",
+          "lineNumber": 95
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 98
+        },
+        {
+          "caller": "Constructor",
+          "callee": "RTCIceCandidate::new_with_proto",
+          "lineNumber": 98
+        },
+        {
+          "caller": "Constructor",
+          "callee": "config.candidate.clone",
+          "lineNumber": 101
+        },
+        {
+          "caller": "Constructor",
+          "callee": "config.sdpMid.clone",
+          "lineNumber": 102
+        },
+        {
+          "caller": "Constructor",
+          "callee": "config.usernameFragment.clone",
+          "lineNumber": 104
+        },
+        {
+          "caller": "Candidate",
+          "callee": "self.candidate.clone",
+          "lineNumber": 111
+        },
+        {
+          "caller": "GetSdpMid",
+          "callee": "self.sdp_m_id.clone",
+          "lineNumber": 116
+        },
+        {
+          "caller": "GetUsernameFragment",
+          "callee": "self.username_fragment.clone",
+          "lineNumber": 126
+        },
+        {
+          "caller": "ToJSON",
+          "callee": "self.candidate.clone",
+          "lineNumber": 132
+        },
+        {
+          "caller": "ToJSON",
+          "callee": "self.sdp_m_id.clone",
+          "lineNumber": 133
+        },
+        {
+          "caller": "ToJSON",
+          "callee": "self.username_fragment.clone",
+          "lineNumber": 135
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 9,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 868,
+      "nonEmptyLines": 787,
+      "functions": [
+        {
+          "name": "on_ice_candidate",
+          "startLine": 88,
+          "endLine": 94,
+          "params": [
+            "_",
+            "candidate"
+          ]
+        },
+        {
+          "name": "on_negotiation_needed",
+          "startLine": 96,
+          "endLine": 103,
+          "params": [
+            "_"
+          ]
+        },
+        {
+          "name": "update_gathering_state",
+          "startLine": 105,
+          "endLine": 112,
+          "params": [
+            "state"
+          ]
+        },
+        {
+          "name": "update_ice_connection_state",
+          "startLine": 114,
+          "endLine": 121,
+          "params": [
+            "state"
+          ]
+        },
+        {
+          "name": "update_signaling_state",
+          "startLine": 123,
+          "endLine": 130,
+          "params": [
+            "state"
+          ]
+        },
+        {
+          "name": "on_add_stream",
+          "startLine": 132,
+          "endLine": 139,
+          "params": [
+            "id",
+            "ty"
+          ]
+        },
+        {
+          "name": "on_data_channel_event",
+          "startLine": 141,
+          "endLine": 156,
+          "params": [
+            "channel",
+            "event",
+            "_"
+          ]
+        },
+        {
+          "name": "close",
+          "startLine": 158,
+          "endLine": 160,
+          "params": []
+        },
+        {
+          "name": "new_inherited",
+          "startLine": 164,
+          "endLine": 179,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 181,
+          "endLine": 216,
+          "params": [
+            "window",
+            "proto",
+            "config",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "get_webrtc_controller",
+          "startLine": 218,
+          "endLine": 220,
+          "params": []
+        },
+        {
+          "name": "make_signaller",
+          "startLine": 222,
+          "endLine": 228,
+          "params": []
+        },
+        {
+          "name": "on_ice_candidate",
+          "startLine": 230,
+          "endLine": 251,
+          "params": [
+            "cx",
+            "candidate"
+          ]
+        },
+        {
+          "name": "on_negotiation_needed",
+          "startLine": 253,
+          "endLine": 265,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "on_add_stream",
+          "startLine": 267,
+          "endLine": 281,
+          "params": [
+            "cx",
+            "id",
+            "ty"
+          ]
+        },
+        {
+          "name": "on_data_channel_event",
+          "startLine": 283,
+          "endLine": 336,
+          "params": [
+            "cx",
+            "channel_id",
+            "event"
+          ]
+        },
+        {
+          "name": "register_data_channel",
+          "startLine": 338,
+          "endLine": 347,
+          "params": [
+            "id",
+            "channel"
+          ]
+        },
+        {
+          "name": "unregister_data_channel",
+          "startLine": 349,
+          "endLine": 351,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "update_gathering_state",
+          "startLine": 354,
+          "endLine": 393,
+          "params": [
+            "cx",
+            "state"
+          ]
+        },
+        {
+          "name": "update_ice_connection_state",
+          "startLine": 396,
+          "endLine": 422,
+          "params": [
+            "cx",
+            "state"
+          ]
+        },
+        {
+          "name": "update_signaling_state",
+          "startLine": 424,
+          "endLine": 445,
+          "params": [
+            "cx",
+            "state"
+          ]
+        },
+        {
+          "name": "create_offer",
+          "startLine": 447,
+          "endLine": 474,
+          "params": []
+        },
+        {
+          "name": "create_answer",
+          "startLine": 476,
+          "endLine": 503,
+          "params": []
+        },
+        {
+          "name": "Constructor",
+          "startLine": 508,
+          "endLine": 515,
+          "params": [
+            "window",
+            "proto",
+            "can_gc",
+            "config"
+          ]
+        },
+        {
+          "name": "AddIceCandidate",
+          "startLine": 555,
+          "endLine": 593,
+          "params": [
+            "current_realm",
+            "candidate"
+          ]
+        },
+        {
+          "name": "CreateOffer",
+          "startLine": 596,
+          "endLine": 609,
+          "params": [
+            "current_realm",
+            "_options"
+          ]
+        },
+        {
+          "name": "CreateAnswer",
+          "startLine": 612,
+          "endLine": 625,
+          "params": [
+            "current_realm",
+            "_options"
+          ]
+        },
+        {
+          "name": "GetLocalDescription",
+          "startLine": 628,
+          "endLine": 630,
+          "params": []
+        },
+        {
+          "name": "GetRemoteDescription",
+          "startLine": 633,
+          "endLine": 635,
+          "params": []
+        },
+        {
+          "name": "SetLocalDescription",
+          "startLine": 638,
+          "endLine": 677,
+          "params": [
+            "current_realm",
+            "desc"
+          ]
+        },
+        {
+          "name": "SetRemoteDescription",
+          "startLine": 680,
+          "endLine": 719,
+          "params": [
+            "current_realm",
+            "desc"
+          ]
+        },
+        {
+          "name": "AddStream",
+          "startLine": 722,
+          "endLine": 730,
+          "params": [
+            "stream"
+          ]
+        },
+        {
+          "name": "IceGatheringState",
+          "startLine": 733,
+          "endLine": 735,
+          "params": []
+        },
+        {
+          "name": "IceConnectionState",
+          "startLine": 738,
+          "endLine": 740,
+          "params": []
+        },
+        {
+          "name": "SignalingState",
+          "startLine": 743,
+          "endLine": 745,
+          "params": []
+        },
+        {
+          "name": "Close",
+          "startLine": 748,
+          "endLine": 775,
+          "params": [
+            "cx"
+          ]
+        },
+        {
+          "name": "CreateDataChannel",
+          "startLine": 778,
+          "endLine": 791,
+          "params": [
+            "label",
+            "init"
+          ]
+        },
+        {
+          "name": "AddTransceiver",
+          "startLine": 794,
+          "endLine": 800,
+          "params": [
+            "_track_or_kind",
+            "init"
+          ]
+        },
+        {
+          "name": "convert",
+          "startLine": 804,
+          "endLine": 815,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 819,
+          "endLine": 830,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 834,
+          "endLine": 840,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 844,
+          "endLine": 854,
+          "params": []
+        },
+        {
+          "name": "convert",
+          "startLine": 858,
+          "endLine": 867,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCPeerConnection",
+          "startLine": 60,
+          "endLine": 80,
+          "methods": [
+            "new_inherited",
+            "new",
+            "get_webrtc_controller",
+            "make_signaller",
+            "on_ice_candidate",
+            "on_negotiation_needed",
+            "on_add_stream",
+            "on_data_channel_event",
+            "register_data_channel",
+            "unregister_data_channel",
+            "update_gathering_state",
+            "update_ice_connection_state",
+            "update_signaling_state",
+            "create_offer",
+            "create_answer",
+            "Constructor",
+            "AddIceCandidate",
+            "CreateOffer",
+            "CreateAnswer",
+            "GetLocalDescription",
+            "GetRemoteDescription",
+            "SetLocalDescription",
+            "SetRemoteDescription",
+            "AddStream",
+            "IceGatheringState",
+            "IceConnectionState",
+            "SignalingState",
+            "Close",
+            "CreateDataChannel",
+            "AddTransceiver"
+          ],
+          "properties": [
+            "eventtarget",
+            "controller",
+            "closed",
+            "offer_answer_generation",
+            "offer_promises",
+            "answer_promises",
+            "local_description",
+            "remote_description",
+            "gathering_state",
+            "ice_connection_state",
+            "signaling_state",
+            "data_channels"
+          ]
+        },
+        {
+          "name": "RTCSignaller",
+          "startLine": 82,
+          "endLine": 85,
+          "methods": [
+            "on_ice_candidate",
+            "on_negotiation_needed",
+            "update_gathering_state",
+            "update_ice_connection_state",
+            "update_signaling_state",
+            "on_add_stream",
+            "on_data_channel_event",
+            "close"
+          ],
+          "properties": [
+            "trusted",
+            "task_source"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCPeerConnection",
+          "line": 60,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 164,
+          "isDefault": false
+        },
+        {
+          "name": "get_webrtc_controller",
+          "line": 218,
+          "isDefault": false
+        },
+        {
+          "name": "register_data_channel",
+          "line": 338,
+          "isDefault": false
+        },
+        {
+          "name": "unregister_data_channel",
+          "line": 349,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "on_ice_candidate",
+          "callee": "self.trusted.clone",
+          "lineNumber": 89
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "self.task_source.queue",
+          "lineNumber": 90
+        },
+        {
+          "caller": "on_negotiation_needed",
+          "callee": "self.trusted.clone",
+          "lineNumber": 97
+        },
+        {
+          "caller": "on_negotiation_needed",
+          "callee": "self.task_source.queue",
+          "lineNumber": 98
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.trusted.clone",
+          "lineNumber": 106
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.task_source.queue",
+          "lineNumber": 107
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "self.trusted.clone",
+          "lineNumber": 115
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "self.task_source.queue",
+          "lineNumber": 116
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "self.trusted.clone",
+          "lineNumber": 124
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "self.task_source.queue",
+          "lineNumber": 125
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "self.trusted.clone",
+          "lineNumber": 133
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "self.task_source.queue",
+          "lineNumber": 135
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.trusted.clone",
+          "lineNumber": 148
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.task_source.queue",
+          "lineNumber": 149
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "EventTarget::new_inherited",
+          "lineNumber": 166
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 167
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 168
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 169
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 170
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 171
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 172
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Default::default",
+          "lineNumber": 173
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 174
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 175
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 176
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "DomRefCell::new",
+          "lineNumber": 177
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "FxHashMap::default",
+          "lineNumber": 177
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_proto",
+          "lineNumber": 187
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 188
+        },
+        {
+          "caller": "new",
+          "callee": "RTCPeerConnection::new_inherited",
+          "lineNumber": 188
+        },
+        {
+          "caller": "new",
+          "callee": "this.make_signaller",
+          "lineNumber": 193
+        },
+        {
+          "caller": "new",
+          "callee": "this.controller.borrow_mut",
+          "lineNumber": 194
+        },
+        {
+          "caller": "new",
+          "callee": "Some",
+          "lineNumber": 194
+        },
+        {
+          "caller": "new",
+          "callee": "ServoMedia::get().create_webrtc",
+          "lineNumber": 194
+        },
+        {
+          "caller": "new",
+          "callee": "ServoMedia::get",
+          "lineNumber": 194
+        },
+        {
+          "caller": "new",
+          "callee": "servers.first",
+          "lineNumber": 196
+        },
+        {
+          "caller": "new",
+          "callee": "Some",
+          "lineNumber": 199
+        },
+        {
+          "caller": "new",
+          "callee": "s.clone",
+          "lineNumber": 199
+        },
+        {
+          "caller": "new",
+          "callee": "s.first().cloned",
+          "lineNumber": 200
+        },
+        {
+          "caller": "new",
+          "callee": "s.first",
+          "lineNumber": 200
+        },
+        {
+          "caller": "new",
+          "callee": "this.controller\n                    .borrow()\n                    .as_ref()\n                    .unwrap().configure",
+          "lineNumber": 208
+        },
+        {
+          "caller": "new",
+          "callee": "this.controller\n                    .borrow()\n                    .as_ref().unwrap",
+          "lineNumber": 208
+        },
+        {
+          "caller": "new",
+          "callee": "this.controller\n                    .borrow().as_ref",
+          "lineNumber": 208
+        },
+        {
+          "caller": "new",
+          "callee": "this.controller.borrow",
+          "lineNumber": 208
+        },
+        {
+          "caller": "new",
+          "callee": "String::from",
+          "lineNumber": 212
+        },
+        {
+          "caller": "make_signaller",
+          "callee": "Trusted::new",
+          "lineNumber": 223
+        },
+        {
+          "caller": "make_signaller",
+          "callee": "Box::new",
+          "lineNumber": 224
+        },
+        {
+          "caller": "make_signaller",
+          "callee": "self.global().task_manager().networking_task_source().into",
+          "lineNumber": 226
+        },
+        {
+          "caller": "make_signaller",
+          "callee": "self.global().task_manager().networking_task_source",
+          "lineNumber": 226
+        },
+        {
+          "caller": "make_signaller",
+          "callee": "self.global().task_manager",
+          "lineNumber": 226
+        },
+        {
+          "caller": "make_signaller",
+          "callee": "self.global",
+          "lineNumber": 226
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "self.closed.get",
+          "lineNumber": 231
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "RTCIceCandidate::new",
+          "lineNumber": 234
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "self.global().as_window",
+          "lineNumber": 235
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "self.global",
+          "lineNumber": 235
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "candidate.candidate.into",
+          "lineNumber": 236
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "Some",
+          "lineNumber": 238
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 240
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "RTCPeerConnectionIceEvent::new",
+          "lineNumber": 242
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "self.global().as_window",
+          "lineNumber": 243
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "self.global",
+          "lineNumber": 243
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "Some",
+          "lineNumber": 245
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 248
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 250
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 250
+        },
+        {
+          "caller": "on_ice_candidate",
+          "callee": "self.upcast",
+          "lineNumber": 250
+        },
+        {
+          "caller": "on_negotiation_needed",
+          "callee": "self.closed.get",
+          "lineNumber": 254
+        },
+        {
+          "caller": "on_negotiation_needed",
+          "callee": "Event::new",
+          "lineNumber": 257
+        },
+        {
+          "caller": "on_negotiation_needed",
+          "callee": "self.global",
+          "lineNumber": 259
+        },
+        {
+          "caller": "on_negotiation_needed",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 264
+        },
+        {
+          "caller": "on_negotiation_needed",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 264
+        },
+        {
+          "caller": "on_negotiation_needed",
+          "callee": "self.upcast",
+          "lineNumber": 264
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "self.closed.get",
+          "lineNumber": 268
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "MediaStreamTrack::new",
+          "lineNumber": 271
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "self.global",
+          "lineNumber": 271
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "RTCTrackEvent::new",
+          "lineNumber": 272
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "self.global().as_window",
+          "lineNumber": 274
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "self.global",
+          "lineNumber": 274
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 280
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 280
+        },
+        {
+          "caller": "on_add_stream",
+          "callee": "self.upcast",
+          "lineNumber": 280
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.closed.get",
+          "lineNumber": 289
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "RTCDataChannel::new",
+          "lineNumber": 295
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.global",
+          "lineNumber": 296
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "USVString::from",
+          "lineNumber": 298
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "\"\".to_owned",
+          "lineNumber": 298
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "RTCDataChannelInit::empty",
+          "lineNumber": 299
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "Some",
+          "lineNumber": 300
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 301
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "RTCDataChannelEvent::new",
+          "lineNumber": 304
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.global().as_window",
+          "lineNumber": 305
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.global",
+          "lineNumber": 305
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 310
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 312
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 312
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.upcast",
+          "lineNumber": 312
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.data_channels.borrow().get",
+          "lineNumber": 316
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "self.data_channels.borrow",
+          "lineNumber": 316
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 317
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "channel.on_open",
+          "lineNumber": 327
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "channel.on_close",
+          "lineNumber": 328
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "channel.on_error",
+          "lineNumber": 329
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "channel.on_message",
+          "lineNumber": 330
+        },
+        {
+          "caller": "on_data_channel_event",
+          "callee": "channel.on_state_change",
+          "lineNumber": 331
+        },
+        {
+          "caller": "register_data_channel",
+          "callee": "self\n            .data_channels\n            .borrow_mut()\n            .insert(id, Dom::from_ref(channel)).is_some",
+          "lineNumber": 339
+        },
+        {
+          "caller": "register_data_channel",
+          "callee": "self\n            .data_channels\n            .borrow_mut().insert",
+          "lineNumber": 339
+        },
+        {
+          "caller": "register_data_channel",
+          "callee": "self\n            .data_channels.borrow_mut",
+          "lineNumber": 339
+        },
+        {
+          "caller": "register_data_channel",
+          "callee": "Dom::from_ref",
+          "lineNumber": 342
+        },
+        {
+          "caller": "unregister_data_channel",
+          "callee": "self.data_channels.borrow_mut().remove",
+          "lineNumber": 350
+        },
+        {
+          "caller": "unregister_data_channel",
+          "callee": "self.data_channels.borrow_mut",
+          "lineNumber": 350
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.closed.get",
+          "lineNumber": 356
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "state.convert",
+          "lineNumber": 361
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.gathering_state.get",
+          "lineNumber": 364
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.gathering_state.set",
+          "lineNumber": 369
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "Event::new",
+          "lineNumber": 372
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.global",
+          "lineNumber": 374
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 379
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 379
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.upcast",
+          "lineNumber": 379
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "RTCPeerConnectionIceEvent::new",
+          "lineNumber": 383
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.global().as_window",
+          "lineNumber": 384
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.global",
+          "lineNumber": 384
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "CanGc::from_cx",
+          "lineNumber": 389
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 391
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 391
+        },
+        {
+          "caller": "update_gathering_state",
+          "callee": "self.upcast",
+          "lineNumber": 391
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "self.closed.get",
+          "lineNumber": 398
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "state.convert",
+          "lineNumber": 403
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "self.ice_connection_state.get",
+          "lineNumber": 406
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "self.ice_connection_state.set",
+          "lineNumber": 411
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "Event::new",
+          "lineNumber": 414
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "self.global",
+          "lineNumber": 416
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 421
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 421
+        },
+        {
+          "caller": "update_ice_connection_state",
+          "callee": "self.upcast",
+          "lineNumber": 421
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "self.closed.get",
+          "lineNumber": 425
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "state.convert",
+          "lineNumber": 429
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "self.signaling_state.get",
+          "lineNumber": 431
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "self.signaling_state.set",
+          "lineNumber": 435
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "Event::new",
+          "lineNumber": 437
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "self.global",
+          "lineNumber": 439
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "event.upcast::<Event>().fire",
+          "lineNumber": 444
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "event.upcast::<Event>",
+          "lineNumber": 444
+        },
+        {
+          "caller": "update_signaling_state",
+          "callee": "self.upcast",
+          "lineNumber": 444
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self.offer_answer_generation.get",
+          "lineNumber": 448
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self\n            .global()\n            .task_manager()\n            .networking_task_source().to_sendable",
+          "lineNumber": 449
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self\n            .global()\n            .task_manager().networking_task_source",
+          "lineNumber": 449
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self\n            .global().task_manager",
+          "lineNumber": 449
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self.global",
+          "lineNumber": 449
+        },
+        {
+          "caller": "create_offer",
+          "callee": "Trusted::new",
+          "lineNumber": 454
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref()\n            .unwrap().create_offer",
+          "lineNumber": 455
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref().unwrap",
+          "lineNumber": 455
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self.controller\n            .borrow_mut().as_ref",
+          "lineNumber": 455
+        },
+        {
+          "caller": "create_offer",
+          "callee": "self.controller.borrow_mut",
+          "lineNumber": 455
+        },
+        {
+          "caller": "create_offer",
+          "callee": "Box::new",
+          "lineNumber": 459
+        },
+        {
+          "caller": "create_offer",
+          "callee": "task_source.queue",
+          "lineNumber": 460
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self.offer_answer_generation.get",
+          "lineNumber": 477
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self\n            .global()\n            .task_manager()\n            .networking_task_source().to_sendable",
+          "lineNumber": 478
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self\n            .global()\n            .task_manager().networking_task_source",
+          "lineNumber": 478
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self\n            .global().task_manager",
+          "lineNumber": 478
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self.global",
+          "lineNumber": 478
+        },
+        {
+          "caller": "create_answer",
+          "callee": "Trusted::new",
+          "lineNumber": 483
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref()\n            .unwrap().create_answer",
+          "lineNumber": 484
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref().unwrap",
+          "lineNumber": 484
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self.controller\n            .borrow_mut().as_ref",
+          "lineNumber": 484
+        },
+        {
+          "caller": "create_answer",
+          "callee": "self.controller.borrow_mut",
+          "lineNumber": 484
+        },
+        {
+          "caller": "create_answer",
+          "callee": "Box::new",
+          "lineNumber": 488
+        },
+        {
+          "caller": "create_answer",
+          "callee": "task_source.queue",
+          "lineNumber": 489
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 514
+        },
+        {
+          "caller": "Constructor",
+          "callee": "RTCPeerConnection::new",
+          "lineNumber": 514
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 560
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "candidate.sdpMid.is_none",
+          "lineNumber": 561
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "candidate.sdpMLineIndex.is_none",
+          "lineNumber": 561
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "p.reject_error",
+          "lineNumber": 562
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "Error::Type",
+          "lineNumber": 564
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "c\"one of sdpMid and sdpMLineIndex must be set\".to_owned",
+          "lineNumber": 564
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "candidate.sdpMLineIndex.is_none",
+          "lineNumber": 570
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "p.reject_error",
+          "lineNumber": 571
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "Error::Type",
+          "lineNumber": 573
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "c\"servo only supports sdpMLineIndex right now\".to_owned",
+          "lineNumber": 573
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref()\n            .unwrap().add_ice_candidate",
+          "lineNumber": 581
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref().unwrap",
+          "lineNumber": 581
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "self.controller\n            .borrow_mut().as_ref",
+          "lineNumber": 581
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "self.controller.borrow_mut",
+          "lineNumber": 581
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "candidate.sdpMLineIndex.unwrap",
+          "lineNumber": 586
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "candidate.candidate.to_string",
+          "lineNumber": 587
+        },
+        {
+          "caller": "AddIceCandidate",
+          "callee": "p.resolve_native_with_cx",
+          "lineNumber": 591
+        },
+        {
+          "caller": "CreateOffer",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 601
+        },
+        {
+          "caller": "CreateOffer",
+          "callee": "self.closed.get",
+          "lineNumber": 602
+        },
+        {
+          "caller": "CreateOffer",
+          "callee": "p.reject_error",
+          "lineNumber": 603
+        },
+        {
+          "caller": "CreateOffer",
+          "callee": "Error::InvalidState",
+          "lineNumber": 603
+        },
+        {
+          "caller": "CreateOffer",
+          "callee": "self.offer_promises.borrow_mut().push",
+          "lineNumber": 606
+        },
+        {
+          "caller": "CreateOffer",
+          "callee": "self.offer_promises.borrow_mut",
+          "lineNumber": 606
+        },
+        {
+          "caller": "CreateOffer",
+          "callee": "p.clone",
+          "lineNumber": 606
+        },
+        {
+          "caller": "CreateOffer",
+          "callee": "self.create_offer",
+          "lineNumber": 607
+        },
+        {
+          "caller": "CreateAnswer",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 617
+        },
+        {
+          "caller": "CreateAnswer",
+          "callee": "self.closed.get",
+          "lineNumber": 618
+        },
+        {
+          "caller": "CreateAnswer",
+          "callee": "p.reject_error",
+          "lineNumber": 619
+        },
+        {
+          "caller": "CreateAnswer",
+          "callee": "Error::InvalidState",
+          "lineNumber": 619
+        },
+        {
+          "caller": "CreateAnswer",
+          "callee": "self.answer_promises.borrow_mut().push",
+          "lineNumber": 622
+        },
+        {
+          "caller": "CreateAnswer",
+          "callee": "self.answer_promises.borrow_mut",
+          "lineNumber": 622
+        },
+        {
+          "caller": "CreateAnswer",
+          "callee": "p.clone",
+          "lineNumber": 622
+        },
+        {
+          "caller": "CreateAnswer",
+          "callee": "self.create_answer",
+          "lineNumber": 623
+        },
+        {
+          "caller": "GetLocalDescription",
+          "callee": "self.local_description.get",
+          "lineNumber": 629
+        },
+        {
+          "caller": "GetRemoteDescription",
+          "callee": "self.remote_description.get",
+          "lineNumber": 634
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 644
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "Trusted::new",
+          "lineNumber": 645
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "desc.convert",
+          "lineNumber": 646
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "TrustedPromise::new",
+          "lineNumber": 647
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "p.clone",
+          "lineNumber": 647
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "self\n            .global()\n            .task_manager()\n            .networking_task_source().to_sendable",
+          "lineNumber": 648
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "self\n            .global()\n            .task_manager().networking_task_source",
+          "lineNumber": 648
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "self\n            .global().task_manager",
+          "lineNumber": 648
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "self.global",
+          "lineNumber": 648
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref()\n            .unwrap().set_local_description",
+          "lineNumber": 653
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref().unwrap",
+          "lineNumber": 653
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "self.controller\n            .borrow_mut().as_ref",
+          "lineNumber": 653
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "self.controller.borrow_mut",
+          "lineNumber": 653
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "desc.clone",
+          "lineNumber": 658
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "Box::new",
+          "lineNumber": 659
+        },
+        {
+          "caller": "SetLocalDescription",
+          "callee": "task_source.queue",
+          "lineNumber": 660
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "Promise::new_in_realm",
+          "lineNumber": 686
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "Trusted::new",
+          "lineNumber": 687
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "desc.convert",
+          "lineNumber": 688
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "TrustedPromise::new",
+          "lineNumber": 689
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "p.clone",
+          "lineNumber": 689
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "self\n            .global()\n            .task_manager()\n            .networking_task_source().to_sendable",
+          "lineNumber": 690
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "self\n            .global()\n            .task_manager().networking_task_source",
+          "lineNumber": 690
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "self\n            .global().task_manager",
+          "lineNumber": 690
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "self.global",
+          "lineNumber": 690
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref()\n            .unwrap().set_remote_description",
+          "lineNumber": 695
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "self.controller\n            .borrow_mut()\n            .as_ref().unwrap",
+          "lineNumber": 695
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "self.controller\n            .borrow_mut().as_ref",
+          "lineNumber": 695
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "self.controller.borrow_mut",
+          "lineNumber": 695
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "desc.clone",
+          "lineNumber": 700
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "Box::new",
+          "lineNumber": 701
+        },
+        {
+          "caller": "SetRemoteDescription",
+          "callee": "task_source.queue",
+          "lineNumber": 702
+        },
+        {
+          "caller": "AddStream",
+          "callee": "stream.get_tracks",
+          "lineNumber": 723
+        },
+        {
+          "caller": "AddStream",
+          "callee": "self.controller\n                .borrow()\n                .as_ref()\n                .unwrap().add_stream",
+          "lineNumber": 724
+        },
+        {
+          "caller": "AddStream",
+          "callee": "self.controller\n                .borrow()\n                .as_ref().unwrap",
+          "lineNumber": 724
+        },
+        {
+          "caller": "AddStream",
+          "callee": "self.controller\n                .borrow().as_ref",
+          "lineNumber": 724
+        },
+        {
+          "caller": "AddStream",
+          "callee": "self.controller.borrow",
+          "lineNumber": 724
+        },
+        {
+          "caller": "AddStream",
+          "callee": "track.id",
+          "lineNumber": 728
+        },
+        {
+          "caller": "IceGatheringState",
+          "callee": "self.gathering_state.get",
+          "lineNumber": 734
+        },
+        {
+          "caller": "IceConnectionState",
+          "callee": "self.ice_connection_state.get",
+          "lineNumber": 739
+        },
+        {
+          "caller": "SignalingState",
+          "callee": "self.signaling_state.get",
+          "lineNumber": 744
+        },
+        {
+          "caller": "Close",
+          "callee": "self.closed.get",
+          "lineNumber": 750
+        },
+        {
+          "caller": "Close",
+          "callee": "self.closed.set",
+          "lineNumber": 754
+        },
+        {
+          "caller": "Close",
+          "callee": "self.signaling_state.set",
+          "lineNumber": 757
+        },
+        {
+          "caller": "Close",
+          "callee": "self.controller.borrow_mut().as_ref().unwrap().quit",
+          "lineNumber": 760
+        },
+        {
+          "caller": "Close",
+          "callee": "self.controller.borrow_mut().as_ref().unwrap",
+          "lineNumber": 760
+        },
+        {
+          "caller": "Close",
+          "callee": "self.controller.borrow_mut().as_ref",
+          "lineNumber": 760
+        },
+        {
+          "caller": "Close",
+          "callee": "self.controller.borrow_mut",
+          "lineNumber": 760
+        },
+        {
+          "caller": "Close",
+          "callee": "self.data_channels.borrow().iter",
+          "lineNumber": 763
+        },
+        {
+          "caller": "Close",
+          "callee": "self.data_channels.borrow",
+          "lineNumber": 763
+        },
+        {
+          "caller": "Close",
+          "callee": "val.on_state_change",
+          "lineNumber": 764
+        },
+        {
+          "caller": "Close",
+          "callee": "self.ice_connection_state.set",
+          "lineNumber": 771
+        },
+        {
+          "caller": "CreateDataChannel",
+          "callee": "RTCDataChannel::new",
+          "lineNumber": 783
+        },
+        {
+          "caller": "CreateDataChannel",
+          "callee": "self.global",
+          "lineNumber": 784
+        },
+        {
+          "caller": "CreateDataChannel",
+          "callee": "CanGc::deprecated_note",
+          "lineNumber": 789
+        },
+        {
+          "caller": "AddTransceiver",
+          "callee": "RTCRtpTransceiver::new",
+          "lineNumber": 799
+        },
+        {
+          "caller": "AddTransceiver",
+          "callee": "self.global",
+          "lineNumber": 799
+        },
+        {
+          "caller": "AddTransceiver",
+          "callee": "CanGc::deprecated_note",
+          "lineNumber": 799
+        },
+        {
+          "caller": "convert",
+          "callee": "self.sdp.into",
+          "lineNumber": 813
+        },
+        {
+          "caller": "convert",
+          "callee": "self.sdp.to_string",
+          "lineNumber": 828
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 43,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 112,
+      "nonEmptyLines": 102,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 31,
+          "endLine": 40,
+          "params": [
+            "candidate",
+            "url"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 42,
+          "endLine": 51,
+          "params": [
+            "window",
+            "ty",
+            "candidate",
+            "url",
+            "trusted",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 53,
+          "endLine": 72,
+          "params": [
+            "window",
+            "proto",
+            "ty",
+            "candidate",
+            "url",
+            "trusted",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 77,
+          "endLine": 96,
+          "params": [
+            "window",
+            "proto",
+            "can_gc",
+            "ty",
+            "init"
+          ]
+        },
+        {
+          "name": "GetCandidate",
+          "startLine": 99,
+          "endLine": 101,
+          "params": []
+        },
+        {
+          "name": "GetUrl",
+          "startLine": 104,
+          "endLine": 106,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 109,
+          "endLine": 111,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCPeerConnectionIceEvent",
+          "startLine": 24,
+          "endLine": 28,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "GetCandidate",
+            "GetUrl",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "candidate",
+            "url"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCPeerConnectionIceEvent",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 42,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 36
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "candidate.map",
+          "lineNumber": 37
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 50
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto",
+          "lineNumber": 62
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "RTCPeerConnectionIceEvent::new_inherited",
+          "lineNumber": 63
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "e.upcast::<Event>",
+          "lineNumber": 68
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "evt.init_event",
+          "lineNumber": 69
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "evt.set_trusted",
+          "lineNumber": 70
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 84
+        },
+        {
+          "caller": "Constructor",
+          "callee": "RTCPeerConnectionIceEvent::new_with_proto",
+          "lineNumber": 84
+        },
+        {
+          "caller": "Constructor",
+          "callee": "ty.into",
+          "lineNumber": 87
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.candidate\n                .as_ref()\n                .and_then(|x| x.as_ref()).map",
+          "lineNumber": 88
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.candidate\n                .as_ref().and_then",
+          "lineNumber": 88
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.candidate.as_ref",
+          "lineNumber": 88
+        },
+        {
+          "caller": "Constructor",
+          "callee": "x.as_ref",
+          "lineNumber": 90
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.url.as_ref().and_then",
+          "lineNumber": 92
+        },
+        {
+          "caller": "Constructor",
+          "callee": "init.url.as_ref",
+          "lineNumber": 92
+        },
+        {
+          "caller": "Constructor",
+          "callee": "x.clone",
+          "lineNumber": 92
+        },
+        {
+          "caller": "GetCandidate",
+          "callee": "self.candidate.as_ref().map",
+          "lineNumber": 100
+        },
+        {
+          "caller": "GetCandidate",
+          "callee": "self.candidate.as_ref",
+          "lineNumber": 100
+        },
+        {
+          "caller": "GetCandidate",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 100
+        },
+        {
+          "caller": "GetUrl",
+          "callee": "self.url.clone",
+          "lineNumber": 105
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 110
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 3,
+        "functionCount": 7,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcrtpsender.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 59,
+      "nonEmptyLines": 51,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 27,
+          "endLine": 31,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 33,
+          "endLine": 35,
+          "params": [
+            "global",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "GetParameters",
+          "startLine": 40,
+          "endLine": 53,
+          "params": []
+        },
+        {
+          "name": "SetParameters",
+          "startLine": 56,
+          "endLine": 58,
+          "params": [
+            "cx",
+            "_parameters"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCRtpSender",
+          "startLine": 22,
+          "endLine": 24,
+          "methods": [
+            "new_inherited",
+            "new",
+            "GetParameters",
+            "SetParameters"
+          ],
+          "properties": [
+            "reflector_"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCRtpSender",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 33,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 29
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 34
+        },
+        {
+          "caller": "GetParameters",
+          "callee": "DOMString::new",
+          "lineNumber": 50
+        },
+        {
+          "caller": "SetParameters",
+          "callee": "Promise::new_resolved",
+          "lineNumber": 57
+        },
+        {
+          "caller": "SetParameters",
+          "callee": "self.global",
+          "lineNumber": 57
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 4,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 67,
+      "nonEmptyLines": 58,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 26,
+          "endLine": 37,
+          "params": [
+            "global",
+            "direction",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 39,
+          "endLine": 49,
+          "params": [
+            "global",
+            "direction",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "Direction",
+          "startLine": 54,
+          "endLine": 56,
+          "params": []
+        },
+        {
+          "name": "SetDirection",
+          "startLine": 59,
+          "endLine": 61,
+          "params": [
+            "direction"
+          ]
+        },
+        {
+          "name": "Sender",
+          "startLine": 64,
+          "endLine": 66,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCRtpTransceiver",
+          "startLine": 19,
+          "endLine": 23,
+          "methods": [
+            "new_inherited",
+            "new",
+            "Direction",
+            "SetDirection",
+            "Sender"
+          ],
+          "properties": [
+            "reflector_",
+            "sender",
+            "direction"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCRtpTransceiver",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 39,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "RTCRtpSender::new",
+          "lineNumber": 31
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 33
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Cell::new",
+          "lineNumber": 34
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 35
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object",
+          "lineNumber": 44
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 45
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_inherited",
+          "lineNumber": 45
+        },
+        {
+          "caller": "Direction",
+          "callee": "self.direction.get",
+          "lineNumber": 55
+        },
+        {
+          "caller": "SetDirection",
+          "callee": "self.direction.set",
+          "lineNumber": 60
+        },
+        {
+          "caller": "Sender",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 65
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtcsessiondescription.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 76,
+      "nonEmptyLines": 68,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 26,
+          "endLine": 32,
+          "params": [
+            "ty",
+            "sdp"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 34,
+          "endLine": 47,
+          "params": [
+            "window",
+            "proto",
+            "ty",
+            "sdp",
+            "can_gc"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 52,
+          "endLine": 65,
+          "params": [
+            "window",
+            "proto",
+            "can_gc",
+            "config"
+          ]
+        },
+        {
+          "name": "Type",
+          "startLine": 68,
+          "endLine": 70,
+          "params": []
+        },
+        {
+          "name": "Sdp",
+          "startLine": 73,
+          "endLine": 75,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCSessionDescription",
+          "startLine": 19,
+          "endLine": 23,
+          "methods": [
+            "new_inherited",
+            "new",
+            "Constructor",
+            "Type",
+            "Sdp"
+          ],
+          "properties": [
+            "reflector",
+            "ty",
+            "sdp"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCSessionDescription",
+          "line": 19,
+          "isDefault": false
+        },
+        {
+          "name": "new_inherited",
+          "line": 26,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Reflector::new",
+          "lineNumber": 28
+        },
+        {
+          "caller": "new",
+          "callee": "reflect_dom_object_with_proto",
+          "lineNumber": 41
+        },
+        {
+          "caller": "new",
+          "callee": "Box::new",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new",
+          "callee": "RTCSessionDescription::new_inherited",
+          "lineNumber": 42
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 58
+        },
+        {
+          "caller": "Constructor",
+          "callee": "RTCSessionDescription::new",
+          "lineNumber": 58
+        },
+        {
+          "caller": "Constructor",
+          "callee": "config.sdp.clone",
+          "lineNumber": 62
+        },
+        {
+          "caller": "Sdp",
+          "callee": "self.sdp.clone",
+          "lineNumber": 74
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/script/dom/webrtc/rtctrackevent.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 97,
+      "nonEmptyLines": 88,
+      "functions": [
+        {
+          "name": "new_inherited",
+          "startLine": 27,
+          "endLine": 32,
+          "params": [
+            "track"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 34,
+          "endLine": 43,
+          "params": [
+            "cx",
+            "window",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "track"
+          ]
+        },
+        {
+          "name": "new_with_proto",
+          "startLine": 45,
+          "endLine": 65,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "type_",
+            "bubbles",
+            "cancelable",
+            "track"
+          ]
+        },
+        {
+          "name": "Constructor",
+          "startLine": 70,
+          "endLine": 86,
+          "params": [
+            "cx",
+            "window",
+            "proto",
+            "type_",
+            "init"
+          ]
+        },
+        {
+          "name": "Track",
+          "startLine": 89,
+          "endLine": 91,
+          "params": []
+        },
+        {
+          "name": "IsTrusted",
+          "startLine": 94,
+          "endLine": 96,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "RTCTrackEvent",
+          "startLine": 21,
+          "endLine": 24,
+          "methods": [
+            "new_inherited",
+            "new",
+            "new_with_proto",
+            "Constructor",
+            "Track",
+            "IsTrusted"
+          ],
+          "properties": [
+            "event",
+            "track"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RTCTrackEvent",
+          "line": 21,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 34,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_inherited",
+          "callee": "Event::new_inherited",
+          "lineNumber": 29
+        },
+        {
+          "caller": "new_inherited",
+          "callee": "Dom::from_ref",
+          "lineNumber": 30
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_proto",
+          "lineNumber": 42
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "reflect_dom_object_with_proto_and_cx",
+          "lineNumber": 54
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "Box::new",
+          "lineNumber": 55
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "RTCTrackEvent::new_inherited",
+          "lineNumber": 55
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "trackevent.upcast::<Event>",
+          "lineNumber": 61
+        },
+        {
+          "caller": "new_with_proto",
+          "callee": "event.init_event",
+          "lineNumber": 62
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Ok",
+          "lineNumber": 77
+        },
+        {
+          "caller": "Constructor",
+          "callee": "RTCTrackEvent::new_with_proto",
+          "lineNumber": 77
+        },
+        {
+          "caller": "Constructor",
+          "callee": "Atom::from",
+          "lineNumber": 81
+        },
+        {
+          "caller": "Track",
+          "callee": "DomRoot::from_ref",
+          "lineNumber": 90
+        },
+        {
+          "caller": "IsTrusted",
+          "callee": "self.event.IsTrusted",
+          "lineNumber": 95
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 6,
+        "classCount": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,1940 @@
+{
+  "nodes": [
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt",
+      "type": "file",
+      "name": "HistoryEntry.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt",
+      "summary": "Data class representing a browsing history entry with timestamp, URL, and title, with JSON serialization support.",
+      "tags": [
+        "data-model",
+        "history",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt:HistoryEntry",
+      "type": "class",
+      "name": "HistoryEntry",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt",
+      "lineRange": [
+        6,
+        22
+      ],
+      "summary": "Data class holding timestamp, URL, and title for a single browsing history entry with a companion object for JSON deserialization.",
+      "tags": [
+        "data-model",
+        "value-object",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt:toJSON",
+      "type": "function",
+      "name": "toJSON",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt",
+      "lineRange": [
+        7,
+        12
+      ],
+      "summary": "Serializes the history entry to a JSONObject with timestamp, URL, and title fields.",
+      "tags": [
+        "serialization",
+        "json",
+        "history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "type": "file",
+      "name": "HistoryFragment.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "summary": "Jetpack Compose fragment that displays the browsing history grouped by day with a clear action, using the HistoryManager for data persistence.",
+      "tags": [
+        "android",
+        "fragment",
+        "history",
+        "compose-ui"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses Jetpack Compose for UI rendering with Material3 components and LazyColumn for the grouped history list."
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:HistoryFragment",
+      "type": "class",
+      "name": "HistoryFragment",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "lineRange": [
+        35,
+        190
+      ],
+      "summary": "Compose-based fragment that loads and displays browsing history grouped by day, with clear-all action and item selection returning URL results.",
+      "tags": [
+        "android",
+        "fragment",
+        "compose-ui",
+        "history"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onCreate",
+      "type": "function",
+      "name": "onCreate",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "lineRange": [
+        41,
+        44
+      ],
+      "summary": "Initializes the HistoryManager instance during fragment creation.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onCreateView",
+      "type": "function",
+      "name": "onCreateView",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "lineRange": [
+        46,
+        50
+      ],
+      "summary": "Inflates the fragment layout and returns the root view.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "fragment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onViewCreated",
+      "type": "function",
+      "name": "onViewCreated",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "lineRange": [
+        52,
+        69
+      ],
+      "summary": "Sets up the Compose content with a top app bar and a clear history action button, then triggers history loading.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "compose-ui"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:loadHistory",
+      "type": "function",
+      "name": "loadHistory",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "lineRange": [
+        71,
+        139
+      ],
+      "summary": "Loads and displays the browsing history using Compose, rendering empty state text or a grouped LazyColumn with date headers and clickable entries.",
+      "tags": [
+        "compose-ui",
+        "history",
+        "ui-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:groupByDay",
+      "type": "function",
+      "name": "groupByDay",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "lineRange": [
+        141,
+        184
+      ],
+      "summary": "Groups history entries by calendar day using a Calendar instance, producing interspersed header and entry items for list display.",
+      "tags": [
+        "data-processing",
+        "history",
+        "grouping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:clearHistory",
+      "type": "function",
+      "name": "clearHistory",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "lineRange": [
+        186,
+        189
+      ],
+      "summary": "Clears all browsing history via the HistoryManager and reloads the empty state.",
+      "tags": [
+        "history",
+        "data-management",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "type": "file",
+      "name": "HistoryItem.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "summary": "Defines a sealed interface and two implementation classes representing history list items: day headers and individual entry items.",
+      "tags": [
+        "data-model",
+        "sealed-class",
+        "history",
+        "ui-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryItem",
+      "type": "class",
+      "name": "HistoryItem",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "lineRange": [
+        3,
+        3
+      ],
+      "summary": "Sealed interface as the base type for history list items, allowing either date headers or entry items.",
+      "tags": [
+        "sealed-class",
+        "ui-model",
+        "history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryHeaderItem",
+      "type": "class",
+      "name": "HistoryHeaderItem",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "lineRange": [
+        5,
+        5
+      ],
+      "summary": "Data class representing a day header in the grouped history list, holding the header text string.",
+      "tags": [
+        "ui-model",
+        "history",
+        "sealed-class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryEntryItem",
+      "type": "class",
+      "name": "HistoryEntryItem",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "lineRange": [
+        7,
+        7
+      ],
+      "summary": "Data class wrapping a HistoryEntry for rendering as a clickable row in the history list.",
+      "tags": [
+        "ui-model",
+        "history",
+        "sealed-class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "type": "file",
+      "name": "HistoryManager.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "summary": "Manages browsing history persistence to a JSON file, providing add, load, save, and clear operations with deduplication.",
+      "tags": [
+        "data-management",
+        "history",
+        "persistence"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:HistoryManager",
+      "type": "class",
+      "name": "HistoryManager",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "lineRange": [
+        18,
+        119
+      ],
+      "summary": "Manages a list of HistoryEntry objects with JSON file persistence, supporting add with deduplication, clear, load, and save operations.",
+      "tags": [
+        "data-management",
+        "history",
+        "persistence",
+        "file-io"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:addEntry",
+      "type": "function",
+      "name": "addEntry",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "lineRange": [
+        25,
+        52
+      ],
+      "summary": "Adds a URL and title to the history list with deduplication against the most recent entry, then persists to file.",
+      "tags": [
+        "data-management",
+        "history",
+        "deduplication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:clearHistory",
+      "type": "function",
+      "name": "clearHistory",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "lineRange": [
+        60,
+        65
+      ],
+      "summary": "Deletes the history file from storage and logs the action.",
+      "tags": [
+        "data-management",
+        "history",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:loadHistory",
+      "type": "function",
+      "name": "loadHistory",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "lineRange": [
+        70,
+        90
+      ],
+      "summary": "Loads the history from a JSON file, parsing each entry using HistoryEntry.fromJSON.",
+      "tags": [
+        "data-management",
+        "file-io",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:saveHistory",
+      "type": "function",
+      "name": "saveHistory",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "lineRange": [
+        95,
+        113
+      ],
+      "summary": "Serializes the history list to JSON and writes it to the history file with error handling.",
+      "tags": [
+        "data-management",
+        "file-io",
+        "json"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "type": "file",
+      "name": "MainActivity.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "summary": "Main browser activity providing navigation controls, URL bar, media session notification handling, and integration with history and settings management.",
+      "tags": [
+        "android",
+        "activity",
+        "browser",
+        "ui",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:MainActivity",
+      "type": "class",
+      "name": "MainActivity",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        30,
+        360
+      ],
+      "summary": "Main browser activity that manages the Servo web view, bottom navigation bar, URL field, media session playback, and history recording.",
+      "tags": [
+        "android",
+        "activity",
+        "browser",
+        "navigation",
+        "media-session"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:bindClick",
+      "type": "function",
+      "name": "bindClick",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        56,
+        61
+      ],
+      "summary": "Binds a click listener to a view identified by its resource ID, dispatching actions to the dispatchAction handler.",
+      "tags": [
+        "ui",
+        "event-handler",
+        "event-binding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onCreate",
+      "type": "function",
+      "name": "onCreate",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        63,
+        117
+      ],
+      "summary": "Initializes the activity: sets up the Servo view, bottom navigation, URL field, history manager, media session, and applies any launch intent URL.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "initialization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onDestroy",
+      "type": "function",
+      "name": "onDestroy",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        119,
+        122
+      ],
+      "summary": "Hides media session controls when the activity is destroyed.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "cleanup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:dispatchAction",
+      "type": "function",
+      "name": "dispatchAction",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        126,
+        155
+      ],
+      "summary": "Dispatches bottom navigation actions: back, forward, reload, stop, and opens Settings or History activities via intents.",
+      "tags": [
+        "navigation",
+        "event-handler",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:setupUrlField",
+      "type": "function",
+      "name": "setupUrlField",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        157,
+        175
+      ],
+      "summary": "Configures the URL input field with an editor action listener for loading URLs and focus change listeners for keyboard management.",
+      "tags": [
+        "ui",
+        "url-bar",
+        "keyboard"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:loadUrlFromField",
+      "type": "function",
+      "name": "loadUrlFromField",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        177,
+        179
+      ],
+      "summary": "Loads the URL currently entered in the URL field into the Servo view.",
+      "tags": [
+        "navigation",
+        "url-bar",
+        "loading"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onImeShow",
+      "type": "function",
+      "name": "onImeShow",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        181,
+        183
+      ],
+      "summary": "Shows the soft input keyboard for URL entry.",
+      "tags": [
+        "ui",
+        "keyboard",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onImeHide",
+      "type": "function",
+      "name": "onImeHide",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        185,
+        187
+      ],
+      "summary": "Hides the soft input keyboard.",
+      "tags": [
+        "ui",
+        "keyboard",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onKeyDown",
+      "type": "function",
+      "name": "onKeyDown",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        189,
+        194
+      ],
+      "summary": "Handles key down events for the activity.",
+      "tags": [
+        "android",
+        "input",
+        "event"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onKeyUp",
+      "type": "function",
+      "name": "onKeyUp",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        196,
+        201
+      ],
+      "summary": "Handles key up events for the activity.",
+      "tags": [
+        "android",
+        "input",
+        "event"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onAlert",
+      "type": "function",
+      "name": "onAlert",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        203,
+        207
+      ],
+      "summary": "Displays an Android AlertDialog with the given message from web content.",
+      "tags": [
+        "android",
+        "dialog",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onLoadStarted",
+      "type": "function",
+      "name": "onLoadStarted",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        209,
+        223
+      ],
+      "summary": "Updates UI when page load begins: disables back/forward buttons and shows loading progress indicator.",
+      "tags": [
+        "android",
+        "browser",
+        "ui-update"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onLoadEnded",
+      "type": "function",
+      "name": "onLoadEnded",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        226,
+        243
+      ],
+      "summary": "Updates UI when page load ends: adds a history entry, hides progress, and enables navigation buttons.",
+      "tags": [
+        "android",
+        "browser",
+        "ui-update",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onTitleChanged",
+      "type": "function",
+      "name": "onTitleChanged",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        245,
+        247
+      ],
+      "summary": "Stores the current page title when the title changes.",
+      "tags": [
+        "browser",
+        "state",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onUrlChanged",
+      "type": "function",
+      "name": "onUrlChanged",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        249,
+        252
+      ],
+      "summary": "Updates the URL field text and current URL when the page URL changes.",
+      "tags": [
+        "browser",
+        "ui-update",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onHistoryChanged",
+      "type": "function",
+      "name": "onHistoryChanged",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        254,
+        265
+      ],
+      "summary": "Enables or disables the back/forward navigation buttons based on current navigation history state.",
+      "tags": [
+        "navigation",
+        "ui-update",
+        "history"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onRedrawing",
+      "type": "function",
+      "name": "onRedrawing",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        267,
+        269
+      ],
+      "summary": "Shows or hides the idle/loading text indicator based on redrawing state.",
+      "tags": [
+        "ui",
+        "loading",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onPause",
+      "type": "function",
+      "name": "onPause",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        271,
+        274
+      ],
+      "summary": "Pauses both the Servo view and the activity lifecycle.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "suspend"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onResume",
+      "type": "function",
+      "name": "onResume",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        276,
+        280
+      ],
+      "summary": "Resumes both the activity and Servo view, and updates settings if necessary.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "preferences"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onBackPressed",
+      "type": "function",
+      "name": "onBackPressed",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        282,
+        289
+      ],
+      "summary": "Navigates back in the Servo view history if available, otherwise delegates to the default back behavior.",
+      "tags": [
+        "android",
+        "navigation",
+        "history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onActivityResult",
+      "type": "function",
+      "name": "onActivityResult",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        291,
+        301
+      ],
+      "summary": "Handles results from child activities: loads a URL returned from the history activity.",
+      "tags": [
+        "android",
+        "activity-result",
+        "lifecycle"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionMetadata",
+      "type": "function",
+      "name": "onMediaSessionMetadata",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        303,
+        307
+      ],
+      "summary": "Updates the media session notification with title, artist, and album metadata from web content.",
+      "tags": [
+        "media-session",
+        "audio",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionPlaybackStateChange",
+      "type": "function",
+      "name": "onMediaSessionPlaybackStateChange",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        309,
+        324
+      ],
+      "summary": "Shows or hides the media session notification controls based on the playback state, including paused vs playing differentiation.",
+      "tags": [
+        "media-session",
+        "audio",
+        "notification",
+        "state-machine"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionSetPositionState",
+      "type": "function",
+      "name": "onMediaSessionSetPositionState",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        326,
+        328
+      ],
+      "summary": "Logs the media playback position state when position updates occur.",
+      "tags": [
+        "media-session",
+        "logging",
+        "media"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onAnimatingIndicatorPrefChanged",
+      "type": "function",
+      "name": "onAnimatingIndicatorPrefChanged",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        330,
+        332
+      ],
+      "summary": "Toggles the animating loading indicator preference on the Servo view.",
+      "tags": [
+        "settings",
+        "preference",
+        "preferences"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onExperimentalPrefChanged",
+      "type": "function",
+      "name": "onExperimentalPrefChanged",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        334,
+        336
+      ],
+      "summary": "Toggles the experimental mode setting on the Servo view.",
+      "tags": [
+        "settings",
+        "preference",
+        "preferences"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:updateSettingsIfNecessary",
+      "type": "function",
+      "name": "updateSettingsIfNecessary",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "lineRange": [
+        338,
+        351
+      ],
+      "summary": "Loads shared preferences and applies animating indicator and experimental mode settings to the Servo view.",
+      "tags": [
+        "settings",
+        "initialization",
+        "android"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "type": "file",
+      "name": "MediaSession.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "summary": "Manages Android media notification for web audio and video playback with play/pause/next/prev controls.",
+      "tags": [
+        "media-session",
+        "android",
+        "notification",
+        "audio"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses Android NotificationCompat.MediaStyle with dynamic broadcast receivers for media button actions."
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:MediaSession",
+      "type": "class",
+      "name": "MediaSession",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "lineRange": [
+        23,
+        185
+      ],
+      "summary": "Manages Android media notification display with play/pause/next/previous actions, notification channel, and dynamic broadcast receiver registration.",
+      "tags": [
+        "media-session",
+        "notification",
+        "audio",
+        "broadcast-receiver"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:createMediaNotificationChannel",
+      "type": "function",
+      "name": "createMediaNotificationChannel",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "lineRange": [
+        50,
+        59
+      ],
+      "summary": "Creates the Android notification channel for media playback notifications.",
+      "tags": [
+        "notification",
+        "android",
+        "initialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:showMediaSessionControls",
+      "type": "function",
+      "name": "showMediaSessionControls",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "lineRange": [
+        61,
+        138
+      ],
+      "summary": "Displays a media notification with play/pause, next, and previous actions, registering a broadcast receiver for button interactions.",
+      "tags": [
+        "notification",
+        "media-controls",
+        "broadcast-receiver"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:hideMediaSessionControls",
+      "type": "function",
+      "name": "hideMediaSessionControls",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "lineRange": [
+        140,
+        145
+      ],
+      "summary": "Cancels the media notification and unregisters the broadcast receiver.",
+      "tags": [
+        "notification",
+        "cleanup",
+        "media"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:setPlaybackState",
+      "type": "function",
+      "name": "setPlaybackState",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "lineRange": [
+        147,
+        149
+      ],
+      "summary": "Updates the stored playback state value.",
+      "tags": [
+        "state",
+        "media",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:updateMetadata",
+      "type": "function",
+      "name": "updateMetadata",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "lineRange": [
+        151,
+        159
+      ],
+      "summary": "Updates media metadata (title, artist, album) and refreshes the media notification controls.",
+      "tags": [
+        "metadata",
+        "media",
+        "notification"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "type": "file",
+      "name": "SettingsActivity.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "summary": "Activity that hosts the SettingsFragment for configuring browser preferences.",
+      "tags": [
+        "android",
+        "activity",
+        "settings",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt:SettingsActivity",
+      "type": "class",
+      "name": "SettingsActivity",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "lineRange": [
+        12,
+        21
+      ],
+      "summary": "Activity that displays the SettingsFragment for modifying browser preferences.",
+      "tags": [
+        "android",
+        "activity",
+        "settings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt:onCreate",
+      "type": "function",
+      "name": "onCreate",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "lineRange": [
+        13,
+        20
+      ],
+      "summary": "Sets up the activity layout and replaces the container with a SettingsFragment instance.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "settings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "type": "file",
+      "name": "SettingsFragment.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "summary": "Fragment providing UI toggles for animating loading indicator and experimental mode preferences, with persistence via SharedPreferences.",
+      "tags": [
+        "android",
+        "fragment",
+        "settings",
+        "preferences"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:SettingsFragment",
+      "type": "class",
+      "name": "SettingsFragment",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "lineRange": [
+        13,
+        73
+      ],
+      "summary": "Fragment with switches for animating indicator and experimental mode, loading current preferences and saving changes.",
+      "tags": [
+        "android",
+        "fragment",
+        "settings",
+        "preferences"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onCreate",
+      "type": "function",
+      "name": "onCreate",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "lineRange": [
+        18,
+        21
+      ],
+      "summary": "Initializes the default shared preferences instance.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "settings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onCreateView",
+      "type": "function",
+      "name": "onCreateView",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "lineRange": [
+        23,
+        27
+      ],
+      "summary": "Inflates the settings layout.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "fragment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onViewCreated",
+      "type": "function",
+      "name": "onViewCreated",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "lineRange": [
+        29,
+        60
+      ],
+      "summary": "Binds UI elements: close button, animating indicator switch, and experimental mode switch, with click and checked-change listeners for saving preferences.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "settings",
+        "ui-binding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:loadPreferences",
+      "type": "function",
+      "name": "loadPreferences",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "lineRange": [
+        62,
+        68
+      ],
+      "summary": "Reads current preference values from SharedPreferences and sets the UI switches accordingly.",
+      "tags": [
+        "settings",
+        "preferences",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:savePreference",
+      "type": "function",
+      "name": "savePreference",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "lineRange": [
+        70,
+        72
+      ],
+      "summary": "Saves a boolean preference key-value pair to SharedPreferences.",
+      "tags": [
+        "settings",
+        "preferences",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:support/android/apk/servoapp/src/main/res/color/bottom_menu_colors.xml",
+      "type": "config",
+      "name": "bottom_menu_colors.xml",
+      "filePath": "support/android/apk/servoapp/src/main/res/color/bottom_menu_colors.xml",
+      "summary": "Android color selector resource defining the bottom navigation menu item colors for enabled, selected, and default states.",
+      "tags": [
+        "android",
+        "resource",
+        "color",
+        "ui-theme"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/res/drawable/cancel.webp",
+      "type": "file",
+      "name": "cancel.webp",
+      "filePath": "support/android/apk/servoapp/src/main/res/drawable/cancel.webp",
+      "summary": "WebP image asset for the cancel/close button icon used in the browser UI.",
+      "tags": [
+        "drawable",
+        "icon",
+        "android-resource"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/res/drawable/history_back.webp",
+      "type": "file",
+      "name": "history_back.webp",
+      "filePath": "support/android/apk/servoapp/src/main/res/drawable/history_back.webp",
+      "summary": "WebP image asset for the history back navigation icon.",
+      "tags": [
+        "drawable",
+        "icon",
+        "android-resource"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/res/drawable/history_forward.webp",
+      "type": "file",
+      "name": "history_forward.webp",
+      "filePath": "support/android/apk/servoapp/src/main/res/drawable/history_forward.webp",
+      "summary": "WebP image asset for the history forward navigation icon.",
+      "tags": [
+        "drawable",
+        "icon",
+        "android-resource"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt:HistoryEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt:toJSON",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt:HistoryEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryEntry.kt:toJSON",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:HistoryFragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onCreateView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onViewCreated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:loadHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:groupByDay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:clearHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:HistoryFragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onCreate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onCreateView",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt:onViewCreated",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryHeaderItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryEntryItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryHeaderItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryItem.kt:HistoryEntryItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:HistoryManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:addEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:clearHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:loadHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:saveHistory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:HistoryManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:addEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt:clearHistory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:MainActivity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:bindClick",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onDestroy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:dispatchAction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:setupUrlField",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:loadUrlFromField",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onImeShow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onImeHide",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onKeyDown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onKeyUp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onAlert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onLoadStarted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onLoadEnded",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onTitleChanged",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onUrlChanged",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onHistoryChanged",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onRedrawing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onPause",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onResume",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onBackPressed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onActivityResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionPlaybackStateChange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionSetPositionState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onAnimatingIndicatorPrefChanged",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onExperimentalPrefChanged",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:updateSettingsIfNecessary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:MainActivity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onCreate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onDestroy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onImeShow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onImeHide",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onKeyDown",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onKeyUp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onAlert",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onLoadStarted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onLoadEnded",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onTitleChanged",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onUrlChanged",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onHistoryChanged",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onRedrawing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onPause",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onResume",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onBackPressed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onActivityResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionMetadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionPlaybackStateChange",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt:onMediaSessionSetPositionState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:MediaSession",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:createMediaNotificationChannel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:showMediaSessionControls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:hideMediaSessionControls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:setPlaybackState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:updateMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:MediaSession",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:showMediaSessionControls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:hideMediaSessionControls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:setPlaybackState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt:updateMetadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt:SettingsActivity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt:onCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt:SettingsActivity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt:onCreate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:SettingsFragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onCreateView",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onViewCreated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:loadPreferences",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:savePreference",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:SettingsFragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onCreate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onCreateView",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt:onViewCreated",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MediaSession.kt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryManager.kt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/res/color/bottom_menu_colors.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

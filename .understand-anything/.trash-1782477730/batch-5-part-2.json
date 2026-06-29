@@ -1,0 +1,1020 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/context.rs",
+      "type": "file",
+      "name": "context.rs",
+      "filePath": "components/layout/context.rs",
+      "summary": "Defines the LayoutContext and ImageResolver, providing shared layout state including style context, font context, and image resolution with caching.",
+      "tags": [
+        "rust",
+        "layout",
+        "context"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/context.rs:should_parallelize",
+      "type": "function",
+      "name": "should_parallelize",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        62,
+        64
+      ],
+      "summary": "Handles should parallelize logic within context.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:should_parallelize_layout",
+      "type": "function",
+      "name": "should_parallelize_layout",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        66,
+        71
+      ],
+      "summary": "Handles should parallelize layout logic within context.",
+      "tags": [
+        "function",
+        "layout",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        138,
+        148
+      ],
+      "summary": "Handles drop logic within context.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:get_or_request_image_or_meta",
+      "type": "function",
+      "name": "get_or_request_image_or_meta",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        152,
+        198
+      ],
+      "summary": "Fetches or requests image metadata for display list rendering.",
+      "tags": [
+        "function",
+        "image",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/context.rs:handle_animated_image",
+      "type": "function",
+      "name": "handle_animated_image",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        200,
+        207
+      ],
+      "summary": "Handles handle animated image logic within context.",
+      "tags": [
+        "function",
+        "image",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:get_cached_image_for_url",
+      "type": "function",
+      "name": "get_cached_image_for_url",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        209,
+        246
+      ],
+      "summary": "Retrieves a cached image for the given URL, requesting it if not available.",
+      "tags": [
+        "function",
+        "image",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/context.rs:rasterize_vector_image",
+      "type": "function",
+      "name": "rasterize_vector_image",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        248,
+        268
+      ],
+      "summary": "Rasterizes an SVG or vector image at the specified size.",
+      "tags": [
+        "function",
+        "image",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/context.rs:queue_svg_element_for_serialization",
+      "type": "function",
+      "name": "queue_svg_element_for_serialization",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        270,
+        274
+      ],
+      "summary": "Handles queue svg element for serialization logic within context.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:resolve_image",
+      "type": "function",
+      "name": "resolve_image",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        276,
+        348
+      ],
+      "summary": "Resolves an image from the image cache or fetches it from the network.",
+      "tags": [
+        "function",
+        "image",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/context.rs:LayoutContext",
+      "type": "class",
+      "name": "LayoutContext",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        32,
+        59
+      ],
+      "summary": "Central layout context holding style system, font context, image resolver, and parallelism configuration.",
+      "tags": [
+        "class",
+        "layout",
+        "formatting-context",
+        "text"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust struct with 0 methods and 8 fields, using Servo's fragment-oriented layout pattern."
+    },
+    {
+      "id": "class:components/layout/context.rs:ResolvedImage",
+      "type": "class",
+      "name": "ResolvedImage",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        74,
+        83
+      ],
+      "summary": "Represents a resolved image ready for display list rendering.",
+      "tags": [
+        "class",
+        "image",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/context.rs:ResolveImageError",
+      "type": "class",
+      "name": "ResolveImageError",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        86,
+        95
+      ],
+      "summary": "Structural type for ResolveImageError in context with 8 properties.",
+      "tags": [
+        "class",
+        "image",
+        "servo"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust struct with 0 methods and 8 fields, using Servo's fragment-oriented layout pattern."
+    },
+    {
+      "id": "class:components/layout/context.rs:LayoutImageCacheResult",
+      "type": "class",
+      "name": "LayoutImageCacheResult",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        97,
+        101
+      ],
+      "summary": "Result of an image cache lookup with loaded image data.",
+      "tags": [
+        "class",
+        "layout",
+        "image"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/context.rs:ImageResolver",
+      "type": "class",
+      "name": "ImageResolver",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        103,
+        135
+      ],
+      "summary": "Manages image loading, caching, and resolution for display list rendering.",
+      "tags": [
+        "class",
+        "image",
+        "servo"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust struct with 7 methods and 8 fields, using Servo's fragment-oriented layout pattern."
+    },
+    {
+      "id": "file:components/layout/display_list/background.rs",
+      "type": "file",
+      "name": "background.rs",
+      "filePath": "components/layout/display_list/background.rs",
+      "summary": "Handles background display list painting including background layers, painting areas, clipping, and tiled background image rendering.",
+      "tags": [
+        "rust",
+        "layout",
+        "display-list",
+        "background"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:get_cyclic",
+      "type": "function",
+      "name": "get_cyclic",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        40,
+        42
+      ],
+      "summary": "Handles get cyclic logic within background.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:painting_area",
+      "type": "function",
+      "name": "painting_area",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        53,
+        79
+      ],
+      "summary": "Handles painting area logic within background.",
+      "tags": [
+        "function",
+        "paint",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:clip",
+      "type": "function",
+      "name": "clip",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        81,
+        111
+      ],
+      "summary": "Handles clip logic within background.",
+      "tags": [
+        "function",
+        "clip",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:common_properties",
+      "type": "function",
+      "name": "common_properties",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        116,
+        136
+      ],
+      "summary": "Handles common properties logic within background.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:positioning_area",
+      "type": "function",
+      "name": "positioning_area",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        141,
+        165
+      ],
+      "summary": "Handles positioning area logic within background.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:layout_layer",
+      "type": "function",
+      "name": "layout_layer",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        168,
+        291
+      ],
+      "summary": "Lays out a single background layer including positioning and tiling.",
+      "tags": [
+        "function",
+        "layout",
+        "servo"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:layout_1d",
+      "type": "function",
+      "name": "layout_1d",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        295,
+        380
+      ],
+      "summary": "Handles layout 1d logic within background.",
+      "tags": [
+        "function",
+        "layout",
+        "servo"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/display_list/background.rs:BackgroundLayer",
+      "type": "class",
+      "name": "BackgroundLayer",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        23,
+        30
+      ],
+      "summary": "Enumerates background painting layers (background-color, background-image).",
+      "tags": [
+        "class",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust struct with 0 methods and 6 fields, using Servo's fragment-oriented layout pattern."
+    },
+    {
+      "id": "class:components/layout/display_list/background.rs:BackgroundPainter",
+      "type": "class",
+      "name": "BackgroundPainter",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        44,
+        48
+      ],
+      "summary": "Paints CSS background layers including images, colors, and tiling.",
+      "tags": [
+        "class",
+        "paint",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/display_list/clip.rs",
+      "type": "file",
+      "name": "clip.rs",
+      "filePath": "components/layout/display_list/clip.rs",
+      "summary": "Manages display list clipping operations including clip paths, basic shapes (circle/ellipse), and the stacking context clip store.",
+      "tags": [
+        "rust",
+        "layout",
+        "display-list",
+        "clip"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/clip.rs:get",
+      "type": "function",
+      "name": "get",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        57,
+        59
+      ],
+      "summary": "Handles get logic within clip.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/clip.rs:add",
+      "type": "function",
+      "name": "add",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        61,
+        77
+      ],
+      "summary": "Handles add logic within clip.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/clip.rs:add_for_clip_path",
+      "type": "function",
+      "name": "add_for_clip_path",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        79,
+        127
+      ],
+      "summary": "Adds a clip chain entry for a CSS clip-path.",
+      "tags": [
+        "function",
+        "clip",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/clip.rs:add_for_basic_shape",
+      "type": "function",
+      "name": "add_for_basic_shape",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        130,
+        235
+      ],
+      "summary": "Adds a clip chain entry for a CSS basic shape (circle, ellipse).",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/display_list/clip.rs:compute_shape_radius_for_circle",
+      "type": "function",
+      "name": "compute_shape_radius_for_circle",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        238,
+        274
+      ],
+      "summary": "Computes the radius for CSS circle() shape function.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/clip.rs:compute_shape_radius_for_ellipse",
+      "type": "function",
+      "name": "compute_shape_radius_for_ellipse",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        276,
+        322
+      ],
+      "summary": "Computes the radii for CSS ellipse() shape function.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/display_list/clip.rs:ClipId",
+      "type": "class",
+      "name": "ClipId",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        25,
+        25
+      ],
+      "summary": "Structural type for ClipId in clip with 1 methods.",
+      "tags": [
+        "class",
+        "clip",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/display_list/clip.rs:Clip",
+      "type": "class",
+      "name": "Clip",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        42,
+        48
+      ],
+      "summary": "Represents a clip region with radii and associated scroll node.",
+      "tags": [
+        "class",
+        "clip",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/display_list/clip.rs:StackingContextTreeClipStore",
+      "type": "class",
+      "name": "StackingContextTreeClipStore",
+      "filePath": "components/layout/display_list/clip.rs",
+      "lineRange": [
+        54,
+        54
+      ],
+      "summary": "Manages clip IDs and clip chains within the stacking context tree.",
+      "tags": [
+        "class",
+        "formatting-context",
+        "clip",
+        "text",
+        "tree"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:should_parallelize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:should_parallelize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:should_parallelize_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:should_parallelize_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:get_or_request_image_or_meta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:get_or_request_image_or_meta",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:handle_animated_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:handle_animated_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:get_cached_image_for_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:get_cached_image_for_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:rasterize_vector_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:rasterize_vector_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:queue_svg_element_for_serialization",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:queue_svg_element_for_serialization",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:resolve_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:resolve_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:LayoutContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:LayoutContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:ResolvedImage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:ResolvedImage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:ResolveImageError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:ResolveImageError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:LayoutImageCacheResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:LayoutImageCacheResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:ImageResolver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:ImageResolver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:get_cyclic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:get_cyclic",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:painting_area",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:painting_area",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:common_properties",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:common_properties",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:positioning_area",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:positioning_area",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:layout_layer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:layout_layer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:layout_1d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "class:components/layout/display_list/background.rs:BackgroundLayer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "class:components/layout/display_list/background.rs:BackgroundLayer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "class:components/layout/display_list/background.rs:BackgroundPainter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "class:components/layout/display_list/background.rs:BackgroundPainter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:get",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:get",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:add",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:add",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:add_for_clip_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:add_for_clip_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:add_for_basic_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:compute_shape_radius_for_circle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "function:components/layout/display_list/clip.rs:compute_shape_radius_for_ellipse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "class:components/layout/display_list/clip.rs:ClipId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "class:components/layout/display_list/clip.rs:ClipId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "class:components/layout/display_list/clip.rs:Clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "class:components/layout/display_list/clip.rs:Clip",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "class:components/layout/display_list/clip.rs:StackingContextTreeClipStore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "class:components/layout/display_list/clip.rs:StackingContextTreeClipStore",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "file:components/layout/display_list/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/display_list/clip.rs",
+      "target": "file:components/layout/display_list/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

@@ -1,0 +1,633 @@
+{
+  "nodes": [
+    {
+      "id": "file:python/servo/util.py",
+      "type": "file",
+      "name": "util.py",
+      "filePath": "python/servo/util.py",
+      "summary": "Utility and file I/O helper functions for the Servo build system, including download with resume, zip extraction with Unix permission preservation, hash verification, environment path manipulation, and HarmonyOS device connectivity via HD C.",
+      "tags": ["utility", "file-io", "download", "build-tool", "HarmonyOS"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:python/servo/util.py:download",
+      "type": "function",
+      "name": "download",
+      "filePath": "python/servo/util.py",
+      "lineRange": [48, 107],
+      "summary": "Downloads a file from a URL with resume support, progress display, and error handling for network issues.",
+      "tags": ["download", "networking", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:python/servo/util.py:download_file",
+      "type": "function",
+      "name": "download_file",
+      "filePath": "python/servo/util.py",
+      "lineRange": [116, 125],
+      "summary": "Downloads a file from a URL and saves it to a specified local path, with resume support using existing partial downloads.",
+      "tags": ["download", "file-io", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/util.py:extract",
+      "type": "function",
+      "name": "extract",
+      "filePath": "python/servo/util.py",
+      "lineRange": [162, 174],
+      "summary": "Extracts a zip archive to a destination directory, optionally moving contents from a subdirectory and removing the archive afterward.",
+      "tags": ["archive", "extraction", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/util.py:check_hash",
+      "type": "function",
+      "name": "check_hash",
+      "filePath": "python/servo/util.py",
+      "lineRange": [177, 187],
+      "summary": "Verifies a file's cryptographic hash against an expected value and exits with an error on mismatch.",
+      "tags": ["hash", "verification", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/util.py:append_paths_to_env",
+      "type": "function",
+      "name": "append_paths_to_env",
+      "filePath": "python/servo/util.py",
+      "lineRange": [194, 203],
+      "summary": "Appends one or more paths to an environment variable, joining with the OS path separator.",
+      "tags": ["environment", "path", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/util.py:prepend_paths_to_env",
+      "type": "function",
+      "name": "prepend_paths_to_env",
+      "filePath": "python/servo/util.py",
+      "lineRange": [206, 214],
+      "summary": "Prepends one or more paths to an environment variable, joining with the OS path separator.",
+      "tags": ["environment", "path", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:python/servo/util.py:ZipFileWithUnixPermissions",
+      "type": "class",
+      "name": "ZipFileWithUnixPermissions",
+      "filePath": "python/servo/util.py",
+      "lineRange": [130, 159],
+      "summary": "Subclass of ZipFile that preserves Unix file permissions (including executable bits) when extracting entries.",
+      "tags": ["archive", "permissions", "zip"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:python/servo/util.py:HarmonyDeviceConnector",
+      "type": "class",
+      "name": "HarmonyDeviceConnector",
+      "filePath": "python/servo/util.py",
+      "lineRange": [221, 286],
+      "summary": "Manages connections to HarmonyOS devices via HD C, providing methods for shell commands, file transfer, wake/suspend, and screenshots.",
+      "tags": ["HarmonyOS", "device", "connectivity"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:python/servo/util.py:HarmonyDevicePerfMode",
+      "type": "class",
+      "name": "HarmonyDevicePerfMode",
+      "filePath": "python/servo/util.py",
+      "lineRange": [289, 314],
+      "summary": "Context manager that enables high-performance mode on a HarmonyOS device by disabling sleep during the managed block.",
+      "tags": ["HarmonyOS", "performance", "context-manager"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:python/servo/visual_studio.py",
+      "type": "file",
+      "name": "visual_studio.py",
+      "filePath": "python/servo/visual_studio.py",
+      "summary": "Discovers Visual Studio installations on Windows, locating compatible MSVC toolchains and Windows SDK installations via vswhere, registry, and path probing.",
+      "tags": ["windows", "visual-studio", "build-tool", "msvc", "sdk"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:python/servo/visual_studio.py:find_vswhere",
+      "type": "function",
+      "name": "find_vswhere",
+      "filePath": "python/servo/visual_studio.py",
+      "lineRange": [41, 48],
+      "summary": "Locates the vswhere.exe tool bundled with Visual Studio 2017+ installations.",
+      "tags": ["visual-studio", "discovery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/visual_studio.py:find_compatible_msvc_with_vswhere",
+      "type": "function",
+      "name": "find_compatible_msvc_with_vswhere",
+      "filePath": "python/servo/visual_studio.py",
+      "lineRange": [51, 82],
+      "summary": "Uses vswhere to query Visual Studio installations for compatible MSVC toolchain and Windows SDK components.",
+      "tags": ["visual-studio", "msvc", "discovery"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:python/servo/visual_studio.py:find_compatible_msvc_with_path",
+      "type": "function",
+      "name": "find_compatible_msvc_with_path",
+      "filePath": "python/servo/visual_studio.py",
+      "lineRange": [85, 97],
+      "summary": "Searches common MSVC installation paths for compatible toolchain versions when vswhere is unavailable.",
+      "tags": ["visual-studio", "msvc", "discovery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/visual_studio.py:find_compatible_msvc_with_environment_variables",
+      "type": "function",
+      "name": "find_compatible_msvc_with_environment_variables",
+      "filePath": "python/servo/visual_studio.py",
+      "lineRange": [100, 112],
+      "summary": "Finds compatible MSVC installations using environment variables like VCToolsInstallDir.",
+      "tags": ["visual-studio", "msvc", "environment"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/visual_studio.py:find_msvc_installations",
+      "type": "function",
+      "name": "find_msvc_installations",
+      "filePath": "python/servo/visual_studio.py",
+      "lineRange": [115, 131],
+      "summary": "Aggregates MSVC installations from all discovery methods (vswhere, path, environment variables), deduplicates and sorts them.",
+      "tags": ["visual-studio", "msvc", "discovery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/visual_studio.py:find_msvc_redist_dirs",
+      "type": "function",
+      "name": "find_msvc_redist_dirs",
+      "filePath": "python/servo/visual_studio.py",
+      "lineRange": [134, 161],
+      "summary": "Locates MSVC redistributable directories for a given platform, raising an error if none are found.",
+      "tags": ["visual-studio", "redistributable", "msvc"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:python/servo/visual_studio.py:find_windows_sdk_installation_path",
+      "type": "function",
+      "name": "find_windows_sdk_installation_path",
+      "filePath": "python/servo/visual_studio.py",
+      "lineRange": [164, 182],
+      "summary": "Reads the Windows SDK installation path from the Windows registry.",
+      "tags": ["windows-sdk", "registry", "discovery"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:python/servo/visual_studio.py:VisualStudioInstallation",
+      "type": "class",
+      "name": "VisualStudioInstallation",
+      "filePath": "python/servo/visual_studio.py",
+      "lineRange": [32, 38],
+      "summary": "Immutable dataclass representing a Visual Studio installation with version number, installation path, and VC tools path.",
+      "tags": ["visual-studio", "dataclass"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:python/tidy/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "python/tidy/__init__.py",
+      "summary": "Package initializer for the servo-tidy tool, re-exporting the main scan, run_coauthors_check, and run_tests entry points for external use.",
+      "tags": ["entry-point", "barrel", "linter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:python/tidy/licenseck.py",
+      "type": "file",
+      "name": "licenseck.py",
+      "filePath": "python/tidy/licenseck.py",
+      "summary": "Defines accepted MPL, Apache, and MIT license texts and copyright disclaimers used by tidy to verify source file license headers.",
+      "tags": ["license", "configuration", "linter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:python/tidy/linting_report.py",
+      "type": "file",
+      "name": "linting_report.py",
+      "filePath": "python/tidy/linting_report.py",
+      "summary": "Provides Git Hub Actions annotation reporting classes for emitting structured lint errors as annot ations or clippy-style diagnostics.",
+      "tags": ["linting", "github-actions", "annotation", "reporting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:python/tidy/linting_report.py:GithubAnnotation",
+      "type": "class",
+      "name": "GithubAnnotation",
+      "filePath": "python/tidy/linting_report.py",
+      "lineRange": [15, 23],
+      "summary": "Dataclass representing a single GitHub Actions annotation with file, line range, severity level, title, and message fields.",
+      "tags": ["github-actions", "annotation", "dataclass"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:python/tidy/linting_report.py:GitHubAnnotationManager",
+      "type": "class",
+      "name": "GitHubAnnotationManager",
+      "filePath": "python/tidy/linting_report.py",
+      "lineRange": [26, 110],
+      "summary": "Manages generation of GitHub Actions workflow annotations, including formatting for clippy JSON output and path sanitization.",
+      "tags": ["github-actions", "annotation", "linting", "clippy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:python/tidy/test.py",
+      "type": "file",
+      "name": "test.py",
+      "filePath": "python/tidy/test.py",
+      "summary": "Unit test suite for the servo-tidy linter, covering whitespace, license, shell, Rust, TOML, and WebIDL checks with test fixture files.",
+      "tags": ["test", "linter", "unit-test"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:python/tidy/test.py:test_file_path",
+      "type": "function",
+      "name": "test_file_path",
+      "filePath": "python/tidy/test.py",
+      "lineRange": [21, 22],
+      "summary": "Builds the absolute path to a test fixture file within the tidy test data directory.",
+      "tags": ["test", "fixture", "path"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/tidy/test.py:iterFile",
+      "type": "function",
+      "name": "iterFile",
+      "filePath": "python/tidy/test.py",
+      "lineRange": [25, 26],
+      "summary": "Creates an iterator over lines in a test fixture file for use by test methods.",
+      "tags": ["test", "fixture", "iteration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/tidy/test.py:run_tests",
+      "type": "function",
+      "name": "run_tests",
+      "filePath": "python/tidy/test.py",
+      "lineRange": [300, 303],
+      "summary": "Entry point that runs the tidy test suite via unittest with logging setup.",
+      "tags": ["test", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:python/tidy/test.py:CheckTidiness",
+      "type": "class",
+      "name": "CheckTidiness",
+      "filePath": "python/tidy/test.py",
+      "lineRange": [29, 297],
+      "summary": "TestCase subclass with over 20 test methods exercising each tidy lint check against fixture files.",
+      "tags": ["test", "linter", "unit-test"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:download",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:download_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:check_hash",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:append_paths_to_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:prepend_paths_to_env",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "class:python/servo/util.py:ZipFileWithUnixPermissions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "class:python/servo/util.py:HarmonyDeviceConnector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "class:python/servo/util.py:HarmonyDevicePerfMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:download",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:download_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:extract",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:check_hash",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:append_paths_to_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "function:python/servo/util.py:prepend_paths_to_env",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "class:python/servo/util.py:ZipFileWithUnixPermissions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "class:python/servo/util.py:HarmonyDeviceConnector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/util.py",
+      "target": "class:python/servo/util.py:HarmonyDevicePerfMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_vswhere",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_compatible_msvc_with_vswhere",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_compatible_msvc_with_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_compatible_msvc_with_environment_variables",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_msvc_installations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_msvc_redist_dirs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_windows_sdk_installation_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "class:python/servo/visual_studio.py:VisualStudioInstallation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_vswhere",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_compatible_msvc_with_vswhere",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_compatible_msvc_with_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_compatible_msvc_with_environment_variables",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_msvc_installations",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_msvc_redist_dirs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "function:python/servo/visual_studio.py:find_windows_sdk_installation_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/visual_studio.py",
+      "target": "class:python/servo/visual_studio.py:VisualStudioInstallation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/tidy/__init__.py",
+      "target": "file:python/tidy/test.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/tidy/__init__.py",
+      "target": "file:python/tidy/tidy.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/tidy/linting_report.py",
+      "target": "class:python/tidy/linting_report.py:GithubAnnotation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/tidy/linting_report.py",
+      "target": "class:python/tidy/linting_report.py:GitHubAnnotationManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/tidy/linting_report.py",
+      "target": "class:python/tidy/linting_report.py:GithubAnnotation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/tidy/linting_report.py",
+      "target": "class:python/tidy/linting_report.py:GitHubAnnotationManager",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "function:python/tidy/test.py:test_file_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "function:python/tidy/test.py:iterFile",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "function:python/tidy/test.py:run_tests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "class:python/tidy/test.py:CheckTidiness",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "function:python/tidy/test.py:test_file_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "function:python/tidy/test.py:iterFile",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "function:python/tidy/test.py:run_tests",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "class:python/tidy/test.py:CheckTidiness",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/tidy/test.py",
+      "target": "file:python/tidy/tidy.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

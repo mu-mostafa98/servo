@@ -1,0 +1,1762 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/query.rs",
+      "type": "file",
+      "name": "query.rs",
+      "filePath": "components/layout/query.rs",
+      "summary": "Handles layout thread queries from script (DOM APIs): resolved styles, box areas, client rects, scroll containers, offset parents, font metrics, containing blocks, text indices, and element-from-point hit testing.",
+      "tags": [
+        "queries",
+        "dom-api",
+        "resolved-style",
+        "layout-query"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:root_transform_for_layout_node",
+      "type": "function",
+      "name": "root_transform_for_layout_node",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        62,
+        72
+      ],
+      "summary": "Computes the root transform matrix for a layout node.",
+      "tags": [
+        "function",
+        "transform",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_padding_request",
+      "type": "function",
+      "name": "process_padding_request",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        74,
+        91
+      ],
+      "summary": "Processes a padding request from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_box_area_request",
+      "type": "function",
+      "name": "process_box_area_request",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        93,
+        126
+      ],
+      "summary": "Processes a box area request from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_box_areas_request",
+      "type": "function",
+      "name": "process_box_areas_request",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        128,
+        150
+      ],
+      "summary": "Processes a box areas request from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_client_rect_request",
+      "type": "function",
+      "name": "process_client_rect_request",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        152,
+        157
+      ],
+      "summary": "Processes a client rect request from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_current_css_zoom_query",
+      "type": "function",
+      "name": "process_current_css_zoom_query",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        165,
+        176
+      ],
+      "summary": "Processes a current css zoom query from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_node_scroll_area_request",
+      "type": "function",
+      "name": "process_node_scroll_area_request",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        179,
+        205
+      ],
+      "summary": "Processes a node scroll area request from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_resolved_style_request",
+      "type": "function",
+      "name": "process_resolved_style_request",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        209,
+        427
+      ],
+      "summary": "Processes a resolved style request from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:resolved_size_should_be_used_value",
+      "type": "function",
+      "name": "resolved_size_should_be_used_value",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        429,
+        444
+      ],
+      "summary": "Determines size resolution behavior for resolved styles.",
+      "tags": [
+        "function",
+        "style",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:should_honor_min_size_auto",
+      "type": "function",
+      "name": "should_honor_min_size_auto",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        446,
+        461
+      ],
+      "summary": "Determines size resolution behavior for resolved styles.",
+      "tags": [
+        "function",
+        "style",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:resolve_grid_template",
+      "type": "function",
+      "name": "resolve_grid_template",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        463,
+        518
+      ],
+      "summary": "Resolves grid template values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_resolved_style_request_for_unstyled_node",
+      "type": "function",
+      "name": "process_resolved_style_request_for_unstyled_node",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        521,
+        567
+      ],
+      "summary": "Processes a resolved style request for unstyled node from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:shorthand_to_css_string",
+      "type": "function",
+      "name": "shorthand_to_css_string",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        569,
+        593
+      ],
+      "summary": "Converts shorthand CSS property values to strings.",
+      "tags": [
+        "function",
+        "style",
+        "serialization"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:offset_parent_fragments",
+      "type": "function",
+      "name": "offset_parent_fragments",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        609,
+        669
+      ],
+      "summary": "Applies a positional offset or translation to the fragment geometry.",
+      "tags": [
+        "function",
+        "positioning"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_offset_parent_query",
+      "type": "function",
+      "name": "process_offset_parent_query",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        672,
+        773
+      ],
+      "summary": "Processes a offset parent query from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:is_containing_block_for_position",
+      "type": "function",
+      "name": "is_containing_block_for_position",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        785,
+        801
+      ],
+      "summary": "Manages the containing block relationship for this fragment.",
+      "tags": [
+        "function",
+        "containing-block"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:containing_block_for_node",
+      "type": "function",
+      "name": "containing_block_for_node",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        803,
+        824
+      ],
+      "summary": "Manages the containing block relationship for this fragment.",
+      "tags": [
+        "function",
+        "containing-block"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_scroll_container_query",
+      "type": "function",
+      "name": "process_scroll_container_query",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        830,
+        917
+      ],
+      "summary": "Processes a scroll container query from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:get_the_text_steps",
+      "type": "function",
+      "name": "get_the_text_steps",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        920,
+        968
+      ],
+      "summary": "Gets the text rendering steps for a given DOM node and range.",
+      "tags": [
+        "function",
+        "text",
+        "rendering"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:default",
+      "type": "function",
+      "name": "default",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        995,
+        1004
+      ],
+      "summary": "Provides default rendering steps for text collection.",
+      "tags": [
+        "function",
+        "text",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:rendered_text_collection_steps",
+      "type": "function",
+      "name": "rendered_text_collection_steps",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        1009,
+        1368
+      ],
+      "summary": "Collects text rendering steps for accessibility or selection.",
+      "tags": [
+        "function",
+        "text",
+        "accessibility"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:find_character_offset_in_fragment_descendants",
+      "type": "function",
+      "name": "find_character_offset_in_fragment_descendants",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        1389,
+        1458
+      ],
+      "summary": "Applies a positional offset or translation to the fragment geometry.",
+      "tags": [
+        "function",
+        "positioning"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_containing_block_query",
+      "type": "function",
+      "name": "process_containing_block_query",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        1460,
+        1463
+      ],
+      "summary": "Manages the containing block relationship for this fragment.",
+      "tags": [
+        "function",
+        "containing-block"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_containing_block_descendant_query",
+      "type": "function",
+      "name": "process_containing_block_descendant_query",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        1465,
+        1476
+      ],
+      "summary": "Manages the containing block relationship for this fragment.",
+      "tags": [
+        "function",
+        "containing-block"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_resolved_font_style_query",
+      "type": "function",
+      "name": "process_resolved_font_style_query",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        1478,
+        1577
+      ],
+      "summary": "Processes a resolved font style query from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:transform_au_rectangle",
+      "type": "function",
+      "name": "transform_au_rectangle",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        1579,
+        1591
+      ],
+      "summary": "Transforms an Au rectangle by a given matrix.",
+      "tags": [
+        "function",
+        "transform",
+        "geometry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/query.rs:process_effective_overflow_query",
+      "type": "function",
+      "name": "process_effective_overflow_query",
+      "filePath": "components/layout/query.rs",
+      "lineRange": [
+        1593,
+        1602
+      ],
+      "summary": "Processes a effective overflow query from the script/layout thread.",
+      "tags": [
+        "function",
+        "query-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/quotes.rs",
+      "type": "file",
+      "name": "quotes.rs",
+      "filePath": "components/layout/quotes.rs",
+      "summary": "Provides CSS quotes data, mapping language codes to their corresponding open/close quote pairs for the quotes CSS property.",
+      "tags": [
+        "quotes",
+        "css",
+        "localization",
+        "typography"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/quotes.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/quotes.rs",
+      "lineRange": [
+        28,
+        39
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/quotes.rs:create_quotes_map",
+      "type": "function",
+      "name": "create_quotes_map",
+      "filePath": "components/layout/quotes.rs",
+      "lineRange": [
+        47,
+        373
+      ],
+      "summary": "Retrieves CSS quote pairs for the specified language.",
+      "tags": [
+        "function",
+        "quotes",
+        "localization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/quotes.rs:quotes_data_for_lang",
+      "type": "function",
+      "name": "quotes_data_for_lang",
+      "filePath": "components/layout/quotes.rs",
+      "lineRange": [
+        375,
+        419
+      ],
+      "summary": "Retrieves CSS quote pairs for the specified language.",
+      "tags": [
+        "function",
+        "quotes",
+        "localization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/quotes.rs:quotes_for_lang",
+      "type": "function",
+      "name": "quotes_for_lang",
+      "filePath": "components/layout/quotes.rs",
+      "lineRange": [
+        421,
+        427
+      ],
+      "summary": "Retrieves CSS quote pairs for the specified language.",
+      "tags": [
+        "function",
+        "quotes",
+        "localization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/quotes.rs:QuotePair",
+      "type": "class",
+      "name": "QuotePair",
+      "filePath": "components/layout/quotes.rs",
+      "lineRange": [
+        16,
+        19
+      ],
+      "summary": "Represents a pair of open/close quote characters for a specific language.",
+      "tags": [
+        "quotes",
+        "typography",
+        "pair"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/replaced.rs",
+      "type": "file",
+      "name": "replaced.rs",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Implements replaced element layout (images, iframes, svg, video, canvas): content sizing from natural dimensions, aspect ratio preservation, SVG render tree construction, and fragment creation for replaced content.",
+      "tags": [
+        "replaced-elements",
+        "images",
+        "svg",
+        "iframe",
+        "content-sizing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_width_and_height",
+      "type": "function",
+      "name": "from_width_and_height",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        86,
+        101
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_natural_size_in_dots",
+      "type": "function",
+      "name": "from_natural_size_in_dots",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        103,
+        111
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:empty",
+      "type": "function",
+      "name": "empty",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        113,
+        119
+      ],
+      "summary": "Creates empty NaturalSizes for elements with no intrinsic size.",
+      "tags": [
+        "function",
+        "replaced",
+        "natural-sizes"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:for_element",
+      "type": "function",
+      "name": "for_element",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        161,
+        227
+      ],
+      "summary": "Creates replaced contents for a given DOM element, detecting its type.",
+      "tags": [
+        "function",
+        "replaced",
+        "element-detection"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:svg_kind_size",
+      "type": "function",
+      "name": "svg_kind_size",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        229,
+        337
+      ],
+      "summary": "Builds SVG render tree nodes from the SVG DOM for rendering.",
+      "tags": [
+        "function",
+        "svg"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:build_svg_render_tree",
+      "type": "function",
+      "name": "build_svg_render_tree",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        339,
+        362
+      ],
+      "summary": "Builds SVG render tree nodes from the SVG DOM for rendering.",
+      "tags": [
+        "function",
+        "svg"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:build_svg_render_node",
+      "type": "function",
+      "name": "build_svg_render_node",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        364,
+        402
+      ],
+      "summary": "Builds SVG render tree nodes from the SVG DOM for rendering.",
+      "tags": [
+        "function",
+        "svg"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_content_property",
+      "type": "function",
+      "name": "from_content_property",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        404,
+        418
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_image_url",
+      "type": "function",
+      "name": "from_image_url",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        420,
+        459
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_image",
+      "type": "function",
+      "name": "from_image",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        461,
+        470
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:zero_sized_invalid_image",
+      "type": "function",
+      "name": "zero_sized_invalid_image",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        472,
+        482
+      ],
+      "summary": "Creates a zero-sized invalid image placeholder.",
+      "tags": [
+        "function",
+        "replaced",
+        "invalid-image"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:content_size",
+      "type": "function",
+      "name": "content_size",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        490,
+        506
+      ],
+      "summary": "Computes the content size for replaced elements based on available space.",
+      "tags": [
+        "function",
+        "replaced",
+        "content-size"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:calculate_fragment_rect",
+      "type": "function",
+      "name": "calculate_fragment_rect",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        508,
+        569
+      ],
+      "summary": "Computes fragment rect from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:make_fragments",
+      "type": "function",
+      "name": "make_fragments",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        571,
+        739
+      ],
+      "summary": "Creates display fragments for replaced content elements.",
+      "tags": [
+        "function",
+        "fragment-creation",
+        "replaced"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:preferred_aspect_ratio",
+      "type": "function",
+      "name": "preferred_aspect_ratio",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        741,
+        761
+      ],
+      "summary": "Computes the preferred aspect ratio for this element based on CSS properties and natural dimensions.",
+      "tags": [
+        "function",
+        "aspect-ratio",
+        "sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:fallback_inline_size",
+      "type": "function",
+      "name": "fallback_inline_size",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        768,
+        774
+      ],
+      "summary": "Computes the fallback inline/block size for replaced elements.",
+      "tags": [
+        "function",
+        "replaced",
+        "fallback-size"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:fallback_block_size",
+      "type": "function",
+      "name": "fallback_block_size",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        781,
+        787
+      ],
+      "summary": "Computes the fallback inline/block size for replaced elements.",
+      "tags": [
+        "function",
+        "replaced",
+        "fallback-size"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:logical_natural_sizes",
+      "type": "function",
+      "name": "logical_natural_sizes",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        789,
+        804
+      ],
+      "summary": "Computes logical-coordinate natural sizes for the replaced element.",
+      "tags": [
+        "function",
+        "replaced",
+        "natural-sizes"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        807,
+        809
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        811,
+        843
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:compute_inline_content_sizes",
+      "type": "function",
+      "name": "compute_inline_content_sizes",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        847,
+        862
+      ],
+      "summary": "Computes inline content sizes from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/replaced.rs:try_to_parse_image_data_url",
+      "type": "function",
+      "name": "try_to_parse_image_data_url",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        865,
+        885
+      ],
+      "summary": "Attempts to parse an inline image data URL.",
+      "tags": [
+        "function",
+        "replaced",
+        "data-url"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:ReplacedContents",
+      "type": "class",
+      "name": "ReplacedContents",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        55,
+        59
+      ],
+      "summary": "Handles replaced element content (images, SVG, iframes, video, canvas), computing natural sizes and creating appropriate display fragments.",
+      "tags": [
+        "replaced",
+        "content",
+        "images",
+        "svg"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:NaturalSizes",
+      "type": "class",
+      "name": "NaturalSizes",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        79,
+        83
+      ],
+      "summary": "Represents the natural (intrinsic) dimensions of a replaced element such as an image or video.",
+      "tags": [
+        "intrinsic",
+        "natural-sizes",
+        "replaced"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:CanvasInfo",
+      "type": "class",
+      "name": "CanvasInfo",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        123,
+        125
+      ],
+      "summary": "Information about a canvas replaced element.",
+      "tags": [
+        "canvas",
+        "replaced",
+        "info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:IFrameInfo",
+      "type": "class",
+      "name": "IFrameInfo",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        128,
+        131
+      ],
+      "summary": "Information about an iframe replaced element, tracking its pipeline and size.",
+      "tags": [
+        "iframe",
+        "replaced",
+        "info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:ImageInfo",
+      "type": "class",
+      "name": "ImageInfo",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        134,
+        138
+      ],
+      "summary": "Information about an image replaced element, including URL and load state.",
+      "tags": [
+        "image",
+        "replaced",
+        "info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:VideoInfo",
+      "type": "class",
+      "name": "VideoInfo",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        141,
+        143
+      ],
+      "summary": "Information about a video replaced element.",
+      "tags": [
+        "video",
+        "replaced",
+        "info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:ReplacedContentKind",
+      "type": "class",
+      "name": "ReplacedContentKind",
+      "filePath": "components/layout/replaced.rs",
+      "lineRange": [
+        146,
+        158
+      ],
+      "summary": "Enum categorizing the kind of replaced content (Image, IFrame, SVG, Video, Canvas).",
+      "tags": [
+        "replaced",
+        "content-kind",
+        "enum"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:root_transform_for_layout_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_padding_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_padding_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_box_area_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_box_area_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_box_areas_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_box_areas_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_client_rect_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_client_rect_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_current_css_zoom_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_current_css_zoom_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_node_scroll_area_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_node_scroll_area_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_style_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_style_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:resolved_size_should_be_used_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:should_honor_min_size_auto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:resolve_grid_template",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_style_request_for_unstyled_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_style_request_for_unstyled_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:shorthand_to_css_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:offset_parent_fragments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_offset_parent_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_offset_parent_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:is_containing_block_for_position",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:containing_block_for_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_scroll_container_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_scroll_container_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:get_the_text_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:get_the_text_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:default",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:rendered_text_collection_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:find_character_offset_in_fragment_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:find_character_offset_in_fragment_descendants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_containing_block_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_containing_block_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_containing_block_descendant_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_containing_block_descendant_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_font_style_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_font_style_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:transform_au_rectangle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:transform_au_rectangle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_effective_overflow_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_effective_overflow_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/quotes.rs",
+      "target": "function:components/layout/quotes.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/quotes.rs",
+      "target": "function:components/layout/quotes.rs:create_quotes_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/quotes.rs",
+      "target": "function:components/layout/quotes.rs:quotes_data_for_lang",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/quotes.rs",
+      "target": "function:components/layout/quotes.rs:quotes_for_lang",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/quotes.rs",
+      "target": "function:components/layout/quotes.rs:quotes_for_lang",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/quotes.rs",
+      "target": "class:components/layout/quotes.rs:QuotePair",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/quotes.rs",
+      "target": "class:components/layout/quotes.rs:QuotePair",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_width_and_height",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_width_and_height",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_natural_size_in_dots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_natural_size_in_dots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:empty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:for_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:for_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:svg_kind_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:build_svg_render_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:build_svg_render_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_content_property",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_image_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_image_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:zero_sized_invalid_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:zero_sized_invalid_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:content_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:calculate_fragment_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:make_fragments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:make_fragments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:preferred_aspect_ratio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:preferred_aspect_ratio",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:fallback_inline_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:fallback_inline_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:fallback_block_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:fallback_block_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:logical_natural_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:logical_natural_sizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:compute_inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:try_to_parse_image_data_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ReplacedContents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ReplacedContents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:NaturalSizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:NaturalSizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:CanvasInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:CanvasInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:IFrameInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:IFrameInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ImageInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ImageInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:VideoInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:VideoInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ReplacedContentKind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ReplacedContentKind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

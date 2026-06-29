@@ -1,0 +1,1066 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/domstringmap.rs",
+      "type": "file",
+      "name": "domstringmap.rs",
+      "filePath": "components/script/dom/domstringmap.rs",
+      "summary": "Implements the DOMStringMap API providing camelCase/snake_case mapping for HTML element custom data attributes.",
+      "tags": [
+        "dom",
+        "rust",
+        "dataset"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/domstringmap.rs:DOMStringMap",
+      "type": "class",
+      "name": "DOMStringMap",
+      "filePath": "components/script/dom/domstringmap.rs",
+      "lineRange": [
+        22,
+        25
+      ],
+      "summary": "Map interface for accessing element custom data attributes with camelCase/snake_case conversion.",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/domstringmap.rs:to_camel_case",
+      "type": "function",
+      "name": "to_camel_case",
+      "filePath": "components/script/dom/domstringmap.rs",
+      "lineRange": [
+        31,
+        73
+      ],
+      "summary": "Converts a kebab-case HTML data attribute name to camelCase JavaScript property name.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/domstringmap.rs:to_snake_case",
+      "type": "function",
+      "name": "to_snake_case",
+      "filePath": "components/script/dom/domstringmap.rs",
+      "lineRange": [
+        77,
+        116
+      ],
+      "summary": "Converts a camelCase JavaScript property name to kebab-case HTML data attribute name with optional validation.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/domstringmap.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/domstringmap.rs",
+      "lineRange": [
+        126,
+        132
+      ],
+      "summary": "Constructs a new DOM object instance.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domstringmap.rs:NamedSetter",
+      "type": "function",
+      "name": "NamedSetter",
+      "filePath": "components/script/dom/domstringmap.rs",
+      "lineRange": [
+        153,
+        177
+      ],
+      "summary": "WebIDL named property accessor for the DOM object interface.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domstringmap.rs:NamedGetter",
+      "type": "function",
+      "name": "NamedGetter",
+      "filePath": "components/script/dom/domstringmap.rs",
+      "lineRange": [
+        180,
+        190
+      ],
+      "summary": "WebIDL named property accessor for the DOM object interface.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domstringmap.rs:SupportedPropertyNames",
+      "type": "function",
+      "name": "SupportedPropertyNames",
+      "filePath": "components/script/dom/domstringmap.rs",
+      "lineRange": [
+        193,
+        203
+      ],
+      "summary": "Enumerates all supported property names on the DOM object.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/domtokenlist.rs",
+      "type": "file",
+      "name": "domtokenlist.rs",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "summary": "Implements the DOMTokenList API for managing space-separated token sets with add, remove, toggle, replace, and supports operations.",
+      "tags": [
+        "dom",
+        "rust",
+        "token-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/domtokenlist.rs:DOMTokenList",
+      "type": "class",
+      "name": "DOMTokenList",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        20,
+        27
+      ],
+      "summary": "Space-separated token list with add, remove, toggle, replace, and supports operations per the DOM specification.",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/domtokenlist.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        30,
+        41
+      ],
+      "summary": "Constructs a new DOM object instance.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domtokenlist.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        43,
+        58
+      ],
+      "summary": "Constructs a new DOM object instance.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domtokenlist.rs:check_token_exceptions",
+      "type": "function",
+      "name": "check_token_exceptions",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        60,
+        69
+      ],
+      "summary": "Validates a token against supported tokens and throws if unsupported.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domtokenlist.rs:validation_steps",
+      "type": "function",
+      "name": "validation_steps",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        83,
+        96
+      ],
+      "summary": "Validates whether a token can be used with the DOMTokenList.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domtokenlist.rs:Add",
+      "type": "function",
+      "name": "Add",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        122,
+        132
+      ],
+      "summary": "Adds one or more tokens to the list, skipping duplicates.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domtokenlist.rs:Remove",
+      "type": "function",
+      "name": "Remove",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        135,
+        146
+      ],
+      "summary": "Removes one or more tokens from the list.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domtokenlist.rs:Toggle",
+      "type": "function",
+      "name": "Toggle",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        149,
+        170
+      ],
+      "summary": "Toggles a token on or off, optionally respecting a force boolean.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/domtokenlist.rs:Replace",
+      "type": "function",
+      "name": "Replace",
+      "filePath": "components/script/dom/domtokenlist.rs",
+      "lineRange": [
+        184,
+        232
+      ],
+      "summary": "Replaces an existing token with a new token in the list.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/elementinternals.rs",
+      "type": "file",
+      "name": "elementinternals.rs",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "summary": "Implements the ElementInternals API providing form association, validation, shadow root access, and custom element state management.",
+      "tags": [
+        "dom",
+        "rust",
+        "custom-elements",
+        "form-validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/elementinternals.rs:ElementInternals",
+      "type": "class",
+      "name": "ElementInternals",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        59,
+        77
+      ],
+      "summary": "Provides form association, validation, shadow root, and custom element state management for custom elements.",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        42,
+        55
+      ],
+      "summary": "Creates a SubmissionValue from a JS value.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        80,
+        95
+      ],
+      "summary": "Constructs a new DOM object instance.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        97,
+        104
+      ],
+      "summary": "Constructs a new DOM object instance.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:set_form_owner",
+      "type": "function",
+      "name": "set_form_owner",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        126,
+        128
+      ],
+      "summary": "Sets the form owner for the element internals.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:form_owner",
+      "type": "function",
+      "name": "form_owner",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        130,
+        132
+      ],
+      "summary": "Returns the associated form owner element, if any.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:set_attached",
+      "type": "function",
+      "name": "set_attached",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        134,
+        136
+      ],
+      "summary": "Marks the element internals as attached to the DOM.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:attached",
+      "type": "function",
+      "name": "attached",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        138,
+        140
+      ],
+      "summary": "Returns whether the element internals are attached to the DOM.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:perform_entry_construction",
+      "type": "function",
+      "name": "perform_entry_construction",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        142,
+        188
+      ],
+      "summary": "Performs entry list construction for form submission.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:is_invalid",
+      "type": "function",
+      "name": "is_invalid",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        190,
+        194
+      ],
+      "summary": "Checks whether the element is in an invalid state.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:custom_states_for_layout",
+      "type": "function",
+      "name": "custom_states_for_layout",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        196,
+        201
+      ],
+      "summary": "Returns the custom states set for layout engine access.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:GetShadowRoot",
+      "type": "function",
+      "name": "GetShadowRoot",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        206,
+        219
+      ],
+      "summary": "Returns the open shadow root attached to the element, if any.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:SetFormValue",
+      "type": "function",
+      "name": "SetFormValue",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        222,
+        244
+      ],
+      "summary": "Sets the form value and optional state for the custom element.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:SetValidity",
+      "type": "function",
+      "name": "SetValidity",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        247,
+        317
+      ],
+      "summary": "Sets validity flags, validation message, and optional anchor element.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:GetValidationMessage",
+      "type": "function",
+      "name": "GetValidationMessage",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        320,
+        329
+      ],
+      "summary": "Returns the current validation error message.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:GetLabels",
+      "type": "function",
+      "name": "GetLabels",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        342,
+        355
+      ],
+      "summary": "Returns the NodeList of label elements associated with this element.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:validity_state",
+      "type": "function",
+      "name": "validity_state",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        416,
+        425
+      ],
+      "summary": "Returns the underlying ValidityState object.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/elementinternals.rs:is_instance_validatable",
+      "type": "function",
+      "name": "is_instance_validatable",
+      "filePath": "components/script/dom/elementinternals.rs",
+      "lineRange": [
+        428,
+        440
+      ],
+      "summary": "Checks whether this element instance can be validated.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/encoding/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/encoding/mod.rs",
+      "summary": "Module barrel for the encoding submodule, re-exporting TextDecoder, TextEncoder, TextDecoderStream, and TextEncoderStream.",
+      "tags": [
+        "dom",
+        "rust",
+        "encoding",
+        "barrel"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/encoding/textdecoder.rs",
+      "type": "file",
+      "name": "textdecoder.rs",
+      "filePath": "components/script/dom/encoding/textdecoder.rs",
+      "summary": "Implements the TextDecoder API for decoding byte sequences into strings using specified character encodings.",
+      "tags": [
+        "dom",
+        "rust",
+        "encoding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/encoding/textdecoder.rs:TextDecoder",
+      "type": "class",
+      "name": "TextDecoder",
+      "filePath": "components/script/dom/encoding/textdecoder.rs",
+      "lineRange": [
+        27,
+        35
+      ],
+      "summary": "Decodes byte sequences into strings using the specified character encoding.",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/encoding/textdecoder.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/encoding/textdecoder.rs",
+      "lineRange": [
+        54,
+        68
+      ],
+      "summary": "Constructs a new DOM object instance.",
+      "tags": [
+        "function",
+        "encoding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/encoding/textdecoder.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/encoding/textdecoder.rs",
+      "lineRange": [
+        73,
+        92
+      ],
+      "summary": "JavaScript-facing constructor creating a TextDecoder/TextEncoder with optional encoding label and options.",
+      "tags": [
+        "function",
+        "encoding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/encoding/textdecoder.rs:Decode",
+      "type": "function",
+      "name": "Decode",
+      "filePath": "components/script/dom/encoding/textdecoder.rs",
+      "lineRange": [
+        110,
+        148
+      ],
+      "summary": "Decodes a sequence of bytes into a string, handling partial sequences.",
+      "tags": [
+        "function",
+        "encoding"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "class:components/script/dom/domstringmap.rs:DOMStringMap",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "class:components/script/dom/domstringmap.rs:DOMStringMap",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "function:components/script/dom/domstringmap.rs:to_camel_case",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "function:components/script/dom/domstringmap.rs:to_snake_case",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "function:components/script/dom/domstringmap.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "function:components/script/dom/domstringmap.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "function:components/script/dom/domstringmap.rs:NamedSetter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "function:components/script/dom/domstringmap.rs:NamedGetter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domstringmap.rs",
+      "target": "function:components/script/dom/domstringmap.rs:SupportedPropertyNames",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "class:components/script/dom/domtokenlist.rs:DOMTokenList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "class:components/script/dom/domtokenlist.rs:DOMTokenList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:check_token_exceptions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:validation_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:Add",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:Remove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:Toggle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/domtokenlist.rs",
+      "target": "function:components/script/dom/domtokenlist.rs:Replace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "class:components/script/dom/elementinternals.rs:ElementInternals",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "class:components/script/dom/elementinternals.rs:ElementInternals",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:set_form_owner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:set_form_owner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:form_owner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:form_owner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:set_attached",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:set_attached",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:attached",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:attached",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:perform_entry_construction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:perform_entry_construction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:is_invalid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:is_invalid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:custom_states_for_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:custom_states_for_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:GetShadowRoot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:SetFormValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:SetValidity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:GetValidationMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:GetLabels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:validity_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/elementinternals.rs",
+      "target": "function:components/script/dom/elementinternals.rs:is_instance_validatable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/encoding/textdecoder.rs",
+      "target": "class:components/script/dom/encoding/textdecoder.rs:TextDecoder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/encoding/textdecoder.rs",
+      "target": "class:components/script/dom/encoding/textdecoder.rs:TextDecoder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/encoding/textdecoder.rs",
+      "target": "function:components/script/dom/encoding/textdecoder.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/encoding/textdecoder.rs",
+      "target": "function:components/script/dom/encoding/textdecoder.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/encoding/textdecoder.rs",
+      "target": "function:components/script/dom/encoding/textdecoder.rs:Decode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/encoding/mod.rs",
+      "target": "file:components/script/dom/encoding/textdecoder.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/encoding/mod.rs",
+      "target": "file:components/script/dom/encoding/textdecodercommon.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/encoding/mod.rs",
+      "target": "file:components/script/dom/encoding/textdecoderstream.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/encoding/mod.rs",
+      "target": "file:components/script/dom/encoding/textencoder.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/encoding/mod.rs",
+      "target": "file:components/script/dom/encoding/textencoderstream.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/encoding/textdecoder.rs",
+      "target": "file:components/script/dom/encoding/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/encoding/textdecoder.rs",
+      "target": "file:components/script/dom/encoding/textdecodercommon.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

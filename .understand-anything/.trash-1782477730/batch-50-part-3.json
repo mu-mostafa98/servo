@@ -1,0 +1,1744 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/shared/net/quality.rs",
+      "type": "file",
+      "name": "quality.rs",
+      "filePath": "components/shared/net/quality.rs",
+      "summary": "Implements HTTP quality value parsing and formatting for content negotiation headers like Accept-Language and Accept-Encoding.",
+      "tags": [
+        "utility",
+        "serialization",
+        "validation"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust source file using standard library patterns and Servo's IPC infrastructure."
+    },
+    {
+      "id": "class:components/shared/net/quality.rs:Quality",
+      "type": "class",
+      "name": "Quality",
+      "filePath": "components/shared/net/quality.rs",
+      "lineRange": [
+        20,
+        20
+      ],
+      "summary": "Quality type with 0 variants/properties.",
+      "tags": [
+        "utility",
+        "quality",
+        "value"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/quality.rs:QualityItem",
+      "type": "class",
+      "name": "QualityItem",
+      "filePath": "components/shared/net/quality.rs",
+      "lineRange": [
+        42,
+        45
+      ],
+      "summary": "QualityItem type with 2 variants/properties.",
+      "tags": [
+        "data-model",
+        "quality",
+        "item"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/quality.rs:fmt",
+      "type": "function",
+      "name": "fmt",
+      "filePath": "components/shared/net/quality.rs",
+      "lineRange": [
+        58,
+        76
+      ],
+      "summary": "Formats the object for display output.",
+      "tags": [
+        "utility",
+        "helper",
+        "networking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/quality.rs:quality_to_value",
+      "type": "function",
+      "name": "quality_to_value",
+      "filePath": "components/shared/net/quality.rs",
+      "lineRange": [
+        79,
+        87
+      ],
+      "summary": "Converts quality items to an HTTP header value string.",
+      "tags": [
+        "negotiation",
+        "locale",
+        "exported"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/net/request.rs",
+      "type": "file",
+      "name": "request.rs",
+      "filePath": "components/shared/net/request.rs",
+      "summary": "Implements the HTTP request abstraction with builder pattern, request body management, CORS validation, preload support, and request header sanitization.",
+      "tags": [
+        "data-model",
+        "validation",
+        "service",
+        "networking"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust source file using standard library patterns and Servo's IPC infrastructure."
+    },
+    {
+      "id": "class:components/shared/net/request.rs:RequestId",
+      "type": "class",
+      "name": "RequestId",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        34,
+        34
+      ],
+      "summary": "Unique identifier for HTTP requests using UUID.",
+      "tags": [
+        "identifier",
+        "request",
+        "uuid"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:Initiator",
+      "type": "class",
+      "name": "Initiator",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        44,
+        52
+      ],
+      "summary": "Request initiator types: none, download, image-set, manifest, XSLT, prefetch, or link.",
+      "tags": [
+        "enum",
+        "request",
+        "initiator"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:Origin",
+      "type": "class",
+      "name": "Origin",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        59,
+        62
+      ],
+      "summary": "Request origin: client-provided or explicit origin.",
+      "tags": [
+        "enum",
+        "origin",
+        "request"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:Referrer",
+      "type": "class",
+      "name": "Referrer",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        72,
+        81
+      ],
+      "summary": "Referrer policy: no referrer, client, or explicit referrer URL.",
+      "tags": [
+        "enum",
+        "referrer",
+        "policy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:RequestMode",
+      "type": "class",
+      "name": "RequestMode",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        85,
+        94
+      ],
+      "summary": "Request mode: navigate, same-origin, no-cors, CORS, or WebSocket.",
+      "tags": [
+        "enum",
+        "request",
+        "mode"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:CredentialsMode",
+      "type": "class",
+      "name": "CredentialsMode",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        98,
+        102
+      ],
+      "summary": "Credentials mode: omit, same-origin, or include.",
+      "tags": [
+        "enum",
+        "credentials",
+        "mode"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:CacheMode",
+      "type": "class",
+      "name": "CacheMode",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        106,
+        113
+      ],
+      "summary": "Cache mode: default, no-store, reload, no-cache, force-cache, or only-if-cached.",
+      "tags": [
+        "enum",
+        "cache",
+        "mode"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:ServiceWorkersMode",
+      "type": "class",
+      "name": "ServiceWorkersMode",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        117,
+        120
+      ],
+      "summary": "Service workers mode: all or none.",
+      "tags": [
+        "enum",
+        "service-worker",
+        "mode"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:RedirectMode",
+      "type": "class",
+      "name": "RedirectMode",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        124,
+        128
+      ],
+      "summary": "Redirect mode: follow, error, or manual.",
+      "tags": [
+        "enum",
+        "redirect",
+        "mode"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:ResponseTainting",
+      "type": "class",
+      "name": "ResponseTainting",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        132,
+        136
+      ],
+      "summary": "Response tainting: basic, CORS, or opaque.",
+      "tags": [
+        "enum",
+        "response",
+        "taint"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:InternalRequest",
+      "type": "class",
+      "name": "InternalRequest",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        140,
+        144
+      ],
+      "summary": "Whether a request is internal: yes or no.",
+      "tags": [
+        "enum",
+        "request",
+        "internal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:PreloadKey",
+      "type": "class",
+      "name": "PreloadKey",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        148,
+        157
+      ],
+      "summary": "Key for preloaded resources identified by URL, destination, mode, and credentials mode.",
+      "tags": [
+        "data-model",
+        "preload",
+        "key"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:PreloadId",
+      "type": "class",
+      "name": "PreloadId",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        171,
+        171
+      ],
+      "summary": "Unique identifier for preload entries.",
+      "tags": [
+        "identifier",
+        "preload",
+        "uuid"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:PreloadEntry",
+      "type": "class",
+      "name": "PreloadEntry",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        181,
+        188
+      ],
+      "summary": "Preloaded resource entry with integrity metadata, response, and availability callback.",
+      "tags": [
+        "data-model",
+        "preload",
+        "entry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:RequestClient",
+      "type": "class",
+      "name": "RequestClient",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        215,
+        226
+      ],
+      "summary": "Client context for a request: preloaded resources, policy container, origin, and security settings.",
+      "tags": [
+        "data-model",
+        "client",
+        "context"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:SystemVisibilityState",
+      "type": "class",
+      "name": "SystemVisibilityState",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        230,
+        234
+      ],
+      "summary": "System visibility: hidden or visible.",
+      "tags": [
+        "enum",
+        "visibility",
+        "system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:TraversableNavigable",
+      "type": "class",
+      "name": "TraversableNavigable",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        238,
+        249
+      ],
+      "summary": "Session history navigable with visibility state and creation source tracking.",
+      "tags": [
+        "data-model",
+        "navigation",
+        "session"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:TraversableForUserPrompts",
+      "type": "class",
+      "name": "TraversableForUserPrompts",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        253,
+        257
+      ],
+      "summary": "Traversable for user prompts: none, client, or explicit traversable navigable.",
+      "tags": [
+        "enum",
+        "prompts",
+        "traversable"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:CorsSettings",
+      "type": "class",
+      "name": "CorsSettings",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        261,
+        264
+      ],
+      "summary": "CORS settings: anonymous or use-credentials.",
+      "tags": [
+        "enum",
+        "cors",
+        "settings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:ParserMetadata",
+      "type": "class",
+      "name": "ParserMetadata",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        279,
+        283
+      ],
+      "summary": "Parser insertion metadata: default, parser-inserted, or not-parser-inserted.",
+      "tags": [
+        "enum",
+        "parser",
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:BodySource",
+      "type": "class",
+      "name": "BodySource",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        287,
+        290
+      ],
+      "summary": "Request body source: null or object.",
+      "tags": [
+        "enum",
+        "body",
+        "source"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:BodyChunkResponse",
+      "type": "class",
+      "name": "BodyChunkResponse",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        295,
+        303
+      ],
+      "summary": "Response for body chunk requests: chunk, done, or error.",
+      "tags": [
+        "enum",
+        "body",
+        "chunk"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:BodyChunkRequest",
+      "type": "class",
+      "name": "BodyChunkRequest",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        309,
+        320
+      ],
+      "summary": "Request body chunk operations: connect, extract, chunk, done, or error.",
+      "tags": [
+        "enum",
+        "body",
+        "chunk",
+        "request"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:RequestBody",
+      "type": "class",
+      "name": "RequestBody",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        328,
+        336
+      ],
+      "summary": "Request body with chunked streaming support, source extraction, and total byte tracking.",
+      "tags": [
+        "data-model",
+        "body",
+        "streaming"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:InsecureRequestsPolicy",
+      "type": "class",
+      "name": "InsecureRequestsPolicy",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        411,
+        414
+      ],
+      "summary": "Insecure requests policy: do not upgrade or upgrade.",
+      "tags": [
+        "enum",
+        "security",
+        "upgrade"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:RequestHeadersSize",
+      "type": "class",
+      "name": "RequestHeadersSize",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        416,
+        418
+      ],
+      "summary": "Helper for computing total request header size.",
+      "tags": [
+        "utility",
+        "headers",
+        "size"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:RequestBuilder",
+      "type": "class",
+      "name": "RequestBuilder",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        429,
+        516
+      ],
+      "summary": "Builder pattern for constructing HTTP requests with all request parameters.",
+      "tags": [
+        "builder",
+        "request",
+        "construction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/net/request.rs:Request",
+      "type": "class",
+      "name": "Request",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        800,
+        872
+      ],
+      "summary": "Core HTTP request type with URL list, headers, body, CORS settings, and redirect handling.",
+      "tags": [
+        "data-model",
+        "request",
+        "http",
+        "core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:is_cors_unsafe_request_header_byte",
+      "type": "function",
+      "name": "is_cors_unsafe_request_header_byte",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1115,
+        1134
+      ],
+      "summary": "is_cors_unsafe_request_header_byte function handling value.",
+      "tags": [
+        "utility",
+        "helper",
+        "networking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:is_cors_safelisted_language",
+      "type": "function",
+      "name": "is_cors_safelisted_language",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1144,
+        1159
+      ],
+      "summary": "is_cors_safelisted_language function handling value.",
+      "tags": [
+        "utility",
+        "helper",
+        "networking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:is_cors_safelisted_request_content_type",
+      "type": "function",
+      "name": "is_cors_safelisted_request_content_type",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1163,
+        1184
+      ],
+      "summary": "is_cors_safelisted_request_content_type function handling value.",
+      "tags": [
+        "predicate",
+        "validation",
+        "exported"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:is_cors_safelisted_request_header",
+      "type": "function",
+      "name": "is_cors_safelisted_request_header",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1189,
+        1205
+      ],
+      "summary": "Checks if a header is CORS-safelisted per the Fetch specification.",
+      "tags": [
+        "predicate",
+        "validation",
+        "exported"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:is_cors_safelisted_request_range",
+      "type": "function",
+      "name": "is_cors_safelisted_request_range",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1207,
+        1212
+      ],
+      "summary": "is_cors_safelisted_request_range function handling value.",
+      "tags": [
+        "predicate",
+        "validation",
+        "exported"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:validate_range_header",
+      "type": "function",
+      "name": "validate_range_header",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1214,
+        1237
+      ],
+      "summary": "validate_range_header function handling value.",
+      "tags": [
+        "utility",
+        "helper",
+        "networking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:get_cors_unsafe_header_names",
+      "type": "function",
+      "name": "get_cors_unsafe_header_names",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1250,
+        1275
+      ],
+      "summary": "Extracts names of headers that are not CORS-safelisted.",
+      "tags": [
+        "getter",
+        "accessor",
+        "exported"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:convert_header_names_to_sorted_lowercase_set",
+      "type": "function",
+      "name": "convert_header_names_to_sorted_lowercase_set",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1278,
+        1287
+      ],
+      "summary": "Converts header names to a sorted, deduplicated, lowercase set.",
+      "tags": [
+        "headers",
+        "mime",
+        "exported"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/net/request.rs:create_request_body_with_content",
+      "type": "function",
+      "name": "create_request_body_with_content",
+      "filePath": "components/shared/net/request.rs",
+      "lineRange": [
+        1289,
+        1306
+      ],
+      "summary": "Creates a request body from string content with shared memory and IPC routing.",
+      "tags": [
+        "helper",
+        "networking",
+        "exported"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/net/resource_fetch_timing.rs",
+      "type": "file",
+      "name": "resource_fetch_timing.rs",
+      "filePath": "components/shared/net/resource_fetch_timing.rs",
+      "summary": "Tracks resource fetch timing metrics including DNS lookup, connection, TLS handshake, and response timing per the Resource Timing API.",
+      "tags": [
+        "data-model",
+        "utility",
+        "timing"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust source file using standard library patterns and Servo's IPC infrastructure."
+    },
+    {
+      "id": "class:components/shared/net/resource_fetch_timing.rs:ResourceFetchTiming",
+      "type": "class",
+      "name": "ResourceFetchTiming",
+      "filePath": "components/shared/net/resource_fetch_timing.rs",
+      "lineRange": [
+        12,
+        29
+      ],
+      "summary": "Resource fetch timing metrics: DNS, TCP, TLS, request, response, and redirect timing.",
+      "tags": [
+        "data-model",
+        "timing",
+        "performance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/resource_fetch_timing.rs:RedirectStartValue",
+      "type": "class",
+      "name": "RedirectStartValue",
+      "filePath": "components/shared/net/resource_fetch_timing.rs",
+      "lineRange": [
+        32,
+        35
+      ],
+      "summary": "Redirect start time values: zero or fetch-start.",
+      "tags": [
+        "enum",
+        "timing",
+        "redirect"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/resource_fetch_timing.rs:RedirectEndValue",
+      "type": "class",
+      "name": "RedirectEndValue",
+      "filePath": "components/shared/net/resource_fetch_timing.rs",
+      "lineRange": [
+        38,
+        41
+      ],
+      "summary": "Redirect end time values: zero or response-end.",
+      "tags": [
+        "enum",
+        "timing",
+        "redirect"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/resource_fetch_timing.rs:ResourceTimeValue",
+      "type": "class",
+      "name": "ResourceTimeValue",
+      "filePath": "components/shared/net/resource_fetch_timing.rs",
+      "lineRange": [
+        46,
+        51
+      ],
+      "summary": "Resource time value: zero, now, fetch-start, or redirect-start.",
+      "tags": [
+        "enum",
+        "timing",
+        "value"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/resource_fetch_timing.rs:ResourceAttribute",
+      "type": "class",
+      "name": "ResourceAttribute",
+      "filePath": "components/shared/net/resource_fetch_timing.rs",
+      "lineRange": [
+        54,
+        67
+      ],
+      "summary": "Resource timing attributes: redirect count, DNS, request, response, connection, and timing points.",
+      "tags": [
+        "enum",
+        "timing",
+        "attribute"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/resource_fetch_timing.rs:ResourceTimingType",
+      "type": "class",
+      "name": "ResourceTimingType",
+      "filePath": "components/shared/net/resource_fetch_timing.rs",
+      "lineRange": [
+        70,
+        75
+      ],
+      "summary": "Resource timing type: resource, navigation, error, or none.",
+      "tags": [
+        "enum",
+        "timing",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/resource_fetch_timing.rs:ResourceFetchTimingContainer",
+      "type": "class",
+      "name": "ResourceFetchTimingContainer",
+      "filePath": "components/shared/net/resource_fetch_timing.rs",
+      "lineRange": [
+        164,
+        166
+      ],
+      "summary": "Thread-safe container for resource fetch timing with attribute setting and concurrent access.",
+      "tags": [
+        "container",
+        "timing",
+        "thread-safe"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/net/response.rs",
+      "type": "file",
+      "name": "response.rs",
+      "filePath": "components/shared/net/response.rs",
+      "summary": "Implements the HTTP response abstraction with network error handling, filtered response types (basic/CORS/opaque), metadata extraction, and response body state management.",
+      "tags": [
+        "data-model",
+        "service",
+        "networking",
+        "validation"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust source file using standard library patterns and Servo's IPC infrastructure."
+    },
+    {
+      "id": "class:components/shared/net/response.rs:ResponseType",
+      "type": "class",
+      "name": "ResponseType",
+      "filePath": "components/shared/net/response.rs",
+      "lineRange": [
+        27,
+        34
+      ],
+      "summary": "Response type: basic, CORS, default, error, opaque, or opaque-redirect.",
+      "tags": [
+        "enum",
+        "response",
+        "type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/response.rs:TerminationReason",
+      "type": "class",
+      "name": "TerminationReason",
+      "filePath": "components/shared/net/response.rs",
+      "lineRange": [
+        38,
+        42
+      ],
+      "summary": "Response termination reason: end-user abort, fatal, or timeout.",
+      "tags": [
+        "enum",
+        "termination",
+        "reason"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/response.rs:ResponseBody",
+      "type": "class",
+      "name": "ResponseBody",
+      "filePath": "components/shared/net/response.rs",
+      "lineRange": [
+        47,
+        51
+      ],
+      "summary": "Response body state: empty, receiving, or done.",
+      "tags": [
+        "enum",
+        "body",
+        "state"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/response.rs:RedirectTaint",
+      "type": "class",
+      "name": "RedirectTaint",
+      "filePath": "components/shared/net/response.rs",
+      "lineRange": [
+        64,
+        69
+      ],
+      "summary": "Redirect taint tracking: same-origin, same-site, or cross-site.",
+      "tags": [
+        "enum",
+        "redirect",
+        "taint"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/response.rs:CacheState",
+      "type": "class",
+      "name": "CacheState",
+      "filePath": "components/shared/net/response.rs",
+      "lineRange": [
+        73,
+        78
+      ],
+      "summary": "Response cache state: none, local, validated, or partial.",
+      "tags": [
+        "enum",
+        "cache",
+        "state"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/response.rs:ResponseInit",
+      "type": "class",
+      "name": "ResponseInit",
+      "filePath": "components/shared/net/response.rs",
+      "lineRange": [
+        81,
+        91
+      ],
+      "summary": "Response initialization parameters: URL, headers, status, referrer, and location URL.",
+      "tags": [
+        "data-model",
+        "response",
+        "init"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/net/response.rs:Response",
+      "type": "class",
+      "name": "Response",
+      "filePath": "components/shared/net/response.rs",
+      "lineRange": [
+        95,
+        135
+      ],
+      "summary": "Core HTTP response type with filtered response support, network error handling, body state, and metadata extraction.",
+      "tags": [
+        "data-model",
+        "response",
+        "http",
+        "core"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/net/quality.rs",
+      "target": "class:components/shared/net/quality.rs:Quality",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/quality.rs",
+      "target": "class:components/shared/net/quality.rs:Quality",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/quality.rs",
+      "target": "class:components/shared/net/quality.rs:QualityItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/quality.rs",
+      "target": "class:components/shared/net/quality.rs:QualityItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/quality.rs",
+      "target": "function:components/shared/net/quality.rs:fmt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/quality.rs",
+      "target": "function:components/shared/net/quality.rs:quality_to_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/quality.rs",
+      "target": "function:components/shared/net/quality.rs:quality_to_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:Initiator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:Initiator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:Origin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:Origin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:Referrer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:Referrer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:CredentialsMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:CredentialsMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:CacheMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:CacheMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:ServiceWorkersMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:ServiceWorkersMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RedirectMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RedirectMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:ResponseTainting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:ResponseTainting",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:InternalRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:InternalRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:PreloadKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:PreloadKey",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:PreloadId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:PreloadId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:PreloadEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:PreloadEntry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestClient",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:SystemVisibilityState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:SystemVisibilityState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:TraversableNavigable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:TraversableNavigable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:TraversableForUserPrompts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:TraversableForUserPrompts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:CorsSettings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:CorsSettings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:ParserMetadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:ParserMetadata",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:BodySource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:BodySource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:BodyChunkResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:BodyChunkResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:BodyChunkRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:BodyChunkRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestBody",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestBody",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:InsecureRequestsPolicy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:InsecureRequestsPolicy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestHeadersSize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestHeadersSize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:RequestBuilder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:Request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "class:components/shared/net/request.rs:Request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:is_cors_unsafe_request_header_byte",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:is_cors_safelisted_language",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:is_cors_safelisted_request_content_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:is_cors_safelisted_request_content_type",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:is_cors_safelisted_request_header",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:is_cors_safelisted_request_header",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:is_cors_safelisted_request_range",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:is_cors_safelisted_request_range",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:validate_range_header",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:get_cors_unsafe_header_names",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:get_cors_unsafe_header_names",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:convert_header_names_to_sorted_lowercase_set",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:convert_header_names_to_sorted_lowercase_set",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:create_request_body_with_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/request.rs",
+      "target": "function:components/shared/net/request.rs:create_request_body_with_content",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceFetchTiming",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceFetchTiming",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:RedirectStartValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:RedirectStartValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:RedirectEndValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:RedirectEndValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceTimeValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceTimeValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceAttribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceAttribute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceTimingType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceTimingType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceFetchTimingContainer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/resource_fetch_timing.rs",
+      "target": "class:components/shared/net/resource_fetch_timing.rs:ResourceFetchTimingContainer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:ResponseType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:ResponseType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:TerminationReason",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:TerminationReason",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:ResponseBody",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:ResponseBody",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:RedirectTaint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:RedirectTaint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:CacheState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:CacheState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:ResponseInit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:ResponseInit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:Response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/shared/net/response.rs",
+      "target": "class:components/shared/net/response.rs:Response",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

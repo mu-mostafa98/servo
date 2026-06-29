@@ -1,0 +1,752 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/links.rs",
+      "type": "file",
+      "name": "links.rs",
+      "filePath": "components/script/links.rs",
+      "summary": "Implements HTML hyperlink processing including element target resolution, noopener detection, valid navigable target name matching, and hyperlink following with browsing context navigation.",
+      "tags": [
+        "hyperlink",
+        "navigation",
+        "browsing-context",
+        "targeting"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/links.rs:for_element",
+      "type": "function",
+      "name": "for_element",
+      "filePath": "components/script/links.rs",
+      "lineRange": [
+        184,
+        215
+      ],
+      "summary": "Resolves the link relationship for a given HTML element, returning link info and state.",
+      "tags": [
+        "hyperlink",
+        "navigation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/links.rs:from_single_keyword",
+      "type": "function",
+      "name": "from_single_keyword",
+      "filePath": "components/script/links.rs",
+      "lineRange": [
+        220,
+        286
+      ],
+      "summary": "Parses a single keyword from the link types string into a LinkRelation value.",
+      "tags": [
+        "hyperlink",
+        "navigation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/links.rs:get_element_noopener",
+      "type": "function",
+      "name": "get_element_noopener",
+      "filePath": "components/script/links.rs",
+      "lineRange": [
+        289,
+        305
+      ],
+      "summary": "Checks if the element has a noopener relationship based on link type or target attribute.",
+      "tags": [
+        "hyperlink",
+        "navigation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/links.rs:valid_navigable_target_name",
+      "type": "function",
+      "name": "valid_navigable_target_name",
+      "filePath": "components/script/links.rs",
+      "lineRange": [
+        311,
+        325
+      ],
+      "summary": "Validates  a navigable target name.",
+      "tags": [
+        "hyperlink",
+        "navigation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/links.rs:valid_navigable_target_name_or_keyword",
+      "type": "function",
+      "name": "valid_navigable_target_name_or_keyword",
+      "filePath": "components/script/links.rs",
+      "lineRange": [
+        328,
+        336
+      ],
+      "summary": "Validates or resolves a navigable target name or returns it as a keyword.",
+      "tags": [
+        "hyperlink",
+        "navigation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/links.rs:get_element_target",
+      "type": "function",
+      "name": "get_element_target",
+      "filePath": "components/script/links.rs",
+      "lineRange": [
+        339,
+        383
+      ],
+      "summary": "Resolves the browsing context target for a hyperlink element.",
+      "tags": [
+        "hyperlink",
+        "navigation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/links.rs:follow_hyperlink",
+      "type": "function",
+      "name": "follow_hyperlink",
+      "filePath": "components/script/links.rs",
+      "lineRange": [
+        386,
+        508
+      ],
+      "summary": "Follows a hyperlink by navigating the browsing context with the specified relations and target.",
+      "tags": [
+        "hyperlink",
+        "navigation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/messaging.rs",
+      "type": "file",
+      "name": "messaging.rs",
+      "filePath": "components/script/messaging.rs",
+      "summary": "Defines the script thread messaging infrastructure including event loop senders, receivers, message types, and cross-thread communication primitives.",
+      "tags": [
+        "messaging",
+        "ipc",
+        "event-loop",
+        "thread-communication"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/messaging.rs:MainThreadScriptMsg",
+      "type": "class",
+      "name": "MainThreadScriptMsg",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        150,
+        174
+      ],
+      "summary": "Part of the script thread messaging system: MainThreadScriptMsg.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/messaging.rs:ScriptEventLoopSender",
+      "type": "class",
+      "name": "ScriptEventLoopSender",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        208,
+        222
+      ],
+      "summary": "Part of the script thread messaging system: ScriptEventLoopSender.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/messaging.rs:ScriptThreadSenders",
+      "type": "class",
+      "name": "ScriptThreadSenders",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        370,
+        413
+      ],
+      "summary": "Part of the script thread messaging system: ScriptThreadSenders.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/messaging.rs:ScriptThreadReceivers",
+      "type": "class",
+      "name": "ScriptThreadReceivers",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        416,
+        435
+      ],
+      "summary": "Part of the script thread messaging system: ScriptThreadReceivers.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/messaging.rs:pipeline_id",
+      "type": "function",
+      "name": "pipeline_id",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        55,
+        145
+      ],
+      "summary": "Extracts the pipeline ID from a MixedMessage variant by matching across all message types.",
+      "tags": [
+        "messaging",
+        "ipc"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/messaging.rs:send",
+      "type": "function",
+      "name": "send",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        226,
+        254
+      ],
+      "summary": "Sends a message through the event loop sender to the script thread.",
+      "tags": [
+        "messaging",
+        "ipc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/messaging.rs:recv",
+      "type": "function",
+      "name": "recv",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        270,
+        292
+      ],
+      "summary": "Receives the next message from the event loop, processing task queues and timer scheduling.",
+      "tags": [
+        "messaging",
+        "ipc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/messaging.rs:task_source_name",
+      "type": "function",
+      "name": "task_source_name",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        296,
+        307
+      ],
+      "summary": "Returns the human-readable name of a task source for debugging.",
+      "tags": [
+        "messaging",
+        "ipc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/messaging.rs:into_queued_task",
+      "type": "function",
+      "name": "into_queued_task",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        320,
+        338
+      ],
+      "summary": "Converts a common script message into a queued task with its task source.",
+      "tags": [
+        "messaging",
+        "ipc"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/messaging.rs:try_recv",
+      "type": "function",
+      "name": "try_recv",
+      "filePath": "components/script/messaging.rs",
+      "lineRange": [
+        509,
+        539
+      ],
+      "summary": "Non-blocking receive that returns the next available message or None.",
+      "tags": [
+        "messaging",
+        "ipc"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/microtask.rs",
+      "type": "file",
+      "name": "microtask.rs",
+      "filePath": "components/script/microtask.rs",
+      "summary": "Implements the microtask queue and checkpoint algorithm for promise callbacks, queued microtasks, and user-defined microtask processing.",
+      "tags": [
+        "microtask",
+        "promise",
+        "task-queue",
+        "async-execution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/microtask.rs:MicrotaskQueue",
+      "type": "class",
+      "name": "MicrotaskQueue",
+      "filePath": "components/script/microtask.rs",
+      "lineRange": [
+        35,
+        40
+      ],
+      "summary": "Represents a queue of microtasks managed per-global scope.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/microtask.rs:MicrotaskRunnable",
+      "type": "class",
+      "name": "MicrotaskRunnable",
+      "filePath": "components/script/microtask.rs",
+      "lineRange": [
+        56,
+        59
+      ],
+      "summary": "Represents a trait for runnable microtask callbacks.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/microtask.rs:enqueue",
+      "type": "function",
+      "name": "enqueue",
+      "filePath": "components/script/microtask.rs",
+      "lineRange": [
+        85,
+        88
+      ],
+      "summary": "Enqueues a microtask for the current global scope.",
+      "tags": [
+        "microtask",
+        "promise"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/microtask.rs:checkpoint",
+      "type": "function",
+      "name": "checkpoint",
+      "filePath": "components/script/microtask.rs",
+      "lineRange": [
+        93,
+        194
+      ],
+      "summary": "Runs the microtask checkpoint algorithm, draining the microtask queue and processing promise callbacks.",
+      "tags": [
+        "microtask",
+        "promise"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/microtask.rs:empty",
+      "type": "function",
+      "name": "empty",
+      "filePath": "components/script/microtask.rs",
+      "lineRange": [
+        196,
+        198
+      ],
+      "summary": "Returns whether the microtask queue is empty for all global scopes.",
+      "tags": [
+        "microtask",
+        "promise"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/microtask.rs:clear",
+      "type": "function",
+      "name": "clear",
+      "filePath": "components/script/microtask.rs",
+      "lineRange": [
+        200,
+        202
+      ],
+      "summary": "Clears all pending microtasks from the queue.",
+      "tags": [
+        "microtask",
+        "promise"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:for_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:for_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:from_single_keyword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:get_element_noopener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:get_element_noopener",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:valid_navigable_target_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:valid_navigable_target_name_or_keyword",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:valid_navigable_target_name_or_keyword",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:get_element_target",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:get_element_target",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:follow_hyperlink",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/links.rs",
+      "target": "function:components/script/links.rs:follow_hyperlink",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "class:components/script/messaging.rs:MainThreadScriptMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "class:components/script/messaging.rs:MainThreadScriptMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "class:components/script/messaging.rs:ScriptEventLoopSender",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "class:components/script/messaging.rs:ScriptEventLoopSender",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "class:components/script/messaging.rs:ScriptThreadSenders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "class:components/script/messaging.rs:ScriptThreadSenders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "class:components/script/messaging.rs:ScriptThreadReceivers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "class:components/script/messaging.rs:ScriptThreadReceivers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:pipeline_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:pipeline_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:send",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:send",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:recv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:recv",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:task_source_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:pipeline_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:pipeline_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:into_queued_task",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:send",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:send",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:recv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:recv",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:try_recv",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/messaging.rs",
+      "target": "function:components/script/messaging.rs:try_recv",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "class:components/script/microtask.rs:MicrotaskQueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "class:components/script/microtask.rs:MicrotaskQueue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "class:components/script/microtask.rs:MicrotaskRunnable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "class:components/script/microtask.rs:MicrotaskRunnable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "function:components/script/microtask.rs:enqueue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "function:components/script/microtask.rs:enqueue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "function:components/script/microtask.rs:checkpoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "function:components/script/microtask.rs:checkpoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "function:components/script/microtask.rs:empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "function:components/script/microtask.rs:empty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "function:components/script/microtask.rs:clear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/microtask.rs",
+      "target": "function:components/script/microtask.rs:clear",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

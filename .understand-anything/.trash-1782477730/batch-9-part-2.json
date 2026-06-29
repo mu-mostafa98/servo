@@ -1,0 +1,410 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/touch/touch.rs",
+      "type": "file",
+      "name": "touch.rs",
+      "filePath": "components/script/dom/touch/touch.rs",
+      "summary": "Implements the Touch Web API representing a single contact point on a touch-sensitive surface, with conversion to pointer events for unified event handling.",
+      "tags": [
+        "dom",
+        "touch",
+        "web-api",
+        "events",
+        "pointer"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/touch/touch.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/touch/touch.rs",
+      "lineRange": [
+        36,
+        57
+      ],
+      "summary": "Initializes a Touch object with identifier, target element, and screen/client/page coordinates.",
+      "tags": [
+        "constructor",
+        "init",
+        "dom"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/touch/touch.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/touch/touch.rs",
+      "lineRange": [
+        60,
+        79
+      ],
+      "summary": "Constructs a new Touch DOM object rooted to the global scope.",
+      "tags": [
+        "constructor",
+        "dom",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/touch/touch.rs:to_pointer_event",
+      "type": "function",
+      "name": "to_pointer_event",
+      "filePath": "components/script/dom/touch/touch.rs",
+      "lineRange": [
+        84,
+        182
+      ],
+      "summary": "Converts a Touch event to a PointerEvent with calculated pointer properties, pressure, and modifiers.",
+      "tags": [
+        "conversion",
+        "pointer",
+        "events"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/touch/touch.rs:Touch",
+      "type": "class",
+      "name": "Touch",
+      "filePath": "components/script/dom/touch/touch.rs",
+      "lineRange": [
+        22,
+        32
+      ],
+      "summary": "DOM Touch interface representing a single touch point on a surface with position tracking.",
+      "tags": [
+        "dom",
+        "touch",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/touch/touchlist.rs",
+      "type": "file",
+      "name": "touchlist.rs",
+      "filePath": "components/script/dom/touch/touchlist.rs",
+      "summary": "Implements the TouchList Web API providing an ordered list of touch points with indexed access.",
+      "tags": [
+        "dom",
+        "touch",
+        "web-api",
+        "list"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/touch/touchlist.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/touch/touchlist.rs",
+      "lineRange": [
+        28,
+        34
+      ],
+      "summary": "Constructs a new TouchList DOM object from a vector of Touch objects.",
+      "tags": [
+        "constructor",
+        "dom",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/touch/touchlist.rs:TouchList",
+      "type": "class",
+      "name": "TouchList",
+      "filePath": "components/script/dom/touch/touchlist.rs",
+      "lineRange": [
+        15,
+        18
+      ],
+      "summary": "DOM TouchList interface providing indexed read access to a collection of touch points.",
+      "tags": [
+        "dom",
+        "touch",
+        "list"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/useractivation.rs",
+      "type": "file",
+      "name": "useractivation.rs",
+      "filePath": "components/script/dom/useractivation.rs",
+      "summary": "Implements the UserActivation Web API for tracking window-level user activation state with timestamp-based sticky activation support.",
+      "tags": [
+        "dom",
+        "user-activation",
+        "web-api",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/useractivation.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/useractivation.rs",
+      "lineRange": [
+        34,
+        36
+      ],
+      "summary": "Constructs a new UserActivation DOM object.",
+      "tags": [
+        "constructor",
+        "dom",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/useractivation.rs:handle_user_activation_notification",
+      "type": "function",
+      "name": "handle_user_activation_notification",
+      "filePath": "components/script/dom/useractivation.rs",
+      "lineRange": [
+        39,
+        80
+      ],
+      "summary": "Handles a user activation notification by tracking activation state per document with timestamp.",
+      "tags": [
+        "handler",
+        "activation",
+        "event"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/useractivation.rs:UserActivation",
+      "type": "class",
+      "name": "UserActivation",
+      "filePath": "components/script/dom/useractivation.rs",
+      "lineRange": [
+        23,
+        25
+      ],
+      "summary": "DOM interface providing hasBeenActive and isActive queries for tracking user interaction state.",
+      "tags": [
+        "dom",
+        "user-activation",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/useractivation.rs:UserActivationTimestamp",
+      "type": "class",
+      "name": "UserActivationTimestamp",
+      "filePath": "components/script/dom/useractivation.rs",
+      "lineRange": [
+        102,
+        107
+      ],
+      "summary": "Data type tracking activation timestamp with an add operation for merging activation windows.",
+      "tags": [
+        "data",
+        "timestamp",
+        "activation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/userscripts.rs",
+      "type": "file",
+      "name": "userscripts.rs",
+      "filePath": "components/script/dom/userscripts.rs",
+      "summary": "Provides user script loading functionality that injects custom CSS and JavaScript from profile- or extension-defined user scripts into document loading.",
+      "tags": [
+        "dom",
+        "script",
+        "user-scripts",
+        "injection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/userscripts.rs:load_script",
+      "type": "function",
+      "name": "load_script",
+      "filePath": "components/script/dom/userscripts.rs",
+      "lineRange": [
+        12,
+        34
+      ],
+      "summary": "Injects user script content (CSS/JS) into the document head during page load.",
+      "tags": [
+        "script",
+        "injection",
+        "loading"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/values.rs",
+      "type": "file",
+      "name": "values.rs",
+      "filePath": "components/script/dom/values.rs",
+      "summary": "Contains a bare DOMTypesValues type alias used across DOM value serialization, providing a unified interface for different value types.",
+      "tags": [
+        "dom",
+        "types",
+        "utility"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/touch/touch.rs",
+      "target": "function:components/script/dom/touch/touch.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/touch/touch.rs",
+      "target": "function:components/script/dom/touch/touch.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/touch/touch.rs",
+      "target": "function:components/script/dom/touch/touch.rs:to_pointer_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/touch/touch.rs",
+      "target": "class:components/script/dom/touch/touch.rs:Touch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/touch/touch.rs",
+      "target": "class:components/script/dom/touch/touch.rs:Touch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/touch/touch.rs",
+      "target": "function:components/script/dom/touch/touch.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/touch/touch.rs",
+      "target": "function:components/script/dom/touch/touch.rs:to_pointer_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/touch/touchlist.rs",
+      "target": "function:components/script/dom/touch/touchlist.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/touch/touchlist.rs",
+      "target": "class:components/script/dom/touch/touchlist.rs:TouchList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/touch/touchlist.rs",
+      "target": "class:components/script/dom/touch/touchlist.rs:TouchList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/touch/touchlist.rs",
+      "target": "function:components/script/dom/touch/touchlist.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/useractivation.rs",
+      "target": "function:components/script/dom/useractivation.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/useractivation.rs",
+      "target": "function:components/script/dom/useractivation.rs:handle_user_activation_notification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/useractivation.rs",
+      "target": "class:components/script/dom/useractivation.rs:UserActivation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/useractivation.rs",
+      "target": "class:components/script/dom/useractivation.rs:UserActivationTimestamp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/useractivation.rs",
+      "target": "class:components/script/dom/useractivation.rs:UserActivation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/useractivation.rs",
+      "target": "function:components/script/dom/useractivation.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/useractivation.rs",
+      "target": "function:components/script/dom/useractivation.rs:handle_user_activation_notification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/useractivation.rs",
+      "target": "class:components/script/dom/useractivation.rs:UserActivationTimestamp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/userscripts.rs",
+      "target": "function:components/script/dom/userscripts.rs:load_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/userscripts.rs",
+      "target": "function:components/script/dom/userscripts.rs:load_script",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

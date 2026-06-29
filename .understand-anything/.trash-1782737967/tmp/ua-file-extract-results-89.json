@@ -1,0 +1,1260 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 4,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/config/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 12,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/config/opts.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 332,
+      "nonEmptyLines": 277,
+      "functions": [
+        {
+          "name": "help_option",
+          "startLine": 162,
+          "endLine": 164,
+          "params": []
+        },
+        {
+          "name": "help_message",
+          "startLine": 168,
+          "endLine": 171,
+          "params": []
+        },
+        {
+          "name": "iter",
+          "startLine": 176,
+          "endLine": 178,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 192,
+          "endLine": 207,
+          "params": []
+        },
+        {
+          "name": "toggle_option",
+          "startLine": 211,
+          "endLine": 213,
+          "params": [
+            "option",
+            "enabled"
+          ]
+        },
+        {
+          "name": "is_enabled",
+          "startLine": 216,
+          "endLine": 218,
+          "params": [
+            "option"
+          ]
+        },
+        {
+          "name": "extend_from_string",
+          "startLine": 223,
+          "endLine": 233,
+          "params": [
+            "option_string"
+          ]
+        },
+        {
+          "name": "default",
+          "startLine": 244,
+          "endLine": 266,
+          "params": []
+        },
+        {
+          "name": "initialize_options",
+          "startLine": 278,
+          "endLine": 280,
+          "params": [
+            "opts"
+          ]
+        },
+        {
+          "name": "get",
+          "startLine": 288,
+          "endLine": 295,
+          "params": []
+        },
+        {
+          "name": "test_parsing_of_diagnostics_logging_options",
+          "startLine": 298,
+          "endLine": 332,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "Opts",
+          "startLine": 23,
+          "endLine": 91,
+          "methods": [
+            "default"
+          ],
+          "properties": [
+            "time_profiling",
+            "time_profiler_trace_path",
+            "hard_fail",
+            "debug",
+            "multiprocess",
+            "force_ipc",
+            "background_hang_monitor",
+            "sandbox",
+            "random_pipeline_closure_probability",
+            "random_pipeline_closure_seed",
+            "shaders_path",
+            "config_dir",
+            "temporary_storage",
+            "certificate_path",
+            "host_file",
+            "ignore_certificate_errors",
+            "unminify_js",
+            "local_script_source",
+            "unminify_css"
+          ]
+        },
+        {
+          "name": "DiagnosticsLoggingOption",
+          "startLine": 108,
+          "endLine": 156,
+          "methods": [
+            "help_option",
+            "help_message",
+            "iter"
+          ],
+          "properties": [
+            "StyleTree",
+            "RuleTree",
+            "FlowTree",
+            "StackingContextTree",
+            "ScrollTree",
+            "DisplayList",
+            "RelayoutEvent",
+            "ProfileScriptEvents",
+            "StyleStatistics",
+            "GcProfile",
+            "ProgressiveWebMetrics",
+            "AccessibilityTree"
+          ]
+        },
+        {
+          "name": "DiagnosticsLogging",
+          "startLine": 183,
+          "endLine": 185,
+          "methods": [
+            "new",
+            "toggle_option",
+            "is_enabled",
+            "extend_from_string"
+          ],
+          "properties": [
+            "options"
+          ]
+        },
+        {
+          "name": "OutputOptions",
+          "startLine": 238,
+          "endLine": 241,
+          "methods": [],
+          "properties": [
+            "FileName",
+            "Stdout"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Opts",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "DiagnosticsLoggingOption",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "help_option",
+          "line": 162,
+          "isDefault": false
+        },
+        {
+          "name": "help_message",
+          "line": 168,
+          "isDefault": false
+        },
+        {
+          "name": "iter",
+          "line": 176,
+          "isDefault": false
+        },
+        {
+          "name": "DiagnosticsLogging",
+          "line": 183,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 192,
+          "isDefault": false
+        },
+        {
+          "name": "toggle_option",
+          "line": 211,
+          "isDefault": false
+        },
+        {
+          "name": "is_enabled",
+          "line": 216,
+          "isDefault": false
+        },
+        {
+          "name": "extend_from_string",
+          "line": 223,
+          "isDefault": false
+        },
+        {
+          "name": "OutputOptions",
+          "line": 238,
+          "isDefault": false
+        },
+        {
+          "name": "initialize_options",
+          "line": 278,
+          "isDefault": false
+        },
+        {
+          "name": "get",
+          "line": 288,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "help_option",
+          "callee": "self.as_ref",
+          "lineNumber": 163
+        },
+        {
+          "caller": "help_message",
+          "callee": "self.get_documentation().expect",
+          "lineNumber": 169
+        },
+        {
+          "caller": "help_message",
+          "callee": "self.get_documentation",
+          "lineNumber": 169
+        },
+        {
+          "caller": "iter",
+          "callee": "<Self as IntoEnumIterator>::iter",
+          "lineNumber": 177
+        },
+        {
+          "caller": "new",
+          "callee": "DiagnosticsLogging::default",
+          "lineNumber": 194
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 199
+        },
+        {
+          "caller": "new",
+          "callee": "std::env::var",
+          "lineNumber": 200
+        },
+        {
+          "caller": "new",
+          "callee": "config.extend_from_string",
+          "lineNumber": 201
+        },
+        {
+          "caller": "extend_from_string",
+          "callee": "option_string.split",
+          "lineNumber": 224
+        },
+        {
+          "caller": "extend_from_string",
+          "callee": "option.trim",
+          "lineNumber": 225
+        },
+        {
+          "caller": "extend_from_string",
+          "callee": "DiagnosticsLoggingOption::from_str",
+          "lineNumber": 226
+        },
+        {
+          "caller": "extend_from_string",
+          "callee": "self.toggle_option",
+          "lineNumber": 227
+        },
+        {
+          "caller": "extend_from_string",
+          "callee": "Err",
+          "lineNumber": 228
+        },
+        {
+          "caller": "extend_from_string",
+          "callee": "Ok",
+          "lineNumber": 232
+        },
+        {
+          "caller": "default",
+          "callee": "Default::default",
+          "lineNumber": 255
+        },
+        {
+          "caller": "initialize_options",
+          "callee": "OPTIONS.set(opts).expect",
+          "lineNumber": 279
+        },
+        {
+          "caller": "initialize_options",
+          "callee": "OPTIONS.set",
+          "lineNumber": 279
+        },
+        {
+          "caller": "get",
+          "callee": "OPTIONS.get_or_init",
+          "lineNumber": 294
+        },
+        {
+          "caller": "test_parsing_of_diagnostics_logging_options",
+          "callee": "DiagnosticsLogging::new",
+          "lineNumber": 301
+        },
+        {
+          "caller": "test_parsing_of_diagnostics_logging_options",
+          "callee": "DiagnosticsLoggingOption::iter",
+          "lineNumber": 302
+        },
+        {
+          "caller": "test_parsing_of_diagnostics_logging_options",
+          "callee": "DiagnosticsLogging::new",
+          "lineNumber": 321
+        },
+        {
+          "caller": "test_parsing_of_diagnostics_logging_options",
+          "callee": "DiagnosticsLoggingOption::iter",
+          "lineNumber": 322
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 13,
+        "functionCount": 11,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "components/config/pref_util.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 172,
+      "nonEmptyLines": 154,
+      "functions": [
+        {
+          "name": "from_booleanish_str",
+          "startLine": 22,
+          "endLine": 32,
+          "params": [
+            "input"
+          ]
+        },
+        {
+          "name": "try_from",
+          "startLine": 38,
+          "endLine": 58,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "try_from",
+          "startLine": 109,
+          "endLine": 115,
+          "params": [
+            "other"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 119,
+          "endLine": 121,
+          "params": [
+            "other"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 125,
+          "endLine": 148,
+          "params": [
+            "other"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "PrefValue",
+          "startLine": 10,
+          "endLine": 17,
+          "methods": [
+            "from_booleanish_str",
+            "try_from",
+            "from"
+          ],
+          "properties": [
+            "Float",
+            "Int",
+            "UInt",
+            "Str",
+            "Bool",
+            "Array"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PrefValue",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "from_booleanish_str",
+          "line": 22,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "from_booleanish_str",
+          "callee": "PrefValue::Bool",
+          "lineNumber": 24
+        },
+        {
+          "caller": "from_booleanish_str",
+          "callee": "PrefValue::Bool",
+          "lineNumber": 25
+        },
+        {
+          "caller": "from_booleanish_str",
+          "callee": "input\n                .parse::<i64>()\n                .map(PrefValue::Int)\n                .or_else(|_| input.parse::<f64>().map(PrefValue::Float)).unwrap_or_else",
+          "lineNumber": 26
+        },
+        {
+          "caller": "from_booleanish_str",
+          "callee": "input\n                .parse::<i64>()\n                .map(PrefValue::Int).or_else",
+          "lineNumber": 26
+        },
+        {
+          "caller": "from_booleanish_str",
+          "callee": "input\n                .parse::<i64>().map",
+          "lineNumber": 26
+        },
+        {
+          "caller": "from_booleanish_str",
+          "callee": "input\n                .parse::<i64>",
+          "lineNumber": 26
+        },
+        {
+          "caller": "from_booleanish_str",
+          "callee": "input.parse::<f64>().map",
+          "lineNumber": 29
+        },
+        {
+          "caller": "from_booleanish_str",
+          "callee": "input.parse::<f64>",
+          "lineNumber": 29
+        },
+        {
+          "caller": "from_booleanish_str",
+          "callee": "PrefValue::from",
+          "lineNumber": 30
+        },
+        {
+          "caller": "try_from",
+          "callee": "Err",
+          "lineNumber": 40
+        },
+        {
+          "caller": "try_from",
+          "callee": "\"Cannot turn null into preference\".into",
+          "lineNumber": 40
+        },
+        {
+          "caller": "try_from",
+          "callee": "Ok",
+          "lineNumber": 41
+        },
+        {
+          "caller": "try_from",
+          "callee": "(*value).into",
+          "lineNumber": 41
+        },
+        {
+          "caller": "try_from",
+          "callee": "number\n                .as_i64()\n                .map(Into::into)\n                .or_else(|| number.as_f64().map(Into::into))\n                .map(Ok).unwrap_or",
+          "lineNumber": 42
+        },
+        {
+          "caller": "try_from",
+          "callee": "number\n                .as_i64()\n                .map(Into::into)\n                .or_else(|| number.as_f64().map(Into::into)).map",
+          "lineNumber": 42
+        },
+        {
+          "caller": "try_from",
+          "callee": "number\n                .as_i64()\n                .map(Into::into).or_else",
+          "lineNumber": 42
+        },
+        {
+          "caller": "try_from",
+          "callee": "number\n                .as_i64().map",
+          "lineNumber": 42
+        },
+        {
+          "caller": "try_from",
+          "callee": "number.as_i64",
+          "lineNumber": 42
+        },
+        {
+          "caller": "try_from",
+          "callee": "number.as_f64().map",
+          "lineNumber": 45
+        },
+        {
+          "caller": "try_from",
+          "callee": "number.as_f64",
+          "lineNumber": 45
+        },
+        {
+          "caller": "try_from",
+          "callee": "Err",
+          "lineNumber": 47
+        },
+        {
+          "caller": "try_from",
+          "callee": "\"Could not parse number from JSON\".into",
+          "lineNumber": 47
+        },
+        {
+          "caller": "try_from",
+          "callee": "Ok",
+          "lineNumber": 48
+        },
+        {
+          "caller": "try_from",
+          "callee": "value.clone().into",
+          "lineNumber": 48
+        },
+        {
+          "caller": "try_from",
+          "callee": "value.clone",
+          "lineNumber": 48
+        },
+        {
+          "caller": "try_from",
+          "callee": "array\n                    .iter()\n                    .map(TryInto::<PrefValue>::try_into)\n                    .collect::<Result<Vec<_>, _>>",
+          "lineNumber": 50
+        },
+        {
+          "caller": "try_from",
+          "callee": "array\n                    .iter().map",
+          "lineNumber": 50
+        },
+        {
+          "caller": "try_from",
+          "callee": "array.iter",
+          "lineNumber": 50
+        },
+        {
+          "caller": "try_from",
+          "callee": "Ok",
+          "lineNumber": 54
+        },
+        {
+          "caller": "try_from",
+          "callee": "PrefValue::Array",
+          "lineNumber": 54
+        },
+        {
+          "caller": "try_from",
+          "callee": "Err",
+          "lineNumber": 56
+        },
+        {
+          "caller": "try_from",
+          "callee": "\"Cannot turn object into preference\".into",
+          "lineNumber": 56
+        },
+        {
+          "caller": "try_from",
+          "callee": "Ok",
+          "lineNumber": 111
+        },
+        {
+          "caller": "try_from",
+          "callee": "Ok",
+          "lineNumber": 112
+        },
+        {
+          "caller": "try_from",
+          "callee": "Err",
+          "lineNumber": 113
+        },
+        {
+          "caller": "from",
+          "callee": "PrefValue::Array",
+          "lineNumber": 120
+        },
+        {
+          "caller": "from",
+          "callee": "IntoIterator::into_iter(other).map(|v| v.into()).collect",
+          "lineNumber": 120
+        },
+        {
+          "caller": "from",
+          "callee": "IntoIterator::into_iter(other).map",
+          "lineNumber": 120
+        },
+        {
+          "caller": "from",
+          "callee": "IntoIterator::into_iter",
+          "lineNumber": 120
+        },
+        {
+          "caller": "from",
+          "callee": "v.into",
+          "lineNumber": 120
+        },
+        {
+          "caller": "from",
+          "callee": "values.len",
+          "lineNumber": 127
+        },
+        {
+          "caller": "from",
+          "callee": "values\n                    .into_iter()\n                    .map(TryFrom::try_from)\n                    .filter_map(Result::ok).collect",
+          "lineNumber": 128
+        },
+        {
+          "caller": "from",
+          "callee": "values\n                    .into_iter()\n                    .map(TryFrom::try_from).filter_map",
+          "lineNumber": 128
+        },
+        {
+          "caller": "from",
+          "callee": "values\n                    .into_iter().map",
+          "lineNumber": 128
+        },
+        {
+          "caller": "from",
+          "callee": "values.into_iter",
+          "lineNumber": 128
+        },
+        {
+          "caller": "from",
+          "callee": "values.len",
+          "lineNumber": 133
+        },
+        {
+          "caller": "test_pref_value_from_str",
+          "callee": "PrefValue::from_booleanish_str",
+          "lineNumber": 157
+        },
+        {
+          "caller": "test_pref_value_from_str",
+          "callee": "PrefValue::from_booleanish_str",
+          "lineNumber": 160
+        },
+        {
+          "caller": "test_pref_value_from_str",
+          "callee": "PrefValue::from_booleanish_str",
+          "lineNumber": 163
+        },
+        {
+          "caller": "test_pref_value_from_str",
+          "callee": "PrefValue::from_booleanish_str",
+          "lineNumber": 166
+        },
+        {
+          "caller": "test_pref_value_from_str",
+          "callee": "PrefValue::from_booleanish_str",
+          "lineNumber": 169
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/config/prefs.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 668,
+      "nonEmptyLines": 646,
+      "functions": [
+        {
+          "name": "get",
+          "startLine": 31,
+          "endLine": 33,
+          "params": []
+        },
+        {
+          "name": "add_observer",
+          "startLine": 36,
+          "endLine": 38,
+          "params": [
+            "observer"
+          ]
+        },
+        {
+          "name": "set",
+          "startLine": 42,
+          "endLine": 78,
+          "params": [
+            "preferences"
+          ]
+        },
+        {
+          "name": "const_default",
+          "startLine": 399,
+          "endLine": 575,
+          "params": []
+        },
+        {
+          "name": "editing_caret_blink_time",
+          "startLine": 579,
+          "endLine": 585,
+          "params": []
+        },
+        {
+          "name": "default",
+          "startLine": 589,
+          "endLine": 606,
+          "params": []
+        },
+        {
+          "name": "default",
+          "startLine": 619,
+          "endLine": 629,
+          "params": []
+        },
+        {
+          "name": "to_user_agent_string",
+          "startLine": 635,
+          "endLine": 667,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "PreferencesObserver",
+          "startLine": 20,
+          "endLine": 25,
+          "methods": [
+            "prefs_changed"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Preferences",
+          "startLine": 100,
+          "endLine": 396,
+          "methods": [
+            "const_default",
+            "editing_caret_blink_time",
+            "default"
+          ],
+          "properties": [
+            "fonts_default",
+            "fonts_serif",
+            "fonts_sans_serif",
+            "fonts_monospace",
+            "fonts_default_size",
+            "fonts_default_monospace_size",
+            "editing_caret_blink_time",
+            "css_animations_testing_enabled",
+            "devtools_server_enabled",
+            "devtools_server_listen_address",
+            "dom_webgpu_enabled",
+            "dom_webgpu_wgpu_backend",
+            "dom_abort_controller_enabled",
+            "dom_adoptedstylesheet_enabled",
+            "dom_allow_preloading_module_descendants",
+            "dom_async_clipboard_enabled",
+            "dom_bluetooth_enabled",
+            "dom_bluetooth_testing_enabled",
+            "dom_allow_scripts_to_close_windows",
+            "dom_canvas_capture_enabled",
+            "dom_canvas_text_enabled",
+            "dom_canvas_backend",
+            "dom_canvas_msg_buffer_size",
+            "dom_clipboardevent_enabled",
+            "dom_composition_event_enabled",
+            "dom_cookiestore_enabled",
+            "dom_credential_management_enabled",
+            "dom_crypto_subtle_enabled",
+            "dom_document_dblclick_timeout",
+            "dom_document_dblclick_dist",
+            "dom_entries_api_enabled",
+            "dom_exec_command_enabled",
+            "dom_fontface_enabled",
+            "dom_fullscreen_test",
+            "dom_gamepad_enabled",
+            "dom_geolocation_enabled",
+            "dom_wakelock_enabled",
+            "dom_indexeddb_enabled",
+            "dom_intersection_observer_enabled",
+            "dom_microdata_testing_enabled",
+            "dom_uievent_which_enabled",
+            "dom_mutation_observer_enabled",
+            "dom_navigator_protocol_handlers_enabled",
+            "dom_notification_enabled",
+            "dom_offscreen_canvas_enabled",
+            "dom_parallel_css_parsing_enabled",
+            "dom_permissions_enabled",
+            "dom_permissions_testing_allowed_in_nonsecure_contexts",
+            "dom_resize_observer_enabled",
+            "dom_sanitizer_enabled",
+            "dom_script_asynch",
+            "dom_storage_manager_api_enabled",
+            "dom_serviceworker_enabled",
+            "dom_serviceworker_timeout_seconds",
+            "dom_sharedworker_enabled",
+            "dom_servo_helpers_enabled",
+            "dom_servoparser_async_html_tokenizer_enabled",
+            "dom_testbinding_enabled",
+            "dom_testbinding_prefcontrolled_enabled",
+            "dom_testbinding_prefcontrolled2_enabled",
+            "dom_testbinding_preference_value_falsy",
+            "dom_testbinding_preference_value_quote_string_test",
+            "dom_testbinding_preference_value_space_string_test",
+            "dom_testbinding_preference_value_string_empty",
+            "dom_testbinding_preference_value_string_test",
+            "dom_testbinding_preference_value_truthy",
+            "dom_testing_element_activation_enabled",
+            "dom_testing_html_input_element_select_files_enabled",
+            "dom_testperf_enabled",
+            "dom_testutils_enabled",
+            "dom_touch_events_legacy_apis_enabled",
+            "dom_transient_activation_duration_ms",
+            "dom_web_animations_enabled",
+            "dom_webgl2_enabled",
+            "dom_webrtc_enabled",
+            "dom_webrtc_transceiver_enabled",
+            "dom_webvtt_enabled",
+            "dom_webxr_enabled",
+            "dom_webxr_test",
+            "dom_webxr_first_person_observer_view",
+            "dom_webxr_glwindow_enabled",
+            "dom_webxr_glwindow_left_right",
+            "dom_webxr_glwindow_red_cyan",
+            "dom_webxr_glwindow_spherical",
+            "dom_webxr_glwindow_cubemap",
+            "dom_webxr_hands_enabled",
+            "dom_webxr_layers_enabled",
+            "dom_webxr_openxr_enabled",
+            "dom_webxr_sessionavailable",
+            "dom_webxr_unsafe_assume_user_intent",
+            "dom_worklet_enabled",
+            "dom_worklet_blockingsleep_enabled",
+            "dom_worklet_testing_enabled",
+            "dom_worklet_timeout_ms",
+            "dom_visual_viewport_enabled",
+            "gfx_precache_shaders",
+            "gfx_text_antialiasing_enabled",
+            "gfx_subpixel_text_antialiasing_enabled",
+            "gfx_texture_swizzling_enabled",
+            "image_key_batch_size",
+            "inspector_show_servo_internal_shadow_roots",
+            "intl_locale_override",
+            "js_asmjs_enabled",
+            "js_baseline_interpreter_enabled",
+            "js_disable_jit",
+            "js_baseline_jit_enabled",
+            "js_baseline_jit_unsafe_eager_compilation_enabled",
+            "js_ion_enabled",
+            "js_ion_unsafe_eager_compilation_enabled",
+            "js_mem_gc_compacting_enabled",
+            "js_mem_gc_empty_chunk_count_min",
+            "js_mem_gc_high_frequency_heap_growth_max",
+            "js_mem_gc_high_frequency_heap_growth_min",
+            "js_mem_gc_high_frequency_high_limit_mb",
+            "js_mem_gc_high_frequency_low_limit_mb",
+            "js_mem_gc_high_frequency_time_limit_ms",
+            "js_mem_gc_incremental_enabled",
+            "js_mem_gc_incremental_slice_ms",
+            "js_mem_gc_low_frequency_heap_growth",
+            "js_mem_gc_per_zone_enabled",
+            "js_mem_gc_zeal_frequency",
+            "js_mem_gc_zeal_level",
+            "js_mem_max",
+            "js_native_regex_enabled",
+            "js_offthread_compilation_enabled",
+            "js_timers_minimum_duration",
+            "js_wasm_baseline_enabled",
+            "js_wasm_enabled",
+            "js_wasm_ion_enabled",
+            "largest_contentful_paint_enabled",
+            "layout_animations_test_enabled",
+            "layout_columns_enabled",
+            "layout_grid_enabled",
+            "layout_container_queries_enabled",
+            "layout_css_attr_enabled",
+            "layout_style_sharing_cache_enabled",
+            "layout_threads",
+            "layout_parallelism_job_count_minimum",
+            "layout_parallelism_job_size_minimum",
+            "layout_unimplemented",
+            "layout_variable_fonts_enabled",
+            "layout_writing_mode_enabled",
+            "layout_svg_engine_enabled",
+            "media_glvideo_enabled",
+            "media_testing_enabled",
+            "network_connection_timeout",
+            "network_enforce_tls_enabled",
+            "network_enforce_tls_localhost",
+            "network_enforce_tls_onion",
+            "network_http_cache_disabled",
+            "network_http_proxy_uri",
+            "network_https_proxy_uri",
+            "network_http_no_proxy",
+            "network_http_cache_size",
+            "network_local_directory_listing_enabled",
+            "network_use_webpki_roots",
+            "session_history_max_length",
+            "shell_background_color_rgba",
+            "webgl_testing_context_creation_error",
+            "thread_pool_workers_max",
+            "thread_pool_fallback_workers",
+            "thread_pool_async_runtime_workers_max",
+            "thread_pool_webrender_workers_max",
+            "user_agent",
+            "viewport_meta_enabled",
+            "log_filter",
+            "accessibility_enabled",
+            "expensive_accessibility_test_assertions_enabled",
+            "expose_servointernals_globally"
+          ]
+        },
+        {
+          "name": "UserAgentPlatform",
+          "startLine": 609,
+          "endLine": 614,
+          "methods": [
+            "default",
+            "to_user_agent_string"
+          ],
+          "properties": [
+            "Desktop",
+            "Android",
+            "OpenHarmony",
+            "Ios"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PreferencesObserver",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "get",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "add_observer",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "set",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "Preferences",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "editing_caret_blink_time",
+          "line": 579,
+          "isDefault": false
+        },
+        {
+          "name": "UserAgentPlatform",
+          "line": 609,
+          "isDefault": false
+        },
+        {
+          "name": "default",
+          "line": 619,
+          "isDefault": false
+        },
+        {
+          "name": "to_user_agent_string",
+          "line": 635,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "get",
+          "callee": "PREFERENCES.read().unwrap",
+          "lineNumber": 32
+        },
+        {
+          "caller": "get",
+          "callee": "PREFERENCES.read",
+          "lineNumber": 32
+        },
+        {
+          "caller": "add_observer",
+          "callee": "OBSERVERS.write().unwrap().push",
+          "lineNumber": 37
+        },
+        {
+          "caller": "add_observer",
+          "callee": "OBSERVERS.write().unwrap",
+          "lineNumber": 37
+        },
+        {
+          "caller": "add_observer",
+          "callee": "OBSERVERS.write",
+          "lineNumber": 37
+        },
+        {
+          "caller": "set",
+          "callee": "preferences.diff",
+          "lineNumber": 44
+        },
+        {
+          "caller": "set",
+          "callee": "PREFERENCES.read().unwrap",
+          "lineNumber": 44
+        },
+        {
+          "caller": "set",
+          "callee": "PREFERENCES.read",
+          "lineNumber": 44
+        },
+        {
+          "caller": "set",
+          "callee": "changed.is_empty",
+          "lineNumber": 45
+        },
+        {
+          "caller": "set",
+          "callee": "PREFERENCES.write().unwrap",
+          "lineNumber": 73
+        },
+        {
+          "caller": "set",
+          "callee": "PREFERENCES.write",
+          "lineNumber": 73
+        },
+        {
+          "caller": "set",
+          "callee": "OBSERVERS.read().unwrap",
+          "lineNumber": 75
+        },
+        {
+          "caller": "set",
+          "callee": "OBSERVERS.read",
+          "lineNumber": 75
+        },
+        {
+          "caller": "set",
+          "callee": "observer.prefs_changed",
+          "lineNumber": 76
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 404
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 414
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 454
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 455
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 456
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 457
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 471
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 495
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 498
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 499
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 500
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 507
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 557
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 558
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 559
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 565
+        },
+        {
+          "caller": "const_default",
+          "callee": "String::new",
+          "lineNumber": 571
+        },
+        {
+          "caller": "editing_caret_blink_time",
+          "callee": "Some",
+          "lineNumber": 581
+        },
+        {
+          "caller": "editing_caret_blink_time",
+          "callee": "Duration::from_millis",
+          "lineNumber": 581
+        },
+        {
+          "caller": "default",
+          "callee": "Self::const_default",
+          "lineNumber": 590
+        },
+        {
+          "caller": "default",
+          "callee": "UserAgentPlatform::default().to_user_agent_string",
+          "lineNumber": 591
+        },
+        {
+          "caller": "default",
+          "callee": "UserAgentPlatform::default",
+          "lineNumber": 591
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var(\"http_proxy\").or_else",
+          "lineNumber": 592
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var",
+          "lineNumber": 592
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var",
+          "lineNumber": 592
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var(\"https_proxy\").or_else",
+          "lineNumber": 597
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var",
+          "lineNumber": 597
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var",
+          "lineNumber": 597
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var(\"no_proxy\").or_else",
+          "lineNumber": 601
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var",
+          "lineNumber": 601
+        },
+        {
+          "caller": "default",
+          "callee": "std::env::var",
+          "lineNumber": 601
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 9,
+        "functionCount": 8,
+        "classCount": 3
+      }
+    }
+  ]
+}

@@ -1,0 +1,2819 @@
+{
+  "nodes": [
+    {
+      "id": "file:ports/servoshell/desktop/tracing.rs",
+      "type": "file",
+      "name": "tracing.rs",
+      "filePath": "ports/servoshell/desktop/tracing.rs",
+      "summary": "Provides winit event logging infrastructure via the trace_winit_event macro and LogTarget trait for categorizing winit events by type for trace-level logging.",
+      "tags": [
+        "logging",
+        "events",
+        "desktop"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/desktop/webxr.rs",
+      "type": "file",
+      "name": "webxr.rs",
+      "filePath": "ports/servoshell/desktop/webxr.rs",
+      "summary": "Implements WebXR discovery and registration for desktop platforms, supporting both GL window and OpenXR backends with preference-driven mock testing.",
+      "tags": [
+        "webxr",
+        "virtual-reality",
+        "desktop"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/egl/android/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Android JNI bridge providing the native interface between Java (ServoView) and the Servo engine, handling initialization, touch events, keyboard input, pinch zoom, media session, and lifecycle management.",
+      "tags": [
+        "android",
+        "jni",
+        "platform-bridge",
+        "input-handling"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:ports/servoshell/egl/app.rs",
+      "type": "file",
+      "name": "app.rs",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Core EGL application state manager defining the App and EmbeddedPlatformWindow structs for platform-embedded rendering, handling webview management, input events, media session, and window lifecycle.",
+      "tags": [
+        "application",
+        "rendering",
+        "platform-layer"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:ports/servoshell/desktop/tracing.rs:LogTarget",
+      "type": "class",
+      "name": "LogTarget",
+      "filePath": "ports/servoshell/desktop/tracing.rs",
+      "summary": "Trait providing a log_target method that returns a static string categorizing winit event types for trace-level logging.",
+      "tags": [
+        "trait",
+        "logging",
+        "winit"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        28,
+        30
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/webxr.rs:new_boxed",
+      "type": "function",
+      "name": "new_boxed",
+      "filePath": "ports/servoshell/desktop/webxr.rs",
+      "summary": "Creates a boxed XrDiscoveryWebXrRegistry, initializing XR discovery backend (OpenXR or GLWindow) based on preferences.",
+      "tags": [
+        "webxr",
+        "factory",
+        "initialization"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        29,
+        58
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/webxr.rs:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "ports/servoshell/desktop/webxr.rs",
+      "summary": "Registers XR discovery backends (mock, GLWindow, OpenXR) with the MainThreadRegistry and sets up preference observers.",
+      "tags": [
+        "webxr",
+        "registration"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        75,
+        89
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/desktop/webxr.rs:XrDiscoveryWebXrRegistry",
+      "type": "class",
+      "name": "XrDiscoveryWebXrRegistry",
+      "filePath": "ports/servoshell/desktop/webxr.rs",
+      "summary": "Holds an optional XrDiscovery instance and implements WebXrRegistry for registering XR backends.",
+      "tags": [
+        "webxr",
+        "registry"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        24,
+        26
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:android_main",
+      "type": "function",
+      "name": "android_main",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "No-op C entry for Android compatibility with winit/android-activity.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        66,
+        72
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_version",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_version",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling version from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        85,
+        92
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_init",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_init",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Initializes Servo from Java, setting up logging, CLI args, preferences, and window handles.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        97,
+        215
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_setExperimentalMode",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_setExperimentalMode",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling setExperimentalMode from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        218,
+        233
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_resize",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_resize",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling resize from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        236,
+        248
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_performUpdates",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_performUpdates",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling performUpdates from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        251,
+        261
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_loadUri",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_loadUri",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling loadUri from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        264,
+        275
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_reload",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_reload",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling reload from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        278,
+        288
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_stop",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_stop",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling stop from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        291,
+        301
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_goBack",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_goBack",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling goBack from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        304,
+        314
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_goForward",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_goForward",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling goForward from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        317,
+        327
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_scroll",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_scroll",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling scroll from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        330,
+        344
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_doFrame",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_doFrame",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling doFrame from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        347,
+        356
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:try_from",
+      "type": "function",
+      "name": "try_from",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Converts Android keycode to NamedKey.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        372,
+        383
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Converts Android keycode to Key.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        387,
+        397
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_keydown",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_keydown",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling keydown from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        408,
+        422
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_keyup",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_keyup",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling keyup from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        425,
+        439
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchDown",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_touchDown",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling touchDown from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        442,
+        455
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchUp",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_touchUp",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling touchUp from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        458,
+        471
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchMove",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_touchMove",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling touchMove from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        474,
+        487
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchCancel",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_touchCancel",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling touchCancel from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        490,
+        503
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoomStart",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_pinchZoomStart",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling pinchZoomStart from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        506,
+        519
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoom",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_pinchZoom",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling pinchZoom from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        522,
+        535
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoomEnd",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_pinchZoomEnd",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling pinchZoomEnd from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        538,
+        551
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_click",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_click",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling click from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        554,
+        569
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pausePainting",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_pausePainting",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling pausePainting from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        572,
+        582
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_resumePainting",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_resumePainting",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling resumePainting from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        585,
+        602
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_mediaSessionAction",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_mediaSessionAction",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "JNI bridge handling mediaSessionAction from the Java layer.",
+      "tags": [
+        "jni",
+        "android",
+        "bridge"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        605,
+        632
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:show_alert",
+      "type": "function",
+      "name": "show_alert",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Dispatches alert dialog to Java via JNI callbacks.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        667,
+        682
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:notify_load_status_changed",
+      "type": "function",
+      "name": "notify_load_status_changed",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Notifies Java about page load status changes.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        684,
+        707
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:on_title_changed",
+      "type": "function",
+      "name": "on_title_changed",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Notifies Java about title changed.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        713,
+        730
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:on_url_changed",
+      "type": "function",
+      "name": "on_url_changed",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Notifies Java about url changed.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        732,
+        749
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:on_history_changed",
+      "type": "function",
+      "name": "on_history_changed",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Notifies Java about history changed.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        751,
+        766
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:on_media_session_metadata",
+      "type": "function",
+      "name": "on_media_session_metadata",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Notifies Java about media session metadata.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        786,
+        811
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:on_media_session_playback_state_change",
+      "type": "function",
+      "name": "on_media_session_playback_state_change",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Notifies Java about media session playback state change.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        813,
+        828
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:on_media_session_set_position_state",
+      "type": "function",
+      "name": "on_media_session_set_position_state",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Notifies Java about media session set position state.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        830,
+        855
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:new_string_as_jvalue",
+      "type": "function",
+      "name": "new_string_as_jvalue",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Creates a JNI JValue from a Rust string.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        875,
+        887
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:jni_coordinate_to_rust_viewport_rect",
+      "type": "function",
+      "name": "jni_coordinate_to_rust_viewport_rect",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Converts JNI coordinates to Rust viewport rect.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        889,
+        900
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:get_field_as_string",
+      "type": "function",
+      "name": "get_field_as_string",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Extracts a string field from a JNI Java object.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        902,
+        911
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:get_options",
+      "type": "function",
+      "name": "get_options",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Parses JNI init options from Java objects (args, URL, viewport, density, surface).",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        913,
+        971
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:display_and_window_handle",
+      "type": "function",
+      "name": "display_and_window_handle",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Extracts display/window handles from Android surface.",
+      "tags": [
+        "android",
+        "helper"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        973,
+        983
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/android/mod.rs:HostCallbacks",
+      "type": "class",
+      "name": "HostCallbacks",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Host callback forwarding embedder notifications to Android Java via JNI.",
+      "tags": [
+        "android",
+        "jni"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        57,
+        59
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/android/mod.rs:WakeupCallback",
+      "type": "class",
+      "name": "WakeupCallback",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Event loop waker using JNI to wake the Android UI thread.",
+      "tags": [
+        "android",
+        "jni"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        634,
+        636
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:update_user_interface_state:85",
+      "type": "function",
+      "name": "update_user_interface_state",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Updates platform window title, URL, back/forward state, and load status.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        85,
+        160
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:show_embedder_control:181",
+      "type": "function",
+      "name": "show_embedder_control",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Shows an embedder control on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        181,
+        199
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:hide_embedder_control:201",
+      "type": "function",
+      "name": "hide_embedder_control",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Hides an embedder control from the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        201,
+        210
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:notify_media_session_event:212",
+      "type": "function",
+      "name": "notify_media_session_event",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Notifies the platform window about media session events.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        212,
+        229
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:new:249",
+      "type": "function",
+      "name": "new",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        249,
+        256
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:notify_vsync:258",
+      "type": "function",
+      "name": "notify_vsync",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        258,
+        264
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:observe_next_frame:268",
+      "type": "function",
+      "name": "observe_next_frame",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Sets up next-vsync frame callback.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        268,
+        282
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:new:308",
+      "type": "function",
+      "name": "new",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Creates a new App with given init options.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        308,
+        338
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:add_platform_window:340",
+      "type": "function",
+      "name": "add_platform_window",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Adds a platform window with display/window handles and viewport config.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        340,
+        376
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:servo:378",
+      "type": "function",
+      "name": "servo",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        378,
+        380
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:servoshell_preferences:382",
+      "type": "function",
+      "name": "servoshell_preferences",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        382,
+        384
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:window:386",
+      "type": "function",
+      "name": "window",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        386,
+        390
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:active_or_newest_webview:392",
+      "type": "function",
+      "name": "active_or_newest_webview",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        392,
+        394
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:initial_url:396",
+      "type": "function",
+      "name": "initial_url",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        396,
+        398
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:create_and_activate_toplevel_webview:400",
+      "type": "function",
+      "name": "create_and_activate_toplevel_webview",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        400,
+        403
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:activate_webview:406",
+      "type": "function",
+      "name": "activate_webview",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        406,
+        408
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:spin_event_loop:413",
+      "type": "function",
+      "name": "spin_event_loop",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        413,
+        420
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:load_uri:423",
+      "type": "function",
+      "name": "load_uri",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        423,
+        427
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:reload:430",
+      "type": "function",
+      "name": "reload",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        430,
+        434
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:stop:437",
+      "type": "function",
+      "name": "stop",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        437,
+        439
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:go_back:442",
+      "type": "function",
+      "name": "go_back",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        442,
+        446
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:go_forward:449",
+      "type": "function",
+      "name": "go_forward",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        449,
+        453
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:resize:456",
+      "type": "function",
+      "name": "resize",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Resizes the platform window viewport.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        456,
+        467
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:scroll:472",
+      "type": "function",
+      "name": "scroll",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        472,
+        479
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:touch_down:482",
+      "type": "function",
+      "name": "touch_down",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles touch event on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        482,
+        492
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:touch_move:495",
+      "type": "function",
+      "name": "touch_move",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles touch event on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        495,
+        505
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:touch_up:508",
+      "type": "function",
+      "name": "touch_up",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles touch event on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        508,
+        518
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:touch_cancel:521",
+      "type": "function",
+      "name": "touch_cancel",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles touch event on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        521,
+        531
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:mouse_move:534",
+      "type": "function",
+      "name": "mouse_move",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles mouse event on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        534,
+        541
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:mouse_down:544",
+      "type": "function",
+      "name": "mouse_down",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles mouse event on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        544,
+        553
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:mouse_up:556",
+      "type": "function",
+      "name": "mouse_up",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles mouse event on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        556,
+        565
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:pinchzoom_start:569",
+      "type": "function",
+      "name": "pinchzoom_start",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles pinch zoom gesture.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        569,
+        574
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:pinchzoom:578",
+      "type": "function",
+      "name": "pinchzoom",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        578,
+        583
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:pinchzoom_end:587",
+      "type": "function",
+      "name": "pinchzoom_end",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles pinch zoom gesture.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        587,
+        592
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:key_down:594",
+      "type": "function",
+      "name": "key_down",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        594,
+        602
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:key_up:604",
+      "type": "function",
+      "name": "key_up",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        604,
+        612
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:ime_insert_text:614",
+      "type": "function",
+      "name": "ime_insert_text",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Handles IME text composition.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        614,
+        637
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:media_session_action:639",
+      "type": "function",
+      "name": "media_session_action",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        639,
+        644
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:set_throttled:646",
+      "type": "function",
+      "name": "set_throttled",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        646,
+        651
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:ime_dismissed:653",
+      "type": "function",
+      "name": "ime_dismissed",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        653,
+        658
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:notify_vsync:660",
+      "type": "function",
+      "name": "notify_vsync",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        660,
+        667
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:pause_painting:669",
+      "type": "function",
+      "name": "pause_painting",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Pauses painting on the platform window.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        669,
+        678
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:resume_painting:680",
+      "type": "function",
+      "name": "resume_painting",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Resumes painting, re-establishing window/display handles.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        680,
+        699
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:new:709",
+      "type": "function",
+      "name": "new",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform method.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        709,
+        713
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:EmbeddedPlatformWindow",
+      "type": "class",
+      "name": "EmbeddedPlatformWindow",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Platform window for embedded environments managing rendering context, input, and viewport.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        28,
+        49
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:VsyncRefreshDriver",
+      "type": "class",
+      "name": "VsyncRefreshDriver",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "VSync-driven frame callback coordinator.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        240,
+        246
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:AppInitOptions",
+      "type": "class",
+      "name": "AppInitOptions",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "App creation options for EGL platforms.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        285,
+        294
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:App",
+      "type": "class",
+      "name": "App",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Core application struct for EGL platforms.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        296,
+        303
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:XrDiscoveryWebXrRegistry",
+      "type": "class",
+      "name": "XrDiscoveryWebXrRegistry",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "EGL struct.",
+      "tags": [
+        "egl",
+        "platform-window"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        703,
+        705
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:ports/servoshell/desktop/tracing.rs",
+      "target": "class:ports/servoshell/desktop/tracing.rs:LogTarget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/tracing.rs",
+      "target": "class:ports/servoshell/desktop/tracing.rs:LogTarget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "function:ports/servoshell/desktop/webxr.rs:new_boxed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "function:ports/servoshell/desktop/webxr.rs:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "class:ports/servoshell/desktop/webxr.rs:XrDiscoveryWebXrRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "function:ports/servoshell/desktop/webxr.rs:new_boxed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "class:ports/servoshell/desktop/webxr.rs:XrDiscoveryWebXrRegistry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:android_main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:android_main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_version",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_init",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_setExperimentalMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_setExperimentalMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_resize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_resize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_performUpdates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_performUpdates",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_loadUri",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_loadUri",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_reload",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_reload",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_stop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_stop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_goBack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_goBack",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_goForward",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_goForward",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_scroll",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_scroll",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_doFrame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_doFrame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:try_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_keydown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_keydown",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_keyup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_keyup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchDown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchDown",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchUp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchUp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchMove",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchMove",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchCancel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_touchCancel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoomStart",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoomStart",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoomEnd",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pinchZoomEnd",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_click",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_click",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pausePainting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_pausePainting",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_resumePainting",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_resumePainting",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_mediaSessionAction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_mediaSessionAction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:show_alert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:notify_load_status_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:on_title_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:on_url_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:on_history_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:on_media_session_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:on_media_session_playback_state_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:on_media_session_set_position_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:new_string_as_jvalue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:jni_coordinate_to_rust_viewport_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:get_field_as_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:get_options",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:display_and_window_handle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "class:ports/servoshell/egl/android/mod.rs:HostCallbacks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "class:ports/servoshell/egl/android/mod.rs:WakeupCallback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "class:ports/servoshell/egl/android/mod.rs:WakeupCallback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:update_user_interface_state:85",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:show_embedder_control:181",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:hide_embedder_control:201",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:notify_media_session_event:212",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:new:249",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:new:249",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:notify_vsync:258",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:observe_next_frame:268",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:new:308",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:new:308",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:add_platform_window:340",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:add_platform_window:340",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:servo:378",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:servo:378",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:servoshell_preferences:382",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:servoshell_preferences:382",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:window:386",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:window:386",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:active_or_newest_webview:392",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:active_or_newest_webview:392",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:initial_url:396",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:initial_url:396",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:create_and_activate_toplevel_webview:400",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:create_and_activate_toplevel_webview:400",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:activate_webview:406",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:activate_webview:406",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:spin_event_loop:413",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:spin_event_loop:413",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:load_uri:423",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:load_uri:423",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:reload:430",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:reload:430",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:stop:437",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:stop:437",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:go_back:442",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:go_back:442",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:go_forward:449",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:go_forward:449",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:resize:456",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:resize:456",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:scroll:472",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:scroll:472",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:touch_down:482",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:touch_down:482",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:touch_move:495",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:touch_move:495",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:touch_up:508",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:touch_up:508",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:touch_cancel:521",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:touch_cancel:521",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:mouse_move:534",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:mouse_move:534",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:mouse_down:544",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:mouse_down:544",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:mouse_up:556",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:mouse_up:556",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:pinchzoom_start:569",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:pinchzoom_start:569",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:pinchzoom:578",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:pinchzoom:578",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:pinchzoom_end:587",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:pinchzoom_end:587",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:key_down:594",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:key_down:594",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:key_up:604",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:key_up:604",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:ime_insert_text:614",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:ime_insert_text:614",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:media_session_action:639",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:media_session_action:639",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:set_throttled:646",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:set_throttled:646",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:ime_dismissed:653",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:ime_dismissed:653",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:notify_vsync:660",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:notify_vsync:660",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:pause_painting:669",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:pause_painting:669",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:resume_painting:680",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:resume_painting:680",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:new:709",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:new:709",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:EmbeddedPlatformWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:EmbeddedPlatformWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:VsyncRefreshDriver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:VsyncRefreshDriver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:AppInitOptions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:AppInitOptions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:App",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:App",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:XrDiscoveryWebXrRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:XrDiscoveryWebXrRegistry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "file:ports/servoshell/egl/app.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "file:ports/servoshell/egl/host_trait.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

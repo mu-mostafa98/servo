@@ -1,0 +1,1088 @@
+{
+  "nodes": [
+    {
+      "id": "file:ffi/capi/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "ffi/capi/lib.rs",
+      "summary": "C FFI entry point exposing a builder pattern for constructing and configuring Servo browser instances from C-compatible languages. Re-exports all C-ABI functions from submodules including options, preferences, rendering context, servo lifecycle, webview, and webview delegate management.",
+      "tags": ["ffi", "c-api", "entry-point", "exports"],
+      "complexity": "complex",
+      "languageNotes": "Uses Rust FFI patterns with Box::into_raw/from_raw for opaque pointer management across the C boundary."
+    },
+    {
+      "id": "class:ffi/capi/lib.rs:ServoBuilder",
+      "type": "class",
+      "name": "ServoBuilder",
+      "filePath": "ffi/capi/lib.rs",
+      "lineRange": [32, 36],
+      "summary": "Opaque C-compatible struct holding optional references to options, event loop waker, and preferences for constructing a Servo instance.",
+      "tags": ["ffi", "builder-pattern", "opaque-pointer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ffi/capi/lib.rs:ServoEventLoopWaker",
+      "type": "class",
+      "name": "ServoEventLoopWaker",
+      "filePath": "ffi/capi/lib.rs",
+      "lineRange": [55, 57],
+      "summary": "Opaque C-compatible struct holding a raw function pointer wake callback used to notify the host's event loop.",
+      "tags": ["ffi", "callback", "event-loop"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/lib.rs:servo_builder_set_preferences",
+      "type": "function",
+      "name": "servo_builder_set_preferences",
+      "filePath": "ffi/capi/lib.rs",
+      "lineRange": [113, 128],
+      "summary": "Sets the preferences on a ServoBuilder from a raw pointer, taking ownership of the Preferences object.",
+      "tags": ["ffi", "builder-pattern", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/lib.rs:servo_builder_set_options",
+      "type": "function",
+      "name": "servo_builder_set_options",
+      "filePath": "ffi/capi/lib.rs",
+      "lineRange": [151, 163],
+      "summary": "Sets the options on a ServoBuilder from a raw pointer, taking ownership of the Options object.",
+      "tags": ["ffi", "builder-pattern", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/lib.rs:servo_builder_set_event_loop_waker",
+      "type": "function",
+      "name": "servo_builder_set_event_loop_waker",
+      "filePath": "ffi/capi/lib.rs",
+      "lineRange": [185, 196],
+      "summary": "Sets the event loop waker on a ServoBuilder from a raw pointer, taking ownership of the waker.",
+      "tags": ["ffi", "builder-pattern", "event-loop"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/lib.rs:servo_builder_build",
+      "type": "function",
+      "name": "servo_builder_build",
+      "filePath": "ffi/capi/lib.rs",
+      "lineRange": [215, 235],
+      "summary": "Consumes the ServoBuilder, constructs a Servo instance by applying options, preferences, and event loop waker, then returns it as a raw pointer.",
+      "tags": ["ffi", "builder-pattern", "instance-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/lib.rs:servo_builder_free",
+      "type": "function",
+      "name": "servo_builder_free",
+      "filePath": "ffi/capi/lib.rs",
+      "lineRange": [249, 257],
+      "summary": "Frees a ServoBuilder by converting the raw pointer back to a Box and dropping it.",
+      "tags": ["ffi", "builder-pattern", "memory-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ffi/capi/options.rs",
+      "type": "file",
+      "name": "options.rs",
+      "filePath": "ffi/capi/options.rs",
+      "summary": "C FFI bindings for configuring Servo runtime options including time profiling, sandboxing, multiprocess mode, certificate handling, debug logging, and shader paths.",
+      "tags": ["ffi", "c-api", "configuration", "ffi-binding"],
+      "complexity": "complex",
+      "languageNotes": "Uses CStr::from_ptr for C string conversion and Box::into_raw/from_raw for heap-allocated opaque option pointers."
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_create",
+      "type": "function",
+      "name": "servo_options_create",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [32, 35],
+      "summary": "Creates a new ServoOptions with default values and returns it as a raw pointer.",
+      "tags": ["ffi", "configuration", "creation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_enable_time_profiling_to_file",
+      "type": "function",
+      "name": "servo_options_enable_time_profiling_to_file",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [57, 74],
+      "summary": "Enables time profiling output to a file at the given path by setting the output options to FileName.",
+      "tags": ["ffi", "profiling", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_time_profiler_trace_path",
+      "type": "function",
+      "name": "servo_options_set_time_profiler_trace_path",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [97, 114],
+      "summary": "Sets the trace output path for the time profiler from a C string path.",
+      "tags": ["ffi", "profiling", "configuration"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_enable_time_profiling_to_stdout",
+      "type": "function",
+      "name": "servo_options_enable_time_profiling_to_stdout",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [129, 138],
+      "summary": "Enables time profiling output to stdout with a configurable interval in seconds.",
+      "tags": ["ffi", "profiling", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_hard_fail",
+      "type": "function",
+      "name": "servo_options_set_hard_fail",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [153, 159],
+      "summary": "Sets whether hard fail mode is enabled, causing the browser to panic on certain errors instead of recovering.",
+      "tags": ["ffi", "configuration", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_multiprocess",
+      "type": "function",
+      "name": "servo_options_set_multiprocess",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [173, 182],
+      "summary": "Sets whether multiprocess mode is enabled for running Servo with separate processes.",
+      "tags": ["ffi", "configuration", "multiprocess"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_force_ipc",
+      "type": "function",
+      "name": "servo_options_set_force_ipc",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [198, 204],
+      "summary": "Sets whether IPC (inter-process communication) is forced even in single-process mode.",
+      "tags": ["ffi", "configuration", "ipc"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_background_hang_monitor",
+      "type": "function",
+      "name": "servo_options_set_background_hang_monitor",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [218, 227],
+      "summary": "Sets whether the background hang monitor is enabled for detecting unresponsive threads.",
+      "tags": ["ffi", "configuration", "monitoring"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_sandbox",
+      "type": "function",
+      "name": "servo_options_set_sandbox",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [241, 247],
+      "summary": "Sets whether sandbox mode is enabled for restricting Servo's capabilities.",
+      "tags": ["ffi", "configuration", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_temporary_storage",
+      "type": "function",
+      "name": "servo_options_set_temporary_storage",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [262, 271],
+      "summary": "Sets whether temporary storage is enabled for the browser session.",
+      "tags": ["ffi", "configuration", "storage"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_ignore_certificate_errors",
+      "type": "function",
+      "name": "servo_options_set_ignore_certificate_errors",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [286, 295],
+      "summary": "Sets whether certificate errors should be ignored for HTTPS connections.",
+      "tags": ["ffi", "configuration", "security", "certificate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_unminify_js",
+      "type": "function",
+      "name": "servo_options_set_unminify_js",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [309, 318],
+      "summary": "Sets whether JavaScript should be unminified for debugging purposes.",
+      "tags": ["ffi", "configuration", "debugging"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_unminify_css",
+      "type": "function",
+      "name": "servo_options_set_unminify_css",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [332, 341],
+      "summary": "Sets whether CSS should be unminified for debugging purposes.",
+      "tags": ["ffi", "configuration", "debugging"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_certificate_path",
+      "type": "function",
+      "name": "servo_options_set_certificate_path",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [363, 383],
+      "summary": "Sets the certificate authority bundle path from a C string for HTTPS verification.",
+      "tags": ["ffi", "configuration", "security", "certificate"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_local_script_source",
+      "type": "function",
+      "name": "servo_options_set_local_script_source",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [405, 425],
+      "summary": "Sets the local script source path from a C string for loading custom scripts.",
+      "tags": ["ffi", "configuration", "scripting"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_shaders_path",
+      "type": "function",
+      "name": "servo_options_set_shaders_path",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [446, 466],
+      "summary": "Sets the WebGL shaders path from a C string, converting to a PathBuf.",
+      "tags": ["ffi", "configuration", "webgl", "shaders"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_config_dir",
+      "type": "function",
+      "name": "servo_options_set_config_dir",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [487, 504],
+      "summary": "Sets the configuration directory path from a C string, converting to a PathBuf.",
+      "tags": ["ffi", "configuration", "filesystem"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_random_pipeline_closure_probability",
+      "type": "function",
+      "name": "servo_options_set_random_pipeline_closure_probability",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [519, 528],
+      "summary": "Sets the probability for random pipeline closure testing, used for fuzzing and reliability testing.",
+      "tags": ["ffi", "configuration", "testing", "fuzzing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_random_pipeline_closure_seed",
+      "type": "function",
+      "name": "servo_options_set_random_pipeline_closure_seed",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [544, 553],
+      "summary": "Sets the seed for the random pipeline closure RNG, enabling deterministic fuzzing.",
+      "tags": ["ffi", "configuration", "testing", "fuzzing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_set_debug_option",
+      "type": "function",
+      "name": "servo_options_set_debug_option",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [569, 585],
+      "summary": "Toggles a debug/logging option by name using the DiagnosticsLoggingOption enum, enabling or disabling it.",
+      "tags": ["ffi", "configuration", "debugging"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/options.rs:servo_options_free",
+      "type": "function",
+      "name": "servo_options_free",
+      "filePath": "ffi/capi/options.rs",
+      "lineRange": [599, 610],
+      "summary": "Frees a ServoOptions by converting the raw pointer back to a Box and dropping it.",
+      "tags": ["ffi", "memory-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ffi/capi/preferences.rs",
+      "type": "file",
+      "name": "preferences.rs",
+      "filePath": "ffi/capi/preferences.rs",
+      "summary": "C FFI bindings for reading and writing Servo preferences including boolean, string, i64, and u64 value types via C-compatible interfaces with C string conversion utilities.",
+      "tags": ["ffi", "c-api", "configuration", "preferences", "ffi-binding"],
+      "complexity": "complex",
+      "languageNotes": "Uses libc::malloc and ptr::copy_nonoverlapping for C-compatible string allocation, alongside CStr::from_ptr for input string conversion."
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_create",
+      "type": "function",
+      "name": "servo_preferences_create",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [29, 32],
+      "summary": "Creates a new ServoPreferences with default values and returns it as a raw pointer.",
+      "tags": ["ffi", "preferences", "creation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_free",
+      "type": "function",
+      "name": "servo_preferences_free",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [46, 57],
+      "summary": "Frees a ServoPreferences by converting the raw pointer back to a Box and dropping it.",
+      "tags": ["ffi", "preferences", "memory-management"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_set_bool",
+      "type": "function",
+      "name": "servo_preferences_set_bool",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [78, 104],
+      "summary": "Sets a boolean preference value by name, converting the C string name to a Rust string and wrapping the value in PrefValue::Bool.",
+      "tags": ["ffi", "preferences", "boolean"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_get_bool",
+      "type": "function",
+      "name": "servo_preferences_get_bool",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [125, 153],
+      "summary": "Gets a boolean preference value by name, returning false if the preference is not found or has a non-boolean type.",
+      "tags": ["ffi", "preferences", "boolean"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_set_string",
+      "type": "function",
+      "name": "servo_preferences_set_string",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [178, 212],
+      "summary": "Sets a string preference value by name, converting both name and value from C strings to Rust strings and wrapping in PrefValue::Str.",
+      "tags": ["ffi", "preferences", "string"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_get_string",
+      "type": "function",
+      "name": "servo_preferences_get_string",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [239, 267],
+      "summary": "Gets a string preference value by name, returning a C-allocated string via create_libc_string.",
+      "tags": ["ffi", "preferences", "string"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:create_libc_string",
+      "type": "function",
+      "name": "create_libc_string",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [272, 298],
+      "summary": "Allocates a C-compatible null-terminated string by copying a Rust string into a libc::malloc buffer using ptr::copy_nonoverlapping.",
+      "tags": ["ffi", "string-allocator", "memory-management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_set_i64",
+      "type": "function",
+      "name": "servo_preferences_set_i64",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [319, 345],
+      "summary": "Sets an i64 integer preference value by name, wrapping in PrefValue::Int.",
+      "tags": ["ffi", "preferences", "integer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_get_i64",
+      "type": "function",
+      "name": "servo_preferences_get_i64",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [366, 394],
+      "summary": "Gets an i64 integer preference value by name, returning 0 if the preference is not found or has a non-integer type.",
+      "tags": ["ffi", "preferences", "integer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_set_u64",
+      "type": "function",
+      "name": "servo_preferences_set_u64",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [415, 441],
+      "summary": "Sets a u64 unsigned integer preference value by name, wrapping in PrefValue::UInt.",
+      "tags": ["ffi", "preferences", "integer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/preferences.rs:servo_preferences_get_u64",
+      "type": "function",
+      "name": "servo_preferences_get_u64",
+      "filePath": "ffi/capi/preferences.rs",
+      "lineRange": [462, 490],
+      "summary": "Gets a u64 unsigned integer preference value by name, returning 0 if the preference is not found or has a non-uint type.",
+      "tags": ["ffi", "preferences", "integer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ffi/capi/rendering_context.rs",
+      "type": "file",
+      "name": "rendering_context.rs",
+      "filePath": "ffi/capi/rendering_context.rs",
+      "summary": "C FFI bindings for creating and destroying software rendering contexts that allow Servo to render into CPU-accessible pixel buffers.",
+      "tags": ["ffi", "c-api", "rendering", "ffi-binding"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ffi/capi/rendering_context.rs:RenderingContext",
+      "type": "class",
+      "name": "RenderingContext",
+      "filePath": "ffi/capi/rendering_context.rs",
+      "lineRange": [22, 24],
+      "summary": "Opaque C-compatible struct wrapping an Rc to a SoftwareRenderingContext for CPU-based rendering.",
+      "tags": ["ffi", "rendering", "opaque-pointer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ffi/capi/rendering_context.rs:servo_rendering_context_create_software",
+      "type": "function",
+      "name": "servo_rendering_context_create_software",
+      "filePath": "ffi/capi/rendering_context.rs",
+      "lineRange": [34, 48],
+      "summary": "Creates a software rendering context with the specified width and height, wrapping it in a RenderingContext with a null native context pointer.",
+      "tags": ["ffi", "rendering", "software-rendering"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ffi/capi/rendering_context.rs:servo_rendering_context_free",
+      "type": "function",
+      "name": "servo_rendering_context_free",
+      "filePath": "ffi/capi/rendering_context.rs",
+      "lineRange": [64, 72],
+      "summary": "Frees a RenderingContext by converting the raw pointer back to a Box and dropping it.",
+      "tags": ["ffi", "rendering", "memory-management"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "file:ffi/capi/options.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "file:ffi/capi/preferences.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "file:ffi/capi/rendering_context.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "file:ffi/capi/servo.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "file:ffi/capi/webview_delegate.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "file:ffi/capi/webview.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "class:ffi/capi/lib.rs:ServoBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "class:ffi/capi/lib.rs:ServoEventLoopWaker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_set_preferences",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_set_options",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_set_event_loop_waker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_build",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_free",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "class:ffi/capi/lib.rs:ServoBuilder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "class:ffi/capi/lib.rs:ServoEventLoopWaker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_set_preferences",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_set_options",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_set_event_loop_waker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_build",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/lib.rs",
+      "target": "function:ffi/capi/lib.rs:servo_builder_free",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_enable_time_profiling_to_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_time_profiler_trace_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_enable_time_profiling_to_stdout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_hard_fail",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_multiprocess",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_force_ipc",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_background_hang_monitor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_sandbox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_temporary_storage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_ignore_certificate_errors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_unminify_js",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_unminify_css",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_certificate_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_local_script_source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_shaders_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_config_dir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_random_pipeline_closure_probability",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_random_pipeline_closure_seed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_debug_option",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_free",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_enable_time_profiling_to_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_time_profiler_trace_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_enable_time_profiling_to_stdout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_hard_fail",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_multiprocess",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_force_ipc",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_background_hang_monitor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_sandbox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_temporary_storage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_ignore_certificate_errors",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_unminify_js",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_unminify_css",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_certificate_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_local_script_source",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_shaders_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_config_dir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_random_pipeline_closure_probability",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_random_pipeline_closure_seed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_set_debug_option",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/options.rs",
+      "target": "function:ffi/capi/options.rs:servo_options_free",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_create",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_free",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_set_bool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_get_bool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_set_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_get_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:create_libc_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_set_i64",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_get_i64",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_set_u64",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_get_u64",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_create",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_free",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_set_bool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_get_bool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_set_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_get_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_set_i64",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_get_i64",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_set_u64",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/preferences.rs",
+      "target": "function:ffi/capi/preferences.rs:servo_preferences_get_u64",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/rendering_context.rs",
+      "target": "class:ffi/capi/rendering_context.rs:RenderingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/rendering_context.rs",
+      "target": "function:ffi/capi/rendering_context.rs:servo_rendering_context_create_software",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/rendering_context.rs",
+      "target": "function:ffi/capi/rendering_context.rs:servo_rendering_context_free",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ffi/capi/rendering_context.rs",
+      "target": "class:ffi/capi/rendering_context.rs:RenderingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/rendering_context.rs",
+      "target": "function:ffi/capi/rendering_context.rs:servo_rendering_context_create_software",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ffi/capi/rendering_context.rs",
+      "target": "function:ffi/capi/rendering_context.rs:servo_rendering_context_free",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

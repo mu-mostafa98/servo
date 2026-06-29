@@ -1,0 +1,3902 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/flow/inline/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "summary": "Core inline formatting context implementation containing line construction, inline item management, white space processing, and float interaction.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Over 3100 lines implementing the core inline layout algorithm with comprehensive float interaction and line breaking."
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:InlineFormattingContext",
+      "type": "class",
+      "name": "InlineFormattingContext",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        147,
+        195
+      ],
+      "summary": "InlineFormattingContext with 11 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:SharedInlineStyles",
+      "type": "class",
+      "name": "SharedInlineStyles",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        202,
+        205
+      ],
+      "summary": "SharedInlineStyles with 2 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:InlineItem",
+      "type": "class",
+      "name": "InlineItem",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        260,
+        275
+      ],
+      "summary": "InlineItem with 5 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:WeakInlineItem",
+      "type": "class",
+      "name": "WeakInlineItem",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        392,
+        407
+      ],
+      "summary": "WeakInlineItem with 1 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:LineUnderConstruction",
+      "type": "class",
+      "name": "LineUnderConstruction",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        438,
+        487
+      ],
+      "summary": "LineUnderConstruction with 5 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:BaselineRelativeSize",
+      "type": "class",
+      "name": "BaselineRelativeSize",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        557,
+        567
+      ],
+      "summary": "BaselineRelativeSize with 3 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:LineBlockSizes",
+      "type": "class",
+      "name": "LineBlockSizes",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        604,
+        608
+      ],
+      "summary": "LineBlockSizes with 6 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:UnbreakableSegmentUnderConstruction",
+      "type": "class",
+      "name": "UnbreakableSegmentUnderConstruction",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        681,
+        707
+      ],
+      "summary": "UnbreakableSegmentUnderConstruction with 5 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:InlineContainerState",
+      "type": "class",
+      "name": "InlineContainerState",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        783,
+        818
+      ],
+      "summary": "InlineContainerState with 4 methods for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:InlineFormattingContextLayout",
+      "type": "class",
+      "name": "InlineFormattingContextLayout",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        820,
+        911
+      ],
+      "summary": "InlineFormattingContextLayout enum/struct for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:ContentSizesComputation",
+      "type": "class",
+      "name": "ContentSizesComputation",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2765,
+        2787
+      ],
+      "summary": "ContentSizesComputation enum/struct for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/mod.rs:BidiLevels",
+      "type": "class",
+      "name": "BidiLevels",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        3086,
+        3088
+      ],
+      "summary": "BidiLevels enum/struct for mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:ptr_eq",
+      "type": "function",
+      "name": "ptr_eq",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        208,
+        210
+      ],
+      "summary": "ptr_eq handles ptr eq in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:from_info_and_context",
+      "type": "function",
+      "name": "from_info_and_context",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        212,
+        217
+      ],
+      "summary": "from_info_and_context handles from info and context in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:layout_into_line_items",
+      "type": "function",
+      "name": "layout_into_line_items",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        221,
+        256
+      ],
+      "summary": "layout_into_line_items handles layout into line items in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        278,
+        309
+      ],
+      "summary": "repair_style handles repair style in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:with_base",
+      "type": "function",
+      "name": "with_base",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        311,
+        326
+      ],
+      "summary": "with_base handles with base in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:with_base_mut",
+      "type": "function",
+      "name": "with_base_mut",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        328,
+        345
+      ],
+      "summary": "with_base_mut handles with base mut in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:attached_to_tree",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        347,
+        365
+      ],
+      "summary": "attached_to_tree handles attached to tree in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:downgrade",
+      "type": "function",
+      "name": "downgrade",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        367,
+        388
+      ],
+      "summary": "downgrade handles downgrade in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        410,
+        429
+      ],
+      "summary": "upgrade handles upgrade in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        490,
+        503
+      ],
+      "summary": "new handles new in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:trim_trailing_whitespace",
+      "type": "function",
+      "name": "trim_trailing_whitespace",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        511,
+        524
+      ],
+      "summary": "trim_trailing_whitespace handles trim trailing whitespace in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:count_justification_opportunities",
+      "type": "function",
+      "name": "count_justification_opportunities",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        527,
+        541
+      ],
+      "summary": "count_justification_opportunities handles count justification opportunities in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:max",
+      "type": "function",
+      "name": "max",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        628,
+        643
+      ],
+      "summary": "max handles max in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:find_baseline_offset",
+      "type": "function",
+      "name": "find_baseline_offset",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        663,
+        675
+      ],
+      "summary": "find_baseline_offset handles find baseline offset in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:new_710",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        710,
+        724
+      ],
+      "summary": "new handles new in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:start_inline_box",
+      "type": "function",
+      "name": "start_inline_box",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        961,
+        1020
+      ],
+      "summary": "start_inline_box handles start inline box in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:finish_inline_box",
+      "type": "function",
+      "name": "finish_inline_box",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1024,
+        1056
+      ],
+      "summary": "finish_inline_box handles finish inline box in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:finish_last_line",
+      "type": "function",
+      "name": "finish_last_line",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1058,
+        1076
+      ],
+      "summary": "finish_last_line handles finish last line in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:finish_current_line_and_reset",
+      "type": "function",
+      "name": "finish_current_line_and_reset",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1081,
+        1224
+      ],
+      "summary": "finish_current_line_and_reset handles finish current line and reset in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:calculate_current_line_inline_start_and_justification_adjustment",
+      "type": "function",
+      "name": "calculate_current_line_inline_start_and_justification_adjustment",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1230,
+        1330
+      ],
+      "summary": "calculate_current_line_inline_start_and_justification_adjustment handles calculate current line inline start and justification adjustment in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:place_float_fragment",
+      "type": "function",
+      "name": "place_float_fragment",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1332,
+        1347
+      ],
+      "summary": "place_float_fragment handles place float fragment in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:place_float_line_item_for_commit_to_line",
+      "type": "function",
+      "name": "place_float_line_item_for_commit_to_line",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1357,
+        1402
+      ],
+      "summary": "place_float_line_item_for_commit_to_line handles place float line item for commit to line in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:place_line_among_floats",
+      "type": "function",
+      "name": "place_line_among_floats",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1408,
+        1436
+      ],
+      "summary": "place_line_among_floats handles place line among floats in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:new_potential_line_size_causes_line_break",
+      "type": "function",
+      "name": "new_potential_line_size_causes_line_break",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1444,
+        1515
+      ],
+      "summary": "new_potential_line_size_causes_line_break handles new potential line size causes line break in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:defer_forced_line_break_at_character_offset",
+      "type": "function",
+      "name": "defer_forced_line_break_at_character_offset",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1517,
+        1547
+      ],
+      "summary": "defer_forced_line_break_at_character_offset handles defer forced line break at character offset in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:possibly_flush_deferred_forced_line_break",
+      "type": "function",
+      "name": "possibly_flush_deferred_forced_line_break",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1549,
+        1559
+      ],
+      "summary": "possibly_flush_deferred_forced_line_break handles possibly flush deferred forced line break in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:push_glyph_store_to_unbreakable_segment",
+      "type": "function",
+      "name": "push_glyph_store_to_unbreakable_segment",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1566,
+        1637
+      ],
+      "summary": "push_glyph_store_to_unbreakable_segment handles push glyph store to unbreakable segment in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:possibly_push_empty_text_run_to_line_for_text_caret",
+      "type": "function",
+      "name": "possibly_push_empty_text_run_to_line_for_text_caret",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1641,
+        1681
+      ],
+      "summary": "possibly_push_empty_text_run_to_line_for_text_caret handles possibly push empty text run to line for text caret in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:update_unbreakable_segment_for_new_content",
+      "type": "function",
+      "name": "update_unbreakable_segment_for_new_content",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1683,
+        1718
+      ],
+      "summary": "update_unbreakable_segment_for_new_content handles update unbreakable segment for new content in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:unbreakable_segment_fits_on_line",
+      "type": "function",
+      "name": "unbreakable_segment_fits_on_line",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1735,
+        1744
+      ],
+      "summary": "unbreakable_segment_fits_on_line handles unbreakable segment fits on line in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:process_soft_wrap_opportunity",
+      "type": "function",
+      "name": "process_soft_wrap_opportunity",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1749,
+        1760
+      ],
+      "summary": "process_soft_wrap_opportunity handles process soft wrap opportunity in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:commit_current_segment_to_line",
+      "type": "function",
+      "name": "commit_current_segment_to_line",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1764,
+        1811
+      ],
+      "summary": "commit_current_segment_to_line handles commit current segment to line in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:from_1837",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1837,
+        1857
+      ],
+      "summary": "from handles from in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:new_with_builder",
+      "type": "function",
+      "name": "new_with_builder",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1862,
+        1968
+      ],
+      "summary": "new_with_builder handles new with builder in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:repair_style_1970",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1970,
+        1978
+      ],
+      "summary": "repair_style handles repair style in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:inline_start_for_first_line",
+      "type": "function",
+      "name": "inline_start_for_first_line",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1980,
+        1990
+      ],
+      "summary": "inline_start_for_first_line handles inline start for first line in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:layout_1992",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        1992,
+        2100
+      ],
+      "summary": "layout handles layout in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:subtree_size",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2102,
+        2121
+      ],
+      "summary": "subtree_size handles subtree size in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:find_block_margin_collapsing_with_parent",
+      "type": "function",
+      "name": "find_block_margin_collapsing_with_parent",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2137,
+        2202
+      ],
+      "summary": "find_block_margin_collapsing_with_parent handles find block margin collapsing with parent in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:attached_to_tree_2204",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2204,
+        2236
+      ],
+      "summary": "attached_to_tree handles attached to tree in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:next_tab_stop_after_inline_advance",
+      "type": "function",
+      "name": "next_tab_stop_after_inline_advance",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2238,
+        2288
+      ],
+      "summary": "next_tab_stop_after_inline_advance handles next tab stop after inline advance in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "public-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:new_2292",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2292,
+        2341
+      ],
+      "summary": "new handles new in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:get_block_sizes_with_style",
+      "type": "function",
+      "name": "get_block_sizes_with_style",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2343,
+        2414
+      ],
+      "summary": "get_block_sizes_with_style handles get block sizes with style in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:get_block_size_contribution",
+      "type": "function",
+      "name": "get_block_size_contribution",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2416,
+        2429
+      ],
+      "summary": "get_block_size_contribution handles get block size contribution in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:get_cumulative_baseline_offset_for_child",
+      "type": "function",
+      "name": "get_cumulative_baseline_offset_for_child",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2431,
+        2481
+      ],
+      "summary": "get_cumulative_baseline_offset_for_child handles get cumulative baseline offset for child in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:layout_into_line_items_2485",
+      "type": "function",
+      "name": "layout_into_line_items",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2485,
+        2579
+      ],
+      "summary": "layout_into_line_items handles layout into line items in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:get_block_sizes_and_baseline_offset",
+      "type": "function",
+      "name": "get_block_sizes_and_baseline_offset",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2593,
+        2628
+      ],
+      "summary": "get_block_sizes_and_baseline_offset handles get block sizes and baseline offset in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:layout_into_line_items_2632",
+      "type": "function",
+      "name": "layout_into_line_items",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2632,
+        2649
+      ],
+      "summary": "layout_into_line_items handles layout into line items in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:line_height",
+      "type": "function",
+      "name": "line_height",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2662,
+        2683
+      ],
+      "summary": "line_height handles line height in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:effective_baseline_shift",
+      "type": "function",
+      "name": "effective_baseline_shift",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2685,
+        2697
+      ],
+      "summary": "effective_baseline_shift handles effective baseline shift in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:inline_container_needs_strut",
+      "type": "function",
+      "name": "inline_container_needs_strut",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2733,
+        2749
+      ],
+      "summary": "inline_container_needs_strut handles inline container needs strut in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:traverse",
+      "type": "function",
+      "name": "traverse",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2790,
+        2807
+      ],
+      "summary": "traverse handles traverse in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:process_item",
+      "type": "function",
+      "name": "process_item",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2809,
+        2912
+      ],
+      "summary": "process_item handles process item in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:process_text_segment",
+      "type": "function",
+      "name": "process_text_segment",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2914,
+        2970
+      ],
+      "summary": "process_text_segment handles process text segment in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:process_preserved_tab",
+      "type": "function",
+      "name": "process_preserved_tab",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        2972,
+        2987
+      ],
+      "summary": "process_preserved_tab handles process preserved tab in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:forced_line_break",
+      "type": "function",
+      "name": "forced_line_break",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        3004,
+        3013
+      ],
+      "summary": "forced_line_break handles forced line break in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:outer_inline_content_sizes_of_float_or_atomic",
+      "type": "function",
+      "name": "outer_inline_content_sizes_of_float_or_atomic",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        3021,
+        3033
+      ],
+      "summary": "outer_inline_content_sizes_of_float_or_atomic handles outer inline content sizes of float or atomic in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:clear_floats",
+      "type": "function",
+      "name": "clear_floats",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        3035,
+        3053
+      ],
+      "summary": "clear_floats handles clear floats in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/mod.rs:compute",
+      "type": "function",
+      "name": "compute",
+      "filePath": "components/layout/flow/inline/mod.rs",
+      "lineRange": [
+        3064,
+        3083
+      ],
+      "summary": "compute handles compute in mod.",
+      "tags": [
+        "inline-formatting",
+        "line-layout",
+        "white-space",
+        "floats",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/flow/inline/text_run.rs",
+      "type": "file",
+      "name": "text_run.rs",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "summary": "Handles text shaping, font selection, text segmentation, and layout-into-line-items for text runs within inline formatting contexts.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flow/inline/text_run.rs:FontAndScriptInfo",
+      "type": "class",
+      "name": "FontAndScriptInfo",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        59,
+        89
+      ],
+      "summary": "FontAndScriptInfo with 1 methods for text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flow/inline/text_run.rs:TextRunSegment",
+      "type": "class",
+      "name": "TextRunSegment",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        157,
+        176
+      ],
+      "summary": "TextRunSegment with 6 methods for text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/text_run.rs:TextRunItem",
+      "type": "class",
+      "name": "TextRunItem",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        402,
+        410
+      ],
+      "summary": "TextRunItem enum/struct for text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/text_run.rs:TextRun",
+      "type": "class",
+      "name": "TextRun",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        419,
+        446
+      ],
+      "summary": "TextRun with 5 methods for text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/text_run.rs:TwoCharsAtATimeIterator",
+      "type": "class",
+      "name": "TwoCharsAtATimeIterator",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        749,
+        754
+      ],
+      "summary": "TwoCharsAtATimeIterator enum/struct for text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:simple_for_font",
+      "type": "function",
+      "name": "simple_for_font",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        95,
+        111
+      ],
+      "summary": "simple_for_font handles simple for font in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        115,
+        153
+      ],
+      "summary": "from handles from in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        179,
+        191
+      ],
+      "summary": "new handles new in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:is_compatible",
+      "type": "function",
+      "name": "is_compatible",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        195,
+        214
+      ],
+      "summary": "is_compatible handles is compatible in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:update",
+      "type": "function",
+      "name": "update",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        218,
+        227
+      ],
+      "summary": "update handles update in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items",
+      "type": "function",
+      "name": "layout_into_line_items",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        229,
+        261
+      ],
+      "summary": "layout_into_line_items handles layout into line items in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:shape_text",
+      "type": "function",
+      "name": "shape_text",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        266,
+        393
+      ],
+      "summary": "shape_text handles shape text in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:new_449",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        449,
+        468
+      ],
+      "summary": "new handles new in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:segment_and_shape",
+      "type": "function",
+      "name": "segment_and_shape",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        470,
+        499
+      ],
+      "summary": "segment_and_shape handles segment and shape in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:segment_text_by_font",
+      "type": "function",
+      "name": "segment_text_by_font",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        504,
+        624
+      ],
+      "summary": "segment_text_by_font handles segment text by font in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items_626",
+      "type": "function",
+      "name": "layout_into_line_items",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        626,
+        658
+      ],
+      "summary": "layout_into_line_items handles layout into line items in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:process_preserved_tab",
+      "type": "function",
+      "name": "process_preserved_tab",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        660,
+        693
+      ],
+      "summary": "process_preserved_tab handles process preserved tab in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:is_cursive_script",
+      "type": "function",
+      "name": "is_cursive_script",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        700,
+        711
+      ],
+      "summary": "is_cursive_script handles is cursive script in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:character_cannot_change_font",
+      "type": "function",
+      "name": "character_cannot_change_font",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        716,
+        735
+      ],
+      "summary": "character_cannot_change_font handles character cannot change font in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:get_font_for_first_font_for_style",
+      "type": "function",
+      "name": "get_font_for_first_font_for_style",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        737,
+        748
+      ],
+      "summary": "get_font_for_first_font_for_style handles get font for first font for style in text_run.",
+      "tags": [
+        "text",
+        "font",
+        "shaping",
+        "inline-formatting",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/flow/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/flow/mod.rs",
+      "summary": "Implements block formatting context layout including block-level box placement, margin collapsing, parallel layout, and float/atomic inline placement.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/flow/mod.rs:BlockFormattingContext",
+      "type": "class",
+      "name": "BlockFormattingContext",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        57,
+        60
+      ],
+      "summary": "BlockFormattingContext with 4 methods for mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/mod.rs:BlockContainer",
+      "type": "class",
+      "name": "BlockContainer",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        63,
+        66
+      ],
+      "summary": "BlockContainer with 8 methods for mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/mod.rs:BlockLevelBox",
+      "type": "class",
+      "name": "BlockLevelBox",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        106,
+        112
+      ],
+      "summary": "BlockLevelBox with 9 methods for mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/mod.rs:CollapsibleWithParentStartMargin",
+      "type": "class",
+      "name": "CollapsibleWithParentStartMargin",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        313,
+        313
+      ],
+      "summary": "CollapsibleWithParentStartMargin enum/struct for mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/mod.rs:OutsideMarker",
+      "type": "class",
+      "name": "OutsideMarker",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        318,
+        321
+      ],
+      "summary": "OutsideMarker with 2 methods for mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/mod.rs:IndependentFloatOrAtomicLayoutResult",
+      "type": "class",
+      "name": "IndependentFloatOrAtomicLayoutResult",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        2079,
+        2083
+      ],
+      "summary": "IndependentFloatOrAtomicLayoutResult enum/struct for mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        78,
+        90
+      ],
+      "summary": "repair_style handles repair style in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:subtree_size",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        92,
+        102
+      ],
+      "summary": "subtree_size handles subtree size in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:repair_style_115",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        115,
+        139
+      ],
+      "summary": "repair_style handles repair style in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:with_base",
+      "type": "function",
+      "name": "with_base",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        141,
+        155
+      ],
+      "summary": "with_base handles with base in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:with_base_mut",
+      "type": "function",
+      "name": "with_base_mut",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        157,
+        173
+      ],
+      "summary": "with_base_mut handles with base mut in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:attached_to_tree",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        175,
+        193
+      ],
+      "summary": "attached_to_tree handles attached to tree in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:find_block_margin_collapsing_with_parent",
+      "type": "function",
+      "name": "find_block_margin_collapsing_with_parent",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        205,
+        305
+      ],
+      "summary": "find_block_margin_collapsing_with_parent handles find block margin collapsing with parent in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        324,
+        408
+      ],
+      "summary": "layout handles layout in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_422",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        422,
+        472
+      ],
+      "summary": "layout handles layout in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        475,
+        477
+      ],
+      "summary": "layout_style handles layout style in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:repair_style_479",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        479,
+        486
+      ],
+      "summary": "repair_style handles repair style in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:attached_to_tree_488",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        488,
+        490
+      ],
+      "summary": "attached_to_tree handles attached to tree in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:compute_inline_content_sizes_for_block_level_boxes",
+      "type": "function",
+      "name": "compute_inline_content_sizes_for_block_level_boxes",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        498,
+        651
+      ],
+      "summary": "compute_inline_content_sizes_for_block_level_boxes handles compute inline content sizes for block level boxes in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_654",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        654,
+        681
+      ],
+      "summary": "layout handles layout in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_style_684",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        684,
+        686
+      ],
+      "summary": "layout_style handles layout style in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:attached_to_tree_688",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        688,
+        699
+      ],
+      "summary": "attached_to_tree handles attached to tree in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:find_block_margin_collapsing_with_parent_701",
+      "type": "function",
+      "name": "find_block_margin_collapsing_with_parent",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        701,
+        724
+      ],
+      "summary": "find_block_margin_collapsing_with_parent handles find block margin collapsing with parent in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:compute_inline_content_sizes_728",
+      "type": "function",
+      "name": "compute_inline_content_sizes",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        728,
+        743
+      ],
+      "summary": "compute_inline_content_sizes handles compute inline content sizes in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_block_level_children",
+      "type": "function",
+      "name": "layout_block_level_children",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        746,
+        794
+      ],
+      "summary": "layout_block_level_children handles layout block level children in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_block_level_children_in_parallel",
+      "type": "function",
+      "name": "layout_block_level_children_in_parallel",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        796,
+        835
+      ],
+      "summary": "layout_block_level_children_in_parallel handles layout block level children in parallel in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_block_level_children_sequentially",
+      "type": "function",
+      "name": "layout_block_level_children_sequentially",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        837,
+        862
+      ],
+      "summary": "layout_block_level_children_sequentially handles layout block level children sequentially in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_block_level_child_864",
+      "type": "function",
+      "name": "layout_block_level_child",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        864,
+        893
+      ],
+      "summary": "layout_block_level_child handles layout block level child in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_897",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        897,
+        973
+      ],
+      "summary": "layout handles layout in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:inline_content_sizes",
+      "type": "function",
+      "name": "inline_content_sizes",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        975,
+        991
+      ],
+      "summary": "inline_content_sizes handles inline content sizes in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_in_flow_block_level",
+      "type": "function",
+      "name": "layout_in_flow_block_level",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1002,
+        1106
+      ],
+      "summary": "layout_in_flow_block_level handles layout in flow block level in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_in_flow_block_level_sequentially",
+      "type": "function",
+      "name": "layout_in_flow_block_level_sequentially",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1111,
+        1457
+      ],
+      "summary": "layout_in_flow_block_level_sequentially handles layout in flow block level sequentially in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:solve_containing_block_padding_and_border_for_in_flow_box",
+      "type": "function",
+      "name": "solve_containing_block_padding_and_border_for_in_flow_box",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1488,
+        1612
+      ],
+      "summary": "solve_containing_block_padding_and_border_for_in_flow_box handles solve containing block padding and border for in flow box in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:solve_margins",
+      "type": "function",
+      "name": "solve_margins",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1618,
+        1641
+      ],
+      "summary": "solve_margins handles solve margins in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:resolve_justify_self",
+      "type": "function",
+      "name": "resolve_justify_self",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1654,
+        1684
+      ],
+      "summary": "resolve_justify_self handles resolve justify self in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:automatic_inline_size",
+      "type": "function",
+      "name": "automatic_inline_size",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1689,
+        1708
+      ],
+      "summary": "automatic_inline_size handles automatic inline size in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:justify_self_alignment",
+      "type": "function",
+      "name": "justify_self_alignment",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1716,
+        1741
+      ],
+      "summary": "justify_self_alignment handles justify self alignment in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:solve_inline_margins_for_in_flow_block_level",
+      "type": "function",
+      "name": "solve_inline_margins_for_in_flow_block_level",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1755,
+        1784
+      ],
+      "summary": "solve_inline_margins_for_in_flow_block_level handles solve inline margins for in flow block level in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:solve_inline_margins_avoiding_floats",
+      "type": "function",
+      "name": "solve_inline_margins_avoiding_floats",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1795,
+        1830
+      ],
+      "summary": "solve_inline_margins_avoiding_floats handles solve inline margins avoiding floats in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1857,
+        1875
+      ],
+      "summary": "new handles new in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:place_fragment_and_update_baseline",
+      "type": "function",
+      "name": "place_fragment_and_update_baseline",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1877,
+        1912
+      ],
+      "summary": "place_fragment_and_update_baseline handles place fragment and update baseline in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:place_fragment_1916",
+      "type": "function",
+      "name": "place_fragment",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        1916,
+        2047
+      ],
+      "summary": "place_fragment handles place fragment in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        2049,
+        2076
+      ],
+      "summary": "finish handles finish in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/mod.rs:layout_float_or_atomic_inline",
+      "type": "function",
+      "name": "layout_float_or_atomic_inline",
+      "filePath": "components/layout/flow/mod.rs",
+      "lineRange": [
+        2086,
+        2216
+      ],
+      "summary": "layout_float_or_atomic_inline handles layout float or atomic inline in mod.",
+      "tags": [
+        "block-formatting",
+        "margin-collapsing",
+        "parallel-layout",
+        "css",
+        "public-api"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:InlineFormattingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:InlineFormattingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:SharedInlineStyles",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:SharedInlineStyles",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:InlineItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:InlineItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:WeakInlineItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:WeakInlineItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:LineUnderConstruction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:BaselineRelativeSize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:LineBlockSizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:UnbreakableSegmentUnderConstruction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:InlineContainerState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:InlineFormattingContextLayout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:ContentSizesComputation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:BidiLevels",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "class:components/layout/flow/inline/mod.rs:BidiLevels",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:ptr_eq",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:ptr_eq",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:from_info_and_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:from_info_and_context",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:layout_into_line_items",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:with_base",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:with_base",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:with_base_mut",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:with_base_mut",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:attached_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:attached_to_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:downgrade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:downgrade",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:upgrade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:upgrade",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:trim_trailing_whitespace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:count_justification_opportunities",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:max",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:find_baseline_offset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:new_710",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:start_inline_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:finish_inline_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:finish_last_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:finish_current_line_and_reset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:calculate_current_line_inline_start_and_justification_adjustment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:place_float_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:place_float_line_item_for_commit_to_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:place_line_among_floats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:new_potential_line_size_causes_line_break",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:defer_forced_line_break_at_character_offset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:possibly_flush_deferred_forced_line_break",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:push_glyph_store_to_unbreakable_segment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:possibly_push_empty_text_run_to_line_for_text_caret",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:update_unbreakable_segment_for_new_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:unbreakable_segment_fits_on_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:process_soft_wrap_opportunity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:commit_current_segment_to_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:from_1837",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:new_with_builder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:repair_style_1970",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:repair_style_1970",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:inline_start_for_first_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:layout_1992",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:layout_1992",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:find_block_margin_collapsing_with_parent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:find_block_margin_collapsing_with_parent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:attached_to_tree_2204",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:attached_to_tree_2204",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:next_tab_stop_after_inline_advance",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:next_tab_stop_after_inline_advance",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:new_2292",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:get_block_sizes_with_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:get_block_size_contribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:get_cumulative_baseline_offset_for_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:layout_into_line_items_2485",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:get_block_sizes_and_baseline_offset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:layout_into_line_items_2632",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:line_height",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:effective_baseline_shift",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:inline_container_needs_strut",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:traverse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:process_item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:process_text_segment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:process_preserved_tab",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:forced_line_break",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:outer_inline_content_sizes_of_float_or_atomic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:clear_floats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/mod.rs",
+      "target": "function:components/layout/flow/inline/mod.rs:compute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:FontAndScriptInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:FontAndScriptInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRunSegment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRunSegment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRunItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRunItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRun",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRun",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TwoCharsAtATimeIterator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TwoCharsAtATimeIterator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:simple_for_font",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:simple_for_font",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:is_compatible",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:shape_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new_449",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new_449",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:segment_and_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:segment_and_shape",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:segment_text_by_font",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items_626",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items_626",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:process_preserved_tab",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:is_cursive_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:character_cannot_change_font",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:get_font_for_first_font_for_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:get_font_for_first_font_for_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:BlockFormattingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:BlockFormattingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:BlockContainer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:BlockContainer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:BlockLevelBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:BlockLevelBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:CollapsibleWithParentStartMargin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:CollapsibleWithParentStartMargin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:OutsideMarker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:OutsideMarker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:IndependentFloatOrAtomicLayoutResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "class:components/layout/flow/mod.rs:IndependentFloatOrAtomicLayoutResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:repair_style_115",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:repair_style_115",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:with_base",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:with_base",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:with_base_mut",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:with_base_mut",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:attached_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:attached_to_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:find_block_margin_collapsing_with_parent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_422",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_422",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:repair_style_479",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:repair_style_479",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:attached_to_tree_488",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:attached_to_tree_488",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:compute_inline_content_sizes_for_block_level_boxes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_654",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_style_684",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_style_684",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:attached_to_tree_688",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:attached_to_tree_688",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:find_block_margin_collapsing_with_parent_701",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:compute_inline_content_sizes_728",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_block_level_children",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_block_level_children_in_parallel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_block_level_children_sequentially",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_block_level_child_864",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_897",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_in_flow_block_level",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_in_flow_block_level",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_in_flow_block_level_sequentially",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:solve_containing_block_padding_and_border_for_in_flow_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:solve_margins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:resolve_justify_self",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:automatic_inline_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:justify_self_alignment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:solve_inline_margins_for_in_flow_block_level",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:solve_inline_margins_avoiding_floats",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:place_fragment_and_update_baseline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:place_fragment_1916",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_float_or_atomic_inline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/mod.rs",
+      "target": "function:components/layout/flow/mod.rs:layout_float_or_atomic_inline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

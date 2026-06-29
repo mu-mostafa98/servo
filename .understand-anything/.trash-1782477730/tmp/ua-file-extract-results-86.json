@@ -1,0 +1,2534 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 5,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/shared/fonts/font_descriptor.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 184,
+      "nonEmptyLines": 165,
+      "functions": [
+        {
+          "name": "from",
+          "startLine": 38,
+          "endLine": 58,
+          "params": [
+            "style"
+          ]
+        },
+        {
+          "name": "with_variation_settings",
+          "startLine": 62,
+          "endLine": 67,
+          "params": [
+            "variation_settings"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 93,
+          "endLine": 98,
+          "params": [
+            "family_name"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 102,
+          "endLine": 149,
+          "params": [
+            "descriptors"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 153,
+          "endLine": 155,
+          "params": [
+            "rule"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 164,
+          "endLine": 168,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "deref",
+          "startLine": 175,
+          "endLine": 177,
+          "params": []
+        },
+        {
+          "name": "fmt",
+          "startLine": 181,
+          "endLine": 183,
+          "params": [
+            "f"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontDescriptor",
+          "startLine": 24,
+          "endLine": 33,
+          "methods": [
+            "from",
+            "with_variation_settings"
+          ],
+          "properties": [
+            "weight",
+            "stretch",
+            "style",
+            "variant",
+            "pt_size",
+            "variation_settings",
+            "synthesis_weight",
+            "optical_sizing"
+          ]
+        },
+        {
+          "name": "ComputedFontStyleDescriptor",
+          "startLine": 73,
+          "endLine": 76,
+          "methods": [],
+          "properties": [
+            "Italic",
+            "Oblique"
+          ]
+        },
+        {
+          "name": "CSSFontFaceDescriptors",
+          "startLine": 84,
+          "endLine": 90,
+          "methods": [
+            "new",
+            "from",
+            "from"
+          ],
+          "properties": [
+            "family_name",
+            "weight",
+            "stretch",
+            "style",
+            "unicode_range"
+          ]
+        },
+        {
+          "name": "LowercaseFontFamilyName",
+          "startLine": 159,
+          "endLine": 161,
+          "methods": [
+            "from",
+            "deref",
+            "fmt"
+          ],
+          "properties": [
+            "inner"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "FontDescriptor",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "with_variation_settings",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "ComputedFontStyleDescriptor",
+          "line": 73,
+          "isDefault": false
+        },
+        {
+          "name": "CSSFontFaceDescriptors",
+          "line": 84,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "LowercaseFontFamilyName",
+          "line": 159,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "from",
+          "callee": "style\n            .clone_font_variation_settings()\n            .0\n            .into_iter()\n            .map(|setting| FontVariation {\n                tag: setting.tag.0,\n                value: setting.value,\n            }).collect",
+          "lineNumber": 39
+        },
+        {
+          "caller": "from",
+          "callee": "style\n            .clone_font_variation_settings()\n            .0\n            .into_iter().map",
+          "lineNumber": 39
+        },
+        {
+          "caller": "from",
+          "callee": "style\n            .clone_font_variation_settings()\n            .0.into_iter",
+          "lineNumber": 39
+        },
+        {
+          "caller": "from",
+          "callee": "style.clone_font_variation_settings",
+          "lineNumber": 39
+        },
+        {
+          "caller": "from",
+          "callee": "Au::from_f32_px",
+          "lineNumber": 53
+        },
+        {
+          "caller": "from",
+          "callee": "style.font_size.computed_size().px",
+          "lineNumber": 53
+        },
+        {
+          "caller": "from",
+          "callee": "style.font_size.computed_size",
+          "lineNumber": 53
+        },
+        {
+          "caller": "from",
+          "callee": "style.clone_font_synthesis_weight",
+          "lineNumber": 55
+        },
+        {
+          "caller": "from",
+          "callee": "style.clone_font_optical_sizing",
+          "lineNumber": 56
+        },
+        {
+          "caller": "new",
+          "callee": "family_name.into",
+          "lineNumber": 95
+        },
+        {
+          "caller": "new",
+          "callee": "Default::default",
+          "lineNumber": 96
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors\n            .font_family\n            .as_ref()\n            .expect(\"Expected rule to contain a font family.\")\n            .name.clone",
+          "lineNumber": 103
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors\n            .font_family\n            .as_ref().expect",
+          "lineNumber": 103
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors\n            .font_family.as_ref",
+          "lineNumber": 103
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors\n            .font_weight\n            .as_ref().and_then",
+          "lineNumber": 109
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors\n            .font_weight.as_ref",
+          "lineNumber": 109
+        },
+        {
+          "caller": "from",
+          "callee": "weight_range.0.compute().zip",
+          "lineNumber": 112
+        },
+        {
+          "caller": "from",
+          "callee": "weight_range.0.compute",
+          "lineNumber": 112
+        },
+        {
+          "caller": "from",
+          "callee": "weight_range.1.compute",
+          "lineNumber": 112
+        },
+        {
+          "caller": "from",
+          "callee": "Some",
+          "lineNumber": 115
+        },
+        {
+          "caller": "from",
+          "callee": "FontStretch::from_percentage",
+          "lineNumber": 117
+        },
+        {
+          "caller": "from",
+          "callee": "percentage.compute",
+          "lineNumber": 117
+        },
+        {
+          "caller": "from",
+          "callee": "keyword.compute",
+          "lineNumber": 119
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors.font_stretch.as_ref().and_then",
+          "lineNumber": 123
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors.font_stretch.as_ref",
+          "lineNumber": 123
+        },
+        {
+          "caller": "from",
+          "callee": "stretch_to_computed(&stretch_range.0).zip",
+          "lineNumber": 124
+        },
+        {
+          "caller": "from",
+          "callee": "stretch_to_computed",
+          "lineNumber": 124
+        },
+        {
+          "caller": "from",
+          "callee": "stretch_to_computed",
+          "lineNumber": 124
+        },
+        {
+          "caller": "style_to_computed",
+          "callee": "Some",
+          "lineNumber": 128
+        },
+        {
+          "caller": "style_to_computed",
+          "callee": "ComputedFontStyleDescriptor::Oblique",
+          "lineNumber": 130
+        },
+        {
+          "caller": "style_to_computed",
+          "callee": "FixedPoint::from_float",
+          "lineNumber": 131
+        },
+        {
+          "caller": "style_to_computed",
+          "callee": "angle_a.degrees",
+          "lineNumber": 131
+        },
+        {
+          "caller": "style_to_computed",
+          "callee": "FixedPoint::from_float",
+          "lineNumber": 132
+        },
+        {
+          "caller": "style_to_computed",
+          "callee": "angle_b.degrees",
+          "lineNumber": 132
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors.font_style.as_ref().and_then",
+          "lineNumber": 136
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors.font_style.as_ref",
+          "lineNumber": 136
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors\n            .unicode_range\n            .as_ref().map",
+          "lineNumber": 137
+        },
+        {
+          "caller": "from",
+          "callee": "descriptors\n            .unicode_range.as_ref",
+          "lineNumber": 137
+        },
+        {
+          "caller": "from",
+          "callee": "ranges.iter().map(|range| range.start..=range.end).collect",
+          "lineNumber": 140
+        },
+        {
+          "caller": "from",
+          "callee": "ranges.iter().map",
+          "lineNumber": 140
+        },
+        {
+          "caller": "from",
+          "callee": "ranges.iter",
+          "lineNumber": 140
+        },
+        {
+          "caller": "from",
+          "callee": "family_name.into",
+          "lineNumber": 143
+        },
+        {
+          "caller": "from",
+          "callee": "(&rule.descriptors).into",
+          "lineNumber": 154
+        },
+        {
+          "caller": "from",
+          "callee": "value.as_ref().to_lowercase",
+          "lineNumber": 166
+        },
+        {
+          "caller": "from",
+          "callee": "value.as_ref",
+          "lineNumber": 166
+        },
+        {
+          "caller": "fmt",
+          "callee": "self.inner.fmt",
+          "lineNumber": 182
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 8,
+        "classCount": 4
+      }
+    },
+    {
+      "path": "components/shared/fonts/font_identifier.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 267,
+      "nonEmptyLines": 232,
+      "functions": [
+        {
+          "name": "index",
+          "startLine": 19,
+          "endLine": 24,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontIdentifier",
+          "startLine": 12,
+          "endLine": 16,
+          "methods": [
+            "index"
+          ],
+          "properties": [
+            "Local",
+            "Web",
+            "ArrayBuffer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "FontIdentifier",
+          "line": 12,
+          "isDefault": false
+        },
+        {
+          "name": "index",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "index",
+          "callee": "local_font_identifier.index",
+          "lineNumber": 21
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "PathBuf::from",
+          "lineNumber": 64
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "File::open(Path::new(&*self.path)).ok",
+          "lineNumber": 71
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "File::open",
+          "lineNumber": 71
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Path::new",
+          "lineNumber": 71
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Mmap::map(&file).ok",
+          "lineNumber": 72
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Mmap::map",
+          "lineNumber": 72
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "FontData::from_bytes",
+          "lineNumber": 73
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Some",
+          "lineNumber": 75
+        },
+        {
+          "caller": "face_index_for_freetype",
+          "callee": "self.named_instance_index",
+          "lineNumber": 89
+        },
+        {
+          "caller": "face_index_for_freetype",
+          "callee": "self.index",
+          "lineNumber": 89
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "self.postscript_name.to_string",
+          "lineNumber": 122
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "self.path.to_string",
+          "lineNumber": 123
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "File::open(Path::new(&*self.path)).ok",
+          "lineNumber": 133
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "File::open",
+          "lineNumber": 133
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Path::new",
+          "lineNumber": 133
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Mmap::map(&file).ok",
+          "lineNumber": 134
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Mmap::map",
+          "lineNumber": 134
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "FileRef::new(mmap.as_ref()).ok",
+          "lineNumber": 137
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "FileRef::new",
+          "lineNumber": 137
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "mmap.as_ref",
+          "lineNumber": 137
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "ttc_index_from_postscript_name",
+          "lineNumber": 138
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Some",
+          "lineNumber": 140
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "FontData::from_bytes",
+          "lineNumber": 141
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "collection.len",
+          "lineNumber": 161
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "collection.get(i).unwrap",
+          "lineNumber": 162
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "collection.get",
+          "lineNumber": 162
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "font.name().unwrap",
+          "lineNumber": 163
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "font.name",
+          "lineNumber": 163
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "name_table\n                        .name_record()\n                        .iter()\n                        .filter(|record| record.name_id() == NameId::POSTSCRIPT_NAME).any",
+          "lineNumber": 164
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "name_table\n                        .name_record()\n                        .iter().filter",
+          "lineNumber": 164
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "name_table\n                        .name_record().iter",
+          "lineNumber": 164
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "name_table.name_record",
+          "lineNumber": 164
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "record.name_id",
+          "lineNumber": 167
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "record\n                                .string(name_table.string_data())\n                                .unwrap()\n                                .chars().eq",
+          "lineNumber": 169
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "record\n                                .string(name_table.string_data())\n                                .unwrap().chars",
+          "lineNumber": 169
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "record\n                                .string(name_table.string_data()).unwrap",
+          "lineNumber": 169
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "record.string",
+          "lineNumber": 169
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "name_table.string_data",
+          "lineNumber": 170
+        },
+        {
+          "caller": "ttc_index_from_postscript_name",
+          "callee": "postscript_name.chars",
+          "lineNumber": 173
+        },
+        {
+          "caller": "index",
+          "callee": "FontCollection::system()\n                .font_from_descriptor(&self.font_descriptor)\n                .ok()\n                .flatten().map_or",
+          "lineNumber": 213
+        },
+        {
+          "caller": "index",
+          "callee": "FontCollection::system()\n                .font_from_descriptor(&self.font_descriptor)\n                .ok().flatten",
+          "lineNumber": 213
+        },
+        {
+          "caller": "index",
+          "callee": "FontCollection::system()\n                .font_from_descriptor(&self.font_descriptor).ok",
+          "lineNumber": 213
+        },
+        {
+          "caller": "index",
+          "callee": "FontCollection::system().font_from_descriptor",
+          "lineNumber": 213
+        },
+        {
+          "caller": "index",
+          "callee": "FontCollection::system",
+          "lineNumber": 213
+        },
+        {
+          "caller": "index",
+          "callee": "font.create_font_face().get_index",
+          "lineNumber": 217
+        },
+        {
+          "caller": "index",
+          "callee": "font.create_font_face",
+          "lineNumber": 217
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "FontCollection::system()\n                .font_from_descriptor(&self.font_descriptor)\n                .ok()\n                .flatten()\n                .expect(\"Could not create Font from FontDescriptor\").create_font_face",
+          "lineNumber": 221
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "FontCollection::system()\n                .font_from_descriptor(&self.font_descriptor)\n                .ok()\n                .flatten().expect",
+          "lineNumber": 221
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "FontCollection::system()\n                .font_from_descriptor(&self.font_descriptor)\n                .ok().flatten",
+          "lineNumber": 221
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "FontCollection::system()\n                .font_from_descriptor(&self.font_descriptor).ok",
+          "lineNumber": 221
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "FontCollection::system().font_from_descriptor",
+          "lineNumber": 221
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "FontCollection::system",
+          "lineNumber": 221
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "face\n                .files()\n                .ok()\n                .and_then(|files| files.first().cloned())\n                .expect(\"Could not get FontFace files\")\n                .font_file_path()\n                .ok().expect",
+          "lineNumber": 227
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "face\n                .files()\n                .ok()\n                .and_then(|files| files.first().cloned())\n                .expect(\"Could not get FontFace files\")\n                .font_file_path().ok",
+          "lineNumber": 227
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "face\n                .files()\n                .ok()\n                .and_then(|files| files.first().cloned())\n                .expect(\"Could not get FontFace files\").font_file_path",
+          "lineNumber": 227
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "face\n                .files()\n                .ok()\n                .and_then(|files| files.first().cloned()).expect",
+          "lineNumber": 227
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "face\n                .files()\n                .ok().and_then",
+          "lineNumber": 227
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "face\n                .files().ok",
+          "lineNumber": 227
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "face.files",
+          "lineNumber": 227
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "files.first().cloned",
+          "lineNumber": 230
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "files.first",
+          "lineNumber": 230
+        },
+        {
+          "caller": "native_font_handle",
+          "callee": "face.get_index",
+          "lineNumber": 237
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "FontCollection::system()\n                .font_from_descriptor(&self.font_descriptor).ok",
+          "lineNumber": 242
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "FontCollection::system().font_from_descriptor",
+          "lineNumber": 242
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "FontCollection::system",
+          "lineNumber": 242
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "font.create_font_face",
+          "lineNumber": 245
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "face.get_index",
+          "lineNumber": 246
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "face.files().ok",
+          "lineNumber": 247
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "face.files",
+          "lineNumber": 247
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "files[0].font_file_bytes().ok",
+          "lineNumber": 250
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "files[0].font_file_bytes",
+          "lineNumber": 250
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "FontData::from_bytes",
+          "lineNumber": 251
+        },
+        {
+          "caller": "font_data_and_index",
+          "callee": "Some",
+          "lineNumber": 253
+        },
+        {
+          "caller": "hash",
+          "callee": "self.font_descriptor.family_name.hash",
+          "lineNumber": 261
+        },
+        {
+          "caller": "hash",
+          "callee": "self.font_descriptor.weight.to_u32().hash",
+          "lineNumber": 262
+        },
+        {
+          "caller": "hash",
+          "callee": "self.font_descriptor.weight.to_u32",
+          "lineNumber": 262
+        },
+        {
+          "caller": "hash",
+          "callee": "self.font_descriptor.stretch.to_u32().hash",
+          "lineNumber": 263
+        },
+        {
+          "caller": "hash",
+          "callee": "self.font_descriptor.stretch.to_u32",
+          "lineNumber": 263
+        },
+        {
+          "caller": "hash",
+          "callee": "self.font_descriptor.style.to_u32().hash",
+          "lineNumber": 264
+        },
+        {
+          "caller": "hash",
+          "callee": "self.font_descriptor.style.to_u32",
+          "lineNumber": 264
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/shared/fonts/font_template.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 615,
+      "nonEmptyLines": 548,
+      "functions": [
+        {
+          "name": "new",
+          "startLine": 29,
+          "endLine": 31,
+          "params": [
+            "template"
+          ]
+        },
+        {
+          "name": "deref",
+          "startLine": 36,
+          "endLine": 38,
+          "params": []
+        },
+        {
+          "name": "default",
+          "startLine": 55,
+          "endLine": 57,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 66,
+          "endLine": 73,
+          "params": [
+            "weight",
+            "stretch",
+            "style"
+          ]
+        },
+        {
+          "name": "is_variation_font",
+          "startLine": 75,
+          "endLine": 79,
+          "params": []
+        },
+        {
+          "name": "distance_from",
+          "startLine": 88,
+          "endLine": 114,
+          "params": [
+            "target"
+          ]
+        },
+        {
+          "name": "matches",
+          "startLine": 116,
+          "endLine": 123,
+          "params": [
+            "descriptor_to_match"
+          ]
+        },
+        {
+          "name": "override_values_with_css_font_template_descriptors",
+          "startLine": 125,
+          "endLine": 146,
+          "params": [
+            "css_font_template_descriptors"
+          ]
+        },
+        {
+          "name": "fmt",
+          "startLine": 172,
+          "endLine": 174,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 182,
+          "endLine": 198,
+          "params": [
+            "identifier",
+            "descriptor",
+            "stylesheet",
+            "font_face_rule"
+          ]
+        },
+        {
+          "name": "new_for_local_web_font",
+          "startLine": 203,
+          "endLine": 216,
+          "params": [
+            "local_template",
+            "css_font_template_descriptors",
+            "stylesheet",
+            "font_face_rule"
+          ]
+        },
+        {
+          "name": "identifier",
+          "startLine": 218,
+          "endLine": 220,
+          "params": []
+        },
+        {
+          "name": "compute_variations",
+          "startLine": 223,
+          "endLine": 290,
+          "params": [
+            "descriptor"
+          ]
+        },
+        {
+          "name": "descriptor",
+          "startLine": 312,
+          "endLine": 314,
+          "params": []
+        },
+        {
+          "name": "identifier",
+          "startLine": 316,
+          "endLine": 318,
+          "params": []
+        },
+        {
+          "name": "matches_font_descriptor",
+          "startLine": 320,
+          "endLine": 322,
+          "params": [
+            "descriptor_to_match"
+          ]
+        },
+        {
+          "name": "descriptor_distance",
+          "startLine": 324,
+          "endLine": 326,
+          "params": [
+            "descriptor_to_match"
+          ]
+        },
+        {
+          "name": "char_in_unicode_range",
+          "startLine": 328,
+          "endLine": 335,
+          "params": [
+            "character"
+          ]
+        },
+        {
+          "name": "font_face_rule",
+          "startLine": 337,
+          "endLine": 339,
+          "params": []
+        },
+        {
+          "name": "match_distance",
+          "startLine": 353,
+          "endLine": 379,
+          "params": [
+            "range"
+          ]
+        },
+        {
+          "name": "to_float",
+          "startLine": 381,
+          "endLine": 383,
+          "params": []
+        },
+        {
+          "name": "match_distance",
+          "startLine": 398,
+          "endLine": 441,
+          "params": [
+            "range"
+          ]
+        },
+        {
+          "name": "to_float",
+          "startLine": 443,
+          "endLine": 445,
+          "params": []
+        },
+        {
+          "name": "match_distance",
+          "startLine": 449,
+          "endLine": 600,
+          "params": [
+            "range"
+          ]
+        },
+        {
+          "name": "to_float",
+          "startLine": 602,
+          "endLine": 604,
+          "params": []
+        },
+        {
+          "name": "is_oblique",
+          "startLine": 612,
+          "endLine": 614,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "FontTemplateRef",
+          "startLine": 26,
+          "endLine": 26,
+          "methods": [
+            "new",
+            "deref",
+            "descriptor",
+            "identifier",
+            "matches_font_descriptor",
+            "descriptor_distance",
+            "char_in_unicode_range",
+            "font_face_rule"
+          ],
+          "properties": []
+        },
+        {
+          "name": "FontTemplateDescriptor",
+          "startLine": 46,
+          "endLine": 52,
+          "methods": [
+            "default",
+            "new",
+            "is_variation_font",
+            "distance_from",
+            "matches",
+            "override_values_with_css_font_template_descriptors"
+          ],
+          "properties": [
+            "weight",
+            "stretch",
+            "style",
+            "unicode_range"
+          ]
+        },
+        {
+          "name": "FontTemplate",
+          "startLine": 153,
+          "endLine": 169,
+          "methods": [
+            "fmt",
+            "new",
+            "new_for_local_web_font",
+            "identifier",
+            "compute_variations"
+          ],
+          "properties": [
+            "identifier",
+            "descriptor",
+            "stylesheet",
+            "font_face_rule"
+          ]
+        },
+        {
+          "name": "FontTemplateRefMethods",
+          "startLine": 293,
+          "endLine": 309,
+          "methods": [
+            "descriptor",
+            "identifier",
+            "matches_font_descriptor",
+            "descriptor_distance",
+            "char_in_unicode_range",
+            "font_face_rule"
+          ],
+          "properties": []
+        },
+        {
+          "name": "FontMatchDistanceMethod",
+          "startLine": 347,
+          "endLine": 350,
+          "methods": [
+            "match_distance",
+            "to_float"
+          ],
+          "properties": []
+        },
+        {
+          "name": "IsOblique",
+          "startLine": 607,
+          "endLine": 609,
+          "methods": [
+            "is_oblique"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "FontTemplateRef",
+          "line": 26,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 29,
+          "isDefault": false
+        },
+        {
+          "name": "FontTemplateDescriptor",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 66,
+          "isDefault": false
+        },
+        {
+          "name": "is_variation_font",
+          "line": 75,
+          "isDefault": false
+        },
+        {
+          "name": "override_values_with_css_font_template_descriptors",
+          "line": 125,
+          "isDefault": false
+        },
+        {
+          "name": "FontTemplate",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 182,
+          "isDefault": false
+        },
+        {
+          "name": "new_for_local_web_font",
+          "line": 203,
+          "isDefault": false
+        },
+        {
+          "name": "identifier",
+          "line": 218,
+          "isDefault": false
+        },
+        {
+          "name": "compute_variations",
+          "line": 223,
+          "isDefault": false
+        },
+        {
+          "name": "FontTemplateRefMethods",
+          "line": 293,
+          "isDefault": false
+        },
+        {
+          "name": "IsOblique",
+          "line": 607,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new",
+          "callee": "Self",
+          "lineNumber": 30
+        },
+        {
+          "caller": "new",
+          "callee": "Arc::new",
+          "lineNumber": 30
+        },
+        {
+          "caller": "new",
+          "callee": "AtomicRefCell::new",
+          "lineNumber": 30
+        },
+        {
+          "caller": "default",
+          "callee": "Self::new",
+          "lineNumber": 56
+        },
+        {
+          "caller": "default",
+          "callee": "FontWeight::normal",
+          "lineNumber": 56
+        },
+        {
+          "caller": "distance_from",
+          "callee": "target.stretch.match_distance",
+          "lineNumber": 89
+        },
+        {
+          "caller": "distance_from",
+          "callee": "target.style.match_distance",
+          "lineNumber": 90
+        },
+        {
+          "caller": "distance_from",
+          "callee": "target.weight.match_distance",
+          "lineNumber": 91
+        },
+        {
+          "caller": "override_values_with_css_font_template_descriptors",
+          "callee": "FontStyle::oblique",
+          "lineNumber": 135
+        },
+        {
+          "caller": "override_values_with_css_font_template_descriptors",
+          "callee": "angle_1.to_float",
+          "lineNumber": 135
+        },
+        {
+          "caller": "override_values_with_css_font_template_descriptors",
+          "callee": "FontStyle::oblique",
+          "lineNumber": 136
+        },
+        {
+          "caller": "override_values_with_css_font_template_descriptors",
+          "callee": "angle_2.to_float",
+          "lineNumber": 136
+        },
+        {
+          "caller": "override_values_with_css_font_template_descriptors",
+          "callee": "Some",
+          "lineNumber": 144
+        },
+        {
+          "caller": "override_values_with_css_font_template_descriptors",
+          "callee": "unicode_range.clone",
+          "lineNumber": 144
+        },
+        {
+          "caller": "fmt",
+          "callee": "self.identifier.fmt",
+          "lineNumber": 173
+        },
+        {
+          "caller": "new_for_local_web_font",
+          "callee": "local_template.borrow().clone",
+          "lineNumber": 209
+        },
+        {
+          "caller": "new_for_local_web_font",
+          "callee": "local_template.borrow",
+          "lineNumber": 209
+        },
+        {
+          "caller": "new_for_local_web_font",
+          "callee": "alias_template\n            .descriptor.override_values_with_css_font_template_descriptors",
+          "lineNumber": 210
+        },
+        {
+          "caller": "new_for_local_web_font",
+          "callee": "Ok",
+          "lineNumber": 215
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "variations\n                .iter().any",
+          "lineNumber": 228
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "variations.iter",
+          "lineNumber": 228
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "variations.push",
+          "lineNumber": 232
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "descriptor\n            .variation_settings\n            .iter()\n            .copied().for_each",
+          "lineNumber": 239
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "descriptor\n            .variation_settings\n            .iter().copied",
+          "lineNumber": 239
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "descriptor\n            .variation_settings.iter",
+          "lineNumber": 239
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "font_face_rule.font_variation_settings.as_ref",
+          "lineNumber": 253
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "variation_settings\n                    .0\n                    .iter()\n                    .map(|variation| FontVariation {\n                        tag: variation.tag.0,\n                        value: variation.value.get().expect(\n                            \"The value is enforced to be resolvable at parse time \\\n                            (see FontVariationSettings::parse_for_font_face_rule).\",\n                        ),\n                    }).for_each",
+          "lineNumber": 254
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "variation_settings\n                    .0\n                    .iter().map",
+          "lineNumber": 254
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "variation_settings\n                    .0.iter",
+          "lineNumber": 254
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "variation.value.get().expect",
+          "lineNumber": 259
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "variation.value.get",
+          "lineNumber": 259
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "add_variation",
+          "lineNumber": 271
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "Tag::new(b\"wght\").to_u32",
+          "lineNumber": 272
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "Tag::new",
+          "lineNumber": 272
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "descriptor.weight.value",
+          "lineNumber": 273
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "add_variation",
+          "lineNumber": 276
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "Tag::new(b\"wdth\").to_u32",
+          "lineNumber": 277
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "Tag::new",
+          "lineNumber": 277
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "descriptor.stretch.0.to_float",
+          "lineNumber": 278
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "add_variation",
+          "lineNumber": 283
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "Tag::new(b\"opsz\").to_u32",
+          "lineNumber": 284
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "Tag::new",
+          "lineNumber": 284
+        },
+        {
+          "caller": "compute_variations",
+          "callee": "descriptor.pt_size.to_f32_px",
+          "lineNumber": 285
+        },
+        {
+          "caller": "descriptor",
+          "callee": "self.borrow().descriptor.clone",
+          "lineNumber": 313
+        },
+        {
+          "caller": "descriptor",
+          "callee": "self.borrow",
+          "lineNumber": 313
+        },
+        {
+          "caller": "identifier",
+          "callee": "self.borrow().identifier.clone",
+          "lineNumber": 317
+        },
+        {
+          "caller": "identifier",
+          "callee": "self.borrow",
+          "lineNumber": 317
+        },
+        {
+          "caller": "matches_font_descriptor",
+          "callee": "self.descriptor().matches",
+          "lineNumber": 321
+        },
+        {
+          "caller": "matches_font_descriptor",
+          "callee": "self.descriptor",
+          "lineNumber": 321
+        },
+        {
+          "caller": "descriptor_distance",
+          "callee": "self.descriptor().distance_from",
+          "lineNumber": 325
+        },
+        {
+          "caller": "descriptor_distance",
+          "callee": "self.descriptor",
+          "lineNumber": 325
+        },
+        {
+          "caller": "char_in_unicode_range",
+          "callee": "self.borrow()\n            .descriptor\n            .unicode_range\n            .as_ref().is_none_or",
+          "lineNumber": 330
+        },
+        {
+          "caller": "char_in_unicode_range",
+          "callee": "self.borrow()\n            .descriptor\n            .unicode_range.as_ref",
+          "lineNumber": 330
+        },
+        {
+          "caller": "char_in_unicode_range",
+          "callee": "self.borrow",
+          "lineNumber": 330
+        },
+        {
+          "caller": "char_in_unicode_range",
+          "callee": "ranges.iter().any",
+          "lineNumber": 334
+        },
+        {
+          "caller": "char_in_unicode_range",
+          "callee": "ranges.iter",
+          "lineNumber": 334
+        },
+        {
+          "caller": "char_in_unicode_range",
+          "callee": "range.contains",
+          "lineNumber": 334
+        },
+        {
+          "caller": "font_face_rule",
+          "callee": "AtomicRef::filter_map",
+          "lineNumber": 338
+        },
+        {
+          "caller": "font_face_rule",
+          "callee": "self.borrow",
+          "lineNumber": 338
+        },
+        {
+          "caller": "font_face_rule",
+          "callee": "template.font_face_rule.as_ref",
+          "lineNumber": 338
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_stretch.to_float",
+          "lineNumber": 367
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 367
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_stretch.to_float",
+          "lineNumber": 369
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 369
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 374
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_stretch.to_float",
+          "lineNumber": 374
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 376
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_stretch.to_float",
+          "lineNumber": 376
+        },
+        {
+          "caller": "to_float",
+          "callee": "self.0.to_float",
+          "lineNumber": 382
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 414
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_weight.to_float",
+          "lineNumber": 414
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_weight.to_float",
+          "lineNumber": 418
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 418
+        },
+        {
+          "caller": "match_distance",
+          "callee": "FontWeight::from_float",
+          "lineNumber": 421
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_weight.to_float",
+          "lineNumber": 424
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 424
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 427
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_weight.to_float",
+          "lineNumber": 427
+        },
+        {
+          "caller": "match_distance",
+          "callee": "FontWeight::from_float",
+          "lineNumber": 432
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_weight.to_float",
+          "lineNumber": 434
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 434
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_weight.to_float",
+          "lineNumber": 437
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 437
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.to_float",
+          "lineNumber": 440
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_weight.to_float",
+          "lineNumber": 440
+        },
+        {
+          "caller": "to_float",
+          "callee": "self.value",
+          "lineNumber": 444
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.is_oblique",
+          "lineNumber": 465
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.oblique_degrees",
+          "lineNumber": 467
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_style.oblique_degrees",
+          "lineNumber": 472
+        },
+        {
+          "caller": "match_distance",
+          "callee": "FontStyle::OBLIQUE.oblique_degrees",
+          "lineNumber": 486
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.is_oblique",
+          "lineNumber": 488
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.oblique_degrees",
+          "lineNumber": 489
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_style.oblique_degrees",
+          "lineNumber": 494
+        },
+        {
+          "caller": "match_distance",
+          "callee": "self.oblique_degrees",
+          "lineNumber": 513
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.is_oblique",
+          "lineNumber": 515
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.oblique_degrees",
+          "lineNumber": 516
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_style.oblique_degrees",
+          "lineNumber": 521
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.is_oblique",
+          "lineNumber": 537
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_style.oblique_degrees",
+          "lineNumber": 539
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.oblique_degrees",
+          "lineNumber": 543
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.is_oblique",
+          "lineNumber": 559
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.oblique_degrees",
+          "lineNumber": 560
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_style.oblique_degrees",
+          "lineNumber": 565
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.is_oblique",
+          "lineNumber": 581
+        },
+        {
+          "caller": "match_distance",
+          "callee": "max_style.oblique_degrees",
+          "lineNumber": 583
+        },
+        {
+          "caller": "match_distance",
+          "callee": "min_style.oblique_degrees",
+          "lineNumber": 587
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 13,
+        "functionCount": 26,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "components/shared/fonts/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 160,
+      "nonEmptyLines": 136,
+      "functions": [
+        {
+          "name": "get",
+          "startLine": 46,
+          "endLine": 48,
+          "params": []
+        },
+        {
+          "name": "len",
+          "startLine": 57,
+          "endLine": 59,
+          "params": []
+        },
+        {
+          "name": "intersect",
+          "startLine": 62,
+          "endLine": 71,
+          "params": [
+            "other"
+          ]
+        },
+        {
+          "name": "contains_inclusive",
+          "startLine": 74,
+          "endLine": 76,
+          "params": [
+            "index"
+          ]
+        },
+        {
+          "name": "deref",
+          "startLine": 81,
+          "endLine": 83,
+          "params": []
+        },
+        {
+          "name": "next",
+          "startLine": 89,
+          "endLine": 97,
+          "params": []
+        },
+        {
+          "name": "next_back",
+          "startLine": 101,
+          "endLine": 108,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 112,
+          "endLine": 114,
+          "params": [
+            "start",
+            "end"
+          ]
+        },
+        {
+          "name": "iter",
+          "startLine": 116,
+          "endLine": 118,
+          "params": []
+        },
+        {
+          "name": "from_bytes",
+          "startLine": 130,
+          "endLine": 132,
+          "params": [
+            "bytes"
+          ]
+        },
+        {
+          "name": "as_ipc_shared_memory",
+          "startLine": 134,
+          "endLine": 136,
+          "params": []
+        },
+        {
+          "name": "as_ref",
+          "startLine": 140,
+          "endLine": 142,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "ByteIndex",
+          "startLine": 43,
+          "endLine": 43,
+          "methods": [
+            "get"
+          ],
+          "properties": []
+        },
+        {
+          "name": "TextByteRange",
+          "startLine": 54,
+          "endLine": 54,
+          "methods": [
+            "len",
+            "intersect",
+            "contains_inclusive",
+            "deref",
+            "next",
+            "next_back",
+            "new",
+            "iter"
+          ],
+          "properties": []
+        },
+        {
+          "name": "FontData",
+          "startLine": 127,
+          "endLine": 127,
+          "methods": [
+            "from_bytes",
+            "as_ipc_shared_memory",
+            "as_ref"
+          ],
+          "properties": []
+        },
+        {
+          "name": "FontDataAndIndex",
+          "startLine": 150,
+          "endLine": 155,
+          "methods": [],
+          "properties": [
+            "data",
+            "index"
+          ]
+        },
+        {
+          "name": "FontDataError",
+          "startLine": 158,
+          "endLine": 160,
+          "methods": [],
+          "properties": [
+            "FailedToLoad"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "ByteIndex",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "get",
+          "line": 46,
+          "isDefault": false
+        },
+        {
+          "name": "TextByteRange",
+          "line": 54,
+          "isDefault": false
+        },
+        {
+          "name": "len",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "intersect",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "contains_inclusive",
+          "line": 74,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "iter",
+          "line": 116,
+          "isDefault": false
+        },
+        {
+          "name": "FontData",
+          "line": 127,
+          "isDefault": false
+        },
+        {
+          "name": "from_bytes",
+          "line": 130,
+          "isDefault": false
+        },
+        {
+          "name": "as_ipc_shared_memory",
+          "line": 134,
+          "isDefault": false
+        },
+        {
+          "name": "FontDataAndIndex",
+          "line": 150,
+          "isDefault": false
+        },
+        {
+          "name": "FontDataError",
+          "line": 158,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "intersect",
+          "callee": "self.start.max",
+          "lineNumber": 63
+        },
+        {
+          "caller": "intersect",
+          "callee": "self.end.min",
+          "lineNumber": 64
+        },
+        {
+          "caller": "intersect",
+          "callee": "Self::default",
+          "lineNumber": 67
+        },
+        {
+          "caller": "intersect",
+          "callee": "Self::new",
+          "lineNumber": 69
+        },
+        {
+          "caller": "next",
+          "callee": "ByteIndex::one",
+          "lineNumber": 94
+        },
+        {
+          "caller": "next",
+          "callee": "Some",
+          "lineNumber": 95
+        },
+        {
+          "caller": "next_back",
+          "callee": "ByteIndex::one",
+          "lineNumber": 105
+        },
+        {
+          "caller": "next_back",
+          "callee": "Some",
+          "lineNumber": 106
+        },
+        {
+          "caller": "new",
+          "callee": "Self",
+          "lineNumber": 113
+        },
+        {
+          "caller": "iter",
+          "callee": "self.0.clone",
+          "lineNumber": 117
+        },
+        {
+          "caller": "from_bytes",
+          "callee": "Self",
+          "lineNumber": 131
+        },
+        {
+          "caller": "from_bytes",
+          "callee": "Arc::new",
+          "lineNumber": 131
+        },
+        {
+          "caller": "from_bytes",
+          "callee": "GenericSharedMemory::from_bytes",
+          "lineNumber": 131
+        },
+        {
+          "caller": "as_ipc_shared_memory",
+          "callee": "self.0.clone",
+          "lineNumber": 135
+        }
+      ],
+      "metrics": {
+        "importCount": 4,
+        "exportCount": 13,
+        "functionCount": 12,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "components/shared/fonts/system_font_service_proxy.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 194,
+      "nonEmptyLines": 173,
+      "functions": [
+        {
+          "name": "to_proxy",
+          "startLine": 48,
+          "endLine": 53,
+          "params": []
+        },
+        {
+          "name": "exit",
+          "startLine": 71,
+          "endLine": 79,
+          "params": []
+        },
+        {
+          "name": "to_sender",
+          "startLine": 81,
+          "endLine": 83,
+          "params": []
+        },
+        {
+          "name": "get_system_font_instance",
+          "startLine": 85,
+          "endLine": 116,
+          "params": [
+            "identifier",
+            "size",
+            "flags",
+            "variations",
+            "painter_id"
+          ]
+        },
+        {
+          "name": "find_matching_font_templates",
+          "startLine": 118,
+          "endLine": 159,
+          "params": [
+            "descriptor_to_match",
+            "family_descriptor"
+          ]
+        },
+        {
+          "name": "generate_font_key",
+          "startLine": 161,
+          "endLine": 173,
+          "params": [
+            "painter_id"
+          ]
+        },
+        {
+          "name": "generate_font_instance_key",
+          "startLine": 175,
+          "endLine": 187,
+          "params": [
+            "painter_id"
+          ]
+        },
+        {
+          "name": "prefetch_font_keys_for_painter",
+          "startLine": 189,
+          "endLine": 193,
+          "params": [
+            "painter_id"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "SystemFontServiceMessage",
+          "startLine": 22,
+          "endLine": 42,
+          "methods": [],
+          "properties": [
+            "GetFontTemplates",
+            "GetFontInstance",
+            "PrefetchFontKeys",
+            "GetFontKey",
+            "GetFontInstanceKey",
+            "CollectMemoryReport",
+            "Exit",
+            "Ping"
+          ]
+        },
+        {
+          "name": "SystemFontServiceProxySender",
+          "startLine": 45,
+          "endLine": 45,
+          "methods": [
+            "to_proxy"
+          ],
+          "properties": []
+        },
+        {
+          "name": "FontTemplateCacheKey",
+          "startLine": 57,
+          "endLine": 60,
+          "methods": [],
+          "properties": [
+            "font_descriptor",
+            "family_descriptor"
+          ]
+        },
+        {
+          "name": "SystemFontServiceProxy",
+          "startLine": 65,
+          "endLine": 68,
+          "methods": [
+            "exit",
+            "to_sender",
+            "get_system_font_instance",
+            "find_matching_font_templates",
+            "generate_font_key",
+            "generate_font_instance_key",
+            "prefetch_font_keys_for_painter"
+          ],
+          "properties": [
+            "sender",
+            "templates"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SystemFontServiceMessage",
+          "line": 22,
+          "isDefault": false
+        },
+        {
+          "name": "SystemFontServiceProxySender",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "to_proxy",
+          "line": 48,
+          "isDefault": false
+        },
+        {
+          "name": "SystemFontServiceProxy",
+          "line": 65,
+          "isDefault": false
+        },
+        {
+          "name": "exit",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "to_sender",
+          "line": 81,
+          "isDefault": false
+        },
+        {
+          "name": "get_system_font_instance",
+          "line": 85,
+          "isDefault": false
+        },
+        {
+          "name": "find_matching_font_templates",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "generate_font_key",
+          "line": 161,
+          "isDefault": false
+        },
+        {
+          "name": "generate_font_instance_key",
+          "line": 175,
+          "isDefault": false
+        },
+        {
+          "name": "prefetch_font_keys_for_painter",
+          "line": 189,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "to_proxy",
+          "callee": "self.0.clone",
+          "lineNumber": 50
+        },
+        {
+          "caller": "to_proxy",
+          "callee": "Default::default",
+          "lineNumber": 51
+        },
+        {
+          "caller": "exit",
+          "callee": "generic_channel::channel().unwrap",
+          "lineNumber": 72
+        },
+        {
+          "caller": "exit",
+          "callee": "generic_channel::channel",
+          "lineNumber": 72
+        },
+        {
+          "caller": "exit",
+          "callee": "self.sender\n            .send(SystemFontServiceMessage::Exit(response_chan)).expect",
+          "lineNumber": 73
+        },
+        {
+          "caller": "exit",
+          "callee": "self.sender.send",
+          "lineNumber": 73
+        },
+        {
+          "caller": "exit",
+          "callee": "SystemFontServiceMessage::Exit",
+          "lineNumber": 74
+        },
+        {
+          "caller": "exit",
+          "callee": "response_port\n            .recv().expect",
+          "lineNumber": 76
+        },
+        {
+          "caller": "exit",
+          "callee": "response_port.recv",
+          "lineNumber": 76
+        },
+        {
+          "caller": "to_sender",
+          "callee": "SystemFontServiceProxySender",
+          "lineNumber": 82
+        },
+        {
+          "caller": "to_sender",
+          "callee": "self.sender.clone",
+          "lineNumber": 82
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "generic_channel::channel().expect",
+          "lineNumber": 94
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "generic_channel::channel",
+          "lineNumber": 94
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "self.sender\n            .send(SystemFontServiceMessage::GetFontInstance(\n                painter_id,\n                identifier,\n                size,\n                flags,\n                variations,\n                response_chan,\n            )).expect",
+          "lineNumber": 95
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "self.sender.send",
+          "lineNumber": 95
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "SystemFontServiceMessage::GetFontInstance",
+          "lineNumber": 96
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "response_port.recv",
+          "lineNumber": 106
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "instance_key.is_err",
+          "lineNumber": 107
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "self.sender.send(SystemFontServiceMessage::Ping).is_err",
+          "lineNumber": 108
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "self.sender.send",
+          "lineNumber": 108
+        },
+        {
+          "caller": "get_system_font_instance",
+          "callee": "instance_key.unwrap",
+          "lineNumber": 115
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "descriptor_to_match.cloned",
+          "lineNumber": 124
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "family_descriptor.clone",
+          "lineNumber": 125
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.templates.read().get(&cache_key).cloned",
+          "lineNumber": 127
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.templates.read().get",
+          "lineNumber": 127
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.templates.read",
+          "lineNumber": 127
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "generic_channel::channel().expect",
+          "lineNumber": 137
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "generic_channel::channel",
+          "lineNumber": 137
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.sender\n            .send(SystemFontServiceMessage::GetFontTemplates(\n                descriptor_to_match.cloned(),\n                family_descriptor.clone(),\n                response_chan,\n            )).expect",
+          "lineNumber": 138
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.sender.send",
+          "lineNumber": 138
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "SystemFontServiceMessage::GetFontTemplates",
+          "lineNumber": 139
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "descriptor_to_match.cloned",
+          "lineNumber": 140
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "family_descriptor.clone",
+          "lineNumber": 141
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "response_port.recv",
+          "lineNumber": 146
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.sender.send(SystemFontServiceMessage::Ping).is_err",
+          "lineNumber": 147
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.sender.send",
+          "lineNumber": 147
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "templates.into_iter().map(FontTemplateRef::new).collect",
+          "lineNumber": 155
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "templates.into_iter().map",
+          "lineNumber": 155
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "templates.into_iter",
+          "lineNumber": 155
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.templates.write().insert",
+          "lineNumber": 156
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "self.templates.write",
+          "lineNumber": 156
+        },
+        {
+          "caller": "find_matching_font_templates",
+          "callee": "templates.clone",
+          "lineNumber": 156
+        },
+        {
+          "caller": "generate_font_key",
+          "callee": "generic_channel::channel().expect",
+          "lineNumber": 163
+        },
+        {
+          "caller": "generate_font_key",
+          "callee": "generic_channel::channel",
+          "lineNumber": 163
+        },
+        {
+          "caller": "generate_font_key",
+          "callee": "self.sender\n            .send(SystemFontServiceMessage::GetFontKey(\n                painter_id,\n                result_sender,\n            )).expect",
+          "lineNumber": 164
+        },
+        {
+          "caller": "generate_font_key",
+          "callee": "self.sender.send",
+          "lineNumber": 164
+        },
+        {
+          "caller": "generate_font_key",
+          "callee": "SystemFontServiceMessage::GetFontKey",
+          "lineNumber": 165
+        },
+        {
+          "caller": "generate_font_key",
+          "callee": "result_receiver\n            .recv().expect",
+          "lineNumber": 170
+        },
+        {
+          "caller": "generate_font_key",
+          "callee": "result_receiver.recv",
+          "lineNumber": 170
+        },
+        {
+          "caller": "generate_font_instance_key",
+          "callee": "generic_channel::channel().expect",
+          "lineNumber": 177
+        },
+        {
+          "caller": "generate_font_instance_key",
+          "callee": "generic_channel::channel",
+          "lineNumber": 177
+        },
+        {
+          "caller": "generate_font_instance_key",
+          "callee": "self.sender\n            .send(SystemFontServiceMessage::GetFontInstanceKey(\n                painter_id,\n                result_sender,\n            )).expect",
+          "lineNumber": 178
+        },
+        {
+          "caller": "generate_font_instance_key",
+          "callee": "self.sender.send",
+          "lineNumber": 178
+        },
+        {
+          "caller": "generate_font_instance_key",
+          "callee": "SystemFontServiceMessage::GetFontInstanceKey",
+          "lineNumber": 179
+        },
+        {
+          "caller": "generate_font_instance_key",
+          "callee": "result_receiver\n            .recv().expect",
+          "lineNumber": 184
+        },
+        {
+          "caller": "generate_font_instance_key",
+          "callee": "result_receiver.recv",
+          "lineNumber": 184
+        },
+        {
+          "caller": "prefetch_font_keys_for_painter",
+          "callee": "self\n            .sender.send",
+          "lineNumber": 190
+        },
+        {
+          "caller": "prefetch_font_keys_for_painter",
+          "callee": "SystemFontServiceMessage::PrefetchFontKeys",
+          "lineNumber": 192
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 11,
+        "functionCount": 8,
+        "classCount": 4
+      }
+    }
+  ]
+}

@@ -1,0 +1,466 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/devtools/network_handler.rs",
+      "type": "file",
+      "name": "network_handler.rs",
+      "filePath": "components/devtools/network_handler.rs",
+      "summary": "Handles network event dispatching for the DevTools protocol, processing request, response, and security info updates by emitting resource-available notifications through the WatcherActor.",
+      "tags": ["network-events", "devtools-protocol", "event-handler", "http"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/devtools/network_handler.rs:Cause",
+      "type": "class",
+      "name": "Cause",
+      "filePath": "components/devtools/network_handler.rs",
+      "lineRange": [19, 23],
+      "summary": "Represents the cause of a network request, with a type field and optional loading document URI, serialized in camelCase for the DevTools protocol.",
+      "tags": ["network", "cause", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/network_handler.rs:handle_network_event",
+      "type": "function",
+      "name": "handle_network_event",
+      "filePath": "components/devtools/network_handler.rs",
+      "lineRange": [25, 100],
+      "summary": "Dispatches network event updates to connected clients by looking up the NetworkEventActor, encoding event state, and pushing resource-available/updated notifications through the WatcherActor for each event phase (request, response, security info).",
+      "tags": ["network", "event-handler", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/devtools/protocol.rs",
+      "type": "file",
+      "name": "protocol.rs",
+      "filePath": "components/devtools/protocol.rs",
+      "summary": "Implements the DevTools remote protocol transport layer including JSON packet reading and writing over TCP streams, the DevtoolsConnection wrapper with length-prefixed packets, and ClientRequest for actor command handling with reply validation.",
+      "tags": ["protocol", "tcp-transport", "json-serialization", "devtools"],
+      "complexity": "moderate",
+      "languageNotes": "Uses a custom length-prefixed JSON framing format (length:data) similar to the Firefox DevTools wire protocol."
+    },
+    {
+      "id": "class:components/devtools/protocol.rs:ActorDescription",
+      "type": "class",
+      "name": "ActorDescription",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [20, 24],
+      "summary": "Describes a protocol actor with category, type name, and supported methods, used for introspection by DevTools clients.",
+      "tags": ["protocol", "actor", "introspection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/devtools/protocol.rs:Method",
+      "type": "class",
+      "name": "Method",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [27, 31],
+      "summary": "Describes an actor method with name, request schema, and response schema for DevTools protocol introspection.",
+      "tags": ["protocol", "method", "introspection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/devtools/protocol.rs:JsonPacketStream",
+      "type": "class",
+      "name": "JsonPacketStream",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [33, 36],
+      "summary": "Trait defining the JSON packet stream interface with read/write methods for DevTools protocol communication over TCP.",
+      "tags": ["protocol", "trait", "serialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/devtools/protocol.rs:DevtoolsConnection",
+      "type": "class",
+      "name": "DevtoolsConnection",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [41, 52],
+      "summary": "Thread-safe wrapper around a TCP stream providing JSON packet read/write, peer address lookup, and shutdown capabilities with Mutex-guarded access.",
+      "tags": ["protocol", "connection", "tcp"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/protocol.rs:peer_addr",
+      "type": "function",
+      "name": "peer_addr",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [65, 67],
+      "summary": "Returns the peer socket address of the DevTools connection.",
+      "tags": ["protocol", "connection", "peer-address"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/protocol.rs:shutdown",
+      "type": "function",
+      "name": "shutdown",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [70, 72],
+      "summary": "Shuts down the TCP connection in the specified direction (read, write, or both).",
+      "tags": ["protocol", "connection", "teardown"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/protocol.rs:read_json_packet",
+      "type": "function",
+      "name": "read_json_packet",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [83, 120],
+      "summary": "Reads a length-prefixed JSON packet from the TCP stream using the DevTools wire format, handling partial reads and malformed packets with descriptive errors.",
+      "tags": ["protocol", "json", "tcp"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/devtools/protocol.rs:ClientRequest",
+      "type": "class",
+      "name": "ClientRequest",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [144, 151],
+      "summary": "Represents an individual client request from the DevTools protocol, tracking the stream, actor target, and whether it has been handled.",
+      "tags": ["protocol", "request", "client"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/protocol.rs:handle",
+      "type": "function",
+      "name": "handle",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [157, 175],
+      "summary": "Processes a client request by invoking the handler function with the JSON message, returning Ok/Err based on handler result and preventing multiple handling.",
+      "tags": ["protocol", "request-handling", "dispatch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/protocol.rs:reply",
+      "type": "function",
+      "name": "reply",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [183, 188],
+      "summary": "Sends a reply JSON packet back to the client over the associated stream connection.",
+      "tags": ["protocol", "response", "json"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/protocol.rs:reply_final",
+      "type": "function",
+      "name": "reply_final",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [191, 194],
+      "summary": "Sends a final reply packet and marks the request as handled, terminating the request-response exchange.",
+      "tags": ["protocol", "response", "final"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/protocol.rs:mark_handled",
+      "type": "function",
+      "name": "mark_handled",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [207, 210],
+      "summary": "Marks the client request as having been handled, preventing duplicate processing.",
+      "tags": ["protocol", "request", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/devtools/protocol.rs:stream",
+      "type": "function",
+      "name": "stream",
+      "filePath": "components/devtools/protocol.rs",
+      "lineRange": [213, 215],
+      "summary": "Returns a clone of the underlying DevtoolsConnection stream for use in continuation handlers.",
+      "tags": ["protocol", "connection", "clone"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/devtools/resource.rs",
+      "type": "file",
+      "name": "resource.rs",
+      "filePath": "components/devtools/resource.rs",
+      "summary": "Defines resource tracking types for the DevTools protocol, including resource array types (Available/Updated), the ResourceAvailableReply response structure, and the ResourceAvailable trait for broadcasting resource notifications.",
+      "tags": ["resource-tracking", "devtools-protocol", "data-models", "trait"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/devtools/resource.rs:ResourceArrayType",
+      "type": "class",
+      "name": "ResourceArrayType",
+      "filePath": "components/devtools/resource.rs",
+      "lineRange": [9, 12],
+      "summary": "Enum distinguishing between resource types: Available (newly available resources) and Updated (previously available resources with updates).",
+      "tags": ["resource-tracking", "enum", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/devtools/resource.rs:ResourceAvailableReply",
+      "type": "class",
+      "name": "ResourceAvailableReply",
+      "filePath": "components/devtools/resource.rs",
+      "lineRange": [15, 20],
+      "summary": "Response struct for resource availability messages, containing the sender actor name, message type, and an array of (resource type, resources) tuples.",
+      "tags": ["resource-tracking", "response", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/devtools/resource.rs:ResourceAvailable",
+      "type": "class",
+      "name": "ResourceAvailable",
+      "filePath": "components/devtools/resource.rs",
+      "lineRange": [22, 53],
+      "summary": "Trait providing methods for actors to broadcast resource availability and updates to connected clients via the JSON packet stream.",
+      "tags": ["resource-tracking", "trait", "broadcast"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/devtools/network_handler.rs",
+      "target": "class:components/devtools/network_handler.rs:Cause",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/network_handler.rs",
+      "target": "function:components/devtools/network_handler.rs:handle_network_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/network_handler.rs",
+      "target": "class:components/devtools/network_handler.rs:Cause",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/network_handler.rs",
+      "target": "function:components/devtools/network_handler.rs:handle_network_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:ActorDescription",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:Method",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:JsonPacketStream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:DevtoolsConnection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:peer_addr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:shutdown",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:read_json_packet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:ClientRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:handle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:reply",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:reply_final",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:mark_handled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:ActorDescription",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:Method",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:JsonPacketStream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:DevtoolsConnection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:peer_addr",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:shutdown",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "class:components/devtools/protocol.rs:ClientRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:handle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:reply",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:reply_final",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:mark_handled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/protocol.rs",
+      "target": "function:components/devtools/protocol.rs:stream",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/resource.rs",
+      "target": "class:components/devtools/resource.rs:ResourceArrayType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/resource.rs",
+      "target": "class:components/devtools/resource.rs:ResourceAvailableReply",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/resource.rs",
+      "target": "class:components/devtools/resource.rs:ResourceAvailable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/devtools/resource.rs",
+      "target": "class:components/devtools/resource.rs:ResourceArrayType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/resource.rs",
+      "target": "class:components/devtools/resource.rs:ResourceAvailableReply",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/devtools/resource.rs",
+      "target": "class:components/devtools/resource.rs:ResourceAvailable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/devtools/lib.rs:handle_network_event",
+      "target": "function:components/devtools/network_handler.rs:handle_network_event",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

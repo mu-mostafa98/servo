@@ -1,0 +1,2571 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/css/cssrulelist.rs",
+      "type": "file",
+      "name": "cssrulelist.rs",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "summary": "Implements CSSRuleList DOM type with indexed rule access, rule insertion/removal, lazy DOM rule construction, and bulk update logic.",
+      "tags": [
+        "dom-binding",
+        "css-rule-list",
+        "indexed-access"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssrulelist.rs:CSSRuleList",
+      "type": "class",
+      "name": "CSSRuleList",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        47,
+        53
+      ],
+      "summary": "Represents an ordered list of CSSRule objects with indexed access and lazy DOM rule construction.",
+      "tags": [
+        "cssom",
+        "rule-list",
+        "indexed-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/css/cssrulelist.rs:RulesSource",
+      "type": "class",
+      "name": "RulesSource",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        55,
+        58
+      ],
+      "summary": "Internal enum distinguishing between stylesheet-owned and element-owned rule sources.",
+      "tags": [
+        "cssom",
+        "internal",
+        "rule-source"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssrulelist.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        62,
+        88
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssrulelist.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        90,
+        101
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssrulelist.rs:insert_rule",
+      "type": "function",
+      "name": "insert_rule",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        105,
+        169
+      ],
+      "summary": "Inserts a new CSS rule at the specified index with full validation.",
+      "tags": [
+        "rule-insertion",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssrulelist.rs:remove_rule",
+      "type": "function",
+      "name": "remove_rule",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        172,
+        204
+      ],
+      "summary": "Removes the CSS rule at the specified index with bounds checking.",
+      "tags": [
+        "rule-removal",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssrulelist.rs:deparent_all",
+      "type": "function",
+      "name": "deparent_all",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        207,
+        213
+      ],
+      "summary": "Removes parent references from all contained rules.",
+      "tags": [
+        "lifecycle",
+        "bulk-deparent"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssrulelist.rs:item",
+      "type": "function",
+      "name": "item",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        215,
+        248
+      ],
+      "summary": "Returns the CSS rule at the specified index, lazily constructing DOM objects as needed.",
+      "tags": [
+        "indexed-access",
+        "lazy-construction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssrulelist.rs:append_lazy_dom_rule",
+      "type": "function",
+      "name": "append_lazy_dom_rule",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        255,
+        260
+      ],
+      "summary": "Appends a rule and lazily creates its DOM representation.",
+      "tags": [
+        "lazy-construction",
+        "rule-appending"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssrulelist.rs:update_rules",
+      "type": "function",
+      "name": "update_rules",
+      "filePath": "components/script/dom/css/cssrulelist.rs",
+      "lineRange": [
+        262,
+        297
+      ],
+      "summary": "Replaces the entire rule collection with new parsed rules under a shared lock guard.",
+      "tags": [
+        "rule-update",
+        "bulk"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "type": "file",
+      "name": "cssstyledeclaration.rs",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "summary": "Implements CSSStyleDeclaration DOM type providing property get/set/remove operations, computed style access, and serialization for inline style manipulation.",
+      "tags": [
+        "dom-binding",
+        "css-style",
+        "property-access"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssstyledeclaration.rs:CSSStyleDeclaration",
+      "type": "class",
+      "name": "CSSStyleDeclaration",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        39,
+        45
+      ],
+      "summary": "Represents a CSS declaration block with property get/set/remove and CSS serialization.",
+      "tags": [
+        "cssom",
+        "style-declaration",
+        "property-access"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust DOM binding with #[dom_struct] macro and DOMRefCell for mutable DOM tree access."
+    },
+    {
+      "id": "class:components/script/dom/css/cssstyledeclaration.rs:CSSStyleOwner",
+      "type": "class",
+      "name": "CSSStyleOwner",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        49,
+        60
+      ],
+      "summary": "Internal enum tracking the owner of a style declaration (element, rule, or computed).",
+      "tags": [
+        "cssom",
+        "internal",
+        "style-owner"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/css/cssstyledeclaration.rs:CSSModificationAccess",
+      "type": "class",
+      "name": "CSSModificationAccess",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        196,
+        199
+      ],
+      "summary": "Access control guard for CSS declaration mutation authorization.",
+      "tags": [
+        "cssom",
+        "internal",
+        "access-control"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:mutate_associated_block",
+      "type": "function",
+      "name": "mutate_associated_block",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        65,
+        138
+      ],
+      "summary": "Provides mutable access to the underlying property declaration block with owner context.",
+      "tags": [
+        "mutation",
+        "property-block"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:with_block",
+      "type": "function",
+      "name": "with_block",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        140,
+        164
+      ],
+      "summary": "Executes a closure with access to the associated property declaration block.",
+      "tags": [
+        "property-block",
+        "functional-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:base_url",
+      "type": "function",
+      "name": "base_url",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        176,
+        192
+      ],
+      "summary": "Returns the base URL for resolving relative URLs in property values.",
+      "tags": [
+        "url-resolution",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        234,
+        252
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        255,
+        271
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:update_property_declaration_block",
+      "type": "function",
+      "name": "update_property_declaration_block",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        273,
+        282
+      ],
+      "summary": "Replaces the underlying property declaration block with new CSS data.",
+      "tags": [
+        "property-block",
+        "update"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:get_computed_style",
+      "type": "function",
+      "name": "get_computed_style",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        284,
+        300
+      ],
+      "summary": "Retrieves the computed value of a property, resolving all inherited and default values.",
+      "tags": [
+        "computed-style",
+        "property-resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:get_property_value",
+      "type": "function",
+      "name": "get_property_value",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        302,
+        319
+      ],
+      "summary": "Returns the value of a property as a DOMString, handling shorthand expansion.",
+      "tags": [
+        "property-value",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:set_property_inner",
+      "type": "function",
+      "name": "set_property_inner",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        336,
+        421
+      ],
+      "summary": "Internal method to set a property value with parsing and modification access validation.",
+      "tags": [
+        "property-setting",
+        "internal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:Length",
+      "type": "function",
+      "name": "Length",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        459,
+        470
+      ],
+      "summary": "Returns the number of property declarations in this style block.",
+      "tags": [
+        "length",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:GetPropertyPriority",
+      "type": "function",
+      "name": "GetPropertyPriority",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        487,
+        505
+      ],
+      "summary": "Returns the !important priority of a property.",
+      "tags": [
+        "property-priority",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:SetProperty",
+      "type": "function",
+      "name": "SetProperty",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        508,
+        521
+      ],
+      "summary": "Web-exposed setProperty() method with optional priority.",
+      "tags": [
+        "web-exposed",
+        "property-setting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:RemoveProperty",
+      "type": "function",
+      "name": "RemoveProperty",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        524,
+        543
+      ],
+      "summary": "Web-exposed removeProperty() method for deleting a property.",
+      "tags": [
+        "web-exposed",
+        "property-removal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:IndexedGetter",
+      "type": "function",
+      "name": "IndexedGetter",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        561,
+        575
+      ],
+      "summary": "Returns the property name at the given index for numeric access.",
+      "tags": [
+        "indexed-access",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:CssText",
+      "type": "function",
+      "name": "CssText",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        578,
+        588
+      ],
+      "summary": "Returns the serialized CSS text of the declaration block.",
+      "tags": [
+        "serialization",
+        "css-text"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstyledeclaration.rs:SetCssText",
+      "type": "function",
+      "name": "SetCssText",
+      "filePath": "components/script/dom/css/cssstyledeclaration.rs",
+      "lineRange": [
+        591,
+        613
+      ],
+      "summary": "Sets the declaration block from a CSS text string, replacing all properties.",
+      "tags": [
+        "serialization",
+        "css-text"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/cssstylerule.rs",
+      "type": "file",
+      "name": "cssstylerule.rs",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "summary": "Implements CSSStyleRule DOM type with selector text manipulation, style declaration access, and rule update lifecycle.",
+      "tags": [
+        "dom-binding",
+        "css-style-rule",
+        "selector"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssstylerule.rs:CSSStyleRule",
+      "type": "class",
+      "name": "CSSStyleRule",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "lineRange": [
+        30,
+        36
+      ],
+      "summary": "Represents a style rule with selector text and associated style declarations.",
+      "tags": [
+        "cssom",
+        "style-rule",
+        "selector"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylerule.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "lineRange": [
+        39,
+        48
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylerule.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "lineRange": [
+        50,
+        61
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylerule.rs:ensure_rules",
+      "type": "function",
+      "name": "ensure_rules",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "lineRange": [
+        63,
+        72
+      ],
+      "summary": "Ensures rules are lazily parsed and available from the stylesheet.",
+      "tags": [
+        "lazy-parsing",
+        "initialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylerule.rs:update_rule",
+      "type": "function",
+      "name": "update_rule",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "lineRange": [
+        74,
+        88
+      ],
+      "summary": "Updates the internal rule data with new parsed rule content.",
+      "tags": [
+        "rule-update",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylerule.rs:block_id",
+      "type": "function",
+      "name": "block_id",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "lineRange": [
+        90,
+        98
+      ],
+      "summary": "Returns the shared block ID for the associated style declarations.",
+      "tags": [
+        "block-id",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylerule.rs:Style",
+      "type": "function",
+      "name": "Style",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "lineRange": [
+        118,
+        132
+      ],
+      "summary": "Returns the CSSStyleDeclaration for this rule.",
+      "tags": [
+        "style-declaration",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylerule.rs:SetSelectorText",
+      "type": "function",
+      "name": "SetSelectorText",
+      "filePath": "components/script/dom/css/cssstylerule.rs",
+      "lineRange": [
+        146,
+        181
+      ],
+      "summary": "Sets the selector text, reparsing and replacing the style rule.",
+      "tags": [
+        "selector",
+        "setter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/css/cssstylesheet.rs",
+      "type": "file",
+      "name": "cssstylesheet.rs",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "summary": "Implements CSSStyleSheet DOM type with rule management, constructed stylesheet support, document adoption, and replacement operations.",
+      "tags": [
+        "dom-binding",
+        "css-stylesheet",
+        "constructed-stylesheets"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssstylesheet.rs:CSSStyleSheet",
+      "type": "class",
+      "name": "CSSStyleSheet",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        50,
+        83
+      ],
+      "summary": "Represents a CSS stylesheet with rule management, construction, adoption, and replacement support.",
+      "tags": [
+        "cssom",
+        "stylesheet",
+        "constructed"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding with #[dom_struct] macro and DOMRefCell for mutable DOM tree access."
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        86,
+        105
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        108,
+        130
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        133,
+        157
+      ],
+      "summary": "Creates a new instance with a specified prototype for prototype chain customization.",
+      "tags": [
+        "constructor",
+        "prototype"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:rulelist",
+      "type": "function",
+      "name": "rulelist",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        159,
+        171
+      ],
+      "summary": "Constructs and returns the CSSRuleList for this grouping rule.",
+      "tags": [
+        "rule-list",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:disabled",
+      "type": "function",
+      "name": "disabled",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        173,
+        175
+      ],
+      "summary": "Returns whether the stylesheet is disabled.",
+      "tags": [
+        "disabled",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:href",
+      "type": "function",
+      "name": "href",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        177,
+        179
+      ],
+      "summary": "Returns the href of the stylesheet location.",
+      "tags": [
+        "href",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:title",
+      "type": "function",
+      "name": "title",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        181,
+        183
+      ],
+      "summary": "Returns the title of the stylesheet.",
+      "tags": [
+        "title",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:get_rule_count",
+      "type": "function",
+      "name": "get_rule_count",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        185,
+        189
+      ],
+      "summary": "Returns the number of rules in this stylesheet.",
+      "tags": [
+        "rule-count",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:origin",
+      "type": "function",
+      "name": "origin",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        191,
+        198
+      ],
+      "summary": "Returns the origin (user agent, user, author) of this stylesheet.",
+      "tags": [
+        "origin",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:owner_node",
+      "type": "function",
+      "name": "owner_node",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        200,
+        202
+      ],
+      "summary": "Returns the owner node (link/style element) of the stylesheet.",
+      "tags": [
+        "owner-node",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:set_disabled",
+      "type": "function",
+      "name": "set_disabled",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        204,
+        208
+      ],
+      "summary": "Sets the disabled state of the stylesheet.",
+      "tags": [
+        "disabled",
+        "setter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:set_owner_node",
+      "type": "function",
+      "name": "set_owner_node",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        210,
+        212
+      ],
+      "summary": "Sets the owner node of the stylesheet.",
+      "tags": [
+        "owner-node",
+        "setter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:shared_lock",
+      "type": "function",
+      "name": "shared_lock",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        214,
+        216
+      ],
+      "summary": "Returns the shared stylesheet lock for synchronized rule access.",
+      "tags": [
+        "synchronization",
+        "lock"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:style_stylesheet",
+      "type": "function",
+      "name": "style_stylesheet",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        218,
+        220
+      ],
+      "summary": "Returns the underlying Servo stylesheet data.",
+      "tags": [
+        "stylesheet-data",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:set_origin_clean",
+      "type": "function",
+      "name": "set_origin_clean",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        222,
+        224
+      ],
+      "summary": "Sets the origin-clean flag on this stylesheet.",
+      "tags": [
+        "origin-clean",
+        "setter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:medialist",
+      "type": "function",
+      "name": "medialist",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        226,
+        233
+      ],
+      "summary": "Returns the MediaList associated with this stylesheet.",
+      "tags": [
+        "media-list",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:is_constructed",
+      "type": "function",
+      "name": "is_constructed",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        237,
+        239
+      ],
+      "summary": "Returns whether this stylesheet was constructed via the CSSStyleSheet() constructor.",
+      "tags": [
+        "constructed",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:constructor_document_matches",
+      "type": "function",
+      "name": "constructor_document_matches",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        241,
+        246
+      ],
+      "summary": "Checks if the constructor document matches the given document for adopted stylesheet isolation.",
+      "tags": [
+        "constructed",
+        "document-check"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:add_adopter",
+      "type": "function",
+      "name": "add_adopter",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        251,
+        254
+      ],
+      "summary": "Adds a document as an adopter of this constructed stylesheet.",
+      "tags": [
+        "constructed",
+        "adoption"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:remove_adopter",
+      "type": "function",
+      "name": "remove_adopter",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        256,
+        261
+      ],
+      "summary": "Removes a document from the adopters list of this constructed stylesheet.",
+      "tags": [
+        "constructed",
+        "adoption"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:will_modify",
+      "type": "function",
+      "name": "will_modify",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        263,
+        273
+      ],
+      "summary": "Prepares the stylesheet for modification, invalidating adopters if constructed.",
+      "tags": [
+        "modification",
+        "invalidation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:update_style_stylesheet",
+      "type": "function",
+      "name": "update_style_stylesheet",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        275,
+        291
+      ],
+      "summary": "Replaces the underlying Servo stylesheet with new data.",
+      "tags": [
+        "stylesheet-data",
+        "update"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:notify_invalidations",
+      "type": "function",
+      "name": "notify_invalidations",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        294,
+        301
+      ],
+      "summary": "Notifies all adopters that the stylesheet has been modified.",
+      "tags": [
+        "invalidation",
+        "notification"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:disallow_modification",
+      "type": "function",
+      "name": "disallow_modification",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        304,
+        306
+      ],
+      "summary": "Prevents further modifications to the stylesheet.",
+      "tags": [
+        "modification",
+        "guard"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:do_replace_sync",
+      "type": "function",
+      "name": "do_replace_sync",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        309,
+        342
+      ],
+      "summary": "Synchronously replaces all rules in the stylesheet with new CSS text.",
+      "tags": [
+        "replacement",
+        "synchronous"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        347,
+        387
+      ],
+      "summary": "Constructs a new CSSStyleSheet() DOM object for the constructed stylesheet API.",
+      "tags": [
+        "constructor",
+        "constructed"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:InsertRule",
+      "type": "function",
+      "name": "InsertRule",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        401,
+        418
+      ],
+      "summary": "Web-exposed insertRule() method for inserting a rule at a given index.",
+      "tags": [
+        "web-exposed",
+        "rule-insertion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:DeleteRule",
+      "type": "function",
+      "name": "DeleteRule",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        421,
+        436
+      ],
+      "summary": "Web-exposed deleteRule() method for removing a rule by index.",
+      "tags": [
+        "web-exposed",
+        "rule-removal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:AddRule",
+      "type": "function",
+      "name": "AddRule",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        449,
+        479
+      ],
+      "summary": "Web-exposed addRule() method legacy API for rule insertion.",
+      "tags": [
+        "web-exposed",
+        "rule-insertion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:Replace",
+      "type": "function",
+      "name": "Replace",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        482,
+        523
+      ],
+      "summary": "Replaces stylesheet contents asynchronously returning a promise.",
+      "tags": [
+        "replacement",
+        "async"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylesheet.rs:ReplaceSync",
+      "type": "function",
+      "name": "ReplaceSync",
+      "filePath": "components/script/dom/css/cssstylesheet.rs",
+      "lineRange": [
+        526,
+        541
+      ],
+      "summary": "Replaces stylesheet contents synchronously.",
+      "tags": [
+        "replacement",
+        "sync"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/cssstylevalue.rs",
+      "type": "file",
+      "name": "cssstylevalue.rs",
+      "filePath": "components/script/dom/css/cssstylevalue.rs",
+      "summary": "Implements CSSStyleValue base type for typed CSS object model value representations.",
+      "tags": [
+        "dom-binding",
+        "css-style-value",
+        "typed-om"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/cssstylevalue.rs:CSSStyleValue",
+      "type": "class",
+      "name": "CSSStyleValue",
+      "filePath": "components/script/dom/css/cssstylevalue.rs",
+      "lineRange": [
+        17,
+        20
+      ],
+      "summary": "Base class for typed CSS Object Model values.",
+      "tags": [
+        "cssom",
+        "typed-om",
+        "value"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylevalue.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/cssstylevalue.rs",
+      "lineRange": [
+        30,
+        40
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/cssstylevalue.rs:get_url",
+      "type": "function",
+      "name": "get_url",
+      "filePath": "components/script/dom/css/cssstylevalue.rs",
+      "lineRange": [
+        55,
+        62
+      ],
+      "summary": "Returns the URL associated with this CSS style value.",
+      "tags": [
+        "url",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/csssupportsrule.rs",
+      "type": "file",
+      "name": "csssupportsrule.rs",
+      "filePath": "components/script/dom/css/csssupportsrule.rs",
+      "summary": "Implements CSSSupportsRule DOM type for @supports at-rules with condition text access.",
+      "tags": [
+        "dom-binding",
+        "css-supports-rule",
+        "at-rule"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/csssupportsrule.rs:CSSSupportsRule",
+      "type": "class",
+      "name": "CSSSupportsRule",
+      "filePath": "components/script/dom/css/csssupportsrule.rs",
+      "lineRange": [
+        23,
+        28
+      ],
+      "summary": "Represents a @supports rule with condition text for feature detection.",
+      "tags": [
+        "cssom",
+        "supports",
+        "at-rule"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csssupportsrule.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/csssupportsrule.rs",
+      "lineRange": [
+        31,
+        40
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csssupportsrule.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/csssupportsrule.rs",
+      "lineRange": [
+        42,
+        56
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csssupportsrule.rs:get_condition_text",
+      "type": "function",
+      "name": "get_condition_text",
+      "filePath": "components/script/dom/css/csssupportsrule.rs",
+      "lineRange": [
+        59,
+        61
+      ],
+      "summary": "Returns the condition text for this rule (@media query or @supports condition).",
+      "tags": [
+        "condition-text",
+        "getter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/csssupportsrule.rs:update_rule",
+      "type": "function",
+      "name": "update_rule",
+      "filePath": "components/script/dom/css/csssupportsrule.rs",
+      "lineRange": [
+        63,
+        71
+      ],
+      "summary": "Updates the internal rule data with new parsed rule content.",
+      "tags": [
+        "rule-update",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/css/fontface.rs",
+      "type": "file",
+      "name": "fontface.rs",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "summary": "Implements the FontFace DOM type with descriptor parsing, font data loading, status tracking, and CSS @font-face property accessors.",
+      "tags": [
+        "dom-binding",
+        "font-face",
+        "font-loading"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust DOM binding implementing the CSSOM specification for the Servo browser engine."
+    },
+    {
+      "id": "class:components/script/dom/css/fontface.rs:FontFace",
+      "type": "class",
+      "name": "FontFace",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        42,
+        69
+      ],
+      "summary": "Represents a font face with descriptors, loading, and status tracking implementing the CSS Font Loading API.",
+      "tags": [
+        "cssom",
+        "font-face",
+        "font-loading"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:parse_font_face_descriptors",
+      "type": "function",
+      "name": "parse_font_face_descriptors",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        76,
+        154
+      ],
+      "summary": "Parses @font-face descriptor values from a CSS string into a structured descriptor set.",
+      "tags": [
+        "parsing",
+        "descriptors"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:serialize_parsed_descriptors",
+      "type": "function",
+      "name": "serialize_parsed_descriptors",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        156,
+        169
+      ],
+      "summary": "Serializes parsed font face descriptors back into CSS text.",
+      "tags": [
+        "serialization",
+        "descriptors"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:new_failed_font_face",
+      "type": "function",
+      "name": "new_failed_font_face",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        189,
+        218
+      ],
+      "summary": "Creates a FontFace instance in error state when parsing fails.",
+      "tags": [
+        "error-handling",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        224,
+        268
+      ],
+      "summary": "Internal constructor initializing the inherited base rule fields.",
+      "tags": [
+        "constructor",
+        "inheritance"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        271,
+        325
+      ],
+      "summary": "Creates a new DOM-wrapped rule instance with reflection and initialization.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:load_from_data",
+      "type": "function",
+      "name": "load_from_data",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        328,
+        378
+      ],
+      "summary": "Creates a FontFace from binary font data with inferenced descriptors.",
+      "tags": [
+        "font-loading",
+        "data"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:set_associated_font_face_set",
+      "type": "function",
+      "name": "set_associated_font_face_set",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        380,
+        382
+      ],
+      "summary": "Associates this font face with a FontFaceSet for status notifications.",
+      "tags": [
+        "association",
+        "font-face-set"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:template",
+      "type": "function",
+      "name": "template",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        384,
+        386
+      ],
+      "summary": "Returns the reflector prototype template for DOM construction.",
+      "tags": [
+        "reflection",
+        "template"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:validate_and_set_descriptors",
+      "type": "function",
+      "name": "validate_and_set_descriptors",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        394,
+        406
+      ],
+      "summary": "Validates and applies new descriptor values to this font face.",
+      "tags": [
+        "validation",
+        "descriptors"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:font_face_rule",
+      "type": "function",
+      "name": "font_face_rule",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        408,
+        418
+      ],
+      "summary": "Constructs a CSSFontFaceRule from this font face for CSS OM access.",
+      "tags": [
+        "css-rule",
+        "conversion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:Load",
+      "type": "function",
+      "name": "Load",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        565,
+        656
+      ],
+      "summary": "Initiates asynchronous font loading and returns a promise resolving when the font is ready.",
+      "tags": [
+        "font-loading",
+        "async"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/css/fontface.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/css/fontface.rs",
+      "lineRange": [
+        664,
+        674
+      ],
+      "summary": "Constructs a new CSSStyleSheet() DOM object for the constructed stylesheet API.",
+      "tags": [
+        "constructor",
+        "constructed"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "class:components/script/dom/css/cssrulelist.rs:CSSRuleList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "class:components/script/dom/css/cssrulelist.rs:CSSRuleList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "class:components/script/dom/css/cssrulelist.rs:RulesSource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "class:components/script/dom/css/cssrulelist.rs:RulesSource",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:insert_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:insert_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:remove_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:remove_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:deparent_all",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:deparent_all",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:item",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:append_lazy_dom_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:append_lazy_dom_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:update_rules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssrulelist.rs",
+      "target": "function:components/script/dom/css/cssrulelist.rs:update_rules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "class:components/script/dom/css/cssstyledeclaration.rs:CSSStyleDeclaration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "class:components/script/dom/css/cssstyledeclaration.rs:CSSStyleDeclaration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "class:components/script/dom/css/cssstyledeclaration.rs:CSSStyleOwner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "class:components/script/dom/css/cssstyledeclaration.rs:CSSStyleOwner",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "class:components/script/dom/css/cssstyledeclaration.rs:CSSModificationAccess",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "class:components/script/dom/css/cssstyledeclaration.rs:CSSModificationAccess",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:mutate_associated_block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:with_block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:base_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:update_property_declaration_block",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:update_property_declaration_block",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:get_computed_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:get_property_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:set_property_inner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:Length",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:GetPropertyPriority",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:SetProperty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:RemoveProperty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:IndexedGetter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:CssText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstyledeclaration.rs",
+      "target": "function:components/script/dom/css/cssstyledeclaration.rs:SetCssText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "class:components/script/dom/css/cssstylerule.rs:CSSStyleRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "class:components/script/dom/css/cssstylerule.rs:CSSStyleRule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:ensure_rules",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:ensure_rules",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:update_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:update_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:block_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:block_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:Style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylerule.rs",
+      "target": "function:components/script/dom/css/cssstylerule.rs:SetSelectorText",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "class:components/script/dom/css/cssstylesheet.rs:CSSStyleSheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "class:components/script/dom/css/cssstylesheet.rs:CSSStyleSheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:rulelist",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:rulelist",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:disabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:disabled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:href",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:href",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:title",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:title",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:get_rule_count",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:get_rule_count",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:origin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:origin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:owner_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:owner_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:set_disabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:set_disabled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:set_owner_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:set_owner_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:shared_lock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:shared_lock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:style_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:style_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:set_origin_clean",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:set_origin_clean",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:medialist",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:medialist",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:is_constructed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:is_constructed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:constructor_document_matches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:constructor_document_matches",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:add_adopter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:add_adopter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:remove_adopter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:remove_adopter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:will_modify",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:will_modify",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:update_style_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:update_style_stylesheet",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:notify_invalidations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:notify_invalidations",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:disallow_modification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:disallow_modification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:do_replace_sync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:InsertRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:DeleteRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:AddRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:Replace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylesheet.rs",
+      "target": "function:components/script/dom/css/cssstylesheet.rs:ReplaceSync",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylevalue.rs",
+      "target": "class:components/script/dom/css/cssstylevalue.rs:CSSStyleValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylevalue.rs",
+      "target": "class:components/script/dom/css/cssstylevalue.rs:CSSStyleValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylevalue.rs",
+      "target": "function:components/script/dom/css/cssstylevalue.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylevalue.rs",
+      "target": "function:components/script/dom/css/cssstylevalue.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylevalue.rs",
+      "target": "function:components/script/dom/css/cssstylevalue.rs:get_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/cssstylevalue.rs",
+      "target": "function:components/script/dom/css/cssstylevalue.rs:get_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "class:components/script/dom/css/csssupportsrule.rs:CSSSupportsRule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "class:components/script/dom/css/csssupportsrule.rs:CSSSupportsRule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "function:components/script/dom/css/csssupportsrule.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "function:components/script/dom/css/csssupportsrule.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "function:components/script/dom/css/csssupportsrule.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "function:components/script/dom/css/csssupportsrule.rs:get_condition_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "function:components/script/dom/css/csssupportsrule.rs:get_condition_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "function:components/script/dom/css/csssupportsrule.rs:update_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/csssupportsrule.rs",
+      "target": "function:components/script/dom/css/csssupportsrule.rs:update_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "class:components/script/dom/css/fontface.rs:FontFace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "class:components/script/dom/css/fontface.rs:FontFace",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:parse_font_face_descriptors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:serialize_parsed_descriptors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:new_failed_font_face",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:load_from_data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:set_associated_font_face_set",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:set_associated_font_face_set",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:template",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:template",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:validate_and_set_descriptors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:font_face_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:Load",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/css/fontface.rs",
+      "target": "function:components/script/dom/css/fontface.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

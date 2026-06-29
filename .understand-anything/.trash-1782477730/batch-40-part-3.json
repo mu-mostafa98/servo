@@ -1,0 +1,603 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/paint/refresh_driver.rs",
+      "type": "file",
+      "name": "refresh_driver.rs",
+      "filePath": "components/paint/refresh_driver.rs",
+      "summary": "Manages frame refresh scheduling with observer notification pattern, animation state change propagation to constellation, and a background timer-based refresh driver for delayed callbacks.",
+      "tags": [
+        "paint",
+        "refresh",
+        "animation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/paint/refresh_driver.rs:BaseRefreshDriver",
+      "type": "class",
+      "name": "BaseRefreshDriver",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        26,
+        37
+      ],
+      "summary": "Coordinates frame refresh by managing observers, tracking frame wait state, and driving will-paint notifications.",
+      "tags": [
+        "paint",
+        "refresh",
+        "observer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/paint/refresh_driver.rs:AnimationRefreshDriverObserver",
+      "type": "class",
+      "name": "AnimationRefreshDriverObserver",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        111,
+        117
+      ],
+      "summary": "Observes animation frame state changes and notifies the constellation when animation states transition.",
+      "tags": [
+        "paint",
+        "animation",
+        "observer"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/paint/refresh_driver.rs:TimerRefreshDriver",
+      "type": "class",
+      "name": "TimerRefreshDriver",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        196,
+        199
+      ],
+      "summary": "Background timer-based refresh driver using a dedicated thread to schedule delayed callbacks.",
+      "tags": [
+        "paint",
+        "timer",
+        "refresh"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/refresh_driver.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        40,
+        52
+      ],
+      "summary": "new method.",
+      "tags": [
+        "paint",
+        "refresh",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/refresh_driver.rs:add_observer",
+      "type": "function",
+      "name": "add_observer",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        54,
+        62
+      ],
+      "summary": "add_observer method in refresh driver.",
+      "tags": [
+        "paint",
+        "refresh",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/refresh_driver.rs:notify_will_paint",
+      "type": "function",
+      "name": "notify_will_paint",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        64,
+        75
+      ],
+      "summary": "notify_will_paint method in refresh driver.",
+      "tags": [
+        "paint",
+        "refresh",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/refresh_driver.rs:notify_animation_state_changed",
+      "type": "function",
+      "name": "notify_animation_state_changed",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        127,
+        152
+      ],
+      "summary": "notify_animation_state_changed method in refresh driver.",
+      "tags": [
+        "paint",
+        "refresh",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/refresh_driver.rs:frame_started",
+      "type": "function",
+      "name": "frame_started",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        156,
+        180
+      ],
+      "summary": "frame_started method in refresh driver.",
+      "tags": [
+        "paint",
+        "refresh",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/refresh_driver.rs:queue_timer",
+      "type": "function",
+      "name": "queue_timer",
+      "filePath": "components/paint/refresh_driver.rs",
+      "lineRange": [
+        235,
+        242
+      ],
+      "summary": "queue_timer method in refresh driver.",
+      "tags": [
+        "paint",
+        "refresh",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/paint/render_notifier.rs",
+      "type": "file",
+      "name": "render_notifier.rs",
+      "filePath": "components/paint/render_notifier.rs",
+      "summary": "WebRender RenderNotifier implementation that forwards new frame ready events from the render backend thread to the paint thread via a paint proxy channel.",
+      "tags": [
+        "paint",
+        "notifier",
+        "webrender"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/paint/render_notifier.rs:RenderNotifier",
+      "type": "class",
+      "name": "RenderNotifier",
+      "filePath": "components/paint/render_notifier.rs",
+      "lineRange": [
+        10,
+        13
+      ],
+      "summary": "WebRender notifier that sends NewWebRenderFrameReady messages from render backend to paint thread.",
+      "tags": [
+        "paint",
+        "webrender",
+        "notifier"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/render_notifier.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/paint/render_notifier.rs",
+      "lineRange": [
+        16,
+        21
+      ],
+      "summary": "new method on RenderNotifier.",
+      "tags": [
+        "paint",
+        "notifier",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/render_notifier.rs:new_frame_ready",
+      "type": "function",
+      "name": "new_frame_ready",
+      "filePath": "components/paint/render_notifier.rs",
+      "lineRange": [
+        34,
+        45
+      ],
+      "summary": "Handles new frame readiness from WebRender by sending a message to the paint thread.",
+      "tags": [
+        "paint",
+        "webrender",
+        "frame-ready"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/paint/screenshot.rs",
+      "type": "file",
+      "name": "screenshot.rs",
+      "filePath": "components/paint/screenshot.rs",
+      "summary": "Manages the full lifecycle of screenshot requests from creation through pipeline readiness checks to final OpenGL framebuffer capture and callback delivery.",
+      "tags": [
+        "paint",
+        "screenshot",
+        "capture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/paint/screenshot.rs:ScreenshotTaker",
+      "type": "class",
+      "name": "ScreenshotTaker",
+      "filePath": "components/paint/screenshot.rs",
+      "lineRange": [
+        59,
+        64
+      ],
+      "summary": "Manages screenshot requests lifecycle: creation, pipeline display list readiness, frame trigger, and final image capture from OpenGL framebuffer.",
+      "tags": [
+        "paint",
+        "screenshot",
+        "capture"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/screenshot.rs:request_screenshot",
+      "type": "function",
+      "name": "request_screenshot",
+      "filePath": "components/paint/screenshot.rs",
+      "lineRange": [
+        67,
+        79
+      ],
+      "summary": "request_screenshot method on ScreenshotTaker.",
+      "tags": [
+        "paint",
+        "screenshot",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/screenshot.rs:handle_screenshot_readiness_reply",
+      "type": "function",
+      "name": "handle_screenshot_readiness_reply",
+      "filePath": "components/paint/screenshot.rs",
+      "lineRange": [
+        81,
+        103
+      ],
+      "summary": "handle_screenshot_readiness_reply method on ScreenshotTaker.",
+      "tags": [
+        "paint",
+        "screenshot",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/screenshot.rs:prepare_screenshot_requests_for_render",
+      "type": "function",
+      "name": "prepare_screenshot_requests_for_render",
+      "filePath": "components/paint/screenshot.rs",
+      "lineRange": [
+        105,
+        137
+      ],
+      "summary": "prepare_screenshot_requests_for_render method on ScreenshotTaker.",
+      "tags": [
+        "paint",
+        "screenshot",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/screenshot.rs:maybe_trigger_paint_for_screenshot",
+      "type": "function",
+      "name": "maybe_trigger_paint_for_screenshot",
+      "filePath": "components/paint/screenshot.rs",
+      "lineRange": [
+        139,
+        152
+      ],
+      "summary": "maybe_trigger_paint_for_screenshot method on ScreenshotTaker.",
+      "tags": [
+        "paint",
+        "screenshot",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/screenshot.rs:maybe_take_screenshots",
+      "type": "function",
+      "name": "maybe_take_screenshots",
+      "filePath": "components/paint/screenshot.rs",
+      "lineRange": [
+        154,
+        211
+      ],
+      "summary": "maybe_take_screenshots method on ScreenshotTaker.",
+      "tags": [
+        "paint",
+        "screenshot",
+        "method"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "class:components/paint/refresh_driver.rs:BaseRefreshDriver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "class:components/paint/refresh_driver.rs:BaseRefreshDriver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "class:components/paint/refresh_driver.rs:AnimationRefreshDriverObserver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "class:components/paint/refresh_driver.rs:AnimationRefreshDriverObserver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "class:components/paint/refresh_driver.rs:TimerRefreshDriver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "class:components/paint/refresh_driver.rs:TimerRefreshDriver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:add_observer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:add_observer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:notify_will_paint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:notify_will_paint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:notify_animation_state_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:notify_animation_state_changed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:frame_started",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:queue_timer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/refresh_driver.rs",
+      "target": "function:components/paint/refresh_driver.rs:queue_timer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/render_notifier.rs",
+      "target": "class:components/paint/render_notifier.rs:RenderNotifier",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/render_notifier.rs",
+      "target": "class:components/paint/render_notifier.rs:RenderNotifier",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/render_notifier.rs",
+      "target": "function:components/paint/render_notifier.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/render_notifier.rs",
+      "target": "function:components/paint/render_notifier.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/render_notifier.rs",
+      "target": "function:components/paint/render_notifier.rs:new_frame_ready",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "class:components/paint/screenshot.rs:ScreenshotTaker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "class:components/paint/screenshot.rs:ScreenshotTaker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:request_screenshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:request_screenshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:handle_screenshot_readiness_reply",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:handle_screenshot_readiness_reply",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:prepare_screenshot_requests_for_render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:prepare_screenshot_requests_for_render",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:maybe_trigger_paint_for_screenshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:maybe_trigger_paint_for_screenshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:maybe_take_screenshots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/screenshot.rs",
+      "target": "function:components/paint/screenshot.rs:maybe_take_screenshots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

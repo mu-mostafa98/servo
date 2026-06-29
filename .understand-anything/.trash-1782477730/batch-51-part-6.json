@@ -1,0 +1,875 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/document/focus.rs",
+      "type": "file",
+      "name": "focus.rs",
+      "filePath": "components/script/dom/document/focus.rs",
+      "summary": "Implements document focus management including focusable area determination, sequential focus navigation (tab order), and focus event dispatching across documents and iframes.",
+      "tags": [
+        "focus",
+        "navigation",
+        "accessibility",
+        "keyboard"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust implementation of core DOM interfaces using Servo's DomRefCell, JS tracing, and script layout patterns."
+    },
+    {
+      "id": "class:components/script/dom/document/focus.rs:FocusableAreaKind",
+      "type": "class",
+      "name": "FocusableAreaKind",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        35,
+        35
+      ],
+      "summary": "Enum for types of focusable areas in the document.",
+      "tags": [
+        "focus",
+        "enum"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/document/focus.rs:FocusableArea",
+      "type": "class",
+      "name": "FocusableArea",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        56,
+        69
+      ],
+      "summary": "Represents a focusable area within the document with kind, element reference, DOM anchor, and focus chain metadata.",
+      "tags": [
+        "focus",
+        "accessibility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/document/focus.rs:DocumentFocusHandler",
+      "type": "class",
+      "name": "DocumentFocusHandler",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        140,
+        156
+      ],
+      "summary": "Manages document focus state including focusable area tracking, sequential focus navigation, focus event dispatching, and cross-document focus management.",
+      "tags": [
+        "focus",
+        "navigation",
+        "keyboard"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationMechanism",
+      "type": "class",
+      "name": "SequentialFocusNavigationMechanism",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        773,
+        784
+      ],
+      "summary": "Enum for sequential focus navigation mechanisms.",
+      "tags": [
+        "focus",
+        "enum"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationSearchContext",
+      "type": "class",
+      "name": "SequentialFocusNavigationSearchContext",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        793,
+        803
+      ],
+      "summary": "Context struct for sequential focus navigation search containing the current element, direction, and search flags.",
+      "tags": [
+        "focus",
+        "navigation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationSearch",
+      "type": "class",
+      "name": "SequentialFocusNavigationSearch",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        833,
+        841
+      ],
+      "summary": "Implements the sequential focus navigation search algorithm for determining the next focusable element in tab order.",
+      "tags": [
+        "focus",
+        "navigation",
+        "algorithm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:fmt",
+      "type": "function",
+      "name": "fmt",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        72,
+        89
+      ],
+      "summary": "Method fmt with 1 parameters in focus module (17 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:element",
+      "type": "function",
+      "name": "element",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        106,
+        112
+      ],
+      "summary": "Method element in focus module (6 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:dom_anchor",
+      "type": "function",
+      "name": "dom_anchor",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        115,
+        123
+      ],
+      "summary": "Method dom_anchor with 1 parameters in focus module (8 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:focus_chain",
+      "type": "function",
+      "name": "focus_chain",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        125,
+        132
+      ],
+      "summary": "Method focus_chain in focus module (7 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:set_focused_area",
+      "type": "function",
+      "name": "set_focused_area",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        186,
+        219
+      ],
+      "summary": "Method set_focused_area with 1 parameters in focus module (33 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:current_focus_chain",
+      "type": "function",
+      "name": "current_focus_chain",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        242,
+        254
+      ],
+      "summary": "Method current_focus_chain in focus module (12 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:focus",
+      "type": "function",
+      "name": "focus",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        258,
+        304
+      ],
+      "summary": "Sets focus to the specified element with scroll behavior and event dispatch.",
+      "tags": [
+        "focus"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:focus_update_steps",
+      "type": "function",
+      "name": "focus_update_steps",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        307,
+        480
+      ],
+      "summary": "Performs the focus update algorithm including focus fixup rules and event firing.",
+      "tags": [
+        "focus",
+        "algorithm"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:fire_focus_event",
+      "type": "function",
+      "name": "fire_focus_event",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        483,
+        508
+      ],
+      "summary": "Fires focus event events to the appropriate targets.",
+      "tags": [
+        "events",
+        "dispatch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:perform_focus_fixup_rule",
+      "type": "function",
+      "name": "perform_focus_fixup_rule",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        516,
+        526
+      ],
+      "summary": "Method perform_focus_fixup_rule with 1 parameters in focus module (10 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:sequential_focus_navigation_via_keyboard_event",
+      "type": "function",
+      "name": "sequential_focus_navigation_via_keyboard_event",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        539,
+        551
+      ],
+      "summary": "Performs navigation via keyboard event for determining the next focusable element.",
+      "tags": [
+        "focus",
+        "navigation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:sequential_focus_navigation",
+      "type": "function",
+      "name": "sequential_focus_navigation",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        554,
+        594
+      ],
+      "summary": "Performs navigation for determining the next focusable element.",
+      "tags": [
+        "focus",
+        "navigation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:sequential_focus_navigation_loop",
+      "type": "function",
+      "name": "sequential_focus_navigation_loop",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        598,
+        684
+      ],
+      "summary": "Performs navigation loop for determining the next focusable element.",
+      "tags": [
+        "focus",
+        "navigation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:sequentially_focus_child_iframe_local_or_remote",
+      "type": "function",
+      "name": "sequentially_focus_child_iframe_local_or_remote",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        686,
+        710
+      ],
+      "summary": "Method sequentially_focus_child_iframe_local_or_remote with 3 parameters in focus module (24 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:sequentially_focus_parent_local_or_remote",
+      "type": "function",
+      "name": "sequentially_focus_parent_local_or_remote",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        712,
+        742
+      ],
+      "summary": "Method sequentially_focus_parent_local_or_remote with 2 parameters in focus module (30 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:sequential_focus_from_another_document",
+      "type": "function",
+      "name": "sequential_focus_from_another_document",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        744,
+        764
+      ],
+      "summary": "Performs from another document for determining the next focusable element.",
+      "tags": [
+        "focus",
+        "navigation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        844,
+        862
+      ],
+      "summary": "Constructor for initializing the struct with default or provided values.",
+      "tags": [
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:search",
+      "type": "function",
+      "name": "search",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        864,
+        882
+      ],
+      "summary": "Method search in focus module (18 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:maybe_search_in_containing_focus_navigation_scope",
+      "type": "function",
+      "name": "maybe_search_in_containing_focus_navigation_scope",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        884,
+        924
+      ],
+      "summary": "Method maybe_search_in_containing_focus_navigation_scope in focus module (40 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:process_node_as_sequentially_focusable_node",
+      "type": "function",
+      "name": "process_node_as_sequentially_focusable_node",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        938,
+        952
+      ],
+      "summary": "Processes a node as a potential sequential focus candidate.",
+      "tags": [
+        "focus",
+        "navigation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:process_node_as_focus_scope_owner",
+      "type": "function",
+      "name": "process_node_as_focus_scope_owner",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        956,
+        1015
+      ],
+      "summary": "Processes a node that owns a focus scope for sequential navigation.",
+      "tags": [
+        "focus",
+        "navigation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:process_candidate_with_tab_index",
+      "type": "function",
+      "name": "process_candidate_with_tab_index",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        1020,
+        1033
+      ],
+      "summary": "Evaluates a candidate element with tabindex for sequential focus.",
+      "tags": [
+        "focus",
+        "tabindex"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:process_element_for_dom_traversal",
+      "type": "function",
+      "name": "process_element_for_dom_traversal",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        1039,
+        1058
+      ],
+      "summary": "Method process_element_for_dom_traversal in focus module (19 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:process_element_for_first_or_last_traversal",
+      "type": "function",
+      "name": "process_element_for_first_or_last_traversal",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        1063,
+        1106
+      ],
+      "summary": "Method process_element_for_first_or_last_traversal with 1 parameters in focus module (43 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:process_element_for_sequential_traversal",
+      "type": "function",
+      "name": "process_element_for_sequential_traversal",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        1112,
+        1172
+      ],
+      "summary": "Method process_element_for_sequential_traversal with 2 parameters in focus module (60 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/document/focus.rs:compare_tab_indices",
+      "type": "function",
+      "name": "compare_tab_indices",
+      "filePath": "components/script/dom/document/focus.rs",
+      "lineRange": [
+        1184,
+        1194
+      ],
+      "summary": "Method compare_tab_indices with 2 parameters in focus module (10 lines).",
+      "tags": [
+        "method"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:FocusableAreaKind",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:FocusableAreaKind",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:FocusableArea",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:FocusableArea",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:DocumentFocusHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:DocumentFocusHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationMechanism",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationMechanism",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationSearchContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationSearchContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationSearch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "class:components/script/dom/document/focus.rs:SequentialFocusNavigationSearch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:fmt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:dom_anchor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:dom_anchor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:focus_chain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:focus_chain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:set_focused_area",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:set_focused_area",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:current_focus_chain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:current_focus_chain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:focus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:focus",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:focus_update_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:focus_update_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:fire_focus_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:fire_focus_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:perform_focus_fixup_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:perform_focus_fixup_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:sequential_focus_navigation_via_keyboard_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:sequential_focus_navigation_via_keyboard_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:sequential_focus_navigation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:sequential_focus_navigation_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:sequentially_focus_child_iframe_local_or_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:sequentially_focus_parent_local_or_remote",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:sequential_focus_from_another_document",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:sequential_focus_from_another_document",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:search",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:search",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:maybe_search_in_containing_focus_navigation_scope",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:process_node_as_sequentially_focusable_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:process_node_as_focus_scope_owner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:process_candidate_with_tab_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:process_element_for_dom_traversal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:process_element_for_first_or_last_traversal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:process_element_for_sequential_traversal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/document/focus.rs",
+      "target": "function:components/script/dom/document/focus.rs:compare_tab_indices",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

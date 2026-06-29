@@ -1,0 +1,118 @@
+{
+  "nodes": [
+    {
+      "id": "config:support/android/apk/servoapp/src/main/res/layout/activity_history.xml",
+      "type": "config",
+      "name": "activity_history.xml",
+      "filePath": "support/android/apk/servoapp/src/main/res/layout/activity_history.xml",
+      "summary": "Android layout defining the HistoryActivity container with a ConstraintLayout hosting a FragmentContainerView for the HistoryFragment.",
+      "tags": ["configuration", "android-layout", "ui-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:support/android/apk/servoapp/src/main/res/layout/activity_main.xml",
+      "type": "config",
+      "name": "activity_main.xml",
+      "filePath": "support/android/apk/servoapp/src/main/res/layout/activity_main.xml",
+      "summary": "Android layout for the main browser activity with a MaterialToolbar containing a URL input field, progress indicator, redrawing status text, a ServoView for web content rendering, and a labeled BottomNavigationView.",
+      "tags": ["configuration", "android-layout", "browser-ui", "ui-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:support/android/apk/servoapp/src/main/res/layout/activity_settings.xml",
+      "type": "config",
+      "name": "activity_settings.xml",
+      "filePath": "support/android/apk/servoapp/src/main/res/layout/activity_settings.xml",
+      "summary": "Android layout defining the SettingsActivity container with a ConstraintLayout hosting a FragmentContainerView for the SettingsFragment.",
+      "tags": ["configuration", "android-layout", "ui-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:support/android/apk/servoapp/src/main/res/layout/fragment_history.xml",
+      "type": "config",
+      "name": "fragment_history.xml",
+      "filePath": "support/android/apk/servoapp/src/main/res/layout/fragment_history.xml",
+      "summary": "Android layout for the history fragment using a CoordinatorLayout with an AppBarLayout containing a ComposeView toolbar and a second ComposeView for the main body content.",
+      "tags": ["configuration", "android-layout", "jetpack-compose", "ui-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:support/android/apk/servoapp/src/main/res/layout/fragment_settings.xml",
+      "type": "config",
+      "name": "fragment_settings.xml",
+      "filePath": "support/android/apk/servoapp/src/main/res/layout/fragment_settings.xml",
+      "summary": "Android layout for the settings fragment with a scrolling form featuring toggles for experimental features and rendering animations, each with descriptive labels and Material switch controls.",
+      "tags": ["configuration", "android-layout", "settings-ui", "ui-definition"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:support/android/apk/servoapp/src/main/res/layout/history_header.xml",
+      "type": "config",
+      "name": "history_header.xml",
+      "filePath": "support/android/apk/servoapp/src/main/res/layout/history_header.xml",
+      "summary": "Android layout providing a header view for the browser history list, intended for use within a RecyclerView or ListView adapter.",
+      "tags": ["configuration", "android-layout", "ui-definition"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:support/android/apk/servoapp/src/main/res/layout/history_item.xml",
+      "type": "config",
+      "name": "history_item.xml",
+      "filePath": "support/android/apk/servoapp/src/main/res/layout/history_item.xml",
+      "summary": "Android layout defining an individual history entry row for the browser history list, intended for use within a RecyclerView or ListView adapter.",
+      "tags": ["configuration", "android-layout", "ui-definition"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "config:support/android/apk/servoapp/src/main/res/layout/activity_history.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/res/layout/activity_history.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/res/layout/activity_main.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/res/layout/activity_settings.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/res/layout/activity_settings.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/res/layout/fragment_history.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/res/layout/fragment_settings.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsFragment.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

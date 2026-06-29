@@ -1,0 +1,512 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/servo/network_manager.rs",
+      "type": "file",
+      "name": "network_manager.rs",
+      "filePath": "components/servo/network_manager.rs",
+      "summary": "Network manager for aggregating and querying cache entries from public and private resource threads, and clearing cached resources.",
+      "tags": ["service", "utility", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/network_manager.rs:CacheEntry",
+      "type": "class",
+      "name": "CacheEntry",
+      "filePath": "components/servo/network_manager.rs",
+      "lineRange": [10, 12],
+      "summary": "A single cache resource entry identified by a key string.",
+      "tags": ["data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/network_manager.rs:NetworkManager",
+      "type": "class",
+      "name": "NetworkManager",
+      "filePath": "components/servo/network_manager.rs",
+      "lineRange": [29, 32],
+      "summary": "Manages network cache by aggregating entries from public and private resource threads and providing cache query and clear operations.",
+      "tags": ["service", "data-model"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/network_manager.rs:cache_entries",
+      "type": "function",
+      "name": "cache_entries",
+      "filePath": "components/servo/network_manager.rs",
+      "lineRange": [55, 66],
+      "summary": "Retrieves the deduplicated list of cache entry keys from both public and private resource threads.",
+      "tags": ["utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/servo/proxies.rs",
+      "type": "file",
+      "name": "proxies.rs",
+      "filePath": "components/servo/proxies.rs",
+      "summary": "ConstellationProxy providing a thread-safe, disconnect-aware channel for sending messages from the embedder to the constellation process.",
+      "tags": ["singleton", "service", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/proxies.rs:ConstellationProxy",
+      "type": "class",
+      "name": "ConstellationProxy",
+      "filePath": "components/servo/proxies.rs",
+      "lineRange": [14, 17],
+      "summary": "Thread-safe proxy wrapping a crossbeam channel sender with atomic disconnect detection for reliable message delivery to the constellation.",
+      "tags": ["singleton", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/proxies.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/servo/proxies.rs",
+      "lineRange": [20, 29],
+      "summary": "Creates a new ConstellationProxy with an unbounded crossbeam channel and initializes the disconnect flag.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/proxies.rs:try_send",
+      "type": "function",
+      "name": "try_send",
+      "filePath": "components/servo/proxies.rs",
+      "lineRange": [42, 55],
+      "summary": "Attempts to send a message, returning an error if the channel is disconnected, and atomically marks the proxy as disconnected on failure.",
+      "tags": ["utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/servo/responders.rs",
+      "type": "file",
+      "name": "responders.rs",
+      "filePath": "components/servo/responders.rs",
+      "summary": "IPC responder infrastructure providing typed sender abstractions (IpcResponder, OneshotSender, ServoErrorChannel) for sending responses with default-fallback and error handling across process boundaries.",
+      "tags": ["utility", "serialization", "service"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/servo/responders.rs:ServoErrorChannel",
+      "type": "class",
+      "name": "ServoErrorChannel",
+      "filePath": "components/servo/responders.rs",
+      "lineRange": [34, 37],
+      "summary": "An unbounded error channel providing a sender and try_receive for ServoError messages, with creation via Default.",
+      "tags": ["utility", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/responders.rs:IpcResponder",
+      "type": "class",
+      "name": "IpcResponder",
+      "filePath": "components/servo/responders.rs",
+      "lineRange": [113, 118],
+      "summary": "Responder that sends a canned default response on drop if no explicit response was sent, preventing hangs from forgotten responses.",
+      "tags": ["utility", "service"],
+      "complexity": "moderate",
+      "languageNotes": "Implements the drop-guard pattern typical in Rust for ensuring resource cleanup."
+    },
+    {
+      "id": "function:components/servo/responders.rs:new_same_process",
+      "type": "function",
+      "name": "new_same_process",
+      "filePath": "components/servo/responders.rs",
+      "lineRange": [131, 140],
+      "summary": "Creates a new IpcResponder for same-process communication using a Tokio oneshot channel, with a default response sent on drop.",
+      "tags": ["constructor", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/responders.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/servo/responders.rs",
+      "lineRange": [152, 162],
+      "summary": "Drop handler that sends the default response if the responder was dropped without an explicit response being sent.",
+      "tags": ["utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/servo/servo.rs",
+      "type": "file",
+      "name": "servo.rs",
+      "filePath": "components/servo/servo.rs",
+      "summary": "Core Servo engine implementation providing the main embedder API: initialization, event loop, message handling (embedder, net, constellation), webview lifecycle, logging, memory reporting, content process management, and builder pattern configuration.",
+      "tags": ["entry-point", "service", "event-handler", "api-handler"],
+      "complexity": "complex",
+      "languageNotes": "Uses crossbeam channels and Select for multiplexed message dispatch across three separate receiver channels."
+    },
+    {
+      "id": "class:components/servo/servo.rs:ServoInner",
+      "type": "class",
+      "name": "ServoInner",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [222, 252],
+      "summary": "Internal Servo engine state containing the message receivers, paint instance, constellation proxy, network manager, site data manager, JavaScript evaluator, webview map, error channel, pending input events, and shutdown state.",
+      "tags": ["service", "singleton"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/servo/servo.rs:Servo",
+      "type": "class",
+      "name": "Servo",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [874, 874],
+      "summary": "Public Servo engine handle wrapping ServoInner in Rc<RefCell<>>, providing the embedder-facing API for initialization, navigation, event processing, logging, preferences, and content process management.",
+      "tags": ["entry-point", "service", "api-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/servo/servo.rs:ServoBuilder",
+      "type": "class",
+      "name": "ServoBuilder",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [1412, 1419],
+      "summary": "Builder for constructing a Servo instance with configurable options, preferences, event loop waker, protocol registry, and WebXR registry.",
+      "tags": ["factory", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/servo.rs:DefaultEventLoopWaker",
+      "type": "class",
+      "name": "DefaultEventLoopWaker",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [1396, 1396],
+      "summary": "Default no-op event loop waker used when no custom waker is provided.",
+      "tags": ["utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/servo.rs:EmbedderMessageSelector",
+      "type": "class",
+      "name": "EmbedderMessageSelector",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [159, 166],
+      "summary": "Multiplexed receiver selector using crossbeam Select to poll from three channels (embedder, net, constellation) with a single try_recv_one_message operation.",
+      "tags": ["utility", "event-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/servo.rs:BothLogger",
+      "type": "class",
+      "name": "BothLogger",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [1257, 1257],
+      "summary": "Logger implementation that delegates to both an env_logger and a custom embedder logger.",
+      "tags": ["utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/servo.rs:spin_event_loop",
+      "type": "function",
+      "name": "spin_event_loop",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [263, 337],
+      "summary": "Main event loop that polls paint messages and embedder/net/constellation channels, dispatches handled input events, performs paint updates, and sends frame-ready notifications.",
+      "tags": ["event-handler", "entry-point"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/servo.rs:handle_net_embedder_message",
+      "type": "function",
+      "name": "handle_net_embedder_message",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [372, 444],
+      "summary": "Dispatches network-layer embedder messages including file picker requests, web resource loading, authentication requests, and cookie operations.",
+      "tags": ["event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/servo.rs:handle_embedder_message",
+      "type": "function",
+      "name": "handle_embedder_message",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [446, 746],
+      "summary": "Dispatches main embedder messages including status/text/favicon updates, cursor changes, navigation controls, clipboard operations, devtools, gamepad haptics, notifications, screen metrics, and accessibility updates.",
+      "tags": ["event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/servo.rs:handle_constellation_embedder_message",
+      "type": "function",
+      "name": "handle_constellation_embedder_message",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [748, 851],
+      "summary": "Dispatches constellation embedder messages including shutdown, navigation requests, webview creation/closure, focus changes, JavaScript evaluation results, input event handling, history updates, crash notifications, and media session events.",
+      "tags": ["event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/servo.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [878, 1032],
+      "summary": "Constructs a full Servo instance including option/preference initialization, media platform setup, paint channel, constellation proxy, embedder/net/constellation channels, profiling, devtools, resource threads, storage threads, and the constellation itself.",
+      "tags": ["constructor", "entry-point"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/servo.rs:create_constellation",
+      "type": "function",
+      "name": "create_constellation",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [1183, 1253],
+      "summary": "Creates and starts the constellation process with all required factories, threads (Bluetooth, font service), and registries (WebXR, WebGL, WebGPU).",
+      "tags": ["factory"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/servo.rs:run_content_process",
+      "type": "function",
+      "name": "run_content_process",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [1292, 1364],
+      "summary": "Runs a content (sandboxed) process with its own event loop: initializes options, prefs, sandboxing, script thread, fetch thread, logging, memory reporting, and hangs monitor.",
+      "tags": ["entry-point", "service"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/servo/servo.rs:create_paint_channel",
+      "type": "function",
+      "name": "create_paint_channel",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [1156, 1180],
+      "summary": "Creates the paint infrastructure with an event-loop-backed paint thread, waker, and cross-process paint API for rendering.",
+      "tags": ["factory"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/servo/servo.rs:setup_logging",
+      "type": "function",
+      "name": "setup_logging",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [1057, 1068],
+      "summary": "Initializes dual logging (env_logger + custom embedder logger) and sets the global log level.",
+      "tags": ["utility", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/servo/servo.rs:register_system_memory_reporter_for_event_loop",
+      "type": "function",
+      "name": "register_system_memory_reporter_for_event_loop",
+      "filePath": "components/servo/servo.rs",
+      "lineRange": [1466, 1485],
+      "summary": "Registers a system memory reporter callback that collects memory reports and sends them to the profiler channel.",
+      "tags": ["utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/servo/servo_delegate.rs",
+      "type": "file",
+      "name": "servo_delegate.rs",
+      "filePath": "components/servo/servo_delegate.rs",
+      "summary": "ServoDelegate trait defining the embedder callback interface for error notification, devtools server events, devtools connections, web resource loading, and notification display.",
+      "tags": ["type-definition", "api-handler"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/servo/servo_delegate.rs:ServoDelegate",
+      "type": "class",
+      "name": "ServoDelegate",
+      "filePath": "components/servo/servo_delegate.rs",
+      "lineRange": [21, 47],
+      "summary": "Trait defining the top-level embedder callbacks for error notification, devtools lifecycle, resource loading, notifications, and console messages.",
+      "tags": ["type-definition", "api-handler"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/servo/network_manager.rs",
+      "target": "class:components/servo/network_manager.rs:CacheEntry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/network_manager.rs",
+      "target": "class:components/servo/network_manager.rs:NetworkManager",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/network_manager.rs",
+      "target": "function:components/servo/network_manager.rs:cache_entries",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/proxies.rs",
+      "target": "class:components/servo/proxies.rs:ConstellationProxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/proxies.rs",
+      "target": "function:components/servo/proxies.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/proxies.rs",
+      "target": "function:components/servo/proxies.rs:try_send",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/responders.rs",
+      "target": "class:components/servo/responders.rs:ServoErrorChannel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/responders.rs",
+      "target": "class:components/servo/responders.rs:IpcResponder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/responders.rs",
+      "target": "function:components/servo/responders.rs:new_same_process",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/responders.rs",
+      "target": "function:components/servo/responders.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "class:components/servo/servo.rs:ServoInner",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "class:components/servo/servo.rs:Servo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "class:components/servo/servo.rs:ServoBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "class:components/servo/servo.rs:DefaultEventLoopWaker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "class:components/servo/servo.rs:EmbedderMessageSelector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "class:components/servo/servo.rs:BothLogger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:spin_event_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:handle_net_embedder_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:handle_embedder_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:handle_constellation_embedder_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:create_constellation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:run_content_process",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:create_paint_channel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:setup_logging",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo.rs",
+      "target": "function:components/servo/servo.rs:register_system_memory_reporter_for_event_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/servo/servo_delegate.rs",
+      "target": "class:components/servo/servo_delegate.rs:ServoDelegate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    }
+  ]
+}

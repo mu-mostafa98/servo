@@ -1,0 +1,352 @@
+{
+  "nodes": [
+    {
+      "id": "class:components/script/dom/bindings/frozenarray.rs:CachedFrozenArray",
+      "type": "class",
+      "name": "CachedFrozenArray",
+      "filePath": "components/script/dom/bindings/frozenarray.rs",
+      "lineRange": [16, 18],
+      "summary": "Lazily-initialized cache for frozen JS arrays, providing get-or-init semantics with lazy creation and clearing.",
+      "tags": ["cache", "frozen-array", "lazy-init"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/frozenarray.rs:get_or_init",
+      "type": "function",
+      "name": "get_or_init",
+      "filePath": "components/script/dom/bindings/frozenarray.rs",
+      "lineRange": [27, 48],
+      "summary": "Returns the cached frozen array or creates and freezes a new array from the provided factory function.",
+      "tags": ["frozen-array", "cache", "lazy"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/bindings/principals.rs:destroy_servo_jsprincipal",
+      "type": "function",
+      "name": "destroy_servo_jsprincipal",
+      "filePath": "components/script/dom/bindings/principals.rs",
+      "lineRange": [18, 23],
+      "summary": "Destructor callback for freeing a ServoJSPrincipals allocated via Box from SpiderMonkey's JSPrincipal system.",
+      "tags": ["principal", "destructor", "ffi"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/principals.rs:write_jsprincipal",
+      "type": "function",
+      "name": "write_jsprincipal",
+      "filePath": "components/script/dom/bindings/principals.rs",
+      "lineRange": [25, 52],
+      "summary": "Serializes a ServoJSPrincipals origin into SpiderMonkey's structured principal serialization format.",
+      "tags": ["principal", "serialization", "write"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/bindings/principals.rs:read_jsprincipal",
+      "type": "function",
+      "name": "read_jsprincipal",
+      "filePath": "components/script/dom/bindings/principals.rs",
+      "lineRange": [54, 87],
+      "summary": "Deserializes a ServoJSPrincipals from SpiderMonkey's structured principal format by reading origin bytes.",
+      "tags": ["principal", "deserialization", "read"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/bindings/principals.rs:subsumes",
+      "type": "function",
+      "name": "subsumes",
+      "filePath": "components/script/dom/bindings/principals.rs",
+      "lineRange": [99, 118],
+      "summary": "Checks whether one principal's origin subsumes another using same_origin_domain comparison.",
+      "tags": ["principal", "security", "origin", "subsumption"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/proxyhandler.rs:is_platform_object_same_origin",
+      "type": "function",
+      "name": "is_platform_object_same_origin",
+      "filePath": "components/script/dom/bindings/proxyhandler.rs",
+      "lineRange": [15, 47],
+      "summary": "Checks whether a JS platform object's realm has the same origin as the current subject principal's realm.",
+      "tags": ["proxy", "same-origin", "security"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/bindings/refcounted.rs:TrustedPromise",
+      "type": "class",
+      "name": "TrustedPromise",
+      "filePath": "components/script/dom/bindings/refcounted.rs",
+      "lineRange": [81, 84],
+      "summary": "Thread-safe handle to a DOM Promise that can be rooted and resolved or rejected from any thread.",
+      "tags": ["promise", "thread-safe", "refcount"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/bindings/refcounted.rs:Trusted",
+      "type": "class",
+      "name": "Trusted",
+      "filePath": "components/script/dom/bindings/refcounted.rs",
+      "lineRange": [164, 172],
+      "summary": "Thread-safe reference-counted pointer to a DOM reflector object, allowing safe access across threads.",
+      "tags": ["refcount", "thread-safe", "dom-reflector"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/bindings/refcounted.rs:LiveDOMReferences",
+      "type": "class",
+      "name": "LiveDOMReferences",
+      "filePath": "components/script/dom/bindings/refcounted.rs",
+      "lineRange": [233, 237],
+      "summary": "Global registry of live DOM references with refcount and promise tables managed via thread-local storage.",
+      "tags": ["registry", "refcount", "promise", "thread-local"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/bindings/refcounted.rs:addref",
+      "type": "function",
+      "name": "addref",
+      "filePath": "components/script/dom/bindings/refcounted.rs",
+      "lineRange": [257, 281],
+      "summary": "Registers a DOM reflector into the live references table, maintaining a weak/strong reference tracking system.",
+      "tags": ["refcount", "registration", "dom-object"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/bindings/refcounted.rs:trace_refcounted_objects",
+      "type": "function",
+      "name": "trace_refcounted_objects",
+      "filePath": "components/script/dom/bindings/refcounted.rs",
+      "lineRange": [298, 321],
+      "summary": "Traces all live refcounted DOM objects and promises for garbage collection, removing stale null entries.",
+      "tags": ["gc-tracing", "refcount", "cleanup"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/bindings/refcounted.rs:remove_nulls",
+      "type": "function",
+      "name": "remove_nulls",
+      "filePath": "components/script/dom/bindings/refcounted.rs",
+      "lineRange": [285, 295],
+      "summary": "Removes entries with dropped weak references from the refcount table to prevent memory leaks.",
+      "tags": ["cleanup", "weak-ref", "gc"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/bindings/refcounted.rs:TrustedReference",
+      "type": "class",
+      "name": "TrustedReference",
+      "filePath": "components/script/dom/bindings/refcounted.rs",
+      "lineRange": [63, 65],
+      "summary": "A single Arc-based trusted reference to a DOM object used for safe cross-thread access.",
+      "tags": ["refcount", "arc", "dom-object"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/bindings/refcounted.rs:root",
+      "type": "function",
+      "name": "root",
+      "filePath": "components/script/dom/bindings/refcounted.rs",
+      "lineRange": [107, 134],
+      "summary": "Roots a TrustedPromise by looking up or recycling a promise entry from the live references table.",
+      "tags": ["root", "promise", "refcount"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/bindings/frozenarray.rs",
+      "target": "class:components/script/dom/bindings/frozenarray.rs:CachedFrozenArray",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/frozenarray.rs",
+      "target": "class:components/script/dom/bindings/frozenarray.rs:CachedFrozenArray",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/frozenarray.rs",
+      "target": "function:components/script/dom/bindings/frozenarray.rs:get_or_init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/frozenarray.rs",
+      "target": "function:components/script/dom/bindings/frozenarray.rs:get_or_init",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/principals.rs",
+      "target": "function:components/script/dom/bindings/principals.rs:destroy_servo_jsprincipal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/principals.rs",
+      "target": "function:components/script/dom/bindings/principals.rs:destroy_servo_jsprincipal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/principals.rs",
+      "target": "function:components/script/dom/bindings/principals.rs:write_jsprincipal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/principals.rs",
+      "target": "function:components/script/dom/bindings/principals.rs:write_jsprincipal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/principals.rs",
+      "target": "function:components/script/dom/bindings/principals.rs:read_jsprincipal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/principals.rs",
+      "target": "function:components/script/dom/bindings/principals.rs:read_jsprincipal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/principals.rs",
+      "target": "function:components/script/dom/bindings/principals.rs:subsumes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/principals.rs",
+      "target": "function:components/script/dom/bindings/principals.rs:subsumes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/proxyhandler.rs",
+      "target": "function:components/script/dom/bindings/proxyhandler.rs:is_platform_object_same_origin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/proxyhandler.rs",
+      "target": "function:components/script/dom/bindings/proxyhandler.rs:is_platform_object_same_origin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "class:components/script/dom/bindings/refcounted.rs:TrustedPromise",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "class:components/script/dom/bindings/refcounted.rs:TrustedPromise",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "class:components/script/dom/bindings/refcounted.rs:Trusted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "class:components/script/dom/bindings/refcounted.rs:Trusted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "class:components/script/dom/bindings/refcounted.rs:LiveDOMReferences",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "class:components/script/dom/bindings/refcounted.rs:LiveDOMReferences",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "class:components/script/dom/bindings/refcounted.rs:TrustedReference",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "function:components/script/dom/bindings/refcounted.rs:addref",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "function:components/script/dom/bindings/refcounted.rs:addref",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "function:components/script/dom/bindings/refcounted.rs:trace_refcounted_objects",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "function:components/script/dom/bindings/refcounted.rs:trace_refcounted_objects",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "function:components/script/dom/bindings/refcounted.rs:remove_nulls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "function:components/script/dom/bindings/refcounted.rs:root",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/bindings/refcounted.rs",
+      "target": "function:components/script/dom/bindings/refcounted.rs:root",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

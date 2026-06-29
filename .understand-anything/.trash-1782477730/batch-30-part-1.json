@@ -1,0 +1,922 @@
+{
+  "nodes": [
+    {
+      "id": "file:ports/servoshell/backtrace.rs",
+      "type": "file",
+      "name": "backtrace.rs",
+      "filePath": "ports/servoshell/backtrace.rs",
+      "summary": "Provides low-level backtrace formatting and printing utilities for crash reporting, with platform-specific Windows path decoding and OpenHarmony support.",
+      "tags": [
+        "utility",
+        "debugging",
+        "crash-reporting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/crash_handler.rs",
+      "type": "file",
+      "name": "crash_handler.rs",
+      "filePath": "ports/servoshell/crash_handler.rs",
+      "summary": "Installs signal handlers (SIGSEGV, SIGILL, SIGIOT, SIGBUS) that print backtraces and safely re-raise signals or exit on crash.",
+      "tags": [
+        "crash-reporting",
+        "signal-handling",
+        "safety"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/desktop/accelerated_gl_media.rs",
+      "type": "file",
+      "name": "accelerated_gl_media.rs",
+      "filePath": "ports/servoshell/desktop/accelerated_gl_media.rs",
+      "summary": "Platform-conditional GL-accelerated media initialization, setting up EGL or X11 native displays and rendering contexts for hardware-accelerated video playback.",
+      "tags": [
+        "media",
+        "gl-acceleration",
+        "multimedia"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/desktop/app.rs",
+      "type": "file",
+      "name": "app.rs",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Core application lifecycle manager handling initialization, platform window creation, event loop pumping, and userscript loading for the Servo shell.",
+      "tags": [
+        "application",
+        "lifecycle",
+        "event-handler",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:ports/servoshell/desktop/cli.rs",
+      "type": "file",
+      "name": "cli.rs",
+      "filePath": "ports/servoshell/desktop/cli.rs",
+      "summary": "CLI entry point for the Servo shell binary that parses arguments, initializes crash handling, crypto, and tracing, and launches the headed or headless event loop.",
+      "tags": [
+        "entry-point",
+        "command-line",
+        "process"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/desktop/dialog.rs",
+      "type": "file",
+      "name": "dialog.rs",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Implements all embedder dialog types including file picker, alert, confirm, prompt, authentication, permission, device selection, select element, color picker, and context menu using egui.",
+      "tags": [
+        "dialog",
+        "ui",
+        "embedder-control",
+        "egui"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:ports/servoshell/backtrace.rs:print",
+      "type": "function",
+      "name": "print",
+      "filePath": "ports/servoshell/backtrace.rs",
+      "summary": "Function print in backtrace.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        17,
+        25
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/backtrace.rs:print_ohos",
+      "type": "function",
+      "name": "print_ohos",
+      "filePath": "ports/servoshell/backtrace.rs",
+      "summary": "Function print_ohos in backtrace.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        28,
+        36
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/backtrace.rs:fmt",
+      "type": "function",
+      "name": "fmt",
+      "filePath": "ports/servoshell/backtrace.rs",
+      "summary": "Function fmt in backtrace.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        44,
+        89
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/backtrace.rs:print_path",
+      "type": "function",
+      "name": "print_path",
+      "filePath": "ports/servoshell/backtrace.rs",
+      "summary": "Function print_path in backtrace.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        92,
+        116
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/crash_handler.rs:install",
+      "type": "function",
+      "name": "install",
+      "filePath": "ports/servoshell/crash_handler.rs",
+      "summary": "Function install in crash_handler.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        6,
+        6
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/crash_handler.rs:raise_signal_or_exit_with_error",
+      "type": "function",
+      "name": "raise_signal_or_exit_with_error",
+      "filePath": "ports/servoshell/crash_handler.rs",
+      "summary": "Function raise_signal_or_exit_with_error in crash_handler.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        61,
+        63
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/accelerated_gl_media.rs:setup_gl_accelerated_media",
+      "type": "function",
+      "name": "setup_gl_accelerated_media",
+      "filePath": "ports/servoshell/desktop/accelerated_gl_media.rs",
+      "summary": "Function setup_gl_accelerated_media in accelerated_gl_media.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        13,
+        13
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/accelerated_gl_media.rs:api",
+      "type": "function",
+      "name": "api",
+      "filePath": "ports/servoshell/desktop/accelerated_gl_media.rs",
+      "summary": "Function api in accelerated_gl_media.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        57,
+        71
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/app.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Function new in app.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        54,
+        79
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/app.rs:init",
+      "type": "function",
+      "name": "init",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Function init in app.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        82,
+        138
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/app.rs:create_platform_window",
+      "type": "function",
+      "name": "create_platform_window",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Function create_platform_window in app.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        141,
+        163
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/app.rs:pump_servo_event_loop",
+      "type": "function",
+      "name": "pump_servo_event_loop",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Function pump_servo_event_loop in app.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        165,
+        176
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/app.rs:window_event",
+      "type": "function",
+      "name": "window_event",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Function window_event in app.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        184,
+        214
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/app.rs:user_event",
+      "type": "function",
+      "name": "user_event",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Function user_event in app.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        216,
+        235
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/app.rs:load_userscripts",
+      "type": "function",
+      "name": "load_userscripts",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Function load_userscripts in app.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        238,
+        251
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/desktop/app.rs:AppState",
+      "type": "class",
+      "name": "AppState",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Class AppState in app.rs.",
+      "tags": [
+        "class"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/desktop/app.rs:App",
+      "type": "class",
+      "name": "App",
+      "filePath": "ports/servoshell/desktop/app.rs",
+      "summary": "Class App in app.rs.",
+      "tags": [
+        "class"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/desktop/cli.rs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "ports/servoshell/desktop/cli.rs",
+      "summary": "Function main in cli.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        12,
+        49
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:new_file_dialog",
+      "type": "function",
+      "name": "new_file_dialog",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function new_file_dialog in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        62,
+        83
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:new_simple_dialog",
+      "type": "function",
+      "name": "new_simple_dialog",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function new_simple_dialog in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        85,
+        91
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:new_authentication_dialog",
+      "type": "function",
+      "name": "new_authentication_dialog",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function new_authentication_dialog in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        93,
+        99
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:new_permission_request_dialog",
+      "type": "function",
+      "name": "new_permission_request_dialog",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function new_permission_request_dialog in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        101,
+        110
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:new_device_selection_dialog",
+      "type": "function",
+      "name": "new_device_selection_dialog",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function new_device_selection_dialog in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        112,
+        117
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:new_select_element_dialog",
+      "type": "function",
+      "name": "new_select_element_dialog",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function new_select_element_dialog in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        119,
+        127
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:new_color_picker_dialog",
+      "type": "function",
+      "name": "new_color_picker_dialog",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function new_color_picker_dialog in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        129,
+        142
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:update",
+      "type": "function",
+      "name": "update",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function update in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        145,
+        719
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:embedder_control_id",
+      "type": "function",
+      "name": "embedder_control_id",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function embedder_control_id in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        721,
+        732
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/desktop/dialog.rs:new_context_menu",
+      "type": "function",
+      "name": "new_context_menu",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Function new_context_menu in dialog.rs.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        734,
+        742
+      ]
+    },
+    {
+      "id": "class:ports/servoshell/desktop/dialog.rs:Dialog",
+      "type": "class",
+      "name": "Dialog",
+      "filePath": "ports/servoshell/desktop/dialog.rs",
+      "summary": "Class Dialog in dialog.rs.",
+      "tags": [
+        "class"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:ports/servoshell/backtrace.rs",
+      "target": "function:ports/servoshell/backtrace.rs:print",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/backtrace.rs",
+      "target": "function:ports/servoshell/backtrace.rs:print",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/backtrace.rs",
+      "target": "function:ports/servoshell/backtrace.rs:print_ohos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/backtrace.rs",
+      "target": "function:ports/servoshell/backtrace.rs:print_ohos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/backtrace.rs",
+      "target": "function:ports/servoshell/backtrace.rs:fmt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/backtrace.rs",
+      "target": "function:ports/servoshell/backtrace.rs:print_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/crash_handler.rs",
+      "target": "function:ports/servoshell/crash_handler.rs:install",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/crash_handler.rs",
+      "target": "function:ports/servoshell/crash_handler.rs:install",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/crash_handler.rs",
+      "target": "function:ports/servoshell/crash_handler.rs:raise_signal_or_exit_with_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/crash_handler.rs",
+      "target": "function:ports/servoshell/crash_handler.rs:raise_signal_or_exit_with_error",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/accelerated_gl_media.rs",
+      "target": "function:ports/servoshell/desktop/accelerated_gl_media.rs:setup_gl_accelerated_media",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/accelerated_gl_media.rs",
+      "target": "function:ports/servoshell/desktop/accelerated_gl_media.rs:setup_gl_accelerated_media",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/accelerated_gl_media.rs",
+      "target": "function:ports/servoshell/desktop/accelerated_gl_media.rs:api",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:init",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:create_platform_window",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:pump_servo_event_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:pump_servo_event_loop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:window_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:user_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "function:ports/servoshell/desktop/app.rs:load_userscripts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "class:ports/servoshell/desktop/app.rs:AppState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "class:ports/servoshell/desktop/app.rs:AppState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "class:ports/servoshell/desktop/app.rs:App",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/app.rs",
+      "target": "class:ports/servoshell/desktop/app.rs:App",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/cli.rs",
+      "target": "function:ports/servoshell/desktop/cli.rs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/cli.rs",
+      "target": "function:ports/servoshell/desktop/cli.rs:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_file_dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_file_dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_simple_dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_simple_dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_authentication_dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_authentication_dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_permission_request_dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_permission_request_dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_device_selection_dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_device_selection_dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_select_element_dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_select_element_dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_color_picker_dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_color_picker_dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:embedder_control_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:embedder_control_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_context_menu",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_context_menu",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "class:ports/servoshell/desktop/dialog.rs:Dialog",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/desktop/dialog.rs",
+      "target": "class:ports/servoshell/desktop/dialog.rs:Dialog",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:ports/servoshell/desktop/cli.rs:main",
+      "target": "function:ports/servoshell/crash_handler.rs:install",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:ports/servoshell/desktop/app.rs:init",
+      "target": "function:ports/servoshell/desktop/app.rs:create_platform_window",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:ports/servoshell/desktop/app.rs:init",
+      "target": "function:ports/servoshell/desktop/app.rs:load_userscripts",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:ports/servoshell/desktop/app.rs:create_platform_window",
+      "target": "function:ports/servoshell/desktop/headless_window.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:ports/servoshell/desktop/app.rs:create_platform_window",
+      "target": "function:ports/servoshell/desktop/headed_window.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:ports/servoshell/desktop/app.rs:pump_servo_event_loop",
+      "target": "function:ports/servoshell/desktop/app.rs:create_platform_window",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:ports/servoshell/desktop/dialog.rs:update",
+      "target": "function:ports/servoshell/desktop/dialog.rs:new_file_dialog",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:ports/servoshell/desktop/app.rs:window_event",
+      "target": "function:ports/servoshell/desktop/gui.rs:update",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

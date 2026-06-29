@@ -1,0 +1,3833 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/sizing.rs",
+      "type": "file",
+      "name": "sizing.rs",
+      "filePath": "components/layout/sizing.rs",
+      "summary": "Provides content sizing infrastructure: ContentSizes (min/max content), SizeConstraint, Sizes resolution, intrinsic sizing modes, inline content size computation, and preferred/max/min size resolution for CSS layout.",
+      "tags": [
+        "sizing",
+        "intrinsic-sizes",
+        "content-sizes",
+        "constraints"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:max",
+      "type": "function",
+      "name": "max",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        48,
+        53
+      ],
+      "summary": "Computes the maximum of two content sizes.",
+      "tags": [
+        "function",
+        "sizing",
+        "max"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:max_assign",
+      "type": "function",
+      "name": "max_assign",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        55,
+        57
+      ],
+      "summary": "max_assign operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:union",
+      "type": "function",
+      "name": "union",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        59,
+        64
+      ],
+      "summary": "union operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:union_assign",
+      "type": "function",
+      "name": "union_assign",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        66,
+        69
+      ],
+      "summary": "union_assign operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:map",
+      "type": "function",
+      "name": "map",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        71,
+        76
+      ],
+      "summary": "Maps the sides using a function.",
+      "tags": [
+        "function",
+        "geometry",
+        "mapping"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:shrink_to_fit",
+      "type": "function",
+      "name": "shrink_to_fit",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        111,
+        116
+      ],
+      "summary": "Computes the shrink-to-fit inline size from available space.",
+      "tags": [
+        "function",
+        "sizing",
+        "shrink-to-fit"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:outer_inline",
+      "type": "function",
+      "name": "outer_inline",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        129,
+        302
+      ],
+      "summary": "Computes the outer inline size for a CSS sizing mode.",
+      "tags": [
+        "function",
+        "sizing",
+        "outer-inline"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:is_initial",
+      "type": "function",
+      "name": "is_initial",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        367,
+        369
+      ],
+      "summary": "Checks if a size value is the initial value.",
+      "tags": [
+        "function",
+        "sizing",
+        "check"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:to_numeric",
+      "type": "function",
+      "name": "to_numeric",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        374,
+        379
+      ],
+      "summary": "Converts a size to a numeric value.",
+      "tags": [
+        "function",
+        "sizing",
+        "conversion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:map",
+      "type": "function",
+      "name": "map",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        382,
+        392
+      ],
+      "summary": "Maps the sides using a function.",
+      "tags": [
+        "function",
+        "geometry",
+        "mapping"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        396,
+        409
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        413,
+        426
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:to_percentage",
+      "type": "function",
+      "name": "to_percentage",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        431,
+        434
+      ],
+      "summary": "Converts a size to a percentage value.",
+      "tags": [
+        "function",
+        "sizing",
+        "conversion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve_percentages_for_preferred",
+      "type": "function",
+      "name": "resolve_percentages_for_preferred",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        441,
+        454
+      ],
+      "summary": "Resolves percentages for preferred values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve_percentages_for_max",
+      "type": "function",
+      "name": "resolve_percentages_for_max",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        461,
+        474
+      ],
+      "summary": "Resolves percentages for max values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:percentages_relative_to_basis",
+      "type": "function",
+      "name": "percentages_relative_to_basis",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        478,
+        486
+      ],
+      "summary": "Computes percentage values relative to a basis size.",
+      "tags": [
+        "function",
+        "sizing",
+        "percentage"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve_for_preferred",
+      "type": "function",
+      "name": "resolve_for_preferred",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        493,
+        513
+      ],
+      "summary": "Resolves for preferred values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve_for_min",
+      "type": "function",
+      "name": "resolve_for_min",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        518,
+        547
+      ],
+      "summary": "Resolves for min values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve_for_max",
+      "type": "function",
+      "name": "resolve_for_max",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        552,
+        566
+      ],
+      "summary": "Resolves for max values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:maybe_resolve_extrinsic",
+      "type": "function",
+      "name": "maybe_resolve_extrinsic",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        578,
+        588
+      ],
+      "summary": "Optionally resolves an extrinsic size constraint.",
+      "tags": [
+        "function",
+        "sizing",
+        "extrinsic"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        611,
+        616
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:is_definite",
+      "type": "function",
+      "name": "is_definite",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        619,
+        621
+      ],
+      "summary": "Definite-ness check and coercion for sizing constraints.",
+      "tags": [
+        "function",
+        "sizing",
+        "definite"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:to_definite",
+      "type": "function",
+      "name": "to_definite",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        624,
+        629
+      ],
+      "summary": "Definite-ness check and coercion for sizing constraints.",
+      "tags": [
+        "function",
+        "sizing",
+        "definite"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:definite_or_min",
+      "type": "function",
+      "name": "definite_or_min",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        632,
+        637
+      ],
+      "summary": "Definite-ness check and coercion for sizing constraints.",
+      "tags": [
+        "function",
+        "sizing",
+        "definite"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        658,
+        664
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve",
+      "type": "function",
+      "name": "resolve",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        668,
+        692
+      ],
+      "summary": "resolve operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve_each",
+      "type": "function",
+      "name": "resolve_each",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        699,
+        721
+      ],
+      "summary": "Resolves each values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve_extrinsic",
+      "type": "function",
+      "name": "resolve_extrinsic",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        729,
+        738
+      ],
+      "summary": "Resolves extrinsic values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve_each_extrinsic",
+      "type": "function",
+      "name": "resolve_each_extrinsic",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        750,
+        767
+      ],
+      "summary": "Resolves each extrinsic values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        788,
+        807
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:intrinsic",
+      "type": "function",
+      "name": "intrinsic",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        816,
+        821
+      ],
+      "summary": "Creates intrinsic sizing data with min and max content values.",
+      "tags": [
+        "function",
+        "sizing",
+        "intrinsic"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/sizing.rs:resolve",
+      "type": "function",
+      "name": "resolve",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        827,
+        841
+      ],
+      "summary": "resolve operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:IntrinsicSizingMode",
+      "type": "class",
+      "name": "IntrinsicSizingMode",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        25,
+        38
+      ],
+      "summary": "Enum representing intrinsic sizing mode (match-legacy or modern) for CSS sizing.",
+      "tags": [
+        "sizing",
+        "intrinsic-mode"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:ContentSizes",
+      "type": "class",
+      "name": "ContentSizes",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        41,
+        44
+      ],
+      "summary": "Tracks min-content and max-content inline sizes with union/max/shrink-to-fit operations for CSS intrinsic sizing.",
+      "tags": [
+        "content-sizing",
+        "intrinsic",
+        "min-max"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:InlineContentSizesResult",
+      "type": "class",
+      "name": "InlineContentSizesResult",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        305,
+        308
+      ],
+      "summary": "Result type for inline content size computation, containing min and max content sizes.",
+      "tags": [
+        "content-sizing",
+        "result-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:ComputeInlineContentSizes",
+      "type": "class",
+      "name": "ComputeInlineContentSizes",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        310,
+        330
+      ],
+      "summary": "Trait for computing inline content sizes of DOM elements.",
+      "tags": [
+        "trait",
+        "content-sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:Size",
+      "type": "class",
+      "name": "Size",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        335,
+        354
+      ],
+      "summary": "A size classification enum (preferred/min/max) for constraint resolution.",
+      "tags": [
+        "sizing",
+        "size-type",
+        "enum"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:SizeConstraint",
+      "type": "class",
+      "name": "SizeConstraint",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        594,
+        600
+      ],
+      "summary": "Represents CSS sizing constraints (preferred/min/max) with resolution logic against containing block size and intrinsic dimensions.",
+      "tags": [
+        "sizing",
+        "constraints",
+        "resolution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:Sizes",
+      "type": "class",
+      "name": "Sizes",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        647,
+        654
+      ],
+      "summary": "Container for preferred, min, and max sizing constraints with resolution methods.",
+      "tags": [
+        "sizing",
+        "constraints"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/sizing.rs:LazySize",
+      "type": "class",
+      "name": "LazySize",
+      "filePath": "components/layout/sizing.rs",
+      "lineRange": [
+        782,
+        785
+      ],
+      "summary": "Lazily-computed size value for deferred resolution.",
+      "tags": [
+        "sizing",
+        "lazy"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/style_ext.rs",
+      "type": "file",
+      "name": "style_ext.rs",
+      "filePath": "components/layout/style_ext.rs",
+      "summary": "Extends Servo computed styles with layout-specific methods: writing mode queries, box size accessors, overflow handling, transform processing, stacking context establishment, containing block creation, padding/border/margin calculations, and aspect ratio resolution.",
+      "tags": [
+        "style-extensions",
+        "css-properties",
+        "layout-style",
+        "overflow"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:display_inside",
+      "type": "function",
+      "name": "display_inside",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        66,
+        73
+      ],
+      "summary": "Determines the display type and box generation rules for this element.",
+      "tags": [
+        "function",
+        "display",
+        "box-generation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:used_value_for_contents",
+      "type": "function",
+      "name": "used_value_for_contents",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        75,
+        104
+      ],
+      "summary": "Determines the display type and box generation rules for this element.",
+      "tags": [
+        "function",
+        "display",
+        "box-generation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:display_inside",
+      "type": "function",
+      "name": "display_inside",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        140,
+        147
+      ],
+      "summary": "Determines the display type and box generation rules for this element.",
+      "tags": [
+        "function",
+        "display",
+        "box-generation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:zero",
+      "type": "function",
+      "name": "zero",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        162,
+        169
+      ],
+      "summary": "Creates a zero value for this type.",
+      "tags": [
+        "function",
+        "constructor",
+        "zero"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:sums_auto_is_zero",
+      "type": "function",
+      "name": "sums_auto_is_zero",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        171,
+        185
+      ],
+      "summary": "Checks if the sum of logical sides auto values is zero.",
+      "tags": [
+        "function",
+        "geometry",
+        "check"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:compute_dependent_size",
+      "type": "function",
+      "name": "compute_dependent_size",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        204,
+        222
+      ],
+      "summary": "Computes dependent size from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:from_logical_content_ratio",
+      "type": "function",
+      "name": "from_logical_content_ratio",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        224,
+        229
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        247,
+        249
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:from_border",
+      "type": "function",
+      "name": "from_border",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        251,
+        268
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:hidden",
+      "type": "function",
+      "name": "hidden",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        270,
+        272
+      ],
+      "summary": "Creates a PaddingBorderMargin with zero values.",
+      "tags": [
+        "function",
+        "geometry",
+        "conversion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:physical_box_offsets",
+      "type": "function",
+      "name": "physical_box_offsets",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        372,
+        391
+      ],
+      "summary": "Applies a positional offset or translation to the fragment geometry.",
+      "tags": [
+        "function",
+        "positioning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:box_size",
+      "type": "function",
+      "name": "box_size",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        397,
+        409
+      ],
+      "summary": "Gets the box size style value for layout.",
+      "tags": [
+        "function",
+        "style",
+        "box-sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:min_box_size",
+      "type": "function",
+      "name": "min_box_size",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        411,
+        423
+      ],
+      "summary": "Gets the min box_size style value for layout.",
+      "tags": [
+        "function",
+        "style",
+        "box-sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:max_box_size",
+      "type": "function",
+      "name": "max_box_size",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        425,
+        437
+      ],
+      "summary": "Gets the max box_size style value for layout.",
+      "tags": [
+        "function",
+        "style",
+        "box-sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:content_box_size_for_box_size",
+      "type": "function",
+      "name": "content_box_size_for_box_size",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        439,
+        453
+      ],
+      "summary": "Gets the content box size from box sizing style, accounting for box-sizing property.",
+      "tags": [
+        "function",
+        "style",
+        "content-sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:content_min_box_size_for_min_size",
+      "type": "function",
+      "name": "content_min_box_size_for_min_size",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        455,
+        468
+      ],
+      "summary": "Gets the content box size from box sizing style, accounting for box-sizing property.",
+      "tags": [
+        "function",
+        "style",
+        "content-sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:content_max_box_size_for_max_size",
+      "type": "function",
+      "name": "content_max_box_size_for_max_size",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        470,
+        484
+      ],
+      "summary": "Gets the content box size from box sizing style, accounting for box-sizing property.",
+      "tags": [
+        "function",
+        "style",
+        "content-sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:border_style_color",
+      "type": "function",
+      "name": "border_style_color",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        486,
+        495
+      ],
+      "summary": "Gets the border style and color for a given side.",
+      "tags": [
+        "function",
+        "border",
+        "style-color"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:physical_margin",
+      "type": "function",
+      "name": "physical_margin",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        497,
+        514
+      ],
+      "summary": "Converts logical margin values to physical margin values.",
+      "tags": [
+        "function",
+        "geometry",
+        "margin"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:is_transformable",
+      "type": "function",
+      "name": "is_transformable",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        540,
+        551
+      ],
+      "summary": "Checks if the element is transformable based on its display type.",
+      "tags": [
+        "function",
+        "transform",
+        "check"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:z_index_applies",
+      "type": "function",
+      "name": "z_index_applies",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        570,
+        588
+      ],
+      "summary": "Checks if the z-index property applies to this element.",
+      "tags": [
+        "function",
+        "z-index",
+        "stacking"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:effective_overflow",
+      "type": "function",
+      "name": "effective_overflow",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        604,
+        659
+      ],
+      "summary": "Computes the effective overflow behavior for this element.",
+      "tags": [
+        "function",
+        "overflow"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:used_transform_style",
+      "type": "function",
+      "name": "used_transform_style",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        663,
+        703
+      ],
+      "summary": "Determines the effective transform style for the element.",
+      "tags": [
+        "function",
+        "transform",
+        "style"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:establishes_block_formatting_context",
+      "type": "function",
+      "name": "establishes_block_formatting_context",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        711,
+        735
+      ],
+      "summary": "Determines whether this element establishes a new block formatting context.",
+      "tags": [
+        "function",
+        "bfc",
+        "formatting-context"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:establishes_stacking_context",
+      "type": "function",
+      "name": "establishes_stacking_context",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        744,
+        841
+      ],
+      "summary": "Determines whether this element establishes a new stacking context.",
+      "tags": [
+        "function",
+        "stacking-context"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:establishes_containing_block_for_absolute_descendants",
+      "type": "function",
+      "name": "establishes_containing_block_for_absolute_descendants",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        849,
+        870
+      ],
+      "summary": "Manages the containing block relationship for this fragment.",
+      "tags": [
+        "function",
+        "containing-block"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:establishes_containing_block_for_all_descendants",
+      "type": "function",
+      "name": "establishes_containing_block_for_all_descendants",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        876,
+        924
+      ],
+      "summary": "Manages the containing block relationship for this fragment.",
+      "tags": [
+        "function",
+        "containing-block"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:preferred_aspect_ratio",
+      "type": "function",
+      "name": "preferred_aspect_ratio",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        929,
+        992
+      ],
+      "summary": "Computes the preferred aspect ratio for this element based on CSS properties and natural dimensions.",
+      "tags": [
+        "function",
+        "aspect-ratio",
+        "sizing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:background_is_transparent",
+      "type": "function",
+      "name": "background_is_transparent",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        995,
+        1004
+      ],
+      "summary": "Checks if the background is fully transparent.",
+      "tags": [
+        "function",
+        "background",
+        "transparency"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:bidi_control_chars",
+      "type": "function",
+      "name": "bidi_control_chars",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1018,
+        1038
+      ],
+      "summary": "Gets the bidirectional control characters for text layout.",
+      "tags": [
+        "function",
+        "bidi",
+        "text"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:resolve_align_self",
+      "type": "function",
+      "name": "resolve_align_self",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1040,
+        1050
+      ],
+      "summary": "Resolves align self values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:depends_on_block_constraints_due_to_relative_positioning",
+      "type": "function",
+      "name": "depends_on_block_constraints_due_to_relative_positioning",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1052,
+        1069
+      ],
+      "summary": "Checks if sizing depends on block constraints due to relative positioning.",
+      "tags": [
+        "function",
+        "sizing",
+        "relative"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:overflow_direction",
+      "type": "function",
+      "name": "overflow_direction",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1072,
+        1086
+      ],
+      "summary": "overflow_direction operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:style",
+      "type": "function",
+      "name": "style",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1107,
+        1112
+      ],
+      "summary": "style operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:is_table",
+      "type": "function",
+      "name": "is_table",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1115,
+        1117
+      ],
+      "summary": "Checks if the element is a table element based on its display type.",
+      "tags": [
+        "function",
+        "display",
+        "table"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:content_box_sizes_and_padding_border_margin",
+      "type": "function",
+      "name": "content_box_sizes_and_padding_border_margin",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1119,
+        1187
+      ],
+      "summary": "Computes content box sizes and padding/border/margin for a box.",
+      "tags": [
+        "function",
+        "sizing",
+        "box-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:padding_border_margin",
+      "type": "function",
+      "name": "padding_border_margin",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1189,
+        1197
+      ],
+      "summary": "Computes the padding border_margin for this fragment.",
+      "tags": [
+        "function",
+        "geometry",
+        "padding_border_margin"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:padding_border_margin_with_writing_mode_and_containing_block_inline_size",
+      "type": "function",
+      "name": "padding_border_margin_with_writing_mode_and_containing_block_inline_size",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1199,
+        1221
+      ],
+      "summary": "Manages the containing block relationship for this fragment.",
+      "tags": [
+        "function",
+        "containing-block"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:padding",
+      "type": "function",
+      "name": "padding",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1223,
+        1242
+      ],
+      "summary": "Computes logical padding values from style.",
+      "tags": [
+        "function",
+        "style",
+        "padding"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:border_width",
+      "type": "function",
+      "name": "border_width",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1244,
+        1273
+      ],
+      "summary": "Computes border widths from style for each side.",
+      "tags": [
+        "function",
+        "style",
+        "border-width"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/style_ext.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1277,
+        1340
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:Display",
+      "type": "class",
+      "name": "Display",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        50,
+        54
+      ],
+      "summary": "Display type classification for box generation rules.",
+      "tags": [
+        "display",
+        "box-generation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:DisplayGeneratingBox",
+      "type": "class",
+      "name": "DisplayGeneratingBox",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        57,
+        64
+      ],
+      "summary": "Display value classification for whether a box generates a principal box, no box, or contents.",
+      "tags": [
+        "display",
+        "box-generation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:DisplayOutside",
+      "type": "class",
+      "name": "DisplayOutside",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        108,
+        111
+      ],
+      "summary": "Display outside value (block, inline, run-in) for CSS display property.",
+      "tags": [
+        "display",
+        "outside"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:DisplayInside",
+      "type": "class",
+      "name": "DisplayInside",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        114,
+        122
+      ],
+      "summary": "Display inside value (flow, flex, grid, table, ruby) for CSS display property.",
+      "tags": [
+        "display",
+        "inside"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:DisplayLayoutInternal",
+      "type": "class",
+      "name": "DisplayLayoutInternal",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        127,
+        136
+      ],
+      "summary": "Display layout-internal values for table parts and ruby.",
+      "tags": [
+        "display",
+        "layout-internal",
+        "table"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:PaddingBorderMargin",
+      "type": "class",
+      "name": "PaddingBorderMargin",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        152,
+        159
+      ],
+      "summary": "Represents padding, border, and margin values for a box in logical coordinates.",
+      "tags": [
+        "padding",
+        "border",
+        "margin",
+        "logical"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:AspectRatio",
+      "type": "class",
+      "name": "AspectRatio",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        192,
+        200
+      ],
+      "summary": "Represents a preferred aspect ratio for sizing, combining CSS aspect-ratio property with intrinsic ratio.",
+      "tags": [
+        "aspect-ratio",
+        "sizing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:ContentBoxSizesAndPBM",
+      "type": "class",
+      "name": "ContentBoxSizesAndPBM",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        233,
+        238
+      ],
+      "summary": "Aggregates content box sizes and padding/border/margin for a layout box.",
+      "tags": [
+        "sizing",
+        "box-model",
+        "content-box"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:BorderStyleColor",
+      "type": "class",
+      "name": "BorderStyleColor",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        241,
+        244
+      ],
+      "summary": "Represents a border side with its style and color for table border rendering.",
+      "tags": [
+        "border",
+        "style",
+        "color"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:OverflowDirection",
+      "type": "class",
+      "name": "OverflowDirection",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        284,
+        289
+      ],
+      "summary": "Represents the overflow direction (horizontal/vertical/both/none) for scrollable containers.",
+      "tags": [
+        "overflow",
+        "direction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:ComputedValuesExt",
+      "type": "class",
+      "name": "ComputedValuesExt",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        291,
+        369
+      ],
+      "summary": "Extension trait on Servo ComputedValues providing layout-specific methods for accessing box model properties, writing mode, overflow, transforms, and stacking context establishment.",
+      "tags": [
+        "style",
+        "extension-trait",
+        "computed-values"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:LayoutStyle",
+      "type": "class",
+      "name": "LayoutStyle",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1100,
+        1103
+      ],
+      "summary": "Represents the computed style for a layout box, providing access to layout-relevant style properties.",
+      "tags": [
+        "style",
+        "layout",
+        "computed-values"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:Clamp",
+      "type": "class",
+      "name": "Clamp",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1343,
+        1346
+      ],
+      "summary": "Utility for clamping values within min/max constraints during size resolution.",
+      "tags": [
+        "utility",
+        "clamping"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/style_ext.rs:TransformExt",
+      "type": "class",
+      "name": "TransformExt",
+      "filePath": "components/layout/style_ext.rs",
+      "lineRange": [
+        1361,
+        1363
+      ],
+      "summary": "Extension trait for transform matrix calculations on layout boxes.",
+      "tags": [
+        "transform",
+        "extension-trait"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/table/construct.rs",
+      "type": "file",
+      "name": "construct.rs",
+      "filePath": "components/layout/table/construct.rs",
+      "summary": "Implements anonymous table object construction: walks the DOM tree to build table structure with rows, cells, columns, and column groups, handling rowspan/colspan and creating anonymous wrappers as needed per the CSS table model.",
+      "tags": [
+        "table",
+        "anonymous-objects",
+        "construct",
+        "rowspan-colspan"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:remove_whitespace_only",
+      "type": "function",
+      "name": "remove_whitespace_only",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        75,
+        93
+      ],
+      "summary": "Manages anonymous table object construction and whitespace handling.",
+      "tags": [
+        "function",
+        "table",
+        "anonymous"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:construct",
+      "type": "function",
+      "name": "construct",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        97,
+        107
+      ],
+      "summary": "Constructs the box tree or table structure from DOM elements.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:construct_anonymous",
+      "type": "function",
+      "name": "construct_anonymous",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        109,
+        158
+      ],
+      "summary": "Manages anonymous table object construction and whitespace handling.",
+      "tags": [
+        "function",
+        "table",
+        "anonymous"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:push_new_slot_to_last_row",
+      "type": "function",
+      "name": "push_new_slot_to_last_row",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        161,
+        171
+      ],
+      "summary": "Manages anonymous table object construction and whitespace handling.",
+      "tags": [
+        "function",
+        "table",
+        "anonymous"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:resolve_slot_at",
+      "type": "function",
+      "name": "resolve_slot_at",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        178,
+        197
+      ],
+      "summary": "Resolves slot at values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:push_spanned",
+      "type": "function",
+      "name": "push_spanned",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        202,
+        214
+      ],
+      "summary": "Pushes a spanned cell into the table grid for rowspan/colspan handling.",
+      "tags": [
+        "function",
+        "table",
+        "spanning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        234,
+        249
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:new_for_tests",
+      "type": "function",
+      "name": "new_for_tests",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        251,
+        260
+      ],
+      "summary": "new_for_tests operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:last_row_index_in_row_group_at_row_n",
+      "type": "function",
+      "name": "last_row_index_in_row_group_at_row_n",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        262,
+        273
+      ],
+      "summary": "last_row_index_in_row_group_at_row_n operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        275,
+        281
+      ],
+      "summary": "Finalizes the construction of a table structure element.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:reorder_first_thead_and_tfoot",
+      "type": "function",
+      "name": "reorder_first_thead_and_tfoot",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        309,
+        337
+      ],
+      "summary": "Manages table row group ordering and track range regeneration.",
+      "tags": [
+        "function",
+        "table",
+        "row-group"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:regenerate_track_ranges",
+      "type": "function",
+      "name": "regenerate_track_ranges",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        339,
+        373
+      ],
+      "summary": "Manages table row group ordering and track range regeneration.",
+      "tags": [
+        "function",
+        "table",
+        "row-group"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:move_row_group_to_front",
+      "type": "function",
+      "name": "move_row_group_to_front",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        375,
+        413
+      ],
+      "summary": "Manages table row group ordering and track range regeneration.",
+      "tags": [
+        "function",
+        "table",
+        "row-group"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:move_row_group_to_end",
+      "type": "function",
+      "name": "move_row_group_to_end",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        415,
+        458
+      ],
+      "summary": "Manages table row group ordering and track range regeneration.",
+      "tags": [
+        "function",
+        "table",
+        "row-group"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:do_final_rowspan_calculation",
+      "type": "function",
+      "name": "do_final_rowspan_calculation",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        463,
+        481
+      ],
+      "summary": "Manages table row group ordering and track range regeneration.",
+      "tags": [
+        "function",
+        "table",
+        "row-group"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:start_row",
+      "type": "function",
+      "name": "start_row",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        498,
+        502
+      ],
+      "summary": "Gets the start or end row index for this slot in the table grid.",
+      "tags": [
+        "function",
+        "table",
+        "row"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:end_row",
+      "type": "function",
+      "name": "end_row",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        504,
+        522
+      ],
+      "summary": "Gets the start or end row index for this slot in the table grid.",
+      "tags": [
+        "function",
+        "table",
+        "row"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:create_spanned_slot_based_on_cell_above",
+      "type": "function",
+      "name": "create_spanned_slot_based_on_cell_above",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        529,
+        548
+      ],
+      "summary": "Creates table grid slots for spanned cells during construction.",
+      "tags": [
+        "function",
+        "table",
+        "spanning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:create_slots_for_cells_above_with_rowspan",
+      "type": "function",
+      "name": "create_slots_for_cells_above_with_rowspan",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        559,
+        584
+      ],
+      "summary": "Creates table grid slots for spanned cells during construction.",
+      "tags": [
+        "function",
+        "table",
+        "spanning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:add_cell",
+      "type": "function",
+      "name": "add_cell",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        589,
+        664
+      ],
+      "summary": "Adds a cell to the table builder with spanning and slot assignment.",
+      "tags": [
+        "function",
+        "table",
+        "cell-placement"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        686,
+        705
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        707,
+        710
+      ],
+      "summary": "Finalizes the construction of a table structure element.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:finish_anonymous_row_if_needed",
+      "type": "function",
+      "name": "finish_anonymous_row_if_needed",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        712,
+        764
+      ],
+      "summary": "Finalizes anonymous table rows or cells during construction.",
+      "tags": [
+        "function",
+        "table",
+        "anonymous"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:handle_element",
+      "type": "function",
+      "name": "handle_element",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        794,
+        967
+      ],
+      "summary": "Processes a DOM element during table structure construction.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        978,
+        994
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        996,
+        1000
+      ],
+      "summary": "Finalizes the construction of a table structure element.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:finish_anonymous_row_if_needed",
+      "type": "function",
+      "name": "finish_anonymous_row_if_needed",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1002,
+        1060
+      ],
+      "summary": "Finalizes anonymous table rows or cells during construction.",
+      "tags": [
+        "function",
+        "table",
+        "anonymous"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:handle_element",
+      "type": "function",
+      "name": "handle_element",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1079,
+        1120
+      ],
+      "summary": "Processes a DOM element during table structure construction.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1137,
+        1150
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1152,
+        1155
+      ],
+      "summary": "Finalizes the construction of a table structure element.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:finish_current_anonymous_cell_if_needed",
+      "type": "function",
+      "name": "finish_current_anonymous_cell_if_needed",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1157,
+        1218
+      ],
+      "summary": "Finalizes anonymous table rows or cells during construction.",
+      "tags": [
+        "function",
+        "table",
+        "anonymous"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:handle_element",
+      "type": "function",
+      "name": "handle_element",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1238,
+        1323
+      ],
+      "summary": "Processes a DOM element during table structure construction.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:handle_element",
+      "type": "function",
+      "name": "handle_element",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1335,
+        1364
+      ],
+      "summary": "Processes a DOM element during table structure construction.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/construct.rs:add_column",
+      "type": "function",
+      "name": "add_column",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1379,
+        1409
+      ],
+      "summary": "Adds a column to the table column group builder.",
+      "tags": [
+        "function",
+        "table",
+        "column"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/table/construct.rs:ResolvedSlotAndLocation",
+      "type": "class",
+      "name": "ResolvedSlotAndLocation",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        37,
+        40
+      ],
+      "summary": "Resolved grid slot position and location during table construction.",
+      "tags": [
+        "table",
+        "slot",
+        "construction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/construct.rs:AnonymousTableContent",
+      "type": "class",
+      "name": "AnonymousTableContent",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        52,
+        62
+      ],
+      "summary": "Tracks anonymous table content during table structure construction.",
+      "tags": [
+        "table",
+        "anonymous",
+        "construction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/construct.rs:TableBuilder",
+      "type": "class",
+      "name": "TableBuilder",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        217,
+        231
+      ],
+      "summary": "Builds the table structure from DOM elements, creating anonymous table objects as needed, managing row groups, cells, columns, and spanning.",
+      "tags": [
+        "table",
+        "builder",
+        "anonymous"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/construct.rs:TableBuilderTraversal",
+      "type": "class",
+      "name": "TableBuilderTraversal",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        667,
+        683
+      ],
+      "summary": "DOM traversal state for building table structure from child elements.",
+      "tags": [
+        "table",
+        "dom-traversal",
+        "construction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/construct.rs:TableColumnGroupBuilder",
+      "type": "class",
+      "name": "TableColumnGroupBuilder",
+      "filePath": "components/layout/table/construct.rs",
+      "lineRange": [
+        1326,
+        1329
+      ],
+      "summary": "Builds column group and column definitions during table construction.",
+      "tags": [
+        "table",
+        "column-group",
+        "construction"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:max",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:max",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:max_assign",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:max_assign",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:union",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:union",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:union_assign",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:union_assign",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:map",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:shrink_to_fit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:shrink_to_fit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:outer_inline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:outer_inline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:is_initial",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:is_initial",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:to_numeric",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:to_numeric",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:map",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:to_percentage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:to_percentage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_percentages_for_preferred",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_percentages_for_preferred",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_percentages_for_max",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_percentages_for_max",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:percentages_relative_to_basis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:percentages_relative_to_basis",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_for_preferred",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_for_preferred",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_for_min",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_for_min",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_for_max",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_for_max",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:maybe_resolve_extrinsic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:maybe_resolve_extrinsic",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:is_definite",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:is_definite",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:to_definite",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:to_definite",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:definite_or_min",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:definite_or_min",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_each",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_each",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_extrinsic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_extrinsic",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_each_extrinsic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve_each_extrinsic",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:intrinsic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:intrinsic",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "function:components/layout/sizing.rs:resolve",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:IntrinsicSizingMode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:IntrinsicSizingMode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:ContentSizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:ContentSizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:InlineContentSizesResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:InlineContentSizesResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:ComputeInlineContentSizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:ComputeInlineContentSizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:Size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:Size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:SizeConstraint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:SizeConstraint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:Sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:Sizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:LazySize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/sizing.rs",
+      "target": "class:components/layout/sizing.rs:LazySize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:display_inside",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:display_inside",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:used_value_for_contents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:used_value_for_contents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:display_inside",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:display_inside",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:zero",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:zero",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:sums_auto_is_zero",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:sums_auto_is_zero",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:compute_dependent_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:compute_dependent_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:from_logical_content_ratio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:from_logical_content_ratio",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:from_border",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:from_border",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:hidden",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:hidden",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:physical_box_offsets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:box_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:min_box_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:max_box_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:content_box_size_for_box_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:content_min_box_size_for_min_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:content_max_box_size_for_max_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:border_style_color",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:physical_margin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:is_transformable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:z_index_applies",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:effective_overflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:used_transform_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:establishes_block_formatting_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:establishes_stacking_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:establishes_containing_block_for_absolute_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:establishes_containing_block_for_all_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:preferred_aspect_ratio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:background_is_transparent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:bidi_control_chars",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:resolve_align_self",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:depends_on_block_constraints_due_to_relative_positioning",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:overflow_direction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:is_table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:is_table",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:content_box_sizes_and_padding_border_margin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:content_box_sizes_and_padding_border_margin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:padding_border_margin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:padding_border_margin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:padding_border_margin_with_writing_mode_and_containing_block_inline_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:padding_border_margin_with_writing_mode_and_containing_block_inline_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:padding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:padding",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:border_width",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:border_width",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "function:components/layout/style_ext.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:Display",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:Display",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:DisplayGeneratingBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:DisplayGeneratingBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:DisplayOutside",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:DisplayOutside",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:DisplayInside",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:DisplayInside",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:DisplayLayoutInternal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:DisplayLayoutInternal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:PaddingBorderMargin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:PaddingBorderMargin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:AspectRatio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:AspectRatio",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:ContentBoxSizesAndPBM",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:ContentBoxSizesAndPBM",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:BorderStyleColor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:BorderStyleColor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:OverflowDirection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:OverflowDirection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:ComputedValuesExt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:ComputedValuesExt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:LayoutStyle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:LayoutStyle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:Clamp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:Clamp",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:TransformExt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/style_ext.rs",
+      "target": "class:components/layout/style_ext.rs:TransformExt",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:remove_whitespace_only",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:construct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:construct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:construct_anonymous",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:construct_anonymous",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:push_new_slot_to_last_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:resolve_slot_at",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:resolve_slot_at",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:push_spanned",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:push_spanned",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new_for_tests",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new_for_tests",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:last_row_index_in_row_group_at_row_n",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:last_row_index_in_row_group_at_row_n",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:reorder_first_thead_and_tfoot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:regenerate_track_ranges",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:move_row_group_to_front",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:move_row_group_to_end",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:do_final_rowspan_calculation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:start_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:start_row",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:end_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:end_row",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:create_spanned_slot_based_on_cell_above",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:create_slots_for_cells_above_with_rowspan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:add_cell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:add_cell",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish_anonymous_row_if_needed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:handle_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish_anonymous_row_if_needed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:handle_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:finish_current_anonymous_cell_if_needed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:handle_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:handle_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "function:components/layout/table/construct.rs:add_column",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:ResolvedSlotAndLocation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:ResolvedSlotAndLocation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:AnonymousTableContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:AnonymousTableContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:TableBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:TableBuilder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:TableBuilderTraversal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:TableBuilderTraversal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/construct.rs",
+      "target": "class:components/layout/table/construct.rs:TableColumnGroupBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

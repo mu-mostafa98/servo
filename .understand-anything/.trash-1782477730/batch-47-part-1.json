@@ -1,0 +1,1178 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "type": "file",
+      "name": "idbcursor.rs",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "summary": "Implements the IDBCursor DOM interface for iterating over IndexedDB object stores and indexes, with support for four cursor directions and key range filtering.",
+      "tags": [
+        "dom-interface",
+        "indexeddb",
+        "cursor",
+        "data-access"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Implements the W3C IndexedDB-3 cursor iteration algorithm with lazy-computed closures for direction-specific filtering."
+    },
+    {
+      "id": "class:components/script/dom/indexeddb/idbcursor.rs:ObjectStoreOrIndex",
+      "type": "class",
+      "name": "ObjectStoreOrIndex",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        34,
+        37
+      ],
+      "summary": "Enum representing the source of a cursor, which can be either an IDBObjectStore or an IDBIndex.",
+      "tags": [
+        "enum",
+        "cursor-source",
+        "union-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/indexeddb/idbcursor.rs:IDBCursor",
+      "type": "class",
+      "name": "IDBCursor",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        40,
+        75
+      ],
+      "summary": "DOM struct representing a cursor for iterating over records in an IndexedDB object store or index, tracking position, direction, and cached key/value state.",
+      "tags": [
+        "dom-struct",
+        "cursor",
+        "indexeddb-core"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/indexeddb/idbcursor.rs:IterationParam",
+      "type": "class",
+      "name": "IterationParam",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        252,
+        257
+      ],
+      "summary": "Parameter struct for the cursor iteration algorithm, carrying the cursor reference, optional key/primary key overrides, and count limit.",
+      "tags": [
+        "struct",
+        "iteration-parameter"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbcursor.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        79,
+        103
+      ],
+      "summary": "Constructs the inherited IDBCursor fields with reflector, transaction reference, range, direction, position, and key state.",
+      "tags": [
+        "constructor",
+        "dom-init"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbcursor.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        107,
+        129
+      ],
+      "summary": "Public constructor that reflects a new IDBCursor DOM object into the JS context.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbcursor.rs:Source",
+      "type": "function",
+      "name": "Source",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        177,
+        186
+      ],
+      "summary": "Returns the cursor source as either an IDBObjectStore or IDBIndex, implementing the IDBCursor.source getter.",
+      "tags": [
+        "getter",
+        "cursor-source"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbcursor.rs:Key",
+      "type": "function",
+      "name": "Key",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        194,
+        214
+      ],
+      "summary": "Returns the cursor current key as a JS value, using a cached copy to preserve object identity across inspections.",
+      "tags": [
+        "getter",
+        "key-access",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbcursor.rs:PrimaryKey",
+      "type": "function",
+      "name": "PrimaryKey",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        217,
+        239
+      ],
+      "summary": "Returns the cursor current primary key as a JS value, with caching for object identity.",
+      "tags": [
+        "getter",
+        "primary-key",
+        "caching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbcursor.rs:iterate_cursor",
+      "type": "function",
+      "name": "iterate_cursor",
+      "filePath": "components/script/dom/indexeddb/idbcursor.rs",
+      "lineRange": [
+        266,
+        552
+      ],
+      "summary": "Implements the full W3C IndexedDB-3 cursor iteration algorithm supporting all four directions with key range matching, position tracking, and structured clone deserialization.",
+      "tags": [
+        "core-algorithm",
+        "iteration",
+        "key-range",
+        "direction"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Implements the full 15-step iteration algorithm from the spec with lazy requirement closures."
+    },
+    {
+      "id": "file:components/script/dom/indexeddb/idbcursorwithvalue.rs",
+      "type": "file",
+      "name": "idbcursorwithvalue.rs",
+      "filePath": "components/script/dom/indexeddb/idbcursorwithvalue.rs",
+      "summary": "Implements the IDBCursorWithValue DOM interface, extending IDBCursor to provide access to the current value at the cursor position.",
+      "tags": [
+        "dom-interface",
+        "indexeddb",
+        "cursor",
+        "value-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/indexeddb/idbcursorwithvalue.rs:IDBCursorWithValue",
+      "type": "class",
+      "name": "IDBCursorWithValue",
+      "filePath": "components/script/dom/indexeddb/idbcursorwithvalue.rs",
+      "lineRange": [
+        19,
+        21
+      ],
+      "summary": "DOM struct extending IDBCursor to expose the current value at the cursor position via the value getter.",
+      "tags": [
+        "dom-struct",
+        "cursor",
+        "value"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "type": "file",
+      "name": "idbdatabase.rs",
+      "filePath": "components/script/dom/indexeddb/idbdatabase.rs",
+      "summary": "Implements the IDBDatabase DOM interface for managing IndexedDB database connections, object stores, transactions, and version change events.",
+      "tags": [
+        "dom-interface",
+        "indexeddb",
+        "database",
+        "transaction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/indexeddb/idbdatabase.rs:IDBDatabase",
+      "type": "class",
+      "name": "IDBDatabase",
+      "filePath": "components/script/dom/indexeddb/idbdatabase.rs",
+      "lineRange": [
+        36,
+        54
+      ],
+      "summary": "DOM struct representing an IndexedDB database connection, holding the database name, version, object store names, and upgrade transaction state.",
+      "tags": [
+        "dom-struct",
+        "database",
+        "connection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbdatabase.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/indexeddb/idbdatabase.rs",
+      "lineRange": [
+        76,
+        94
+      ],
+      "summary": "Public constructor that reflects a new IDBDatabase DOM object with name, id, version, and object store names.",
+      "tags": [
+        "constructor",
+        "dom-reflection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbdatabase.rs:dispatch_versionchange",
+      "type": "function",
+      "name": "dispatch_versionchange",
+      "filePath": "components/script/dom/indexeddb/idbdatabase.rs",
+      "lineRange": [
+        164,
+        179
+      ],
+      "summary": "Dispatches a versionchange event on the database connection, used when another tab opens the same database with a newer version.",
+      "tags": [
+        "event-dispatch",
+        "version-change"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbdatabase.rs:Transaction",
+      "type": "function",
+      "name": "Transaction",
+      "filePath": "components/script/dom/indexeddb/idbdatabase.rs",
+      "lineRange": [
+        184,
+        251
+      ],
+      "summary": "Creates a new IDBTransaction on this database with the given store names, mode, and durability options, checking for pending upgrades and close state.",
+      "tags": [
+        "api-method",
+        "transaction-creation",
+        "scope-validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbdatabase.rs:CreateObjectStore",
+      "type": "function",
+      "name": "CreateObjectStore",
+      "filePath": "components/script/dom/indexeddb/idbdatabase.rs",
+      "lineRange": [
+        254,
+        363
+      ],
+      "summary": "Creates a new object store in the database during an upgrade transaction, validating key path, auto-increment, and constraint rules before issuing a backend sync operation.",
+      "tags": [
+        "api-method",
+        "object-store-creation",
+        "upgrade",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbdatabase.rs:DeleteObjectStore",
+      "type": "function",
+      "name": "DeleteObjectStore",
+      "filePath": "components/script/dom/indexeddb/idbdatabase.rs",
+      "lineRange": [
+        366,
+        415
+      ],
+      "summary": "Deletes an object store from the database during an upgrade transaction, validating state and issuing a backend delete operation.",
+      "tags": [
+        "api-method",
+        "object-store-deletion",
+        "upgrade"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbdatabase.rs:Close",
+      "type": "function",
+      "name": "Close",
+      "filePath": "components/script/dom/indexeddb/idbdatabase.rs",
+      "lineRange": [
+        433,
+        449
+      ],
+      "summary": "Closes the database connection by setting the close-pending flag and issuing a backend close operation.",
+      "tags": [
+        "api-method",
+        "connection-close"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "type": "file",
+      "name": "idbfactory.rs",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "summary": "Implements the IDBFactory DOM interface for opening, deleting, and enumerating IndexedDB databases, managing connections and transaction lifecycle.",
+      "tags": [
+        "dom-interface",
+        "indexeddb",
+        "factory",
+        "connection-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/indexeddb/idbfactory.rs:IDBFactory",
+      "type": "class",
+      "name": "IDBFactory",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        45,
+        60
+      ],
+      "summary": "DOM struct holding open database connections and active IndexedDB transactions, with a callback channel to the storage backend.",
+      "tags": [
+        "dom-struct",
+        "factory",
+        "connection-pool"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:register_indexeddb_transaction",
+      "type": "function",
+      "name": "register_indexeddb_transaction",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        72,
+        80
+      ],
+      "summary": "Registers a transaction in the factory transactions map, keyed by database name, and marks it as registered in the global scope.",
+      "tags": [
+        "transaction-registration",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:cleanup_indexeddb_transactions",
+      "type": "function",
+      "name": "cleanup_indexeddb_transactions",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        94,
+        158
+      ],
+      "summary": "Deactivates script-created transactions at microtask checkpoints per the HTML spec, prunes finished transactions, and triggers auto-commits.",
+      "tags": [
+        "cleanup",
+        "microtask",
+        "transaction-lifecycle"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:maybe_commit_txn",
+      "type": "function",
+      "name": "maybe_commit_txn",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        160,
+        176
+      ],
+      "summary": "Attempts to commit a specific transaction by database name and serial number.",
+      "tags": [
+        "commit",
+        "transaction-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:clear_open_request_transaction_for_txn",
+      "type": "function",
+      "name": "clear_open_request_transaction_for_txn",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        180,
+        198
+      ],
+      "summary": "Clears the upgrade transaction reference from the IDBOpenDBRequest associated with a given transaction.",
+      "tags": [
+        "cleanup",
+        "upgrade-transaction"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:get_or_setup_callback",
+      "type": "function",
+      "name": "get_or_setup_callback",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        205,
+        234
+      ],
+      "summary": "Lazily initializes the GenericCallback channel to the storage backend for receiving connection messages, queueing database tasks on the event loop.",
+      "tags": [
+        "callback-setup",
+        "backend-communication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:handle_connection_message",
+      "type": "function",
+      "name": "handle_connection_message",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        258,
+        393
+      ],
+      "summary": "Dispatches incoming connection messages from the storage backend, handling connection establishment, upgrades, version changes, blocking, and errors.",
+      "tags": [
+        "message-handler",
+        "connection-lifecycle",
+        "state-machine"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:dispatch_error",
+      "type": "function",
+      "name": "dispatch_error",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        397,
+        449
+      ],
+      "summary": "Dispatches an error event on an IDBOpenDBRequest with the appropriate DOMException, clearing the result and transaction references.",
+      "tags": [
+        "error-handling",
+        "event-dispatch"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:open_database",
+      "type": "function",
+      "name": "open_database",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        452,
+        492
+      ],
+      "summary": "Initiates the parallel steps for opening a database connection by sending a SyncOperation to the storage backend with the callback channel.",
+      "tags": [
+        "database-open",
+        "parallel-operation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:abort_pending_upgrades",
+      "type": "function",
+      "name": "abort_pending_upgrades",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        494,
+        522
+      ],
+      "summary": "Aborts all pending upgrade transactions by sending a SyncOperation to the storage backend.",
+      "tags": [
+        "abort",
+        "upgrade",
+        "cleanup"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:Open",
+      "type": "function",
+      "name": "Open",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        552,
+        592
+      ],
+      "summary": "Implements IDBFactory.open() with version validation, storage key obtainment, local storage bottle map setup, and backend parallel open operation.",
+      "tags": [
+        "api-method",
+        "database-open",
+        "validation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:DeleteDatabase",
+      "type": "function",
+      "name": "DeleteDatabase",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        595,
+        627
+      ],
+      "summary": "Implements IDBFactory.deleteDatabase() by sending a delete operation to the storage backend with an open request and callback.",
+      "tags": [
+        "api-method",
+        "database-delete"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:Databases",
+      "type": "function",
+      "name": "Databases",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        630,
+        701
+      ],
+      "summary": "Implements IDBFactory.databases() returning a Promise that resolves with the list of available databases from the storage backend.",
+      "tags": [
+        "api-method",
+        "database-listing",
+        "promise"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbfactory.rs:Cmp",
+      "type": "function",
+      "name": "Cmp",
+      "filePath": "components/script/dom/indexeddb/idbfactory.rs",
+      "lineRange": [
+        704,
+        717
+      ],
+      "summary": "Implements IDBFactory.cmp() comparing two IndexedDB keys and returning -1, 0, or 1 based on their sort order.",
+      "tags": [
+        "api-method",
+        "key-comparison"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/indexeddb/idbindex.rs",
+      "type": "file",
+      "name": "idbindex.rs",
+      "filePath": "components/script/dom/indexeddb/idbindex.rs",
+      "summary": "Implements the IDBIndex DOM interface providing metadata access for an index within an IndexedDB object store, including its name, key path, uniqueness, and multi-entry flags.",
+      "tags": [
+        "dom-interface",
+        "indexeddb",
+        "index",
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/indexeddb/idbindex.rs:IDBIndex",
+      "type": "class",
+      "name": "IDBIndex",
+      "filePath": "components/script/dom/indexeddb/idbindex.rs",
+      "lineRange": [
+        19,
+        26
+      ],
+      "summary": "DOM struct representing an index in an IndexedDB object store, carrying its name, key path, multi-entry and unique flags.",
+      "tags": [
+        "dom-struct",
+        "index",
+        "metadata"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/indexeddb/idbkeyrange.rs",
+      "type": "file",
+      "name": "idbkeyrange.rs",
+      "filePath": "components/script/dom/indexeddb/idbkeyrange.rs",
+      "summary": "Implements the IDBKeyRange DOM interface for defining a range of IndexedDB keys with upper and lower bounds, including static factory methods and inclusion testing.",
+      "tags": [
+        "dom-interface",
+        "indexeddb",
+        "key-range",
+        "bound"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/indexeddb/idbkeyrange.rs:IDBKeyRange",
+      "type": "class",
+      "name": "IDBKeyRange",
+      "filePath": "components/script/dom/indexeddb/idbkeyrange.rs",
+      "lineRange": [
+        19,
+        23
+      ],
+      "summary": "DOM struct wrapping an IndexedDBKeyRange value with lower/upper bounds and open flags.",
+      "tags": [
+        "dom-struct",
+        "key-range",
+        "bound"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbkeyrange.rs:Only",
+      "type": "function",
+      "name": "Only",
+      "filePath": "components/script/dom/indexeddb/idbkeyrange.rs",
+      "lineRange": [
+        72,
+        86
+      ],
+      "summary": "Static factory creating an IDBKeyRange containing only a single key value.",
+      "tags": [
+        "static-method",
+        "factory",
+        "single-key"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbkeyrange.rs:LowerBound",
+      "type": "function",
+      "name": "LowerBound",
+      "filePath": "components/script/dom/indexeddb/idbkeyrange.rs",
+      "lineRange": [
+        89,
+        104
+      ],
+      "summary": "Static factory creating an IDBKeyRange with a lower bound and optional open flag.",
+      "tags": [
+        "static-method",
+        "factory",
+        "lower-bound"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbkeyrange.rs:UpperBound",
+      "type": "function",
+      "name": "UpperBound",
+      "filePath": "components/script/dom/indexeddb/idbkeyrange.rs",
+      "lineRange": [
+        107,
+        123
+      ],
+      "summary": "Static factory creating an IDBKeyRange with an upper bound and optional open flag.",
+      "tags": [
+        "static-method",
+        "factory",
+        "upper-bound"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/indexeddb/idbkeyrange.rs:Bound",
+      "type": "function",
+      "name": "Bound",
+      "filePath": "components/script/dom/indexeddb/idbkeyrange.rs",
+      "lineRange": [
+        126,
+        156
+      ],
+      "summary": "Static factory creating an IDBKeyRange with both lower and upper bounds, validating that the lower bound does not exceed the upper bound.",
+      "tags": [
+        "static-method",
+        "factory",
+        "range",
+        "validation"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "class:components/script/dom/indexeddb/idbcursor.rs:ObjectStoreOrIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "class:components/script/dom/indexeddb/idbcursor.rs:IDBCursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "class:components/script/dom/indexeddb/idbcursor.rs:IterationParam",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:Source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:Key",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:PrimaryKey",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:iterate_cursor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "class:components/script/dom/indexeddb/idbcursor.rs:ObjectStoreOrIndex",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "class:components/script/dom/indexeddb/idbcursor.rs:IDBCursor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "class:components/script/dom/indexeddb/idbcursor.rs:IterationParam",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "function:components/script/dom/indexeddb/idbcursor.rs:iterate_cursor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursorwithvalue.rs",
+      "target": "class:components/script/dom/indexeddb/idbcursorwithvalue.rs:IDBCursorWithValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursorwithvalue.rs",
+      "target": "class:components/script/dom/indexeddb/idbcursorwithvalue.rs:IDBCursorWithValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "class:components/script/dom/indexeddb/idbdatabase.rs:IDBDatabase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "function:components/script/dom/indexeddb/idbdatabase.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "function:components/script/dom/indexeddb/idbdatabase.rs:dispatch_versionchange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "function:components/script/dom/indexeddb/idbdatabase.rs:Transaction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "function:components/script/dom/indexeddb/idbdatabase.rs:CreateObjectStore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "function:components/script/dom/indexeddb/idbdatabase.rs:DeleteObjectStore",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "function:components/script/dom/indexeddb/idbdatabase.rs:Close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "class:components/script/dom/indexeddb/idbdatabase.rs:IDBDatabase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "function:components/script/dom/indexeddb/idbdatabase.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "function:components/script/dom/indexeddb/idbdatabase.rs:dispatch_versionchange",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "class:components/script/dom/indexeddb/idbfactory.rs:IDBFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:register_indexeddb_transaction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:cleanup_indexeddb_transactions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:maybe_commit_txn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:clear_open_request_transaction_for_txn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:get_or_setup_callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:handle_connection_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:dispatch_error",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:open_database",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:abort_pending_upgrades",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:Open",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:DeleteDatabase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:Databases",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:Cmp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "class:components/script/dom/indexeddb/idbfactory.rs:IDBFactory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:register_indexeddb_transaction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:cleanup_indexeddb_transactions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:maybe_commit_txn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:clear_open_request_transaction_for_txn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "function:components/script/dom/indexeddb/idbfactory.rs:abort_pending_upgrades",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbindex.rs",
+      "target": "class:components/script/dom/indexeddb/idbindex.rs:IDBIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbindex.rs",
+      "target": "class:components/script/dom/indexeddb/idbindex.rs:IDBIndex",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbkeyrange.rs",
+      "target": "class:components/script/dom/indexeddb/idbkeyrange.rs:IDBKeyRange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbkeyrange.rs",
+      "target": "function:components/script/dom/indexeddb/idbkeyrange.rs:Only",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbkeyrange.rs",
+      "target": "function:components/script/dom/indexeddb/idbkeyrange.rs:LowerBound",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbkeyrange.rs",
+      "target": "function:components/script/dom/indexeddb/idbkeyrange.rs:UpperBound",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbkeyrange.rs",
+      "target": "function:components/script/dom/indexeddb/idbkeyrange.rs:Bound",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbkeyrange.rs",
+      "target": "class:components/script/dom/indexeddb/idbkeyrange.rs:IDBKeyRange",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "file:components/script/dom/indexeddb/idbindex.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "file:components/script/dom/indexeddb/idbobjectstore.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "file:components/script/dom/indexeddb/idbrequest.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "target": "file:components/script/dom/indexeddb/idbtransaction.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursorwithvalue.rs",
+      "target": "file:components/script/dom/indexeddb/idbcursor.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbcursorwithvalue.rs",
+      "target": "file:components/script/dom/indexeddb/idbtransaction.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "file:components/script/dom/indexeddb/idbobjectstore.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "file:components/script/dom/indexeddb/idbtransaction.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "target": "file:components/script/dom/indexeddb/idbversionchangeevent.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "file:components/script/dom/indexeddb/idbopendbrequest.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "file:components/script/dom/indexeddb/idbtransaction.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/script/dom/indexeddb/idbfactory.rs",
+      "target": "file:components/script/dom/indexeddb/idbdatabase.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

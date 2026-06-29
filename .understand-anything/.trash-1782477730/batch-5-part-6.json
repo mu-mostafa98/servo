@@ -1,0 +1,1567 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/flexbox/geom.rs",
+      "type": "file",
+      "name": "geom.rs",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "summary": "Flexbox geometry primitives including FlexRelativeVec2/Rect and FlexAxis for coordinate conversion between flex and flow-relative spaces.",
+      "tags": [
+        "rust",
+        "layout",
+        "flexbox",
+        "geometry"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flexbox/geom.rs:sum_by_axis",
+      "type": "function",
+      "name": "sum_by_axis",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        58,
+        66
+      ],
+      "summary": "Handles sum by axis logic within geom.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/geom.rs:from_1",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        95,
+        100
+      ],
+      "summary": "Handles from logic within geom.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/geom.rs:vec2_to_flex_relative",
+      "type": "function",
+      "name": "vec2_to_flex_relative",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        102,
+        114
+      ],
+      "summary": "Handles vec2 to flex relative logic within geom.",
+      "tags": [
+        "function",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/geom.rs:vec2_to_flow_relative",
+      "type": "function",
+      "name": "vec2_to_flow_relative",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        116,
+        128
+      ],
+      "summary": "Handles vec2 to flow relative logic within geom.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/geom.rs:from_2",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        162,
+        178
+      ],
+      "summary": "Handles from logic within geom.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/geom.rs:rect_to_flow_relative",
+      "type": "function",
+      "name": "rect_to_flow_relative",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        234,
+        272
+      ],
+      "summary": "Handles rect to flow relative logic within geom.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flexbox/geom.rs:FlexRelativeVec2",
+      "type": "class",
+      "name": "FlexRelativeVec2",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        13,
+        16
+      ],
+      "summary": "A 2D vector in flex-relative coordinate space.",
+      "tags": [
+        "class",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flexbox/geom.rs:FlexRelativeSides",
+      "type": "class",
+      "name": "FlexRelativeSides",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        19,
+        24
+      ],
+      "summary": "Structural type for FlexRelativeSides in geom with 4 properties.",
+      "tags": [
+        "class",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flexbox/geom.rs:FlexRelativeRect",
+      "type": "class",
+      "name": "FlexRelativeRect",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        26,
+        29
+      ],
+      "summary": "A rectangle in flex-relative coordinate space.",
+      "tags": [
+        "class",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flexbox/geom.rs:FlexAxis",
+      "type": "class",
+      "name": "FlexAxis",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        72,
+        78
+      ],
+      "summary": "Represents the flex axis direction (row or column) with coordinate conversion methods.",
+      "tags": [
+        "class",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flexbox/geom.rs:MainStartCrossStart",
+      "type": "class",
+      "name": "MainStartCrossStart",
+      "filePath": "components/layout/flexbox/geom.rs",
+      "lineRange": [
+        83,
+        92
+      ],
+      "summary": "Represents the main-start/cross-start pair for flex layout direction.",
+      "tags": [
+        "class",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust struct with 1 methods and 8 fields, using Servo's fragment-oriented layout pattern."
+    },
+    {
+      "id": "file:components/layout/flexbox/layout.rs",
+      "type": "file",
+      "name": "layout.rs",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "summary": "Core flexbox layout algorithm implementing item sizing, line breaking, alignment, cross-axis distribution, and flexible length resolution.",
+      "tags": [
+        "rust",
+        "layout",
+        "flexbox"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust source with extensive use of enums, pattern matching, and trait-based polymorphism typical of the Servo layout engine."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:collect_fragment",
+      "type": "function",
+      "name": "collect_fragment",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        166,
+        305
+      ],
+      "summary": "Collects and positions flex item fragments into flex lines.",
+      "tags": [
+        "function",
+        "fragment",
+        "servo"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:resolve_reversable_flex_alignment",
+      "type": "function",
+      "name": "resolve_reversable_flex_alignment",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        327,
+        339
+      ],
+      "summary": "Handles resolve reversable flex alignment logic within layout.",
+      "tags": [
+        "function",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:rect_to_flow_relative",
+      "type": "function",
+      "name": "rect_to_flow_relative",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        375,
+        386
+      ],
+      "summary": "Handles rect to flow relative logic within layout.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:compute_inline_content_sizes",
+      "type": "function",
+      "name": "compute_inline_content_sizes",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        408,
+        423
+      ],
+      "summary": "Calculates the min and max inline content sizes for a node.",
+      "tags": [
+        "function",
+        "inline",
+        "line-layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:cross_content_sizes",
+      "type": "function",
+      "name": "cross_content_sizes",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        427,
+        464
+      ],
+      "summary": "Computes cross-axis content sizes for flex items.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:main_content_sizes",
+      "type": "function",
+      "name": "main_content_sizes",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        466,
+        605
+      ],
+      "summary": "Computes main-axis content size contributions in flex layout.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:layout_1",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        613,
+        966
+      ],
+      "summary": "Performs the main layout computation for this context type.",
+      "tags": [
+        "function",
+        "layout",
+        "servo"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:create_absolutely_positioned_flex_child_fragment",
+      "type": "function",
+      "name": "create_absolutely_positioned_flex_child_fragment",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        983,
+        1031
+      ],
+      "summary": "Handles create absolutely positioned flex child fragment logic within layout.",
+      "tags": [
+        "function",
+        "flexbox",
+        "fragment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1034,
+        1036
+      ],
+      "summary": "Handles layout style logic within layout.",
+      "tags": [
+        "function",
+        "layout",
+        "style"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:attached_to_tree",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1038,
+        1044
+      ],
+      "summary": "Handles operations when a layout node is attached to the box tree.",
+      "tags": [
+        "function",
+        "tree",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:allocate_free_cross_space_for_flex_line",
+      "type": "function",
+      "name": "allocate_free_cross_space_for_flex_line",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1050,
+        1091
+      ],
+      "summary": "Handles allocate free cross space for flex line logic within layout.",
+      "tags": [
+        "function",
+        "flexbox",
+        "line-layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:new_1",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1094,
+        1107
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:cross_axis_is_item_block_axis",
+      "type": "function",
+      "name": "cross_axis_is_item_block_axis",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1110,
+        1119
+      ],
+      "summary": "Handles cross axis is item block axis logic within layout.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:do_initial_flex_line_layout",
+      "type": "function",
+      "name": "do_initial_flex_line_layout",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1135,
+        1202
+      ],
+      "summary": "Handles do initial flex line layout logic within layout.",
+      "tags": [
+        "function",
+        "layout",
+        "flexbox",
+        "line-layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:new_2",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1219,
+        1275
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:resolve_flexible_lengths",
+      "type": "function",
+      "name": "resolve_flexible_lengths",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1279,
+        1481
+      ],
+      "summary": "Resolves flex item lengths distributing free space according to flex factors.",
+      "tags": [
+        "function",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:cross_size",
+      "type": "function",
+      "name": "cross_size",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1484,
+        1523
+      ],
+      "summary": "Handles cross size logic within layout.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:finish_with_final_cross_size",
+      "type": "function",
+      "name": "finish_with_final_cross_size",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1525,
+        1749
+      ],
+      "summary": "Completes flex layout by setting final cross sizes on all items.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:layout_2",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1766,
+        1955
+      ],
+      "summary": "Performs the main layout computation for this context type.",
+      "tags": [
+        "function",
+        "layout",
+        "servo"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:synthesized_baseline_relative_to_margin_box",
+      "type": "function",
+      "name": "synthesized_baseline_relative_to_margin_box",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1957,
+        1967
+      ],
+      "summary": "Handles synthesized baseline relative to margin box logic within layout.",
+      "tags": [
+        "function",
+        "box-tree",
+        "margin",
+        "line-layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:resolve_auto_margins",
+      "type": "function",
+      "name": "resolve_auto_margins",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        1978,
+        2050
+      ],
+      "summary": "Handles resolve auto margins logic within layout.",
+      "tags": [
+        "function",
+        "margin",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:align_along_cross_axis",
+      "type": "function",
+      "name": "align_along_cross_axis",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        2053,
+        2091
+      ],
+      "summary": "Handles align along cross axis logic within layout.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:to_flex_item",
+      "type": "function",
+      "name": "to_flex_item",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        2104,
+        2353
+      ],
+      "summary": "Converts a layout box into a FlexItem with computed sizing properties.",
+      "tags": [
+        "function",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:main_content_size_info",
+      "type": "function",
+      "name": "main_content_size_info",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        2355,
+        2465
+      ],
+      "summary": "Handles main content size info logic within layout.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Extensive Rust function leveraging pattern matching and iterator combinators for complex layout logic."
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:desired_flex_factors_for_preferred_width",
+      "type": "function",
+      "name": "desired_flex_factors_for_preferred_width",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        2467,
+        2511
+      ],
+      "summary": "Handles desired flex factors for preferred width logic within layout.",
+      "tags": [
+        "function",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:flex_basis",
+      "type": "function",
+      "name": "flex_basis",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        2518,
+        2559
+      ],
+      "summary": "Handles flex basis logic within layout.",
+      "tags": [
+        "function",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:layout_for_block_content_size",
+      "type": "function",
+      "name": "layout_for_block_content_size",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        2563,
+        2646
+      ],
+      "summary": "Handles layout for block content size logic within layout.",
+      "tags": [
+        "function",
+        "layout",
+        "servo"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flexbox/layout.rs:inline_content_sizes",
+      "type": "function",
+      "name": "inline_content_sizes",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        2648,
+        2659
+      ],
+      "summary": "Handles inline content sizes logic within layout.",
+      "tags": [
+        "function",
+        "inline",
+        "line-layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flexbox/layout.rs:FlexItem",
+      "type": "class",
+      "name": "FlexItem",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        58,
+        104
+      ],
+      "summary": "Stores computed flex item properties including base size, hypothetical size, and alignment.",
+      "tags": [
+        "class",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Rust struct with 0 methods and 16 fields, using Servo's fragment-oriented layout pattern."
+    },
+    {
+      "id": "class:components/layout/flexbox/layout.rs:FlexItemLayoutResult",
+      "type": "class",
+      "name": "FlexItemLayoutResult",
+      "filePath": "components/layout/flexbox/layout.rs",
+      "lineRange": [
+        114,
+        139
+      ],
+      "summary": "Holds the result of flex item layout including fragments and baseline info.",
+      "tags": [
+        "class",
+        "layout",
+        "flexbox"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust struct with 0 methods and 9 fields, using Servo's fragment-oriented layout pattern."
+    },
+    {
+      "id": "file:components/layout/flexbox/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "summary": "Flexbox container construction and FlexLevelBox/FlexItemBox wrapper types for integrating flex items into the layout tree.",
+      "tags": [
+        "rust",
+        "layout",
+        "flexbox"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        50,
+        89
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:construct",
+      "type": "function",
+      "name": "construct",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        103,
+        145
+      ],
+      "summary": "Builds the flow/fragment tree from DOM content during layout construction.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:repair_style_1",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        147,
+        150
+      ],
+      "summary": "Updates layout state when the computed style changes for a node.",
+      "tags": [
+        "function",
+        "style",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:subtree_size",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        152,
+        157
+      ],
+      "summary": "Computes the total subtree size for this layout node.",
+      "tags": [
+        "function",
+        "tree",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:repair_style_2",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        168,
+        183
+      ],
+      "summary": "Updates layout state when the computed style changes for a node.",
+      "tags": [
+        "function",
+        "style",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:with_base",
+      "type": "function",
+      "name": "with_base",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        185,
+        194
+      ],
+      "summary": "Provides access to the base fragment info via a callback.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:with_base_mut",
+      "type": "function",
+      "name": "with_base_mut",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        196,
+        205
+      ],
+      "summary": "Provides mutable access to the base fragment info via a callback.",
+      "tags": [
+        "function",
+        "servo",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:attached_to_tree",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        207,
+        217
+      ],
+      "summary": "Handles operations when a layout node is attached to the box tree.",
+      "tags": [
+        "function",
+        "tree",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flexbox/mod.rs:style",
+      "type": "function",
+      "name": "style",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        238,
+        240
+      ],
+      "summary": "Handles style logic within mod.",
+      "tags": [
+        "function",
+        "style",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flexbox/mod.rs:FlexContainerConfig",
+      "type": "class",
+      "name": "FlexContainerConfig",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        35,
+        47
+      ],
+      "summary": "Configuration for flex container layout behavior.",
+      "tags": [
+        "class",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Rust struct with 1 methods and 11 fields, using Servo's fragment-oriented layout pattern."
+    },
+    {
+      "id": "class:components/layout/flexbox/mod.rs:FlexContainer",
+      "type": "class",
+      "name": "FlexContainer",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        93,
+        100
+      ],
+      "summary": "Represents a flex container managing flex items and configuration.",
+      "tags": [
+        "class",
+        "flexbox",
+        "servo"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flexbox/mod.rs:FlexLevelBox",
+      "type": "class",
+      "name": "FlexLevelBox",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        162,
+        165
+      ],
+      "summary": "Wrapper for flex items and out-of-flow absolutely positioned boxes in flex layout.",
+      "tags": [
+        "class",
+        "flexbox",
+        "box-tree"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flexbox/mod.rs:FlexItemBox",
+      "type": "class",
+      "name": "FlexItemBox",
+      "filePath": "components/layout/flexbox/mod.rs",
+      "lineRange": [
+        221,
+        223
+      ],
+      "summary": "Represents an individual flex item within the flex container.",
+      "tags": [
+        "class",
+        "flexbox",
+        "box-tree"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:sum_by_axis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:sum_by_axis",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:from_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:from_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:vec2_to_flex_relative",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:vec2_to_flex_relative",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:vec2_to_flow_relative",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:vec2_to_flow_relative",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:from_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:from_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:rect_to_flow_relative",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "function:components/layout/flexbox/geom.rs:rect_to_flow_relative",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:FlexRelativeVec2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:FlexRelativeVec2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:FlexRelativeSides",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:FlexRelativeSides",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:FlexRelativeRect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:FlexRelativeRect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:FlexAxis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:FlexAxis",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:MainStartCrossStart",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "class:components/layout/flexbox/geom.rs:MainStartCrossStart",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:collect_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:resolve_reversable_flex_alignment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:rect_to_flow_relative",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:compute_inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:cross_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:main_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:layout_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:layout_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:create_absolutely_positioned_flex_child_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:attached_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:attached_to_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:allocate_free_cross_space_for_flex_line",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:new_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:cross_axis_is_item_block_axis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:do_initial_flex_line_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:new_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:resolve_flexible_lengths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:cross_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:finish_with_final_cross_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:layout_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:synthesized_baseline_relative_to_margin_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:resolve_auto_margins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:align_along_cross_axis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:to_flex_item",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:main_content_size_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:desired_flex_factors_for_preferred_width",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:flex_basis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:layout_for_block_content_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "function:components/layout/flexbox/layout.rs:inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "class:components/layout/flexbox/layout.rs:FlexItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "class:components/layout/flexbox/layout.rs:FlexItemLayoutResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:construct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:construct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:repair_style_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:repair_style_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:repair_style_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:repair_style_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:with_base",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:with_base",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:with_base_mut",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:with_base_mut",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:attached_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:attached_to_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "function:components/layout/flexbox/mod.rs:style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "class:components/layout/flexbox/mod.rs:FlexContainerConfig",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "class:components/layout/flexbox/mod.rs:FlexContainerConfig",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "class:components/layout/flexbox/mod.rs:FlexContainer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "class:components/layout/flexbox/mod.rs:FlexContainer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "class:components/layout/flexbox/mod.rs:FlexLevelBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "class:components/layout/flexbox/mod.rs:FlexLevelBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "class:components/layout/flexbox/mod.rs:FlexItemBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "class:components/layout/flexbox/mod.rs:FlexItemBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flexbox/geom.rs",
+      "target": "file:components/layout/flexbox/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/flexbox/layout.rs",
+      "target": "file:components/layout/flexbox/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "file:components/layout/flexbox/geom.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout/flexbox/mod.rs",
+      "target": "file:components/layout/flexbox/layout.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

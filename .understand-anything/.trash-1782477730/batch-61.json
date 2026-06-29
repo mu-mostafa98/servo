@@ -1,0 +1,1006 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/svg/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/svg/mod.rs",
+      "summary": "Module barrel file that re-exports all SVG element types (circle, ellipse, rect, image, svg, geometry, graphics, and base element) as public submodules of the SVG DOM module.",
+      "tags": ["module", "barrel", "svg", "entry-point", "dom"],
+      "complexity": "simple",
+      "languageNotes": "Rust module declaration file with 8 pub mod statements, serving as the directory-level entry point for the svg DOM module."
+    },
+    {
+      "id": "file:components/script/dom/svg/svgcircleelement.rs",
+      "type": "file",
+      "name": "svgcircleelement.rs",
+      "filePath": "components/script/dom/svg/svgcircleelement.rs",
+      "summary": "Defines the SVGCircleElement DOM type representing an SVG <circle> element, with constructor delegation to SVGGeometryElement.",
+      "tags": ["svg", "dom", "geometry-element", "circle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/svg/svgelement.rs",
+      "type": "file",
+      "name": "svgelement.rs",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "summary": "Defines the base SVGElement DOM type shared by all SVG elements, providing attribute mutation handling, presentational hint synthesis from SVG attributes to CSS properties, focus/blur management, and style declaration access.",
+      "tags": ["svg", "dom", "base-class", "element", "presentational-hints"],
+      "complexity": "complex",
+      "languageNotes": "Contains extensive pattern matching in synthesize_presentational_hints (116 lines) that converts SVG presentation attributes like fill, stroke, and opacity into CSS property declarations."
+    },
+    {
+      "id": "file:components/script/dom/svg/svgellipseelement.rs",
+      "type": "file",
+      "name": "svgellipseelement.rs",
+      "filePath": "components/script/dom/svg/svgellipseelement.rs",
+      "summary": "Defines the SVGEllipseElement DOM type representing an SVG <ellipse> element, with constructor delegation to SVGGeometryElement.",
+      "tags": ["svg", "dom", "geometry-element", "ellipse"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/svg/svggeometryelement.rs",
+      "type": "file",
+      "name": "svggeometryelement.rs",
+      "filePath": "components/script/dom/svg/svggeometryelement.rs",
+      "summary": "Defines the SVGGeometryElement intermediate DOM type serving as the base for shape elements (circle, ellipse, rect), with constructor delegation to SVGGraphicsElement.",
+      "tags": ["svg", "dom", "geometry-element", "intermediate-class"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/svg/svggraphicselement.rs",
+      "type": "file",
+      "name": "svggraphicselement.rs",
+      "filePath": "components/script/dom/svg/svggraphicselement.rs",
+      "summary": "Defines the SVGGraphicsElement intermediate DOM type serving as the base for renderable SVG elements (geometry, image, svg root), with constructor delegation to SVGElement.",
+      "tags": ["svg", "dom", "graphics-element", "intermediate-class"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/svg/svgimageelement.rs",
+      "type": "file",
+      "name": "svgimageelement.rs",
+      "filePath": "components/script/dom/svg/svgimageelement.rs",
+      "summary": "Defines the SVGImageElement DOM type representing an SVG <image> element, with attribute mutation handling, image resource fetching, and SVG-specific attribute parsing for width/height as u32 values.",
+      "tags": ["svg", "dom", "image-element", "graphics-element"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/svg/svgrectelement.rs",
+      "type": "file",
+      "name": "svgrectelement.rs",
+      "filePath": "components/script/dom/svg/svgrectelement.rs",
+      "summary": "Defines the SVGRectElement DOM type representing an SVG <rect> element, with constructor delegation to SVGGeometryElement.",
+      "tags": ["svg", "dom", "geometry-element", "rect"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/svg/svgsvgelement.rs",
+      "type": "file",
+      "name": "svgsvgelement.rs",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "summary": "Defines the SVGSVGElement DOM type representing the root <svg> element, managing serialization of the SVG subtree to data URLs, <use> element processing with node cloning, cached rasterization invalidation, and SVG-specific attribute parsing.",
+      "tags": ["svg", "dom", "svg-root", "serialization", "use-element"],
+      "complexity": "complex",
+      "languageNotes": "Implements SVG subtree serialization as data URLs for image caching, and processes <use> element references by cloning referenced nodes via DOM manipulation."
+    },
+    {
+      "id": "function:components/script/dom/svg/svgcircleelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/svg/svgcircleelement.rs",
+      "lineRange": [33, 46],
+      "summary": "Constructs a new SVGCircleElement by reflecting the DOM node with its prototype and initializing inherited state.",
+      "tags": ["constructor", "dom", "svg", "circle"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/svg/svgcircleelement.rs:SVGCircleElement",
+      "type": "class",
+      "name": "SVGCircleElement",
+      "filePath": "components/script/dom/svg/svgcircleelement.rs",
+      "lineRange": [18, 20],
+      "summary": "DOM class representing an SVG <circle> element, inheriting from SVGGeometryElement with no additional properties beyond the inherited geometry element.",
+      "tags": ["svg", "dom", "circle", "geometry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:new_inherited_with_state",
+      "type": "function",
+      "name": "new_inherited_with_state",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [52, 62],
+      "summary": "Initializes SVGElement inherited state with a given ElementState, delegating to the Element base class constructor.",
+      "tags": ["constructor", "dom", "svg", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [64, 77],
+      "summary": "Constructs a new SVGElement by reflecting the DOM node with its prototype and initializing inherited state.",
+      "tags": ["constructor", "dom", "svg", "reflection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [89, 110],
+      "summary": "Handles attribute mutations by delegating to the parent Element and updating the nonce internal slot when the nonce attribute changes.",
+      "tags": ["svg", "dom", "attribute-handling", "nonce"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:attribute_affects_presentational_hints",
+      "type": "function",
+      "name": "attribute_affects_presentational_hints",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [112, 137],
+      "summary": "Determines whether an attribute change requires re-synthesizing CSS presentational hints by checking the attribute name against known SVG presentation attributes.",
+      "tags": ["svg", "dom", "presentational-hints", "attribute-checking"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:Style",
+      "type": "function",
+      "name": "Style",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [142, 153],
+      "summary": "Returns the inline style declaration for the SVG element, lazily initializing a CSSStyleDeclaration with element ownership.",
+      "tags": ["svg", "dom", "style", "inline-css"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:Focus",
+      "type": "function",
+      "name": "Focus",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [181, 214],
+      "summary": "Implements the SVG element focus algorithm, running the focusing steps and scrolling the element into view with focus options.",
+      "tags": ["svg", "dom", "focus", "accessibility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:Blur",
+      "type": "function",
+      "name": "Blur",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [217, 227],
+      "summary": "Implements the SVG element blur algorithm by checking focus state and delegating to the document focus handler.",
+      "tags": ["svg", "dom", "blur", "focus"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:synthesize_presentational_hints",
+      "type": "function",
+      "name": "synthesize_presentational_hints",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [242, 357],
+      "summary": "Converts SVG presentation attributes (width, height, fill, stroke, opacity, etc.) into CSS property declarations by parsing attribute values through the CSS parser, handling the svg root element's width/height separately.",
+      "tags": ["svg", "css", "presentational-hints", "attribute-parsing"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgelement.rs:parse_svg_attribute",
+      "type": "function",
+      "name": "parse_svg_attribute",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [359, 380],
+      "summary": "Retrieves an SVG attribute value by name and applies a CSS parser callback to convert it into a property declaration, used by synthesize_presentational_hints for each presentation attribute.",
+      "tags": ["svg", "css", "attribute-parsing", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/svg/svgelement.rs:SVGElement",
+      "type": "class",
+      "name": "SVGElement",
+      "filePath": "components/script/dom/svg/svgelement.rs",
+      "lineRange": [38, 41],
+      "summary": "Base DOM class for all SVG elements, providing shared functionality for attribute mutation handling, CSS presentational hint synthesis from SVG attributes, focus/blur management, style declaration access, and element-level properties like nonce and tabindex.",
+      "tags": ["svg", "dom", "base-class", "element"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgellipseelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/svg/svgellipseelement.rs",
+      "lineRange": [33, 46],
+      "summary": "Constructs a new SVGEllipseElement by reflecting the DOM node with its prototype and initializing inherited state.",
+      "tags": ["constructor", "dom", "svg", "ellipse"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/svg/svgellipseelement.rs:SVGEllipseElement",
+      "type": "class",
+      "name": "SVGEllipseElement",
+      "filePath": "components/script/dom/svg/svgellipseelement.rs",
+      "lineRange": [18, 20],
+      "summary": "DOM class representing an SVG <ellipse> element, inheriting from SVGGeometryElement with no additional properties beyond the inherited geometry element.",
+      "tags": ["svg", "dom", "ellipse", "geometry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svggeometryelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/svg/svggeometryelement.rs",
+      "lineRange": [20, 31],
+      "summary": "Initializes SVGGeometryElement inherited state with an empty ElementState, delegating to new_inherited_with_state within the same class.",
+      "tags": ["constructor", "dom", "svg", "geometry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svggeometryelement.rs:new_inherited_with_state",
+      "type": "function",
+      "name": "new_inherited_with_state",
+      "filePath": "components/script/dom/svg/svggeometryelement.rs",
+      "lineRange": [33, 44],
+      "summary": "Initializes SVGGeometryElement inherited state with a given ElementState, delegating to SVGGraphicsElement's constructor.",
+      "tags": ["constructor", "dom", "svg", "geometry", "inheritance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/svg/svggeometryelement.rs:SVGGeometryElement",
+      "type": "class",
+      "name": "SVGGeometryElement",
+      "filePath": "components/script/dom/svg/svggeometryelement.rs",
+      "lineRange": [15, 17],
+      "summary": "Intermediate DOM class serving as the base for SVG shape elements (circle, ellipse, rect), inheriting from SVGGraphicsElement.",
+      "tags": ["svg", "dom", "geometry", "intermediate-class"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svggraphicselement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/svg/svggraphicselement.rs",
+      "lineRange": [20, 31],
+      "summary": "Initializes SVGGraphicsElement inherited state with an empty ElementState, delegating to new_inherited_with_state within the same class.",
+      "tags": ["constructor", "dom", "svg", "graphics"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svggraphicselement.rs:new_inherited_with_state",
+      "type": "function",
+      "name": "new_inherited_with_state",
+      "filePath": "components/script/dom/svg/svggraphicselement.rs",
+      "lineRange": [33, 42],
+      "summary": "Initializes SVGGraphicsElement inherited state with a given ElementState, delegating to SVGElement's constructor.",
+      "tags": ["constructor", "dom", "svg", "graphics", "inheritance"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/svg/svggraphicselement.rs:SVGGraphicsElement",
+      "type": "class",
+      "name": "SVGGraphicsElement",
+      "filePath": "components/script/dom/svg/svggraphicselement.rs",
+      "lineRange": [15, 17],
+      "summary": "Intermediate DOM class serving as the base for renderable SVG elements (geometry shapes, image, svg root), inheriting from SVGElement.",
+      "tags": ["svg", "dom", "graphics", "intermediate-class"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgimageelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/svg/svgimageelement.rs",
+      "lineRange": [40, 53],
+      "summary": "Constructs a new SVGImageElement by reflecting the DOM node with its prototype and initializing inherited state.",
+      "tags": ["constructor", "dom", "svg", "image"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgimageelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/svg/svgimageelement.rs",
+      "lineRange": [71, 86],
+      "summary": "Handles attribute mutations for SVGImageElement by delegating to the parent class and triggering image resource re-fetching when the href attribute changes.",
+      "tags": ["svg", "image", "attribute-handling", "resource-fetching"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgimageelement.rs:parse_plain_attribute",
+      "type": "function",
+      "name": "parse_plain_attribute",
+      "filePath": "components/script/dom/svg/svgimageelement.rs",
+      "lineRange": [98, 107],
+      "summary": "Parses SVGImageElement-specific attributes, converting width and height values to u32 attribute values before delegating to the parent class.",
+      "tags": ["svg", "image", "attribute-parsing", "width-height"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/svg/svgimageelement.rs:SVGImageElement",
+      "type": "class",
+      "name": "SVGImageElement",
+      "filePath": "components/script/dom/svg/svgimageelement.rs",
+      "lineRange": [25, 27],
+      "summary": "DOM class representing an SVG <image> element, inheriting from SVGGraphicsElement, with attribute mutation handling and image resource fetching on href changes.",
+      "tags": ["svg", "dom", "image", "graphics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgrectelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/svg/svgrectelement.rs",
+      "lineRange": [33, 46],
+      "summary": "Constructs a new SVGRectElement by reflecting the DOM node with its prototype and initializing inherited state.",
+      "tags": ["constructor", "dom", "svg", "rect"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/svg/svgrectelement.rs:SVGRectElement",
+      "type": "class",
+      "name": "SVGRectElement",
+      "filePath": "components/script/dom/svg/svgrectelement.rs",
+      "lineRange": [18, 20],
+      "summary": "DOM class representing an SVG <rect> element, inheriting from SVGGeometryElement with no additional properties beyond the inherited geometry element.",
+      "tags": ["svg", "dom", "rect", "geometry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [49, 59],
+      "summary": "Initializes SVGSVGElement inherited state with a UUID and empty cached data URL, delegating to SVGGraphicsElement's constructor.",
+      "tags": ["constructor", "dom", "svg", "uuid"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [62, 75],
+      "summary": "Constructs a new SVGSVGElement by reflecting the DOM node with its prototype and initializing inherited state.",
+      "tags": ["constructor", "dom", "svg", "reflection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:serialize_and_cache_subtree",
+      "type": "function",
+      "name": "serialize_and_cache_subtree",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [77, 98],
+      "summary": "Serializes the SVG element's subtree to an XML string, processes <use> element references, encodes the result as a base64 data URL, and caches it for subsequent retrieval.",
+      "tags": ["svg", "serialization", "caching", "data-url", "use-element"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:process_use_elements",
+      "type": "function",
+      "name": "process_use_elements",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [100, 114],
+      "summary": "Traverses the SVG subtree to find <use> elements and processes them by cloning the referenced nodes into the tree.",
+      "tags": ["svg", "use-element", "traversal", "cloning"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:process_single_use_element",
+      "type": "function",
+      "name": "process_single_use_element",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [116, 145],
+      "summary": "Processes a single <use> element by resolving its href attribute to a referenced element, cloning the referenced subtree, and appending it to the svg root.",
+      "tags": ["svg", "use-element", "href", "cloning", "dom-manipulation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:cleanup_cloned_nodes",
+      "type": "function",
+      "name": "cleanup_cloned_nodes",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [147, 156],
+      "summary": "Removes previously cloned <use> element nodes from the SVG root to keep the serialized subtree clean across re-serializations.",
+      "tags": ["svg", "cleanup", "dom-manipulation", "use-element"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:invalidate_cached_serialized_subtree_and_rasterization_result",
+      "type": "function",
+      "name": "invalidate_cached_serialized_subtree_and_rasterization_result",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [158, 174],
+      "summary": "Invalidates all cached data for the SVG subtree including serialized data URL, rasterized image cache, and layout image, marking the node as dirty.",
+      "tags": ["svg", "caching", "invalidation", "rasterization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:data",
+      "type": "function",
+      "name": "data",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [179, 197],
+      "summary": "Provides SVG layout data including the element UUID, viewBox values, and the cached serialized data URL for use by the layout system.",
+      "tags": ["svg", "layout-data", "uuid", "viewbox", "cached-url"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [205, 216],
+      "summary": "Handles attribute mutations for SVGSVGElement by delegating to the parent class and invalidating cached serialization results.",
+      "tags": ["svg", "attribute-handling", "caching", "invalidation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/svg/svgsvgelement.rs:parse_plain_attribute",
+      "type": "function",
+      "name": "parse_plain_attribute",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [228, 259],
+      "summary": "Parses SVGSVGElement-specific attributes, handling width and height as LengthPercentage values via CSS parsing, with fallback to the parent class parser.",
+      "tags": ["svg", "attribute-parsing", "width-height", "css-parsing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/svg/svgsvgelement.rs:SVGSVGElement",
+      "type": "class",
+      "name": "SVGSVGElement",
+      "filePath": "components/script/dom/svg/svgsvgelement.rs",
+      "lineRange": [38, 46],
+      "summary": "Root DOM class for SVG documents, managing subtree serialization to data URLs, <use> element resolution with node cloning, cached rasterization invalidation, and SVG-specific attribute parsing for width/height/viewBox.",
+      "tags": ["svg", "dom", "svg-root", "serialization", "use-element"],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/svg/mod.rs",
+      "target": "file:components/script/dom/svg/svgcircleelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/svg/mod.rs",
+      "target": "file:components/script/dom/svg/svgelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/svg/mod.rs",
+      "target": "file:components/script/dom/svg/svgellipseelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/svg/mod.rs",
+      "target": "file:components/script/dom/svg/svggeometryelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/svg/mod.rs",
+      "target": "file:components/script/dom/svg/svggraphicselement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/svg/mod.rs",
+      "target": "file:components/script/dom/svg/svgimageelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/svg/mod.rs",
+      "target": "file:components/script/dom/svg/svgrectelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/svg/mod.rs",
+      "target": "file:components/script/dom/svg/svgsvgelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/svg/svgcircleelement.rs",
+      "target": "function:components/script/dom/svg/svgcircleelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgcircleelement.rs",
+      "target": "class:components/script/dom/svg/svgcircleelement.rs:SVGCircleElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:new_inherited_with_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:attribute_affects_presentational_hints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:Style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:Focus",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:Blur",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:synthesize_presentational_hints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:parse_svg_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "class:components/script/dom/svg/svgelement.rs:SVGElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgellipseelement.rs",
+      "target": "function:components/script/dom/svg/svgellipseelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgellipseelement.rs",
+      "target": "class:components/script/dom/svg/svgellipseelement.rs:SVGEllipseElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svggeometryelement.rs",
+      "target": "function:components/script/dom/svg/svggeometryelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svggeometryelement.rs",
+      "target": "function:components/script/dom/svg/svggeometryelement.rs:new_inherited_with_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svggeometryelement.rs",
+      "target": "class:components/script/dom/svg/svggeometryelement.rs:SVGGeometryElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svggraphicselement.rs",
+      "target": "function:components/script/dom/svg/svggraphicselement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svggraphicselement.rs",
+      "target": "function:components/script/dom/svg/svggraphicselement.rs:new_inherited_with_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svggraphicselement.rs",
+      "target": "class:components/script/dom/svg/svggraphicselement.rs:SVGGraphicsElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgimageelement.rs",
+      "target": "function:components/script/dom/svg/svgimageelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgimageelement.rs",
+      "target": "function:components/script/dom/svg/svgimageelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgimageelement.rs",
+      "target": "function:components/script/dom/svg/svgimageelement.rs:parse_plain_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgimageelement.rs",
+      "target": "class:components/script/dom/svg/svgimageelement.rs:SVGImageElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgrectelement.rs",
+      "target": "function:components/script/dom/svg/svgrectelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgrectelement.rs",
+      "target": "class:components/script/dom/svg/svgrectelement.rs:SVGRectElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:serialize_and_cache_subtree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:process_use_elements",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:process_single_use_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:cleanup_cloned_nodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:invalidate_cached_serialized_subtree_and_rasterization_result",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:data",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:parse_plain_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "class:components/script/dom/svg/svgsvgelement.rs:SVGSVGElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/svg/svgcircleelement.rs",
+      "target": "function:components/script/dom/svg/svgcircleelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgcircleelement.rs",
+      "target": "class:components/script/dom/svg/svgcircleelement.rs:SVGCircleElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:new_inherited_with_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "function:components/script/dom/svg/svgelement.rs:synthesize_presentational_hints",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgelement.rs",
+      "target": "class:components/script/dom/svg/svgelement.rs:SVGElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgellipseelement.rs",
+      "target": "function:components/script/dom/svg/svgellipseelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgellipseelement.rs",
+      "target": "class:components/script/dom/svg/svgellipseelement.rs:SVGEllipseElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svggeometryelement.rs",
+      "target": "function:components/script/dom/svg/svggeometryelement.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svggeometryelement.rs",
+      "target": "function:components/script/dom/svg/svggeometryelement.rs:new_inherited_with_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svggeometryelement.rs",
+      "target": "class:components/script/dom/svg/svggeometryelement.rs:SVGGeometryElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svggraphicselement.rs",
+      "target": "function:components/script/dom/svg/svggraphicselement.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svggraphicselement.rs",
+      "target": "function:components/script/dom/svg/svggraphicselement.rs:new_inherited_with_state",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svggraphicselement.rs",
+      "target": "class:components/script/dom/svg/svggraphicselement.rs:SVGGraphicsElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgimageelement.rs",
+      "target": "function:components/script/dom/svg/svgimageelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgimageelement.rs",
+      "target": "class:components/script/dom/svg/svgimageelement.rs:SVGImageElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgrectelement.rs",
+      "target": "function:components/script/dom/svg/svgrectelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgrectelement.rs",
+      "target": "class:components/script/dom/svg/svgrectelement.rs:SVGRectElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:serialize_and_cache_subtree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "function:components/script/dom/svg/svgsvgelement.rs:data",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/svg/svgsvgelement.rs",
+      "target": "class:components/script/dom/svg/svgsvgelement.rs:SVGSVGElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:components/script/dom/svg/svgcircleelement.rs:SVGCircleElement",
+      "target": "class:components/script/dom/svg/svggeometryelement.rs:SVGGeometryElement",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:components/script/dom/svg/svgellipseelement.rs:SVGEllipseElement",
+      "target": "class:components/script/dom/svg/svggeometryelement.rs:SVGGeometryElement",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:components/script/dom/svg/svgrectelement.rs:SVGRectElement",
+      "target": "class:components/script/dom/svg/svggeometryelement.rs:SVGGeometryElement",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:components/script/dom/svg/svggeometryelement.rs:SVGGeometryElement",
+      "target": "class:components/script/dom/svg/svggraphicselement.rs:SVGGraphicsElement",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:components/script/dom/svg/svggraphicselement.rs:SVGGraphicsElement",
+      "target": "class:components/script/dom/svg/svgelement.rs:SVGElement",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:components/script/dom/svg/svgimageelement.rs:SVGImageElement",
+      "target": "class:components/script/dom/svg/svggraphicselement.rs:SVGGraphicsElement",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:components/script/dom/svg/svgsvgelement.rs:SVGSVGElement",
+      "target": "class:components/script/dom/svg/svggraphicselement.rs:SVGGraphicsElement",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "function:components/script/dom/svg/svggeometryelement.rs:new_inherited_with_state",
+      "target": "function:components/script/dom/svg/svggraphicselement.rs:new_inherited_with_state",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/svg/svggraphicselement.rs:new_inherited_with_state",
+      "target": "function:components/script/dom/svg/svgelement.rs:new_inherited_with_state",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/svg/svgimageelement.rs:attribute_mutated",
+      "target": "function:components/script/dom/svg/svgelement.rs:attribute_mutated",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/svg/svgsvgelement.rs:attribute_mutated",
+      "target": "function:components/script/dom/svg/svgelement.rs:attribute_mutated",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

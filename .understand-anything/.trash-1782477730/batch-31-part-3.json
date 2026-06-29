@@ -1,0 +1,379 @@
+{
+  "nodes": [
+    {
+      "id": "file:ports/servoshell/egl/ohos/resources.rs",
+      "type": "file",
+      "name": "resources.rs",
+      "filePath": "ports/servoshell/egl/ohos/resources.rs",
+      "summary": "Implements a ResourceReader for OpenHarmony that resolves resource directory paths and reads bundled resource files from the OHOS filesystem.",
+      "tags": [
+        "resources",
+        "ohos",
+        "file-reading"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "ports/servoshell/lib.rs",
+      "summary": "Main library entry point for servoshell, conditionally composing platform modules, defining the init_crypto and init_tracing setup functions, and implementing the HitraceLayer for tracing-subscriber on OHOS.",
+      "tags": [
+        "entry-point",
+        "library-root",
+        "platform-init"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/panic_hook.rs",
+      "type": "file",
+      "name": "panic_hook.rs",
+      "filePath": "ports/servoshell/panic_hook.rs",
+      "summary": "Custom panic hook that formats panic messages with thread info and location, optionally triggers a segfault for hard-fail crash detection in tests.",
+      "tags": [
+        "panic",
+        "error-handling",
+        "crash-detection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/parser.rs",
+      "type": "file",
+      "name": "parser.rs",
+      "filePath": "ports/servoshell/parser.rs",
+      "summary": "URL parsing utilities for resolving command-line URLs, file paths, domain names, and search queries into ServoUrl values with fallback to homepage or about:blank.",
+      "tags": [
+        "url-parsing",
+        "input-processing",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/lib.rs:init_tracing",
+      "type": "function",
+      "name": "init_tracing",
+      "filePath": "ports/servoshell/lib.rs",
+      "summary": "Initializes the tracing subscriber with optional Perfetto and Hitrace layers, environment-filter-based filtering, and a startup timing event.",
+      "tags": [
+        "tracing",
+        "initialization",
+        "profiling"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        50,
+        114
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/lib.rs:init_crypto",
+      "type": "function",
+      "name": "init_crypto",
+      "filePath": "ports/servoshell/lib.rs",
+      "summary": "Initializes the AWS-LC Rust crypto provider as the default TLS implementation.",
+      "tags": [
+        "crypto",
+        "initialization",
+        "tls"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        44,
+        48
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/lib.rs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "ports/servoshell/lib.rs",
+      "summary": "Entry point function that delegates to desktop::cli::main for non-embedded platforms.",
+      "tags": [
+        "entry-point",
+        "desktop"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        40,
+        42
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/panic_hook.rs:panic_hook",
+      "type": "function",
+      "name": "panic_hook",
+      "filePath": "ports/servoshell/panic_hook.rs",
+      "summary": "Custom panic hook that formats panic messages with thread name and source location, optionally triggering a segfault for hard-fail crash test detection.",
+      "tags": [
+        "panic",
+        "error-handling",
+        "crash-detection"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        14,
+        53
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/parser.rs:parse_url_or_filename",
+      "type": "function",
+      "name": "parse_url_or_filename",
+      "filePath": "ports/servoshell/parser.rs",
+      "summary": "Parses a string as URL or joins with cwd as a file path.",
+      "tags": [
+        "url-parsing",
+        "utility"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        11,
+        19
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/parser.rs:get_default_url",
+      "type": "function",
+      "name": "get_default_url",
+      "filePath": "ports/servoshell/parser.rs",
+      "summary": "Resolves a default URL from command-line input, homepage preference, or about:blank.",
+      "tags": [
+        "url-parsing",
+        "utility"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        22,
+        66
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/parser.rs:location_bar_input_to_url",
+      "type": "function",
+      "name": "location_bar_input_to_url",
+      "filePath": "ports/servoshell/parser.rs",
+      "summary": "Converts a location bar input to a ServoUrl, trying file, domain, and search page interpretations.",
+      "tags": [
+        "url-parsing",
+        "utility"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        72,
+        87
+      ]
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/resources.rs:read",
+      "type": "function",
+      "name": "read",
+      "filePath": "ports/servoshell/egl/ohos/resources.rs",
+      "summary": "Reads a resource file from the OHOS filesystem given a resource path.",
+      "tags": [
+        "resources",
+        "ohos",
+        "file-reading"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        27,
+        37
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:init_tracing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:init_crypto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:init_tracing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:init_crypto",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/panic_hook.rs",
+      "target": "function:ports/servoshell/panic_hook.rs:panic_hook",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/panic_hook.rs",
+      "target": "function:ports/servoshell/panic_hook.rs:panic_hook",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:parse_url_or_filename",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:parse_url_or_filename",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:get_default_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:get_default_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:location_bar_input_to_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:location_bar_input_to_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/resources.rs",
+      "target": "function:ports/servoshell/egl/ohos/resources.rs:read",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/resources.rs",
+      "target": "function:ports/servoshell/egl/ohos/resources.rs:read",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/backtrace.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/crash_handler.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/desktop/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/egl/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/panic_hook.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/parser.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/prefs.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/resources/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/running_app_state.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/test.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/webdriver.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "file:ports/servoshell/window.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

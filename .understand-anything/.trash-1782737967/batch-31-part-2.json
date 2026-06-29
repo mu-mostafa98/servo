@@ -1,0 +1,640 @@
+{
+  "nodes": [
+    {
+      "id": "file:ports/servoshell/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "ports/servoshell/lib.rs",
+      "summary": "Main library entry point for servoshell, providing the application main function, crypto initialization, and tracing/perfetto setup for profiling.",
+      "tags": ["entry-point", "library", "tracing", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/lib.rs:main",
+      "type": "function",
+      "name": "main",
+      "filePath": "ports/servoshell/lib.rs",
+      "lineRange": [40, 42],
+      "summary": "Desktop application entry point that delegates to the desktop CLI module.",
+      "tags": ["entry-point", "desktop"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/lib.rs:init_crypto",
+      "type": "function",
+      "name": "init_crypto",
+      "filePath": "ports/servoshell/lib.rs",
+      "lineRange": [44, 48],
+      "summary": "Initializes the Rustls cryptography provider using the AWS-LC-RS backend.",
+      "tags": ["crypto", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/lib.rs:init_tracing",
+      "type": "function",
+      "name": "init_tracing",
+      "filePath": "ports/servoshell/lib.rs",
+      "lineRange": [50, 114],
+      "summary": "Configures and initializes the tracing subscriber system with Perfetto profiling, Hitrace (OHOS), and ENV-filtered logging.",
+      "tags": ["tracing", "profiling", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/panic_hook.rs",
+      "type": "file",
+      "name": "panic_hook.rs",
+      "filePath": "ports/servoshell/panic_hook.rs",
+      "summary": "Custom panic hook for servoshell that prints detailed panic information to stderr and optionally raises a signal for crash reporting.",
+      "tags": ["panic", "error-handling", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/panic_hook.rs:panic_hook",
+      "type": "function",
+      "name": "panic_hook",
+      "filePath": "ports/servoshell/panic_hook.rs",
+      "lineRange": [14, 53],
+      "summary": "Custom panic handler that outputs thread name, panic message, location, optional backtrace, and optionally raises SIGABRT or exits with error.",
+      "tags": ["panic", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/parser.rs",
+      "type": "file",
+      "name": "parser.rs",
+      "filePath": "ports/servoshell/parser.rs",
+      "summary": "URL parsing utilities for servoshell, providing functions to parse command line URLs, location bar input, and file/domain/search page detection.",
+      "tags": ["url", "parsing", "utility", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/parser.rs:parse_url_or_filename",
+      "type": "function",
+      "name": "parse_url_or_filename",
+      "filePath": "ports/servoshell/parser.rs",
+      "lineRange": [11, 19],
+      "summary": "Parses an input string as a URL or resolves it as a file path relative to the current working directory.",
+      "tags": ["url", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/parser.rs:get_default_url",
+      "type": "function",
+      "name": "get_default_url",
+      "filePath": "ports/servoshell/parser.rs",
+      "lineRange": [22, 66],
+      "summary": "Resolves the default URL from command line options, preferring file paths, then domain-like inputs, then search pages, and finally the homepage or blank.",
+      "tags": ["url", "defaults", "resolution"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/parser.rs:location_bar_input_to_url",
+      "type": "function",
+      "name": "location_bar_input_to_url",
+      "filePath": "ports/servoshell/parser.rs",
+      "lineRange": [72, 87],
+      "summary": "Converts user location bar input to a URL by trying direct URL parse, file path, domain detection, and search page fallback.",
+      "tags": ["url", "location-bar"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/prefs.rs",
+      "type": "file",
+      "name": "prefs.rs",
+      "filePath": "ports/servoshell/prefs.rs",
+      "summary": "Servoshell preferences and command line argument parsing, defining the ServoShellPreferences struct, argument handling, and platform-specific configuration.",
+      "tags": ["configuration", "cli", "preferences", "rust"],
+      "complexity": "complex",
+      "languageNotes": "Heavy use of Rust CLI argument parsing with structopt-like patterns and platform-conditional config dir resolution (#[cfg] for Windows, Linux, macOS, OHOS, Android)."
+    },
+    {
+      "id": "class:ports/servoshell/prefs.rs:ServoShellPreferences",
+      "type": "class",
+      "name": "ServoShellPreferences",
+      "filePath": "ports/servoshell/prefs.rs",
+      "lineRange": [58, 109],
+      "summary": "Configuration struct holding all servoshell preferences including URL, window size, headless mode, tracing filter, user scripts, and WebDriver port.",
+      "tags": ["configuration", "preferences"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/prefs.rs:ArgumentParsingResult",
+      "type": "class",
+      "name": "ArgumentParsingResult",
+      "filePath": "ports/servoshell/prefs.rs",
+      "lineRange": [231, 236],
+      "summary": "Enum representing the result of command line argument parsing: ChromeProcess, ContentProcess, Exit, or ErrorParsing.",
+      "tags": ["cli", "argument-parsing", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/prefs.rs:ParseResolutionError",
+      "type": "class",
+      "name": "ParseResolutionError",
+      "filePath": "ports/servoshell/prefs.rs",
+      "lineRange": [238, 242],
+      "summary": "Error type for window resolution parsing with InvalidFormat, ZeroDimension, and ParseError variants.",
+      "tags": ["parsing", "error"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/prefs.rs:parse_command_line_arguments",
+      "type": "function",
+      "name": "parse_command_line_arguments",
+      "filePath": "ports/servoshell/prefs.rs",
+      "lineRange": [646, 650],
+      "summary": "Parses command line arguments and returns an ArgumentParsingResult with options, preferences, and servoshell preferences.",
+      "tags": ["cli", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/prefs.rs:parse_arguments_helper",
+      "type": "function",
+      "name": "parse_arguments_helper",
+      "filePath": "ports/servoshell/prefs.rs",
+      "lineRange": [651, 775],
+      "summary": "Core argument parser implementing the full CLI interface for servoshell, handling all flags and options.",
+      "tags": ["cli", "argument-parsing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/resources/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "ports/servoshell/resources/mod.rs",
+      "summary": "Resource directory resolution for servoshell, locating bundled resources relative to the executable path.",
+      "tags": ["resources", "paths", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/resources/mod.rs:resource_root_dir_path",
+      "type": "function",
+      "name": "resource_root_dir_path",
+      "filePath": "ports/servoshell/resources/mod.rs",
+      "lineRange": [17, 71],
+      "summary": "Resolves the root resource directory by checking command line argument, environment variable, and well-known paths relative to the executable.",
+      "tags": ["resources", "path-resolution"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/running_app_state.rs",
+      "type": "file",
+      "name": "running_app_state.rs",
+      "filePath": "ports/servoshell/running_app_state.rs",
+      "summary": "Core application state management for servoshell, containing the webview collection, window management, WebDriver integration, and delegate callbacks.",
+      "tags": ["app-state", "webview", "window-management", "rust"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:ports/servoshell/running_app_state.rs:WebViewCollection",
+      "type": "class",
+      "name": "WebViewCollection",
+      "filePath": "ports/servoshell/running_app_state.rs",
+      "lineRange": [51, 63],
+      "summary": "Manages a collection of webviews with creation order tracking, active webview selection, and CRUD operations.",
+      "tags": ["webview", "collection", "management"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/running_app_state.rs:RunningAppState",
+      "type": "class",
+      "name": "RunningAppState",
+      "filePath": "ports/servoshell/running_app_state.rs",
+      "lineRange": [165, 226],
+      "summary": "Central application state holding the servo engine, windows, WebDriver communication, gamepad delegate, and accessibility state with methods for navigation, WebDriver, and tab management.",
+      "tags": ["app-state", "webdriver", "window"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:ports/servoshell/running_app_state.rs:new",
+      "type": "function",
+      "name": "RunningAppState::new",
+      "filePath": "ports/servoshell/running_app_state.rs",
+      "lineRange": [229, 277],
+      "summary": "Constructs a new RunningAppState with servo engine, preferences, event loop waker, user content manager, and gamepad delegate.",
+      "tags": ["initialization", "app-state"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/running_app_state.rs:spin_event_loop",
+      "type": "function",
+      "name": "spin_event_loop",
+      "filePath": "ports/servoshell/running_app_state.rs",
+      "lineRange": [410, 451],
+      "summary": "Processes a single iteration of the event loop, handling pending events (WebDriver, navigation, gamepad, schedule exit) and closing empty windows.",
+      "tags": ["event-loop", "processing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/test.rs",
+      "type": "file",
+      "name": "test.rs",
+      "filePath": "ports/servoshell/test.rs",
+      "summary": "Unit tests for servoshell URL parsing and argument handling, verifying various URL formats and platform-specific path resolution.",
+      "tags": ["test", "url-parsing", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/webdriver.rs",
+      "type": "file",
+      "name": "webdriver.rs",
+      "filePath": "ports/servoshell/webdriver.rs",
+      "summary": "WebDriver integration for servoshell, implementing the embedder controls interface for dialog handling, window management, and command execution.",
+      "tags": ["webdriver", "automation", "testing", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/webdriver.rs:WebDriverEmbedderControls",
+      "type": "class",
+      "name": "WebDriverEmbedderControls",
+      "filePath": "ports/servoshell/webdriver.rs",
+      "lineRange": [20, 22],
+      "summary": "WebDriver embedder controls implementation managing dialog interactions (alert, confirm, prompt), embedder control tracking, and message dispatch.",
+      "tags": ["webdriver", "dialog", "embedder"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/webdriver.rs:handle_webdriver_messages",
+      "type": "function",
+      "name": "handle_webdriver_messages",
+      "filePath": "ports/servoshell/webdriver.rs",
+      "lineRange": [131, 328],
+      "summary": "Main WebDriver message handler dispatching commands including navigation (load, close, switch), window management (resize, position, maximize), script evaluation, and cookie management.",
+      "tags": ["webdriver", "dispatch", "handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:ports/servoshell/window.rs",
+      "type": "file",
+      "name": "window.rs",
+      "filePath": "ports/servoshell/window.rs",
+      "summary": "ServoShell window abstraction providing webview management, user interface command queuing, and platform window delegation for rendering and input.",
+      "tags": ["window", "webview", "ui", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/window.rs:ServoShellWindowId",
+      "type": "class",
+      "name": "ServoShellWindowId",
+      "filePath": "ports/servoshell/window.rs",
+      "lineRange": [36, 36],
+      "summary": "Window ID wrapper type with atomic counter and conversion from u32.",
+      "tags": ["window", "id"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/window.rs:ServoShellWindow",
+      "type": "class",
+      "name": "ServoShellWindow",
+      "filePath": "ports/servoshell/window.rs",
+      "lineRange": [51, 68],
+      "summary": "Window container managing webview collection, platform window, render state, favicon loading, and user interface command queue processing.",
+      "tags": ["window", "webview", "tabs"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/window.rs:PlatformWindow",
+      "type": "class",
+      "name": "PlatformWindow",
+      "filePath": "ports/servoshell/window.rs",
+      "lineRange": [379, 461],
+      "summary": "Trait defining the platform window interface with methods for rendering context, geometry, fullscreen, cursor, positioning, media session, and accessibility.",
+      "tags": ["trait", "platform-window", "interface"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/window.rs:handle_interface_commands",
+      "type": "function",
+      "name": "handle_interface_commands",
+      "filePath": "ports/servoshell/window.rs",
+      "lineRange": [310, 373],
+      "summary": "Processes queued user interface commands (navigation, create/close webview, new window) and dispatches them to the application state.",
+      "tags": ["ui", "commands", "dispatch"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:init_crypto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:init_crypto",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:init_tracing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/lib.rs",
+      "target": "function:ports/servoshell/lib.rs:init_tracing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/panic_hook.rs",
+      "target": "function:ports/servoshell/panic_hook.rs:panic_hook",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/panic_hook.rs",
+      "target": "function:ports/servoshell/panic_hook.rs:panic_hook",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:parse_url_or_filename",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:parse_url_or_filename",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:get_default_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:get_default_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:location_bar_input_to_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "function:ports/servoshell/parser.rs:location_bar_input_to_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/parser.rs",
+      "target": "file:ports/servoshell/test.rs",
+      "type": "tested_by",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "class:ports/servoshell/prefs.rs:ServoShellPreferences",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "class:ports/servoshell/prefs.rs:ServoShellPreferences",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "class:ports/servoshell/prefs.rs:ArgumentParsingResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "class:ports/servoshell/prefs.rs:ArgumentParsingResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "class:ports/servoshell/prefs.rs:ParseResolutionError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "class:ports/servoshell/prefs.rs:ParseResolutionError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "function:ports/servoshell/prefs.rs:parse_command_line_arguments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "function:ports/servoshell/prefs.rs:parse_command_line_arguments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/prefs.rs",
+      "target": "function:ports/servoshell/prefs.rs:parse_arguments_helper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/resources/mod.rs",
+      "target": "function:ports/servoshell/resources/mod.rs:resource_root_dir_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/running_app_state.rs",
+      "target": "class:ports/servoshell/running_app_state.rs:WebViewCollection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/running_app_state.rs",
+      "target": "class:ports/servoshell/running_app_state.rs:WebViewCollection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/running_app_state.rs",
+      "target": "class:ports/servoshell/running_app_state.rs:RunningAppState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/running_app_state.rs",
+      "target": "class:ports/servoshell/running_app_state.rs:RunningAppState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/running_app_state.rs",
+      "target": "function:ports/servoshell/running_app_state.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/running_app_state.rs",
+      "target": "function:ports/servoshell/running_app_state.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/running_app_state.rs",
+      "target": "function:ports/servoshell/running_app_state.rs:spin_event_loop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/running_app_state.rs",
+      "target": "function:ports/servoshell/running_app_state.rs:spin_event_loop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/webdriver.rs",
+      "target": "class:ports/servoshell/webdriver.rs:WebDriverEmbedderControls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/webdriver.rs",
+      "target": "class:ports/servoshell/webdriver.rs:WebDriverEmbedderControls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/webdriver.rs",
+      "target": "function:ports/servoshell/webdriver.rs:handle_webdriver_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/webdriver.rs",
+      "target": "function:ports/servoshell/webdriver.rs:handle_webdriver_messages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/window.rs",
+      "target": "class:ports/servoshell/window.rs:ServoShellWindowId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/window.rs",
+      "target": "class:ports/servoshell/window.rs:ServoShellWindowId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/window.rs",
+      "target": "class:ports/servoshell/window.rs:ServoShellWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/window.rs",
+      "target": "class:ports/servoshell/window.rs:ServoShellWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/window.rs",
+      "target": "class:ports/servoshell/window.rs:PlatformWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/window.rs",
+      "target": "class:ports/servoshell/window.rs:PlatformWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/window.rs",
+      "target": "function:ports/servoshell/window.rs:handle_interface_commands",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/window.rs",
+      "target": "function:ports/servoshell/window.rs:handle_interface_commands",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/test.rs",
+      "target": "file:ports/servoshell/parser.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

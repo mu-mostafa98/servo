@@ -1,0 +1,4373 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 7,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "python/servo/devtools_tests/conftest.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 179,
+      "nonEmptyLines": 136,
+      "functions": [
+        {
+          "name": "pytest_addoption",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "parser"
+          ]
+        },
+        {
+          "name": "pytest_sessionstart",
+          "startLine": 36,
+          "endLine": 40,
+          "params": [
+            "session"
+          ]
+        },
+        {
+          "name": "pytest_sessionfinish",
+          "startLine": 43,
+          "endLine": 46,
+          "params": [
+            "session"
+          ]
+        },
+        {
+          "name": "servo_binary",
+          "startLine": 50,
+          "endLine": 54,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "test_dir",
+          "startLine": 58,
+          "endLine": 59,
+          "params": [
+            "request"
+          ]
+        },
+        {
+          "name": "_test_dir",
+          "startLine": 62,
+          "endLine": 66,
+          "params": [
+            "config"
+          ]
+        },
+        {
+          "name": "devtools_port",
+          "startLine": 70,
+          "endLine": 82,
+          "params": [
+            "worker_id"
+          ]
+        },
+        {
+          "name": "web_server_urls",
+          "startLine": 86,
+          "endLine": 101,
+          "params": [
+            "worker_id"
+          ]
+        },
+        {
+          "name": "_start_web_servers",
+          "startLine": 104,
+          "endLine": 129,
+          "params": [
+            "config"
+          ]
+        },
+        {
+          "name": "_stop_web_servers",
+          "startLine": 132,
+          "endLine": 139,
+          "params": []
+        },
+        {
+          "name": "run_servoshell",
+          "startLine": 143,
+          "endLine": 179,
+          "params": [
+            "servo_binary",
+            "devtools_port"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "pytest_addoption",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "pytest_sessionstart",
+          "line": 36,
+          "isDefault": false
+        },
+        {
+          "name": "pytest_sessionfinish",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "servo_binary",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "test_dir",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "_test_dir",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "devtools_port",
+          "line": 69,
+          "isDefault": false
+        },
+        {
+          "name": "web_server_urls",
+          "line": 85,
+          "isDefault": false
+        },
+        {
+          "name": "_start_web_servers",
+          "line": 104,
+          "isDefault": false
+        },
+        {
+          "name": "_stop_web_servers",
+          "line": 132,
+          "isDefault": false
+        },
+        {
+          "name": "run_servoshell",
+          "line": 142,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "pytest_addoption",
+          "callee": "parser.addoption",
+          "lineNumber": 32
+        },
+        {
+          "caller": "pytest_addoption",
+          "callee": "parser.addoption",
+          "lineNumber": 33
+        },
+        {
+          "caller": "pytest_sessionstart",
+          "callee": "hasattr",
+          "lineNumber": 37
+        },
+        {
+          "caller": "pytest_sessionstart",
+          "callee": "_start_web_servers",
+          "lineNumber": 40
+        },
+        {
+          "caller": "pytest_sessionfinish",
+          "callee": "hasattr",
+          "lineNumber": 44
+        },
+        {
+          "caller": "pytest_sessionfinish",
+          "callee": "_stop_web_servers",
+          "lineNumber": 46
+        },
+        {
+          "caller": "servo_binary",
+          "callee": "request.config.getoption",
+          "lineNumber": 51
+        },
+        {
+          "caller": "servo_binary",
+          "callee": "pytest.fail",
+          "lineNumber": 53
+        },
+        {
+          "caller": "test_dir",
+          "callee": "_test_dir",
+          "lineNumber": 59
+        },
+        {
+          "caller": "_test_dir",
+          "callee": "config.getoption",
+          "lineNumber": 63
+        },
+        {
+          "caller": "_test_dir",
+          "callee": "pytest.fail",
+          "lineNumber": 65
+        },
+        {
+          "caller": "_test_dir",
+          "callee": "os.path.join",
+          "lineNumber": 66
+        },
+        {
+          "caller": "devtools_port",
+          "callee": "int",
+          "lineNumber": 75
+        },
+        {
+          "caller": "devtools_port",
+          "callee": "worker_id.replace",
+          "lineNumber": 75
+        },
+        {
+          "caller": "web_server_urls",
+          "callee": "range",
+          "lineNumber": 92
+        },
+        {
+          "caller": "web_server_urls",
+          "callee": "int",
+          "lineNumber": 92
+        },
+        {
+          "caller": "web_server_urls",
+          "callee": "socket.create_connection",
+          "lineNumber": 94
+        },
+        {
+          "caller": "web_server_urls",
+          "callee": "time.sleep",
+          "lineNumber": 97
+        },
+        {
+          "caller": "web_server_urls",
+          "callee": "TimeoutError",
+          "lineNumber": 99
+        },
+        {
+          "caller": "_start_web_servers",
+          "callee": "_test_dir",
+          "lineNumber": 107
+        },
+        {
+          "caller": "__init__",
+          "callee": "super().__init__",
+          "lineNumber": 111
+        },
+        {
+          "caller": "__init__",
+          "callee": "super",
+          "lineNumber": 111
+        },
+        {
+          "caller": "log_message",
+          "callee": "super().log_message",
+          "lineNumber": 115
+        },
+        {
+          "caller": "log_message",
+          "callee": "super",
+          "lineNumber": 115
+        },
+        {
+          "caller": "_start_web_servers",
+          "callee": "web_servers.append",
+          "lineNumber": 124
+        },
+        {
+          "caller": "_start_web_servers",
+          "callee": "socketserver.TCPServer",
+          "lineNumber": 124
+        },
+        {
+          "caller": "_start_web_servers",
+          "callee": "Thread",
+          "lineNumber": 127
+        },
+        {
+          "caller": "_start_web_servers",
+          "callee": "web_server_threads.append",
+          "lineNumber": 128
+        },
+        {
+          "caller": "_start_web_servers",
+          "callee": "thread.start",
+          "lineNumber": 129
+        },
+        {
+          "caller": "_stop_web_servers",
+          "callee": "server.shutdown",
+          "lineNumber": 135
+        },
+        {
+          "caller": "_stop_web_servers",
+          "callee": "server.server_close",
+          "lineNumber": 136
+        },
+        {
+          "caller": "_stop_web_servers",
+          "callee": "thread.join",
+          "lineNumber": 139
+        },
+        {
+          "caller": "run",
+          "callee": "subprocess.Popen",
+          "lineNumber": 153
+        },
+        {
+          "caller": "run",
+          "callee": "range",
+          "lineNumber": 156
+        },
+        {
+          "caller": "run",
+          "callee": "int",
+          "lineNumber": 156
+        },
+        {
+          "caller": "run",
+          "callee": "print",
+          "lineNumber": 157
+        },
+        {
+          "caller": "run",
+          "callee": "socket.create_connection",
+          "lineNumber": 159
+        },
+        {
+          "caller": "run",
+          "callee": "stream.recv",
+          "lineNumber": 160
+        },
+        {
+          "caller": "run",
+          "callee": "stream.shutdown",
+          "lineNumber": 161
+        },
+        {
+          "caller": "run",
+          "callee": "print",
+          "lineNumber": 162
+        },
+        {
+          "caller": "run",
+          "callee": "time.sleep",
+          "lineNumber": 165
+        },
+        {
+          "caller": "run",
+          "callee": "TimeoutError",
+          "lineNumber": 166
+        },
+        {
+          "caller": "run_servoshell",
+          "callee": "process.terminate",
+          "lineNumber": 174
+        },
+        {
+          "caller": "run_servoshell",
+          "callee": "process.wait",
+          "lineNumber": 176
+        },
+        {
+          "caller": "run_servoshell",
+          "callee": "print",
+          "lineNumber": 178
+        },
+        {
+          "caller": "run_servoshell",
+          "callee": "process.kill",
+          "lineNumber": 179
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 11,
+        "functionCount": 11,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "python/servo/devtools_tests/test_connection.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 26,
+      "nonEmptyLines": 19,
+      "classes": [
+        {
+          "name": "TestConnection",
+          "startLine": 15,
+          "endLine": 26,
+          "methods": [
+            "test_selected_tab"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestConnection",
+          "line": 15,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "test_selected_tab",
+          "callee": "run_servoshell",
+          "lineNumber": 17
+        },
+        {
+          "caller": "test_selected_tab",
+          "callee": "Devtools.connect",
+          "lineNumber": 19
+        },
+        {
+          "caller": "test_selected_tab",
+          "callee": "RootActor",
+          "lineNumber": 20
+        },
+        {
+          "caller": "test_selected_tab",
+          "callee": "root.list_tabs",
+          "lineNumber": 21
+        },
+        {
+          "caller": "test_selected_tab",
+          "callee": "len",
+          "lineNumber": 23
+        },
+        {
+          "caller": "test_selected_tab",
+          "callee": "tab.get",
+          "lineNumber": 25
+        },
+        {
+          "caller": "test_selected_tab",
+          "callee": "len",
+          "lineNumber": 26
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "python/servo/devtools_tests/test_console_tab.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 192,
+      "nonEmptyLines": 150,
+      "functions": [
+        {
+          "name": "evaluate_and_capture_console_log_output",
+          "startLine": 20,
+          "endLine": 39,
+          "params": [
+            "js",
+            "timeout"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "TestConsoleTab",
+          "startLine": 42,
+          "endLine": 192,
+          "methods": [
+            "test_console_log_object_with_object_preview",
+            "test_console_log_booleans",
+            "test_console_log_numbers",
+            "test_console_log_array",
+            "test_console_log_map",
+            "test_console_log_function",
+            "test_console_log_function_arguments",
+            "test_console_log_sprintf_substitutions",
+            "test_console_actor_can_handle_self_referential_objects",
+            "test_console_actor_log_window_object",
+            "test_console_throw_exception"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "evaluate_and_capture_console_log_output",
+          "line": 20,
+          "isDefault": false
+        },
+        {
+          "name": "TestConsoleTab",
+          "line": 42,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "evaluate_and_capture_console_log_output",
+          "callee": "Devtools.connect",
+          "lineNumber": 21
+        },
+        {
+          "caller": "evaluate_and_capture_console_log_output",
+          "callee": "devtools.watcher.watch_resources",
+          "lineNumber": 22
+        },
+        {
+          "caller": "evaluate_and_capture_console_log_output",
+          "callee": "WebConsoleActor",
+          "lineNumber": 24
+        },
+        {
+          "caller": "evaluate_and_capture_console_log_output",
+          "callee": "Future",
+          "lineNumber": 25
+        },
+        {
+          "caller": "on_resource_available",
+          "callee": "evaluation_result.set_result",
+          "lineNumber": 31
+        },
+        {
+          "caller": "evaluate_and_capture_console_log_output",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 34
+        },
+        {
+          "caller": "evaluate_and_capture_console_log_output",
+          "callee": "console.evaluate_js_async",
+          "lineNumber": 38
+        },
+        {
+          "caller": "evaluate_and_capture_console_log_output",
+          "callee": "evaluation_result.result",
+          "lineNumber": 39
+        },
+        {
+          "caller": "test_console_log_object_with_object_preview",
+          "callee": "run_servoshell",
+          "lineNumber": 44
+        },
+        {
+          "caller": "test_console_log_object_with_object_preview",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 46
+        },
+        {
+          "caller": "test_console_log_booleans",
+          "callee": "run_servoshell",
+          "lineNumber": 79
+        },
+        {
+          "caller": "test_console_log_booleans",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 81
+        },
+        {
+          "caller": "test_console_log_numbers",
+          "callee": "run_servoshell",
+          "lineNumber": 86
+        },
+        {
+          "caller": "test_console_log_numbers",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 88
+        },
+        {
+          "caller": "test_console_log_array",
+          "callee": "run_servoshell",
+          "lineNumber": 100
+        },
+        {
+          "caller": "test_console_log_array",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 102
+        },
+        {
+          "caller": "test_console_log_map",
+          "callee": "run_servoshell",
+          "lineNumber": 112
+        },
+        {
+          "caller": "test_console_log_map",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 114
+        },
+        {
+          "caller": "test_console_log_function",
+          "callee": "run_servoshell",
+          "lineNumber": 124
+        },
+        {
+          "caller": "test_console_log_function",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 126
+        },
+        {
+          "caller": "test_console_log_function_arguments",
+          "callee": "run_servoshell",
+          "lineNumber": 141
+        },
+        {
+          "caller": "test_console_log_function_arguments",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 143
+        },
+        {
+          "caller": "test_console_log_sprintf_substitutions",
+          "callee": "run_servoshell",
+          "lineNumber": 152
+        },
+        {
+          "caller": "test_console_log_sprintf_substitutions",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 154
+        },
+        {
+          "caller": "test_console_actor_can_handle_self_referential_objects",
+          "callee": "run_servoshell",
+          "lineNumber": 158
+        },
+        {
+          "caller": "test_console_actor_can_handle_self_referential_objects",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 160
+        },
+        {
+          "caller": "test_console_actor_log_window_object",
+          "callee": "run_servoshell",
+          "lineNumber": 167
+        },
+        {
+          "caller": "test_console_actor_log_window_object",
+          "callee": "evaluate_and_capture_console_log_output",
+          "lineNumber": 169
+        },
+        {
+          "caller": "test_console_throw_exception",
+          "callee": "run_servoshell",
+          "lineNumber": 176
+        },
+        {
+          "caller": "test_console_throw_exception",
+          "callee": "Devtools.connect",
+          "lineNumber": 178
+        },
+        {
+          "caller": "test_console_throw_exception",
+          "callee": "WebConsoleActor",
+          "lineNumber": 179
+        },
+        {
+          "caller": "test_console_throw_exception",
+          "callee": "Future",
+          "lineNumber": 180
+        },
+        {
+          "caller": "on_evaluation",
+          "callee": "evaluation_result.set_result",
+          "lineNumber": 183
+        },
+        {
+          "caller": "test_console_throw_exception",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 185
+        },
+        {
+          "caller": "test_console_throw_exception",
+          "callee": "console.evaluate_js_async",
+          "lineNumber": 187
+        },
+        {
+          "caller": "test_console_throw_exception",
+          "callee": "evaluation_result.result",
+          "lineNumber": 188
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 2,
+        "functionCount": 1,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "python/servo/devtools_tests/test_debugger_tab.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 988,
+      "nonEmptyLines": 853,
+      "classes": [
+        {
+          "name": "TestDebuggerTab",
+          "startLine": 38,
+          "endLine": 988,
+          "methods": [
+            "test_breakpoint_pause",
+            "test_frame_this_and_global_scope_object",
+            "test_breakpoint_at_invalid_entry_point_does_not_crash",
+            "test_console_eval_does_not_pause_again_while_already_paused",
+            "test_frame_scoped_eval",
+            "test_map_preview",
+            "test_manual_pause",
+            "test_stepping_hooks",
+            "test_sources_list",
+            "test_sources_list_with_data_no_scripts",
+            "test_sources_list_with_data_empty_inline_classic_script",
+            "test_sources_list_with_data_inline_classic_script",
+            "test_sources_list_with_data_external_classic_script",
+            "test_sources_list_with_data_empty_inline_module_script",
+            "test_sources_list_with_data_inline_module_script",
+            "test_sources_list_with_data_external_module_script",
+            "test_sources_list_with_static_import_module",
+            "test_sources_list_with_dynamic_import_module",
+            "test_sources_list_with_classic_worker",
+            "test_sources_list_with_module_worker",
+            "test_sources_list_with_injected_script_write_and_display_url",
+            "test_sources_list_with_injected_script_write_but_no_display_url",
+            "test_sources_list_with_injected_script_append_and_display_url",
+            "test_sources_list_with_injected_script_append_but_no_display_url",
+            "test_sources_list_with_eval_and_display_url",
+            "test_sources_list_with_eval_but_no_display_url",
+            "test_sources_list_with_debugger_eval_and_display_url",
+            "test_sources_list_with_debugger_eval_but_no_display_url",
+            "test_sources_list_with_function_and_display_url",
+            "test_sources_list_with_function_but_no_display_url",
+            "test_sources_list_with_javascript_url_and_display_url",
+            "test_sources_list_with_javascript_url_but_no_display_url",
+            "test_sources_list_with_event_handler_and_display_url",
+            "test_sources_list_with_event_handler_but_no_display_url",
+            "test_sources_list_with_dom_timer_and_display_url",
+            "test_sources_list_with_dom_timer_but_no_display_url",
+            "test_sources_list_with_inline_script_and_display_url",
+            "test_sources_list_with_inline_script_but_invalid_display_url",
+            "test_sources_list_with_inline_script_but_no_display_url",
+            "test_sources_list_with_iframe_srcdoc_and_display_url",
+            "test_sources_list_with_iframe_srcdoc_but_no_display_url",
+            "test_sources_list_with_iframe_srcdoc_multiple_inline_scripts",
+            "test_source_content_inline_script",
+            "test_source_content_external_script",
+            "test_source_content_html_file",
+            "test_source_content_with_inline_module_import_external",
+            "test_source_content_inline_script_with_inner_html",
+            "test_source_content_inline_script_with_outer_html",
+            "test_source_content_inline_script_with_domparser",
+            "test_source_content_inline_script_with_responsexml",
+            "test_source_breakable_lines_and_positions",
+            "test_source_breakable_lines_and_positions_with_functions",
+            "test_blackboxing_prevents_breakpoint_pause",
+            "test_blackboxing_prevents_breakpoint_pause_single_line",
+            "test_blackboxing_prevents_breakpoint_pause_multiline",
+            "test_unblackboxing_partial",
+            "test_blackboxing_prevents_stepping"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestDebuggerTab",
+          "line": 38,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "run_servoshell",
+          "lineNumber": 40
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "Devtools.connect",
+          "lineNumber": 41
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "attach_thread",
+          "lineNumber": 42
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "wait_for_source",
+          "lineNumber": 43
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "devtools.client.send_receive(\n                {\"to\": source_actor, \"type\": \"getBreakpointPositionsCompressed\"}\n            ).get",
+          "lineNumber": 46
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 46
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "min",
+          "lineNumber": 49
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "positions.keys",
+          "lineNumber": 49
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "int",
+          "lineNumber": 50
+        },
+        {
+          "caller": "trigger",
+          "callee": "set_breakpoint",
+          "lineNumber": 53
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "wait_for_pause",
+          "lineNumber": 55
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "paused_data.get",
+          "lineNumber": 56
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "paused_data.get(\"why\", {}).get",
+          "lineNumber": 57
+        },
+        {
+          "caller": "test_breakpoint_pause",
+          "callee": "paused_data.get",
+          "lineNumber": 57
+        },
+        {
+          "caller": "test_frame_this_and_global_scope_object",
+          "callee": "run_servoshell",
+          "lineNumber": 60
+        },
+        {
+          "caller": "test_frame_this_and_global_scope_object",
+          "callee": "Devtools.connect",
+          "lineNumber": 61
+        },
+        {
+          "caller": "test_frame_this_and_global_scope_object",
+          "callee": "attach_thread",
+          "lineNumber": 62
+        },
+        {
+          "caller": "trigger",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 65
+        },
+        {
+          "caller": "test_frame_this_and_global_scope_object",
+          "callee": "wait_for_pause",
+          "lineNumber": 67
+        },
+        {
+          "caller": "test_frame_this_and_global_scope_object",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 74
+        },
+        {
+          "caller": "test_frame_this_and_global_scope_object",
+          "callee": "environment.get",
+          "lineNumber": 75
+        },
+        {
+          "caller": "test_breakpoint_at_invalid_entry_point_does_not_crash",
+          "callee": "run_servoshell",
+          "lineNumber": 83
+        },
+        {
+          "caller": "test_breakpoint_at_invalid_entry_point_does_not_crash",
+          "callee": "Devtools.connect",
+          "lineNumber": 84
+        },
+        {
+          "caller": "test_breakpoint_at_invalid_entry_point_does_not_crash",
+          "callee": "devtools.watcher.get_breakpoint_list_actor",
+          "lineNumber": 85
+        },
+        {
+          "caller": "test_breakpoint_at_invalid_entry_point_does_not_crash",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 86
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "run_servoshell",
+          "lineNumber": 100
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "Devtools.connect",
+          "lineNumber": 101
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "attach_thread",
+          "lineNumber": 102
+        },
+        {
+          "caller": "trigger",
+          "callee": "set_breakpoint",
+          "lineNumber": 107
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "wait_for_pause",
+          "lineNumber": 109
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "Future",
+          "lineNumber": 111
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "Future",
+          "lineNumber": 112
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 114
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 117
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 118
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "time.sleep",
+          "lineNumber": 128
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "nested_pause.done",
+          "lineNumber": 129
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "eval_result.result",
+          "lineNumber": 130
+        },
+        {
+          "caller": "test_console_eval_does_not_pause_again_while_already_paused",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 133
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "run_servoshell",
+          "lineNumber": 136
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "Devtools.connect",
+          "lineNumber": 137
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "attach_thread",
+          "lineNumber": 138
+        },
+        {
+          "caller": "trigger",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 142
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "wait_for_pause",
+          "lineNumber": 144
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "paused_data.get(\"frame\", {}).get",
+          "lineNumber": 145
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "paused_data.get",
+          "lineNumber": 145
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "Future",
+          "lineNumber": 148
+        },
+        {
+          "caller": "on_eval_result",
+          "callee": "eval_future.set_result",
+          "lineNumber": 151
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 153
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 154
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "eval_future.result",
+          "lineNumber": 163
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "eval_result.get",
+          "lineNumber": 164
+        },
+        {
+          "caller": "test_frame_scoped_eval",
+          "callee": "eval_result.get",
+          "lineNumber": 165
+        },
+        {
+          "caller": "test_map_preview",
+          "callee": "run_servoshell",
+          "lineNumber": 168
+        },
+        {
+          "caller": "test_map_preview",
+          "callee": "Devtools.connect",
+          "lineNumber": 169
+        },
+        {
+          "caller": "test_map_preview",
+          "callee": "WebConsoleActor",
+          "lineNumber": 170
+        },
+        {
+          "caller": "test_map_preview",
+          "callee": "Future",
+          "lineNumber": 171
+        },
+        {
+          "caller": "on_evaluation_result",
+          "callee": "evaluation_result.set_result",
+          "lineNumber": 174
+        },
+        {
+          "caller": "test_map_preview",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 176
+        },
+        {
+          "caller": "test_map_preview",
+          "callee": "console.evaluate_js_async",
+          "lineNumber": 179
+        },
+        {
+          "caller": "test_map_preview",
+          "callee": "evaluation_result.result",
+          "lineNumber": 181
+        },
+        {
+          "caller": "test_manual_pause",
+          "callee": "run_servoshell",
+          "lineNumber": 190
+        },
+        {
+          "caller": "test_manual_pause",
+          "callee": "Devtools.connect",
+          "lineNumber": 191
+        },
+        {
+          "caller": "test_manual_pause",
+          "callee": "attach_thread",
+          "lineNumber": 192
+        },
+        {
+          "caller": "trigger",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 195
+        },
+        {
+          "caller": "test_manual_pause",
+          "callee": "wait_for_pause",
+          "lineNumber": 197
+        },
+        {
+          "caller": "test_manual_pause",
+          "callee": "paused_data.get",
+          "lineNumber": 198
+        },
+        {
+          "caller": "test_manual_pause",
+          "callee": "paused_data.get",
+          "lineNumber": 199
+        },
+        {
+          "caller": "test_manual_pause",
+          "callee": "why.get",
+          "lineNumber": 200
+        },
+        {
+          "caller": "test_manual_pause",
+          "callee": "why.get",
+          "lineNumber": 201
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "run_servoshell",
+          "lineNumber": 204
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "Devtools.connect",
+          "lineNumber": 205
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "attach_thread",
+          "lineNumber": 206
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "wait_for_source",
+          "lineNumber": 207
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "devtools.client.send_receive(\n                {\"to\": source_actor, \"type\": \"getBreakpointPositionsCompressed\"}\n            ).get",
+          "lineNumber": 210
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 210
+        },
+        {
+          "caller": "trigger",
+          "callee": "set_breakpoint",
+          "lineNumber": 220
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "wait_for_pause",
+          "lineNumber": 223
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get",
+          "lineNumber": 224
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get(\"why\", {}).get",
+          "lineNumber": 225
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get",
+          "lineNumber": 225
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 228
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get(\"frame\", {}).get",
+          "lineNumber": 228
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get",
+          "lineNumber": 228
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step",
+          "lineNumber": 231
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 232
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"why\", {}).get",
+          "lineNumber": 233
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 233
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 234
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 234
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 234
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step",
+          "lineNumber": 237
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 238
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 238
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 238
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step",
+          "lineNumber": 241
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 242
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 242
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 242
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "resume_and_wait",
+          "lineNumber": 245
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get(\"why\", {}).get",
+          "lineNumber": 246
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get",
+          "lineNumber": 246
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 247
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get(\"frame\", {}).get",
+          "lineNumber": 247
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "paused_data.get",
+          "lineNumber": 247
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step",
+          "lineNumber": 250
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"why\", {}).get",
+          "lineNumber": 251
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 251
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 252
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 252
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 252
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 253
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 253
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step",
+          "lineNumber": 256
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 257
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 257
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 257
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step",
+          "lineNumber": 260
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 261
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 261
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 261
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step",
+          "lineNumber": 264
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"why\", {}).get",
+          "lineNumber": 265
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 265
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 266
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 266
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 266
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 267
+        },
+        {
+          "caller": "test_stepping_hooks",
+          "callee": "step_data.get",
+          "lineNumber": 267
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "run_servoshell",
+          "lineNumber": 280
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "assert_sources_list",
+          "lineNumber": 281
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "Counter",
+          "lineNumber": 282
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "frozen_multiset",
+          "lineNumber": 284
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "Source",
+          "lineNumber": 286
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "Source",
+          "lineNumber": 287
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "Source",
+          "lineNumber": 288
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "Source",
+          "lineNumber": 289
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "Source",
+          "lineNumber": 290
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "frozen_multiset",
+          "lineNumber": 293
+        },
+        {
+          "caller": "test_sources_list",
+          "callee": "Source",
+          "lineNumber": 293
+        },
+        {
+          "caller": "test_sources_list_with_data_no_scripts",
+          "callee": "run_servoshell",
+          "lineNumber": 299
+        },
+        {
+          "caller": "test_sources_list_with_data_no_scripts",
+          "callee": "assert_sources_list",
+          "lineNumber": 300
+        },
+        {
+          "caller": "test_sources_list_with_data_no_scripts",
+          "callee": "Counter",
+          "lineNumber": 300
+        },
+        {
+          "caller": "test_sources_list_with_data_no_scripts",
+          "callee": "frozen_multiset",
+          "lineNumber": 300
+        },
+        {
+          "caller": "test_sources_list_with_data_empty_inline_classic_script",
+          "callee": "run_servoshell",
+          "lineNumber": 305
+        },
+        {
+          "caller": "test_sources_list_with_data_empty_inline_classic_script",
+          "callee": "assert_sources_list",
+          "lineNumber": 306
+        },
+        {
+          "caller": "test_sources_list_with_data_empty_inline_classic_script",
+          "callee": "Counter",
+          "lineNumber": 306
+        },
+        {
+          "caller": "test_sources_list_with_data_empty_inline_classic_script",
+          "callee": "frozen_multiset",
+          "lineNumber": 306
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_classic_script",
+          "callee": "run_servoshell",
+          "lineNumber": 309
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_classic_script",
+          "callee": "assert_sources_list",
+          "lineNumber": 310
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_classic_script",
+          "callee": "Counter",
+          "lineNumber": 310
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_classic_script",
+          "callee": "frozen_multiset",
+          "lineNumber": 310
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_classic_script",
+          "callee": "Source",
+          "lineNumber": 310
+        },
+        {
+          "caller": "test_sources_list_with_data_external_classic_script",
+          "callee": "run_servoshell",
+          "lineNumber": 313
+        },
+        {
+          "caller": "test_sources_list_with_data_external_classic_script",
+          "callee": "assert_sources_list",
+          "lineNumber": 314
+        },
+        {
+          "caller": "test_sources_list_with_data_external_classic_script",
+          "callee": "Counter",
+          "lineNumber": 315
+        },
+        {
+          "caller": "test_sources_list_with_data_external_classic_script",
+          "callee": "frozen_multiset",
+          "lineNumber": 315
+        },
+        {
+          "caller": "test_sources_list_with_data_external_classic_script",
+          "callee": "Source",
+          "lineNumber": 315
+        },
+        {
+          "caller": "test_sources_list_with_data_empty_inline_module_script",
+          "callee": "run_servoshell",
+          "lineNumber": 319
+        },
+        {
+          "caller": "test_sources_list_with_data_empty_inline_module_script",
+          "callee": "assert_sources_list",
+          "lineNumber": 320
+        },
+        {
+          "caller": "test_sources_list_with_data_empty_inline_module_script",
+          "callee": "Counter",
+          "lineNumber": 320
+        },
+        {
+          "caller": "test_sources_list_with_data_empty_inline_module_script",
+          "callee": "frozen_multiset",
+          "lineNumber": 320
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_module_script",
+          "callee": "run_servoshell",
+          "lineNumber": 323
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_module_script",
+          "callee": "assert_sources_list",
+          "lineNumber": 324
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_module_script",
+          "callee": "Counter",
+          "lineNumber": 325
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_module_script",
+          "callee": "frozen_multiset",
+          "lineNumber": 325
+        },
+        {
+          "caller": "test_sources_list_with_data_inline_module_script",
+          "callee": "Source",
+          "lineNumber": 325
+        },
+        {
+          "caller": "test_sources_list_with_data_external_module_script",
+          "callee": "run_servoshell",
+          "lineNumber": 329
+        },
+        {
+          "caller": "test_sources_list_with_data_external_module_script",
+          "callee": "assert_sources_list",
+          "lineNumber": 330
+        },
+        {
+          "caller": "test_sources_list_with_data_external_module_script",
+          "callee": "Counter",
+          "lineNumber": 331
+        },
+        {
+          "caller": "test_sources_list_with_data_external_module_script",
+          "callee": "frozen_multiset",
+          "lineNumber": 331
+        },
+        {
+          "caller": "test_sources_list_with_data_external_module_script",
+          "callee": "Source",
+          "lineNumber": 331
+        },
+        {
+          "caller": "test_sources_list_with_static_import_module",
+          "callee": "run_servoshell",
+          "lineNumber": 337
+        },
+        {
+          "caller": "test_sources_list_with_static_import_module",
+          "callee": "assert_sources_list",
+          "lineNumber": 338
+        },
+        {
+          "caller": "test_sources_list_with_static_import_module",
+          "callee": "Counter",
+          "lineNumber": 339
+        },
+        {
+          "caller": "test_sources_list_with_static_import_module",
+          "callee": "frozen_multiset",
+          "lineNumber": 341
+        },
+        {
+          "caller": "test_sources_list_with_static_import_module",
+          "callee": "Source",
+          "lineNumber": 343
+        },
+        {
+          "caller": "test_sources_list_with_static_import_module",
+          "callee": "Source",
+          "lineNumber": 347
+        },
+        {
+          "caller": "test_sources_list_with_dynamic_import_module",
+          "callee": "run_servoshell",
+          "lineNumber": 355
+        },
+        {
+          "caller": "test_sources_list_with_dynamic_import_module",
+          "callee": "assert_sources_list",
+          "lineNumber": 356
+        },
+        {
+          "caller": "test_sources_list_with_dynamic_import_module",
+          "callee": "Counter",
+          "lineNumber": 357
+        },
+        {
+          "caller": "test_sources_list_with_dynamic_import_module",
+          "callee": "frozen_multiset",
+          "lineNumber": 359
+        },
+        {
+          "caller": "test_sources_list_with_dynamic_import_module",
+          "callee": "Source",
+          "lineNumber": 361
+        },
+        {
+          "caller": "test_sources_list_with_dynamic_import_module",
+          "callee": "Source",
+          "lineNumber": 365
+        },
+        {
+          "caller": "test_sources_list_with_classic_worker",
+          "callee": "run_servoshell",
+          "lineNumber": 375
+        },
+        {
+          "caller": "test_sources_list_with_classic_worker",
+          "callee": "assert_sources_list",
+          "lineNumber": 376
+        },
+        {
+          "caller": "test_sources_list_with_classic_worker",
+          "callee": "Counter",
+          "lineNumber": 377
+        },
+        {
+          "caller": "test_sources_list_with_classic_worker",
+          "callee": "frozen_multiset",
+          "lineNumber": 379
+        },
+        {
+          "caller": "test_sources_list_with_classic_worker",
+          "callee": "Source",
+          "lineNumber": 381
+        },
+        {
+          "caller": "test_sources_list_with_classic_worker",
+          "callee": "frozen_multiset",
+          "lineNumber": 387
+        },
+        {
+          "caller": "test_sources_list_with_classic_worker",
+          "callee": "Source",
+          "lineNumber": 389
+        },
+        {
+          "caller": "test_sources_list_with_module_worker",
+          "callee": "run_servoshell",
+          "lineNumber": 397
+        },
+        {
+          "caller": "test_sources_list_with_module_worker",
+          "callee": "assert_sources_list",
+          "lineNumber": 398
+        },
+        {
+          "caller": "test_sources_list_with_module_worker",
+          "callee": "Counter",
+          "lineNumber": 399
+        },
+        {
+          "caller": "test_sources_list_with_module_worker",
+          "callee": "frozen_multiset",
+          "lineNumber": 401
+        },
+        {
+          "caller": "test_sources_list_with_module_worker",
+          "callee": "Source",
+          "lineNumber": 403
+        },
+        {
+          "caller": "test_sources_list_with_module_worker",
+          "callee": "frozen_multiset",
+          "lineNumber": 409
+        },
+        {
+          "caller": "test_sources_list_with_module_worker",
+          "callee": "Source",
+          "lineNumber": 411
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 421
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 424
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 425
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 427
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_and_display_url",
+          "callee": "Source",
+          "lineNumber": 429
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_and_display_url",
+          "callee": "Source",
+          "lineNumber": 433
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 441
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 442
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 443
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 445
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_write_but_no_display_url",
+          "callee": "Source",
+          "lineNumber": 447
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 459
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 460
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 461
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 463
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_and_display_url",
+          "callee": "Source",
+          "lineNumber": 465
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_and_display_url",
+          "callee": "Source",
+          "lineNumber": 469
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 478
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 479
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 480
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 482
+        },
+        {
+          "caller": "test_sources_list_with_injected_script_append_but_no_display_url",
+          "callee": "Source",
+          "lineNumber": 484
+        },
+        {
+          "caller": "test_sources_list_with_eval_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 495
+        },
+        {
+          "caller": "test_sources_list_with_eval_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 496
+        },
+        {
+          "caller": "test_sources_list_with_eval_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 497
+        },
+        {
+          "caller": "test_sources_list_with_eval_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 499
+        },
+        {
+          "caller": "test_sources_list_with_eval_and_display_url",
+          "callee": "Source",
+          "lineNumber": 501
+        },
+        {
+          "caller": "test_sources_list_with_eval_and_display_url",
+          "callee": "Source",
+          "lineNumber": 504
+        },
+        {
+          "caller": "test_sources_list_with_eval_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 512
+        },
+        {
+          "caller": "test_sources_list_with_eval_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 513
+        },
+        {
+          "caller": "test_sources_list_with_eval_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 514
+        },
+        {
+          "caller": "test_sources_list_with_eval_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 514
+        },
+        {
+          "caller": "test_sources_list_with_eval_but_no_display_url",
+          "callee": "Source",
+          "lineNumber": 514
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 518
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "Devtools.connect",
+          "lineNumber": 519
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "WebConsoleActor",
+          "lineNumber": 520
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "Future",
+          "lineNumber": 521
+        },
+        {
+          "caller": "on_evaluation_result",
+          "callee": "evaluation_result.set_result",
+          "lineNumber": 524
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 526
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "console.evaluate_js_async",
+          "lineNumber": 529
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "evaluation_result.result",
+          "lineNumber": 530
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 531
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 532
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 532
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_and_display_url",
+          "callee": "Source",
+          "lineNumber": 532
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 536
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "Devtools.connect",
+          "lineNumber": 537
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "WebConsoleActor",
+          "lineNumber": 538
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "Future",
+          "lineNumber": 539
+        },
+        {
+          "caller": "on_evaluation_result",
+          "callee": "evaluation_result.set_result",
+          "lineNumber": 542
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 544
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "console.evaluate_js_async",
+          "lineNumber": 547
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "evaluation_result.result",
+          "lineNumber": 548
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 549
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 549
+        },
+        {
+          "caller": "test_sources_list_with_debugger_eval_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 549
+        },
+        {
+          "caller": "test_sources_list_with_function_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 552
+        },
+        {
+          "caller": "test_sources_list_with_function_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 553
+        },
+        {
+          "caller": "test_sources_list_with_function_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 554
+        },
+        {
+          "caller": "test_sources_list_with_function_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 556
+        },
+        {
+          "caller": "test_sources_list_with_function_and_display_url",
+          "callee": "Source",
+          "lineNumber": 558
+        },
+        {
+          "caller": "test_sources_list_with_function_and_display_url",
+          "callee": "Source",
+          "lineNumber": 562
+        },
+        {
+          "caller": "test_sources_list_with_function_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 570
+        },
+        {
+          "caller": "test_sources_list_with_function_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 571
+        },
+        {
+          "caller": "test_sources_list_with_function_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 572
+        },
+        {
+          "caller": "test_sources_list_with_function_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 574
+        },
+        {
+          "caller": "test_sources_list_with_function_but_no_display_url",
+          "callee": "Source",
+          "lineNumber": 576
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 585
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 588
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 589
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 591
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_and_display_url",
+          "callee": "Source",
+          "lineNumber": 593
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_and_display_url",
+          "callee": "Source",
+          "lineNumber": 597
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 605
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 606
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 606
+        },
+        {
+          "caller": "test_sources_list_with_javascript_url_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 606
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 610
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 611
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 612
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 614
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_and_display_url",
+          "callee": "Source",
+          "lineNumber": 616
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 624
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 625
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 625
+        },
+        {
+          "caller": "test_sources_list_with_event_handler_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 625
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 629
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 630
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 631
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 633
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_and_display_url",
+          "callee": "Source",
+          "lineNumber": 635
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 644
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 645
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 645
+        },
+        {
+          "caller": "test_sources_list_with_dom_timer_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 645
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 650
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 651
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 652
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 654
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_and_display_url",
+          "callee": "Source",
+          "lineNumber": 656
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_invalid_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 665
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_invalid_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 666
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_invalid_display_url",
+          "callee": "Counter",
+          "lineNumber": 667
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_invalid_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 669
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_invalid_display_url",
+          "callee": "Source",
+          "lineNumber": 671
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 679
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 680
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 681
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 683
+        },
+        {
+          "caller": "test_sources_list_with_inline_script_but_no_display_url",
+          "callee": "Source",
+          "lineNumber": 685
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_and_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 696
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_and_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 697
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_and_display_url",
+          "callee": "Counter",
+          "lineNumber": 698
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_and_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 700
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_and_display_url",
+          "callee": "Source",
+          "lineNumber": 702
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_but_no_display_url",
+          "callee": "run_servoshell",
+          "lineNumber": 711
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_but_no_display_url",
+          "callee": "assert_sources_list",
+          "lineNumber": 712
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_but_no_display_url",
+          "callee": "Counter",
+          "lineNumber": 713
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_but_no_display_url",
+          "callee": "frozen_multiset",
+          "lineNumber": 715
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_but_no_display_url",
+          "callee": "Source",
+          "lineNumber": 718
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_multiple_inline_scripts",
+          "callee": "run_servoshell",
+          "lineNumber": 727
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_multiple_inline_scripts",
+          "callee": "assert_sources_list",
+          "lineNumber": 730
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_multiple_inline_scripts",
+          "callee": "Counter",
+          "lineNumber": 731
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_multiple_inline_scripts",
+          "callee": "frozen_multiset",
+          "lineNumber": 733
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_multiple_inline_scripts",
+          "callee": "Source",
+          "lineNumber": 735
+        },
+        {
+          "caller": "test_sources_list_with_iframe_srcdoc_multiple_inline_scripts",
+          "callee": "Source",
+          "lineNumber": 737
+        },
+        {
+          "caller": "test_source_content_inline_script",
+          "callee": "run_servoshell",
+          "lineNumber": 748
+        },
+        {
+          "caller": "test_source_content_inline_script",
+          "callee": "assert_source_content",
+          "lineNumber": 749
+        },
+        {
+          "caller": "test_source_content_inline_script",
+          "callee": "Source",
+          "lineNumber": 749
+        },
+        {
+          "caller": "test_source_content_external_script",
+          "callee": "run_servoshell",
+          "lineNumber": 752
+        },
+        {
+          "caller": "test_source_content_external_script",
+          "callee": "assert_source_content",
+          "lineNumber": 754
+        },
+        {
+          "caller": "test_source_content_external_script",
+          "callee": "Source",
+          "lineNumber": 754
+        },
+        {
+          "caller": "test_source_content_html_file",
+          "callee": "run_servoshell",
+          "lineNumber": 757
+        },
+        {
+          "caller": "test_source_content_html_file",
+          "callee": "open(os.path.join(test_dir, \"sources/test.html\")).read",
+          "lineNumber": 758
+        },
+        {
+          "caller": "test_source_content_html_file",
+          "callee": "open",
+          "lineNumber": 758
+        },
+        {
+          "caller": "test_source_content_html_file",
+          "callee": "os.path.join",
+          "lineNumber": 758
+        },
+        {
+          "caller": "test_source_content_html_file",
+          "callee": "assert_source_content",
+          "lineNumber": 759
+        },
+        {
+          "caller": "test_source_content_html_file",
+          "callee": "Source",
+          "lineNumber": 759
+        },
+        {
+          "caller": "test_source_content_with_inline_module_import_external",
+          "callee": "run_servoshell",
+          "lineNumber": 762
+        },
+        {
+          "caller": "test_source_content_with_inline_module_import_external",
+          "callee": "open(\n            os.path.join(test_dir, \"sources_content_with_inline_module_import_external/test.html\")\n        ).read",
+          "lineNumber": 763
+        },
+        {
+          "caller": "test_source_content_with_inline_module_import_external",
+          "callee": "open",
+          "lineNumber": 763
+        },
+        {
+          "caller": "test_source_content_with_inline_module_import_external",
+          "callee": "os.path.join",
+          "lineNumber": 764
+        },
+        {
+          "caller": "test_source_content_with_inline_module_import_external",
+          "callee": "assert_source_content",
+          "lineNumber": 766
+        },
+        {
+          "caller": "test_source_content_with_inline_module_import_external",
+          "callee": "Source",
+          "lineNumber": 767
+        },
+        {
+          "caller": "test_source_content_inline_script_with_inner_html",
+          "callee": "run_servoshell",
+          "lineNumber": 777
+        },
+        {
+          "caller": "test_source_content_inline_script_with_inner_html",
+          "callee": "assert_source_content",
+          "lineNumber": 778
+        },
+        {
+          "caller": "test_source_content_inline_script_with_inner_html",
+          "callee": "Source",
+          "lineNumber": 778
+        },
+        {
+          "caller": "test_source_content_inline_script_with_outer_html",
+          "callee": "run_servoshell",
+          "lineNumber": 784
+        },
+        {
+          "caller": "test_source_content_inline_script_with_outer_html",
+          "callee": "assert_source_content",
+          "lineNumber": 785
+        },
+        {
+          "caller": "test_source_content_inline_script_with_outer_html",
+          "callee": "Source",
+          "lineNumber": 785
+        },
+        {
+          "caller": "test_source_content_inline_script_with_domparser",
+          "callee": "run_servoshell",
+          "lineNumber": 791
+        },
+        {
+          "caller": "test_source_content_inline_script_with_domparser",
+          "callee": "assert_source_content",
+          "lineNumber": 792
+        },
+        {
+          "caller": "test_source_content_inline_script_with_domparser",
+          "callee": "Source",
+          "lineNumber": 792
+        },
+        {
+          "caller": "test_source_content_inline_script_with_responsexml",
+          "callee": "run_servoshell",
+          "lineNumber": 797
+        },
+        {
+          "caller": "test_source_content_inline_script_with_responsexml",
+          "callee": "open(os.path.join(test_dir, \"sources_content_with_responsexml/test.html\")).read",
+          "lineNumber": 798
+        },
+        {
+          "caller": "test_source_content_inline_script_with_responsexml",
+          "callee": "open",
+          "lineNumber": 798
+        },
+        {
+          "caller": "test_source_content_inline_script_with_responsexml",
+          "callee": "os.path.join",
+          "lineNumber": 798
+        },
+        {
+          "caller": "test_source_content_inline_script_with_responsexml",
+          "callee": "assert_source_content",
+          "lineNumber": 799
+        },
+        {
+          "caller": "test_source_content_inline_script_with_responsexml",
+          "callee": "Source",
+          "lineNumber": 800
+        },
+        {
+          "caller": "test_source_breakable_lines_and_positions",
+          "callee": "run_servoshell",
+          "lineNumber": 805
+        },
+        {
+          "caller": "test_source_breakable_lines_and_positions",
+          "callee": "assert_source_breakable_lines_and_positions",
+          "lineNumber": 806
+        },
+        {
+          "caller": "test_source_breakable_lines_and_positions",
+          "callee": "Source",
+          "lineNumber": 807
+        },
+        {
+          "caller": "test_source_breakable_lines_and_positions_with_functions",
+          "callee": "run_servoshell",
+          "lineNumber": 818
+        },
+        {
+          "caller": "test_source_breakable_lines_and_positions_with_functions",
+          "callee": "assert_source_breakable_lines_and_positions",
+          "lineNumber": 819
+        },
+        {
+          "caller": "test_source_breakable_lines_and_positions_with_functions",
+          "callee": "Source",
+          "lineNumber": 820
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "run_servoshell",
+          "lineNumber": 837
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "Devtools.connect",
+          "lineNumber": 838
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "attach_thread",
+          "lineNumber": 839
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "wait_for_source",
+          "lineNumber": 840
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "devtools.client.send_receive(\n                {\"to\": source_actor, \"type\": \"getBreakpointPositionsCompressed\"}\n            ).get",
+          "lineNumber": 843
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 843
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "min",
+          "lineNumber": 846
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "positions.keys",
+          "lineNumber": 846
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "int",
+          "lineNumber": 847
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "devtools.watcher.get_blackboxing_actor",
+          "lineNumber": 850
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 851
+        },
+        {
+          "caller": "trigger",
+          "callee": "set_breakpoint",
+          "lineNumber": 855
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause",
+          "callee": "wait_and_assert_no_pause",
+          "lineNumber": 857
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "run_servoshell",
+          "lineNumber": 861
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "Devtools.connect",
+          "lineNumber": 862
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "attach_thread",
+          "lineNumber": 863
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "wait_for_source",
+          "lineNumber": 864
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "devtools.client.send_receive(\n                {\"to\": source_actor, \"type\": \"getBreakpointPositionsCompressed\"}\n            ).get",
+          "lineNumber": 867
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 867
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "min",
+          "lineNumber": 870
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "positions.keys",
+          "lineNumber": 870
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "int",
+          "lineNumber": 871
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "devtools.watcher.get_blackboxing_actor",
+          "lineNumber": 874
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 875
+        },
+        {
+          "caller": "trigger",
+          "callee": "set_breakpoint",
+          "lineNumber": 886
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_single_line",
+          "callee": "wait_and_assert_no_pause",
+          "lineNumber": 888
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "run_servoshell",
+          "lineNumber": 892
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "Devtools.connect",
+          "lineNumber": 893
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "attach_thread",
+          "lineNumber": 894
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "wait_for_source",
+          "lineNumber": 895
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "devtools.client.send_receive(\n                {\"to\": source_actor, \"type\": \"getBreakpointPositionsCompressed\"}\n            ).get",
+          "lineNumber": 898
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 898
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "min",
+          "lineNumber": 901
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "positions.keys",
+          "lineNumber": 901
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "int",
+          "lineNumber": 902
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "devtools.watcher.get_blackboxing_actor",
+          "lineNumber": 905
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 906
+        },
+        {
+          "caller": "trigger",
+          "callee": "set_breakpoint",
+          "lineNumber": 917
+        },
+        {
+          "caller": "test_blackboxing_prevents_breakpoint_pause_multiline",
+          "callee": "wait_and_assert_no_pause",
+          "lineNumber": 919
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "run_servoshell",
+          "lineNumber": 923
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "Devtools.connect",
+          "lineNumber": 924
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "attach_thread",
+          "lineNumber": 925
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "wait_for_source",
+          "lineNumber": 926
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "devtools.client.send_receive(\n                {\"to\": source_actor, \"type\": \"getBreakpointPositionsCompressed\"}\n            ).get",
+          "lineNumber": 929
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 929
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "min",
+          "lineNumber": 932
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "positions.keys",
+          "lineNumber": 932
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "int",
+          "lineNumber": 933
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "devtools.watcher.get_blackboxing_actor",
+          "lineNumber": 936
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 938
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 941
+        },
+        {
+          "caller": "trigger",
+          "callee": "set_breakpoint",
+          "lineNumber": 945
+        },
+        {
+          "caller": "test_unblackboxing_partial",
+          "callee": "wait_for_pause",
+          "lineNumber": 947
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "run_servoshell",
+          "lineNumber": 951
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "Devtools.connect",
+          "lineNumber": 952
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "attach_thread",
+          "lineNumber": 953
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "wait_for_source",
+          "lineNumber": 954
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "devtools.client.send_receive(\n                {\"to\": source_actor, \"type\": \"getBreakpointPositionsCompressed\"}\n            ).get",
+          "lineNumber": 957
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 957
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "print",
+          "lineNumber": 960
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "min",
+          "lineNumber": 963
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "str",
+          "lineNumber": 963
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "min",
+          "lineNumber": 964
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "str",
+          "lineNumber": 964
+        },
+        {
+          "caller": "trigger",
+          "callee": "set_breakpoint",
+          "lineNumber": 968
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "wait_for_pause",
+          "lineNumber": 970
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "set_breakpoint",
+          "lineNumber": 973
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "devtools.watcher.get_blackboxing_actor",
+          "lineNumber": 976
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 977
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "step",
+          "lineNumber": 987
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "step_data.get(\"frame\", {}).get(\"where\", {}).get",
+          "lineNumber": 988
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "step_data.get(\"frame\", {}).get",
+          "lineNumber": 988
+        },
+        {
+          "caller": "test_blackboxing_prevents_stepping",
+          "callee": "step_data.get",
+          "lineNumber": 988
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "python/servo/devtools_tests/test_inspector_tab.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 222,
+      "nonEmptyLines": 180,
+      "classes": [
+        {
+          "name": "TestInspectorTab",
+          "startLine": 24,
+          "endLine": 222,
+          "methods": [
+            "test_inspector_event_listeners",
+            "test_inspector_attribute_modifications_affect_dom",
+            "test_inspector_notices_attribute_mutation_from_javascript",
+            "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+            "test_walker_observes_new_dom_after_nav",
+            "test_watcher_returns_same_breakpoint_list_actor_every_time",
+            "test_watcher_returns_same_blackboxing_actor_every_time"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestInspectorTab",
+          "line": 24,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "run_servoshell",
+          "lineNumber": 26
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "Devtools.connect",
+          "lineNumber": 27
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "InspectorActor",
+          "lineNumber": 28
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "WalkerActor",
+          "lineNumber": 29
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "inspector.get_walker",
+          "lineNumber": 29
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "walker.document_element",
+          "lineNumber": 30
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "walker.query_selector",
+          "lineNumber": 32
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "walker.query_selector",
+          "lineNumber": 33
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "walker.query_selector",
+          "lineNumber": 34
+        },
+        {
+          "caller": "assert_event_listeners",
+          "callee": "NodeActor",
+          "lineNumber": 42
+        },
+        {
+          "caller": "assert_event_listeners",
+          "callee": "node_actor.get_event_listener_info",
+          "lineNumber": 43
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "assert_event_listeners",
+          "lineNumber": 47
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "assert_event_listeners",
+          "lineNumber": 48
+        },
+        {
+          "caller": "test_inspector_event_listeners",
+          "callee": "assert_event_listeners",
+          "lineNumber": 49
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "run_servoshell",
+          "lineNumber": 52
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "Devtools.connect",
+          "lineNumber": 53
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "InspectorActor",
+          "lineNumber": 54
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "WalkerActor",
+          "lineNumber": 55
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "inspector.get_walker",
+          "lineNumber": 55
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "walker.document_element",
+          "lineNumber": 56
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "walker.query_selector",
+          "lineNumber": 57
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "Future",
+          "lineNumber": 59
+        },
+        {
+          "caller": "on_new_mutations",
+          "callee": "mutation_result.set_result",
+          "lineNumber": 62
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 64
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "inspector.get_walker",
+          "lineNumber": 65
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "walker.children",
+          "lineNumber": 69
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "NodeActor(devtools.client, first_child[\"actor\"]).modify_attributes",
+          "lineNumber": 73
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "NodeActor",
+          "lineNumber": 73
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "mutation_result.result",
+          "lineNumber": 78
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "walker.get_mutations",
+          "lineNumber": 81
+        },
+        {
+          "caller": "test_inspector_attribute_modifications_affect_dom",
+          "callee": "walker.children",
+          "lineNumber": 86
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "run_servoshell",
+          "lineNumber": 89
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "Devtools.connect",
+          "lineNumber": 90
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "InspectorActor",
+          "lineNumber": 91
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "WalkerActor",
+          "lineNumber": 92
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "inspector.get_walker",
+          "lineNumber": 92
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "walker.document_element",
+          "lineNumber": 93
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "WebConsoleActor",
+          "lineNumber": 94
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "walker.query_selector",
+          "lineNumber": 95
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "Future",
+          "lineNumber": 97
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "Future",
+          "lineNumber": 98
+        },
+        {
+          "caller": "on_new_mutations",
+          "callee": "mutation_result.set_result",
+          "lineNumber": 101
+        },
+        {
+          "caller": "on_evaluation_result",
+          "callee": "evaluation_result.set_result",
+          "lineNumber": 104
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 106
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "inspector.get_walker",
+          "lineNumber": 107
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 109
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "walker.children",
+          "lineNumber": 114
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "console.evaluate_js_async",
+          "lineNumber": 115
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "evaluation_result.result",
+          "lineNumber": 116
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "mutation_result.result",
+          "lineNumber": 119
+        },
+        {
+          "caller": "test_inspector_notices_attribute_mutation_from_javascript",
+          "callee": "walker.get_mutations",
+          "lineNumber": 122
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "run_servoshell",
+          "lineNumber": 129
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "Devtools.connect",
+          "lineNumber": 130
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "InspectorActor",
+          "lineNumber": 131
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "WalkerActor",
+          "lineNumber": 132
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "inspector.get_walker",
+          "lineNumber": 132
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "WebConsoleActor",
+          "lineNumber": 133
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "Future",
+          "lineNumber": 136
+        },
+        {
+          "caller": "on_evaluation_result",
+          "callee": "evaluation_result.set_result",
+          "lineNumber": 143
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 145
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "inspector.get_walker",
+          "lineNumber": 146
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 148
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "console.evaluate_js_async",
+          "lineNumber": 153
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "evaluation_result.result",
+          "lineNumber": 154
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "time.sleep",
+          "lineNumber": 157
+        },
+        {
+          "caller": "test_inspector_doesnt_crash_when_attribute_on_element_it_doesnt_know_about_is_mutated",
+          "callee": "walker.get_mutations",
+          "lineNumber": 159
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "run_servoshell",
+          "lineNumber": 166
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "Devtools.connect",
+          "lineNumber": 167
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "Future",
+          "lineNumber": 168
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "Future",
+          "lineNumber": 169
+        },
+        {
+          "caller": "on_target_destroyed",
+          "callee": "target_destroyed.set_result",
+          "lineNumber": 172
+        },
+        {
+          "caller": "on_target_available",
+          "callee": "data.get",
+          "lineNumber": 175
+        },
+        {
+          "caller": "on_target_available",
+          "callee": "target.get(\"url\", \"\").endswith",
+          "lineNumber": 176
+        },
+        {
+          "caller": "on_target_available",
+          "callee": "target.get",
+          "lineNumber": 176
+        },
+        {
+          "caller": "on_target_available",
+          "callee": "target_available.set_result",
+          "lineNumber": 177
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 179
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 184
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 189
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "target_destroyed.result",
+          "lineNumber": 197
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "target_available.result",
+          "lineNumber": 198
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "InspectorActor",
+          "lineNumber": 200
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "inspector.get_walker",
+          "lineNumber": 201
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "WalkerActor",
+          "lineNumber": 202
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "walker.query_selector",
+          "lineNumber": 205
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "title_node.get",
+          "lineNumber": 206
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "title_node[\"node\"].get",
+          "lineNumber": 207
+        },
+        {
+          "caller": "test_walker_observes_new_dom_after_nav",
+          "callee": "title_node[\"node\"][\"inlineTextChild\"].get",
+          "lineNumber": 208
+        },
+        {
+          "caller": "test_watcher_returns_same_breakpoint_list_actor_every_time",
+          "callee": "run_servoshell",
+          "lineNumber": 211
+        },
+        {
+          "caller": "test_watcher_returns_same_breakpoint_list_actor_every_time",
+          "callee": "Devtools.connect",
+          "lineNumber": 212
+        },
+        {
+          "caller": "test_watcher_returns_same_breakpoint_list_actor_every_time",
+          "callee": "devtools.watcher.get_breakpoint_list_actor",
+          "lineNumber": 213
+        },
+        {
+          "caller": "test_watcher_returns_same_breakpoint_list_actor_every_time",
+          "callee": "devtools.watcher.get_breakpoint_list_actor",
+          "lineNumber": 214
+        },
+        {
+          "caller": "test_watcher_returns_same_blackboxing_actor_every_time",
+          "callee": "run_servoshell",
+          "lineNumber": 218
+        },
+        {
+          "caller": "test_watcher_returns_same_blackboxing_actor_every_time",
+          "callee": "Devtools.connect",
+          "lineNumber": 219
+        },
+        {
+          "caller": "test_watcher_returns_same_blackboxing_actor_every_time",
+          "callee": "devtools.watcher.get_blackboxing_actor",
+          "lineNumber": 220
+        },
+        {
+          "caller": "test_watcher_returns_same_blackboxing_actor_every_time",
+          "callee": "devtools.watcher.get_blackboxing_actor",
+          "lineNumber": 221
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "python/servo/devtools_tests/test_network_tab.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 125,
+      "nonEmptyLines": 105,
+      "classes": [
+        {
+          "name": "TestNetworkTab",
+          "startLine": 18,
+          "endLine": 125,
+          "methods": [
+            "test_navigation",
+            "test_stylesheet_inline",
+            "test_stylesheet_linked",
+            "test_stylesheet_content"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "TestNetworkTab",
+          "line": 18,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "test_navigation",
+          "callee": "run_servoshell",
+          "lineNumber": 20
+        },
+        {
+          "caller": "test_navigation",
+          "callee": "Devtools.connect",
+          "lineNumber": 21
+        },
+        {
+          "caller": "test_navigation",
+          "callee": "Future",
+          "lineNumber": 27
+        },
+        {
+          "caller": "on_target_available",
+          "callee": "data.get(\"target\", {}).get(\"url\", \"\").endswith",
+          "lineNumber": 30
+        },
+        {
+          "caller": "on_target_available",
+          "callee": "data.get(\"target\", {}).get",
+          "lineNumber": 30
+        },
+        {
+          "caller": "on_target_available",
+          "callee": "data.get",
+          "lineNumber": 30
+        },
+        {
+          "caller": "on_target_available",
+          "callee": "done.set_result",
+          "lineNumber": 31
+        },
+        {
+          "caller": "test_navigation",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 33
+        },
+        {
+          "caller": "test_navigation",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 38
+        },
+        {
+          "caller": "test_navigation",
+          "callee": "done.result",
+          "lineNumber": 40
+        },
+        {
+          "caller": "test_stylesheet_inline",
+          "callee": "run_servoshell",
+          "lineNumber": 43
+        },
+        {
+          "caller": "test_stylesheet_inline",
+          "callee": "Devtools.connect",
+          "lineNumber": 44
+        },
+        {
+          "caller": "test_stylesheet_inline",
+          "callee": "Future",
+          "lineNumber": 45
+        },
+        {
+          "caller": "on_resource",
+          "callee": "stylesheets_data.extend",
+          "lineNumber": 51
+        },
+        {
+          "caller": "on_resource",
+          "callee": "done.set_result",
+          "lineNumber": 52
+        },
+        {
+          "caller": "test_stylesheet_inline",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 54
+        },
+        {
+          "caller": "test_stylesheet_inline",
+          "callee": "devtools.watcher.watch_resources",
+          "lineNumber": 59
+        },
+        {
+          "caller": "test_stylesheet_inline",
+          "callee": "done.result",
+          "lineNumber": 60
+        },
+        {
+          "caller": "test_stylesheet_inline",
+          "callee": "inline_sheet.get",
+          "lineNumber": 64
+        },
+        {
+          "caller": "test_stylesheet_linked",
+          "callee": "run_servoshell",
+          "lineNumber": 70
+        },
+        {
+          "caller": "test_stylesheet_linked",
+          "callee": "Devtools.connect",
+          "lineNumber": 71
+        },
+        {
+          "caller": "test_stylesheet_linked",
+          "callee": "Future",
+          "lineNumber": 72
+        },
+        {
+          "caller": "on_resource",
+          "callee": "stylesheets_data.extend",
+          "lineNumber": 78
+        },
+        {
+          "caller": "on_resource",
+          "callee": "done.set_result",
+          "lineNumber": 79
+        },
+        {
+          "caller": "test_stylesheet_linked",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 81
+        },
+        {
+          "caller": "test_stylesheet_linked",
+          "callee": "devtools.watcher.watch_resources",
+          "lineNumber": 86
+        },
+        {
+          "caller": "test_stylesheet_linked",
+          "callee": "done.result",
+          "lineNumber": 87
+        },
+        {
+          "caller": "test_stylesheet_content",
+          "callee": "run_servoshell",
+          "lineNumber": 97
+        },
+        {
+          "caller": "test_stylesheet_content",
+          "callee": "Devtools.connect",
+          "lineNumber": 98
+        },
+        {
+          "caller": "test_stylesheet_content",
+          "callee": "Future",
+          "lineNumber": 100
+        },
+        {
+          "caller": "on_resource",
+          "callee": "founded_resources.extend",
+          "lineNumber": 105
+        },
+        {
+          "caller": "on_resource",
+          "callee": "done.set_result",
+          "lineNumber": 106
+        },
+        {
+          "caller": "test_stylesheet_content",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 108
+        },
+        {
+          "caller": "test_stylesheet_content",
+          "callee": "devtools.watcher.watch_resources",
+          "lineNumber": 113
+        },
+        {
+          "caller": "test_stylesheet_content",
+          "callee": "done.result",
+          "lineNumber": 114
+        },
+        {
+          "caller": "test_stylesheet_content",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 117
+        }
+      ],
+      "metrics": {
+        "importCount": 1,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "python/servo/devtools_tests/utils.py",
+      "language": "python",
+      "fileCategory": "code",
+      "totalLines": 348,
+      "nonEmptyLines": 282,
+      "functions": [
+        {
+          "name": "attach_thread",
+          "startLine": 115,
+          "endLine": 118,
+          "params": [
+            "devtools"
+          ]
+        },
+        {
+          "name": "wait_for_source",
+          "startLine": 122,
+          "endLine": 138,
+          "params": [
+            "devtools",
+            "url_pattern",
+            "timeout"
+          ]
+        },
+        {
+          "name": "set_breakpoint",
+          "startLine": 141,
+          "endLine": 149,
+          "params": [
+            "devtools",
+            "source_url",
+            "line",
+            "column"
+          ]
+        },
+        {
+          "name": "wait_for_pause",
+          "startLine": 153,
+          "endLine": 161,
+          "params": [
+            "client",
+            "thread_actor",
+            "trigger",
+            "timeout"
+          ]
+        },
+        {
+          "name": "step",
+          "startLine": 165,
+          "endLine": 173,
+          "params": [
+            "client",
+            "thread_actor",
+            "step_type",
+            "timeout"
+          ]
+        },
+        {
+          "name": "resume_and_wait",
+          "startLine": 177,
+          "endLine": 185,
+          "params": [
+            "client",
+            "thread_actor",
+            "timeout"
+          ]
+        },
+        {
+          "name": "wait_and_assert_no_pause",
+          "startLine": 189,
+          "endLine": 202,
+          "params": [
+            "client",
+            "thread_actor",
+            "trigger",
+            "duration"
+          ]
+        },
+        {
+          "name": "frozen_multiset",
+          "startLine": 212,
+          "endLine": 222,
+          "params": [
+            "items"
+          ]
+        },
+        {
+          "name": "assert_sources_list",
+          "startLine": 225,
+          "endLine": 262,
+          "params": [
+            "expected_sources_by_target",
+            "devtools"
+          ]
+        },
+        {
+          "name": "assert_source_content",
+          "startLine": 265,
+          "endLine": 301,
+          "params": [
+            "expected_source",
+            "expected_content",
+            "devtools"
+          ]
+        },
+        {
+          "name": "assert_source_breakable_lines_and_positions",
+          "startLine": 304,
+          "endLine": 348,
+          "params": [
+            "expected_source",
+            "expected_breakable_lines",
+            "expected_positions",
+            "devtools"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "Devtools",
+          "startLine": 33,
+          "endLine": 105,
+          "methods": [
+            "connect",
+            "__getattribute__",
+            "__enter__",
+            "__exit__"
+          ],
+          "properties": [
+            "client",
+            "tab",
+            "watcher",
+            "targets",
+            "exited"
+          ]
+        },
+        {
+          "name": "Source",
+          "startLine": 109,
+          "endLine": 111,
+          "methods": [],
+          "properties": [
+            "introduction_type",
+            "url"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Devtools",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "Source",
+          "line": 108,
+          "isDefault": false
+        },
+        {
+          "name": "attach_thread",
+          "line": 115,
+          "isDefault": false
+        },
+        {
+          "name": "wait_for_source",
+          "line": 122,
+          "isDefault": false
+        },
+        {
+          "name": "set_breakpoint",
+          "line": 141,
+          "isDefault": false
+        },
+        {
+          "name": "wait_for_pause",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "step",
+          "line": 165,
+          "isDefault": false
+        },
+        {
+          "name": "resume_and_wait",
+          "line": 177,
+          "isDefault": false
+        },
+        {
+          "name": "wait_and_assert_no_pause",
+          "line": 189,
+          "isDefault": false
+        },
+        {
+          "name": "frozen_multiset",
+          "line": 212,
+          "isDefault": false
+        },
+        {
+          "name": "assert_sources_list",
+          "line": 225,
+          "isDefault": false
+        },
+        {
+          "name": "assert_source_content",
+          "line": 265,
+          "isDefault": false
+        },
+        {
+          "name": "assert_source_breakable_lines_and_positions",
+          "line": 304,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "connect",
+          "callee": "RDPClient",
+          "lineNumber": 45
+        },
+        {
+          "caller": "connect",
+          "callee": "client.connect",
+          "lineNumber": 46
+        },
+        {
+          "caller": "connect",
+          "callee": "RootActor",
+          "lineNumber": 47
+        },
+        {
+          "caller": "connect",
+          "callee": "root.list_tabs",
+          "lineNumber": 48
+        },
+        {
+          "caller": "connect",
+          "callee": "TabActor",
+          "lineNumber": 50
+        },
+        {
+          "caller": "connect",
+          "callee": "tab.get_watcher",
+          "lineNumber": 51
+        },
+        {
+          "caller": "connect",
+          "callee": "WatcherActor",
+          "lineNumber": 52
+        },
+        {
+          "caller": "connect",
+          "callee": "Future",
+          "lineNumber": 54
+        },
+        {
+          "caller": "on_target",
+          "callee": "targets.append",
+          "lineNumber": 59
+        },
+        {
+          "caller": "on_target",
+          "callee": "len",
+          "lineNumber": 60
+        },
+        {
+          "caller": "on_target",
+          "callee": "done.set_result",
+          "lineNumber": 61
+        },
+        {
+          "caller": "on_target",
+          "callee": "done.set_result",
+          "lineNumber": 65
+        },
+        {
+          "caller": "connect",
+          "callee": "client.add_event_listener",
+          "lineNumber": 67
+        },
+        {
+          "caller": "connect",
+          "callee": "watcher.watch_targets",
+          "lineNumber": 72
+        },
+        {
+          "caller": "connect",
+          "callee": "watcher.watch_targets",
+          "lineNumber": 73
+        },
+        {
+          "caller": "connect",
+          "callee": "done.result",
+          "lineNumber": 75
+        },
+        {
+          "caller": "connect",
+          "callee": "Devtools",
+          "lineNumber": 79
+        },
+        {
+          "caller": "__getattribute__",
+          "callee": "object.__getattribute__",
+          "lineNumber": 85
+        },
+        {
+          "caller": "__getattribute__",
+          "callee": "ValueError",
+          "lineNumber": 86
+        },
+        {
+          "caller": "__getattribute__",
+          "callee": "object.__getattribute__",
+          "lineNumber": 87
+        },
+        {
+          "caller": "__enter__",
+          "callee": "ValueError",
+          "lineNumber": 94
+        },
+        {
+          "caller": "__exit__",
+          "callee": "self.client.__exit__",
+          "lineNumber": 104
+        },
+        {
+          "caller": "attach_thread",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 117
+        },
+        {
+          "caller": "wait_for_source",
+          "callee": "Future",
+          "lineNumber": 123
+        },
+        {
+          "caller": "on_source",
+          "callee": "data.get",
+          "lineNumber": 126
+        },
+        {
+          "caller": "on_source",
+          "callee": "source.get",
+          "lineNumber": 129
+        },
+        {
+          "caller": "on_source",
+          "callee": "source_future.set_result",
+          "lineNumber": 130
+        },
+        {
+          "caller": "wait_for_source",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 132
+        },
+        {
+          "caller": "wait_for_source",
+          "callee": "devtools.watcher.watch_resources",
+          "lineNumber": 137
+        },
+        {
+          "caller": "wait_for_source",
+          "callee": "source_future.result",
+          "lineNumber": 138
+        },
+        {
+          "caller": "set_breakpoint",
+          "callee": "devtools.watcher.get_breakpoint_list_actor",
+          "lineNumber": 142
+        },
+        {
+          "caller": "set_breakpoint",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 143
+        },
+        {
+          "caller": "wait_for_pause",
+          "callee": "Future",
+          "lineNumber": 154
+        },
+        {
+          "caller": "on_paused",
+          "callee": "future.set_result",
+          "lineNumber": 157
+        },
+        {
+          "caller": "wait_for_pause",
+          "callee": "client.add_event_listener",
+          "lineNumber": 159
+        },
+        {
+          "caller": "wait_for_pause",
+          "callee": "trigger",
+          "lineNumber": 160
+        },
+        {
+          "caller": "wait_for_pause",
+          "callee": "future.result",
+          "lineNumber": 161
+        },
+        {
+          "caller": "step",
+          "callee": "Future",
+          "lineNumber": 166
+        },
+        {
+          "caller": "on_paused",
+          "callee": "future.set_result",
+          "lineNumber": 169
+        },
+        {
+          "caller": "step",
+          "callee": "client.add_event_listener",
+          "lineNumber": 171
+        },
+        {
+          "caller": "step",
+          "callee": "client.send_receive",
+          "lineNumber": 172
+        },
+        {
+          "caller": "step",
+          "callee": "future.result",
+          "lineNumber": 173
+        },
+        {
+          "caller": "resume_and_wait",
+          "callee": "Future",
+          "lineNumber": 178
+        },
+        {
+          "caller": "on_paused",
+          "callee": "future.set_result",
+          "lineNumber": 181
+        },
+        {
+          "caller": "resume_and_wait",
+          "callee": "client.add_event_listener",
+          "lineNumber": 183
+        },
+        {
+          "caller": "resume_and_wait",
+          "callee": "client.send_receive",
+          "lineNumber": 184
+        },
+        {
+          "caller": "resume_and_wait",
+          "callee": "future.result",
+          "lineNumber": 185
+        },
+        {
+          "caller": "wait_and_assert_no_pause",
+          "callee": "Future",
+          "lineNumber": 190
+        },
+        {
+          "caller": "on_paused",
+          "callee": "future.set_result",
+          "lineNumber": 193
+        },
+        {
+          "caller": "wait_and_assert_no_pause",
+          "callee": "client.add_event_listener",
+          "lineNumber": 195
+        },
+        {
+          "caller": "wait_and_assert_no_pause",
+          "callee": "trigger",
+          "lineNumber": 196
+        },
+        {
+          "caller": "wait_and_assert_no_pause",
+          "callee": "future.result",
+          "lineNumber": 199
+        },
+        {
+          "caller": "wait_and_assert_no_pause",
+          "callee": "AssertionError",
+          "lineNumber": 200
+        },
+        {
+          "caller": "frozen_multiset",
+          "callee": "Counter",
+          "lineNumber": 220
+        },
+        {
+          "caller": "frozen_multiset",
+          "callee": "tuple",
+          "lineNumber": 222
+        },
+        {
+          "caller": "frozen_multiset",
+          "callee": "sorted",
+          "lineNumber": 222
+        },
+        {
+          "caller": "frozen_multiset",
+          "callee": "result.items",
+          "lineNumber": 222
+        },
+        {
+          "caller": "assert_sources_list",
+          "callee": "len",
+          "lineNumber": 228
+        },
+        {
+          "caller": "assert_sources_list",
+          "callee": "Devtools.connect",
+          "lineNumber": 230
+        },
+        {
+          "caller": "assert_sources_list",
+          "callee": "Future",
+          "lineNumber": 232
+        },
+        {
+          "caller": "assert_sources_list",
+          "callee": "Counter",
+          "lineNumber": 233
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "frozen_multiset",
+          "lineNumber": 239
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "Source",
+          "lineNumber": 240
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "actual_sources_by_target.update",
+          "lineNumber": 243
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "len",
+          "lineNumber": 244
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "done.set_result",
+          "lineNumber": 245
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "done.set_result",
+          "lineNumber": 249
+        },
+        {
+          "caller": "assert_sources_list",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 252
+        },
+        {
+          "caller": "assert_sources_list",
+          "callee": "devtools.watcher.watch_resources",
+          "lineNumber": 257
+        },
+        {
+          "caller": "assert_sources_list",
+          "callee": "done.result",
+          "lineNumber": 259
+        },
+        {
+          "caller": "assert_source_content",
+          "callee": "Devtools.connect",
+          "lineNumber": 267
+        },
+        {
+          "caller": "assert_source_content",
+          "callee": "Future",
+          "lineNumber": 269
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "Source",
+          "lineNumber": 277
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "done.set_result",
+          "lineNumber": 279
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "done.set_result",
+          "lineNumber": 281
+        },
+        {
+          "caller": "assert_source_content",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 284
+        },
+        {
+          "caller": "assert_source_content",
+          "callee": "devtools.watcher.watch_resources",
+          "lineNumber": 289
+        },
+        {
+          "caller": "assert_source_content",
+          "callee": "done.result",
+          "lineNumber": 291
+        },
+        {
+          "caller": "assert_source_content",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 299
+        },
+        {
+          "caller": "assert_source_breakable_lines_and_positions",
+          "callee": "Devtools.connect",
+          "lineNumber": 312
+        },
+        {
+          "caller": "assert_source_breakable_lines_and_positions",
+          "callee": "Future",
+          "lineNumber": 314
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "Source",
+          "lineNumber": 322
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "done.set_result",
+          "lineNumber": 324
+        },
+        {
+          "caller": "on_source_resource",
+          "callee": "done.set_result",
+          "lineNumber": 326
+        },
+        {
+          "caller": "assert_source_breakable_lines_and_positions",
+          "callee": "devtools.client.add_event_listener",
+          "lineNumber": 329
+        },
+        {
+          "caller": "assert_source_breakable_lines_and_positions",
+          "callee": "devtools.watcher.watch_resources",
+          "lineNumber": 334
+        },
+        {
+          "caller": "assert_source_breakable_lines_and_positions",
+          "callee": "done.result",
+          "lineNumber": 336
+        },
+        {
+          "caller": "assert_source_breakable_lines_and_positions",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 344
+        },
+        {
+          "caller": "assert_source_breakable_lines_and_positions",
+          "callee": "devtools.client.send_receive",
+          "lineNumber": 347
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 13,
+        "functionCount": 11,
+        "classCount": 2
+      }
+    }
+  ]
+}

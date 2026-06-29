@@ -1,0 +1,1261 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/layout/lib.rs",
+      "summary": "Module entry point for the layout crate, re-exporting core types (ConstraintSpace, ContainingBlock, PropagatedBoxTreeData) and establishing the crate public API surface.",
+      "tags": [
+        "crate-root",
+        "barrel",
+        "module",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/lib.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/lib.rs",
+      "lineRange": [
+        70,
+        80
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/lib.rs:ConstraintSpace",
+      "type": "class",
+      "name": "ConstraintSpace",
+      "filePath": "components/layout/lib.rs",
+      "lineRange": [
+        63,
+        67
+      ],
+      "summary": "Represents the available space constraints for layout, including inline and block sizes.",
+      "tags": [
+        "constraint",
+        "space",
+        "layout-input"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/lib.rs:IndefiniteContainingBlock",
+      "type": "class",
+      "name": "IndefiniteContainingBlock",
+      "filePath": "components/layout/lib.rs",
+      "lineRange": [
+        86,
+        89
+      ],
+      "summary": "Represents an indefinite containing block measurement along one axis.",
+      "tags": [
+        "containing-block",
+        "indefinite"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/lib.rs:ContainingBlockSize",
+      "type": "class",
+      "name": "ContainingBlockSize",
+      "filePath": "components/layout/lib.rs",
+      "lineRange": [
+        125,
+        128
+      ],
+      "summary": "Represents the containing block size for layout with computed values.",
+      "tags": [
+        "containing-block",
+        "size"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/lib.rs:ContainingBlock",
+      "type": "class",
+      "name": "ContainingBlock",
+      "filePath": "components/layout/lib.rs",
+      "lineRange": [
+        130,
+        133
+      ],
+      "summary": "Represents the containing block size and writing mode for layout computations.",
+      "tags": [
+        "containing-block",
+        "size",
+        "writing-mode"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/lib.rs:PropagatedBoxTreeData",
+      "type": "class",
+      "name": "PropagatedBoxTreeData",
+      "filePath": "components/layout/lib.rs",
+      "lineRange": [
+        156,
+        158
+      ],
+      "summary": "Tracks box tree propagation data during layout for handling special formatting context interactions.",
+      "tags": [
+        "box-tree",
+        "propagation",
+        "layout-data"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/lists.rs",
+      "type": "file",
+      "name": "lists.rs",
+      "filePath": "components/layout/lists.rs",
+      "summary": "Provides CSS list marker generation including ordered list counter representation, marker string formatting (decimal, roman, alpha styles), and marker box construction for list items.",
+      "tags": [
+        "lists",
+        "counters",
+        "markers",
+        "css"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/lists.rs:make_marker",
+      "type": "function",
+      "name": "make_marker",
+      "filePath": "components/layout/lists.rs",
+      "lineRange": [
+        18,
+        58
+      ],
+      "summary": "Generates CSS list marker content or counter representation.",
+      "tags": [
+        "function",
+        "lists",
+        "counters"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/lists.rs:generate_counter_representation",
+      "type": "function",
+      "name": "generate_counter_representation",
+      "filePath": "components/layout/lists.rs",
+      "lineRange": [
+        68,
+        129
+      ],
+      "summary": "Generates CSS list marker content or counter representation.",
+      "tags": [
+        "function",
+        "lists",
+        "counters"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/lists.rs:marker_string",
+      "type": "function",
+      "name": "marker_string",
+      "filePath": "components/layout/lists.rs",
+      "lineRange": [
+        132,
+        165
+      ],
+      "summary": "Generates CSS list marker content or counter representation.",
+      "tags": [
+        "function",
+        "lists",
+        "counters"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/positioned.rs",
+      "type": "file",
+      "name": "positioned.rs",
+      "filePath": "components/layout/positioned.rs",
+      "summary": "Implements absolute and fixed positioning layout: PositioningContext management, hoisting of absolutely positioned boxes, static position adjustment, inset resolution, margin auto-solving, and layout of the initial containing block children.",
+      "tags": [
+        "positioned-layout",
+        "absolute",
+        "fixed",
+        "insets",
+        "hoisting"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        73,
+        75
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:construct",
+      "type": "function",
+      "name": "construct",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        77,
+        95
+      ],
+      "summary": "Constructs the box tree or table structure from DOM elements.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:to_hoisted",
+      "type": "function",
+      "name": "to_hoisted",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        97,
+        110
+      ],
+      "summary": "Converts an AbsolutelyPositionedBox to a HoistedAbsolutelyPositionedBox.",
+      "tags": [
+        "function",
+        "positioned",
+        "hoisting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:is_empty",
+      "type": "function",
+      "name": "is_empty",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        120,
+        122
+      ],
+      "summary": "Checks whether the table track is empty.",
+      "tags": [
+        "function",
+        "table",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:new_for_layout_box_base",
+      "type": "function",
+      "name": "new_for_layout_box_base",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        125,
+        130
+      ],
+      "summary": "Creates a new PositioningContext for a LayoutBoxBase.",
+      "tags": [
+        "function",
+        "positioning",
+        "constructor"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:new_for_style_and_fragment_flags",
+      "type": "function",
+      "name": "new_for_style_and_fragment_flags",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        132,
+        141
+      ],
+      "summary": "Creates a new PositioningContext from style and fragment flags.",
+      "tags": [
+        "function",
+        "positioning",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:adjust_static_position_of_hoisted_fragments",
+      "type": "function",
+      "name": "adjust_static_position_of_hoisted_fragments",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        155,
+        167
+      ],
+      "summary": "Adjusts the static position of hoisted absolutely positioned fragments.",
+      "tags": [
+        "function",
+        "positioned",
+        "static-position"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:adjust_static_position_of_hoisted_fragments_with_offset",
+      "type": "function",
+      "name": "adjust_static_position_of_hoisted_fragments_with_offset",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        170,
+        181
+      ],
+      "summary": "Applies a positional offset or translation to the fragment geometry.",
+      "tags": [
+        "function",
+        "positioning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:layout_maybe_position_relative_fragment",
+      "type": "function",
+      "name": "layout_maybe_position_relative_fragment",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        186,
+        219
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:forget_unhoisted_boxes",
+      "type": "function",
+      "name": "forget_unhoisted_boxes",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        221,
+        232
+      ],
+      "summary": "Manages the collection of absolutely positioned boxes for layout.",
+      "tags": [
+        "function",
+        "positioned",
+        "box-collection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:take_boxes_for_fragment",
+      "type": "function",
+      "name": "take_boxes_for_fragment",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        234,
+        257
+      ],
+      "summary": "Manages the collection of absolutely positioned boxes for layout.",
+      "tags": [
+        "function",
+        "positioned",
+        "box-collection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:layout_collected_children",
+      "type": "function",
+      "name": "layout_collected_children",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        261,
+        328
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:push",
+      "type": "function",
+      "name": "push",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        330,
+        333
+      ],
+      "summary": "Adds an absolutely positioned box to this positioning context.",
+      "tags": [
+        "function",
+        "positioned",
+        "box-collection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:append",
+      "type": "function",
+      "name": "append",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        335,
+        344
+      ],
+      "summary": "Adds an absolutely positioned box to this positioning context.",
+      "tags": [
+        "function",
+        "positioned",
+        "box-collection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:layout_initial_containing_block_children",
+      "type": "function",
+      "name": "layout_initial_containing_block_children",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        346,
+        366
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:len",
+      "type": "function",
+      "name": "len",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        369,
+        371
+      ],
+      "summary": "Gets the length or truncates the positioning context box list.",
+      "tags": [
+        "function",
+        "positioned",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:truncate",
+      "type": "function",
+      "name": "truncate",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        376,
+        378
+      ],
+      "summary": "Gets the length or truncates the positioning context box list.",
+      "tags": [
+        "function",
+        "positioned",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:position",
+      "type": "function",
+      "name": "position",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        396,
+        405
+      ],
+      "summary": "Computes the position of boxes within a positioning context.",
+      "tags": [
+        "function",
+        "positioned",
+        "positioning"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:layout_many",
+      "type": "function",
+      "name": "layout_many",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        407,
+        453
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        455,
+        527
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:layout_as_absolute",
+      "type": "function",
+      "name": "layout_as_absolute",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        540,
+        761
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:get_axis",
+      "type": "function",
+      "name": "get_axis",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        771,
+        782
+      ],
+      "summary": "Gets the axis solver for a given CSS axis (inline/block).",
+      "tags": [
+        "function",
+        "positioned",
+        "axis"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:inset_sum",
+      "type": "function",
+      "name": "inset_sum",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        805,
+        823
+      ],
+      "summary": "Sums the resolved inset values for an absolutely positioned element.",
+      "tags": [
+        "function",
+        "positioned",
+        "insets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:solve_margins",
+      "type": "function",
+      "name": "solve_margins",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        852,
+        880
+      ],
+      "summary": "Solves margin auto values for absolute positioning along a single axis.",
+      "tags": [
+        "function",
+        "margins",
+        "absolute"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:origin_for_margin_box",
+      "type": "function",
+      "name": "origin_for_margin_box",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        882,
+        1005
+      ],
+      "summary": "Computes the origin position for the margin box of an absolutely positioned element.",
+      "tags": [
+        "function",
+        "origin",
+        "absolute"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:relative_adjustement",
+      "type": "function",
+      "name": "relative_adjustement",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        1009,
+        1041
+      ],
+      "summary": "Applies relative positioning adjustment to a fragment.",
+      "tags": [
+        "function",
+        "relative",
+        "positioning"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/positioned.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        1078,
+        1102
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/positioned.rs:AbsolutelyPositionedBox",
+      "type": "class",
+      "name": "AbsolutelyPositionedBox",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        39,
+        41
+      ],
+      "summary": "Represents a single absolutely positioned box within a positioning context, tracking its fragment and hoisting status.",
+      "tags": [
+        "absolute",
+        "positioned-box",
+        "hoisted"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/positioned.rs:HoistedAbsolutelyPositionedBox",
+      "type": "class",
+      "name": "HoistedAbsolutelyPositionedBox",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        44,
+        70
+      ],
+      "summary": "An absolutely positioned box that has been hoisted to a higher positioning context for layout.",
+      "tags": [
+        "absolute",
+        "hoisted",
+        "positioned-box"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/positioned.rs:PositioningContext",
+      "type": "class",
+      "name": "PositioningContext",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        114,
+        116
+      ],
+      "summary": "Manages a positioning context for absolutely/fixed positioned elements, including box collection, hoisting, and layout coordination.",
+      "tags": [
+        "positioning",
+        "context",
+        "hoisting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/positioned.rs:PositioningContextLength",
+      "type": "class",
+      "name": "PositioningContextLength",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        383,
+        383
+      ],
+      "summary": "Wrapper around positioning context length for indexed access.",
+      "tags": [
+        "positioning",
+        "length"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/positioned.rs:AbsoluteAxisSolver",
+      "type": "class",
+      "name": "AbsoluteAxisSolver",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        785,
+        798
+      ],
+      "summary": "Solves absolute positioning along a single axis, computing resolved insets, margin auto-distribution, and final fragment position.",
+      "tags": [
+        "absolute",
+        "positioning",
+        "axis-solver",
+        "insets"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/positioned.rs:LayoutRootLayoutInputs",
+      "type": "class",
+      "name": "LayoutRootLayoutInputs",
+      "filePath": "components/layout/positioned.rs",
+      "lineRange": [
+        1048,
+        1065
+      ],
+      "summary": "Input parameters for the initial containing block layout pass, including viewport size and optional parent layout data.",
+      "tags": [
+        "layout-inputs",
+        "root",
+        "viewport"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "function:components/layout/lib.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:ConstraintSpace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:ConstraintSpace",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:IndefiniteContainingBlock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:IndefiniteContainingBlock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:ContainingBlockSize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:ContainingBlockSize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:ContainingBlock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:ContainingBlock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "class:components/layout/lib.rs:PropagatedBoxTreeData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:make_marker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:make_marker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:generate_counter_representation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:generate_counter_representation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:marker_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:marker_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:construct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:construct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:to_hoisted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:to_hoisted",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:is_empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:is_empty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:new_for_layout_box_base",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:new_for_layout_box_base",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:new_for_style_and_fragment_flags",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:adjust_static_position_of_hoisted_fragments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:adjust_static_position_of_hoisted_fragments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:adjust_static_position_of_hoisted_fragments_with_offset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:adjust_static_position_of_hoisted_fragments_with_offset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_maybe_position_relative_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_maybe_position_relative_fragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:forget_unhoisted_boxes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:take_boxes_for_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_collected_children",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_collected_children",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:push",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:push",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:append",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:append",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_initial_containing_block_children",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_initial_containing_block_children",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:len",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:len",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:truncate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:truncate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:position",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_many",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_many",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_as_absolute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout_as_absolute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:get_axis",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:inset_sum",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:solve_margins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:origin_for_margin_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:relative_adjustement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:relative_adjustement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "function:components/layout/positioned.rs:layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:AbsolutelyPositionedBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:AbsolutelyPositionedBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:HoistedAbsolutelyPositionedBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:HoistedAbsolutelyPositionedBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:PositioningContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:PositioningContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:PositioningContextLength",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:PositioningContextLength",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:AbsoluteAxisSolver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:LayoutRootLayoutInputs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/positioned.rs",
+      "target": "class:components/layout/positioned.rs:LayoutRootLayoutInputs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

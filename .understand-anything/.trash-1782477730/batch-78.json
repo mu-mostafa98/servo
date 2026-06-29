@@ -1,0 +1,577 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/shared/layout/layout_damage.rs",
+      "type": "file",
+      "name": "layout_damage.rs",
+      "filePath": "components/shared/layout/layout_damage.rs",
+      "summary": "Defines the LayoutDamage bitflag type and conversion functions between RestyleDamage and LayoutDamage, extending stylo's damage tracking with layout-specific damage modes for the Servo layout system.",
+      "tags": ["layout", "damage-tracking", "bitflags"],
+      "complexity": "simple",
+      "languageNotes": "Uses bitflags crate to define LayoutDamage as a superset of RestyleDamage with layout-specific bits for inline content sizes, box damage, and descendant tracking."
+    },
+    {
+      "id": "file:components/shared/layout/layout_dom.rs",
+      "type": "file",
+      "name": "layout_dom.rs",
+      "filePath": "components/shared/layout/layout_dom.rs",
+      "summary": "Defines the LayoutDomTypeBundle trait and associated type aliases that map DOM node types to their concrete layout implementations, enabling parameterization of the Layout trait over a single type bundle.",
+      "tags": ["type-definition", "trait", "layout"],
+      "complexity": "simple",
+      "languageNotes": "Uses associated types to bundle multiple concrete layout trait implementations, with type aliases for extraction pending default associated types stabilization."
+    },
+    {
+      "id": "file:components/shared/layout/layout_element.rs",
+      "type": "file",
+      "name": "layout_element.rs",
+      "filePath": "components/shared/layout/layout_element.rs",
+      "summary": "Defines the LayoutElement trait providing element-level layout operations including style access, attribute retrieval, pseudo-element chain management, and type identification, along with the DangerousStyleElement trait for stylo integration.",
+      "tags": ["trait", "element", "style-access", "layout"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/shared/layout/layout_node.rs",
+      "type": "file",
+      "name": "layout_node.rs",
+      "filePath": "components/shared/layout/layout_node.rs",
+      "summary": "Defines the LayoutNode trait providing comprehensive node-level layout operations including children traversal, style resolution, selection state, image/media/canvas/SVG data access, and table span information for the Servo layout tree.",
+      "tags": ["trait", "node", "layout", "dom-traversal"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/shared/layout/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/layout/lib.rs",
+      "summary": "Crate root for the shared layout library, defining the main Layout trait (the layout thread engine), image animation state management, reflow request and result types, layout data structures, and re-exporting all submodule types.",
+      "tags": ["crate-root", "layout-engine", "reflow", "data-structures", "entry-point"],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/shared/layout/pseudo_element_chain.rs",
+      "type": "file",
+      "name": "pseudo_element_chain.rs",
+      "filePath": "components/shared/layout/pseudo_element_chain.rs",
+      "summary": "Defines PseudoElementChain, a two-level nested pseudo-element chain data structure supporting before/after pseudo-element nesting rules with operations for adding, removing, and inspecting pseudo-elements.",
+      "tags": ["pseudo-element", "data-structure", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/layout_dom.rs:LayoutDomTypeBundle",
+      "type": "class",
+      "name": "LayoutDomTypeBundle",
+      "filePath": "components/shared/layout/layout_dom.rs",
+      "lineRange": [13, 22],
+      "summary": "Trait bundling all concrete Layout DOM trait implementations (LayoutNode, LayoutElement, DangerousStyleNode, DangerousStyleElement) into a single type parameter for the Layout trait.",
+      "tags": ["trait", "type-bundle", "dependency-injection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/layout_element.rs:LayoutElement",
+      "type": "class",
+      "name": "LayoutElement",
+      "filePath": "components/shared/layout/layout_element.rs",
+      "lineRange": [31, 135],
+      "summary": "Core trait exposing DOM elements to layout, providing methods for pseudo-element management, style data access, attribute retrieval, element type identification, and shadow DOM detection, with thread-safety constraints that forbid parent access.",
+      "tags": ["trait", "element", "style-access", "layout"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/layout/layout_element.rs:DangerousStyleElement",
+      "type": "class",
+      "name": "DangerousStyleElement",
+      "filePath": "components/shared/layout/layout_element.rs",
+      "lineRange": [143, 150],
+      "summary": "Unsafe trait wrapper around LayoutElement that allows parent node access, reserved exclusively for stylo and selectors integration where thread-safety invariants are managed externally.",
+      "tags": ["trait", "unsafe", "stylo-integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/layout_node.rs:LayoutNode",
+      "type": "class",
+      "name": "LayoutNode",
+      "filePath": "components/shared/layout/layout_node.rs",
+      "lineRange": [37, 224],
+      "summary": "Central layout trait exposing DOM nodes to the layout system, providing flat tree and DOM children traversal, style resolution (own, parent, selected), text content, selection state, image/media/canvas/SVG data, iframe identifiers, table spans, and form input detection.",
+      "tags": ["trait", "node", "layout", "dom-traversal", "style"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/layout/layout_node.rs:DangerousStyleNode",
+      "type": "class",
+      "name": "DangerousStyleNode",
+      "filePath": "components/shared/layout/layout_node.rs",
+      "lineRange": [232, 237],
+      "summary": "Unsafe trait wrapper around LayoutNode that allows parent node access for stylo and selectors integration, providing a layout_node() method to convert back to the safe LayoutNode API.",
+      "tags": ["trait", "unsafe", "stylo-integration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:LayoutElementType",
+      "type": "class",
+      "name": "LayoutElementType",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [112, 136],
+      "summary": "Enum categorizing all supported HTML and SVG element types for the layout system, enabling element-specific layout handling for over 20 element variants including form controls and SVG elements.",
+      "tags": ["enum", "element-types", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:Layout",
+      "type": "class",
+      "name": "Layout",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [270, 430],
+      "summary": "Main layout thread trait managing the full layout lifecycle including document reflow, stacking context tree construction, stylesheet management, scroll offset tracking, accessibility updates, and comprehensive query operations for element positions and computed styles.",
+      "tags": ["trait", "layout-engine", "reflow", "query-api"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:AxesOverflow",
+      "type": "class",
+      "name": "AxesOverflow",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [494, 497],
+      "summary": "Struct representing scroll overflow state on both x and y axes with methods for conversion to scrollable axes and scroll container detection.",
+      "tags": ["struct", "scroll", "overflow"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:QueryMsg",
+      "type": "class",
+      "name": "QueryMsg",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [540, 559],
+      "summary": "Enum defining all possible layout query message types including box area, style, text index, scroll parent, element from point, offset parent, and resize queries for script-layout communication.",
+      "tags": ["enum", "message", "query", "ipc"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:ReflowRequest",
+      "type": "class",
+      "name": "ReflowRequest",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [687, 714],
+      "summary": "Comprehensive struct encapsulating all data for a reflow operation including document state, viewport details, animation timeline value, restyle requests, highlighted DOM nodes, and accessibility integrity checks.",
+      "tags": ["struct", "reflow", "layout-data"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:ImageAnimationState",
+      "type": "class",
+      "name": "ImageAnimationState",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [773, 784],
+      "summary": "State machine tracking animated image frame advancement including active frame index, start time, completed loops, and methods for frame duration calculation and timeline-based frame updates.",
+      "tags": ["struct", "animation", "image"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:AnimatingImages",
+      "type": "class",
+      "name": "AnimatingImages",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [910, 917],
+      "summary": "Collection tracking image animation states across DOM nodes using a hash map from node to ImageAnimationState with dirty tracking for efficient incremental updates during reflow.",
+      "tags": ["struct", "animation", "image", "tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/pseudo_element_chain.rs:PseudoElementChain",
+      "type": "class",
+      "name": "PseudoElementChain",
+      "filePath": "components/shared/layout/pseudo_element_chain.rs",
+      "lineRange": [17, 20],
+      "summary": "Data structure representing a chain of up to two nested pseudo-elements (primary and secondary), supporting before/after pseudo-element nesting rules with methods for creation, inspection, and manipulation.",
+      "tags": ["struct", "pseudo-element", "chain"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/layout/layout_damage.rs:only_layout_modes",
+      "type": "function",
+      "name": "only_layout_modes",
+      "filePath": "components/shared/layout/layout_damage.rs",
+      "lineRange": [42, 44],
+      "summary": "Filters a LayoutDamage value to retain only the layout-related damage bits (Relayout and below), discarding layout-specific extension bits.",
+      "tags": ["utility", "damage-filter"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/layout/lib.rs:ratio_from_view_box",
+      "type": "function",
+      "name": "ratio_from_view_box",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [169, 186],
+      "summary": "Parses an SVG viewBox attribute string to extract and compute the width-to-height aspect ratio, returning None for zero-valued dimensions.",
+      "tags": ["utility", "svg", "parsing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/layout/lib.rs:duration_to_next_frame",
+      "type": "function",
+      "name": "duration_to_next_frame",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [806, 821],
+      "summary": "Calculates the time remaining until the next frame of an animated image should be displayed, accounting for frame delay and elapsed time since the current frame started.",
+      "tags": ["animation", "timing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/layout/lib.rs:update_frame_for_animation_timeline_value",
+      "type": "function",
+      "name": "update_frame_for_animation_timeline_value",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [826, 876],
+      "summary": "Advances the active frame of an animated image based on a timeline value by calculating elapsed frame duration, skipping completed frames, handling loop completion, and updating frame timing state.",
+      "tags": ["animation", "frame-advancement"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/layout/lib.rs:maybe_insert_or_update",
+      "type": "function",
+      "name": "maybe_insert_or_update",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [920, 937],
+      "summary": "Inserts or updates an image animation state for a given DOM node in the AnimatingImages collection, creating a new state if the node is not tracked or updating the image data on an existing state.",
+      "tags": ["animation", "image-tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/layout/pseudo_element_chain.rs:unnested",
+      "type": "function",
+      "name": "unnested",
+      "filePath": "components/shared/layout/pseudo_element_chain.rs",
+      "lineRange": [23, 28],
+      "summary": "Creates a PseudoElementChain containing a single pseudo-element as the primary element with no secondary nesting.",
+      "tags": ["utility", "pseudo-element"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/layout/pseudo_element_chain.rs:with_pseudo",
+      "type": "function",
+      "name": "with_pseudo",
+      "filePath": "components/shared/layout/pseudo_element_chain.rs",
+      "lineRange": [38, 49],
+      "summary": "Appends a pseudo-element onto an existing chain, nesting it as secondary when the primary is a before/after pseudo-element, or replacing the chain with a new single-element chain otherwise.",
+      "tags": ["utility", "pseudo-element", "nesting"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/layout/layout_damage.rs",
+      "target": "function:components/shared/layout/layout_damage.rs:only_layout_modes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/layout_damage.rs",
+      "target": "function:components/shared/layout/layout_damage.rs:only_layout_modes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/layout_dom.rs",
+      "target": "class:components/shared/layout/layout_dom.rs:LayoutDomTypeBundle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/layout_dom.rs",
+      "target": "class:components/shared/layout/layout_dom.rs:LayoutDomTypeBundle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/layout_element.rs",
+      "target": "class:components/shared/layout/layout_element.rs:LayoutElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/layout_element.rs",
+      "target": "class:components/shared/layout/layout_element.rs:LayoutElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/layout_element.rs",
+      "target": "class:components/shared/layout/layout_element.rs:DangerousStyleElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/layout_element.rs",
+      "target": "class:components/shared/layout/layout_element.rs:DangerousStyleElement",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/layout_node.rs",
+      "target": "class:components/shared/layout/layout_node.rs:LayoutNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/layout_node.rs",
+      "target": "class:components/shared/layout/layout_node.rs:LayoutNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/layout_node.rs",
+      "target": "class:components/shared/layout/layout_node.rs:DangerousStyleNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/layout_node.rs",
+      "target": "class:components/shared/layout/layout_node.rs:DangerousStyleNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/pseudo_element_chain.rs",
+      "target": "class:components/shared/layout/pseudo_element_chain.rs:PseudoElementChain",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/pseudo_element_chain.rs",
+      "target": "class:components/shared/layout/pseudo_element_chain.rs:PseudoElementChain",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/pseudo_element_chain.rs",
+      "target": "function:components/shared/layout/pseudo_element_chain.rs:unnested",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/pseudo_element_chain.rs",
+      "target": "function:components/shared/layout/pseudo_element_chain.rs:unnested",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/pseudo_element_chain.rs",
+      "target": "function:components/shared/layout/pseudo_element_chain.rs:with_pseudo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/pseudo_element_chain.rs",
+      "target": "function:components/shared/layout/pseudo_element_chain.rs:with_pseudo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:LayoutElementType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:LayoutElementType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:Layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:Layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:AxesOverflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:AxesOverflow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:QueryMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:QueryMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ReflowRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ReflowRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ImageAnimationState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ImageAnimationState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:AnimatingImages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:AnimatingImages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "function:components/shared/layout/lib.rs:ratio_from_view_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "function:components/shared/layout/lib.rs:ratio_from_view_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "function:components/shared/layout/lib.rs:duration_to_next_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "function:components/shared/layout/lib.rs:duration_to_next_frame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "function:components/shared/layout/lib.rs:update_frame_for_animation_timeline_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "function:components/shared/layout/lib.rs:update_frame_for_animation_timeline_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "function:components/shared/layout/lib.rs:maybe_insert_or_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "function:components/shared/layout/lib.rs:maybe_insert_or_update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "file:components/shared/layout/layout_damage.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "file:components/shared/layout/layout_dom.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "file:components/shared/layout/layout_element.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "file:components/shared/layout/layout_node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "file:components/shared/layout/pseudo_element_chain.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

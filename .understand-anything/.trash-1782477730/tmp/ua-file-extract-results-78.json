@@ -1,0 +1,1838 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 6,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/shared/layout/layout_damage.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 57,
+      "nonEmptyLines": 51,
+      "functions": [
+        {
+          "name": "only_layout_modes",
+          "startLine": 42,
+          "endLine": 44,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 48,
+          "endLine": 50,
+          "params": [
+            "restyle_damage"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 54,
+          "endLine": 56,
+          "params": [
+            "layout_damage"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "only_layout_modes",
+          "line": 42,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "only_layout_modes",
+          "callee": "self.intersection",
+          "lineNumber": 43
+        },
+        {
+          "caller": "from",
+          "callee": "LayoutDamage::from_bits_retain",
+          "lineNumber": 49
+        },
+        {
+          "caller": "from",
+          "callee": "restyle_damage.bits",
+          "lineNumber": 49
+        },
+        {
+          "caller": "from",
+          "callee": "RestyleDamage::from_bits_retain",
+          "lineNumber": 55
+        },
+        {
+          "caller": "from",
+          "callee": "layout_damage.bits",
+          "lineNumber": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/shared/layout/layout_dom.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 40,
+      "nonEmptyLines": 32,
+      "classes": [
+        {
+          "name": "LayoutDomTypeBundle",
+          "startLine": 13,
+          "endLine": 22,
+          "methods": [],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LayoutDomTypeBundle",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 0,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/shared/layout/layout_element.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 150,
+      "nonEmptyLines": 125,
+      "classes": [
+        {
+          "name": "LayoutElement",
+          "startLine": 31,
+          "endLine": 135,
+          "methods": [
+            "with_pseudo",
+            "pseudo_element_chain",
+            "as_node",
+            "dangerous_style_element",
+            "initialize_style_and_layout_data",
+            "unset_snapshot_flags",
+            "set_has_snapshot",
+            "style_data",
+            "type_id",
+            "local_name",
+            "attribute",
+            "attribute_as_str",
+            "element_data",
+            "element_data_mut",
+            "style",
+            "is_shadow_host",
+            "is_body_element_of_html_element_root",
+            "is_html_element_in_html_document",
+            "is_root"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DangerousStyleElement",
+          "startLine": 143,
+          "endLine": 150,
+          "methods": [
+            "layout_element"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LayoutElement",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "DangerousStyleElement",
+          "line": 143,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/shared/layout/layout_node.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 237,
+      "nonEmptyLines": 197,
+      "classes": [
+        {
+          "name": "LayoutNode",
+          "startLine": 37,
+          "endLine": 224,
+          "methods": [
+            "with_pseudo",
+            "pseudo_element_chain",
+            "dangerous_style_node",
+            "dangerous_dom_parent",
+            "dangerous_flat_tree_parent",
+            "layout_data",
+            "is_connected",
+            "opaque",
+            "type_id",
+            "initialize_layout_data",
+            "flat_tree_children",
+            "dom_children",
+            "as_html_element",
+            "as_element",
+            "style",
+            "parent_style",
+            "selected_style",
+            "text_content",
+            "selection",
+            "image_url",
+            "image_density",
+            "image_data",
+            "showing_broken_image_icon",
+            "canvas_data",
+            "svg_data",
+            "media_data",
+            "iframe_browsing_context_id",
+            "iframe_pipeline_id",
+            "table_span",
+            "table_colspan",
+            "table_rowspan",
+            "is_single_line_text_input",
+            "is_root_of_user_agent_widget",
+            "set_uses_content_attribute_with_attr"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DangerousStyleNode",
+          "startLine": 232,
+          "endLine": 237,
+          "methods": [
+            "layout_node"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "LayoutNode",
+          "line": 37,
+          "isDefault": false
+        },
+        {
+          "name": "DangerousStyleNode",
+          "line": 232,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 2,
+        "functionCount": 0,
+        "classCount": 2
+      }
+    },
+    {
+      "path": "components/shared/layout/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 1083,
+      "nonEmptyLines": 961,
+      "functions": [
+        {
+          "name": "ratio_from_view_box",
+          "startLine": 169,
+          "endLine": 186,
+          "params": []
+        },
+        {
+          "name": "default",
+          "startLine": 500,
+          "endLine": 505,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 509,
+          "endLine": 514,
+          "params": [
+            "style"
+          ]
+        },
+        {
+          "name": "to_scrollable",
+          "startLine": 518,
+          "endLine": 523,
+          "params": []
+        },
+        {
+          "name": "establishes_scroll_container",
+          "startLine": 526,
+          "endLine": 530,
+          "params": []
+        },
+        {
+          "name": "needs_restyle",
+          "startLine": 609,
+          "endLine": 611,
+          "params": []
+        },
+        {
+          "name": "needs_frame",
+          "startLine": 653,
+          "endLine": 657,
+          "params": []
+        },
+        {
+          "name": "stylesheets_changed",
+          "startLine": 717,
+          "endLine": 721,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 754,
+          "endLine": 760,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "combine_id_with_fragment_type",
+          "startLine": 763,
+          "endLine": 766,
+          "params": [
+            "id",
+            "fragment_type"
+          ]
+        },
+        {
+          "name": "node_id_from_scroll_id",
+          "startLine": 768,
+          "endLine": 770,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 787,
+          "endLine": 800,
+          "params": [
+            "image",
+            "last_update_time"
+          ]
+        },
+        {
+          "name": "image_key",
+          "startLine": 802,
+          "endLine": 804,
+          "params": []
+        },
+        {
+          "name": "duration_to_next_frame",
+          "startLine": 806,
+          "endLine": 821,
+          "params": [
+            "now"
+          ]
+        },
+        {
+          "name": "update_frame_for_animation_timeline_value",
+          "startLine": 826,
+          "endLine": 876,
+          "params": [
+            "now"
+          ]
+        },
+        {
+          "name": "is_finished",
+          "startLine": 879,
+          "endLine": 885,
+          "params": []
+        },
+        {
+          "name": "advance_completed_loops",
+          "startLine": 888,
+          "endLine": 892,
+          "params": []
+        },
+        {
+          "name": "maybe_insert_or_update",
+          "startLine": 920,
+          "endLine": 937,
+          "params": [
+            "node",
+            "image",
+            "current_timeline_value"
+          ]
+        },
+        {
+          "name": "remove",
+          "startLine": 939,
+          "endLine": 943,
+          "params": [
+            "node"
+          ]
+        },
+        {
+          "name": "clear_dirty",
+          "startLine": 946,
+          "endLine": 948,
+          "params": []
+        },
+        {
+          "name": "is_empty",
+          "startLine": 950,
+          "endLine": 952,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 958,
+          "endLine": 965,
+          "params": []
+        },
+        {
+          "name": "drop",
+          "startLine": 969,
+          "endLine": 975,
+          "params": []
+        },
+        {
+          "name": "with_layout_state",
+          "startLine": 983,
+          "endLine": 986,
+          "params": [
+            "f"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GenericLayoutDataTrait",
+          "startLine": 79,
+          "endLine": 81,
+          "methods": [
+            "as_any"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LayoutDataTrait",
+          "startLine": 83,
+          "endLine": 83,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "StyleData",
+          "startLine": 87,
+          "endLine": 96,
+          "methods": [],
+          "properties": [
+            "element_data",
+            "parallel"
+          ]
+        },
+        {
+          "name": "DomParallelInfo",
+          "startLine": 100,
+          "endLine": 103,
+          "methods": [],
+          "properties": [
+            "children_to_process"
+          ]
+        },
+        {
+          "name": "LayoutNodeType",
+          "startLine": 106,
+          "endLine": 109,
+          "methods": [],
+          "properties": [
+            "Element",
+            "Text"
+          ]
+        },
+        {
+          "name": "LayoutElementType",
+          "startLine": 112,
+          "endLine": 136,
+          "methods": [],
+          "properties": [
+            "Element",
+            "HTMLBodyElement",
+            "HTMLBRElement",
+            "HTMLCanvasElement",
+            "HTMLHtmlElement",
+            "HTMLIFrameElement",
+            "HTMLImageElement",
+            "HTMLInputElement",
+            "HTMLMediaElement",
+            "HTMLObjectElement",
+            "HTMLOptGroupElement",
+            "HTMLOptionElement",
+            "HTMLParagraphElement",
+            "HTMLPreElement",
+            "HTMLSelectElement",
+            "HTMLTableCellElement",
+            "HTMLTableColElement",
+            "HTMLTableElement",
+            "HTMLTableRowElement",
+            "HTMLTableSectionElement",
+            "HTMLTextAreaElement",
+            "SVGImageElement",
+            "SVGSVGElement"
+          ]
+        },
+        {
+          "name": "ScriptSelection",
+          "startLine": 142,
+          "endLine": 150,
+          "methods": [],
+          "properties": [
+            "range",
+            "character_range",
+            "enabled"
+          ]
+        },
+        {
+          "name": "HTMLCanvasData",
+          "startLine": 153,
+          "endLine": 157,
+          "methods": [],
+          "properties": [
+            "image_key",
+            "width",
+            "height"
+          ]
+        },
+        {
+          "name": "SVGElementData",
+          "startLine": 159,
+          "endLine": 166,
+          "methods": [],
+          "properties": [
+            "source",
+            "width",
+            "height",
+            "svg_id",
+            "view_box"
+          ]
+        },
+        {
+          "name": "TrustedNodeAddress",
+          "startLine": 191,
+          "endLine": 191,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PendingImageState",
+          "startLine": 198,
+          "endLine": 201,
+          "methods": [],
+          "properties": [
+            "Unrequested",
+            "PendingResponse"
+          ]
+        },
+        {
+          "name": "LayoutImageDestination",
+          "startLine": 205,
+          "endLine": 208,
+          "methods": [],
+          "properties": [
+            "BoxTreeConstruction",
+            "DisplayListBuilding"
+          ]
+        },
+        {
+          "name": "PendingImage",
+          "startLine": 214,
+          "endLine": 221,
+          "methods": [],
+          "properties": [
+            "state",
+            "node",
+            "id",
+            "origin",
+            "destination",
+            "is_internal_request"
+          ]
+        },
+        {
+          "name": "PendingRasterizationImage",
+          "startLine": 227,
+          "endLine": 231,
+          "methods": [],
+          "properties": [
+            "node",
+            "id",
+            "size"
+          ]
+        },
+        {
+          "name": "MediaFrame",
+          "startLine": 234,
+          "endLine": 238,
+          "methods": [],
+          "properties": [
+            "image_key",
+            "width",
+            "height"
+          ]
+        },
+        {
+          "name": "MediaMetadata",
+          "startLine": 240,
+          "endLine": 243,
+          "methods": [],
+          "properties": [
+            "width",
+            "height"
+          ]
+        },
+        {
+          "name": "HTMLMediaData",
+          "startLine": 245,
+          "endLine": 248,
+          "methods": [],
+          "properties": [
+            "current_frame",
+            "metadata"
+          ]
+        },
+        {
+          "name": "LayoutConfig",
+          "startLine": 250,
+          "endLine": 264,
+          "methods": [],
+          "properties": [
+            "id",
+            "webview_id",
+            "url",
+            "is_iframe",
+            "script_chan",
+            "image_cache",
+            "font_context",
+            "time_profiler_chan",
+            "paint_api",
+            "viewport_details",
+            "user_stylesheets",
+            "theme",
+            "embedder_chan"
+          ]
+        },
+        {
+          "name": "LayoutFactory",
+          "startLine": 266,
+          "endLine": 268,
+          "methods": [
+            "create"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Layout",
+          "startLine": 270,
+          "endLine": 430,
+          "methods": [
+            "device",
+            "set_theme",
+            "set_viewport_details",
+            "load_web_fonts_from_stylesheet",
+            "add_stylesheet",
+            "exit_now",
+            "collect_reports",
+            "set_quirks_mode",
+            "remove_stylesheet",
+            "remove_cached_image",
+            "reflow",
+            "ensure_stacking_context_tree",
+            "register_paint_worklet_modules",
+            "set_scroll_offsets_from_renderer",
+            "scroll_offset",
+            "needs_new_display_list",
+            "set_needs_new_display_list",
+            "node_rendering_type",
+            "query_containing_block",
+            "query_containing_block_is_descendant",
+            "query_padding",
+            "query_box_area",
+            "query_box_areas",
+            "query_client_rect",
+            "query_current_css_zoom",
+            "query_element_inner_outer_text",
+            "query_offset_parent",
+            "query_scroll_container",
+            "query_resolved_style",
+            "query_resolved_font_style",
+            "query_scrolling_area",
+            "query_text_index",
+            "query_elements_from_point",
+            "query_effective_overflow",
+            "stylist_mut",
+            "set_accessibility_active",
+            "accessibility_active",
+            "needs_accessibility_update",
+            "set_needs_accessibility_update"
+          ],
+          "properties": []
+        },
+        {
+          "name": "ScriptThreadFactory",
+          "startLine": 435,
+          "endLine": 443,
+          "methods": [
+            "create"
+          ],
+          "properties": []
+        },
+        {
+          "name": "BoxAreaType",
+          "startLine": 448,
+          "endLine": 452,
+          "methods": [],
+          "properties": [
+            "Content",
+            "Padding",
+            "Border"
+          ]
+        },
+        {
+          "name": "NodeRenderingType",
+          "startLine": 459,
+          "endLine": 467,
+          "methods": [],
+          "properties": [
+            "Rendered",
+            "DelegatesRendering",
+            "NotRendered"
+          ]
+        },
+        {
+          "name": "PhysicalSides",
+          "startLine": 470,
+          "endLine": 475,
+          "methods": [],
+          "properties": [
+            "left",
+            "top",
+            "right",
+            "bottom"
+          ]
+        },
+        {
+          "name": "OffsetParentResponse",
+          "startLine": 478,
+          "endLine": 481,
+          "methods": [],
+          "properties": [
+            "node_address",
+            "rect"
+          ]
+        },
+        {
+          "name": "AxesOverflow",
+          "startLine": 494,
+          "endLine": 497,
+          "methods": [
+            "default",
+            "from",
+            "to_scrollable",
+            "establishes_scroll_container"
+          ],
+          "properties": [
+            "x",
+            "y"
+          ]
+        },
+        {
+          "name": "ScrollContainerResponse",
+          "startLine": 534,
+          "endLine": 537,
+          "methods": [],
+          "properties": [
+            "Viewport",
+            "Element"
+          ]
+        },
+        {
+          "name": "QueryMsg",
+          "startLine": 540,
+          "endLine": 559,
+          "methods": [],
+          "properties": [
+            "BoxArea",
+            "BoxAreas",
+            "ClientRectQuery",
+            "CurrentCSSZoomQuery",
+            "EffectiveOverflow",
+            "ElementInnerOuterTextQuery",
+            "ElementsFromPoint",
+            "InnerWindowDimensionsQuery",
+            "NodesFromPointQuery",
+            "OffsetParentQuery",
+            "ScrollParentQuery",
+            "ResolvedFontStyleQuery",
+            "ResolvedStyleQuery",
+            "ScrollingAreaOrOffsetQuery",
+            "StyleQuery",
+            "TextIndexQuery",
+            "PaddingQuery",
+            "FlushForUpdateTheRenderingQuery"
+          ]
+        },
+        {
+          "name": "ReflowGoal",
+          "startLine": 567,
+          "endLine": 580,
+          "methods": [],
+          "properties": [
+            "UpdateTheRendering",
+            "LayoutQuery",
+            "UpdateScrollNode"
+          ]
+        },
+        {
+          "name": "IFrameSize",
+          "startLine": 583,
+          "endLine": 587,
+          "methods": [],
+          "properties": [
+            "browsing_context_id",
+            "pipeline_id",
+            "viewport_details"
+          ]
+        },
+        {
+          "name": "ReflowResult",
+          "startLine": 616,
+          "endLine": 634,
+          "methods": [],
+          "properties": [
+            "reflow_phases_run",
+            "reflow_statistics",
+            "pending_images",
+            "pending_rasterization_images",
+            "pending_svg_elements_for_serialization",
+            "iframe_sizes"
+          ]
+        },
+        {
+          "name": "ReflowStatistics",
+          "startLine": 661,
+          "endLine": 669,
+          "methods": [],
+          "properties": [
+            "rebuilt_fragment_count",
+            "restyle_fragment_count",
+            "only_descendants_changed_count"
+          ]
+        },
+        {
+          "name": "ReflowRequestRestyle",
+          "startLine": 674,
+          "endLine": 683,
+          "methods": [],
+          "properties": [
+            "reason",
+            "dirty_root",
+            "stylesheets_changed",
+            "pending_restyles"
+          ]
+        },
+        {
+          "name": "ReflowRequest",
+          "startLine": 687,
+          "endLine": 714,
+          "methods": [
+            "stylesheets_changed"
+          ],
+          "properties": [
+            "document",
+            "epoch",
+            "restyle",
+            "viewport_details",
+            "reflow_goal",
+            "origin",
+            "animation_timeline_value",
+            "animations",
+            "animating_images",
+            "highlighted_dom_node",
+            "document_context",
+            "rooted_nodes_for_accessibility_integrity_check"
+          ]
+        },
+        {
+          "name": "PendingRestyle",
+          "startLine": 726,
+          "endLine": 736,
+          "methods": [],
+          "properties": [
+            "snapshot",
+            "hint",
+            "damage"
+          ]
+        },
+        {
+          "name": "FragmentType",
+          "startLine": 744,
+          "endLine": 751,
+          "methods": [
+            "from"
+          ],
+          "properties": [
+            "FragmentBody",
+            "BeforePseudoContent",
+            "AfterPseudoContent"
+          ]
+        },
+        {
+          "name": "ImageAnimationState",
+          "startLine": 773,
+          "endLine": 784,
+          "methods": [
+            "new",
+            "image_key",
+            "duration_to_next_frame",
+            "update_frame_for_animation_timeline_value",
+            "is_finished",
+            "advance_completed_loops"
+          ],
+          "properties": [
+            "image",
+            "active_frame",
+            "frame_start_time",
+            "completed_loops"
+          ]
+        },
+        {
+          "name": "ElementsFromPointResult",
+          "startLine": 897,
+          "endLine": 907,
+          "methods": [],
+          "properties": [
+            "node",
+            "point_in_target",
+            "cursor"
+          ]
+        },
+        {
+          "name": "AnimatingImages",
+          "startLine": 910,
+          "endLine": 917,
+          "methods": [
+            "maybe_insert_or_update",
+            "remove",
+            "clear_dirty",
+            "is_empty"
+          ],
+          "properties": [
+            "node_to_state_map",
+            "dirty"
+          ]
+        },
+        {
+          "name": "ThreadStateRestorer",
+          "startLine": 955,
+          "endLine": 955,
+          "methods": [
+            "new",
+            "drop"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "GenericLayoutDataTrait",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutDataTrait",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "StyleData",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "DomParallelInfo",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutNodeType",
+          "line": 106,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutElementType",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "ScriptSelection",
+          "line": 142,
+          "isDefault": false
+        },
+        {
+          "name": "HTMLCanvasData",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "SVGElementData",
+          "line": 159,
+          "isDefault": false
+        },
+        {
+          "name": "ratio_from_view_box",
+          "line": 169,
+          "isDefault": false
+        },
+        {
+          "name": "TrustedNodeAddress",
+          "line": 191,
+          "isDefault": false
+        },
+        {
+          "name": "PendingImageState",
+          "line": 198,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutImageDestination",
+          "line": 205,
+          "isDefault": false
+        },
+        {
+          "name": "PendingImage",
+          "line": 214,
+          "isDefault": false
+        },
+        {
+          "name": "PendingRasterizationImage",
+          "line": 227,
+          "isDefault": false
+        },
+        {
+          "name": "MediaFrame",
+          "line": 234,
+          "isDefault": false
+        },
+        {
+          "name": "MediaMetadata",
+          "line": 240,
+          "isDefault": false
+        },
+        {
+          "name": "HTMLMediaData",
+          "line": 245,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutConfig",
+          "line": 250,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutFactory",
+          "line": 266,
+          "isDefault": false
+        },
+        {
+          "name": "Layout",
+          "line": 270,
+          "isDefault": false
+        },
+        {
+          "name": "ScriptThreadFactory",
+          "line": 435,
+          "isDefault": false
+        },
+        {
+          "name": "BoxAreaType",
+          "line": 448,
+          "isDefault": false
+        },
+        {
+          "name": "NodeRenderingType",
+          "line": 459,
+          "isDefault": false
+        },
+        {
+          "name": "PhysicalSides",
+          "line": 470,
+          "isDefault": false
+        },
+        {
+          "name": "OffsetParentResponse",
+          "line": 478,
+          "isDefault": false
+        },
+        {
+          "name": "AxesOverflow",
+          "line": 494,
+          "isDefault": false
+        },
+        {
+          "name": "to_scrollable",
+          "line": 518,
+          "isDefault": false
+        },
+        {
+          "name": "establishes_scroll_container",
+          "line": 526,
+          "isDefault": false
+        },
+        {
+          "name": "ScrollContainerResponse",
+          "line": 534,
+          "isDefault": false
+        },
+        {
+          "name": "QueryMsg",
+          "line": 540,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowGoal",
+          "line": 567,
+          "isDefault": false
+        },
+        {
+          "name": "IFrameSize",
+          "line": 583,
+          "isDefault": false
+        },
+        {
+          "name": "needs_restyle",
+          "line": 609,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowResult",
+          "line": 616,
+          "isDefault": false
+        },
+        {
+          "name": "needs_frame",
+          "line": 653,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowStatistics",
+          "line": 661,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowRequestRestyle",
+          "line": 674,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowRequest",
+          "line": 687,
+          "isDefault": false
+        },
+        {
+          "name": "stylesheets_changed",
+          "line": 717,
+          "isDefault": false
+        },
+        {
+          "name": "PendingRestyle",
+          "line": 726,
+          "isDefault": false
+        },
+        {
+          "name": "FragmentType",
+          "line": 744,
+          "isDefault": false
+        },
+        {
+          "name": "combine_id_with_fragment_type",
+          "line": 763,
+          "isDefault": false
+        },
+        {
+          "name": "node_id_from_scroll_id",
+          "line": 768,
+          "isDefault": false
+        },
+        {
+          "name": "ImageAnimationState",
+          "line": 773,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 787,
+          "isDefault": false
+        },
+        {
+          "name": "image_key",
+          "line": 802,
+          "isDefault": false
+        },
+        {
+          "name": "duration_to_next_frame",
+          "line": 806,
+          "isDefault": false
+        },
+        {
+          "name": "update_frame_for_animation_timeline_value",
+          "line": 826,
+          "isDefault": false
+        },
+        {
+          "name": "ElementsFromPointResult",
+          "line": 897,
+          "isDefault": false
+        },
+        {
+          "name": "AnimatingImages",
+          "line": 910,
+          "isDefault": false
+        },
+        {
+          "name": "maybe_insert_or_update",
+          "line": 920,
+          "isDefault": false
+        },
+        {
+          "name": "remove",
+          "line": 939,
+          "isDefault": false
+        },
+        {
+          "name": "clear_dirty",
+          "line": 946,
+          "isDefault": false
+        },
+        {
+          "name": "is_empty",
+          "line": 950,
+          "isDefault": false
+        },
+        {
+          "name": "with_layout_state",
+          "line": 983,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "self.view_box?.chars",
+          "lineNumber": 170
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_integer(&mut iter).ok",
+          "lineNumber": 171
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_integer",
+          "lineNumber": 171
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_integer(&mut iter).ok",
+          "lineNumber": 172
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_integer",
+          "lineNumber": 172
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_unsigned_integer(&mut iter).ok",
+          "lineNumber": 174
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_unsigned_integer",
+          "lineNumber": 174
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_unsigned_integer(&mut iter).ok",
+          "lineNumber": 179
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_unsigned_integer",
+          "lineNumber": 179
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "iter.skip_while",
+          "lineNumber": 184
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "char_is_whitespace",
+          "lineNumber": 184
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "iter.next().is_none().then",
+          "lineNumber": 185
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "iter.next().is_none",
+          "lineNumber": 185
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "iter.next",
+          "lineNumber": 185
+        },
+        {
+          "caller": "from",
+          "callee": "style.clone_overflow_x",
+          "lineNumber": 511
+        },
+        {
+          "caller": "from",
+          "callee": "style.clone_overflow_y",
+          "lineNumber": 512
+        },
+        {
+          "caller": "to_scrollable",
+          "callee": "self.x.to_scrollable",
+          "lineNumber": 520
+        },
+        {
+          "caller": "to_scrollable",
+          "callee": "self.y.to_scrollable",
+          "lineNumber": 521
+        },
+        {
+          "caller": "establishes_scroll_container",
+          "callee": "self.x.is_scrollable",
+          "lineNumber": 529
+        },
+        {
+          "caller": "needs_restyle",
+          "callee": "self.is_empty",
+          "lineNumber": 610
+        },
+        {
+          "caller": "needs_frame",
+          "callee": "self.intersects",
+          "lineNumber": 654
+        },
+        {
+          "caller": "stylesheets_changed",
+          "callee": "self.restyle\n            .as_ref().is_some_and",
+          "lineNumber": 718
+        },
+        {
+          "caller": "stylesheets_changed",
+          "callee": "self.restyle.as_ref",
+          "lineNumber": 718
+        },
+        {
+          "caller": "new",
+          "callee": "Some",
+          "lineNumber": 791
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "self.is_finished",
+          "lineNumber": 807
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "self\n            .image\n            .frames\n            .get(self.active_frame)\n            .expect(\"Image frame should always be valid\")\n            .delay.unwrap_or_default",
+          "lineNumber": 810
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "self\n            .image\n            .frames\n            .get(self.active_frame).expect",
+          "lineNumber": 810
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "self\n            .image\n            .frames.get",
+          "lineNumber": 810
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "(now - self.frame_start_time).max",
+          "lineNumber": 818
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "Duration::from_secs_f64",
+          "lineNumber": 819
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "Some",
+          "lineNumber": 820
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "time_since_frame_start.min",
+          "lineNumber": 820
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image.frames.len",
+          "lineNumber": 827
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.is_finished",
+          "lineNumber": 827
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames\n                .get(self.active_frame)\n                .unwrap()\n                .delay()\n                .unwrap().as_secs_f64",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames\n                .get(self.active_frame)\n                .unwrap()\n                .delay().unwrap",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames\n                .get(self.active_frame)\n                .unwrap().delay",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames\n                .get(self.active_frame).unwrap",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames.get",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image.frames.len",
+          "lineNumber": 841
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.advance_completed_loops",
+          "lineNumber": 847
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.is_finished",
+          "lineNumber": 851
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames\n                .get(next_active_frame_id)\n                .unwrap()\n                .delay()\n                .unwrap().as_secs_f64",
+          "lineNumber": 861
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames\n                .get(next_active_frame_id)\n                .unwrap()\n                .delay().unwrap",
+          "lineNumber": 861
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames\n                .get(next_active_frame_id)\n                .unwrap().delay",
+          "lineNumber": 861
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames\n                .get(next_active_frame_id).unwrap",
+          "lineNumber": 861
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames.get",
+          "lineNumber": 861
+        },
+        {
+          "caller": "is_finished",
+          "callee": "self.image.loop_count.as_ref",
+          "lineNumber": 880
+        },
+        {
+          "caller": "is_finished",
+          "callee": "self.completed_loops.is_some_and",
+          "lineNumber": 883
+        },
+        {
+          "caller": "is_finished",
+          "callee": "maximum_loops.get",
+          "lineNumber": 884
+        },
+        {
+          "caller": "advance_completed_loops",
+          "callee": "self.completed_loops.as_mut",
+          "lineNumber": 889
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "self.node_to_state_map.entry(node).or_insert_with",
+          "lineNumber": 926
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "self.node_to_state_map.entry",
+          "lineNumber": 926
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "ImageAnimationState::new",
+          "lineNumber": 928
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "image.clone",
+          "lineNumber": 928
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "ImageAnimationState::new",
+          "lineNumber": 935
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "image.clone",
+          "lineNumber": 935
+        },
+        {
+          "caller": "remove",
+          "callee": "self.node_to_state_map.remove(&node).is_some",
+          "lineNumber": 940
+        },
+        {
+          "caller": "remove",
+          "callee": "self.node_to_state_map.remove",
+          "lineNumber": 940
+        },
+        {
+          "caller": "clear_dirty",
+          "callee": "std::mem::take",
+          "lineNumber": 947
+        },
+        {
+          "caller": "is_empty",
+          "callee": "self.node_to_state_map.is_empty",
+          "lineNumber": 951
+        },
+        {
+          "caller": "new",
+          "callee": "thread_state::exit",
+          "lineNumber": 961
+        },
+        {
+          "caller": "new",
+          "callee": "thread_state::enter",
+          "lineNumber": 962
+        },
+        {
+          "caller": "drop",
+          "callee": "thread_state::exit",
+          "lineNumber": 972
+        },
+        {
+          "caller": "drop",
+          "callee": "thread_state::enter",
+          "lineNumber": 973
+        },
+        {
+          "caller": "with_layout_state",
+          "callee": "ThreadStateRestorer::new",
+          "lineNumber": 984
+        },
+        {
+          "caller": "with_layout_state",
+          "callee": "f",
+          "lineNumber": 985
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "std::iter::repeat_with(|| ImageFrame {\n            delay: Some(Duration::from_millis(100)),\n            byte_range: 0..1,\n            width: 100,\n            height: 100,\n        })\n        .take(10).collect",
+          "lineNumber": 1000
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "std::iter::repeat_with(|| ImageFrame {\n            delay: Some(Duration::from_millis(100)),\n            byte_range: 0..1,\n            width: 100,\n            height: 100,\n        }).take",
+          "lineNumber": 1000
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "std::iter::repeat_with",
+          "lineNumber": 1000
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Some",
+          "lineNumber": 1001
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Duration::from_millis",
+          "lineNumber": 1001
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Arc::new",
+          "lineNumber": 1015
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Some",
+          "lineNumber": 1018
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "ImageAnimationState::new",
+          "lineNumber": 1021
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Arc::new",
+          "lineNumber": 1021
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "std::iter::repeat_with(|| ImageFrame {\n            delay: Some(Duration::from_millis(100)),\n            byte_range: 0..1,\n            width: 100,\n            height: 100,\n        })\n        .take(2).collect",
+          "lineNumber": 1041
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "std::iter::repeat_with(|| ImageFrame {\n            delay: Some(Duration::from_millis(100)),\n            byte_range: 0..1,\n            width: 100,\n            height: 100,\n        }).take",
+          "lineNumber": 1041
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "std::iter::repeat_with",
+          "lineNumber": 1041
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Some",
+          "lineNumber": 1042
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Duration::from_millis",
+          "lineNumber": 1042
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Arc::new",
+          "lineNumber": 1056
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Some",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Repeat::Finite",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "NonZeroU32::new(1).unwrap",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "NonZeroU32::new",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "ImageAnimationState::new",
+          "lineNumber": 1062
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Arc::new",
+          "lineNumber": 1062
+        }
+      ],
+      "metrics": {
+        "importCount": 5,
+        "exportCount": 56,
+        "functionCount": 24,
+        "classCount": 40
+      }
+    },
+    {
+      "path": "components/shared/layout/pseudo_element_chain.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 62,
+      "nonEmptyLines": 54,
+      "functions": [
+        {
+          "name": "unnested",
+          "startLine": 23,
+          "endLine": 28,
+          "params": [
+            "pseudo_element"
+          ]
+        },
+        {
+          "name": "innermost",
+          "startLine": 30,
+          "endLine": 32,
+          "params": []
+        },
+        {
+          "name": "with_pseudo",
+          "startLine": 38,
+          "endLine": 49,
+          "params": [
+            "pseudo_element"
+          ]
+        },
+        {
+          "name": "without_innermost",
+          "startLine": 51,
+          "endLine": 57,
+          "params": []
+        },
+        {
+          "name": "is_empty",
+          "startLine": 59,
+          "endLine": 61,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "PseudoElementChain",
+          "startLine": 17,
+          "endLine": 20,
+          "methods": [
+            "unnested",
+            "innermost",
+            "with_pseudo",
+            "without_innermost",
+            "is_empty"
+          ],
+          "properties": [
+            "primary",
+            "secondary"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "PseudoElementChain",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "unnested",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "innermost",
+          "line": 30,
+          "isDefault": false
+        },
+        {
+          "name": "with_pseudo",
+          "line": 38,
+          "isDefault": false
+        },
+        {
+          "name": "without_innermost",
+          "line": 51,
+          "isDefault": false
+        },
+        {
+          "name": "is_empty",
+          "line": 59,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "unnested",
+          "callee": "Some",
+          "lineNumber": 25
+        },
+        {
+          "caller": "innermost",
+          "callee": "self.secondary.or",
+          "lineNumber": 31
+        },
+        {
+          "caller": "with_pseudo",
+          "callee": "primary.is_before_or_after",
+          "lineNumber": 40
+        },
+        {
+          "caller": "with_pseudo",
+          "callee": "Some",
+          "lineNumber": 42
+        },
+        {
+          "caller": "with_pseudo",
+          "callee": "Self::unnested",
+          "lineNumber": 46
+        },
+        {
+          "caller": "without_innermost",
+          "callee": "Some",
+          "lineNumber": 53
+        },
+        {
+          "caller": "without_innermost",
+          "callee": "self.secondary.map_or_else",
+          "lineNumber": 54
+        },
+        {
+          "caller": "without_innermost",
+          "callee": "Self::unnested",
+          "lineNumber": 55
+        },
+        {
+          "caller": "is_empty",
+          "callee": "self.primary.is_none",
+          "lineNumber": 60
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 6,
+        "functionCount": 5,
+        "classCount": 1
+      }
+    }
+  ]
+}

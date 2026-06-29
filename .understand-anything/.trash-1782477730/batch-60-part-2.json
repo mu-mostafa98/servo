@@ -1,0 +1,447 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/geometry/domrect.rs",
+      "type": "file",
+      "name": "domrect.rs",
+      "filePath": "components/script/dom/geometry/domrect.rs",
+      "summary": "Implements the DOMRect interface for mutable rectangles with x, y, width, height properties. Extends DOMRectReadOnly and provides setters for all four properties, constructors from individual values or dictionaries, and IPDL serialization.",
+      "tags": ["dom-binding", "rectangle", "geometry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/geometry/domrectlist.rs",
+      "type": "file",
+      "name": "domrectlist.rs",
+      "filePath": "components/script/dom/geometry/domrectlist.rs",
+      "summary": "Implements the DOMRectList interface for a frozen ordered collection of DOMRect objects with indexed access and length query.",
+      "tags": ["dom-binding", "rectangle", "list", "collection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "type": "file",
+      "name": "domrectreadonly.rs",
+      "filePath": "components/script/dom/geometry/domrectreadonly.rs",
+      "summary": "Implements the DOMRectReadOnly interface for immutable rectangles. Stores x, y, width, height as Cell<f64>, provides read accessors, computed edge properties (top, right, bottom, left), constructors from individual values or dictionaries, and IPDL serialization.",
+      "tags": ["dom-binding", "rectangle", "geometry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/geometry/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/geometry/mod.rs",
+      "summary": "Module barrel file that re-exports all geometry DOM interfaces: DOMMatrix, DOMMatrixReadOnly, DOMPoint, DOMPointReadOnly, DOMQuad, DOMRect, DOMRectList, and DOMRectReadOnly.",
+      "tags": ["entry-point", "barrel", "module"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/geometry/domrect.rs:DOMRect",
+      "type": "class",
+      "name": "DOMRect",
+      "filePath": "components/script/dom/geometry/domrect.rs",
+      "lineRange": [27, 29],
+      "summary": "Mutable rectangle extending DOMRectReadOnly with property setters for x, y, width, height.",
+      "tags": ["dom-binding", "rectangle", "geometry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrect.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/geometry/domrect.rs",
+      "lineRange": [38, 47],
+      "summary": "Creates a new DOMRect DOM object with the given position and dimensions.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrect.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/geometry/domrect.rs",
+      "lineRange": [32, 36],
+      "summary": "Low-level constructor that initializes the DOMRect struct by delegating to DOMRectReadOnly::new_inherited with position and dimensions.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrect.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/geometry/domrect.rs",
+      "lineRange": [49, 64],
+      "summary": "Creates a new DOMRect with a custom prototype for the JS reflector.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrect.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/geometry/domrect.rs",
+      "lineRange": [69, 81],
+      "summary": "WebIDL constructor creating a DOMRect with default or provided position and dimensions.",
+      "tags": ["constructor", "webidl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrect.rs:deserialize",
+      "type": "function",
+      "name": "deserialize",
+      "filePath": "components/script/dom/geometry/domrect.rs",
+      "lineRange": [146, 162],
+      "summary": "IPDL deserialization: reconstructs a DOMRect from serialized x, y, width, height values.",
+      "tags": ["serialization", "ipdl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/geometry/domrectlist.rs:DOMRectList",
+      "type": "class",
+      "name": "DOMRectList",
+      "filePath": "components/script/dom/geometry/domrectlist.rs",
+      "lineRange": [15, 18],
+      "summary": "Frozen ordered collection of traced DOMRect references with indexed getter and length.",
+      "tags": ["dom-binding", "collection"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrectlist.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/geometry/domrectlist.rs",
+      "lineRange": [21, 31],
+      "summary": "Low-level constructor initializing the DOMRectList with traced DOM references for GC rooting.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrectlist.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/geometry/domrectlist.rs",
+      "lineRange": [33, 44],
+      "summary": "Creates a new DOMRectList DOM object wrapping a vector of DOMRect references.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/geometry/domrectreadonly.rs:DOMRectReadOnly",
+      "type": "class",
+      "name": "DOMRectReadOnly",
+      "filePath": "components/script/dom/geometry/domrectreadonly.rs",
+      "lineRange": [27, 33],
+      "summary": "Immutable rectangle storing x, y, width, height as Cell<f64> with read accessors, computed edge properties (top, right, bottom, left), and dictionary-based construction.",
+      "tags": ["dom-binding", "rectangle", "geometry"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrectreadonly.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/geometry/domrectreadonly.rs",
+      "lineRange": [36, 44],
+      "summary": "Low-level constructor initializing DOMRectReadOnly with reflector and Cell-stored dimensions.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrectreadonly.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/geometry/domrectreadonly.rs",
+      "lineRange": [46, 61],
+      "summary": "Creates a new DOMRectReadOnly DOM object with the given position and dimensions.",
+      "tags": ["constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrectreadonly.rs:new_from_dictionary",
+      "type": "function",
+      "name": "new_from_dictionary",
+      "filePath": "components/script/dom/geometry/domrectreadonly.rs",
+      "lineRange": [63, 75],
+      "summary": "Creates a DOMRectReadOnly from a dictionary by extracting x, y, width, height with defaults.",
+      "tags": ["constructor", "dictionary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrectreadonly.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/geometry/domrectreadonly.rs",
+      "lineRange": [96, 106],
+      "summary": "WebIDL constructor creating a DOMRectReadOnly with default or provided position and dimensions.",
+      "tags": ["constructor", "webidl"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrectreadonly.rs:create_a_domrectreadonly_from_the_dictionary",
+      "type": "function",
+      "name": "create_a_domrectreadonly_from_the_dictionary",
+      "filePath": "components/script/dom/geometry/domrectreadonly.rs",
+      "lineRange": [182, 200],
+      "summary": "Helper that creates a DOMRectReadOnly struct directly from a dictionary without a JS reflector, handling coordinate NaN normalization.",
+      "tags": ["helper", "dictionary"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/geometry/domrectreadonly.rs:deserialize",
+      "type": "function",
+      "name": "deserialize",
+      "filePath": "components/script/dom/geometry/domrectreadonly.rs",
+      "lineRange": [218, 235],
+      "summary": "IPDL deserialization: reconstructs a DOMRectReadOnly from serialized dimensions.",
+      "tags": ["serialization", "ipdl"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/geometry/domrect.rs",
+      "target": "class:components/script/dom/geometry/domrect.rs:DOMRect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrect.rs",
+      "target": "function:components/script/dom/geometry/domrect.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrect.rs",
+      "target": "function:components/script/dom/geometry/domrect.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrect.rs",
+      "target": "function:components/script/dom/geometry/domrect.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrect.rs",
+      "target": "function:components/script/dom/geometry/domrect.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrect.rs",
+      "target": "function:components/script/dom/geometry/domrect.rs:deserialize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectlist.rs",
+      "target": "class:components/script/dom/geometry/domrectlist.rs:DOMRectList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectlist.rs",
+      "target": "function:components/script/dom/geometry/domrectlist.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectlist.rs",
+      "target": "function:components/script/dom/geometry/domrectlist.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "class:components/script/dom/geometry/domrectreadonly.rs:DOMRectReadOnly",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:new_from_dictionary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:create_a_domrectreadonly_from_the_dictionary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:deserialize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrect.rs",
+      "target": "class:components/script/dom/geometry/domrect.rs:DOMRect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrect.rs",
+      "target": "function:components/script/dom/geometry/domrect.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectlist.rs",
+      "target": "class:components/script/dom/geometry/domrectlist.rs:DOMRectList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectlist.rs",
+      "target": "function:components/script/dom/geometry/domrectlist.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "class:components/script/dom/geometry/domrectreadonly.rs:DOMRectReadOnly",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:new_from_dictionary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:create_a_domrectreadonly_from_the_dictionary",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:components/script/dom/geometry/domrect.rs:DOMRect",
+      "target": "class:components/script/dom/geometry/domrectreadonly.rs:DOMRectReadOnly",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "file:components/script/dom/geometry/mod.rs",
+      "target": "file:components/script/dom/geometry/dommatrix.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/geometry/mod.rs",
+      "target": "file:components/script/dom/geometry/dommatrixreadonly.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/geometry/mod.rs",
+      "target": "file:components/script/dom/geometry/dompoint.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/geometry/mod.rs",
+      "target": "file:components/script/dom/geometry/dompointreadonly.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/geometry/mod.rs",
+      "target": "file:components/script/dom/geometry/domquad.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/geometry/mod.rs",
+      "target": "file:components/script/dom/geometry/domrect.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/geometry/mod.rs",
+      "target": "file:components/script/dom/geometry/domrectlist.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/geometry/mod.rs",
+      "target": "file:components/script/dom/geometry/domrectreadonly.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:components/script/dom/geometry/domrect.rs:new_inherited",
+      "target": "function:components/script/dom/geometry/domrectreadonly.rs:new_inherited",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

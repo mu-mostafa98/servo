@@ -1,0 +1,1067 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "type": "file",
+      "name": "largest_contentful_paint_calculator.rs",
+      "filePath": "components/paint/largest_contentful_paint_calculator.rs",
+      "summary": "Tracks and calculates Largest Contentful Paint (LCP) metrics per webview, managing LCP candidates and enabling/disabling LCP calculation for specific webviews.",
+      "tags": [
+        "paint",
+        "performance",
+        "web-metrics"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/paint/largest_contentful_paint_calculator.rs:LargestContentfulPaintCalculator",
+      "type": "class",
+      "name": "LargestContentfulPaintCalculator",
+      "filePath": "components/paint/largest_contentful_paint_calculator.rs",
+      "lineRange": [
+        13,
+        16
+      ],
+      "summary": "Manages LCP tracking per webview: collects candidates, computes LCP, and controls webview-level enable/disable state.",
+      "tags": [
+        "paint",
+        "performance",
+        "lcp"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/largest_contentful_paint_calculator.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/paint/largest_contentful_paint_calculator.rs",
+      "lineRange": [
+        19,
+        24
+      ],
+      "summary": "Method new for LargestContentfulPaintCalculator.",
+      "tags": [
+        "paint",
+        "lcp",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/largest_contentful_paint_calculator.rs:append_lcp_candidate",
+      "type": "function",
+      "name": "append_lcp_candidate",
+      "filePath": "components/paint/largest_contentful_paint_calculator.rs",
+      "lineRange": [
+        26,
+        38
+      ],
+      "summary": "Records a new LCP candidate for a specific pipeline and webview.",
+      "tags": [
+        "paint",
+        "lcp",
+        "candidate"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/largest_contentful_paint_calculator.rs:calculate_largest_contentful_paint",
+      "type": "function",
+      "name": "calculate_largest_contentful_paint",
+      "filePath": "components/paint/largest_contentful_paint_calculator.rs",
+      "lineRange": [
+        48,
+        56
+      ],
+      "summary": "Computes the largest contentful paint for a given pipeline from stored candidates.",
+      "tags": [
+        "paint",
+        "lcp",
+        "calculation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/paint/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/paint/lib.rs",
+      "summary": "Module root for the paint component, declaring all submodules and defining the InitialPaintState struct used to bootstrap the paint thread.",
+      "tags": [
+        "barrel",
+        "entry-point",
+        "paint"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/paint/lib.rs:InitialPaintState",
+      "type": "class",
+      "name": "InitialPaintState",
+      "filePath": "components/paint/lib.rs",
+      "lineRange": [
+        38,
+        58
+      ],
+      "summary": "Bootstrap state passed to the paint thread containing paint proxy, IPC channels, profiler channels, event loop waker, and WebXR registry.",
+      "tags": [
+        "paint",
+        "bootstrap",
+        "state"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/paint/paint.rs",
+      "type": "file",
+      "name": "paint.rs",
+      "filePath": "components/paint/paint.rs",
+      "summary": "Core paint loop orchestrator that manages painters, dispatches browser messages (display lists, scroll, zoom, input), coordinates WebGL/WebGPU/WebXR resources, and drives the frame rendering pipeline.",
+      "tags": [
+        "paint",
+        "render-loop",
+        "orchestrator"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Complex Rust struct with 44 methods managing the full paint lifecycle across webviews."
+    },
+    {
+      "id": "class:components/paint/paint.rs:WebRenderDebugOption",
+      "type": "class",
+      "name": "WebRenderDebugOption",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        56,
+        60
+      ],
+      "summary": "Enumeration of WebRender debug visualization options: profiler, texture cache, and render target overlays.",
+      "tags": [
+        "paint",
+        "webrender",
+        "debug"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/paint/paint.rs:Paint",
+      "type": "class",
+      "name": "Paint",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        83,
+        138
+      ],
+      "summary": "Central paint orchestrator owning all painter instances, WebGL/WebGPU/WebXR resources, and driving the main frame rendering loop with message handling and shutdown coordination.",
+      "tags": [
+        "paint",
+        "orchestrator",
+        "rendering"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/paint/paint.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        162,
+        218
+      ],
+      "summary": "Initializes the Paint orchestrator with all rendering resources, WebXR registry, WebGL threads, and memory profiling.",
+      "tags": [
+        "paint",
+        "initialization",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/paint/paint.rs:register_rendering_context",
+      "type": "function",
+      "name": "register_rendering_context",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        220,
+        253
+      ],
+      "summary": "register_rendering_context method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:maybe_painter",
+      "type": "function",
+      "name": "maybe_painter",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        261,
+        266
+      ],
+      "summary": "maybe_painter method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:maybe_painter_mut",
+      "type": "function",
+      "name": "maybe_painter_mut",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        273,
+        281
+      ],
+      "summary": "maybe_painter_mut method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:webxr_running",
+      "type": "function",
+      "name": "webxr_running",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        304,
+        313
+      ],
+      "summary": "webxr_running method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:webviews_needing_repaint",
+      "type": "function",
+      "name": "webviews_needing_repaint",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        325,
+        330
+      ],
+      "summary": "webviews_needing_repaint method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:finish_shutting_down",
+      "type": "function",
+      "name": "finish_shutting_down",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        332,
+        353
+      ],
+      "summary": "finish_shutting_down method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:handle_browser_message",
+      "type": "function",
+      "name": "handle_browser_message",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        355,
+        550
+      ],
+      "summary": "Dispatches incoming browser messages to the appropriate painter operations (display list, scroll, zoom, fonts, LCP, etc.).",
+      "tags": [
+        "paint",
+        "message-handling",
+        "method"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/paint/paint.rs:remove_webview",
+      "type": "function",
+      "name": "remove_webview",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        552,
+        564
+      ],
+      "summary": "remove_webview method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:handle_browser_message_while_shutting_down",
+      "type": "function",
+      "name": "handle_browser_message_while_shutting_down",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        615,
+        645
+      ],
+      "summary": "Handles limited browser messages during paint thread shutdown, forwarding only essential operations.",
+      "tags": [
+        "paint",
+        "shutdown",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:add_webview",
+      "type": "function",
+      "name": "add_webview",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        647,
+        650
+      ],
+      "summary": "add_webview method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:set_hidpi_scale_factor",
+      "type": "function",
+      "name": "set_hidpi_scale_factor",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        662,
+        672
+      ],
+      "summary": "set_hidpi_scale_factor method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:resize_rendering_context",
+      "type": "function",
+      "name": "resize_rendering_context",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        674,
+        680
+      ],
+      "summary": "resize_rendering_context method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:set_page_zoom",
+      "type": "function",
+      "name": "set_page_zoom",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        682,
+        688
+      ],
+      "summary": "set_page_zoom method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:handle_messages",
+      "type": "function",
+      "name": "handle_messages",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        706,
+        738
+      ],
+      "summary": "handle_messages method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:perform_updates",
+      "type": "function",
+      "name": "perform_updates",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        741,
+        755
+      ],
+      "summary": "perform_updates method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:capture_webrender",
+      "type": "function",
+      "name": "capture_webrender",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        763,
+        787
+      ],
+      "summary": "capture_webrender method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:notify_input_event",
+      "type": "function",
+      "name": "notify_input_event",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        791,
+        797
+      ],
+      "summary": "notify_input_event method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:notify_scroll_event",
+      "type": "function",
+      "name": "notify_scroll_event",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        799,
+        805
+      ],
+      "summary": "notify_scroll_event method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:adjust_pinch_zoom",
+      "type": "function",
+      "name": "adjust_pinch_zoom",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        807,
+        818
+      ],
+      "summary": "adjust_pinch_zoom method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:device_pixels_per_page_pixel",
+      "type": "function",
+      "name": "device_pixels_per_page_pixel",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        824,
+        830
+      ],
+      "summary": "device_pixels_per_page_pixel method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:request_screenshot",
+      "type": "function",
+      "name": "request_screenshot",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        836,
+        844
+      ],
+      "summary": "request_screenshot method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/paint/paint.rs:notify_input_event_handled",
+      "type": "function",
+      "name": "notify_input_event_handled",
+      "filePath": "components/paint/paint.rs",
+      "lineRange": [
+        846,
+        855
+      ],
+      "summary": "notify_input_event_handled method on Paint.",
+      "tags": [
+        "paint",
+        "method",
+        "method"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "class:components/paint/largest_contentful_paint_calculator.rs:LargestContentfulPaintCalculator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "class:components/paint/largest_contentful_paint_calculator.rs:LargestContentfulPaintCalculator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "function:components/paint/largest_contentful_paint_calculator.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "function:components/paint/largest_contentful_paint_calculator.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "function:components/paint/largest_contentful_paint_calculator.rs:append_lcp_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "function:components/paint/largest_contentful_paint_calculator.rs:append_lcp_candidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "function:components/paint/largest_contentful_paint_calculator.rs:calculate_largest_contentful_paint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "function:components/paint/largest_contentful_paint_calculator.rs:calculate_largest_contentful_paint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "function:components/paint/largest_contentful_paint_calculator.rs:calculate_largest_contentful_paint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "target": "function:components/paint/largest_contentful_paint_calculator.rs:calculate_largest_contentful_paint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "class:components/paint/lib.rs:InitialPaintState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "class:components/paint/lib.rs:InitialPaintState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/largest_contentful_paint_calculator.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/paint.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/painter.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/pinch_zoom.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/pipeline_details.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/refresh_driver.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/render_notifier.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/screenshot.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/touch.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/tracing.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/web_content_animation.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/webrender_external_images.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/lib.rs",
+      "target": "file:components/paint/webview_renderer.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "class:components/paint/paint.rs:WebRenderDebugOption",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "class:components/paint/paint.rs:WebRenderDebugOption",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "class:components/paint/paint.rs:Paint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "class:components/paint/paint.rs:Paint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:register_rendering_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:register_rendering_context",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:maybe_painter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:maybe_painter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:maybe_painter_mut",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:maybe_painter_mut",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:webxr_running",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:webxr_running",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:webviews_needing_repaint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:webviews_needing_repaint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:finish_shutting_down",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:finish_shutting_down",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:handle_browser_message",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:remove_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:remove_webview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:handle_browser_message_while_shutting_down",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:add_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:add_webview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:set_hidpi_scale_factor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:set_hidpi_scale_factor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:resize_rendering_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:resize_rendering_context",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:set_page_zoom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:set_page_zoom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:handle_messages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:handle_messages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:perform_updates",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:perform_updates",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:capture_webrender",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:capture_webrender",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:notify_input_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:notify_input_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:notify_scroll_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:notify_scroll_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:adjust_pinch_zoom",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:adjust_pinch_zoom",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:device_pixels_per_page_pixel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:device_pixels_per_page_pixel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:request_screenshot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:request_screenshot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:notify_input_event_handled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/paint/paint.rs",
+      "target": "function:components/paint/paint.rs:notify_input_event_handled",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

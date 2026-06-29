@@ -1,0 +1,2653 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/table/layout.rs",
+      "type": "file",
+      "name": "layout.rs",
+      "filePath": "components/layout/table/layout.rs",
+      "summary": "Implements table layout algorithm: column width distribution, row height calculation, collapsed border resolution, cell layout, caption placement, and table-specific inline content sizing.",
+      "tags": [
+        "table",
+        "layout-algorithm",
+        "column-widths",
+        "border-collapse",
+        "row-heights"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:from_layout_style",
+      "type": "function",
+      "name": "from_layout_style",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        144,
+        156
+      ],
+      "summary": "Converts from another type or constructs from source parameters.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:partial_cmp",
+      "type": "function",
+      "name": "partial_cmp",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        183,
+        193
+      ],
+      "summary": "partial_cmp operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        247,
+        273
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_cell_measures",
+      "type": "function",
+      "name": "compute_cell_measures",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        277,
+        392
+      ],
+      "summary": "Computes cell measures from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_track_constrainedness_and_has_originating_cells",
+      "type": "function",
+      "name": "compute_track_constrainedness_and_has_originating_cells",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        399,
+        471
+      ],
+      "summary": "Computes track constrainedness and has originating cells from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_column_measures",
+      "type": "function",
+      "name": "compute_column_measures",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        475,
+        565
+      ],
+      "summary": "Computes column measures from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:distribute_colspanned_cell_to_columns",
+      "type": "function",
+      "name": "distribute_colspanned_cell_to_columns",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        580,
+        648
+      ],
+      "summary": "Distributes a colspan cell intrinsic sizes across the columns it spans.",
+      "tags": [
+        "function",
+        "table",
+        "colspan"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_grid_min_max",
+      "type": "function",
+      "name": "compute_grid_min_max",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        657,
+        719
+      ],
+      "summary": "Computes grid min max from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_caption_minimum_inline_size",
+      "type": "function",
+      "name": "compute_caption_minimum_inline_size",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        722,
+        745
+      ],
+      "summary": "Computes caption minimum inline size from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_table_width",
+      "type": "function",
+      "name": "compute_table_width",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        747,
+        763
+      ],
+      "summary": "Computes table width from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:distribute_width_to_columns",
+      "type": "function",
+      "name": "distribute_width_to_columns",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        767,
+        937
+      ],
+      "summary": "Distributes available width among table columns according to CSS table width distribution rules.",
+      "tags": [
+        "function",
+        "table",
+        "column-widths"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:distribute_extra_width_to_columns",
+      "type": "function",
+      "name": "distribute_extra_width_to_columns",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        941,
+        1074
+      ],
+      "summary": "Distributes available width among table columns according to CSS table width distribution rules.",
+      "tags": [
+        "function",
+        "table",
+        "column-widths"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout_cells_in_row",
+      "type": "function",
+      "name": "layout_cells_in_row",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1078,
+        1202
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:do_first_row_layout",
+      "type": "function",
+      "name": "do_first_row_layout",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1206,
+        1257
+      ],
+      "summary": "Performs a phase of the table layout algorithm.",
+      "tags": [
+        "function",
+        "table",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:calculate_row_sizes_after_first_layout",
+      "type": "function",
+      "name": "calculate_row_sizes_after_first_layout",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1263,
+        1344
+      ],
+      "summary": "Computes row sizes after first layout from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:distribute_extra_size_to_rows",
+      "type": "function",
+      "name": "distribute_extra_size_to_rows",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1348,
+        1477
+      ],
+      "summary": "Distributes extra height to table rows after the initial layout pass.",
+      "tags": [
+        "function",
+        "table",
+        "row-height"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_table_height_and_final_row_heights",
+      "type": "function",
+      "name": "compute_table_height_and_final_row_heights",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1481,
+        1517
+      ],
+      "summary": "Computes table height and final row heights from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout_caption",
+      "type": "function",
+      "name": "layout_caption",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1519,
+        1557
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1562,
+        1746
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout_grid",
+      "type": "function",
+      "name": "layout_grid",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1750,
+        1908
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:specific_layout_info_for_grid",
+      "type": "function",
+      "name": "specific_layout_info_for_grid",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1910,
+        1949
+      ],
+      "summary": "Creates SpecificLayoutInfo for a table grid with collapsed borders.",
+      "tags": [
+        "function",
+        "table",
+        "layout-info"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:is_row_collapsed",
+      "type": "function",
+      "name": "is_row_collapsed",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1951,
+        1965
+      ],
+      "summary": "Checks whether a specific table row or column is collapsed.",
+      "tags": [
+        "function",
+        "table",
+        "collapse"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:is_column_collapsed",
+      "type": "function",
+      "name": "is_column_collapsed",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1967,
+        1980
+      ],
+      "summary": "Checks whether a specific table row or column is collapsed.",
+      "tags": [
+        "function",
+        "table",
+        "collapse"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:do_final_cell_layout",
+      "type": "function",
+      "name": "do_final_cell_layout",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        1983,
+        2112
+      ],
+      "summary": "Performs the final layout pass for each table cell.",
+      "tags": [
+        "function",
+        "table",
+        "cell-layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:make_fragments_for_columns_and_column_groups",
+      "type": "function",
+      "name": "make_fragments_for_columns_and_column_groups",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2114,
+        2144
+      ],
+      "summary": "Creates display fragments for table column and column group elements.",
+      "tags": [
+        "function",
+        "table",
+        "column-fragments"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_border_collapse",
+      "type": "function",
+      "name": "compute_border_collapse",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2146,
+        2259
+      ],
+      "summary": "Computes border collapse from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:get_collapsed_border_widths_for_area",
+      "type": "function",
+      "name": "get_collapsed_border_widths_for_area",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2261,
+        2276
+      ],
+      "summary": "Gets the collapsed border widths for a specific table area.",
+      "tags": [
+        "function",
+        "table",
+        "border-widths"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2288,
+        2309
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2310,
+        2369
+      ],
+      "summary": "Finalizes the construction of a table structure element.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2381,
+        2400
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2402,
+        2437
+      ],
+      "summary": "Finalizes the construction of a table structure element.",
+      "tags": [
+        "function",
+        "table",
+        "construction"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2453,
+        2525
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:get_row_group_rect",
+      "type": "function",
+      "name": "get_row_group_rect",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2543,
+        2554
+      ],
+      "summary": "Gets the rectangle for a table row group, column group, or cell.",
+      "tags": [
+        "function",
+        "table",
+        "geometry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:get_column_group_rect",
+      "type": "function",
+      "name": "get_column_group_rect",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2556,
+        2567
+      ],
+      "summary": "Gets the rectangle for a table row group, column group, or cell.",
+      "tags": [
+        "function",
+        "table",
+        "geometry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:get_cell_rect",
+      "type": "function",
+      "name": "get_cell_rect",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2569,
+        2584
+      ],
+      "summary": "Gets the rectangle for a table row group, column group, or cell.",
+      "tags": [
+        "function",
+        "table",
+        "geometry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:border_spacing",
+      "type": "function",
+      "name": "border_spacing",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2588,
+        2598
+      ],
+      "summary": "Calculates border spacing values for separated-border table model.",
+      "tags": [
+        "function",
+        "table",
+        "border-spacing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:total_border_spacing",
+      "type": "function",
+      "name": "total_border_spacing",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2600,
+        2614
+      ],
+      "summary": "Calculates border spacing values for separated-border table model.",
+      "tags": [
+        "function",
+        "table",
+        "border-spacing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:get_column_measure_for_column_at_index",
+      "type": "function",
+      "name": "get_column_measure_for_column_at_index",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2616,
+        2656
+      ],
+      "summary": "Retrieves column or row measure data for a given index in the table grid.",
+      "tags": [
+        "function",
+        "table",
+        "measure"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:get_row_measure_for_row_at_index",
+      "type": "function",
+      "name": "get_row_measure_for_row_at_index",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2658,
+        2685
+      ],
+      "summary": "Retrieves column or row measure data for a given index in the table grid.",
+      "tags": [
+        "function",
+        "table",
+        "measure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2687,
+        2700
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:attached_to_tree",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2702,
+        2759
+      ],
+      "summary": "Checks whether this box is attached to the layout tree.",
+      "tags": [
+        "function",
+        "tree",
+        "attachment"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:compute_inline_content_sizes",
+      "type": "function",
+      "name": "compute_inline_content_sizes",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2764,
+        2794
+      ],
+      "summary": "Computes inline content sizes from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2799,
+        2807
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout_style_for_grid",
+      "type": "function",
+      "name": "layout_style_for_grid",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2810,
+        2812
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2817,
+        2819
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2824,
+        2826
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:style",
+      "type": "function",
+      "name": "style",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2831,
+        2833
+      ],
+      "summary": "style operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:collapses_borders",
+      "type": "function",
+      "name": "collapses_borders",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2836,
+        2838
+      ],
+      "summary": "collapses_borders operation on this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:halved_collapsed_border_widths",
+      "type": "function",
+      "name": "halved_collapsed_border_widths",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2840,
+        2857
+      ],
+      "summary": "Creates table fragments for rendering collapsed borders.",
+      "tags": [
+        "function",
+        "table",
+        "border"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:content_alignment",
+      "type": "function",
+      "name": "content_alignment",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2861,
+        2874
+      ],
+      "summary": "Converts a content alignment style value to Taffy representation.",
+      "tags": [
+        "function",
+        "taffy",
+        "conversion"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:create_fragment",
+      "type": "function",
+      "name": "create_fragment",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2877,
+        2960
+      ],
+      "summary": "Creates table fragments for rendering collapsed borders.",
+      "tags": [
+        "function",
+        "table",
+        "border"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:get_size_percentage_contribution",
+      "type": "function",
+      "name": "get_size_percentage_contribution",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2963,
+        2984
+      ],
+      "summary": "Computes the percentage-based size contribution for a table element.",
+      "tags": [
+        "function",
+        "table",
+        "sizing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/layout.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2994,
+        3048
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/table/layout.rs:CellLayout",
+      "type": "class",
+      "name": "CellLayout",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        70,
+        75
+      ],
+      "summary": "Per-cell layout tracking during table layout, including column mapping and measure information.",
+      "tags": [
+        "table",
+        "cell",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/layout.rs:TableLayout",
+      "type": "class",
+      "name": "TableLayout",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        203,
+        225
+      ],
+      "summary": "Implements the full CSS table layout algorithm including column width distribution, row height calculation, collapsed borders, and cell positioning.",
+      "tags": [
+        "table",
+        "layout-algorithm",
+        "columns",
+        "rows"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/layout.rs:CellOrTrackMeasure",
+      "type": "class",
+      "name": "CellOrTrackMeasure",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        228,
+        231
+      ],
+      "summary": "Measure data for a table cell or track during layout computation.",
+      "tags": [
+        "table",
+        "measure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/layout.rs:RowGroupFragmentLayout",
+      "type": "class",
+      "name": "RowGroupFragmentLayout",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2372,
+        2378
+      ],
+      "summary": "Row group fragment layout data including position and border information.",
+      "tags": [
+        "table",
+        "row-group",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/layout.rs:TableAndTrackDimensions",
+      "type": "class",
+      "name": "TableAndTrackDimensions",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        2440,
+        2450
+      ],
+      "summary": "Aggregated table and track dimension data after layout computation.",
+      "tags": [
+        "table",
+        "dimensions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/layout.rs:ColspanToDistribute",
+      "type": "class",
+      "name": "ColspanToDistribute",
+      "filePath": "components/layout/table/layout.rs",
+      "lineRange": [
+        3070,
+        3075
+      ],
+      "summary": "Tracks colspan cell distribution across table columns for intrinsic sizing.",
+      "tags": [
+        "table",
+        "colspan",
+        "distribution"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/table/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/table/mod.rs",
+      "summary": "Module re-exporting table-level box types: Table, TableSlot, TableTrack, TableTrackGroup, TableCaption, collapsed borders, and related types for table layout.",
+      "tags": [
+        "table",
+        "barrel",
+        "module",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        147,
+        167
+      ],
+      "summary": "Constructs a new instance with the provided parameters.",
+      "tags": [
+        "function",
+        "constructor"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:resolve_first_cell_coords",
+      "type": "function",
+      "name": "resolve_first_cell_coords",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        175,
+        184
+      ],
+      "summary": "Resolves first cell coords values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:resolve_first_cell",
+      "type": "function",
+      "name": "resolve_first_cell",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        186,
+        198
+      ],
+      "summary": "Resolves first cell values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        200,
+        213
+      ],
+      "summary": "Computes or applies style/layout damage for incremental update tracking.",
+      "tags": [
+        "function",
+        "damage",
+        "incremental"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:subtree_size",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        215,
+        221
+      ],
+      "summary": "Returns the subtree size of this element for layout traversal.",
+      "tags": [
+        "function",
+        "tree",
+        "subtree"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:mock_for_testing",
+      "type": "function",
+      "name": "mock_for_testing",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        242,
+        258
+      ],
+      "summary": "Creates a mock table instance for testing purposes.",
+      "tags": [
+        "function",
+        "table",
+        "testing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:node_id",
+      "type": "function",
+      "name": "node_id",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        261,
+        267
+      ],
+      "summary": "Returns the DOM node ID for this table-level box.",
+      "tags": [
+        "function",
+        "table",
+        "node"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:subtree_size",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        309,
+        314
+      ],
+      "summary": "Returns the subtree size of this element for layout traversal.",
+      "tags": [
+        "function",
+        "tree",
+        "subtree"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        338,
+        341
+      ],
+      "summary": "Computes or applies style/layout damage for incremental update tracking.",
+      "tags": [
+        "function",
+        "damage",
+        "incremental"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:is_empty",
+      "type": "function",
+      "name": "is_empty",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        370,
+        372
+      ],
+      "summary": "Checks whether the table track is empty.",
+      "tags": [
+        "function",
+        "table",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        374,
+        377
+      ],
+      "summary": "Computes or applies style/layout damage for incremental update tracking.",
+      "tags": [
+        "function",
+        "damage",
+        "incremental"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:with_base",
+      "type": "function",
+      "name": "with_base",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        419,
+        426
+      ],
+      "summary": "Accesses the base data of a table-level box.",
+      "tags": [
+        "function",
+        "table",
+        "base-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:with_base_mut",
+      "type": "function",
+      "name": "with_base_mut",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        428,
+        435
+      ],
+      "summary": "Accesses the base data of a table-level box.",
+      "tags": [
+        "function",
+        "table",
+        "base-access"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        437,
+        457
+      ],
+      "summary": "Computes or applies style/layout damage for incremental update tracking.",
+      "tags": [
+        "function",
+        "damage",
+        "incremental"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:attached_to_tree",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        459,
+        468
+      ],
+      "summary": "Checks whether this box is attached to the layout tree.",
+      "tags": [
+        "function",
+        "tree",
+        "attachment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:downgrade",
+      "type": "function",
+      "name": "downgrade",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        470,
+        477
+      ],
+      "summary": "Converts between strong and weak references for table-level boxes.",
+      "tags": [
+        "function",
+        "table",
+        "reference"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/table/mod.rs:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        489,
+        496
+      ],
+      "summary": "Converts between strong and weak references for table-level boxes.",
+      "tags": [
+        "function",
+        "table",
+        "reference"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:Table",
+      "type": "class",
+      "name": "Table",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        103,
+        144
+      ],
+      "summary": "Represents a CSS table-level box in the box tree, with repair, sizing, and testing support.",
+      "tags": [
+        "table",
+        "box-tree"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:TableSlotCell",
+      "type": "class",
+      "name": "TableSlotCell",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        228,
+        239
+      ],
+      "summary": "Represents a cell within the CSS table grid, tracking its row/column placement and spanning.",
+      "tags": [
+        "table",
+        "cell",
+        "grid-placement"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:TableSlot",
+      "type": "class",
+      "name": "TableSlot",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        275,
+        292
+      ],
+      "summary": "Represents a slot (cell position) in the CSS table grid structure.",
+      "tags": [
+        "table",
+        "slot",
+        "grid"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:TableTrack",
+      "type": "class",
+      "name": "TableTrack",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        319,
+        335
+      ],
+      "summary": "Represents a track (row or column) in the CSS table grid structure.",
+      "tags": [
+        "table",
+        "track"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:TableTrackGroupType",
+      "type": "class",
+      "name": "TableTrackGroupType",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        345,
+        350
+      ],
+      "summary": "Enum for table track group type (row group, column group).",
+      "tags": [
+        "table",
+        "track-group-type"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:TableTrackGroup",
+      "type": "class",
+      "name": "TableTrackGroup",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        353,
+        367
+      ],
+      "summary": "Represents a group of table tracks (rows or columns).",
+      "tags": [
+        "table",
+        "track-group"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:TableCaption",
+      "type": "class",
+      "name": "TableCaption",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        381,
+        384
+      ],
+      "summary": "Represents a table caption box in the table layout model.",
+      "tags": [
+        "table",
+        "caption"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:CollapsedBorder",
+      "type": "class",
+      "name": "CollapsedBorder",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        388,
+        391
+      ],
+      "summary": "Represents a collapsed border between table cells with resolved style and width.",
+      "tags": [
+        "table",
+        "collapsed-border",
+        "border"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:SpecificTableGridInfo",
+      "type": "class",
+      "name": "SpecificTableGridInfo",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        397,
+        400
+      ],
+      "summary": "Stores the computed grid structure for a table, including column measures and row data.",
+      "tags": [
+        "table",
+        "grid-info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:TableLayoutStyle",
+      "type": "class",
+      "name": "TableLayoutStyle",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        402,
+        405
+      ],
+      "summary": "Enum representing the table layout style (auto or fixed).",
+      "tags": [
+        "table",
+        "layout-style"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:TableLevelBox",
+      "type": "class",
+      "name": "TableLevelBox",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        411,
+        416
+      ],
+      "summary": "Base type for table-level boxes in the box tree, providing tree attachment and style management.",
+      "tags": [
+        "table",
+        "table-level-box",
+        "base"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/table/mod.rs:WeakTableLevelBox",
+      "type": "class",
+      "name": "WeakTableLevelBox",
+      "filePath": "components/layout/table/mod.rs",
+      "lineRange": [
+        481,
+        486
+      ],
+      "summary": "Weak reference to a TableLevelBox for non-owning access.",
+      "tags": [
+        "table",
+        "weak-reference"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/taffy/layout.rs",
+      "type": "file",
+      "name": "layout.rs",
+      "filePath": "components/layout/taffy/layout.rs",
+      "summary": "Implements Taffy-based layout (Flexbox/Grid) integration: computes child layouts using the Taffy library, resolves content sizes, handles inline content sizing, and provides layout entry points for flex/grid containers.",
+      "tags": [
+        "taffy",
+        "flexbox",
+        "grid",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:resolve_content_size",
+      "type": "function",
+      "name": "resolve_content_size",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        37,
+        47
+      ],
+      "summary": "Resolves content size values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:with_independent_formatting_context",
+      "type": "function",
+      "name": "with_independent_formatting_context",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        50,
+        60
+      ],
+      "summary": "Runs a layout computation within an independent formatting context.",
+      "tags": [
+        "function",
+        "taffy",
+        "formatting-context"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:resolve_calc_value",
+      "type": "function",
+      "name": "resolve_calc_value",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        121,
+        131
+      ],
+      "summary": "Resolves calc value values based on available space and style constraints.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:compute_child_layout",
+      "type": "function",
+      "name": "compute_child_layout",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        133,
+        252
+      ],
+      "summary": "Computes child layout from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:get_grid_child_style",
+      "type": "function",
+      "name": "get_grid_child_style",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        273,
+        283
+      ],
+      "summary": "Retrieves the grid layout style for a child element.",
+      "tags": [
+        "function",
+        "taffy",
+        "grid"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:compute_inline_content_sizes",
+      "type": "function",
+      "name": "compute_inline_content_sizes",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        297,
+        372
+      ],
+      "summary": "Computes inline content sizes from the current layout state.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        377,
+        588
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        591,
+        593
+      ],
+      "summary": "Performs layout for this element or its children, computing sizes and positions.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:attached_to_tree",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        595,
+        601
+      ],
+      "summary": "Checks whether this box is attached to the layout tree.",
+      "tags": [
+        "function",
+        "tree",
+        "attachment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/taffy/layout.rs:subtree_size",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/taffy/layout.rs",
+      "lineRange": [
+        603,
+        608
+      ],
+      "summary": "Returns the subtree size of this element for layout traversal.",
+      "tags": [
+        "function",
+        "tree",
+        "subtree"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:from_layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:partial_cmp",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_cell_measures",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_cell_measures",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_track_constrainedness_and_has_originating_cells",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_column_measures",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:distribute_colspanned_cell_to_columns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_grid_min_max",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_caption_minimum_inline_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_table_width",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:distribute_width_to_columns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:distribute_extra_width_to_columns",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_cells_in_row",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:do_first_row_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:calculate_row_sizes_after_first_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:distribute_extra_size_to_rows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_table_height_and_final_row_heights",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_caption",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_grid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:specific_layout_info_for_grid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:is_row_collapsed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:is_column_collapsed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:do_final_cell_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:make_fragments_for_columns_and_column_groups",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_border_collapse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:get_collapsed_border_widths_for_area",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:get_row_group_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:get_column_group_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:get_cell_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:border_spacing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:total_border_spacing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:get_column_measure_for_column_at_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:get_row_measure_for_row_at_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:attached_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:attached_to_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:compute_inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_style_for_grid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_style_for_grid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:collapses_borders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:collapses_borders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:halved_collapsed_border_widths",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:halved_collapsed_border_widths",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:content_alignment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:create_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:get_size_percentage_contribution",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "function:components/layout/table/layout.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "class:components/layout/table/layout.rs:CellLayout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "class:components/layout/table/layout.rs:TableLayout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "class:components/layout/table/layout.rs:TableLayout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "class:components/layout/table/layout.rs:CellOrTrackMeasure",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "class:components/layout/table/layout.rs:RowGroupFragmentLayout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "class:components/layout/table/layout.rs:TableAndTrackDimensions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/layout.rs",
+      "target": "class:components/layout/table/layout.rs:ColspanToDistribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:resolve_first_cell_coords",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:resolve_first_cell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:mock_for_testing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:mock_for_testing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:node_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:node_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:is_empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:is_empty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:with_base",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:with_base",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:with_base_mut",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:with_base_mut",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:attached_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:attached_to_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:downgrade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:downgrade",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:upgrade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "function:components/layout/table/mod.rs:upgrade",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:Table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:Table",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableSlotCell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableSlotCell",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableSlot",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableSlot",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableTrack",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableTrack",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableTrackGroupType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableTrackGroupType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableTrackGroup",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableTrackGroup",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableCaption",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableCaption",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:CollapsedBorder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:CollapsedBorder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:SpecificTableGridInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:SpecificTableGridInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableLayoutStyle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableLayoutStyle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableLevelBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:TableLevelBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:WeakTableLevelBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/table/mod.rs",
+      "target": "class:components/layout/table/mod.rs:WeakTableLevelBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:resolve_content_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:with_independent_formatting_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:resolve_calc_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:compute_child_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:get_grid_child_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:compute_inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:attached_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:attached_to_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/taffy/layout.rs",
+      "target": "function:components/layout/taffy/layout.rs:subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

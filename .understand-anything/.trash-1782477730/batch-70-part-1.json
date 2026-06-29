@@ -1,0 +1,4446 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/window/window.rs",
+      "type": "file",
+      "name": "window.rs",
+      "filePath": "components/script/dom/window/window.rs",
+      "summary": "Core Window DOM implementation with 245+ methods covering lifecycle, layout/reflow, navigation, alerts, timers, scrolling, user activation, screenshot readiness, XR sessions, and webdriver integration. The primary script-side representation of a browsing context.",
+      "tags": [
+        "dom",
+        "window",
+        "browsing-context",
+        "reflow",
+        "lifecycle"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Rust DOM struct with extensive use of SpiderMonkey JSAPI bindings, DomRefCell for interior mutability, and cross-beam channels for IPC with the constellation process."
+    },
+    {
+      "id": "class:components/script/dom/window/window.rs:PendingImageCallback",
+      "type": "class",
+      "name": "PendingImageCallback",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        206,
+        210
+      ],
+      "summary": "Callback wrapper for image cache responses, storing a boxed closure invoked when a pending image completes loading.",
+      "tags": [
+        "image",
+        "callback",
+        "cache"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/window/window.rs:OngoingNavigation",
+      "type": "class",
+      "name": "OngoingNavigation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        254,
+        254
+      ],
+      "summary": "Newtype wrapper around a u32 identifier for tracking in-progress navigations, based on the HTML spec.",
+      "tags": [
+        "navigation",
+        "identifier"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/window/window.rs:Window",
+      "type": "class",
+      "name": "Window",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        270,
+        487
+      ],
+      "summary": "Central DOM struct for the Window object, managing document, layout, navigation, timers, storage, user activation, and communication with the constellation and embedder processes.",
+      "tags": [
+        "dom",
+        "window",
+        "browsing-context",
+        "central"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/window/window.rs:FontCspHandler",
+      "type": "class",
+      "name": "FontCspHandler",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        954,
+        957
+      ],
+      "summary": "Content Security Policy violation handler for font loads, enforcing CSP on web font access.",
+      "tags": [
+        "font",
+        "csp",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/window/window.rs:FontNetworkTimingHandler",
+      "type": "class",
+      "name": "FontNetworkTimingHandler",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        976,
+        979
+      ],
+      "summary": "Network timing handler for font loads, collecting performance metrics for Resource Timing API.",
+      "tags": [
+        "font",
+        "network",
+        "timing",
+        "performance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/window/window.rs:FontFetchListener",
+      "type": "class",
+      "name": "FontFetchListener",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1006,
+        1009
+      ],
+      "summary": "Image cache listener for font file responses, routing font data to the WebFont context for rendering.",
+      "tags": [
+        "font",
+        "fetch",
+        "listener"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/window/window.rs:LayoutValue",
+      "type": "class",
+      "name": "LayoutValue",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3821,
+        3825
+      ],
+      "summary": "Container for cached layout query results, providing get method for retrieving previously computed layout values.",
+      "tags": [
+        "layout",
+        "cache"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/window/window.rs:CSSErrorReporter",
+      "type": "class",
+      "name": "CSSErrorReporter",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3907,
+        3910
+      ],
+      "summary": "CSS parse error reporter that forwards style sheet errors to the Window for developer tooling and console logging.",
+      "tags": [
+        "css",
+        "error-reporting",
+        "devtools"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:layout_blocked_l246",
+      "type": "function",
+      "name": "layout_blocked",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        246,
+        248
+      ],
+      "summary": "Returns whether layout is currently blocked due to pending page load.",
+      "tags": [
+        "layout",
+        "blocking",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:script_thread_l490",
+      "type": "function",
+      "name": "script_thread",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        490,
+        493
+      ],
+      "summary": "Function script_thread in components/script/dom/window/window.rs (4 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:webview_id_l495",
+      "type": "function",
+      "name": "webview_id",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        495,
+        497
+      ],
+      "summary": "Function webview_id in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:as_global_scope_l499",
+      "type": "function",
+      "name": "as_global_scope",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        499,
+        501
+      ],
+      "summary": "Function as_global_scope in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:get_exists_mut_observer_l511",
+      "type": "function",
+      "name": "get_exists_mut_observer",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        511,
+        513
+      ],
+      "summary": "Function get_exists_mut_observer in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_exists_mut_observer_l515",
+      "type": "function",
+      "name": "set_exists_mut_observer",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        515,
+        517
+      ],
+      "summary": "Function set_exists_mut_observer in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:clear_js_runtime_for_script_deallocation_l520",
+      "type": "function",
+      "name": "clear_js_runtime_for_script_deallocation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        520,
+        531
+      ],
+      "summary": "Frees the JS runtime associated with this Window for clean script thread deallocation, dropping the layout.",
+      "tags": [
+        "lifecycle",
+        "cleanup",
+        "js"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:discard_browsing_context_l535",
+      "type": "function",
+      "name": "discard_browsing_context",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        535,
+        547
+      ],
+      "summary": "Discards the browsing context by clearing image cache listeners and dropping the window proxy.",
+      "tags": [
+        "lifecycle",
+        "browsing-context",
+        "cleanup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:new_script_pair_l566",
+      "type": "function",
+      "name": "new_script_pair",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        566,
+        572
+      ],
+      "summary": "Returns a new (event loop sender, script thread) pair for this window.",
+      "tags": [
+        "scripting",
+        "event-loop"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:append_reporting_observer_l587",
+      "type": "function",
+      "name": "append_reporting_observer",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        587,
+        591
+      ],
+      "summary": "Registers a ReportingObserver to receive reports generated by this window.",
+      "tags": [
+        "reporting",
+        "observer",
+        "registration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:remove_reporting_observer_l593",
+      "type": "function",
+      "name": "remove_reporting_observer",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        593,
+        603
+      ],
+      "summary": "Removes a registered ReportingObserver from this window.",
+      "tags": [
+        "reporting",
+        "observer",
+        "cleanup"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:registered_reporting_observers_l605",
+      "type": "function",
+      "name": "registered_reporting_observers",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        605,
+        607
+      ],
+      "summary": "Function registered_reporting_observers in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:append_report_l609",
+      "type": "function",
+      "name": "append_report",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        609,
+        623
+      ],
+      "summary": "Appends a ReportingObserver report to the buffer and dispatches to registered observers.",
+      "tags": [
+        "reporting",
+        "observer",
+        "monitoring"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:buffered_reports_l625",
+      "type": "function",
+      "name": "buffered_reports",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        625,
+        627
+      ],
+      "summary": "Function buffered_reports in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_endpoints_list_l629",
+      "type": "function",
+      "name": "set_endpoints_list",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        629,
+        631
+      ],
+      "summary": "Function set_endpoints_list in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:undiscarded_window_proxy_l635",
+      "type": "function",
+      "name": "undiscarded_window_proxy",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        635,
+        643
+      ],
+      "summary": "Function undiscarded_window_proxy in components/script/dom/window/window.rs (9 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:top_level_document_if_local_l649",
+      "type": "function",
+      "name": "top_level_document_if_local",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        649,
+        658
+      ],
+      "summary": "Returns the top-level document if it is in the same script thread (local), used for same-origin navigations.",
+      "tags": [
+        "document",
+        "top-level",
+        "local"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:bluetooth_extra_permission_data_l666",
+      "type": "function",
+      "name": "bluetooth_extra_permission_data",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        666,
+        668
+      ],
+      "summary": "Function bluetooth_extra_permission_data in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:webgl_chan_value_l679",
+      "type": "function",
+      "name": "webgl_chan_value",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        679,
+        681
+      ],
+      "summary": "Function webgl_chan_value in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:register_image_cache_listener_l693",
+      "type": "function",
+      "name": "register_image_cache_listener",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        693,
+        708
+      ],
+      "summary": "Registers a callback for image cache responses, associating a PendingImageId with a response handler.",
+      "tags": [
+        "images",
+        "cache",
+        "callback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:pending_layout_image_notification_l710",
+      "type": "function",
+      "name": "pending_layout_image_notification",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        710,
+        739
+      ],
+      "summary": "Handles pending image notification from layout by forwarding to the image cache listener or scheduling a rerasterization.",
+      "tags": [
+        "images",
+        "layout",
+        "notification"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:handle_image_rasterization_complete_notification_l741",
+      "type": "function",
+      "name": "handle_image_rasterization_complete_notification",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        741,
+        755
+      ],
+      "summary": "Handles the completion of an image rasterization request by notifying the Document about the newly rasterized image.",
+      "tags": [
+        "images",
+        "rasterization",
+        "completion"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:pending_image_notification_l757",
+      "type": "function",
+      "name": "pending_image_notification",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        757,
+        784
+      ],
+      "summary": "Processes a pending image response by locating the listener callback and invoking it with the image data.",
+      "tags": [
+        "images",
+        "notification",
+        "callback"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:userscripts_l790",
+      "type": "function",
+      "name": "userscripts",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        790,
+        792
+      ],
+      "summary": "Function userscripts in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:font_context_l803",
+      "type": "function",
+      "name": "font_context",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        803,
+        807
+      ],
+      "summary": "Function font_context in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_ongoing_navigation_l814",
+      "type": "function",
+      "name": "set_ongoing_navigation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        814,
+        830
+      ],
+      "summary": "Sets the ongoing navigation state, used to track planned form navigations for cancellation.",
+      "tags": [
+        "navigation",
+        "state"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:stop_loading_l833",
+      "type": "function",
+      "name": "stop_loading",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        833,
+        850
+      ],
+      "summary": "Stops loading the current page by sending a CancelLoadUrl message to the constellation.",
+      "tags": [
+        "navigation",
+        "loading",
+        "cancel"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:destroy_top_level_traversable_l853",
+      "type": "function",
+      "name": "destroy_top_level_traversable",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        853,
+        864
+      ],
+      "summary": "Destroys the top-level traversable browsing context via the constellation.",
+      "tags": [
+        "browsing-context",
+        "destroy",
+        "constellation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:definitely_close_l867",
+      "type": "function",
+      "name": "definitely_close",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        867,
+        882
+      ],
+      "summary": "Forces the window to close by sending a CloseWindow message to the embedder.",
+      "tags": [
+        "window",
+        "close",
+        "embedder"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:cannot_show_simple_dialogs_l885",
+      "type": "function",
+      "name": "cannot_show_simple_dialogs",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        885,
+        914
+      ],
+      "summary": "Returns true if simple dialogs (alert/confirm/prompt) are not supported in this browsing context.",
+      "tags": [
+        "dialogs",
+        "restriction",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:web_font_context_l920",
+      "type": "function",
+      "name": "web_font_context",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        920,
+        943
+      ],
+      "summary": "Returns the WebFontDocumentContext for this window, creating one if needed.",
+      "tags": [
+        "fonts",
+        "web-fonts",
+        "context"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:gc_l946",
+      "type": "function",
+      "name": "gc",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        946,
+        950
+      ],
+      "summary": "Function gc in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:submit_timing_l982",
+      "type": "function",
+      "name": "submit_timing",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        982,
+        995
+      ],
+      "summary": "Submits resource timing data to the performance timeline via the performance object.",
+      "tags": [
+        "performance",
+        "timing",
+        "resource-timing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:base64_btoa_l1022",
+      "type": "function",
+      "name": "base64_btoa",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1022,
+        1046
+      ],
+      "summary": "Encodes a string to base64, throwing InvalidCharacterError for non-Latin1 input.",
+      "tags": [
+        "base64",
+        "encoding",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:base64_atob_l1049",
+      "type": "function",
+      "name": "base64_atob",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1049,
+        1101
+      ],
+      "summary": "Decodes a base64 string, throwing InvalidCharacterError for invalid input with whitespace stripping.",
+      "tags": [
+        "base64",
+        "decoding",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:Alert_l1112",
+      "type": "function",
+      "name": "Alert",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1112,
+        1162
+      ],
+      "summary": "Displays a alert dialog to the user via the embedder, blocking until the user responds with the appropriate action.",
+      "tags": [
+        "dialog",
+        "ui",
+        "embedder"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:Confirm_l1165",
+      "type": "function",
+      "name": "Confirm",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1165,
+        1211
+      ],
+      "summary": "Displays a confirm dialog to the user via the embedder, blocking until the user responds with the appropriate action.",
+      "tags": [
+        "dialog",
+        "ui",
+        "embedder"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:Prompt_l1214",
+      "type": "function",
+      "name": "Prompt",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1214,
+        1266
+      ],
+      "summary": "Displays a prompt dialog to the user via the embedder, blocking until the user responds with the appropriate action.",
+      "tags": [
+        "dialog",
+        "ui",
+        "embedder"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:Focus_l1278",
+      "type": "function",
+      "name": "Focus",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1278,
+        1302
+      ],
+      "summary": "Focuses the window by sending an EmbedderMsg::Focus to the embedder.",
+      "tags": [
+        "window",
+        "focus",
+        "embedder"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:GetOpener_l1322",
+      "type": "function",
+      "name": "GetOpener",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1322,
+        1343
+      ],
+      "summary": "Function GetOpener in components/script/dom/window/window.rs (22 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:SetOpener_l1347",
+      "type": "function",
+      "name": "SetOpener",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1347,
+        1363
+      ],
+      "summary": "Function SetOpener in components/script/dom/window/window.rs (17 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:Close_l1374",
+      "type": "function",
+      "name": "Close",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1374,
+        1414
+      ],
+      "summary": "Closes the window by sending a CloseWindow message to the embedder, handling both script-initiated and user-initiated close scenarios.",
+      "tags": [
+        "window",
+        "close",
+        "embedder"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:GetSessionStorage_l1445",
+      "type": "function",
+      "name": "GetSessionStorage",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1445,
+        1469
+      ],
+      "summary": "Returns the sessionstorage Storage object for this window's origin, creating it if necessary via IPC with the storage thread.",
+      "tags": [
+        "storage",
+        "dom"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:GetLocalStorage_l1472",
+      "type": "function",
+      "name": "GetLocalStorage",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1472,
+        1496
+      ],
+      "summary": "Returns the localstorage Storage object for this window's origin, creating it if necessary via IPC with the storage thread.",
+      "tags": [
+        "storage",
+        "dom"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:GetFrameElement_l1511",
+      "type": "function",
+      "name": "GetFrameElement",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1511,
+        1532
+      ],
+      "summary": "Function GetFrameElement in components/script/dom/window/window.rs (22 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:SetTimeout_l1551",
+      "type": "function",
+      "name": "SetTimeout",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1551,
+        1574
+      ],
+      "summary": "Creates a timeout timer that invokes the callback after the specified delay, returning a timer ID.",
+      "tags": [
+        "timer",
+        "timeout",
+        "scheduling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:SetInterval_l1582",
+      "type": "function",
+      "name": "SetInterval",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1582,
+        1605
+      ],
+      "summary": "Creates a interval timer that invokes the callback after the specified delay, returning a timer ID.",
+      "tags": [
+        "timer",
+        "interval",
+        "scheduling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:CreateImageBitmap_l1621",
+      "type": "function",
+      "name": "CreateImageBitmap",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1621,
+        1637
+      ],
+      "summary": "Function CreateImageBitmap in components/script/dom/window/window.rs (17 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:CreateImageBitmap__l1640",
+      "type": "function",
+      "name": "CreateImageBitmap_",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1640,
+        1660
+      ],
+      "summary": "Function CreateImageBitmap_ in components/script/dom/window/window.rs (21 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:Window_l1663",
+      "type": "function",
+      "name": "Window",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1663,
+        1665
+      ],
+      "summary": "Function Window in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:GetParent_l1683",
+      "type": "function",
+      "name": "GetParent",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1683,
+        1693
+      ],
+      "summary": "Function GetParent in components/script/dom/window/window.rs (11 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:GetVisualViewport_l1728",
+      "type": "function",
+      "name": "GetVisualViewport",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1728,
+        1737
+      ],
+      "summary": "Function GetVisualViewport in components/script/dom/window/window.rs (10 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:PostMessage_l1762",
+      "type": "function",
+      "name": "PostMessage",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1762,
+        1774
+      ],
+      "summary": "Function PostMessage in components/script/dom/window/window.rs (13 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:PostMessage__l1777",
+      "type": "function",
+      "name": "PostMessage_",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1777,
+        1807
+      ],
+      "summary": "Variant of postMessage that accepts structured options (transfer, target origin) and deserializes them before delegating to post_message_impl.",
+      "tags": [
+        "postmessage",
+        "messaging"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:WebdriverException_l1828",
+      "type": "function",
+      "name": "WebdriverException",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1828,
+        1838
+      ],
+      "summary": "WebDriver command handler for exception operations, coordinating with the automation thread.",
+      "tags": [
+        "webdriver",
+        "automation",
+        "testing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:WebdriverFrame_l1844",
+      "type": "function",
+      "name": "WebdriverFrame",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1844,
+        1856
+      ],
+      "summary": "WebDriver command handler for frame operations, coordinating with the automation thread.",
+      "tags": [
+        "webdriver",
+        "automation",
+        "testing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:WebdriverWindow_l1858",
+      "type": "function",
+      "name": "WebdriverWindow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1858,
+        1869
+      ],
+      "summary": "WebDriver command handler for window operations, coordinating with the automation thread.",
+      "tags": [
+        "webdriver",
+        "automation",
+        "testing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:GetComputedStyle_l1876",
+      "type": "function",
+      "name": "GetComputedStyle",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1876,
+        1941
+      ],
+      "summary": "Returns the computed style for a given element, optionally filtered by pseudo-element, by querying the layout thread.",
+      "tags": [
+        "css",
+        "style",
+        "layout-query"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:Scroll_l1981",
+      "type": "function",
+      "name": "Scroll",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        1981,
+        1994
+      ],
+      "summary": "Implements window.scroll() with scroll options processing and delegation to the main scroll method.",
+      "tags": [
+        "scroll",
+        "window",
+        "dom-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:ScrollBy_l2021",
+      "type": "function",
+      "name": "ScrollBy",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2021,
+        2041
+      ],
+      "summary": "Implements window.scrollby() with scroll options processing and delegation to the main scroll method.",
+      "tags": [
+        "scroll",
+        "window",
+        "dom-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:ScrollBy__l2044",
+      "type": "function",
+      "name": "ScrollBy_",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2044,
+        2059
+      ],
+      "summary": "Implements window.scrollby_() with scroll options processing and delegation to the main scroll method.",
+      "tags": [
+        "scroll",
+        "window",
+        "dom-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:ResizeTo_l2062",
+      "type": "function",
+      "name": "ResizeTo",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2062,
+        2078
+      ],
+      "summary": "Resizes the window to the specified width and height by sending a SetWindowSize message to the embedder.",
+      "tags": [
+        "window",
+        "resize",
+        "embedder"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:NamedGetter_l2230",
+      "type": "function",
+      "name": "NamedGetter",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2230,
+        2317
+      ],
+      "summary": "Implements named property access on the Window, returning child frames, elements by name/id, or named document elements.",
+      "tags": [
+        "window",
+        "named-properties",
+        "dom"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:StructuredClone_l2325",
+      "type": "function",
+      "name": "StructuredClone",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2325,
+        2334
+      ],
+      "summary": "Implements window.structuredClone() for deep cloning JS values with transferable support.",
+      "tags": [
+        "structured-clone",
+        "serialization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:create_named_properties_object_l2349",
+      "type": "function",
+      "name": "create_named_properties_object",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2349,
+        2355
+      ],
+      "summary": "Function create_named_properties_object in components/script/dom/window/window.rs (7 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:current_event_l2357",
+      "type": "function",
+      "name": "current_event",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2357,
+        2362
+      ],
+      "summary": "Function current_event in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_current_event_l2364",
+      "type": "function",
+      "name": "set_current_event",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2364,
+        2368
+      ],
+      "summary": "Function set_current_event in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:post_message_impl_l2371",
+      "type": "function",
+      "name": "post_message_impl",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2371,
+        2396
+      ],
+      "summary": "Function post_message_impl in components/script/dom/window/window.rs (26 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:paint_worklet_l2399",
+      "type": "function",
+      "name": "paint_worklet",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2399,
+        2401
+      ],
+      "summary": "Function paint_worklet in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:clear_js_runtime_l2403",
+      "type": "function",
+      "name": "clear_js_runtime",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2403,
+        2437
+      ],
+      "summary": "Clears the JS runtime for this Window, dropping all JS resources and the window proxy reference.",
+      "tags": [
+        "lifecycle",
+        "cleanup",
+        "js"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:scroll_l2440",
+      "type": "function",
+      "name": "scroll",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2440,
+        2497
+      ],
+      "summary": "Scrolls the document to a specified position with optional smooth behavior, coordinating with the layout thread for scroll offsets.",
+      "tags": [
+        "scroll",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:perform_a_scroll_l2500",
+      "type": "function",
+      "name": "perform_a_scroll",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2500,
+        2531
+      ],
+      "summary": "Performs a scroll operation by sending a scroll message to the layout thread.",
+      "tags": [
+        "scroll",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:advance_animation_clock_l2547",
+      "type": "function",
+      "name": "advance_animation_clock",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2547,
+        2551
+      ],
+      "summary": "Function advance_animation_clock in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:reflow_l2560",
+      "type": "function",
+      "name": "reflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2560,
+        2672
+      ],
+      "summary": "Performs a full document reflow by sending layout queries to the layout thread, handling image notifications, running resize steps, firing scroll events, cleaning up stale images, and advancing animations.",
+      "tags": [
+        "reflow",
+        "layout",
+        "rendering"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:request_screenshot_readiness_l2674",
+      "type": "function",
+      "name": "request_screenshot_readiness",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2674,
+        2677
+      ],
+      "summary": "Function request_screenshot_readiness in components/script/dom/window/window.rs (4 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:maybe_resolve_pending_screenshot_readiness_requests_l2679",
+      "type": "function",
+      "name": "maybe_resolve_pending_screenshot_readiness_requests",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2679,
+        2735
+      ],
+      "summary": "Resolves any pending screenshot readiness promises when the document enters fullscreen or completes painting.",
+      "tags": [
+        "screenshot",
+        "readiness",
+        "promise"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:reflow_if_reflow_timer_expired_l2739",
+      "type": "function",
+      "name": "reflow_if_reflow_timer_expired",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2739,
+        2749
+      ],
+      "summary": "Function reflow_if_reflow_timer_expired in components/script/dom/window/window.rs (11 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:prevent_layout_until_load_event_l2754",
+      "type": "function",
+      "name": "prevent_layout_until_load_event",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2754,
+        2763
+      ],
+      "summary": "Prevents layout from occurring until the load event has fired, to avoid flashing incomplete content.",
+      "tags": [
+        "layout",
+        "load-event",
+        "blocking"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:allow_layout_if_necessary_l2767",
+      "type": "function",
+      "name": "allow_layout_if_necessary",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2767,
+        2794
+      ],
+      "summary": "Allows layout to proceed if the page has finished loading or the parsing timer expired, transitioning the layout blocker state.",
+      "tags": [
+        "layout",
+        "lifecycle",
+        "parsing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:layout_blocked_l2796",
+      "type": "function",
+      "name": "layout_blocked",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2796,
+        2798
+      ],
+      "summary": "Returns whether layout is currently blocked due to pending page load.",
+      "tags": [
+        "layout",
+        "blocking",
+        "lifecycle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:layout_reflow_l2802",
+      "type": "function",
+      "name": "layout_reflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2802,
+        2807
+      ],
+      "summary": "Function layout_reflow in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:reflow_for_non_flushing_update_the_rendering_queries_l2810",
+      "type": "function",
+      "name": "reflow_for_non_flushing_update_the_rendering_queries",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2810,
+        2815
+      ],
+      "summary": "Function reflow_for_non_flushing_update_the_rendering_queries in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:resolved_font_style_query_l2817",
+      "type": "function",
+      "name": "resolved_font_style_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2817,
+        2832
+      ],
+      "summary": "Queries the layout thread for resolved font style properties of a given element.",
+      "tags": [
+        "font",
+        "style",
+        "layout-query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:containing_block_node_query_without_reflow_l2837",
+      "type": "function",
+      "name": "containing_block_node_query_without_reflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2837,
+        2845
+      ],
+      "summary": "Function containing_block_node_query_without_reflow in components/script/dom/window/window.rs (9 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:is_containing_block_descendant_query_without_reflow_l2849",
+      "type": "function",
+      "name": "is_containing_block_descendant_query_without_reflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2849,
+        2858
+      ],
+      "summary": "Function is_containing_block_descendant_query_without_reflow in components/script/dom/window/window.rs (10 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:padding_query_without_reflow_l2864",
+      "type": "function",
+      "name": "padding_query_without_reflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2864,
+        2867
+      ],
+      "summary": "Function padding_query_without_reflow in components/script/dom/window/window.rs (4 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:box_area_query_without_reflow_l2873",
+      "type": "function",
+      "name": "box_area_query_without_reflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2873,
+        2886
+      ],
+      "summary": "Queries the box area of an element without triggering a reflow, returning cached layout data.",
+      "tags": [
+        "layout",
+        "box-area",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:box_area_query_l2888",
+      "type": "function",
+      "name": "box_area_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2888,
+        2896
+      ],
+      "summary": "Function box_area_query in components/script/dom/window/window.rs (9 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:box_areas_query_l2898",
+      "type": "function",
+      "name": "box_areas_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2898,
+        2903
+      ],
+      "summary": "Function box_areas_query in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:client_rect_query_l2905",
+      "type": "function",
+      "name": "client_rect_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2905,
+        2910
+      ],
+      "summary": "Function client_rect_query in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:current_css_zoom_query_l2912",
+      "type": "function",
+      "name": "current_css_zoom_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2912,
+        2917
+      ],
+      "summary": "Function current_css_zoom_query in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:scrolling_area_query_l2921",
+      "type": "function",
+      "name": "scrolling_area_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2921,
+        2926
+      ],
+      "summary": "Function scrolling_area_query in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:scroll_offset_query_l2928",
+      "type": "function",
+      "name": "scroll_offset_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2928,
+        2934
+      ],
+      "summary": "Function scroll_offset_query in components/script/dom/window/window.rs (7 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:scroll_an_element_l2956",
+      "type": "function",
+      "name": "scroll_an_element",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2956,
+        2976
+      ],
+      "summary": "Scrolls an element into view by sending a scroll query to the layout thread.",
+      "tags": [
+        "scroll",
+        "element",
+        "layout-query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:resolved_style_query_l2978",
+      "type": "function",
+      "name": "resolved_style_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        2978,
+        2995
+      ],
+      "summary": "Returns the computed value of a CSS property for a given element by querying the layout thread.",
+      "tags": [
+        "css",
+        "style",
+        "layout-query"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:get_iframe_viewport_details_if_known_l3000",
+      "type": "function",
+      "name": "get_iframe_viewport_details_if_known",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3000,
+        3010
+      ],
+      "summary": "Returns viewport details for an iframe element if available, used for nested browsing context layout.",
+      "tags": [
+        "iframe",
+        "viewport",
+        "layout-query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:offset_parent_query_l3013",
+      "type": "function",
+      "name": "offset_parent_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3013,
+        3027
+      ],
+      "summary": "Returns the offset parent and position of an element for getBoundingClientRect calculations.",
+      "tags": [
+        "layout",
+        "offset",
+        "positioning"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:scroll_container_query_l3029",
+      "type": "function",
+      "name": "scroll_container_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3029,
+        3038
+      ],
+      "summary": "Returns scroll container information for a given node from the layout thread.",
+      "tags": [
+        "scroll",
+        "container",
+        "layout-query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:scrolling_box_query_l3041",
+      "type": "function",
+      "name": "scrolling_box_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3041,
+        3062
+      ],
+      "summary": "Returns the scrolling element or element for scroll-related layout queries.",
+      "tags": [
+        "scroll",
+        "layout",
+        "query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:text_index_query_on_node_for_event_l3064",
+      "type": "function",
+      "name": "text_index_query_on_node_for_event",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3064,
+        3078
+      ],
+      "summary": "Returns the text index within a node for a given text event position.",
+      "tags": [
+        "text",
+        "event",
+        "layout-query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:elements_from_point_query_l3080",
+      "type": "function",
+      "name": "elements_from_point_query",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3080,
+        3086
+      ],
+      "summary": "Function elements_from_point_query in components/script/dom/window/window.rs (7 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:query_effective_overflow_l3088",
+      "type": "function",
+      "name": "query_effective_overflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3088,
+        3091
+      ],
+      "summary": "Function query_effective_overflow in components/script/dom/window/window.rs (4 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:query_effective_overflow_without_reflow_l3093",
+      "type": "function",
+      "name": "query_effective_overflow_without_reflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3093,
+        3100
+      ],
+      "summary": "Function query_effective_overflow_without_reflow in components/script/dom/window/window.rs (8 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:hit_test_from_input_event_l3102",
+      "type": "function",
+      "name": "hit_test_from_input_event",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3102,
+        3109
+      ],
+      "summary": "Function hit_test_from_input_event in components/script/dom/window/window.rs (8 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:hit_test_from_point_in_viewport_l3112",
+      "type": "function",
+      "name": "hit_test_from_point_in_viewport",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3112,
+        3134
+      ],
+      "summary": "Performs a hit test at the given viewport coordinates by querying the layout thread.",
+      "tags": [
+        "hit-test",
+        "layout",
+        "event"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:init_window_proxy_l3136",
+      "type": "function",
+      "name": "init_window_proxy",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3136,
+        3139
+      ],
+      "summary": "Function init_window_proxy in components/script/dom/window/window.rs (4 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:init_document_l3141",
+      "type": "function",
+      "name": "init_document",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3141,
+        3145
+      ],
+      "summary": "Function init_document in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:load_data_for_document_l3147",
+      "type": "function",
+      "name": "load_data_for_document",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3147,
+        3170
+      ],
+      "summary": "Starts loading a new document by dispatching a LoadUrl message to the constellation with referrer, origin, sandbox flags, and navigation history behavior.",
+      "tags": [
+        "navigation",
+        "loading",
+        "constellation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_viewport_details_l3174",
+      "type": "function",
+      "name": "set_viewport_details",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3174,
+        3181
+      ],
+      "summary": "Function set_viewport_details in components/script/dom/window/window.rs (8 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:viewport_details_l3183",
+      "type": "function",
+      "name": "viewport_details",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3183,
+        3185
+      ],
+      "summary": "Function viewport_details in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:get_or_init_visual_viewport_l3187",
+      "type": "function",
+      "name": "get_or_init_visual_viewport",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3187,
+        3191
+      ],
+      "summary": "Function get_or_init_visual_viewport in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:maybe_update_visual_viewport_l3194",
+      "type": "function",
+      "name": "maybe_update_visual_viewport",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3194,
+        3216
+      ],
+      "summary": "Updates the visual viewport dimensions if they have changed, firing a resize event.",
+      "tags": [
+        "viewport",
+        "resize",
+        "event"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_theme_l3224",
+      "type": "function",
+      "name": "set_theme",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3224,
+        3234
+      ],
+      "summary": "Sets the theme (light/dark) for this window and propagates to the document for CSS prefers-color-scheme evaluation.",
+      "tags": [
+        "theme",
+        "css",
+        "prefers-color-scheme"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:take_pending_media_query_evaluation_l3238",
+      "type": "function",
+      "name": "take_pending_media_query_evaluation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3238,
+        3240
+      ],
+      "summary": "Function take_pending_media_query_evaluation in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:has_pending_media_query_evaluation_l3242",
+      "type": "function",
+      "name": "has_pending_media_query_evaluation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3242,
+        3244
+      ],
+      "summary": "Function has_pending_media_query_evaluation in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:add_resize_event_l3254",
+      "type": "function",
+      "name": "add_resize_event",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3254,
+        3258
+      ],
+      "summary": "Function add_resize_event in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:take_unhandled_resize_event_l3260",
+      "type": "function",
+      "name": "take_unhandled_resize_event",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3260,
+        3262
+      ],
+      "summary": "Function take_unhandled_resize_event in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:has_unhandled_resize_event_l3265",
+      "type": "function",
+      "name": "has_unhandled_resize_event",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3265,
+        3267
+      ],
+      "summary": "Function has_unhandled_resize_event in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:suspend_l3269",
+      "type": "function",
+      "name": "suspend",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3269,
+        3283
+      ],
+      "summary": "Suspends this window, stopping timers and marking it as suspended.",
+      "tags": [
+        "lifecycle",
+        "suspend",
+        "timers"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:resume_l3285",
+      "type": "function",
+      "name": "resume",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3285,
+        3295
+      ],
+      "summary": "Resumes a suspended window, restarting timers and marking it as active.",
+      "tags": [
+        "lifecycle",
+        "resume",
+        "timers"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:need_emit_timeline_marker_l3297",
+      "type": "function",
+      "name": "need_emit_timeline_marker",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3297,
+        3300
+      ],
+      "summary": "Function need_emit_timeline_marker in components/script/dom/window/window.rs (4 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:emit_timeline_marker_l3302",
+      "type": "function",
+      "name": "emit_timeline_marker",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3302,
+        3306
+      ],
+      "summary": "Function emit_timeline_marker in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_devtools_timeline_markers_l3308",
+      "type": "function",
+      "name": "set_devtools_timeline_markers",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3308,
+        3315
+      ],
+      "summary": "Enables devtools timeline markers for the specified marker types on this window.",
+      "tags": [
+        "devtools",
+        "timeline",
+        "debugging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:drop_devtools_timeline_markers_l3317",
+      "type": "function",
+      "name": "drop_devtools_timeline_markers",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3317,
+        3325
+      ],
+      "summary": "Disables devtools timeline markers for the specified marker types.",
+      "tags": [
+        "devtools",
+        "timeline",
+        "debugging"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_webdriver_load_status_sender_l3331",
+      "type": "function",
+      "name": "set_webdriver_load_status_sender",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3331,
+        3336
+      ],
+      "summary": "Function set_webdriver_load_status_sender in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:webdriver_load_status_sender_l3338",
+      "type": "function",
+      "name": "webdriver_load_status_sender",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3338,
+        3342
+      ],
+      "summary": "Function webdriver_load_status_sender in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:is_alive_l3344",
+      "type": "function",
+      "name": "is_alive",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3344,
+        3346
+      ],
+      "summary": "Function is_alive in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:is_top_level_l3349",
+      "type": "function",
+      "name": "is_top_level",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3349,
+        3351
+      ],
+      "summary": "Function is_top_level in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:run_resize_steps_for_layout_viewport_l3357",
+      "type": "function",
+      "name": "run_resize_steps_for_layout_viewport",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3357,
+        3402
+      ],
+      "summary": "Function run_resize_steps_for_layout_viewport in components/script/dom/window/window.rs (46 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:run_the_resize_steps_l3408",
+      "type": "function",
+      "name": "run_the_resize_steps",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3408,
+        3430
+      ],
+      "summary": "Runs resize observer steps including updating the visual viewport and firing resize events.",
+      "tags": [
+        "resize",
+        "viewport",
+        "event"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:evaluate_media_queries_and_report_changes_l3434",
+      "type": "function",
+      "name": "evaluate_media_queries_and_report_changes",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3434,
+        3460
+      ],
+      "summary": "Re-evaluates all media queries in documents, dispatching MediaQueryListEvent for changed states.",
+      "tags": [
+        "media-queries",
+        "css",
+        "event"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:set_throttled_l3463",
+      "type": "function",
+      "name": "set_throttled",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3463,
+        3470
+      ],
+      "summary": "Function set_throttled in components/script/dom/window/window.rs (8 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:send_to_embedder_l3496",
+      "type": "function",
+      "name": "send_to_embedder",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3496,
+        3501
+      ],
+      "summary": "Function send_to_embedder in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:send_to_constellation_l3503",
+      "type": "function",
+      "name": "send_to_constellation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3503,
+        3508
+      ],
+      "summary": "Function send_to_constellation in components/script/dom/window/window.rs (6 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:in_immersive_xr_session_l3511",
+      "type": "function",
+      "name": "in_immersive_xr_session",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3511,
+        3517
+      ],
+      "summary": "Function in_immersive_xr_session in components/script/dom/window/window.rs (7 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:in_immersive_xr_session_l3520",
+      "type": "function",
+      "name": "in_immersive_xr_session",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3520,
+        3522
+      ],
+      "summary": "Function in_immersive_xr_session in components/script/dom/window/window.rs (3 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:handle_pending_images_post_reflow_l3525",
+      "type": "function",
+      "name": "handle_pending_images_post_reflow",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3525,
+        3598
+      ],
+      "summary": "Processes pending image rasterization requests after a reflow, sending image requests to the image cache.",
+      "tags": [
+        "images",
+        "reflow",
+        "rasterization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:has_sticky_activation_l3601",
+      "type": "function",
+      "name": "has_sticky_activation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3601,
+        3605
+      ],
+      "summary": "Function has_sticky_activation in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:has_transient_activation_l3608",
+      "type": "function",
+      "name": "has_transient_activation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3608,
+        3616
+      ],
+      "summary": "Function has_transient_activation in components/script/dom/window/window.rs (9 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:consume_last_activation_timestamp_l3618",
+      "type": "function",
+      "name": "consume_last_activation_timestamp",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3618,
+        3622
+      ],
+      "summary": "Function consume_last_activation_timestamp in components/script/dom/window/window.rs (5 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:consume_user_activation_l3625",
+      "type": "function",
+      "name": "consume_user_activation",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3625,
+        3652
+      ],
+      "summary": "Consumes sticky and transient user activation, used for checking user gesture requirements before certain operations.",
+      "tags": [
+        "user-activation",
+        "security",
+        "gesture"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:new_l3655",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3655,
+        3793
+      ],
+      "summary": "Constructs a new Window with full initialization of layout, scripting channels, image cache, font context, bluetooth (optional), webgl, WebXR, reporting observers, timers, and all DOM-related state.",
+      "tags": [
+        "constructor",
+        "dom",
+        "window",
+        "initialization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:cache_layout_value_l3808",
+      "type": "function",
+      "name": "cache_layout_value",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3808,
+        3813
+      ],
+      "summary": "Caches a layout query result for later retrieval by the layout API.",
+      "tags": [
+        "layout",
+        "cache",
+        "optimization"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:new_l3835",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3835,
+        3840
+      ],
+      "summary": "Constructs a new Window with full initialization of layout, scripting channels, image cache, font context, bluetooth (optional), webgl, WebXR, reporting observers, timers, and all DOM-related state.",
+      "tags": [
+        "constructor",
+        "dom",
+        "window",
+        "initialization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:get_l3843",
+      "type": "function",
+      "name": "get",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3843,
+        3848
+      ],
+      "summary": "JSAPI proxy trap: get on the WindowProxy, routing same-origin to the Window and cross-origin to the restricted xOrigin handler.",
+      "tags": [
+        "proxy",
+        "trap",
+        "jsapi"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:post_message_l3853",
+      "type": "function",
+      "name": "post_message",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3853,
+        3903
+      ],
+      "summary": "Sends a postMessage to the window, dispatching a MessageEvent with structured clone data through the constellation if cross-origin.",
+      "tags": [
+        "postmessage",
+        "messaging",
+        "event"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:report_error_l3914",
+      "type": "function",
+      "name": "report_error",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3914,
+        3938
+      ],
+      "summary": "Reports a CSS error from the style system by collecting detailed location information and forwarding to the devtools timeline.",
+      "tags": [
+        "css",
+        "error",
+        "reporting",
+        "devtools"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:is_named_element_with_name_attribute_l3941",
+      "type": "function",
+      "name": "is_named_element_with_name_attribute",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3941,
+        3953
+      ],
+      "summary": "Checks if a given Element has a matching name attribute for named property resolution on the Window.",
+      "tags": [
+        "dom",
+        "named-properties",
+        "element"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/window/window.rs:create_named_properties_object_l3969",
+      "type": "function",
+      "name": "create_named_properties_object",
+      "filePath": "components/script/dom/window/window.rs",
+      "lineRange": [
+        3969,
+        3975
+      ],
+      "summary": "Function create_named_properties_object in components/script/dom/window/window.rs (7 lines).",
+      "tags": [
+        "rust"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:PendingImageCallback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:PendingImageCallback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:OngoingNavigation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:OngoingNavigation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:Window",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:Window",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:FontCspHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:FontNetworkTimingHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:FontFetchListener",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:LayoutValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:LayoutValue",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:CSSErrorReporter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "class:components/script/dom/window/window.rs:CSSErrorReporter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:layout_blocked_l246",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:layout_blocked_l246",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:script_thread_l490",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:script_thread_l490",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:webview_id_l495",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:webview_id_l495",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:as_global_scope_l499",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:as_global_scope_l499",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:get_exists_mut_observer_l511",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:get_exists_mut_observer_l511",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_exists_mut_observer_l515",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_exists_mut_observer_l515",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:clear_js_runtime_for_script_deallocation_l520",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:clear_js_runtime_for_script_deallocation_l520",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:discard_browsing_context_l535",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:discard_browsing_context_l535",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:new_script_pair_l566",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:new_script_pair_l566",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:append_reporting_observer_l587",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:append_reporting_observer_l587",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:remove_reporting_observer_l593",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:remove_reporting_observer_l593",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:registered_reporting_observers_l605",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:registered_reporting_observers_l605",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:append_report_l609",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:append_report_l609",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:buffered_reports_l625",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:buffered_reports_l625",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_endpoints_list_l629",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_endpoints_list_l629",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:undiscarded_window_proxy_l635",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:undiscarded_window_proxy_l635",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:top_level_document_if_local_l649",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:top_level_document_if_local_l649",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:bluetooth_extra_permission_data_l666",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:bluetooth_extra_permission_data_l666",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:webgl_chan_value_l679",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:webgl_chan_value_l679",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:register_image_cache_listener_l693",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:register_image_cache_listener_l693",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:pending_layout_image_notification_l710",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:handle_image_rasterization_complete_notification_l741",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:handle_image_rasterization_complete_notification_l741",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:pending_image_notification_l757",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:pending_image_notification_l757",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:userscripts_l790",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:userscripts_l790",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:font_context_l803",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:font_context_l803",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_ongoing_navigation_l814",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_ongoing_navigation_l814",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:stop_loading_l833",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:destroy_top_level_traversable_l853",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:definitely_close_l867",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:cannot_show_simple_dialogs_l885",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:web_font_context_l920",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:web_font_context_l920",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:gc_l946",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:gc_l946",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:submit_timing_l982",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:base64_btoa_l1022",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:base64_btoa_l1022",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:base64_atob_l1049",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:base64_atob_l1049",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:Alert_l1112",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:Confirm_l1165",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:Prompt_l1214",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:Focus_l1278",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:GetOpener_l1322",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:SetOpener_l1347",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:Close_l1374",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:GetSessionStorage_l1445",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:GetLocalStorage_l1472",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:GetFrameElement_l1511",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:SetTimeout_l1551",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:SetInterval_l1582",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:CreateImageBitmap_l1621",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:CreateImageBitmap__l1640",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:Window_l1663",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:Window_l1663",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:GetParent_l1683",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:GetVisualViewport_l1728",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:PostMessage_l1762",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:PostMessage__l1777",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:WebdriverException_l1828",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:WebdriverFrame_l1844",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:WebdriverWindow_l1858",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:GetComputedStyle_l1876",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:Scroll_l1981",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:ScrollBy_l2021",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:ScrollBy__l2044",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:ResizeTo_l2062",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:NamedGetter_l2230",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:StructuredClone_l2325",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:create_named_properties_object_l2349",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:create_named_properties_object_l2349",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:current_event_l2357",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:current_event_l2357",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_current_event_l2364",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_current_event_l2364",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:post_message_impl_l2371",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:paint_worklet_l2399",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:paint_worklet_l2399",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:clear_js_runtime_l2403",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:clear_js_runtime_l2403",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scroll_l2440",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scroll_l2440",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:perform_a_scroll_l2500",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:perform_a_scroll_l2500",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:advance_animation_clock_l2547",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:advance_animation_clock_l2547",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:reflow_l2560",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:reflow_l2560",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:request_screenshot_readiness_l2674",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:request_screenshot_readiness_l2674",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:maybe_resolve_pending_screenshot_readiness_requests_l2679",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:maybe_resolve_pending_screenshot_readiness_requests_l2679",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:reflow_if_reflow_timer_expired_l2739",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:reflow_if_reflow_timer_expired_l2739",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:prevent_layout_until_load_event_l2754",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:prevent_layout_until_load_event_l2754",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:allow_layout_if_necessary_l2767",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:allow_layout_if_necessary_l2767",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:layout_blocked_l2796",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:layout_blocked_l2796",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:layout_reflow_l2802",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:layout_reflow_l2802",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:reflow_for_non_flushing_update_the_rendering_queries_l2810",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:reflow_for_non_flushing_update_the_rendering_queries_l2810",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:resolved_font_style_query_l2817",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:resolved_font_style_query_l2817",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:containing_block_node_query_without_reflow_l2837",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:containing_block_node_query_without_reflow_l2837",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:is_containing_block_descendant_query_without_reflow_l2849",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:is_containing_block_descendant_query_without_reflow_l2849",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:padding_query_without_reflow_l2864",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:padding_query_without_reflow_l2864",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:box_area_query_without_reflow_l2873",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:box_area_query_without_reflow_l2873",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:box_area_query_l2888",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:box_area_query_l2888",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:box_areas_query_l2898",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:box_areas_query_l2898",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:client_rect_query_l2905",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:client_rect_query_l2905",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:current_css_zoom_query_l2912",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:current_css_zoom_query_l2912",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scrolling_area_query_l2921",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scrolling_area_query_l2921",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scroll_offset_query_l2928",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scroll_offset_query_l2928",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scroll_an_element_l2956",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scroll_an_element_l2956",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:resolved_style_query_l2978",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:resolved_style_query_l2978",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:get_iframe_viewport_details_if_known_l3000",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:get_iframe_viewport_details_if_known_l3000",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:offset_parent_query_l3013",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:offset_parent_query_l3013",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scroll_container_query_l3029",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scroll_container_query_l3029",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scrolling_box_query_l3041",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:scrolling_box_query_l3041",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:text_index_query_on_node_for_event_l3064",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:text_index_query_on_node_for_event_l3064",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:elements_from_point_query_l3080",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:elements_from_point_query_l3080",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:query_effective_overflow_l3088",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:query_effective_overflow_l3088",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:query_effective_overflow_without_reflow_l3093",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:query_effective_overflow_without_reflow_l3093",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:hit_test_from_input_event_l3102",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:hit_test_from_input_event_l3102",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:hit_test_from_point_in_viewport_l3112",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:hit_test_from_point_in_viewport_l3112",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:init_window_proxy_l3136",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:init_window_proxy_l3136",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:init_document_l3141",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:init_document_l3141",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:load_data_for_document_l3147",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:load_data_for_document_l3147",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_viewport_details_l3174",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_viewport_details_l3174",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:viewport_details_l3183",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:viewport_details_l3183",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:get_or_init_visual_viewport_l3187",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:get_or_init_visual_viewport_l3187",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:maybe_update_visual_viewport_l3194",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:maybe_update_visual_viewport_l3194",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_theme_l3224",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_theme_l3224",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:take_pending_media_query_evaluation_l3238",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:take_pending_media_query_evaluation_l3238",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:has_pending_media_query_evaluation_l3242",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:has_pending_media_query_evaluation_l3242",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:add_resize_event_l3254",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:add_resize_event_l3254",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:take_unhandled_resize_event_l3260",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:take_unhandled_resize_event_l3260",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:has_unhandled_resize_event_l3265",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:has_unhandled_resize_event_l3265",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:suspend_l3269",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:suspend_l3269",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:resume_l3285",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:resume_l3285",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:need_emit_timeline_marker_l3297",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:need_emit_timeline_marker_l3297",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:emit_timeline_marker_l3302",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:emit_timeline_marker_l3302",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_devtools_timeline_markers_l3308",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_devtools_timeline_markers_l3308",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:drop_devtools_timeline_markers_l3317",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:drop_devtools_timeline_markers_l3317",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_webdriver_load_status_sender_l3331",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_webdriver_load_status_sender_l3331",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:webdriver_load_status_sender_l3338",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:webdriver_load_status_sender_l3338",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:is_alive_l3344",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:is_alive_l3344",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:is_top_level_l3349",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:is_top_level_l3349",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:run_resize_steps_for_layout_viewport_l3357",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:run_the_resize_steps_l3408",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:run_the_resize_steps_l3408",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:evaluate_media_queries_and_report_changes_l3434",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:evaluate_media_queries_and_report_changes_l3434",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_throttled_l3463",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:set_throttled_l3463",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:send_to_embedder_l3496",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:send_to_embedder_l3496",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:send_to_constellation_l3503",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:send_to_constellation_l3503",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:in_immersive_xr_session_l3511",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:in_immersive_xr_session_l3511",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:in_immersive_xr_session_l3520",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:in_immersive_xr_session_l3520",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:handle_pending_images_post_reflow_l3525",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:has_sticky_activation_l3601",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:has_sticky_activation_l3601",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:has_transient_activation_l3608",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:has_transient_activation_l3608",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:consume_last_activation_timestamp_l3618",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:consume_last_activation_timestamp_l3618",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:consume_user_activation_l3625",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:consume_user_activation_l3625",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:new_l3655",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:new_l3655",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:cache_layout_value_l3808",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:cache_layout_value_l3808",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:new_l3835",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:new_l3835",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:get_l3843",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:get_l3843",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:post_message_l3853",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:post_message_l3853",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:report_error_l3914",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:is_named_element_with_name_attribute_l3941",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:create_named_properties_object_l3969",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/window/window.rs",
+      "target": "function:components/script/dom/window/window.rs:create_named_properties_object_l3969",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

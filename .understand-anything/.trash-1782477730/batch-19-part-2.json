@@ -1,0 +1,1100 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/html/htmltablecaptionelement.rs",
+      "type": "file",
+      "name": "htmltablecaptionelement.rs",
+      "filePath": "components/script/dom/html/htmltablecaptionelement.rs",
+      "summary": "Implements the HTMLTableCaptionElement DOM interface for `<caption>` elements in tables.",
+      "tags": [
+        "dom",
+        "html-element",
+        "table",
+        "caption"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltablecaptionelement.rs:HTMLTableCaptionElement",
+      "type": "class",
+      "name": "HTMLTableCaptionElement",
+      "filePath": "components/script/dom/html/htmltablecaptionelement.rs",
+      "summary": "DOM struct for `<caption>` elements within HTML tables.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        16,
+        18
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltablecellelement.rs",
+      "type": "file",
+      "name": "htmltablecellelement.rs",
+      "filePath": "components/script/dom/html/htmltablecellelement.rs",
+      "summary": "Implements the HTMLTableCellElement DOM interface for `<td>` and `<th>` elements, managing cell index, colspan/rowspan, and presentational attributes.",
+      "tags": [
+        "dom",
+        "html-element",
+        "table",
+        "cell"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltablecellelement.rs:HTMLTableCellElement",
+      "type": "class",
+      "name": "HTMLTableCellElement",
+      "filePath": "components/script/dom/html/htmltablecellelement.rs",
+      "summary": "DOM struct for `<td>` and `<th>` elements with cell index calculation and presentational attribute handling.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        30,
+        32
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablecellelement.rs:CellIndex",
+      "type": "function",
+      "name": "CellIndex",
+      "filePath": "components/script/dom/html/htmltablecellelement.rs",
+      "summary": "Calculates the cell's index within its parent row by counting preceding `<td>` and `<th>` siblings.",
+      "tags": [
+        "table",
+        "cell",
+        "index"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        102,
+        116
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablecellelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmltablecellelement.rs",
+      "summary": "Handles attribute changes that affect presentational hints for table cells.",
+      "tags": [
+        "attribute",
+        "table",
+        "dom-update"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        172,
+        188
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablecellelement.rs:parse_plain_attribute",
+      "type": "function",
+      "name": "parse_plain_attribute",
+      "filePath": "components/script/dom/html/htmltablecellelement.rs",
+      "summary": "Parses presentational HTML attributes (align, valign, bgcolor, width, height) for table cells.",
+      "tags": [
+        "attribute",
+        "parsing",
+        "presentational"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        200,
+        231
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltablecolelement.rs",
+      "type": "file",
+      "name": "htmltablecolelement.rs",
+      "filePath": "components/script/dom/html/htmltablecolelement.rs",
+      "summary": "Implements the HTMLTableColElement DOM interface for `<col>` and `<colgroup>` elements, managing span attribute and presentational styling.",
+      "tags": [
+        "dom",
+        "html-element",
+        "table",
+        "col"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltablecolelement.rs:HTMLTableColElement",
+      "type": "class",
+      "name": "HTMLTableColElement",
+      "filePath": "components/script/dom/html/htmltablecolelement.rs",
+      "summary": "DOM struct for `<col>` and `<colgroup>` elements with span and width attribute support.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        22,
+        24
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablecolelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmltablecolelement.rs",
+      "summary": "Handles attribute changes for span and width on table column elements.",
+      "tags": [
+        "attribute",
+        "table"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        94,
+        107
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablecolelement.rs:parse_plain_attribute",
+      "type": "function",
+      "name": "parse_plain_attribute",
+      "filePath": "components/script/dom/html/htmltablecolelement.rs",
+      "summary": "Parses presentational attributes for table column elements (width, align).",
+      "tags": [
+        "attribute",
+        "parsing"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        119,
+        137
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltableelement.rs",
+      "type": "file",
+      "name": "htmltableelement.rs",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Implements the HTMLTableElement DOM interface for `<table>` elements, managing sections (thead/tbody/tfoot), caption, rows, and presentational attributes.",
+      "tags": [
+        "dom",
+        "html-element",
+        "table",
+        "rows"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltableelement.rs:HTMLTableElement",
+      "type": "class",
+      "name": "HTMLTableElement",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "DOM struct for `<table>` elements with section management, row indexing, caption control, and presentational attribute storage.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        34,
+        40
+      ]
+    },
+    {
+      "id": "class:components/script/dom/html/htmltableelement.rs:TableRowFilter",
+      "type": "class",
+      "name": "TableRowFilter",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Collection filter that provides a view of all rows across all table sections.",
+      "tags": [
+        "table",
+        "rows",
+        "filter"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        44,
+        46
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltableelement.rs:set_first_section_of_type",
+      "type": "function",
+      "name": "set_first_section_of_type",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Sets or replaces the first section (thead/tfoot) of the table, moving the old section to before/after the table as needed.",
+      "tags": [
+        "table",
+        "section",
+        "dom-manipulation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        107,
+        135
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltableelement.rs:create_section_of_type",
+      "type": "function",
+      "name": "create_section_of_type",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Creates or returns the first section of a given type (thead/tfoot), inserting it at the correct position.",
+      "tags": [
+        "table",
+        "section",
+        "creation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        139,
+        168
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltableelement.rs:Rows",
+      "type": "function",
+      "name": "Rows",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Returns an HTMLCollection of all rows in the table, including rows from all child sections.",
+      "tags": [
+        "table",
+        "rows",
+        "getter"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        178,
+        189
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltableelement.rs:InsertRow",
+      "type": "function",
+      "name": "InsertRow",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Inserts a new row at the specified index into the table, creating a tbody section if none exists.",
+      "tags": [
+        "table",
+        "rows",
+        "dom-manipulation"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        348,
+        424
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltableelement.rs:DeleteRow",
+      "type": "function",
+      "name": "DeleteRow",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Removes a row at the specified index from the table, delegating to the appropriate section.",
+      "tags": [
+        "table",
+        "rows",
+        "dom-manipulation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        427,
+        453
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltableelement.rs:CreateCaption",
+      "type": "function",
+      "name": "CreateCaption",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Creates or returns the existing `<caption>` element for the table.",
+      "tags": [
+        "table",
+        "caption",
+        "creation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        223,
+        243
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltableelement.rs:CreateTBody",
+      "type": "function",
+      "name": "CreateTBody",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Creates a new `<tbody>` element and appends it to the table.",
+      "tags": [
+        "table",
+        "section",
+        "creation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        324,
+        345
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltableelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmltableelement.rs",
+      "summary": "Handles attribute changes that affect presentational hints on the table (border, cellpadding, etc.).",
+      "tags": [
+        "attribute",
+        "table"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        522,
+        556
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltablerowelement.rs",
+      "type": "file",
+      "name": "htmltablerowelement.rs",
+      "filePath": "components/script/dom/html/htmltablerowelement.rs",
+      "summary": "Implements the HTMLTableRowElement DOM interface for `<tr>` elements, managing row index, cell collection, and presentational attribute parsing.",
+      "tags": [
+        "dom",
+        "html-element",
+        "table",
+        "row"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltablerowelement.rs:HTMLTableRowElement",
+      "type": "class",
+      "name": "HTMLTableRowElement",
+      "filePath": "components/script/dom/html/htmltablerowelement.rs",
+      "summary": "DOM struct for `<tr>` elements with row indexing and cell management operations.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        32,
+        35
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablerowelement.rs:Cells",
+      "type": "function",
+      "name": "Cells",
+      "filePath": "components/script/dom/html/htmltablerowelement.rs",
+      "summary": "Returns an HTMLCollection of the `<td>` and `<th>` cells in this row.",
+      "tags": [
+        "table",
+        "row",
+        "cells"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        87,
+        99
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablerowelement.rs:InsertCell",
+      "type": "function",
+      "name": "InsertCell",
+      "filePath": "components/script/dom/html/htmltablerowelement.rs",
+      "summary": "Inserts a new `<td>` cell at the specified index in this row.",
+      "tags": [
+        "table",
+        "row",
+        "dom-manipulation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        102,
+        121
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablerowelement.rs:RowIndex",
+      "type": "function",
+      "name": "RowIndex",
+      "filePath": "components/script/dom/html/htmltablerowelement.rs",
+      "summary": "Returns the index of this row within the entire table, or -1 if not in a table.",
+      "tags": [
+        "table",
+        "row",
+        "index"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        135,
+        157
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablerowelement.rs:SectionRowIndex",
+      "type": "function",
+      "name": "SectionRowIndex",
+      "filePath": "components/script/dom/html/htmltablerowelement.rs",
+      "summary": "Returns the index of this row within its parent section (tbody/thead/tfoot).",
+      "tags": [
+        "table",
+        "row",
+        "index"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        160,
+        173
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltablesectionelement.rs",
+      "type": "file",
+      "name": "htmltablesectionelement.rs",
+      "filePath": "components/script/dom/html/htmltablesectionelement.rs",
+      "summary": "Implements the HTMLTableSectionElement DOM interface for `<thead>`, `<tbody>`, and `<tfoot>` elements, managing row collections and presentational hints.",
+      "tags": [
+        "dom",
+        "html-element",
+        "table",
+        "section"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltablesectionelement.rs:HTMLTableSectionElement",
+      "type": "class",
+      "name": "HTMLTableSectionElement",
+      "filePath": "components/script/dom/html/htmltablesectionelement.rs",
+      "summary": "DOM struct for table section elements (thead/tbody/tfoot) with row management and presentational attribute support.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        28,
+        30
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablesectionelement.rs:Rows",
+      "type": "function",
+      "name": "Rows",
+      "filePath": "components/script/dom/html/htmltablesectionelement.rs",
+      "summary": "Returns an HTMLCollection of rows within this table section.",
+      "tags": [
+        "table",
+        "rows",
+        "getter"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        66,
+        76
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltablesectionelement.rs:InsertRow",
+      "type": "function",
+      "name": "InsertRow",
+      "filePath": "components/script/dom/html/htmltablesectionelement.rs",
+      "summary": "Inserts a new row at the specified index within this table section.",
+      "tags": [
+        "table",
+        "row",
+        "dom-manipulation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        79,
+        98
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltemplateelement.rs",
+      "type": "file",
+      "name": "htmltemplateelement.rs",
+      "filePath": "components/script/dom/html/htmltemplateelement.rs",
+      "summary": "Implements the HTMLTemplateElement DOM interface for `<template>` elements, managing document fragment contents and adoption/cloning behavior.",
+      "tags": [
+        "dom",
+        "html-element",
+        "template",
+        "fragment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltemplateelement.rs:HTMLTemplateElement",
+      "type": "class",
+      "name": "HTMLTemplateElement",
+      "filePath": "components/script/dom/html/htmltemplateelement.rs",
+      "summary": "DOM struct for `<template>` elements with a DocumentFragment content holder and lifecycle hooks.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        24,
+        29
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltemplateelement.rs:Content",
+      "type": "function",
+      "name": "Content",
+      "filePath": "components/script/dom/html/htmltemplateelement.rs",
+      "summary": "Returns the template's document fragment content, lazily initializing it if needed.",
+      "tags": [
+        "template",
+        "fragment",
+        "getter"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        113,
+        126
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltemplateelement.rs:adopting_steps",
+      "type": "function",
+      "name": "adopting_steps",
+      "filePath": "components/script/dom/html/htmltemplateelement.rs",
+      "summary": "Updates the template content's document owner when the template is adopted by another document.",
+      "tags": [
+        "template",
+        "lifecycle",
+        "adoption"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        135,
+        144
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltemplateelement.rs:cloning_steps",
+      "type": "function",
+      "name": "cloning_steps",
+      "filePath": "components/script/dom/html/htmltemplateelement.rs",
+      "summary": "Handles deep cloning of a template element by cloning its content fragment into the new template.",
+      "tags": [
+        "template",
+        "clone",
+        "lifecycle"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        147,
+        175
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltextareaelement.rs",
+      "type": "file",
+      "name": "htmltextareaelement.rs",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Implements the HTMLTextAreaElement DOM interface for `<textarea>` elements, providing text input management, selection API, form integration, and validation.",
+      "tags": [
+        "dom",
+        "html-element",
+        "textarea",
+        "form",
+        "selection"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Full textarea implementation with TextInput-backed editing, shared selection state with layout, embedder clipboard, and comprehensive form validation."
+    },
+    {
+      "id": "class:components/script/dom/html/htmltextareaelement.rs:HTMLTextAreaElement",
+      "type": "class",
+      "name": "HTMLTextAreaElement",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "DOM struct for `<textarea>` elements with text input widget, shared selection, form controls, and validity state.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        58,
+        78
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:handle_focus_event",
+      "type": "function",
+      "name": "handle_focus_event",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Handles focus events on the textarea, showing the keyboard and resetting selection state.",
+      "tags": [
+        "focus",
+        "textarea",
+        "events"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        173,
+        198
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:schedule_a_selection_change_event",
+      "type": "function",
+      "name": "schedule_a_selection_change_event",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Schedules a selectionchange event on the document when the textarea's selection changes.",
+      "tags": [
+        "selection",
+        "events"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        237,
+        269
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:maybe_update_shared_selection",
+      "type": "function",
+      "name": "maybe_update_shared_selection",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Updates the shared selection state that is synchronized with layout's display of the textarea content.",
+      "tags": [
+        "selection",
+        "layout",
+        "synchronization"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        294,
+        323
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:SetValue",
+      "type": "function",
+      "name": "SetValue",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Sets the textarea's value, marking it dirty and notifying the text input widget.",
+      "tags": [
+        "textarea",
+        "setter"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        437,
+        455
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:SetSelectionRange",
+      "type": "function",
+      "name": "SetSelectionRange",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Sets the selection range within the textarea content, delegating to the text input widget.",
+      "tags": [
+        "selection",
+        "setter"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        507,
+        513
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:SetRangeText_",
+      "type": "function",
+      "name": "SetRangeText_",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Replaces a range of text in the textarea with new text, supporting the four selection modes (select/start/end/preserve).",
+      "tags": [
+        "textarea",
+        "text-manipulation"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        522,
+        535
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:attribute_mutated",
+      "type": "function",
+      "name": "attribute_mutated",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Handles attribute changes on the textarea (rows, cols, placeholder, maxlength, readonly, disabled, etc.) with corresponding widget updates.",
+      "tags": [
+        "attribute",
+        "textarea",
+        "dom-update"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        617,
+        705
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:handle_event",
+      "type": "function",
+      "name": "handle_event",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Dispatches input, keyboard, composition, and clipboard events to the text input widget for processing.",
+      "tags": [
+        "events",
+        "textarea",
+        "input-handling"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        785,
+        855
+      ]
+    },
+    {
+      "id": "function:components/script/dom/html/htmltextareaelement.rs:perform_validation",
+      "type": "function",
+      "name": "perform_validation",
+      "filePath": "components/script/dom/html/htmltextareaelement.rs",
+      "summary": "Performs constraint validation for the textarea element, checking valueMissing, patternMismatch, tooLong, and customError.",
+      "tags": [
+        "validation",
+        "form"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        898,
+        941
+      ]
+    },
+    {
+      "id": "file:components/script/dom/html/htmltimeelement.rs",
+      "type": "file",
+      "name": "htmltimeelement.rs",
+      "filePath": "components/script/dom/html/htmltimeelement.rs",
+      "summary": "Implements the HTMLTimeElement DOM interface for `<time>` elements, providing datetime attribute support.",
+      "tags": [
+        "dom",
+        "html-element",
+        "time"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/html/htmltimeelement.rs:HTMLTimeElement",
+      "type": "class",
+      "name": "HTMLTimeElement",
+      "filePath": "components/script/dom/html/htmltimeelement.rs",
+      "summary": "DOM struct for `<time>` elements with datetime attribute support.",
+      "tags": [
+        "dom",
+        "html-element"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        17,
+        19
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/html/htmltablecaptionelement.rs",
+      "target": "class:components/script/dom/html/htmltablecaptionelement.rs:HTMLTableCaptionElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablecellelement.rs",
+      "target": "class:components/script/dom/html/htmltablecellelement.rs:HTMLTableCellElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablecellelement.rs",
+      "target": "function:components/script/dom/html/htmltablecellelement.rs:CellIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablecellelement.rs",
+      "target": "function:components/script/dom/html/htmltablecellelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablecellelement.rs",
+      "target": "function:components/script/dom/html/htmltablecellelement.rs:parse_plain_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablecolelement.rs",
+      "target": "class:components/script/dom/html/htmltablecolelement.rs:HTMLTableColElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablecolelement.rs",
+      "target": "function:components/script/dom/html/htmltablecolelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablecolelement.rs",
+      "target": "function:components/script/dom/html/htmltablecolelement.rs:parse_plain_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "class:components/script/dom/html/htmltableelement.rs:HTMLTableElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "class:components/script/dom/html/htmltableelement.rs:TableRowFilter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "function:components/script/dom/html/htmltableelement.rs:set_first_section_of_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "function:components/script/dom/html/htmltableelement.rs:create_section_of_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "function:components/script/dom/html/htmltableelement.rs:Rows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "function:components/script/dom/html/htmltableelement.rs:InsertRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "function:components/script/dom/html/htmltableelement.rs:DeleteRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "function:components/script/dom/html/htmltableelement.rs:CreateCaption",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "function:components/script/dom/html/htmltableelement.rs:CreateTBody",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltableelement.rs",
+      "target": "function:components/script/dom/html/htmltableelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablerowelement.rs",
+      "target": "class:components/script/dom/html/htmltablerowelement.rs:HTMLTableRowElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablerowelement.rs",
+      "target": "function:components/script/dom/html/htmltablerowelement.rs:Cells",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablerowelement.rs",
+      "target": "function:components/script/dom/html/htmltablerowelement.rs:InsertCell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablerowelement.rs",
+      "target": "function:components/script/dom/html/htmltablerowelement.rs:RowIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablerowelement.rs",
+      "target": "function:components/script/dom/html/htmltablerowelement.rs:SectionRowIndex",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablesectionelement.rs",
+      "target": "class:components/script/dom/html/htmltablesectionelement.rs:HTMLTableSectionElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablesectionelement.rs",
+      "target": "function:components/script/dom/html/htmltablesectionelement.rs:Rows",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltablesectionelement.rs",
+      "target": "function:components/script/dom/html/htmltablesectionelement.rs:InsertRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltemplateelement.rs",
+      "target": "class:components/script/dom/html/htmltemplateelement.rs:HTMLTemplateElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltemplateelement.rs",
+      "target": "function:components/script/dom/html/htmltemplateelement.rs:Content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltemplateelement.rs",
+      "target": "function:components/script/dom/html/htmltemplateelement.rs:adopting_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltemplateelement.rs",
+      "target": "function:components/script/dom/html/htmltemplateelement.rs:cloning_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "class:components/script/dom/html/htmltextareaelement.rs:HTMLTextAreaElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:handle_focus_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:schedule_a_selection_change_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:maybe_update_shared_selection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:SetValue",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:SetSelectionRange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:SetRangeText_",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:attribute_mutated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:handle_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltextareaelement.rs",
+      "target": "function:components/script/dom/html/htmltextareaelement.rs:perform_validation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/html/htmltimeelement.rs",
+      "target": "class:components/script/dom/html/htmltimeelement.rs:HTMLTimeElement",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

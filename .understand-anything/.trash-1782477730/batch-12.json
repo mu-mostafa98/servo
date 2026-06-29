@@ -1,0 +1,2308 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/animations.rs",
+      "type": "file",
+      "name": "animations.rs",
+      "filePath": "components/script/animations.rs",
+      "summary": "Manages CSS animations and transitions for DOM nodes, handling lifecycle events from start to completion including pending event dispatch and running animation tracking.",
+      "tags": [
+        "animation",
+        "css-transitions",
+        "event-dispatch",
+        "keyframe"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/animations.rs:Animations",
+      "type": "class",
+      "name": "Animations",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        41,
+        59
+      ],
+      "summary": "Manages the lifecycle of CSS animations and transitions across animation sets, including running, pending, and canceled states.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/animations.rs:TransitionOrAnimationEventType",
+      "type": "class",
+      "name": "TransitionOrAnimationEventType",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        569,
+        592
+      ],
+      "summary": "Defines the TransitionOrAnimationEventType type with 1 methods and 8 properties.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        62,
+        70
+      ],
+      "summary": "Creates a new Animations instance with default animation set storage and empty tracking state.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:clear",
+      "type": "function",
+      "name": "clear",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        72,
+        76
+      ],
+      "summary": "Clears all animation state including sets, rooted nodes, and pending events.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:mark_animating_nodes_as_dirty",
+      "type": "function",
+      "name": "mark_animating_nodes_as_dirty",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        81,
+        98
+      ],
+      "summary": "Marks currently animating DOM nodes as dirty when the timeline value changes.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:update_for_new_timeline_value",
+      "type": "function",
+      "name": "update_for_new_timeline_value",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        100,
+        124
+      ],
+      "summary": "Updates all animation sets for a new timeline value, advancing running animations and finishing completed ones.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:cancel_animations_for_node",
+      "type": "function",
+      "name": "cancel_animations_for_node",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        127,
+        145
+      ],
+      "summary": "Cancels all running animations for a specific DOM node across non-pseudo and pseudo animation sets.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:do_post_reflow_update",
+      "type": "function",
+      "name": "do_post_reflow_update",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        151,
+        179
+      ],
+      "summary": "Performs post-reflow animation updates including canceling unrendered nodes, processing new animations, and cleaning up empty sets.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:handle_animation_presence_or_pending_events_change",
+      "type": "function",
+      "name": "handle_animation_presence_or_pending_events_change",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        191,
+        204
+      ],
+      "summary": "Notifies the constellation when running animation state or pending events change.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:running_animation_count",
+      "type": "function",
+      "name": "running_animation_count",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        206,
+        213
+      ],
+      "summary": "Returns the total count of currently running animations and transitions across all sets.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:start_pending_animations",
+      "type": "function",
+      "name": "start_pending_animations",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        217,
+        249
+      ],
+      "summary": "Starts pending animations and transitions in an animation set by adding start events.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/animations.rs:finish_running_animations",
+      "type": "function",
+      "name": "finish_running_animations",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        253,
+        285
+      ],
+      "summary": "Completes running animations and transitions that have ended, adding end/cancel events.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/animations.rs:handle_canceled_animations",
+      "type": "function",
+      "name": "handle_canceled_animations",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        290,
+        322
+      ],
+      "summary": "Processes canceled animations and transitions, adding appropriate cancel events.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/animations.rs:handle_new_animations",
+      "type": "function",
+      "name": "handle_new_animations",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        324,
+        347
+      ],
+      "summary": "Processes newly created animations and transitions by adding start events.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:root_newly_animating_dom_nodes",
+      "type": "function",
+      "name": "root_newly_animating_dom_nodes",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        352,
+        375
+      ],
+      "summary": "Ensures newly animating DOM nodes are rooted to prevent garbage collection.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/animations.rs:add_transition_event",
+      "type": "function",
+      "name": "add_transition_event",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        386,
+        424
+      ],
+      "summary": "Creates and queues a transition event with computed elapsed time based on timing parameters.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/animations.rs:add_animation_event",
+      "type": "function",
+      "name": "add_animation_event",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        426,
+        473
+      ],
+      "summary": "Creates and queues an animation event with computed elapsed time based on animation phase.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/animations.rs:send_pending_events",
+      "type": "function",
+      "name": "send_pending_events",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        477,
+        563
+      ],
+      "summary": "Dispatches all queued animation and transition events to their target nodes as DOM events.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/animations.rs:is_transition_event",
+      "type": "function",
+      "name": "is_transition_event",
+      "filePath": "components/script/animations.rs",
+      "lineRange": [
+        596,
+        607
+      ],
+      "summary": "Returns true if this event type represents a transition event rather than an animation event.",
+      "tags": [
+        "animation",
+        "helper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/body.rs",
+      "type": "file",
+      "name": "body.rs",
+      "filePath": "components/script/body.rs",
+      "summary": "Implements the Fetch API body reading and extraction primitives, supporting text, JSON, blob, form data, and array buffer body consumption from readable streams with content disposition parsing.",
+      "tags": [
+        "fetch-api",
+        "stream-processing",
+        "body-extraction",
+        "http"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/body.rs:TransmitBodyConnectHandler",
+      "type": "class",
+      "name": "TransmitBodyConnectHandler",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        105,
+        113
+      ],
+      "summary": "Handles stream reading and chunk transmission for HTTP body.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/body.rs:ExtractedBody",
+      "type": "class",
+      "name": "ExtractedBody",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        383,
+        392
+      ],
+      "summary": "Represents extracted body data with stream, content source metadata, and total byte count.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/body.rs:BodyMixin",
+      "type": "class",
+      "name": "BodyMixin",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        1152,
+        1161
+      ],
+      "summary": "Mixin trait providing body usage tracking, stream access, and MIME type retrieval for objects with a body.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:clone_body_stream_for_dom_body",
+      "type": "function",
+      "name": "clone_body_stream_for_dom_body",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        55,
+        77
+      ],
+      "summary": "Clones a readable body stream for DOM body consumption by teeing the original stream.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        116,
+        132
+      ],
+      "summary": "Creates a TransmitBodyConnectHandler with stream, task source, and channel senders.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:reset_in_memory_done",
+      "type": "function",
+      "name": "reset_in_memory_done",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        136,
+        138
+      ],
+      "summary": "Performs reset in memory done operations.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:re_extract",
+      "type": "function",
+      "name": "re_extract",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        142,
+        171
+      ],
+      "summary": "Extracts body content from a source into a structured ExtractedBody with stream and content type.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:transmit_source",
+      "type": "function",
+      "name": "transmit_source",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        179,
+        201
+      ],
+      "summary": "Transmits the body source information (in-memory bytes or stream reference) to the requester.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:start_reading",
+      "type": "function",
+      "name": "start_reading",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        205,
+        225
+      ],
+      "summary": "Starts reading the body stream by queuing a read task on the task source.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:stop_reading",
+      "type": "function",
+      "name": "stop_reading",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        231,
+        245
+      ],
+      "summary": "Stops reading by sending stop signal and cleaning up the bytes sender channel.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:transmit_body_chunk",
+      "type": "function",
+      "name": "transmit_body_chunk",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        248,
+        302
+      ],
+      "summary": "Reads and transmits a chunk of body data, handling errors and stream completion.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/body.rs:callback",
+      "type": "function",
+      "name": "callback",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        321,
+        356
+      ],
+      "summary": "Performs callback operations.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/body.rs:into_net_request_body",
+      "type": "function",
+      "name": "into_net_request_body",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        406,
+        477
+      ],
+      "summary": "Converts the extracted body into a network request body, setting up chunked transfer if needed.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/body.rs:in_memory",
+      "type": "function",
+      "name": "in_memory",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        480,
+        482
+      ],
+      "summary": "Returns whether the body stream is backed by in-memory data.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:stream_from_body_init_bytes",
+      "type": "function",
+      "name": "stream_from_body_init_bytes",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        496,
+        506
+      ],
+      "summary": "Creates a ReadableStream from byte data for use as a body init source.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:extract",
+      "type": "function",
+      "name": "extract",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        510,
+        565
+      ],
+      "summary": "Extracts body content from a source into a structured ExtractedBody with stream and content type.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/body.rs:consume_body",
+      "type": "function",
+      "name": "consume_body",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        703,
+        802
+      ],
+      "summary": "Reads the entire body from a BodyMixin object and processes it according to the specified body type.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/body.rs:resolve_result_promise",
+      "type": "function",
+      "name": "resolve_result_promise",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        806,
+        829
+      ],
+      "summary": "Resolves a promise with the result of running the appropriate data algorithm for the body type.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:run_package_data_algorithm",
+      "type": "function",
+      "name": "run_package_data_algorithm",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        834,
+        851
+      ],
+      "summary": "Routes body bytes to the correct processing algorithm based on body type.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:run_text_data_algorithm",
+      "type": "function",
+      "name": "run_text_data_algorithm",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        854,
+        865
+      ],
+      "summary": "Decodes body bytes to UTF-16 string with BOM removal.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:run_json_data_algorithm",
+      "type": "function",
+      "name": "run_json_data_algorithm",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        869,
+        896
+      ],
+      "summary": "Parses body bytes as JSON and returns the JS value.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:run_blob_data_algorithm",
+      "type": "function",
+      "name": "run_blob_data_algorithm",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        899,
+        916
+      ],
+      "summary": "Creates a Blob object from body bytes with the given MIME type.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:extract_name_from_content_disposition",
+      "type": "function",
+      "name": "extract_name_from_content_disposition",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        918,
+        930
+      ],
+      "summary": "Extracts body content from a source into a structured ExtractedBody with stream and content type.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:extract_filename_from_content_disposition",
+      "type": "function",
+      "name": "extract_filename_from_content_disposition",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        932,
+        953
+      ],
+      "summary": "Extracts body content from a source into a structured ExtractedBody with stream and content type.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:append_form_data_entry_from_part",
+      "type": "function",
+      "name": "append_form_data_entry_from_part",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        965,
+        1000
+      ],
+      "summary": "Parses a multipart form data entry from headers and body into a FormData entry.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/body.rs:append_multipart_nodes",
+      "type": "function",
+      "name": "append_multipart_nodes",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        1002,
+        1024
+      ],
+      "summary": "Processes multipart form data nodes into FormData entries.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:run_form_data_algorithm",
+      "type": "function",
+      "name": "run_form_data_algorithm",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        1027,
+        1094
+      ],
+      "summary": "Parses multipart/form-data body bytes into a FormData object.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/body.rs:run_bytes_data_algorithm",
+      "type": "function",
+      "name": "run_bytes_data_algorithm",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        1097,
+        1113
+      ],
+      "summary": "Returns body bytes as a Uint8Array.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:run_array_buffer_data_algorithm",
+      "type": "function",
+      "name": "run_array_buffer_data_algorithm",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        1116,
+        1132
+      ],
+      "summary": "Returns body bytes as an ArrayBuffer.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/body.rs:decode_to_utf16_with_bom_removal",
+      "type": "function",
+      "name": "decode_to_utf16_with_bom_removal",
+      "filePath": "components/script/body.rs",
+      "lineRange": [
+        1135,
+        1149
+      ],
+      "summary": "Decodes bytes to UTF-16 string, stripping the BOM if present.",
+      "tags": [
+        "fetch-api",
+        "body-processing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/clipboard_provider.rs",
+      "type": "file",
+      "name": "clipboard_provider.rs",
+      "filePath": "components/script/clipboard_provider.rs",
+      "summary": "Defines clipboard provider traits and an embedder-based implementation for reading and writing clipboard text content.",
+      "tags": [
+        "clipboard",
+        "trait-definition",
+        "embedder-api",
+        "trait"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/clipboard_provider.rs:ClipboardProvider",
+      "type": "class",
+      "name": "ClipboardProvider",
+      "filePath": "components/script/clipboard_provider.rs",
+      "lineRange": [
+        12,
+        17
+      ],
+      "summary": "Defines the ClipboardProvider type with 2 methods and 0 properties.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/clipboard_provider.rs:EmbedderClipboardProvider",
+      "type": "class",
+      "name": "EmbedderClipboardProvider",
+      "filePath": "components/script/clipboard_provider.rs",
+      "lineRange": [
+        20,
+        23
+      ],
+      "summary": "Defines the EmbedderClipboardProvider type with 2 methods and 2 properties.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/conversions.rs",
+      "type": "file",
+      "name": "conversions.rs",
+      "filePath": "components/script/conversions.rs",
+      "summary": "Provides conversion traits for converting between Rust types and script (JS) values in the DOM binding system.",
+      "tags": [
+        "conversion",
+        "trait",
+        "type-system",
+        "dom-bindings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/css.rs",
+      "type": "file",
+      "name": "css.rs",
+      "filePath": "components/script/css.rs",
+      "summary": "Creates CSS parser contexts for document stylesheets, providing parsing mode configuration and error reporter integration.",
+      "tags": [
+        "css-parsing",
+        "stylesheet",
+        "parser-context",
+        "parser"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/css.rs:parser_context_for_document",
+      "type": "function",
+      "name": "parser_context_for_document",
+      "filePath": "components/script/css.rs",
+      "lineRange": [
+        18,
+        38
+      ],
+      "summary": "Creates a CSS parser context for a document stylesheet with specified parsing mode.",
+      "tags": [
+        "css",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/css.rs:parser_context_for_document_with_reporter",
+      "type": "function",
+      "name": "parser_context_for_document_with_reporter",
+      "filePath": "components/script/css.rs",
+      "lineRange": [
+        41,
+        61
+      ],
+      "summary": "Creates a CSS parser context with a custom error reporter for parsing diagnostics.",
+      "tags": [
+        "css",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/css.rs:parser_context_for_anonymous_content",
+      "type": "function",
+      "name": "parser_context_for_anonymous_content",
+      "filePath": "components/script/css.rs",
+      "lineRange": [
+        65,
+        81
+      ],
+      "summary": "Creates a CSS parser context for anonymous (non-document) content.",
+      "tags": [
+        "css",
+        "parsing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/devtools.rs",
+      "type": "file",
+      "name": "devtools.rs",
+      "filePath": "components/script/devtools.rs",
+      "summary": "Implements Firefox DevTools protocol handlers for inspecting the DOM tree, CSS rules, computed styles, layout data, and performing attribute and rule modifications.",
+      "tags": [
+        "devtools",
+        "inspection",
+        "dom-inspector",
+        "protocol-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/devtools.rs:DevtoolsState",
+      "type": "class",
+      "name": "DevtoolsState",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        64,
+        66
+      ],
+      "summary": "Defines the DevtoolsState type with 6 methods and 1 properties.",
+      "tags": [
+        "class",
+        "script"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:notify_pipeline_created",
+      "type": "function",
+      "name": "notify_pipeline_created",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        78,
+        86
+      ],
+      "summary": "Notifies the DevTools server that a new pipeline was created.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:notify_pipeline_exited",
+      "type": "function",
+      "name": "notify_pipeline_exited",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        87,
+        91
+      ],
+      "summary": "Notifies the DevTools server that a pipeline was destroyed.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:wants_updates_for_node",
+      "type": "function",
+      "name": "wants_updates_for_node",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        107,
+        115
+      ],
+      "summary": "Checks if the DevTools client wants updates for a specific node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_set_timeline_markers",
+      "type": "function",
+      "name": "handle_set_timeline_markers",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        125,
+        135
+      ],
+      "summary": "Handles a DevTools request to set timeline markers markers.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_drop_timeline_markers",
+      "type": "function",
+      "name": "handle_drop_timeline_markers",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        137,
+        145
+      ],
+      "summary": "Handles a DevTools request to drop timeline markers markers.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_request_animation_frame",
+      "type": "function",
+      "name": "handle_request_animation_frame",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        147,
+        155
+      ],
+      "summary": "Handles a DevTools request for animation frame data.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_css_database",
+      "type": "function",
+      "name": "handle_get_css_database",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        157,
+        173
+      ],
+      "summary": "Handles a DevTools request to get css database data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_event_listener_info",
+      "type": "function",
+      "name": "handle_get_event_listener_info",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        175,
+        190
+      ],
+      "summary": "Handles a DevTools request to get event listener info data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_root_node",
+      "type": "function",
+      "name": "handle_get_root_node",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        192,
+        210
+      ],
+      "summary": "Handles a DevTools request to get root node data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_document_element",
+      "type": "function",
+      "name": "handle_get_document_element",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        212,
+        230
+      ],
+      "summary": "Handles a DevTools request to get document element data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_stylesheets",
+      "type": "function",
+      "name": "handle_get_stylesheets",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        232,
+        254
+      ],
+      "summary": "Handles a DevTools request to get stylesheets data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_stylesheet_text",
+      "type": "function",
+      "name": "handle_get_stylesheet_text",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        256,
+        290
+      ],
+      "summary": "Handles a DevTools request to get stylesheet text data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_children",
+      "type": "function",
+      "name": "handle_get_children",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        292,
+        347
+      ],
+      "summary": "Handles a DevTools request to get children data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_attribute_style",
+      "type": "function",
+      "name": "handle_get_attribute_style",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        349,
+        386
+      ],
+      "summary": "Handles a DevTools request to get attribute style data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:build_rule_map",
+      "type": "function",
+      "name": "build_rule_map",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        388,
+        428
+      ],
+      "summary": "Builds a CSS rule map from a selector list with stylesheet and ancestor info for DevTools display.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:find_rule_by_block_id",
+      "type": "function",
+      "name": "find_rule_by_block_id",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        430,
+        455
+      ],
+      "summary": "Finds a CSS rule by its block ID within a selector list.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_selectors",
+      "type": "function",
+      "name": "handle_get_selectors",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        458,
+        503
+      ],
+      "summary": "Handles a DevTools request to get selectors data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_stylesheet_style",
+      "type": "function",
+      "name": "handle_get_stylesheet_style",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        507,
+        543
+      ],
+      "summary": "Handles a DevTools request to get stylesheet style data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_computed_style",
+      "type": "function",
+      "name": "handle_get_computed_style",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        545,
+        575
+      ],
+      "summary": "Handles a DevTools request to get computed style data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_layout",
+      "type": "function",
+      "name": "handle_get_layout",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        577,
+        622
+      ],
+      "summary": "Handles a DevTools request to get layout data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_get_xpath",
+      "type": "function",
+      "name": "handle_get_xpath",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        624,
+        681
+      ],
+      "summary": "Handles a DevTools request to get xpath data from the document or node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_modify_attribute",
+      "type": "function",
+      "name": "handle_modify_attribute",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        683,
+        722
+      ],
+      "summary": "Handles a DevTools request to modify attributes on a DOM node.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_modify_rule",
+      "type": "function",
+      "name": "handle_modify_rule",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        724,
+        757
+      ],
+      "summary": "Handles a DevTools request to modify a CSS rule in a stylesheet.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/devtools.rs:handle_highlight_dom_node",
+      "type": "function",
+      "name": "handle_highlight_dom_node",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        759,
+        776
+      ],
+      "summary": "Handles a DevTools request to highlight a DOM node by its ID.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/devtools.rs:determine_auto_margins",
+      "type": "function",
+      "name": "determine_auto_margins",
+      "filePath": "components/script/devtools.rs",
+      "lineRange": [
+        779,
+        790
+      ],
+      "summary": "Determines auto margins for a node from its computed style.",
+      "tags": [
+        "devtools",
+        "handler"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "class:components/script/animations.rs:Animations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "class:components/script/animations.rs:Animations",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "class:components/script/animations.rs:TransitionOrAnimationEventType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "class:components/script/animations.rs:TransitionOrAnimationEventType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:clear",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:clear",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:mark_animating_nodes_as_dirty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:mark_animating_nodes_as_dirty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:update_for_new_timeline_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:update_for_new_timeline_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:cancel_animations_for_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:cancel_animations_for_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:do_post_reflow_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:do_post_reflow_update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:handle_animation_presence_or_pending_events_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:running_animation_count",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:running_animation_count",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:start_pending_animations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:finish_running_animations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:handle_canceled_animations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:handle_new_animations",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:root_newly_animating_dom_nodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:add_transition_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:add_animation_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:send_pending_events",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:send_pending_events",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:is_transition_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/animations.rs",
+      "target": "function:components/script/animations.rs:is_transition_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "class:components/script/body.rs:TransmitBodyConnectHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "class:components/script/body.rs:ExtractedBody",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "class:components/script/body.rs:ExtractedBody",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "class:components/script/body.rs:BodyMixin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "class:components/script/body.rs:BodyMixin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:clone_body_stream_for_dom_body",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:clone_body_stream_for_dom_body",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:reset_in_memory_done",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:reset_in_memory_done",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:re_extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:transmit_source",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:start_reading",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:stop_reading",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:transmit_body_chunk",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:callback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:into_net_request_body",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:into_net_request_body",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:in_memory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:in_memory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:stream_from_body_init_bytes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:extract",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:consume_body",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:consume_body",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:resolve_result_promise",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:run_package_data_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:run_text_data_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:run_json_data_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:run_blob_data_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:extract_name_from_content_disposition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:extract_filename_from_content_disposition",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:append_form_data_entry_from_part",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:append_multipart_nodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:run_form_data_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:run_bytes_data_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:run_array_buffer_data_algorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:run_array_buffer_data_algorithm",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:decode_to_utf16_with_bom_removal",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/body.rs",
+      "target": "function:components/script/body.rs:decode_to_utf16_with_bom_removal",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/clipboard_provider.rs",
+      "target": "class:components/script/clipboard_provider.rs:ClipboardProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/clipboard_provider.rs",
+      "target": "class:components/script/clipboard_provider.rs:ClipboardProvider",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/clipboard_provider.rs",
+      "target": "class:components/script/clipboard_provider.rs:EmbedderClipboardProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/clipboard_provider.rs",
+      "target": "class:components/script/clipboard_provider.rs:EmbedderClipboardProvider",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/css.rs",
+      "target": "function:components/script/css.rs:parser_context_for_document",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/css.rs",
+      "target": "function:components/script/css.rs:parser_context_for_document",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/css.rs",
+      "target": "function:components/script/css.rs:parser_context_for_document_with_reporter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/css.rs",
+      "target": "function:components/script/css.rs:parser_context_for_document_with_reporter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/css.rs",
+      "target": "function:components/script/css.rs:parser_context_for_anonymous_content",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/css.rs",
+      "target": "function:components/script/css.rs:parser_context_for_anonymous_content",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "class:components/script/devtools.rs:DevtoolsState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "class:components/script/devtools.rs:DevtoolsState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:notify_pipeline_created",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:notify_pipeline_created",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:notify_pipeline_exited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:notify_pipeline_exited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:wants_updates_for_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:wants_updates_for_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_set_timeline_markers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_set_timeline_markers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_drop_timeline_markers",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_drop_timeline_markers",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_request_animation_frame",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_request_animation_frame",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_css_database",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_css_database",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_event_listener_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_event_listener_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_root_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_root_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_document_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_document_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_stylesheets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_stylesheets",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_stylesheet_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_stylesheet_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_children",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_children",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_attribute_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_attribute_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:build_rule_map",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:find_rule_by_block_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_selectors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_selectors",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_stylesheet_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_stylesheet_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_computed_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_computed_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_xpath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_get_xpath",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_modify_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_modify_attribute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_modify_rule",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_modify_rule",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_highlight_dom_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:handle_highlight_dom_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/devtools.rs",
+      "target": "function:components/script/devtools.rs:determine_auto_margins",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

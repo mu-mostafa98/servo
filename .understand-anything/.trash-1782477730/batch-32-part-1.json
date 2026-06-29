@@ -1,0 +1,1272 @@
+{
+  "nodes": [
+    {
+      "id": "file:python/servo/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "python/servo/__init__.py",
+      "summary": "Package init for the servo Python module. Contains only the license header with no exported symbols.",
+      "tags": [
+        "python",
+        "package-init",
+        "servo-build"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:python/servo/bootstrap_commands.py",
+      "type": "file",
+      "name": "bootstrap_commands.py",
+      "filePath": "python/servo/bootstrap_commands.py",
+      "summary": "Handles bootstrapping of the Servo development environment including downloading toolchain dependencies, HSTS preload lists, public suffix lists, cleaning nightly builds, and managing the Cargo cache.",
+      "tags": [
+        "python",
+        "bootstrap",
+        "servo-build",
+        "toolchain"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:python/servo/build_commands.py",
+      "type": "file",
+      "name": "build_commands.py",
+      "filePath": "python/servo/build_commands.py",
+      "summary": "Provides build commands for Servo including building the engine, cleaning build artifacts, copying platform-specific DLLs, packaging GStreamer libraries, and setting up sanitizer environments.",
+      "tags": [
+        "python",
+        "build-system",
+        "servo-build",
+        "compilation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:python/servo/command_base.py",
+      "type": "file",
+      "name": "command_base.py",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Base class for all Servo mach commands providing shared functionality for build configuration, target management, environment setup, Cargo invocation, and utility functions for archiving, file operations, and platform detection.",
+      "tags": [
+        "python",
+        "base-class",
+        "servo-build",
+        "utility",
+        "configuration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:python/servo/devenv_commands.py",
+      "type": "file",
+      "name": "devenv_commands.py",
+      "filePath": "python/servo/devenv_commands.py",
+      "summary": "Developer environment commands providing utilities for printing build environment info, running rustfmt, cargo fix, clippy linting, and executing shell commands within the Servo build context.",
+      "tags": [
+        "python",
+        "developer-tools",
+        "servo-build",
+        "linting"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:python/servo/devtools_tests/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "python/servo/devtools_tests/__init__.py",
+      "summary": "Package init marker for the devtools_tests subpackage. Contains only the license header with no exported symbols.",
+      "tags": [
+        "python",
+        "package-init",
+        "testing"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:python/servo/gstreamer.py",
+      "type": "file",
+      "name": "gstreamer.py",
+      "filePath": "python/servo/gstreamer.py",
+      "summary": "GStreamer multimedia library integration utilities including DLL/plugin discovery, dependency rewriting on macOS, and packaging platform-specific GStreamer binaries for distribution.",
+      "tags": [
+        "python",
+        "gstreamer",
+        "multimedia",
+        "packaging",
+        "servo-build"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:python/servo/package_commands.py",
+      "type": "file",
+      "name": "package_commands.py",
+      "filePath": "python/servo/package_commands.py",
+      "summary": "Packaging and release commands for Servo including creating distributable packages with platform-specific resources, installing builds, uploading nightly releases, and version bumping.",
+      "tags": [
+        "python",
+        "packaging",
+        "release",
+        "servo-build",
+        "deployment"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:python/servo/platform/__init__.py",
+      "type": "file",
+      "name": "__init__.py",
+      "filePath": "python/servo/platform/__init__.py",
+      "summary": "Platform detection module providing host platform identification, triple string generation, and lazy platform singleton creation for the current operating system.",
+      "tags": [
+        "python",
+        "platform-detection",
+        "servo-build",
+        "cross-platform"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:python/servo/build_commands.py:get_rustc_llvm_version",
+      "type": "function",
+      "name": "get_rustc_llvm_version",
+      "filePath": "python/servo/build_commands.py",
+      "summary": "Retrieves the LLVM version used by the system Rust compiler for configuring compatible LLVM toolchain flags.",
+      "tags": [
+        "rust",
+        "llvm",
+        "version-detection",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        57,
+        80
+      ]
+    },
+    {
+      "id": "function:python/servo/build_commands.py:copy_windows_dlls_to_build_directory",
+      "type": "function",
+      "name": "copy_windows_dlls_to_build_directory",
+      "filePath": "python/servo/build_commands.py",
+      "summary": "Copies required Windows DLL files into the Servo binary build directory for runtime dependency resolution.",
+      "tags": [
+        "windows",
+        "dll",
+        "build",
+        "packaging"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        319,
+        347
+      ]
+    },
+    {
+      "id": "function:python/servo/build_commands.py:package_gstreamer_dlls",
+      "type": "function",
+      "name": "package_gstreamer_dlls",
+      "filePath": "python/servo/build_commands.py",
+      "summary": "Packages GStreamer DLL files alongside the Servo binary for distribution on Windows platforms.",
+      "tags": [
+        "gstreamer",
+        "windows",
+        "packaging",
+        "dll"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        350,
+        386
+      ]
+    },
+    {
+      "id": "function:python/servo/build_commands.py:package_msvc_dlls",
+      "type": "function",
+      "name": "package_msvc_dlls",
+      "filePath": "python/servo/build_commands.py",
+      "summary": "Copies MSVC runtime DLLs (ucrtbase, vcruntime, msvcp) to the Servo binary directory for deployment.",
+      "tags": [
+        "msvc",
+        "visual-studio",
+        "dll",
+        "packaging"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        389,
+        422
+      ]
+    },
+    {
+      "id": "function:python/servo/command_base.py:cd",
+      "type": "function",
+      "name": "cd",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Context manager that temporarily changes the working directory to a given path, restoring it on exit.",
+      "tags": [
+        "utility",
+        "context-manager",
+        "directory"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        109,
+        116
+      ]
+    },
+    {
+      "id": "function:python/servo/command_base.py:setlocale",
+      "type": "function",
+      "name": "setlocale",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Context manager that temporarily sets a locale for the duration of a code block.",
+      "tags": [
+        "utility",
+        "locale",
+        "context-manager"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        120,
+        126
+      ]
+    },
+    {
+      "id": "function:python/servo/command_base.py:find_dep_path_newest",
+      "type": "function",
+      "name": "find_dep_path_newest",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Finds the most recent build dependency directory matching a given package name under the Cargo target directory.",
+      "tags": [
+        "utility",
+        "cargo",
+        "dependency",
+        "path-resolution"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        129,
+        139
+      ]
+    },
+    {
+      "id": "function:python/servo/command_base.py:archive_deterministically",
+      "type": "function",
+      "name": "archive_deterministically",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Creates a reproducible tar.gz archive from a directory with deterministic timestamps and file ordering for build reproducibility.",
+      "tags": [
+        "utility",
+        "archiving",
+        "reproducible-builds",
+        "tar"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        142,
+        190
+      ]
+    },
+    {
+      "id": "function:python/servo/command_base.py:call",
+      "type": "function",
+      "name": "call",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Executes a subprocess command with optional environment variables and returns the completed process result.",
+      "tags": [
+        "utility",
+        "subprocess",
+        "execution"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        193,
+        201
+      ]
+    },
+    {
+      "id": "function:python/servo/command_base.py:check_output",
+      "type": "function",
+      "name": "check_output",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Executes a subprocess command and returns its stdout output, raising on non-zero exit codes.",
+      "tags": [
+        "utility",
+        "subprocess",
+        "output-capture"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        204,
+        212
+      ]
+    },
+    {
+      "id": "function:python/servo/command_base.py:check_call",
+      "type": "function",
+      "name": "check_call",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Executes a subprocess command with verbose logging, displaying command output in real-time with configurable environment and error handling.",
+      "tags": [
+        "utility",
+        "subprocess",
+        "logging",
+        "error-handling"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        215,
+        239
+      ]
+    },
+    {
+      "id": "function:python/servo/gstreamer.py:load_plugin_libraries_from_text_file",
+      "type": "function",
+      "name": "load_plugin_libraries_from_text_file",
+      "filePath": "python/servo/gstreamer.py",
+      "summary": "Parses a text file listing GStreamer plugin library paths and returns a set of discovered library filenames.",
+      "tags": [
+        "gstreamer",
+        "plugin",
+        "parsing",
+        "utility"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        96,
+        119
+      ]
+    },
+    {
+      "id": "function:python/servo/gstreamer.py:is_macos_system_library",
+      "type": "function",
+      "name": "is_macos_system_library",
+      "filePath": "python/servo/gstreamer.py",
+      "summary": "Checks if a given library path is a macOS system library that should not be bundled with the application.",
+      "tags": [
+        "macos",
+        "library",
+        "system",
+        "filtering"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        138,
+        141
+      ]
+    },
+    {
+      "id": "function:python/servo/gstreamer.py:rewrite_dependencies_to_be_relative",
+      "type": "function",
+      "name": "rewrite_dependencies_to_be_relative",
+      "filePath": "python/servo/gstreamer.py",
+      "summary": "Rewrites absolute shared library dependency paths to @rpath-relative paths for macOS bundle relocation.",
+      "tags": [
+        "macos",
+        "dylib",
+        "rpath",
+        "relocation"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        144,
+        157
+      ]
+    },
+    {
+      "id": "function:python/servo/gstreamer.py:make_rpath_path_absolute",
+      "type": "function",
+      "name": "make_rpath_path_absolute",
+      "filePath": "python/servo/gstreamer.py",
+      "summary": "Resolves an @rpath-relative dylib path to an absolute path by trying each rpath entry.",
+      "tags": [
+        "macos",
+        "dylib",
+        "rpath",
+        "path-resolution"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        160,
+        174
+      ]
+    },
+    {
+      "id": "function:python/servo/gstreamer.py:find_non_system_dependencies_with_otool",
+      "type": "function",
+      "name": "find_non_system_dependencies_with_otool",
+      "filePath": "python/servo/gstreamer.py",
+      "summary": "Uses macOS otool to discover all non-system shared library dependencies of a binary for bundling.",
+      "tags": [
+        "macos",
+        "dylib",
+        "otool",
+        "dependency-discovery"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        177,
+        193
+      ]
+    },
+    {
+      "id": "function:python/servo/gstreamer.py:package_gstreamer_dylibs",
+      "type": "function",
+      "name": "package_gstreamer_dylibs",
+      "filePath": "python/servo/gstreamer.py",
+      "summary": "Recursively packages all GStreamer dynamic library dependencies into a target directory, rewriting rpaths for relocatability.",
+      "tags": [
+        "gstreamer",
+        "macos",
+        "packaging",
+        "dylib",
+        "relocation"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        196,
+        281
+      ]
+    },
+    {
+      "id": "function:python/servo/package_commands.py:check_call_with_randomized_backoff",
+      "type": "function",
+      "name": "check_call_with_randomized_backoff",
+      "filePath": "python/servo/package_commands.py",
+      "summary": "Runs a subprocess command with retry logic using exponential backoff and jitter for resilient network operations.",
+      "tags": [
+        "utility",
+        "retry",
+        "subprocess",
+        "networking"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        54,
+        69
+      ]
+    },
+    {
+      "id": "function:python/servo/package_commands.py:copy_packaged_resources",
+      "type": "function",
+      "name": "copy_packaged_resources",
+      "filePath": "python/servo/package_commands.py",
+      "summary": "Copies resource directories (resources, imports, blobs) into a package destination for distribution.",
+      "tags": [
+        "packaging",
+        "resources",
+        "utility"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        72,
+        79
+      ]
+    },
+    {
+      "id": "function:python/servo/platform/__init__.py:host_platform",
+      "type": "function",
+      "name": "host_platform",
+      "filePath": "python/servo/platform/__init__.py",
+      "summary": "Returns the normalized platform string for the current host OS (e.g. unknown-linux-gnu, apple-darwin, pc-windows-msvc).",
+      "tags": [
+        "platform",
+        "detection",
+        "host"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        17,
+        31
+      ]
+    },
+    {
+      "id": "function:python/servo/platform/__init__.py:host_triple",
+      "type": "function",
+      "name": "host_triple",
+      "filePath": "python/servo/platform/__init__.py",
+      "summary": "Returns the full Rust-style target triple for the current host by combining CPU architecture and platform strings.",
+      "tags": [
+        "platform",
+        "triple",
+        "detection",
+        "architecture"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        34,
+        47
+      ]
+    },
+    {
+      "id": "function:python/servo/platform/__init__.py:get",
+      "type": "function",
+      "name": "get",
+      "filePath": "python/servo/platform/__init__.py",
+      "summary": "Returns the platform singleton for the current host OS, lazily creating and caching the appropriate platform implementation.",
+      "tags": [
+        "platform",
+        "singleton",
+        "lazy-loading"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        50,
+        81
+      ]
+    },
+    {
+      "id": "class:python/servo/bootstrap_commands.py:MachCommands",
+      "type": "class",
+      "name": "MachCommands",
+      "filePath": "python/servo/bootstrap_commands.py",
+      "summary": "Mach command class providing bootstrap commands for toolchain setup, HSTS preload downloading, public suffix list management, nightly cleanup, and Cargo cache management.",
+      "tags": [
+        "bootstrap",
+        "mach-commands",
+        "toolchain",
+        "servo-build"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        37,
+        350
+      ]
+    },
+    {
+      "id": "class:python/servo/build_commands.py:MachCommands",
+      "type": "class",
+      "name": "MachCommands",
+      "filePath": "python/servo/build_commands.py",
+      "summary": "Mach command class providing build, clean, and sanitizer environment setup commands for the Servo engine.",
+      "tags": [
+        "build-system",
+        "mach-commands",
+        "compilation",
+        "servo-build"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        84,
+        316
+      ]
+    },
+    {
+      "id": "class:python/servo/command_base.py:BuildType",
+      "type": "class",
+      "name": "BuildType",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Data class representing a build configuration type (dev, release, prod, custom) with profiling options and Cargo argument generation.",
+      "tags": [
+        "build-type",
+        "configuration",
+        "dataclass"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        47,
+        105
+      ]
+    },
+    {
+      "id": "class:python/servo/command_base.py:BuildNotFound",
+      "type": "class",
+      "name": "BuildNotFound",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Custom exception raised when a requested Servo build binary cannot be found in the target directory.",
+      "tags": [
+        "error-handling",
+        "exception",
+        "build"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        258,
+        263
+      ]
+    },
+    {
+      "id": "class:python/servo/command_base.py:CommandBase",
+      "type": "class",
+      "name": "CommandBase",
+      "filePath": "python/servo/command_base.py",
+      "summary": "Base class for all Servo mach commands providing shared build environment configuration, Cargo build invocation, target management, Android toolchain setup, and common argument definitions.",
+      "tags": [
+        "base-class",
+        "build-system",
+        "mach-commands",
+        "configuration",
+        "servo-build"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        266,
+        854
+      ]
+    },
+    {
+      "id": "class:python/servo/devenv_commands.py:MachCommands",
+      "type": "class",
+      "name": "MachCommands",
+      "filePath": "python/servo/devenv_commands.py",
+      "summary": "Mach command class providing developer environment commands including environment printing, shell execution, cargo-fix, clippy linting with configurable options, and rustc invocation.",
+      "tags": [
+        "developer-tools",
+        "mach-commands",
+        "linting",
+        "servo-build"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        27,
+        178
+      ]
+    },
+    {
+      "id": "class:python/servo/package_commands.py:PackageCommands",
+      "type": "class",
+      "name": "PackageCommands",
+      "filePath": "python/servo/package_commands.py",
+      "summary": "Mach command class for packaging Servo builds, installing packages, uploading nightly releases, and managing version bumps with Cargo.toml workspace version replacement.",
+      "tags": [
+        "packaging",
+        "release",
+        "mach-commands",
+        "versioning",
+        "servo-build"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        83,
+        605
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:python/servo/bootstrap_commands.py",
+      "target": "file:python/servo/command_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/bootstrap_commands.py",
+      "target": "file:python/servo/platform/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/bootstrap_commands.py",
+      "target": "file:python/servo/util.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "file:python/servo/command_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "file:python/servo/gstreamer.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "file:python/servo/platform/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "file:python/servo/platform/build_target.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "file:python/servo/platform/macos.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "file:python/servo/util.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "file:python/servo/visual_studio.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "file:python/servo/platform/__init__.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "file:python/servo/platform/build_target.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "file:python/servo/util.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/devenv_commands.py",
+      "target": "file:python/servo/command_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/devenv_commands.py",
+      "target": "file:python/tidy/linting_report.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "file:python/servo/platform/build_target.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "file:python/servo/command_base.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "file:python/servo/gstreamer.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "file:python/servo/platform/build_target.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "file:python/servo/util.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "file:python/servo/platform/windows.py",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "function:python/servo/build_commands.py:get_rustc_llvm_version",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "function:python/servo/build_commands.py:copy_windows_dlls_to_build_directory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "function:python/servo/build_commands.py:package_gstreamer_dlls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "function:python/servo/build_commands.py:package_msvc_dlls",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "class:python/servo/build_commands.py:MachCommands",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:cd",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:setlocale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:find_dep_path_newest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:archive_deterministically",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:check_output",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:check_call",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "class:python/servo/command_base.py:BuildType",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "class:python/servo/command_base.py:BuildNotFound",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "class:python/servo/command_base.py:CommandBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:load_plugin_libraries_from_text_file",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:is_macos_system_library",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:rewrite_dependencies_to_be_relative",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:make_rpath_path_absolute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:find_non_system_dependencies_with_otool",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:package_gstreamer_dylibs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "function:python/servo/package_commands.py:check_call_with_randomized_backoff",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "function:python/servo/package_commands.py:copy_packaged_resources",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "class:python/servo/package_commands.py:PackageCommands",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "function:python/servo/platform/__init__.py:host_platform",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "function:python/servo/platform/__init__.py:host_triple",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "function:python/servo/platform/__init__.py:get",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/bootstrap_commands.py",
+      "target": "class:python/servo/bootstrap_commands.py:MachCommands",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/devenv_commands.py",
+      "target": "class:python/servo/devenv_commands.py:MachCommands",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:python/servo/bootstrap_commands.py",
+      "target": "class:python/servo/bootstrap_commands.py:MachCommands",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "function:python/servo/build_commands.py:get_rustc_llvm_version",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "function:python/servo/build_commands.py:copy_windows_dlls_to_build_directory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "function:python/servo/build_commands.py:package_gstreamer_dlls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "function:python/servo/build_commands.py:package_msvc_dlls",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/build_commands.py",
+      "target": "class:python/servo/build_commands.py:MachCommands",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:cd",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:setlocale",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:find_dep_path_newest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:archive_deterministically",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:call",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:check_output",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "function:python/servo/command_base.py:check_call",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "class:python/servo/command_base.py:BuildType",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "class:python/servo/command_base.py:BuildNotFound",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/command_base.py",
+      "target": "class:python/servo/command_base.py:CommandBase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/devenv_commands.py",
+      "target": "class:python/servo/devenv_commands.py:MachCommands",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:load_plugin_libraries_from_text_file",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:is_macos_system_library",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:rewrite_dependencies_to_be_relative",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:make_rpath_path_absolute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:find_non_system_dependencies_with_otool",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/gstreamer.py",
+      "target": "function:python/servo/gstreamer.py:package_gstreamer_dylibs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "function:python/servo/package_commands.py:check_call_with_randomized_backoff",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "function:python/servo/package_commands.py:copy_packaged_resources",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/package_commands.py",
+      "target": "class:python/servo/package_commands.py:PackageCommands",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "function:python/servo/platform/__init__.py:host_platform",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "function:python/servo/platform/__init__.py:host_triple",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "function:python/servo/platform/__init__.py:get",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:python/servo/bootstrap_commands.py:MachCommands",
+      "target": "class:python/servo/command_base.py:CommandBase",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:python/servo/build_commands.py:MachCommands",
+      "target": "class:python/servo/command_base.py:CommandBase",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:python/servo/devenv_commands.py:MachCommands",
+      "target": "class:python/servo/command_base.py:CommandBase",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:python/servo/package_commands.py:PackageCommands",
+      "target": "class:python/servo/command_base.py:CommandBase",
+      "type": "inherits",
+      "direction": "forward",
+      "weight": 0.9
+    },
+    {
+      "source": "class:python/servo/command_base.py:CommandBase",
+      "target": "class:python/servo/platform/build_target.py:BuildTarget",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "class:python/servo/command_base.py:CommandBase",
+      "target": "class:python/servo/platform/build_target.py:AndroidTarget",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "file:python/servo/platform/linux.py",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "file:python/servo/platform/macos.py",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "file:python/servo/platform/freebsd.py",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:python/servo/platform/__init__.py",
+      "target": "file:python/servo/platform/base.py",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

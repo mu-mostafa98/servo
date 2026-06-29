@@ -1,0 +1,3155 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 17,
+  "filesSkipped": [],
+  "results": [
+    {
+      "path": "components/svg_engine/Cargo.toml",
+      "language": "toml",
+      "fileCategory": "config",
+      "totalLines": 17,
+      "nonEmptyLines": 16,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 12
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 2
+      }
+    },
+    {
+      "path": "components/svg_engine/src/extract.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 388,
+      "nonEmptyLines": 346,
+      "functions": [
+        {
+          "name": "extract_node_style",
+          "startLine": 17,
+          "endLine": 23,
+          "params": [
+            "computed_values"
+          ]
+        },
+        {
+          "name": "extract_fill_params",
+          "startLine": 25,
+          "endLine": 47,
+          "params": [
+            "computed_values"
+          ]
+        },
+        {
+          "name": "resolve_svg_paint",
+          "startLine": 49,
+          "endLine": 65,
+          "params": [
+            "svg_paint",
+            "computed_values"
+          ]
+        },
+        {
+          "name": "extract_stroke_params",
+          "startLine": 67,
+          "endLine": 128,
+          "params": [
+            "computed_values"
+          ]
+        },
+        {
+          "name": "extract_tag",
+          "startLine": 130,
+          "endLine": 143,
+          "params": [
+            "name",
+            "get_attr"
+          ]
+        },
+        {
+          "name": "extract_rect",
+          "startLine": 145,
+          "endLine": 154,
+          "params": [
+            "get_attr"
+          ]
+        },
+        {
+          "name": "parse_length",
+          "startLine": 156,
+          "endLine": 159,
+          "params": [
+            "attr",
+            "get_attr"
+          ]
+        },
+        {
+          "name": "extract_ellipse",
+          "startLine": 161,
+          "endLine": 168,
+          "params": [
+            "get_attr"
+          ]
+        },
+        {
+          "name": "extract_circle",
+          "startLine": 170,
+          "endLine": 176,
+          "params": [
+            "get_attr"
+          ]
+        },
+        {
+          "name": "extract_line",
+          "startLine": 178,
+          "endLine": 185,
+          "params": [
+            "get_attr"
+          ]
+        },
+        {
+          "name": "parse_points",
+          "startLine": 194,
+          "endLine": 212,
+          "params": [
+            "get_attr"
+          ]
+        },
+        {
+          "name": "parse_path",
+          "startLine": 214,
+          "endLine": 217,
+          "params": [
+            "get_attr"
+          ]
+        },
+        {
+          "name": "extract_transforms",
+          "startLine": 223,
+          "endLine": 273,
+          "params": [
+            "get_attr"
+          ]
+        },
+        {
+          "name": "extract_viewbox",
+          "startLine": 277,
+          "endLine": 288,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "extract_node_style_from_css",
+          "startLine": 296,
+          "endLine": 348,
+          "params": [
+            "style_str"
+          ]
+        },
+        {
+          "name": "parse_css_color",
+          "startLine": 351,
+          "endLine": 387,
+          "params": [
+            "val"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "extract_node_style",
+          "line": 17,
+          "isDefault": false
+        },
+        {
+          "name": "extract_fill_params",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "extract_stroke_params",
+          "line": 67,
+          "isDefault": false
+        },
+        {
+          "name": "extract_tag",
+          "line": 130,
+          "isDefault": false
+        },
+        {
+          "name": "extract_transforms",
+          "line": 223,
+          "isDefault": false
+        },
+        {
+          "name": "extract_viewbox",
+          "line": 277,
+          "isDefault": false
+        },
+        {
+          "name": "extract_node_style_from_css",
+          "line": 296,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "extract_node_style",
+          "callee": "extract_fill_params",
+          "lineNumber": 19
+        },
+        {
+          "caller": "extract_node_style",
+          "callee": "extract_stroke_params",
+          "lineNumber": 20
+        },
+        {
+          "caller": "extract_fill_params",
+          "callee": "computed_values.get_inherited_svg",
+          "lineNumber": 27
+        },
+        {
+          "caller": "extract_fill_params",
+          "callee": "resolve_svg_paint",
+          "lineNumber": 28
+        },
+        {
+          "caller": "extract_fill_params",
+          "callee": "color.is_none",
+          "lineNumber": 38
+        },
+        {
+          "caller": "extract_fill_params",
+          "callee": "Some",
+          "lineNumber": 42
+        },
+        {
+          "caller": "resolve_svg_paint",
+          "callee": "computed_values.clone_color",
+          "lineNumber": 52
+        },
+        {
+          "caller": "resolve_svg_paint",
+          "callee": "color.resolve_to_absolute",
+          "lineNumber": 53
+        },
+        {
+          "caller": "resolve_svg_paint",
+          "callee": "absolute.to_color_space",
+          "lineNumber": 54
+        },
+        {
+          "caller": "resolve_svg_paint",
+          "callee": "Some",
+          "lineNumber": 55
+        },
+        {
+          "caller": "resolve_svg_paint",
+          "callee": "ColorF::new",
+          "lineNumber": 55
+        },
+        {
+          "caller": "resolve_svg_paint",
+          "callee": "srgb.components.0.clamp",
+          "lineNumber": 56
+        },
+        {
+          "caller": "resolve_svg_paint",
+          "callee": "srgb.components.1.clamp",
+          "lineNumber": 57
+        },
+        {
+          "caller": "resolve_svg_paint",
+          "callee": "srgb.components.2.clamp",
+          "lineNumber": 58
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "computed_values.get_inherited_svg",
+          "lineNumber": 68
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "resolve_svg_paint",
+          "lineNumber": 69
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "nn_lp.0.to_length().map(|l| l.px()).unwrap_or",
+          "lineNumber": 77
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "nn_lp.0.to_length().map",
+          "lineNumber": 77
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "nn_lp.0.to_length",
+          "lineNumber": 77
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "l.px",
+          "lineNumber": 77
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "values.is_empty",
+          "lineNumber": 98
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "Some",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "values.iter().map(|v| v.0.to_length().map(|l| l.px()).unwrap_or(0.0)).collect",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "values.iter().map",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "values.iter",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "v.0.to_length().map(|l| l.px()).unwrap_or",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "v.0.to_length().map",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "v.0.to_length",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "l.px",
+          "lineNumber": 101
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "lp.to_length().map(|l| l.px()).unwrap_or",
+          "lineNumber": 109
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "lp.to_length().map",
+          "lineNumber": 109
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "lp.to_length",
+          "lineNumber": 109
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "l.px",
+          "lineNumber": 109
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "color.is_none",
+          "lineNumber": 114
+        },
+        {
+          "caller": "extract_stroke_params",
+          "callee": "Some",
+          "lineNumber": 118
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Some",
+          "lineNumber": 132
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Container",
+          "lineNumber": 132
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Some",
+          "lineNumber": 133
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Container",
+          "lineNumber": 133
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "extract_rect(get_attr).map",
+          "lineNumber": 134
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "extract_rect",
+          "lineNumber": 134
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Shape",
+          "lineNumber": 134
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Shape::Rect",
+          "lineNumber": 134
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "extract_ellipse(get_attr).map",
+          "lineNumber": 135
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "extract_ellipse",
+          "lineNumber": 135
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Shape",
+          "lineNumber": 135
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Shape::Ellipse",
+          "lineNumber": 135
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "extract_circle(get_attr).map",
+          "lineNumber": 136
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "extract_circle",
+          "lineNumber": 136
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Shape",
+          "lineNumber": 136
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Shape::Circle",
+          "lineNumber": 136
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "extract_line(get_attr).map",
+          "lineNumber": 137
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "extract_line",
+          "lineNumber": 137
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Shape",
+          "lineNumber": 137
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Shape::Line",
+          "lineNumber": 137
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "parse_points(get_attr).map",
+          "lineNumber": 138
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "parse_points",
+          "lineNumber": 138
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Shape",
+          "lineNumber": 138
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Shape::Polyline",
+          "lineNumber": 138
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "parse_points(get_attr).map",
+          "lineNumber": 139
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "parse_points",
+          "lineNumber": 139
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Shape",
+          "lineNumber": 139
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Shape::Polygon",
+          "lineNumber": 139
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "parse_path(get_attr).map",
+          "lineNumber": 140
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "parse_path",
+          "lineNumber": 140
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "SvgTag::Shape",
+          "lineNumber": 140
+        },
+        {
+          "caller": "extract_tag",
+          "callee": "Shape::Path",
+          "lineNumber": 140
+        },
+        {
+          "caller": "extract_rect",
+          "callee": "Some",
+          "lineNumber": 146
+        },
+        {
+          "caller": "extract_rect",
+          "callee": "parse_length",
+          "lineNumber": 147
+        },
+        {
+          "caller": "extract_rect",
+          "callee": "parse_length",
+          "lineNumber": 148
+        },
+        {
+          "caller": "extract_rect",
+          "callee": "parse_length",
+          "lineNumber": 149
+        },
+        {
+          "caller": "extract_rect",
+          "callee": "parse_length",
+          "lineNumber": 150
+        },
+        {
+          "caller": "extract_rect",
+          "callee": "parse_length",
+          "lineNumber": 151
+        },
+        {
+          "caller": "extract_rect",
+          "callee": "parse_length",
+          "lineNumber": 152
+        },
+        {
+          "caller": "parse_length",
+          "callee": "get_attr",
+          "lineNumber": 157
+        },
+        {
+          "caller": "parse_length",
+          "callee": "value.trim_end_matches(\"px\").trim().parse::<f32>().ok",
+          "lineNumber": 158
+        },
+        {
+          "caller": "parse_length",
+          "callee": "value.trim_end_matches(\"px\").trim().parse::<f32>",
+          "lineNumber": 158
+        },
+        {
+          "caller": "parse_length",
+          "callee": "value.trim_end_matches(\"px\").trim",
+          "lineNumber": 158
+        },
+        {
+          "caller": "parse_length",
+          "callee": "value.trim_end_matches",
+          "lineNumber": 158
+        },
+        {
+          "caller": "extract_ellipse",
+          "callee": "Some",
+          "lineNumber": 162
+        },
+        {
+          "caller": "extract_ellipse",
+          "callee": "parse_length",
+          "lineNumber": 163
+        },
+        {
+          "caller": "extract_ellipse",
+          "callee": "parse_length",
+          "lineNumber": 164
+        },
+        {
+          "caller": "extract_ellipse",
+          "callee": "parse_length",
+          "lineNumber": 165
+        },
+        {
+          "caller": "extract_ellipse",
+          "callee": "parse_length",
+          "lineNumber": 166
+        },
+        {
+          "caller": "extract_circle",
+          "callee": "Some",
+          "lineNumber": 171
+        },
+        {
+          "caller": "extract_circle",
+          "callee": "parse_length",
+          "lineNumber": 172
+        },
+        {
+          "caller": "extract_circle",
+          "callee": "parse_length",
+          "lineNumber": 173
+        },
+        {
+          "caller": "extract_circle",
+          "callee": "parse_length",
+          "lineNumber": 174
+        },
+        {
+          "caller": "extract_line",
+          "callee": "Some",
+          "lineNumber": 179
+        },
+        {
+          "caller": "extract_line",
+          "callee": "parse_length",
+          "lineNumber": 180
+        },
+        {
+          "caller": "extract_line",
+          "callee": "parse_length",
+          "lineNumber": 181
+        },
+        {
+          "caller": "extract_line",
+          "callee": "parse_length",
+          "lineNumber": 182
+        },
+        {
+          "caller": "extract_line",
+          "callee": "parse_length",
+          "lineNumber": 183
+        },
+        {
+          "caller": "parse_points",
+          "callee": "get_attr",
+          "lineNumber": 195
+        },
+        {
+          "caller": "parse_points",
+          "callee": "value\n        .split(|c: char| c == ',' || c.is_whitespace())\n        .filter(|s| !s.is_empty())\n        .filter_map(|s| s.parse::<f64>().ok()).collect",
+          "lineNumber": 196
+        },
+        {
+          "caller": "parse_points",
+          "callee": "value\n        .split(|c: char| c == ',' || c.is_whitespace())\n        .filter(|s| !s.is_empty()).filter_map",
+          "lineNumber": 196
+        },
+        {
+          "caller": "parse_points",
+          "callee": "value\n        .split(|c: char| c == ',' || c.is_whitespace()).filter",
+          "lineNumber": 196
+        },
+        {
+          "caller": "parse_points",
+          "callee": "value.split",
+          "lineNumber": 196
+        },
+        {
+          "caller": "parse_points",
+          "callee": "c.is_whitespace",
+          "lineNumber": 197
+        },
+        {
+          "caller": "parse_points",
+          "callee": "s.is_empty",
+          "lineNumber": 198
+        },
+        {
+          "caller": "parse_points",
+          "callee": "s.parse::<f64>().ok",
+          "lineNumber": 199
+        },
+        {
+          "caller": "parse_points",
+          "callee": "s.parse::<f64>",
+          "lineNumber": 199
+        },
+        {
+          "caller": "parse_points",
+          "callee": "coords\n        .chunks(2)\n        .filter_map(|chunk| {\n            let x = *chunk.first()?;\n            let y = *chunk.get(1)?;\n            Some(Point::new(x, y))\n        }).collect",
+          "lineNumber": 202
+        },
+        {
+          "caller": "parse_points",
+          "callee": "coords\n        .chunks(2).filter_map",
+          "lineNumber": 202
+        },
+        {
+          "caller": "parse_points",
+          "callee": "coords.chunks",
+          "lineNumber": 202
+        },
+        {
+          "caller": "parse_points",
+          "callee": "chunk.first",
+          "lineNumber": 205
+        },
+        {
+          "caller": "parse_points",
+          "callee": "chunk.get",
+          "lineNumber": 206
+        },
+        {
+          "caller": "parse_points",
+          "callee": "Some",
+          "lineNumber": 207
+        },
+        {
+          "caller": "parse_points",
+          "callee": "Point::new",
+          "lineNumber": 207
+        },
+        {
+          "caller": "parse_points",
+          "callee": "points.len",
+          "lineNumber": 211
+        },
+        {
+          "caller": "parse_points",
+          "callee": "Some",
+          "lineNumber": 211
+        },
+        {
+          "caller": "parse_path",
+          "callee": "get_attr",
+          "lineNumber": 215
+        },
+        {
+          "caller": "parse_path",
+          "callee": "BezPath::from_svg(&value).ok",
+          "lineNumber": 216
+        },
+        {
+          "caller": "parse_path",
+          "callee": "BezPath::from_svg",
+          "lineNumber": 216
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "get_attr",
+          "lineNumber": 224
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "Vec::new",
+          "lineNumber": 226
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "attr.trim().to_string",
+          "lineNumber": 228
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "attr.trim",
+          "lineNumber": 228
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "Vec::new",
+          "lineNumber": 229
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining.is_empty",
+          "lineNumber": 231
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining.find",
+          "lineNumber": 232
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining.find",
+          "lineNumber": 236
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining[..paren_open].trim().to_string",
+          "lineNumber": 241
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining[..paren_open].trim",
+          "lineNumber": 241
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args_str\n            .split(|c: char| c == ',' || c.is_whitespace())\n            .filter(|s| !s.is_empty())\n            .filter_map(|s| s.trim().parse::<f32>().ok()).collect",
+          "lineNumber": 243
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args_str\n            .split(|c: char| c == ',' || c.is_whitespace())\n            .filter(|s| !s.is_empty()).filter_map",
+          "lineNumber": 243
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args_str\n            .split(|c: char| c == ',' || c.is_whitespace()).filter",
+          "lineNumber": 243
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args_str.split",
+          "lineNumber": 243
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "c.is_whitespace",
+          "lineNumber": 244
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "s.is_empty",
+          "lineNumber": 245
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "s.trim().parse::<f32>().ok",
+          "lineNumber": 246
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "s.trim().parse::<f32>",
+          "lineNumber": 246
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "s.trim",
+          "lineNumber": 246
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "name.as_str",
+          "lineNumber": 249
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args.len",
+          "lineNumber": 250
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "ops.push",
+          "lineNumber": 251
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "TransformOp::Translate",
+          "lineNumber": 251
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args.len",
+          "lineNumber": 253
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "ops.push",
+          "lineNumber": 254
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "TransformOp::Scale",
+          "lineNumber": 254
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args.len",
+          "lineNumber": 256
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "ops.push",
+          "lineNumber": 257
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "TransformOp::Scale",
+          "lineNumber": 257
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args.len",
+          "lineNumber": 259
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "ops.push",
+          "lineNumber": 260
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "TransformOp::Rotate",
+          "lineNumber": 260
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "args.len",
+          "lineNumber": 262
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "ops.push",
+          "lineNumber": 263
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "TransformOp::Rotate",
+          "lineNumber": 263
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining[paren_close + 1..].trim().to_string",
+          "lineNumber": 268
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining[paren_close + 1..].trim",
+          "lineNumber": 268
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining.trim_start_matches(|c: char| c == ';' || c == ',').to_string",
+          "lineNumber": 269
+        },
+        {
+          "caller": "extract_transforms",
+          "callee": "remaining.trim_start_matches",
+          "lineNumber": 269
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "value\n        .split(|c: char| c == ',' || c.is_whitespace())\n        .filter(|s| !s.is_empty())\n        .filter_map(|s| s.trim().parse::<f32>().ok()).collect",
+          "lineNumber": 278
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "value\n        .split(|c: char| c == ',' || c.is_whitespace())\n        .filter(|s| !s.is_empty()).filter_map",
+          "lineNumber": 278
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "value\n        .split(|c: char| c == ',' || c.is_whitespace()).filter",
+          "lineNumber": 278
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "value.split",
+          "lineNumber": 278
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "c.is_whitespace",
+          "lineNumber": 279
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "s.is_empty",
+          "lineNumber": 280
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "s.trim().parse::<f32>().ok",
+          "lineNumber": 281
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "s.trim().parse::<f32>",
+          "lineNumber": 281
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "s.trim",
+          "lineNumber": 281
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "parts.len",
+          "lineNumber": 283
+        },
+        {
+          "caller": "extract_viewbox",
+          "callee": "Some",
+          "lineNumber": 284
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "style_str.split",
+          "lineNumber": 308
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "decl.trim",
+          "lineNumber": 309
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "decl.is_empty",
+          "lineNumber": 310
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "decl.splitn(2, ':').collect",
+          "lineNumber": 311
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "decl.splitn",
+          "lineNumber": 311
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "parts.len",
+          "lineNumber": 312
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "parts[0].trim",
+          "lineNumber": 313
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "parts[1].trim",
+          "lineNumber": 314
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "parse_css_color",
+          "lineNumber": 317
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "val.parse::<f32>",
+          "lineNumber": 319
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "v.clamp",
+          "lineNumber": 319
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "parse_css_color",
+          "lineNumber": 324
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "val.trim_end_matches(\"px\").trim",
+          "lineNumber": 326
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "val.trim_end_matches",
+          "lineNumber": 326
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "v.parse::<f32>",
+          "lineNumber": 327
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "w.max",
+          "lineNumber": 327
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "val.parse::<f32>",
+          "lineNumber": 330
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "v.clamp",
+          "lineNumber": 330
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "val.parse::<f32>",
+          "lineNumber": 333
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "fill_color.map",
+          "lineNumber": 340
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "Some",
+          "lineNumber": 340
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "stroke_color.map",
+          "lineNumber": 341
+        },
+        {
+          "caller": "extract_node_style_from_css",
+          "callee": "Some",
+          "lineNumber": 342
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "val.trim",
+          "lineNumber": 352
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "val.starts_with",
+          "lineNumber": 354
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "hex.len",
+          "lineNumber": 357
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "u8::from_str_radix(&hex[0..1], 16).ok",
+          "lineNumber": 358
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "u8::from_str_radix",
+          "lineNumber": 358
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "u8::from_str_radix(&hex[1..2], 16).ok",
+          "lineNumber": 359
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "u8::from_str_radix",
+          "lineNumber": 359
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "u8::from_str_radix(&hex[2..3], 16).ok",
+          "lineNumber": 360
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "u8::from_str_radix",
+          "lineNumber": 360
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 361
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 361
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "hex.len",
+          "lineNumber": 364
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "u32::from_str_radix",
+          "lineNumber": 365
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 366
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 366
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 376
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 376
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 377
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 377
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 378
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 378
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 379
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 379
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 380
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 380
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 381
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 381
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 382
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 382
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 383
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 383
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "Some",
+          "lineNumber": 384
+        },
+        {
+          "caller": "parse_css_color",
+          "callee": "ColorF::new",
+          "lineNumber": 384
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 7,
+        "functionCount": 16,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/lib.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 15,
+      "nonEmptyLines": 12,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/render.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 118,
+      "nonEmptyLines": 105,
+      "functions": [
+        {
+          "name": "render_svg_tree",
+          "startLine": 19,
+          "endLine": 63,
+          "params": [
+            "tree",
+            "svg_origin",
+            "svg_size",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        },
+        {
+          "name": "render_node",
+          "startLine": 65,
+          "endLine": 99,
+          "params": [
+            "node",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        },
+        {
+          "name": "render_dispatch",
+          "startLine": 101,
+          "endLine": 118,
+          "params": [
+            "shape",
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_svg_tree",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_svg_tree",
+          "callee": "LayoutRect::from_origin_and_size",
+          "lineNumber": 28
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "wr.define_clip_rect",
+          "lineNumber": 29
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "wr.define_clip_chain",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "Some",
+          "lineNumber": 31
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "Transform2D::translation",
+          "lineNumber": 41
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "Transform2D::scale",
+          "lineNumber": 42
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "t1.then",
+          "lineNumber": 43
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "transform::to_layout_transform",
+          "lineNumber": 44
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "wr.push_reference_frame",
+          "lineNumber": 45
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "PropertyBinding::Value",
+          "lineNumber": 47
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "LayoutPoint::new",
+          "lineNumber": 53
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "render_node",
+          "lineNumber": 58
+        },
+        {
+          "caller": "render_svg_tree",
+          "callee": "wr.pop_reference_frame",
+          "lineNumber": 61
+        },
+        {
+          "caller": "render_node",
+          "callee": "transform::apply_transform_op",
+          "lineNumber": 78
+        },
+        {
+          "caller": "render_node",
+          "callee": "render_dispatch",
+          "lineNumber": 88
+        },
+        {
+          "caller": "render_node",
+          "callee": "render_node",
+          "lineNumber": 92
+        },
+        {
+          "caller": "render_node",
+          "callee": "wr.pop_reference_frame",
+          "lineNumber": 97
+        },
+        {
+          "caller": "render_dispatch",
+          "callee": "renderers::render_rect",
+          "lineNumber": 110
+        },
+        {
+          "caller": "render_dispatch",
+          "callee": "renderers::render_ellipse",
+          "lineNumber": 111
+        },
+        {
+          "caller": "render_dispatch",
+          "callee": "renderers::render_circle",
+          "lineNumber": 112
+        },
+        {
+          "caller": "render_dispatch",
+          "callee": "renderers::render_line",
+          "lineNumber": 113
+        },
+        {
+          "caller": "render_dispatch",
+          "callee": "renderers::render_polyline",
+          "lineNumber": 114
+        },
+        {
+          "caller": "render_dispatch",
+          "callee": "renderers::render_polygon",
+          "lineNumber": 115
+        },
+        {
+          "caller": "render_dispatch",
+          "callee": "renderers::render_path",
+          "lineNumber": 116
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 3,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/render_tree.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 42,
+      "nonEmptyLines": 36,
+      "classes": [
+        {
+          "name": "SvgRenderTree",
+          "startLine": 10,
+          "endLine": 13,
+          "methods": [],
+          "properties": [
+            "root",
+            "viewport"
+          ]
+        },
+        {
+          "name": "SvgRenderNode",
+          "startLine": 16,
+          "endLine": 22,
+          "methods": [],
+          "properties": [
+            "id",
+            "tag",
+            "style",
+            "transforms",
+            "children"
+          ]
+        },
+        {
+          "name": "SvgTag",
+          "startLine": 25,
+          "endLine": 28,
+          "methods": [],
+          "properties": [
+            "Shape",
+            "Container"
+          ]
+        },
+        {
+          "name": "Container",
+          "startLine": 31,
+          "endLine": 34,
+          "methods": [],
+          "properties": [
+            "Group",
+            "Svg"
+          ]
+        },
+        {
+          "name": "ViewportInfo",
+          "startLine": 37,
+          "endLine": 42,
+          "methods": [],
+          "properties": [
+            "width",
+            "height",
+            "view_box"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "SvgRenderTree",
+          "line": 10,
+          "isDefault": false
+        },
+        {
+          "name": "SvgRenderNode",
+          "line": 16,
+          "isDefault": false
+        },
+        {
+          "name": "SvgTag",
+          "line": 25,
+          "isDefault": false
+        },
+        {
+          "name": "Container",
+          "line": 31,
+          "isDefault": false
+        },
+        {
+          "name": "ViewportInfo",
+          "line": 37,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 5,
+        "functionCount": 0,
+        "classCount": 5
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/circle.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 28,
+      "nonEmptyLines": 24,
+      "functions": [
+        {
+          "name": "render_circle",
+          "startLine": 12,
+          "endLine": 28,
+          "params": [
+            "circle",
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_circle",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_circle",
+          "callee": "render_ellipse",
+          "lineNumber": 27
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/ellipse.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 33,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "render_ellipse",
+          "startLine": 12,
+          "endLine": 33,
+          "params": [
+            "ellipse",
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_ellipse",
+          "line": 12,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_ellipse",
+          "callee": "Some",
+          "lineNumber": 29
+        },
+        {
+          "caller": "render_ellipse",
+          "callee": "Some",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render_ellipse",
+          "callee": "render_rect",
+          "lineNumber": 32
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/line.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 76,
+      "nonEmptyLines": 68,
+      "functions": [
+        {
+          "name": "render_line",
+          "startLine": 16,
+          "endLine": 76,
+          "params": [
+            "line",
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_line",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_line",
+          "callee": "(dx * dx + dy * dy).sqrt",
+          "lineNumber": 39
+        },
+        {
+          "caller": "render_line",
+          "callee": "dy.atan2",
+          "lineNumber": 47
+        },
+        {
+          "caller": "render_line",
+          "callee": "LayoutTransform::rotation",
+          "lineNumber": 53
+        },
+        {
+          "caller": "render_line",
+          "callee": "Angle::radians",
+          "lineNumber": 53
+        },
+        {
+          "caller": "render_line",
+          "callee": "wr.push_reference_frame",
+          "lineNumber": 54
+        },
+        {
+          "caller": "render_line",
+          "callee": "LayoutPoint::new",
+          "lineNumber": 55
+        },
+        {
+          "caller": "render_line",
+          "callee": "PropertyBinding::Value",
+          "lineNumber": 58
+        },
+        {
+          "caller": "render_line",
+          "callee": "LayoutRect::from_origin_and_size",
+          "lineNumber": 66
+        },
+        {
+          "caller": "render_line",
+          "callee": "LayoutPoint::new",
+          "lineNumber": 67
+        },
+        {
+          "caller": "render_line",
+          "callee": "LayoutSize::new",
+          "lineNumber": 68
+        },
+        {
+          "caller": "render_line",
+          "callee": "CommonItemProperties::new",
+          "lineNumber": 70
+        },
+        {
+          "caller": "render_line",
+          "callee": "wr.push_rect",
+          "lineNumber": 74
+        },
+        {
+          "caller": "render_line",
+          "callee": "wr.pop_reference_frame",
+          "lineNumber": 75
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/mod.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 16,
+      "nonEmptyLines": 15,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/path.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 64,
+      "nonEmptyLines": 55,
+      "functions": [
+        {
+          "name": "render_path",
+          "startLine": 19,
+          "endLine": 36,
+          "params": [
+            "path",
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        },
+        {
+          "name": "flatten_path",
+          "startLine": 40,
+          "endLine": 64,
+          "params": [
+            "path"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_path",
+          "line": 19,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_path",
+          "callee": "flatten_path",
+          "lineNumber": 28
+        },
+        {
+          "caller": "render_path",
+          "callee": "points.len",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render_path",
+          "callee": "super::render_polyline",
+          "lineNumber": 35
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "Vec::new",
+          "lineNumber": 41
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "kurbo::flatten",
+          "lineNumber": 44
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "path.elements().iter().copied",
+          "lineNumber": 44
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "path.elements().iter",
+          "lineNumber": 44
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "path.elements",
+          "lineNumber": 44
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "points.push",
+          "lineNumber": 47
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "Some",
+          "lineNumber": 48
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "points.push",
+          "lineNumber": 51
+        },
+        {
+          "caller": "flatten_path",
+          "callee": "points.push",
+          "lineNumber": 55
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 2,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/polygon.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 32,
+      "nonEmptyLines": 28,
+      "functions": [
+        {
+          "name": "render_polygon",
+          "startLine": 13,
+          "endLine": 32,
+          "params": [
+            "polygon",
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_polygon",
+          "line": 13,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_polygon",
+          "callee": "polygon.points.clone",
+          "lineNumber": 25
+        },
+        {
+          "caller": "render_polygon",
+          "callee": "polygon.points.first",
+          "lineNumber": 26
+        },
+        {
+          "caller": "render_polygon",
+          "callee": "closed_points.push",
+          "lineNumber": 27
+        },
+        {
+          "caller": "render_polygon",
+          "callee": "super::render_polyline",
+          "lineNumber": 31
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/polygon_tessellator.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 157,
+      "nonEmptyLines": 137,
+      "functions": [
+        {
+          "name": "new_vertex",
+          "startLine": 31,
+          "endLine": 33,
+          "params": [
+            "vertex"
+          ]
+        },
+        {
+          "name": "tessellate_polygon",
+          "startLine": 37,
+          "endLine": 80,
+          "params": [
+            "points",
+            "fill_rule",
+            "color",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        },
+        {
+          "name": "scanline_fill_triangle",
+          "startLine": 87,
+          "endLine": 150,
+          "params": [
+            "v0",
+            "v1",
+            "v2",
+            "color",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        },
+        {
+          "name": "sort_vertices_by_y",
+          "startLine": 153,
+          "endLine": 157,
+          "params": [
+            "a",
+            "b",
+            "c"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "PosCtor",
+          "startLine": 28,
+          "endLine": 28,
+          "methods": [
+            "new_vertex"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "tessellate_polygon",
+          "line": 37,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "new_vertex",
+          "callee": "vertex.position",
+          "lineNumber": 32
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "points.len",
+          "lineNumber": 45
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "FillTessellator::new",
+          "lineNumber": 51
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "VertexBuffers::new",
+          "lineNumber": 52
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "tessellator.tessellate(\n        polygon.path_events(),\n        &FillOptions::default()\n            .with_fill_rule(lyon_fill_rule)\n            .with_tolerance(0.01),\n        &mut BuffersBuilder::new(&mut buffers, PosCtor),\n    ).is_err",
+          "lineNumber": 59
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "tessellator.tessellate",
+          "lineNumber": 59
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "polygon.path_events",
+          "lineNumber": 60
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "FillOptions::default()\n            .with_fill_rule(lyon_fill_rule).with_tolerance",
+          "lineNumber": 61
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "FillOptions::default().with_fill_rule",
+          "lineNumber": 61
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "FillOptions::default",
+          "lineNumber": 61
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "BuffersBuilder::new",
+          "lineNumber": 64
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "buffers.indices.chunks",
+          "lineNumber": 70
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "tri.len",
+          "lineNumber": 71
+        },
+        {
+          "caller": "tessellate_polygon",
+          "callee": "scanline_fill_triangle",
+          "lineNumber": 78
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "sort_vertices_by_y",
+          "lineNumber": 97
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "top.y.ceil",
+          "lineNumber": 99
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "bot.y.floor",
+          "lineNumber": 100
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "x_edge_a.min",
+          "lineNumber": 129
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "x_edge_a.max",
+          "lineNumber": 129
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "x_edge_a.min",
+          "lineNumber": 134
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "x_edge_a.max",
+          "lineNumber": 134
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "LayoutRect::from_origin_and_size",
+          "lineNumber": 139
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "LayoutPoint::new",
+          "lineNumber": 140
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "LayoutSize::new",
+          "lineNumber": 141
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "CommonItemProperties::new",
+          "lineNumber": 143
+        },
+        {
+          "caller": "scanline_fill_triangle",
+          "callee": "wr.push_rect",
+          "lineNumber": 147
+        },
+        {
+          "caller": "sort_vertices_by_y",
+          "callee": "pts.sort_by",
+          "lineNumber": 155
+        },
+        {
+          "caller": "sort_vertices_by_y",
+          "callee": "p.y.partial_cmp(&q.y).unwrap_or",
+          "lineNumber": 155
+        },
+        {
+          "caller": "sort_vertices_by_y",
+          "callee": "p.y.partial_cmp",
+          "lineNumber": 155
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 4,
+        "classCount": 1
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/polyline.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 82,
+      "nonEmptyLines": 72,
+      "functions": [
+        {
+          "name": "render_polyline",
+          "startLine": 16,
+          "endLine": 82,
+          "params": [
+            "polyline",
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_polyline",
+          "line": 16,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_polyline",
+          "callee": "points.len",
+          "lineNumber": 25
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "points.iter().map(|p| {\n        LyonPoint::new(svg_origin.x + p.x as f32, svg_origin.y + p.y as f32)\n    }).collect",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "points.iter().map",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "points.iter",
+          "lineNumber": 30
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "LyonPoint::new",
+          "lineNumber": 31
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "points.iter()\n        .map(|p| (p.x as f32, p.y as f32)).collect",
+          "lineNumber": 36
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "points.iter().map",
+          "lineNumber": 36
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "points.iter",
+          "lineNumber": 36
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "points.len",
+          "lineNumber": 41
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "tessellate_polygon",
+          "lineNumber": 46
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "stroke.color.is_some",
+          "lineNumber": 53
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "Some",
+          "lineNumber": 56
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "stroke.dash_array.clone",
+          "lineNumber": 63
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "local_points.len",
+          "lineNumber": 71
+        },
+        {
+          "caller": "render_polyline",
+          "callee": "super::render_line",
+          "lineNumber": 78
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/renderers/rect.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 101,
+      "nonEmptyLines": 94,
+      "functions": [
+        {
+          "name": "render_rect",
+          "startLine": 15,
+          "endLine": 101,
+          "params": [
+            "rect",
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "render_rect",
+          "line": 15,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "render_rect",
+          "callee": "LayoutRect::from_origin_and_size",
+          "lineNumber": 23
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutPoint::new",
+          "lineNumber": 24
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 25
+        },
+        {
+          "caller": "render_rect",
+          "callee": "rect.rx\n        .or(rect.ry)\n        .unwrap_or(0.0).clamp",
+          "lineNumber": 28
+        },
+        {
+          "caller": "render_rect",
+          "callee": "rect.rx\n        .or(rect.ry).unwrap_or",
+          "lineNumber": 28
+        },
+        {
+          "caller": "render_rect",
+          "callee": "rect.rx.or",
+          "lineNumber": 28
+        },
+        {
+          "caller": "render_rect",
+          "callee": "rect.ry\n        .or(rect.rx)\n        .unwrap_or(0.0).clamp",
+          "lineNumber": 32
+        },
+        {
+          "caller": "render_rect",
+          "callee": "rect.ry\n        .or(rect.rx).unwrap_or",
+          "lineNumber": 32
+        },
+        {
+          "caller": "render_rect",
+          "callee": "rect.ry.or",
+          "lineNumber": 32
+        },
+        {
+          "caller": "render_rect",
+          "callee": "wr.define_clip_rounded_rect",
+          "lineNumber": 43
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 48
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 49
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 50
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 51
+        },
+        {
+          "caller": "render_rect",
+          "callee": "Some",
+          "lineNumber": 58
+        },
+        {
+          "caller": "render_rect",
+          "callee": "wr.define_clip_chain",
+          "lineNumber": 60
+        },
+        {
+          "caller": "render_rect",
+          "callee": "CommonItemProperties::new",
+          "lineNumber": 61
+        },
+        {
+          "caller": "render_rect",
+          "callee": "wr.push_rect",
+          "lineNumber": 65
+        },
+        {
+          "caller": "render_rect",
+          "callee": "CommonItemProperties::new",
+          "lineNumber": 67
+        },
+        {
+          "caller": "render_rect",
+          "callee": "wr.push_rect",
+          "lineNumber": 71
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSideOffsets::new_all_same",
+          "lineNumber": 79
+        },
+        {
+          "caller": "render_rect",
+          "callee": "BorderDetails::Normal",
+          "lineNumber": 81
+        },
+        {
+          "caller": "render_rect",
+          "callee": "border_side.clone",
+          "lineNumber": 82
+        },
+        {
+          "caller": "render_rect",
+          "callee": "border_side.clone",
+          "lineNumber": 83
+        },
+        {
+          "caller": "render_rect",
+          "callee": "border_side.clone",
+          "lineNumber": 84
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 87
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 88
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 89
+        },
+        {
+          "caller": "render_rect",
+          "callee": "LayoutSize::new",
+          "lineNumber": 90
+        },
+        {
+          "caller": "render_rect",
+          "callee": "CommonItemProperties::new",
+          "lineNumber": 94
+        },
+        {
+          "caller": "render_rect",
+          "callee": "wr.push_border",
+          "lineNumber": 98
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 1,
+        "functionCount": 1,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/svg_engine/src/shapes.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 69,
+      "nonEmptyLines": 58,
+      "classes": [
+        {
+          "name": "Shape",
+          "startLine": 13,
+          "endLine": 21,
+          "methods": [],
+          "properties": [
+            "Rect",
+            "Circle",
+            "Ellipse",
+            "Line",
+            "Polyline",
+            "Polygon",
+            "Path"
+          ]
+        },
+        {
+          "name": "Rectangle",
+          "startLine": 24,
+          "endLine": 31,
+          "methods": [],
+          "properties": [
+            "x",
+            "y",
+            "width",
+            "height",
+            "rx",
+            "ry"
+          ]
+        },
+        {
+          "name": "Circle",
+          "startLine": 34,
+          "endLine": 38,
+          "methods": [],
+          "properties": [
+            "cx",
+            "cy",
+            "r"
+          ]
+        },
+        {
+          "name": "Ellipse",
+          "startLine": 41,
+          "endLine": 46,
+          "methods": [],
+          "properties": [
+            "cx",
+            "cy",
+            "rx",
+            "ry"
+          ]
+        },
+        {
+          "name": "Line",
+          "startLine": 49,
+          "endLine": 54,
+          "methods": [],
+          "properties": [
+            "x1",
+            "y1",
+            "x2",
+            "y2"
+          ]
+        },
+        {
+          "name": "Polyline",
+          "startLine": 57,
+          "endLine": 59,
+          "methods": [],
+          "properties": [
+            "points"
+          ]
+        },
+        {
+          "name": "Polygon",
+          "startLine": 62,
+          "endLine": 64,
+          "methods": [],
+          "properties": [
+            "points"
+          ]
+        },
+        {
+          "name": "Path",
+          "startLine": 67,
+          "endLine": 69,
+          "methods": [],
+          "properties": [
+            "path"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "Shape",
+          "line": 13,
+          "isDefault": false
+        },
+        {
+          "name": "Rectangle",
+          "line": 24,
+          "isDefault": false
+        },
+        {
+          "name": "Circle",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "Ellipse",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "Line",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "Polyline",
+          "line": 57,
+          "isDefault": false
+        },
+        {
+          "name": "Polygon",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "Path",
+          "line": 67,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 8,
+        "functionCount": 0,
+        "classCount": 8
+      }
+    },
+    {
+      "path": "components/svg_engine/src/styles.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 158,
+      "nonEmptyLines": 133,
+      "functions": [
+        {
+          "name": "default",
+          "startLine": 25,
+          "endLine": 30,
+          "params": []
+        }
+      ],
+      "classes": [
+        {
+          "name": "NodeStyle",
+          "startLine": 14,
+          "endLine": 22,
+          "methods": [
+            "default"
+          ],
+          "properties": [
+            "fill",
+            "stroke"
+          ]
+        },
+        {
+          "name": "Visibility",
+          "startLine": 34,
+          "endLine": 38,
+          "methods": [],
+          "properties": [
+            "Visible",
+            "Hidden",
+            "Collapse"
+          ]
+        },
+        {
+          "name": "Display",
+          "startLine": 41,
+          "endLine": 45,
+          "methods": [],
+          "properties": [
+            "Inline",
+            "Block",
+            "None"
+          ]
+        },
+        {
+          "name": "FillParams",
+          "startLine": 49,
+          "endLine": 53,
+          "methods": [],
+          "properties": [
+            "color",
+            "opacity",
+            "fill_rule"
+          ]
+        },
+        {
+          "name": "FillRule",
+          "startLine": 56,
+          "endLine": 59,
+          "methods": [],
+          "properties": [
+            "NonZero",
+            "EvenOdd"
+          ]
+        },
+        {
+          "name": "StrokeParams",
+          "startLine": 64,
+          "endLine": 73,
+          "methods": [],
+          "properties": [
+            "color",
+            "opacity",
+            "width",
+            "line_cap",
+            "line_join",
+            "miter_limit",
+            "dash_array",
+            "dash_offset"
+          ]
+        },
+        {
+          "name": "LineCap",
+          "startLine": 76,
+          "endLine": 80,
+          "methods": [],
+          "properties": [
+            "Butt",
+            "Round",
+            "Square"
+          ]
+        },
+        {
+          "name": "LineJoin",
+          "startLine": 83,
+          "endLine": 87,
+          "methods": [],
+          "properties": [
+            "Miter",
+            "Round",
+            "Bevel"
+          ]
+        },
+        {
+          "name": "RenderHints",
+          "startLine": 93,
+          "endLine": 101,
+          "methods": [],
+          "properties": [
+            "vector_effect",
+            "color_rendering",
+            "color_interpolation",
+            "shape_rendering",
+            "text_rendering",
+            "image_rendering",
+            "paint_order"
+          ]
+        },
+        {
+          "name": "VectorEffect",
+          "startLine": 104,
+          "endLine": 107,
+          "methods": [],
+          "properties": [
+            "None",
+            "NonScalingStroke"
+          ]
+        },
+        {
+          "name": "ColorRendering",
+          "startLine": 111,
+          "endLine": 115,
+          "methods": [],
+          "properties": [
+            "Auto",
+            "OptimizeSpeed",
+            "OptimizeQuality"
+          ]
+        },
+        {
+          "name": "ColorInterpolation",
+          "startLine": 118,
+          "endLine": 122,
+          "methods": [],
+          "properties": [
+            "Auto",
+            "SRGB",
+            "LinearRGB"
+          ]
+        },
+        {
+          "name": "ShapeRendering",
+          "startLine": 125,
+          "endLine": 130,
+          "methods": [],
+          "properties": [
+            "Auto",
+            "OptimizeSpeed",
+            "CrispEdges",
+            "GeometricPrecision"
+          ]
+        },
+        {
+          "name": "TextRendering",
+          "startLine": 133,
+          "endLine": 138,
+          "methods": [],
+          "properties": [
+            "Auto",
+            "OptimizeSpeed",
+            "OptimizeLegibility",
+            "GeometricPrecision"
+          ]
+        },
+        {
+          "name": "ImageRendering",
+          "startLine": 141,
+          "endLine": 145,
+          "methods": [],
+          "properties": [
+            "Auto",
+            "OptimizeSpeed",
+            "OptimizeQuality"
+          ]
+        },
+        {
+          "name": "PaintOrder",
+          "startLine": 148,
+          "endLine": 150,
+          "methods": [],
+          "properties": [
+            "Normal"
+          ]
+        },
+        {
+          "name": "NodeEffects",
+          "startLine": 154,
+          "endLine": 158,
+          "methods": [],
+          "properties": [
+            "transform",
+            "clip_path",
+            "mask"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "NodeStyle",
+          "line": 14,
+          "isDefault": false
+        },
+        {
+          "name": "Visibility",
+          "line": 34,
+          "isDefault": false
+        },
+        {
+          "name": "Display",
+          "line": 41,
+          "isDefault": false
+        },
+        {
+          "name": "FillParams",
+          "line": 49,
+          "isDefault": false
+        },
+        {
+          "name": "FillRule",
+          "line": 56,
+          "isDefault": false
+        },
+        {
+          "name": "StrokeParams",
+          "line": 64,
+          "isDefault": false
+        },
+        {
+          "name": "LineCap",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "LineJoin",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "RenderHints",
+          "line": 93,
+          "isDefault": false
+        },
+        {
+          "name": "VectorEffect",
+          "line": 104,
+          "isDefault": false
+        },
+        {
+          "name": "ColorRendering",
+          "line": 111,
+          "isDefault": false
+        },
+        {
+          "name": "ColorInterpolation",
+          "line": 118,
+          "isDefault": false
+        },
+        {
+          "name": "ShapeRendering",
+          "line": 125,
+          "isDefault": false
+        },
+        {
+          "name": "TextRendering",
+          "line": 133,
+          "isDefault": false
+        },
+        {
+          "name": "ImageRendering",
+          "line": 141,
+          "isDefault": false
+        },
+        {
+          "name": "PaintOrder",
+          "line": 148,
+          "isDefault": false
+        },
+        {
+          "name": "NodeEffects",
+          "line": 154,
+          "isDefault": false
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 17,
+        "functionCount": 1,
+        "classCount": 17
+      }
+    },
+    {
+      "path": "components/svg_engine/src/transform.rs",
+      "language": "rust",
+      "fileCategory": "code",
+      "totalLines": 132,
+      "nonEmptyLines": 122,
+      "functions": [
+        {
+          "name": "apply_transform_op",
+          "startLine": 43,
+          "endLine": 78,
+          "params": [
+            "op",
+            "origin",
+            "spatial_id",
+            "wr"
+          ]
+        },
+        {
+          "name": "push_reference_frame",
+          "startLine": 81,
+          "endLine": 98,
+          "params": [
+            "origin",
+            "parent_spatial_id",
+            "transform",
+            "wr"
+          ]
+        },
+        {
+          "name": "build_rotation_transform",
+          "startLine": 102,
+          "endLine": 110,
+          "params": [
+            "angle_deg",
+            "cx",
+            "cy"
+          ]
+        },
+        {
+          "name": "to_layout_transform",
+          "startLine": 113,
+          "endLine": 132,
+          "params": [
+            "xform"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "TransformOp",
+          "startLine": 23,
+          "endLine": 27,
+          "methods": [],
+          "properties": [
+            "Translate",
+            "Scale",
+            "Rotate"
+          ]
+        },
+        {
+          "name": "TransformResult",
+          "startLine": 32,
+          "endLine": 37,
+          "methods": [],
+          "properties": [
+            "child_origin",
+            "child_spatial_id",
+            "pushed_frame"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "TransformOp",
+          "line": 23,
+          "isDefault": false
+        },
+        {
+          "name": "TransformResult",
+          "line": 32,
+          "isDefault": false
+        },
+        {
+          "name": "apply_transform_op",
+          "line": 43,
+          "isDefault": false
+        },
+        {
+          "name": "to_layout_transform",
+          "line": 113,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "apply_transform_op",
+          "callee": "LayoutPoint::new",
+          "lineNumber": 53
+        },
+        {
+          "caller": "apply_transform_op",
+          "callee": "LayoutTransform::scale",
+          "lineNumber": 59
+        },
+        {
+          "caller": "apply_transform_op",
+          "callee": "push_reference_frame",
+          "lineNumber": 60
+        },
+        {
+          "caller": "apply_transform_op",
+          "callee": "LayoutPoint::new",
+          "lineNumber": 62
+        },
+        {
+          "caller": "apply_transform_op",
+          "callee": "build_rotation_transform",
+          "lineNumber": 69
+        },
+        {
+          "caller": "apply_transform_op",
+          "callee": "push_reference_frame",
+          "lineNumber": 70
+        },
+        {
+          "caller": "apply_transform_op",
+          "callee": "LayoutPoint::new",
+          "lineNumber": 72
+        },
+        {
+          "caller": "push_reference_frame",
+          "callee": "wr.push_reference_frame",
+          "lineNumber": 87
+        },
+        {
+          "caller": "push_reference_frame",
+          "callee": "PropertyBinding::Value",
+          "lineNumber": 91
+        },
+        {
+          "caller": "build_rotation_transform",
+          "callee": "angle_deg.to_radians",
+          "lineNumber": 103
+        },
+        {
+          "caller": "build_rotation_transform",
+          "callee": "radians.sin_cos",
+          "lineNumber": 104
+        },
+        {
+          "caller": "build_rotation_transform",
+          "callee": "Transform2D::translation",
+          "lineNumber": 105
+        },
+        {
+          "caller": "build_rotation_transform",
+          "callee": "Transform2D::new",
+          "lineNumber": 106
+        },
+        {
+          "caller": "build_rotation_transform",
+          "callee": "Transform2D::translation",
+          "lineNumber": 107
+        },
+        {
+          "caller": "build_rotation_transform",
+          "callee": "t1.then(&rotate).then",
+          "lineNumber": 108
+        },
+        {
+          "caller": "build_rotation_transform",
+          "callee": "t1.then",
+          "lineNumber": 108
+        },
+        {
+          "caller": "build_rotation_transform",
+          "callee": "to_layout_transform",
+          "lineNumber": 109
+        },
+        {
+          "caller": "to_layout_transform",
+          "callee": "LayoutTransform::new",
+          "lineNumber": 126
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 4,
+        "functionCount": 4,
+        "classCount": 2
+      }
+    }
+  ]
+}

@@ -1,0 +1,527 @@
+{
+  "nodes": [
+    {
+      "id": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "type": "file",
+      "name": "Interop.kt",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "summary": "Provides Gradle build helper functions for resolving Android NDK paths, Rust target triples, and JNI libs directories across architectures and build modes.",
+      "tags": [
+        "build-utility",
+        "android",
+        "ndk",
+        "rust-target"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Kotlin buildSrc convention plugin helper consumed by build.gradle.kts without explicit imports."
+    },
+    {
+      "id": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getTargetDir",
+      "type": "function",
+      "name": "getTargetDir",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "lineRange": [
+        11,
+        14
+      ],
+      "summary": "Returns the build output target directory path for a given debug mode and CPU architecture.",
+      "tags": [
+        "build-utility",
+        "path-resolution",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNativeTargetDir",
+      "type": "function",
+      "name": "getNativeTargetDir",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "lineRange": [
+        16,
+        23
+      ],
+      "summary": "Returns the native target directory, falling back to a SERVO_TARGET_DIR environment variable override.",
+      "tags": [
+        "build-utility",
+        "path-resolution",
+        "gradle"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getSubTargetDir",
+      "type": "function",
+      "name": "getSubTargetDir",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "lineRange": [
+        25,
+        30
+      ],
+      "summary": "Constructs the sub-target directory by combining the build output root, debug folder, and Rust target triple.",
+      "tags": [
+        "build-utility",
+        "path-resolution",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getJniLibsPath",
+      "type": "function",
+      "name": "getJniLibsPath",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "lineRange": [
+        32,
+        33
+      ],
+      "summary": "Returns the JNI libs path by delegating to getTargetDir with a 'jniLibs' suffix.",
+      "tags": [
+        "build-utility",
+        "jni",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getRustTarget",
+      "type": "function",
+      "name": "getRustTarget",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "lineRange": [
+        35,
+        43
+      ],
+      "summary": "Maps a short architecture name (arm64, armv7, x86, x64) to the corresponding Rust target triple string.",
+      "tags": [
+        "build-utility",
+        "rust",
+        "cross-compilation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNDKAbi",
+      "type": "function",
+      "name": "getNDKAbi",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "lineRange": [
+        45,
+        53
+      ],
+      "summary": "Maps a short architecture name to the Android NDK ABI string used by Gradle's abiFilters.",
+      "tags": [
+        "build-utility",
+        "android",
+        "ndk"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNdkDir",
+      "type": "function",
+      "name": "getNdkDir",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "lineRange": [
+        55,
+        78
+      ],
+      "summary": "Resolves the Android NDK installation directory from environment variables or the local.properties file.",
+      "tags": [
+        "build-utility",
+        "android",
+        "ndk",
+        "environment"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:support/android/apk/buildSrc/src/main/kotlin/VersionCode.kt",
+      "type": "file",
+      "name": "VersionCode.kt",
+      "filePath": "support/android/apk/buildSrc/src/main/kotlin/VersionCode.kt",
+      "summary": "Generates a unique Android versionCode from the current date in yyyyMMdd00 format for nightly build versioning.",
+      "tags": [
+        "build-utility",
+        "versioning",
+        "android"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:support/android/apk/gradle.properties",
+      "type": "config",
+      "name": "gradle.properties",
+      "filePath": "support/android/apk/gradle.properties",
+      "summary": "Project-wide Gradle settings configuring JVM memory allocation and opting into the new Android DSL.",
+      "tags": [
+        "configuration",
+        "gradle",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/gradle/wrapper/gradle-wrapper.jar",
+      "type": "file",
+      "name": "gradle-wrapper.jar",
+      "filePath": "support/android/apk/gradle/wrapper/gradle-wrapper.jar",
+      "summary": "Gradle wrapper JAR binary that downloads and runs the specified Gradle version for the Android build.",
+      "tags": [
+        "gradle",
+        "build-system",
+        "wrapper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:support/android/apk/gradle/wrapper/gradle-wrapper.properties",
+      "type": "config",
+      "name": "gradle-wrapper.properties",
+      "filePath": "support/android/apk/gradle/wrapper/gradle-wrapper.properties",
+      "summary": "Configures the Gradle wrapper to use Gradle 9.5.1 with network timeout settings.",
+      "tags": [
+        "configuration",
+        "gradle",
+        "wrapper"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/gradlew",
+      "type": "file",
+      "name": "gradlew",
+      "filePath": "support/android/apk/gradlew",
+      "summary": "POSIX-compatible Gradle startup script that locates Java, resolves APP_HOME, and launches the Gradle wrapper JAR.",
+      "tags": [
+        "build-tool",
+        "gradle",
+        "shell-script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:support/android/apk/gradlew.bat",
+      "type": "file",
+      "name": "gradlew.bat",
+      "filePath": "support/android/apk/gradlew.bat",
+      "summary": "Windows batch script for launching the Gradle wrapper with proper environment setup.",
+      "tags": [
+        "build-tool",
+        "gradle",
+        "batch-script"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:support/android/apk/jni/Android.mk",
+      "type": "file",
+      "name": "Android.mk",
+      "filePath": "support/android/apk/jni/Android.mk",
+      "summary": "Android NDK build file that wraps the prebuilt libservoshell.so native library as the servojni module.",
+      "tags": [
+        "android",
+        "ndk",
+        "native-library",
+        "makefile"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/jni/Application.mk",
+      "type": "file",
+      "name": "Application.mk",
+      "filePath": "support/android/apk/jni/Application.mk",
+      "summary": "Android NDK application settings specifying Clang toolchain, target ABIs, and C++ shared STL for the servojni module.",
+      "tags": [
+        "android",
+        "ndk",
+        "native-library",
+        "makefile"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/build.gradle.kts",
+      "type": "file",
+      "name": "build.gradle.kts",
+      "filePath": "support/android/apk/servoapp/build.gradle.kts",
+      "summary": "Android application Gradle build configuration with multi-architecture build variants (arm, x86, x64), signing, and APK output copying.",
+      "tags": [
+        "gradle",
+        "android",
+        "build-configuration",
+        "apk"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses Kotlin DSL with custom build types registered per CPU architecture, referencing buildSrc helper functions for NDK ABI and target paths."
+    },
+    {
+      "id": "config:support/android/apk/servoapp/src/main/AndroidManifest.xml",
+      "type": "config",
+      "name": "AndroidManifest.xml",
+      "filePath": "support/android/apk/servoapp/src/main/AndroidManifest.xml",
+      "summary": "Android application manifest declaring activities, permissions (Internet, Bluetooth, notifications), and intent filters for web browsing with OpenGL ES 3.0 requirement.",
+      "tags": [
+        "android",
+        "manifest",
+        "configuration",
+        "permissions"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "type": "file",
+      "name": "HistoryActivity.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "summary": "Activity that hosts the HistoryFragment for browsing and selecting from the browsing history list.",
+      "tags": [
+        "android",
+        "activity",
+        "history",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt:HistoryActivity",
+      "type": "class",
+      "name": "HistoryActivity",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "lineRange": [
+        12,
+        21
+      ],
+      "summary": "Activity that displays the HistoryFragment and returns the selected URL result to the caller.",
+      "tags": [
+        "android",
+        "activity",
+        "history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt:onCreate",
+      "type": "function",
+      "name": "onCreate",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "lineRange": [
+        13,
+        20
+      ],
+      "summary": "Sets up the activity layout and replaces the container with a HistoryFragment instance.",
+      "tags": [
+        "android",
+        "lifecycle",
+        "history"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryAdapter.kt",
+      "type": "file",
+      "name": "HistoryAdapter.kt",
+      "filePath": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryAdapter.kt",
+      "summary": "RecyclerView adapter for rendering history entries in the browsing history list UI (file was missing from disk during analysis).",
+      "tags": [
+        "android",
+        "adapter",
+        "history",
+        "ui"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getTargetDir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNativeTargetDir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getSubTargetDir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getJniLibsPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getRustTarget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNDKAbi",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNdkDir",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getTargetDir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNativeTargetDir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getSubTargetDir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getJniLibsPath",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getRustTarget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNDKAbi",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "target": "function:support/android/apk/buildSrc/src/main/kotlin/Interop.kt:getNdkDir",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt:HistoryActivity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt:onCreate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "target": "class:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt:HistoryActivity",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "target": "function:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt:onCreate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:support/android/apk/gradle.properties",
+      "target": "file:support/android/apk/servoapp/build.gradle.kts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/gradle/wrapper/gradle-wrapper.properties",
+      "target": "file:support/android/apk/servoapp/build.gradle.kts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/AndroidManifest.xml",
+      "target": "file:support/android/apk/servoapp/build.gradle.kts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/AndroidManifest.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/AndroidManifest.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:support/android/apk/servoapp/src/main/AndroidManifest.xml",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/SettingsActivity.kt",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:support/android/apk/servoapp/build.gradle.kts",
+      "target": "file:support/android/apk/buildSrc/src/main/kotlin/Interop.kt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:support/android/apk/servoapp/build.gradle.kts",
+      "target": "file:support/android/apk/buildSrc/src/main/kotlin/VersionCode.kt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryActivity.kt",
+      "target": "file:support/android/apk/servoapp/src/main/java/org/servo/servoshell/HistoryFragment.kt",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

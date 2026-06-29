@@ -1,0 +1,2094 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/execcommand/contenteditable/document.rs",
+      "type": "file",
+      "name": "document.rs",
+      "filePath": "components/script/dom/execcommand/contenteditable/document.rs",
+      "summary": "Provides a helper function for creating HTML elements in the context of contenteditable document operations.",
+      "tags": [
+        "contenteditable",
+        "document-helper",
+        "element-creation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "type": "file",
+      "name": "element.rs",
+      "filePath": "components/script/dom/execcommand/contenteditable/element.rs",
+      "summary": "Provides contenteditable element analysis including resolved display values, specified command values, modifiable element detection, inline container classification, and tag name manipulation.",
+      "tags": [
+        "contenteditable",
+        "element-analysis",
+        "modifiable",
+        "style-resolution"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "type": "file",
+      "name": "htmlelement.rs",
+      "filePath": "components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "summary": "Provides HTML element utilities including local name extraction, text decoration value removal, value clearing on elements, and contenteditable focus state management.",
+      "tags": [
+        "contenteditable",
+        "html-utilities",
+        "focus-state"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/execcommand/contenteditable/mod.rs",
+      "summary": "Barrel module re-exporting all contenteditable helper modules (document, element, node, range, selection, text) for the contenteditable subsystem.",
+      "tags": [
+        "barrel",
+        "module-entry",
+        "contenteditable"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "type": "file",
+      "name": "node.rs",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "summary": "Core contenteditable DOM manipulation module providing node splitting, wrapping, value pushing/forcing, whitespace canonicalization, tree restructuring, and command value resolution across the editable tree.",
+      "tags": [
+        "contenteditable",
+        "dom-manipulation",
+        "tree-mutation",
+        "whitespace",
+        "core-logic"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "type": "file",
+      "name": "range.rs",
+      "filePath": "components/script/dom/execcommand/contenteditable/range.rs",
+      "summary": "Provides contenteditable range helpers including effective containment detection, block extension, and recording/restoring formatting states and values during DOM mutations.",
+      "tags": [
+        "contenteditable",
+        "range-traversal",
+        "state-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "type": "file",
+      "name": "selection.rs",
+      "filePath": "components/script/dom/execcommand/contenteditable/selection.rs",
+      "summary": "Provides selection-level operations including point equivalence resolution, deletion with block merging and wrapper stripping, and value setting across the selection range.",
+      "tags": [
+        "contenteditable",
+        "selection-deletion",
+        "value-setting"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/contenteditable/text.rs",
+      "type": "file",
+      "name": "text.rs",
+      "filePath": "components/script/dom/execcommand/contenteditable/text.rs",
+      "summary": "Provides text node analysis including data retrieval, whitespace detection, collapsed whitespace identification, and whitespace preservation inheritance checks.",
+      "tags": [
+        "contenteditable",
+        "text-node",
+        "whitespace",
+        "analysis"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/execcommands.rs",
+      "type": "file",
+      "name": "execcommands.rs",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "summary": "Top-level execCommand dispatch implementing Document.execCommand(), queryCommandSupported(), queryCommandEnabled(), queryCommandState(), queryCommandValue(), and queryCommandIndeterminate() with argument mapping, support verification, and enablement checks.",
+      "tags": [
+        "exec-command",
+        "dispatch",
+        "dom-api",
+        "command-query",
+        "entry-point"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/script/dom/execcommand/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/execcommand/mod.rs",
+      "summary": "Barrel module re-exporting the base command infrastructure, all command handlers, contenteditable helpers, and the execCommand dispatch entry point as a single module.",
+      "tags": [
+        "barrel",
+        "module-entry",
+        "exec-command"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/document.rs:create_element",
+      "type": "function",
+      "name": "create_element",
+      "filePath": "components/script/dom/execcommand/contenteditable/document.rs",
+      "lineRange": [
+        16,
+        23
+      ],
+      "summary": "Handles create element logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "dom-traversal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/element.rs:specified_command_value",
+      "type": "function",
+      "name": "specified_command_value",
+      "filePath": "components/script/dom/execcommand/contenteditable/element.rs",
+      "lineRange": [
+        31,
+        135
+      ],
+      "summary": "Computes the specified command value for an element by examining inline style declarations and font element attributes, handling the complete CSS property mapping for all formatting commands.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/element.rs:is_modifiable_element",
+      "type": "function",
+      "name": "is_modifiable_element",
+      "filePath": "components/script/dom/execcommand/contenteditable/element.rs",
+      "lineRange": [
+        138,
+        199
+      ],
+      "summary": "Checks whether an element can be modified by execCommand operations, verifying it is not a prohibited paragraph child and has valid formatting content.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "editable"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/element.rs:has_empty_style_attribute",
+      "type": "function",
+      "name": "has_empty_style_attribute",
+      "filePath": "components/script/dom/execcommand/contenteditable/element.rs",
+      "lineRange": [
+        201,
+        211
+      ],
+      "summary": "Handles has empty style attribute logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/element.rs:is_non_list_single_line_container",
+      "type": "function",
+      "name": "is_non_list_single_line_container",
+      "filePath": "components/script/dom/execcommand/contenteditable/element.rs",
+      "lineRange": [
+        214,
+        232
+      ],
+      "summary": "Handles is non list single line container logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/element.rs:is_simple_modifiable_element",
+      "type": "function",
+      "name": "is_simple_modifiable_element",
+      "filePath": "components/script/dom/execcommand/contenteditable/element.rs",
+      "lineRange": [
+        235,
+        382
+      ],
+      "summary": "Determines if an element can be safely modified in-place during formatting operations, checking for inline formatting elements like FONT, B, I, U, etc.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "editable"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/element.rs:set_the_tag_name",
+      "type": "function",
+      "name": "set_the_tag_name",
+      "filePath": "components/script/dom/execcommand/contenteditable/element.rs",
+      "lineRange": [
+        385,
+        416
+      ],
+      "summary": "Handles set the tag name logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/htmlelement.rs:remove_value_from_text_decoration",
+      "type": "function",
+      "name": "remove_value_from_text_decoration",
+      "filePath": "components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "lineRange": [
+        32,
+        78
+      ],
+      "summary": "Handles remove value from text decoration logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/htmlelement.rs:clear_the_value",
+      "type": "function",
+      "name": "clear_the_value",
+      "filePath": "components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "lineRange": [
+        81,
+        171
+      ],
+      "summary": "Handles clear the value logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/htmlelement.rs:handle_focus_state_for_contenteditable",
+      "type": "function",
+      "name": "handle_focus_state_for_contenteditable",
+      "filePath": "components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "lineRange": [
+        176,
+        267
+      ],
+      "summary": "Handles handle focus state for contenteditable logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query",
+        "editable"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/execcommand/contenteditable/node.rs:NodeOrString",
+      "type": "class",
+      "name": "NodeOrString",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        38,
+        41
+      ],
+      "summary": "Enum union type representing either a DOM Node or a string, used during node list wrapping and splitting operations.",
+      "tags": [
+        "enum",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:move_preserving_ranges",
+      "type": "function",
+      "name": "move_preserving_ranges",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        143,
+        242
+      ],
+      "summary": "Moves a node to a new position while preserving all DOM range boundaries, used during contenteditable restructuring operations.",
+      "tags": [
+        "function",
+        "selection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_allowed_child",
+      "type": "function",
+      "name": "is_allowed_child",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        245,
+        406
+      ],
+      "summary": "Determines whether a node is allowed as a child within a given parent based on HTML content model restrictions, used during paragraph insertion and restructuring.",
+      "tags": [
+        "function",
+        "dom-traversal"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:split_the_parent",
+      "type": "function",
+      "name": "split_the_parent",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        409,
+        580
+      ],
+      "summary": "Splits a parent node at a given boundary point, dividing its children into before and after groups, used for inserting content at range boundaries.",
+      "tags": [
+        "function",
+        "dom-traversal"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:wrap_node_list",
+      "type": "function",
+      "name": "wrap_node_list",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        583,
+        810
+      ],
+      "summary": "Wraps a list of nodes in appropriate container elements based on command type, handling edge cases for different formatting commands.",
+      "tags": [
+        "function",
+        "dom-traversal"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:record_the_values",
+      "type": "function",
+      "name": "record_the_values",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        819,
+        869
+      ],
+      "summary": "Records/restores the current formatting state of nodes in a range before/after DOM mutations, enabling undo and state preservation.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:restore_the_values",
+      "type": "function",
+      "name": "restore_the_values",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        872,
+        914
+      ],
+      "summary": "Records/restores the current formatting state of nodes in a range before/after DOM mutations, enabling undo and state preservation.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_extraneous_line_break",
+      "type": "function",
+      "name": "is_extraneous_line_break",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        918,
+        931
+      ],
+      "summary": "Handles is extraneous line break logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "block-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:push_down_values",
+      "type": "function",
+      "name": "push_down_values",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        936,
+        1063
+      ],
+      "summary": "Propagates formatting values downward from ancestor nodes to newly split or wrapped child nodes, ensuring consistent formatting after DOM mutations.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:reorder_modifiable_descendants",
+      "type": "function",
+      "name": "reorder_modifiable_descendants",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1066,
+        1139
+      ],
+      "summary": "Handles reorder modifiable descendants logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "editable"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:force_the_value",
+      "type": "function",
+      "name": "force_the_value",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1142,
+        1475
+      ],
+      "summary": "Applies a command value to a node by splitting the parent, wrapping in appropriate elements, and setting inline styles or element attributes. Core mutation function spanning extensive edge cases for all formatting commands.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:same_editing_host",
+      "type": "function",
+      "name": "same_editing_host",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1478,
+        1482
+      ],
+      "summary": "Handles same editing host logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "editable"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_node",
+      "type": "function",
+      "name": "is_block_node",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1485,
+        1501
+      ],
+      "summary": "Determines whether a node is a block-level or inline-level element based on its computed display value.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "block-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:block_node_of",
+      "type": "function",
+      "name": "block_node_of",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1510,
+        1522
+      ],
+      "summary": "Handles block node of logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "block-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_visible",
+      "type": "function",
+      "name": "is_visible",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1525,
+        1563
+      ],
+      "summary": "Determines if a node is visually rendered in the document, checking for display:none and other visibility rules.",
+      "tags": [
+        "function",
+        "visibility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_formattable",
+      "type": "function",
+      "name": "is_formattable",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1572,
+        1577
+      ],
+      "summary": "Handles is formattable logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "editable"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_single_line_container",
+      "type": "function",
+      "name": "is_single_line_container",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1580,
+        1591
+      ],
+      "summary": "Handles is single line container logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_start_point",
+      "type": "function",
+      "name": "is_block_start_point",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1594,
+        1605
+      ],
+      "summary": "Handles is block start point logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "block-structure",
+        "selection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_end_point",
+      "type": "function",
+      "name": "is_block_end_point",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1608,
+        1617
+      ],
+      "summary": "Handles is block end point logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "block-structure",
+        "selection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_no_allowed_child_in_same_editing_host",
+      "type": "function",
+      "name": "is_no_allowed_child_in_same_editing_host",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1625,
+        1638
+      ],
+      "summary": "Handles is no allowed child in same editing host logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "editable"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_prohibited_paragraph_child",
+      "type": "function",
+      "name": "is_prohibited_paragraph_child",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1641,
+        1647
+      ],
+      "summary": "Checks if a node is a prohibited child of a paragraph element, used during paragraph insertion to restructure invalid DOM.",
+      "tags": [
+        "function",
+        "dom-traversal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:fix_disallowed_ancestors",
+      "type": "function",
+      "name": "fix_disallowed_ancestors",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1650,
+        1746
+      ],
+      "summary": "Fixes disallowed ancestor nesting by splitting or restructuring the tree when a node has an ancestor that is not permitted by HTML content models.",
+      "tags": [
+        "function",
+        "dom-traversal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:is_collapsed_block_prop",
+      "type": "function",
+      "name": "is_collapsed_block_prop",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1749,
+        1780
+      ],
+      "summary": "Handles is collapsed block prop logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "block-structure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:follows_a_line_break",
+      "type": "function",
+      "name": "follows_a_line_break",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1783,
+        1809
+      ],
+      "summary": "Checks whether a node follows a line break in the tree order, used for extraneous line break removal.",
+      "tags": [
+        "function",
+        "block-structure"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:precedes_a_line_break",
+      "type": "function",
+      "name": "precedes_a_line_break",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1812,
+        1842
+      ],
+      "summary": "Checks whether a node precedes a line break in the tree order, used for extraneous line break removal.",
+      "tags": [
+        "function",
+        "block-structure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:canonical_space_sequence",
+      "type": "function",
+      "name": "canonical_space_sequence",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1845,
+        1894
+      ],
+      "summary": "Finds and normalizes a sequence of space characters in a text node, collapsing multiple spaces and handling block boundaries.",
+      "tags": [
+        "function",
+        "whitespace"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:canonicalize_whitespace",
+      "type": "function",
+      "name": "canonicalize_whitespace",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        1897,
+        2134
+      ],
+      "summary": "Canonicalizes whitespace in text nodes by collapsing sequences, removing extraneous spaces at block boundaries, and normalizing whitespace characters according to contenteditable rules.",
+      "tags": [
+        "function",
+        "whitespace"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:remove_extraneous_line_breaks_before",
+      "type": "function",
+      "name": "remove_extraneous_line_breaks_before",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        2137,
+        2173
+      ],
+      "summary": "Removes extraneous BR elements that appear before a given position in the tree, cleaning up after contenteditable operations.",
+      "tags": [
+        "function",
+        "block-structure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:remove_extraneous_line_breaks_at_the_end_of",
+      "type": "function",
+      "name": "remove_extraneous_line_breaks_at_the_end_of",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        2176,
+        2220
+      ],
+      "summary": "Removes extraneous BR elements at the end of a container, ensuring clean block termination in contenteditable.",
+      "tags": [
+        "function",
+        "block-structure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:remove_preserving_its_descendants",
+      "type": "function",
+      "name": "remove_preserving_its_descendants",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        2231,
+        2242
+      ],
+      "summary": "Removes a node from the DOM while preserving its child nodes by moving them to the parent's position.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/node.rs:effective_command_value",
+      "type": "function",
+      "name": "effective_command_value",
+      "filePath": "components/script/dom/execcommand/contenteditable/node.rs",
+      "lineRange": [
+        2245,
+        2353
+      ],
+      "summary": "Resolves the effective command value for a node by traversing ancestors to find inline style declarations or font element attributes, returning the computed value string.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/range.rs:is_effectively_contained_node",
+      "type": "function",
+      "name": "is_effectively_contained_node",
+      "filePath": "components/script/dom/execcommand/contenteditable/range.rs",
+      "lineRange": [
+        26,
+        52
+      ],
+      "summary": "Handles is effectively contained node logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "dom-traversal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/range.rs:first_formattable_contained_node",
+      "type": "function",
+      "name": "first_formattable_contained_node",
+      "filePath": "components/script/dom/execcommand/contenteditable/range.rs",
+      "lineRange": [
+        71,
+        79
+      ],
+      "summary": "Handles first formattable contained node logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "editable"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/range.rs:for_each_effectively_contained_child",
+      "type": "function",
+      "name": "for_each_effectively_contained_child",
+      "filePath": "components/script/dom/execcommand/contenteditable/range.rs",
+      "lineRange": [
+        81,
+        101
+      ],
+      "summary": "Iterates over all formattable nodes effectively contained within a range, applying a callback to each for formatting operations.",
+      "tags": [
+        "function",
+        "dom-traversal"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/range.rs:block_extend",
+      "type": "function",
+      "name": "block_extend",
+      "filePath": "components/script/dom/execcommand/contenteditable/range.rs",
+      "lineRange": [
+        104,
+        193
+      ],
+      "summary": "Extends a range boundary to the start/end of the enclosing block, used for block-level formatting operations.",
+      "tags": [
+        "function",
+        "block-structure"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/range.rs:record_current_states_and_values",
+      "type": "function",
+      "name": "record_current_states_and_values",
+      "filePath": "components/script/dom/execcommand/contenteditable/range.rs",
+      "lineRange": [
+        196,
+        263
+      ],
+      "summary": "Records the current formatting state and value of every formattable node in the range before a DOM mutation, enabling state preservation across complex edits.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/range.rs:restore_states_and_values",
+      "type": "function",
+      "name": "restore_states_and_values",
+      "filePath": "components/script/dom/execcommand/contenteditable/range.rs",
+      "lineRange": [
+        266,
+        385
+      ],
+      "summary": "Restores previously recorded formatting states and values onto nodes after a DOM mutation, preserving the original formatting intent.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/execcommand/contenteditable/selection.rs:EquivalentPoint",
+      "type": "class",
+      "name": "EquivalentPoint",
+      "filePath": "components/script/dom/execcommand/contenteditable/selection.rs",
+      "lineRange": [
+        52,
+        57
+      ],
+      "summary": "Struct for resolving equivalent boundary points in contenteditable selections, considering collapsed whitespace and text node boundaries.",
+      "tags": [
+        "enum",
+        "struct"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/selection.rs:previous_equivalent_point",
+      "type": "function",
+      "name": "previous_equivalent_point",
+      "filePath": "components/script/dom/execcommand/contenteditable/selection.rs",
+      "lineRange": [
+        61,
+        89
+      ],
+      "summary": "Handles previous equivalent point logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "selection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/selection.rs:next_equivalent_point",
+      "type": "function",
+      "name": "next_equivalent_point",
+      "filePath": "components/script/dom/execcommand/contenteditable/selection.rs",
+      "lineRange": [
+        92,
+        132
+      ],
+      "summary": "Handles next equivalent point logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "selection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/selection.rs:first_equivalent_point",
+      "type": "function",
+      "name": "first_equivalent_point",
+      "filePath": "components/script/dom/execcommand/contenteditable/selection.rs",
+      "lineRange": [
+        135,
+        146
+      ],
+      "summary": "Handles first equivalent point logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "selection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/selection.rs:last_equivalent_point",
+      "type": "function",
+      "name": "last_equivalent_point",
+      "filePath": "components/script/dom/execcommand/contenteditable/selection.rs",
+      "lineRange": [
+        149,
+        160
+      ],
+      "summary": "Handles last equivalent point logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "selection"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/selection.rs:delete_the_selection",
+      "type": "function",
+      "name": "delete_the_selection",
+      "filePath": "components/script/dom/execcommand/contenteditable/selection.rs",
+      "lineRange": [
+        165,
+        772
+      ],
+      "summary": "Deletes the current selection content handling block merging, wrapper element stripping, and directional deletion with full cleanup of extraneous elements.",
+      "tags": [
+        "function",
+        "selection"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/selection.rs:set_the_selection_value",
+      "type": "function",
+      "name": "set_the_selection_value",
+      "filePath": "components/script/dom/execcommand/contenteditable/selection.rs",
+      "lineRange": [
+        775,
+        874
+      ],
+      "summary": "Applies a formatting command value to the entire selection range, wrapping content in appropriate elements and setting inline styles for each affected node.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management",
+        "selection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/text.rs:is_whitespace_node",
+      "type": "function",
+      "name": "is_whitespace_node",
+      "filePath": "components/script/dom/execcommand/contenteditable/text.rs",
+      "lineRange": [
+        26,
+        59
+      ],
+      "summary": "Handles is whitespace node logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "whitespace"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/text.rs:is_collapsed_whitespace_node",
+      "type": "function",
+      "name": "is_collapsed_whitespace_node",
+      "filePath": "components/script/dom/execcommand/contenteditable/text.rs",
+      "lineRange": [
+        62,
+        133
+      ],
+      "summary": "Handles is collapsed whitespace node logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "whitespace"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/contenteditable/text.rs:has_whitespace_and_has_parent_with_whitespace_preserve",
+      "type": "function",
+      "name": "has_whitespace_and_has_parent_with_whitespace_preserve",
+      "filePath": "components/script/dom/execcommand/contenteditable/text.rs",
+      "lineRange": [
+        137,
+        160
+      ],
+      "summary": "Handles has whitespace and has parent with whitespace preserve logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "dom-traversal",
+        "whitespace"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/execcommand/execcommands.rs:DocumentExecCommandSupport",
+      "type": "class",
+      "name": "DocumentExecCommandSupport",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        142,
+        158
+      ],
+      "summary": "Struct tracking command support and enablement state per document, with methods for checking if a command is supported, enabled, and querying its state/value.",
+      "tags": [
+        "enum",
+        "command"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/execcommands.rs:is_command_listed_in_miscellaneous_section",
+      "type": "function",
+      "name": "is_command_listed_in_miscellaneous_section",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        23,
+        33
+      ],
+      "summary": "Handles is command listed in miscellaneous section logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/execcommands.rs:mapped_value_of_command",
+      "type": "function",
+      "name": "mapped_value_of_command",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        36,
+        66
+      ],
+      "summary": "Handles mapped value of command logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/execcommands.rs:selection_if_command_is_enabled",
+      "type": "function",
+      "name": "selection_if_command_is_enabled",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        77,
+        112
+      ],
+      "summary": "Handles selection if command is enabled logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query",
+        "selection"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/execcommands.rs:command_if_command_is_supported",
+      "type": "function",
+      "name": "command_if_command_is_supported",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        115,
+        139
+      ],
+      "summary": "Handles command if command is supported logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/execcommands.rs:command_state_for_command",
+      "type": "function",
+      "name": "command_state_for_command",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        175,
+        186
+      ],
+      "summary": "Handles command state for command logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/execcommands.rs:command_value_for_command",
+      "type": "function",
+      "name": "command_value_for_command",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        189,
+        210
+      ],
+      "summary": "Handles command value for command logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query",
+        "value-management"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/execcommands.rs:check_support_and_enabled",
+      "type": "function",
+      "name": "check_support_and_enabled",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        213,
+        222
+      ],
+      "summary": "Handles check support and enabled logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/execcommand/execcommands.rs:exec_command_for_command_id",
+      "type": "function",
+      "name": "exec_command_for_command_id",
+      "filePath": "components/script/dom/execcommand/execcommands.rs",
+      "lineRange": [
+        225,
+        319
+      ],
+      "summary": "Handles exec command for command id logic in the contenteditable execCommand subsystem.",
+      "tags": [
+        "function",
+        "command-query"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/document.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/document.rs:create_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/document.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/document.rs:create_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:specified_command_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:specified_command_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:is_modifiable_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:is_modifiable_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:has_empty_style_attribute",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:has_empty_style_attribute",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:is_non_list_single_line_container",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:is_non_list_single_line_container",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:is_simple_modifiable_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:is_simple_modifiable_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:set_the_tag_name",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/element.rs:set_the_tag_name",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/htmlelement.rs:remove_value_from_text_decoration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/htmlelement.rs:clear_the_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/htmlelement.rs:clear_the_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/htmlelement.rs:handle_focus_state_for_contenteditable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/htmlelement.rs:handle_focus_state_for_contenteditable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "class:components/script/dom/execcommand/contenteditable/node.rs:NodeOrString",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "class:components/script/dom/execcommand/contenteditable/node.rs:NodeOrString",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:move_preserving_ranges",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:move_preserving_ranges",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_allowed_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_allowed_child",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:split_the_parent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:split_the_parent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:wrap_node_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:wrap_node_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:record_the_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:record_the_values",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:restore_the_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:restore_the_values",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_extraneous_line_break",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:push_down_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:push_down_values",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:reorder_modifiable_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:force_the_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:force_the_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:same_editing_host",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:same_editing_host",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:block_node_of",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:block_node_of",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_visible",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_visible",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_formattable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_formattable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_single_line_container",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_single_line_container",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_start_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_start_point",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_end_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_block_end_point",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_no_allowed_child_in_same_editing_host",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_no_allowed_child_in_same_editing_host",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_prohibited_paragraph_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_prohibited_paragraph_child",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:fix_disallowed_ancestors",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:fix_disallowed_ancestors",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_collapsed_block_prop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:is_collapsed_block_prop",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:follows_a_line_break",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:precedes_a_line_break",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:canonical_space_sequence",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:canonicalize_whitespace",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:canonicalize_whitespace",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:remove_extraneous_line_breaks_before",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:remove_extraneous_line_breaks_at_the_end_of",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:remove_extraneous_line_breaks_at_the_end_of",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:remove_preserving_its_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:remove_preserving_its_descendants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:effective_command_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/node.rs:effective_command_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:is_effectively_contained_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:first_formattable_contained_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:first_formattable_contained_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:for_each_effectively_contained_child",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:for_each_effectively_contained_child",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:block_extend",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:block_extend",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:record_current_states_and_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:record_current_states_and_values",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:restore_states_and_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:restore_states_and_values",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "class:components/script/dom/execcommand/contenteditable/selection.rs:EquivalentPoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/selection.rs:previous_equivalent_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/selection.rs:next_equivalent_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/selection.rs:first_equivalent_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/selection.rs:last_equivalent_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/selection.rs:delete_the_selection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/selection.rs:delete_the_selection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/selection.rs:set_the_selection_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/selection.rs:set_the_selection_value",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/text.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/text.rs:is_whitespace_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/text.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/text.rs:is_whitespace_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/text.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/text.rs:is_collapsed_whitespace_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/text.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/text.rs:is_collapsed_whitespace_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/text.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/text.rs:has_whitespace_and_has_parent_with_whitespace_preserve",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/text.rs",
+      "target": "function:components/script/dom/execcommand/contenteditable/text.rs:has_whitespace_and_has_parent_with_whitespace_preserve",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "class:components/script/dom/execcommand/execcommands.rs:DocumentExecCommandSupport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "class:components/script/dom/execcommand/execcommands.rs:DocumentExecCommandSupport",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "function:components/script/dom/execcommand/execcommands.rs:is_command_listed_in_miscellaneous_section",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "function:components/script/dom/execcommand/execcommands.rs:mapped_value_of_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "function:components/script/dom/execcommand/execcommands.rs:selection_if_command_is_enabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "function:components/script/dom/execcommand/execcommands.rs:command_if_command_is_supported",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "function:components/script/dom/execcommand/execcommands.rs:command_state_for_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "function:components/script/dom/execcommand/execcommands.rs:command_value_for_command",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "function:components/script/dom/execcommand/execcommands.rs:check_support_and_enabled",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/execcommands.rs",
+      "target": "function:components/script/dom/execcommand/execcommands.rs:exec_command_for_command_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "target": "file:components/script/dom/execcommand/contenteditable/document.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "target": "file:components/script/dom/execcommand/contenteditable/element.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "target": "file:components/script/dom/execcommand/contenteditable/htmlelement.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "target": "file:components/script/dom/execcommand/contenteditable/node.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "target": "file:components/script/dom/execcommand/contenteditable/range.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "target": "file:components/script/dom/execcommand/contenteditable/selection.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "target": "file:components/script/dom/execcommand/contenteditable/text.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/mod.rs",
+      "target": "file:components/script/dom/execcommand/basecommand.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/mod.rs",
+      "target": "file:components/script/dom/execcommand/commands/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/mod.rs",
+      "target": "file:components/script/dom/execcommand/contenteditable/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/execcommand/mod.rs",
+      "target": "file:components/script/dom/execcommand/execcommands.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "function:components/script/dom/execcommand/execcommands.rs:exec_command_for_command_id",
+      "target": "function:components/script/dom/execcommand/basecommand.rs:execute",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/execcommand/contenteditable/range.rs:record_current_states_and_values",
+      "target": "function:components/script/dom/execcommand/basecommand.rs:record_current_overrides",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/execcommand/contenteditable/selection.rs:delete_the_selection",
+      "target": "function:components/script/dom/execcommand/contenteditable/range.rs:block_extend",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

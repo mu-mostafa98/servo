@@ -1,0 +1,936 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "type": "file",
+      "name": "rtcpeerconnection.rs",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "summary": "Central RTCPeerConnection implementation orchestrating WebRTC peer connections, ICE candidate handling, SDP negotiation, data channels, and media streams via the servo-media backend.",
+      "tags": ["webrtc", "peer-connection", "dom", "api-handler"],
+      "complexity": "complex",
+      "languageNotes": "Largest file in the WebRTC module. Uses Rust DOM reflection with promise-based async patterns and a two-layer architecture (RTCSignaller callback bridge + RTCPeerConnection DOM class)."
+    },
+    {
+      "id": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "type": "file",
+      "name": "rtcpeerconnectioniceevent.rs",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "summary": "Implements the RTCPeerConnectionIceEvent DOM interface dispatched during ICE candidate gathering and state transitions.",
+      "tags": ["webrtc", "ice", "event", "dom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webrtc/rtcrtpsender.rs",
+      "type": "file",
+      "name": "rtcrtpsender.rs",
+      "filePath": "components/script/dom/webrtc/rtcrtpsender.rs",
+      "summary": "Implements the RTCRtpSender DOM interface for controlling RTP media stream sending, with encoding parameter access and promise-based parameter updates.",
+      "tags": ["webrtc", "rtp", "sender", "dom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "type": "file",
+      "name": "rtcrtptransceiver.rs",
+      "filePath": "components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "summary": "Implements the RTCRtpTransceiver DOM interface combining an RTCRtpSender with a direction control for bidirectional media transmission.",
+      "tags": ["webrtc", "transceiver", "rtp", "dom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webrtc/rtcsessiondescription.rs",
+      "type": "file",
+      "name": "rtcsessiondescription.rs",
+      "filePath": "components/script/dom/webrtc/rtcsessiondescription.rs",
+      "summary": "Implements the RTCSessionDescription DOM interface representing SDP offer/answer payloads for WebRTC negotiation.",
+      "tags": ["webrtc", "sdp", "session", "dom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/webrtc/rtctrackevent.rs",
+      "type": "file",
+      "name": "rtctrackevent.rs",
+      "filePath": "components/script/dom/webrtc/rtctrackevent.rs",
+      "summary": "Implements the RTCTrackEvent DOM interface dispatched when a new MediaStreamTrack is received from a remote peer.",
+      "tags": ["webrtc", "track", "event", "dom"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/webrtc/rtcpeerconnection.rs:RTCPeerConnection",
+      "type": "class",
+      "name": "RTCPeerConnection",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [60, 80],
+      "summary": "Primary DOM reflector for WebRTC peer connection, managing ICE candidates, SDP offers/answers, data channels, media streams, and connection state machines.",
+      "tags": ["webrtc", "peer-connection", "dom"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:RTCPeerConnectionIceEvent",
+      "type": "class",
+      "name": "RTCPeerConnectionIceEvent",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "lineRange": [24, 28],
+      "summary": "DOM reflector for RTCPeerConnectionIceEvent, wrapping ICE candidate and candidate URL data for event dispatch.",
+      "tags": ["webrtc", "ice", "event", "dom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webrtc/rtcrtpsender.rs:RTCRtpSender",
+      "type": "class",
+      "name": "RTCRtpSender",
+      "filePath": "components/script/dom/webrtc/rtcrtpsender.rs",
+      "lineRange": [22, 24],
+      "summary": "DOM reflector for RTCRtpSender, providing access to RTP encoding parameters and promise-based parameter updates.",
+      "tags": ["webrtc", "rtp", "sender", "dom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webrtc/rtcrtptransceiver.rs:RTCRtpTransceiver",
+      "type": "class",
+      "name": "RTCRtpTransceiver",
+      "filePath": "components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "lineRange": [19, 23],
+      "summary": "DOM reflector for RTCRtpTransceiver, pairing an RTCRtpSender with direction control for bidirectional media.",
+      "tags": ["webrtc", "transceiver", "rtp", "dom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webrtc/rtcsessiondescription.rs:RTCSessionDescription",
+      "type": "class",
+      "name": "RTCSessionDescription",
+      "filePath": "components/script/dom/webrtc/rtcsessiondescription.rs",
+      "lineRange": [19, 23],
+      "summary": "DOM reflector for RTCSessionDescription, holding SDP type and content for WebRTC offer/answer exchange.",
+      "tags": ["webrtc", "sdp", "session", "dom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webrtc/rtctrackevent.rs:RTCTrackEvent",
+      "type": "class",
+      "name": "RTCTrackEvent",
+      "filePath": "components/script/dom/webrtc/rtctrackevent.rs",
+      "lineRange": [21, 24],
+      "summary": "DOM reflector for RTCTrackEvent, wrapping a MediaStreamTrack reference for track event dispatch.",
+      "tags": ["webrtc", "track", "event", "dom"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_data_channel_event",
+      "type": "function",
+      "name": "on_data_channel_event",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [141, 156],
+      "summary": "Queues data channel events from the RTCSignaller callback onto the networking task source.",
+      "tags": ["webrtc", "event-handler", "callback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [164, 179],
+      "summary": "Initializes a new RTCPeerConnection with event target inheritance, state cells, and an empty data channel registry.",
+      "tags": ["webrtc", "peer-connection", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [181, 216],
+      "summary": "Creates a full reflected RTCPeerConnection with a WebRTC controller from servo-media, configured with ICE servers.",
+      "tags": ["webrtc", "peer-connection", "constructor"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:get_webrtc_controller",
+      "type": "function",
+      "name": "get_webrtc_controller",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [218, 220],
+      "summary": "Returns the option reference to the servo-media WebRTC controller.",
+      "tags": ["webrtc", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_ice_candidate",
+      "type": "function",
+      "name": "on_ice_candidate",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [230, 251],
+      "summary": "Handles ICE candidate discovery from the WebRTC backend, creates an RTCIceCandidate, and dispatches the icecandidate event.",
+      "tags": ["webrtc", "ice", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_negotiation_needed",
+      "type": "function",
+      "name": "on_negotiation_needed",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [253, 265],
+      "summary": "Dispatches a negotiationneeded event when the WebRTC backend signals renegotiation is required.",
+      "tags": ["webrtc", "event-handler", "negotiation"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_add_stream",
+      "type": "function",
+      "name": "on_add_stream",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [267, 281],
+      "summary": "Handles incoming media streams by creating a MediaStreamTrack and dispatching an RTCTrackEvent.",
+      "tags": ["webrtc", "media", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_data_channel_event",
+      "type": "function",
+      "name": "on_data_channel_event",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [283, 336],
+      "summary": "Handles incoming data channel events from the backend by creating an RTCDataChannel, dispatching events, and forwarding channel lifecycle callbacks.",
+      "tags": ["webrtc", "data-channel", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:register_data_channel",
+      "type": "function",
+      "name": "register_data_channel",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [338, 347],
+      "summary": "Registers a data channel by servo-media ID in the peer connection's data channel map.",
+      "tags": ["webrtc", "data-channel", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:unregister_data_channel",
+      "type": "function",
+      "name": "unregister_data_channel",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [349, 351],
+      "summary": "Removes a data channel from the peer connection's data channel map by ID.",
+      "tags": ["webrtc", "data-channel", "utility"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:update_gathering_state",
+      "type": "function",
+      "name": "update_gathering_state",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [354, 393],
+      "summary": "Processes ICE gathering state transitions, updating state and dispatching ice gathering and candidate events.",
+      "tags": ["webrtc", "ice", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:update_ice_connection_state",
+      "type": "function",
+      "name": "update_ice_connection_state",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [396, 422],
+      "summary": "Processes ICE connection state transitions, updating state and dispatching iceconnectionstatechange events.",
+      "tags": ["webrtc", "ice", "event-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:update_signaling_state",
+      "type": "function",
+      "name": "update_signaling_state",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [424, 445],
+      "summary": "Processes signaling state transitions, updating state and dispatching signalingstatechange events.",
+      "tags": ["webrtc", "signaling", "event-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:create_offer",
+      "type": "function",
+      "name": "create_offer",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [447, 474],
+      "summary": "Asynchronously creates an SDP offer through the WebRTC controller, queuing the result on the networking task source.",
+      "tags": ["webrtc", "sdp", "offer", "async"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:create_answer",
+      "type": "function",
+      "name": "create_answer",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [476, 503],
+      "summary": "Asynchronously creates an SDP answer through the WebRTC controller, queuing the result on the networking task source.",
+      "tags": ["webrtc", "sdp", "answer", "async"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:AddIceCandidate",
+      "type": "function",
+      "name": "AddIceCandidate",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [555, 593],
+      "summary": "Public API adding an ICE candidate with sdpMid/sdpMLineIndex validation, returning a promise resolved upon completion.",
+      "tags": ["webrtc", "ice", "api-handler"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:CreateOffer",
+      "type": "function",
+      "name": "CreateOffer",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [596, 609],
+      "summary": "WebIDL-exposed API initiating an SDP offer, returning a promise and delegating to the internal create_offer workflow.",
+      "tags": ["webrtc", "sdp", "api-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:CreateAnswer",
+      "type": "function",
+      "name": "CreateAnswer",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [612, 625],
+      "summary": "WebIDL-exposed API initiating an SDP answer, returning a promise and delegating to the internal create_answer workflow.",
+      "tags": ["webrtc", "sdp", "api-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:SetLocalDescription",
+      "type": "function",
+      "name": "SetLocalDescription",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [638, 677],
+      "summary": "Sets the local SDP description asynchronously via the WebRTC controller and queues the result promise resolution on the networking task source.",
+      "tags": ["webrtc", "sdp", "api-handler", "async"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:SetRemoteDescription",
+      "type": "function",
+      "name": "SetRemoteDescription",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [680, 719],
+      "summary": "Sets the remote SDP description asynchronously via the WebRTC controller and queues the result promise resolution on the networking task source.",
+      "tags": ["webrtc", "sdp", "api-handler", "async"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:Close",
+      "type": "function",
+      "name": "Close",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [748, 775],
+      "summary": "Closes the peer connection, quits the WebRTC controller, transitions data channels to closed state, and updates signaling and ICE states.",
+      "tags": ["webrtc", "peer-connection", "lifecycle"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnection.rs:CreateDataChannel",
+      "type": "function",
+      "name": "CreateDataChannel",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnection.rs",
+      "lineRange": [778, 791],
+      "summary": "WebIDL-exposed API creating a new RTCDataChannel on this peer connection with a given label and initialization options.",
+      "tags": ["webrtc", "data-channel", "api-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "lineRange": [31, 40],
+      "summary": "Initializes a new RTCPeerConnectionIceEvent with optional ICE candidate and candidate URL.",
+      "tags": ["webrtc", "ice", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "lineRange": [42, 51],
+      "summary": "Creates a reflected RTCPeerConnectionIceEvent DOM object for dispatching ICE events.",
+      "tags": ["webrtc", "ice", "event", "constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "lineRange": [53, 72],
+      "summary": "Creates a reflected RTCPeerConnectionIceEvent with custom prototype, event initialization, and trusted flag.",
+      "tags": ["webrtc", "ice", "event", "constructor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "lineRange": [77, 96],
+      "summary": "WebIDL constructor for RTCPeerConnectionIceEvent that parses the init dictionary and delegates to new_with_proto.",
+      "tags": ["webrtc", "ice", "event", "constructor", "webidl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcrtpsender.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webrtc/rtcrtpsender.rs",
+      "lineRange": [33, 35],
+      "summary": "Creates a reflected RTCRtpSender DOM object.",
+      "tags": ["webrtc", "rtp", "constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcrtpsender.rs:GetParameters",
+      "type": "function",
+      "name": "GetParameters",
+      "filePath": "components/script/dom/webrtc/rtcrtpsender.rs",
+      "lineRange": [40, 53],
+      "summary": "Returns the RTCRtpSender's encoding parameters including codecs, header extensions, and transaction ID.",
+      "tags": ["webrtc", "rtp", "api-handler"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcrtptransceiver.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "lineRange": [26, 37],
+      "summary": "Initializes a new RTCRtpTransceiver with an RTCRtpSender, reflector, and direction cell.",
+      "tags": ["webrtc", "transceiver", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcrtptransceiver.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "lineRange": [39, 49],
+      "summary": "Creates a reflected RTCRtpTransceiver DOM object with an initial direction.",
+      "tags": ["webrtc", "transceiver", "constructor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcsessiondescription.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/webrtc/rtcsessiondescription.rs",
+      "lineRange": [26, 32],
+      "summary": "Initializes a new RTCSessionDescription with SDP type and content string.",
+      "tags": ["webrtc", "sdp", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcsessiondescription.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webrtc/rtcsessiondescription.rs",
+      "lineRange": [34, 47],
+      "summary": "Creates a reflected RTCSessionDescription DOM object with prototype chain, SDP type, and SDP string.",
+      "tags": ["webrtc", "sdp", "constructor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtcsessiondescription.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/webrtc/rtcsessiondescription.rs",
+      "lineRange": [52, 65],
+      "summary": "WebIDL constructor for RTCSessionDescription that parses the init dictionary and creates the description.",
+      "tags": ["webrtc", "sdp", "constructor", "webidl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtctrackevent.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webrtc/rtctrackevent.rs",
+      "lineRange": [34, 43],
+      "summary": "Creates a reflected RTCTrackEvent DOM object for dispatching media track events.",
+      "tags": ["webrtc", "track", "event", "constructor"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtctrackevent.rs:new_with_proto",
+      "type": "function",
+      "name": "new_with_proto",
+      "filePath": "components/script/dom/webrtc/rtctrackevent.rs",
+      "lineRange": [45, 65],
+      "summary": "Creates a reflected RTCTrackEvent with custom prototype chain and event initialization.",
+      "tags": ["webrtc", "track", "event", "constructor"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webrtc/rtctrackevent.rs:Constructor",
+      "type": "function",
+      "name": "Constructor",
+      "filePath": "components/script/dom/webrtc/rtctrackevent.rs",
+      "lineRange": [70, 86],
+      "summary": "WebIDL constructor for RTCTrackEvent that parses the init dictionary and delegates to new_with_proto.",
+      "tags": ["webrtc", "track", "event", "constructor", "webidl"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "class:components/script/dom/webrtc/rtcpeerconnection.rs:RTCPeerConnection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_data_channel_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:get_webrtc_controller",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_ice_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_negotiation_needed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_add_stream",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_data_channel_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:register_data_channel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:unregister_data_channel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:update_gathering_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:update_ice_connection_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:update_signaling_state",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:create_offer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:create_answer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:AddIceCandidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:CreateOffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:CreateAnswer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:SetLocalDescription",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:SetRemoteDescription",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:Close",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:CreateDataChannel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "target": "class:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:RTCPeerConnectionIceEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtpsender.rs",
+      "target": "class:components/script/dom/webrtc/rtcrtpsender.rs:RTCRtpSender",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtpsender.rs",
+      "target": "function:components/script/dom/webrtc/rtcrtpsender.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtpsender.rs",
+      "target": "function:components/script/dom/webrtc/rtcrtpsender.rs:GetParameters",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "target": "class:components/script/dom/webrtc/rtcrtptransceiver.rs:RTCRtpTransceiver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "target": "function:components/script/dom/webrtc/rtcrtptransceiver.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "target": "function:components/script/dom/webrtc/rtcrtptransceiver.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcsessiondescription.rs",
+      "target": "class:components/script/dom/webrtc/rtcsessiondescription.rs:RTCSessionDescription",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcsessiondescription.rs",
+      "target": "function:components/script/dom/webrtc/rtcsessiondescription.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcsessiondescription.rs",
+      "target": "function:components/script/dom/webrtc/rtcsessiondescription.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcsessiondescription.rs",
+      "target": "function:components/script/dom/webrtc/rtcsessiondescription.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtctrackevent.rs",
+      "target": "class:components/script/dom/webrtc/rtctrackevent.rs:RTCTrackEvent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtctrackevent.rs",
+      "target": "function:components/script/dom/webrtc/rtctrackevent.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtctrackevent.rs",
+      "target": "function:components/script/dom/webrtc/rtctrackevent.rs:new_with_proto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtctrackevent.rs",
+      "target": "function:components/script/dom/webrtc/rtctrackevent.rs:Constructor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "class:components/script/dom/webrtc/rtcpeerconnection.rs:RTCPeerConnection",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:get_webrtc_controller",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:register_data_channel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnection.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnection.rs:unregister_data_channel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "target": "class:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:RTCPeerConnectionIceEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtpsender.rs",
+      "target": "class:components/script/dom/webrtc/rtcrtpsender.rs:RTCRtpSender",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtpsender.rs",
+      "target": "function:components/script/dom/webrtc/rtcrtpsender.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "target": "class:components/script/dom/webrtc/rtcrtptransceiver.rs:RTCRtpTransceiver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcrtptransceiver.rs",
+      "target": "function:components/script/dom/webrtc/rtcrtptransceiver.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcsessiondescription.rs",
+      "target": "class:components/script/dom/webrtc/rtcsessiondescription.rs:RTCSessionDescription",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtcsessiondescription.rs",
+      "target": "function:components/script/dom/webrtc/rtcsessiondescription.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtctrackevent.rs",
+      "target": "class:components/script/dom/webrtc/rtctrackevent.rs:RTCTrackEvent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webrtc/rtctrackevent.rs",
+      "target": "function:components/script/dom/webrtc/rtctrackevent.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_ice_candidate",
+      "target": "function:components/script/dom/webrtc/rtcicecandidate.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_ice_candidate",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_data_channel_event",
+      "target": "function:components/script/dom/webrtc/rtcdatachannel.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_data_channel_event",
+      "target": "function:components/script/dom/webrtc/rtcdatachannelevent.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webrtc/rtcpeerconnection.rs:on_add_stream",
+      "target": "function:components/script/dom/webrtc/rtctrackevent.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webrtc/rtcpeerconnection.rs:update_gathering_state",
+      "target": "function:components/script/dom/webrtc/rtcpeerconnectioniceevent.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:components/script/dom/webrtc/rtcpeerconnection.rs:CreateDataChannel",
+      "target": "function:components/script/dom/webrtc/rtcdatachannel.rs:new",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

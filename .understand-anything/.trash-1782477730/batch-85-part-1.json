@@ -1,0 +1,840 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/shared/constellation/from_script_message.rs",
+      "type": "file",
+      "name": "from_script_message.rs",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "summary": "Defines the complete set of message types sent from script processes to the constellation, covering service worker algorithms, navigation, message ports, broadcast channels, and browsing context management.",
+      "tags": ["message-types", "service-worker", "constellation", "ipc"],
+      "complexity": "complex",
+      "languageNotes": "Rust enums with data variants used as an inter-process message protocol between script and constellation."
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:ScriptToConstellationChan",
+      "type": "class",
+      "name": "ScriptToConstellationChan",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [57, 64],
+      "summary": "A sender-receiver channel for sending ScriptToConstellationMessage payloads from script to the constellation, scoped to a specific webview and pipeline.",
+      "tags": ["channel", "ipc", "sender"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:LoadData",
+      "type": "class",
+      "name": "LoadData",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [88, 138],
+      "summary": "Comprehensive data structure describing a page load request, including origin, URL, method, headers, post data, JS eval result, referrer policy, sandbox flags, and document encoding.",
+      "tags": ["navigation", "load-request", "data-structure"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:ScopeThings",
+      "type": "class",
+      "name": "ScopeThings",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [213, 228],
+      "summary": "Data bundle for service worker scope initialization including script URL, worker load origin, devtools channel, worker ID, browsing context ID, and webview ID.",
+      "tags": ["service-worker", "scope", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:DOMMessage",
+      "type": "class",
+      "name": "DOMMessage",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [232, 238],
+      "summary": "A simple DOM message envelope carrying an origin, pipeline ID, and serialized message data for cross-context messaging.",
+      "tags": ["dom", "messaging", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:SWManagerSenders",
+      "type": "class",
+      "name": "SWManagerSenders",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [242, 253],
+      "summary": "Collection of IPC sender channels for the service worker manager, including resource threads, paint API, font service, and a self-referencing sender-receiver pair.",
+      "tags": ["service-worker", "ipc", "channels"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerMsg",
+      "type": "class",
+      "name": "ServiceWorkerMsg",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [257, 272],
+      "summary": "Enumeration of service worker internal messages: timeout, DOM message forwarding, worker message forwarding, algorithm handling, and exit.",
+      "tags": ["service-worker", "message-type", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerRegistrationInfo",
+      "type": "class",
+      "name": "ServiceWorkerRegistrationInfo",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [313, 328],
+      "summary": "Information about a service worker registration including its ID, installing/waiting/active workers, storage key, scope URL, and script URL.",
+      "tags": ["service-worker", "registration", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerAlgorithm",
+      "type": "class",
+      "name": "ServiceWorkerAlgorithm",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [332, 343],
+      "summary": "Enumeration of service worker algorithm commands: start register, unregister, and match registration.",
+      "tags": ["service-worker", "algorithm", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerAlgorithmResult",
+      "type": "class",
+      "name": "ServiceWorkerAlgorithmResult",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [348, 365],
+      "summary": "Results from service worker algorithm execution: job results, matched registrations, and worker messages.",
+      "tags": ["service-worker", "algorithm", "result-type", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:Job",
+      "type": "class",
+      "name": "Job",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [369, 384],
+      "summary": "A service worker job describing a register, unregister, or update operation with scope URL, script URL, client, referrer, scope things, and storage key.",
+      "tags": ["service-worker", "job", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerManagerFactory",
+      "type": "class",
+      "name": "ServiceWorkerManagerFactory",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [438, 441],
+      "summary": "Factory type for creating a service worker manager instance, with a single `create` method.",
+      "tags": ["service-worker", "factory", "creation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:AuxiliaryWebViewCreationRequest",
+      "type": "class",
+      "name": "AuxiliaryWebViewCreationRequest",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [445, 454],
+      "summary": "Request to create an auxiliary webview (popup/new window), carrying load data, opener IDs, and a response sender channel.",
+      "tags": ["webview", "creation", "request"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:AuxiliaryWebViewCreationResponse",
+      "type": "class",
+      "name": "AuxiliaryWebViewCreationResponse",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [458, 465],
+      "summary": "Response from a webview creation request, containing the new webview ID, pipeline ID, and user content manager ID.",
+      "tags": ["webview", "creation", "response"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:IFrameLoadInfo",
+      "type": "class",
+      "name": "IFrameLoadInfo",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [469, 488],
+      "summary": "Information required to load an iframe: parent pipeline ID, browsing context ID, webview ID, new pipeline ID, secure context flags, history handling, and target snapshot params.",
+      "tags": ["iframe", "navigation", "data-structure"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:IFrameLoadInfoWithData",
+      "type": "class",
+      "name": "IFrameLoadInfoWithData",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [492, 503],
+      "summary": "Extended iframe load info that additionally carries load data, old pipeline ID, viewport details, and theme information.",
+      "tags": ["iframe", "navigation", "load-data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:WorkerGlobalScopeInit",
+      "type": "class",
+      "name": "WorkerGlobalScopeInit",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [507, 536],
+      "summary": "Initialization parameters for a worker global scope, including resource threads, storage threads, profiler channels, devtools senders, and WebGL channel.",
+      "tags": ["worker", "initialization", "data-structure"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:WorkerScriptLoadOrigin",
+      "type": "class",
+      "name": "WorkerScriptLoadOrigin",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [540, 547],
+      "summary": "Origin information for worker script loading, including referrer URL, referrer policy, and pipeline ID.",
+      "tags": ["worker", "script-loading", "origin"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:IFrameSizeMsg",
+      "type": "class",
+      "name": "IFrameSizeMsg",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [551, 558],
+      "summary": "Message carrying iframe size information: browsing context ID, new size, and whether the size update is initial or a resize.",
+      "tags": ["iframe", "sizing", "message"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:ScriptToConstellationMessage",
+      "type": "class",
+      "name": "ScriptToConstellationMessage",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [603, 806],
+      "summary": "The primary inter-process message enum with 53 variants covering all script-to-constellation communication: service worker algorithms, navigation, message ports, broadcast channels, animation state, canvas threads, focus management, history traversal, wake locks, and garbage collection.",
+      "tags": ["message-type", "ipc", "constellation", "enum"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/constellation/from_script_message.rs:TargetSnapshotParams",
+      "type": "class",
+      "name": "TargetSnapshotParams",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [817, 822],
+      "summary": "Snapshot parameters for an iframe target including sandboxing flags and iframe element referrer policy.",
+      "tags": ["iframe", "snapshot", "security"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/constellation/from_script_message.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [143, 176],
+      "summary": "Constructs a LoadData with all required fields including origin, URL, base URL, creator pipeline ID, referrer, policy, security context, and sandbox flags.",
+      "tags": ["constructor", "load-data", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/constellation/from_script_message.rs:new_for_new_unrelated_webview",
+      "type": "function",
+      "name": "new_for_new_unrelated_webview",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [180, 193],
+      "summary": "Constructs a LoadData for a webview that is not related to an existing browsing context, with no creator pipeline and empty sandbox flags.",
+      "tags": ["constructor", "load-data", "webview"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/constellation/from_script_message.rs:create_job",
+      "type": "function",
+      "name": "create_job",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [388, 406],
+      "summary": "Creates a new Job instance with job type, scope URL, script URL, client information, referrer, scope things, and storage key.",
+      "tags": ["constructor", "service-worker", "job"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/constellation/from_script_message.rs:eq",
+      "type": "function",
+      "name": "eq",
+      "filePath": "components/shared/constellation/from_script_message.rs",
+      "lineRange": [411, 424],
+      "summary": "Equality implementation for Job, comparing all fields: job type, scope URL, script URL, client, referrer, scope things, and storage key.",
+      "tags": ["equality", "comparison", "service-worker"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/constellation/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/constellation/lib.rs",
+      "summary": "Defines message types sent from the embedder to the constellation, including navigation commands, viewport changes, webview management, user content actions, scroll state, and message port management.",
+      "tags": ["message-types", "embedder", "constellation", "ipc"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/lib.rs:EmbedderToConstellationMessage",
+      "type": "class",
+      "name": "EmbedderToConstellationMessage",
+      "filePath": "components/shared/constellation/lib.rs",
+      "lineRange": [45, 119],
+      "summary": "The main embedder-to-constellation message enum with 32 variants covering exit, navigation, viewport changes, webview creation/closing/focusing, input events, profiler toggling, fullscreen, accessibility, and memory reporting.",
+      "tags": ["message-type", "embedder", "constellation", "ipc", "enum"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/constellation/lib.rs:PortMessageTask",
+      "type": "class",
+      "name": "PortMessageTask",
+      "filePath": "components/shared/constellation/lib.rs",
+      "lineRange": [177, 182],
+      "summary": "A queued message port task containing the message origin and serialized data.",
+      "tags": ["message-port", "task", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/lib.rs:PortTransferInfo",
+      "type": "class",
+      "name": "PortTransferInfo",
+      "filePath": "components/shared/constellation/lib.rs",
+      "lineRange": [186, 193],
+      "summary": "State tracking for a message port transfer: the queue of pending messages and whether the port has been disentangled.",
+      "tags": ["message-port", "transfer", "state"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/lib.rs:MessagePortMsg",
+      "type": "class",
+      "name": "MessagePortMsg",
+      "filePath": "components/shared/constellation/lib.rs",
+      "lineRange": [198, 209],
+      "summary": "Enumeration of message port operations: complete transfer, complete pending transfer, complete disentanglement, and new task.",
+      "tags": ["message-port", "message-type", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/constellation/lib.rs:ScrollStateUpdate",
+      "type": "class",
+      "name": "ScrollStateUpdate",
+      "filePath": "components/shared/constellation/lib.rs",
+      "lineRange": [214, 220],
+      "summary": "A scroll state update containing the scrolled node and its new X/Y offsets.",
+      "tags": ["scrolling", "state-update", "data-structure"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/constellation/structured_data/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/shared/constellation/structured_data/mod.rs",
+      "summary": "Module root for structured serialization data, providing the StructuredSerializedData container and its clone-for-broadcast logic that handles serialized blobs, files, image bitmaps, offscreen canvases, and crypto keys.",
+      "tags": ["serialization", "structured-data", "module-root", "broadcast"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/constellation/structured_data/mod.rs:StructuredSerializedData",
+      "type": "class",
+      "name": "StructuredSerializedData",
+      "filePath": "components/shared/constellation/structured_data/mod.rs",
+      "lineRange": [26, 62],
+      "summary": "Container for serialized structured data with 17 fields including serialized values, blobs, files, file lists, DOM geometry types (points, rects, quads, matrices), exceptions, image bitmaps, offscreen canvases, image data, and crypto keys.",
+      "tags": ["serialization", "data-container", "structured-clone"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/shared/constellation/structured_data/mod.rs:is_empty",
+      "type": "function",
+      "name": "is_empty",
+      "filePath": "components/shared/constellation/structured_data/mod.rs",
+      "lineRange": [65, 77],
+      "summary": "Checks if the StructuredSerializedData container is empty by testing each of its six core data fields for emptiness.",
+      "tags": ["utility", "validation", "empty-check"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/constellation/structured_data/mod.rs:clone_all_of_type",
+      "type": "function",
+      "name": "clone_all_of_type",
+      "filePath": "components/shared/constellation/structured_data/mod.rs",
+      "lineRange": [81, 93],
+      "summary": "Generic helper that clones all items of a given transferrable type from one HashMap to another, applying the clone_for_broadcast transform to each item.",
+      "tags": ["utility", "cloning", "generic", "transferrable"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/shared/constellation/structured_data/mod.rs:clone_for_broadcast",
+      "type": "function",
+      "name": "clone_for_broadcast",
+      "filePath": "components/shared/constellation/structured_data/mod.rs",
+      "lineRange": [96, 120],
+      "summary": "Creates a deep clone of StructuredSerializedData suitable for broadcast, cloning serialized data and all transferrable types via their clone_for_broadcast implementations.",
+      "tags": ["cloning", "broadcast", "deep-copy", "serialization"],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ScriptToConstellationChan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:LoadData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ScopeThings",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:DOMMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:SWManagerSenders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerRegistrationInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerAlgorithm",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerAlgorithmResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:Job",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerManagerFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:AuxiliaryWebViewCreationRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:AuxiliaryWebViewCreationResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:IFrameLoadInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:IFrameLoadInfoWithData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:WorkerGlobalScopeInit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:WorkerScriptLoadOrigin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:IFrameSizeMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ScriptToConstellationMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:TargetSnapshotParams",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "function:components/shared/constellation/from_script_message.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "function:components/shared/constellation/from_script_message.rs:new_for_new_unrelated_webview",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "function:components/shared/constellation/from_script_message.rs:create_job",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "function:components/shared/constellation/from_script_message.rs:eq",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ScriptToConstellationChan",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:LoadData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ScopeThings",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:DOMMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:SWManagerSenders",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerRegistrationInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerAlgorithm",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerAlgorithmResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:Job",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ServiceWorkerManagerFactory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:AuxiliaryWebViewCreationRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:AuxiliaryWebViewCreationResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:IFrameLoadInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:IFrameLoadInfoWithData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:WorkerGlobalScopeInit",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:WorkerScriptLoadOrigin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:IFrameSizeMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:ScriptToConstellationMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "class:components/shared/constellation/from_script_message.rs:TargetSnapshotParams",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "function:components/shared/constellation/from_script_message.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "function:components/shared/constellation/from_script_message.rs:new_for_new_unrelated_webview",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "function:components/shared/constellation/from_script_message.rs:create_job",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/from_script_message.rs",
+      "target": "function:components/shared/constellation/from_script_message.rs:eq",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:EmbedderToConstellationMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:PortMessageTask",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:PortTransferInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:MessagePortMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:ScrollStateUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:EmbedderToConstellationMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:PortMessageTask",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:PortTransferInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:MessagePortMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "class:components/shared/constellation/lib.rs:ScrollStateUpdate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "file:components/shared/constellation/from_script_message.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/constellation/lib.rs",
+      "target": "file:components/shared/constellation/structured_data/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/mod.rs",
+      "target": "class:components/shared/constellation/structured_data/mod.rs:StructuredSerializedData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/mod.rs",
+      "target": "function:components/shared/constellation/structured_data/mod.rs:is_empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/mod.rs",
+      "target": "function:components/shared/constellation/structured_data/mod.rs:clone_all_of_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/mod.rs",
+      "target": "function:components/shared/constellation/structured_data/mod.rs:clone_for_broadcast",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/mod.rs",
+      "target": "class:components/shared/constellation/structured_data/mod.rs:StructuredSerializedData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/mod.rs",
+      "target": "function:components/shared/constellation/structured_data/mod.rs:clone_for_broadcast",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/mod.rs",
+      "target": "file:components/shared/constellation/structured_data/serializable.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/shared/constellation/structured_data/mod.rs",
+      "target": "file:components/shared/constellation/structured_data/transferable.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}

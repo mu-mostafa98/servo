@@ -1,0 +1,703 @@
+{
+  "nodes": [
+    {
+      "id": "file:ports/servoshell/desktop/tracing.rs",
+      "type": "file",
+      "name": "tracing.rs",
+      "filePath": "ports/servoshell/desktop/tracing.rs",
+      "summary": "Logging integration for servoshell on desktop platforms, providing a log target adapter that routes tracing events through the existing logging system.",
+      "tags": ["logging", "utility", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/desktop/tracing.rs:LogTarget",
+      "type": "class",
+      "name": "LogTarget",
+      "filePath": "ports/servoshell/desktop/tracing.rs",
+      "lineRange": [28, 30],
+      "summary": "Tracing subscriber log target that converts tracing events into log records via the standard logging infrastructure.",
+      "tags": ["logging", "tracing"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/desktop/webxr.rs",
+      "type": "file",
+      "name": "webxr.rs",
+      "filePath": "ports/servoshell/desktop/webxr.rs",
+      "summary": "WebXR discovery and integration for desktop platforms, providing headless mock and OpenXR/GLWindow discovery registration.",
+      "tags": ["webxr", "virtual-reality", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/desktop/webxr.rs:XrDiscoveryWebXrRegistry",
+      "type": "class",
+      "name": "XrDiscoveryWebXrRegistry",
+      "filePath": "ports/servoshell/desktop/webxr.rs",
+      "lineRange": [24, 26],
+      "summary": "WebXR discovery registry that manages XR device discovery, supporting both OpenXR and GLWindow backends.",
+      "tags": ["webxr", "discovery", "registry"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/desktop/webxr.rs:new_boxed",
+      "type": "function",
+      "name": "new_boxed",
+      "filePath": "ports/servoshell/desktop/webxr.rs",
+      "lineRange": [29, 58],
+      "summary": "Creates a boxed XrDiscoveryWebXrRegistry instance, setting up OpenXR and GLWindow discovery backends.",
+      "tags": ["webxr", "factory"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/desktop/webxr.rs:register",
+      "type": "function",
+      "name": "register",
+      "filePath": "ports/servoshell/desktop/webxr.rs",
+      "lineRange": [75, 89],
+      "summary": "Registers XR discovery implementations with the WebXR registry, including headless mock support for testing.",
+      "tags": ["webxr", "registration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/egl/android/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "summary": "Android platform JNI bridge for servoshell, providing native methods for lifecycle management, input handling, and host callbacks via Java Native Interface.",
+      "tags": ["android", "jni", "platform-bridge", "rust"],
+      "complexity": "complex",
+      "languageNotes": "Uses JNI to expose Rust functions to Java/Kotlin code; each Java_org_servo_servoview_JNIServo_* function maps to a native method called from the Android ServoView."
+    },
+    {
+      "id": "class:ports/servoshell/egl/android/mod.rs:HostCallbacks",
+      "type": "class",
+      "name": "HostCallbacks",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "lineRange": [57, 59],
+      "summary": "Android host callback implementation that forwards browser events (alerts, title changes, history, IME, media session) from Rust to the Java layer via JNI.",
+      "tags": ["android", "jni", "callbacks", "host"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/egl/android/mod.rs:WakeupCallback",
+      "type": "class",
+      "name": "WakeupCallback",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "lineRange": [634, 636],
+      "summary": "Android event loop waker that triggers the Java event loop by calling the wakeup method on the callback object via JNI.",
+      "tags": ["android", "event-loop", "jni"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:android_main",
+      "type": "function",
+      "name": "android_main",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "lineRange": [66, 72],
+      "summary": "Android entry point called by native activity, initializes the Android logging system and launches the servo application.",
+      "tags": ["android", "entry-point"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_init",
+      "type": "function",
+      "name": "Java_org_servo_servoview_JNIServo_init",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "lineRange": [97, 215],
+      "summary": "Initializes the Servo engine on Android, parsing command line options, setting up logging, creating the application window, and configuring the rendering surface.",
+      "tags": ["android", "initialization", "jni"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/egl/android/mod.rs:get_options",
+      "type": "function",
+      "name": "get_options",
+      "filePath": "ports/servoshell/egl/android/mod.rs",
+      "lineRange": [913, 971],
+      "summary": "Extracts JNI initialization options including args, URL, viewport, density, and window/display handles from Java objects.",
+      "tags": ["android", "jni", "utility"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/egl/app.rs",
+      "type": "file",
+      "name": "app.rs",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "summary": "Core application implementation for EGL-based embedded platforms, managing the App state, platform windows, webview collection, and input event routing.",
+      "tags": ["app", "embedded", "egl", "rust"],
+      "complexity": "complex",
+      "languageNotes": "Uses an App struct with internal RefCell shared state and platform window abstraction for embedded/EGL-based rendering."
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:EmbeddedPlatformWindow",
+      "type": "class",
+      "name": "EmbeddedPlatformWindow",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "lineRange": [28, 49],
+      "summary": "Embedded platform window implementation providing EGL rendering context, viewport management, and host trait integration for UI state updates.",
+      "tags": ["embedded", "window", "egl", "platform"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:VsyncRefreshDriver",
+      "type": "class",
+      "name": "VsyncRefreshDriver",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "lineRange": [240, 246],
+      "summary": "VSync-based refresh driver that manages frame callbacks and coordinates rendering with the native vsync system.",
+      "tags": ["vsync", "rendering", "refresh"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:AppInitOptions",
+      "type": "class",
+      "name": "AppInitOptions",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "lineRange": [285, 294],
+      "summary": "Configuration struct for initializing the embedded application, including host callbacks, event loop waker, initial URL, and preferences.",
+      "tags": ["configuration", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/egl/app.rs:App",
+      "type": "class",
+      "name": "App",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "lineRange": [296, 303],
+      "summary": "Main application controller for EGL-based platforms, managing servo engine state, platform windows, and input event routing (touch, mouse, keyboard, pinch zoom).",
+      "tags": ["app", "controller", "embedded", "input"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:new",
+      "type": "function",
+      "name": "App::new",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "lineRange": [308, 338],
+      "summary": "Constructs the App with servo engine, preferences, event loop waker, and initializes a default window.",
+      "tags": ["app", "initialization"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/egl/app.rs:add_platform_window",
+      "type": "function",
+      "name": "add_platform_window",
+      "filePath": "ports/servoshell/egl/app.rs",
+      "lineRange": [340, 376],
+      "summary": "Creates and attaches a new platform window with the given display handle, window handle, viewport, and scale factor.",
+      "tags": ["window", "platform", "embedded"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/egl/host_trait.rs",
+      "type": "file",
+      "name": "host_trait.rs",
+      "filePath": "ports/servoshell/egl/host_trait.rs",
+      "summary": "Defines the HostTrait interface that embedded platforms must implement to handle browser lifecycle events such as alerts, navigation, IME, and media session updates.",
+      "tags": ["trait", "interface", "host", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/egl/host_trait.rs:HostTrait",
+      "type": "class",
+      "name": "HostTrait",
+      "filePath": "ports/servoshell/egl/host_trait.rs",
+      "lineRange": [8, 45],
+      "summary": "Trait defining the host interface for embedded platforms, with methods for alerts, navigation state, title/URL changes, IME control, media session events, and error handling.",
+      "tags": ["trait", "interface", "host", "embedded"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/egl/log.rs",
+      "type": "file",
+      "name": "log.rs",
+      "filePath": "ports/servoshell/egl/log.rs",
+      "summary": "Stdout and stderr redirection to the Android logcat system for Rust logging on EGL-based platforms.",
+      "tags": ["logging", "android", "utility", "rust"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:ports/servoshell/egl/log.rs:LogRedirectError",
+      "type": "class",
+      "name": "LogRedirectError",
+      "filePath": "ports/servoshell/egl/log.rs",
+      "lineRange": [14, 17],
+      "summary": "Error type for stdout/stderr redirection failures, with variants for pipe creation and redirection errors.",
+      "tags": ["logging", "error-handling"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/egl/log.rs:redirect_stdout_and_stderr",
+      "type": "function",
+      "name": "redirect_stdout_and_stderr",
+      "filePath": "ports/servoshell/egl/log.rs",
+      "lineRange": [20, 104],
+      "summary": "Redirects stdout and stderr to Android logcat by creating pipes, spawning a reader thread, and forwarding output to the logging system.",
+      "tags": ["logging", "android", "redirection"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:ports/servoshell/egl/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "ports/servoshell/egl/mod.rs",
+      "summary": "Module root for the EGL platform layer, re-exporting the log module and OHOS-specific implementation.",
+      "tags": ["module", "barrel", "egl", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/egl/ohos/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "summary": "OpenHarmony (OHOS) platform implementation for servoshell, providing XComponent lifecycle management, touch/key event dispatch, IME integration, and Android-compatible JNI-style bindings.",
+      "tags": ["ohos", "openharmony", "platform", "jni", "rust"],
+      "complexity": "complex",
+      "languageNotes": "Uses C-compatible FFI callbacks (extern C) for XComponent lifecycle and event handling with a ServoAction enum-based message passing pattern."
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:InitOpts",
+      "type": "class",
+      "name": "InitOpts",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "lineRange": [292, 297],
+      "summary": "OHOS initialization options containing the initial URL, resource directory, and command line arguments.",
+      "tags": ["ohos", "configuration"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:ServoAction",
+      "type": "class",
+      "name": "ServoAction",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "lineRange": [331, 356],
+      "summary": "Enum representing actions that can be dispatched to the Servo engine on OHOS, including WakeUp, LoadUrl, touch events, key events, IME operations, and window management.",
+      "tags": ["ohos", "actions", "enum"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/mod.rs:HostCallbacks",
+      "type": "class",
+      "name": "HostCallbacks",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "lineRange": [1052, 1054],
+      "summary": "OHOS host callbacks implementing HostTrait, handling alerts, navigation state, IME show/hide, and media session events through the OHOS IME proxy.",
+      "tags": ["ohos", "callbacks", "host"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:init_app",
+      "type": "function",
+      "name": "init_app",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "lineRange": [195, 288],
+      "summary": "Initializes the Servo engine on OHOS, setting up the application state, window handle, and dispatching the initial load.",
+      "tags": ["ohos", "initialization"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:do_action",
+      "type": "function",
+      "name": "do_action",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "lineRange": [418, 524],
+      "summary": "Dispatches a ServoAction to the OHOS servo engine, handling wakeup, navigation, touch events, key events, IME operations, and window management.",
+      "tags": ["ohos", "dispatch", "action"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_surface_created_cb",
+      "type": "function",
+      "name": "on_surface_created_cb",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "lineRange": [574, 602],
+      "summary": "OHOS XComponent surface creation callback that initializes a platform window when the native surface is available.",
+      "tags": ["ohos", "xcomponent", "callback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:on_dispatch_touch_event_cb",
+      "type": "function",
+      "name": "on_dispatch_touch_event_cb",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "lineRange": [681, 712],
+      "summary": "OHOS touch event callback that parses touch input data and dispatches it to the servo engine.",
+      "tags": ["ohos", "touch", "callback"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:ports/servoshell/egl/ohos/mod.rs:show_alert",
+      "type": "function",
+      "name": "show_alert",
+      "filePath": "ports/servoshell/egl/ohos/mod.rs",
+      "lineRange": [1112, 1133],
+      "summary": "OHOS host callback that displays a JavaScript alert dialog using a platform-specific mechanism.",
+      "tags": ["ohos", "alert", "dialog"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:ports/servoshell/egl/ohos/resources.rs",
+      "type": "file",
+      "name": "resources.rs",
+      "filePath": "ports/servoshell/egl/ohos/resources.rs",
+      "summary": "OHOS resource reader implementation providing sandbox-aware file access for bundled resources on OpenHarmony.",
+      "tags": ["ohos", "resources", "filesystem", "rust"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:ports/servoshell/egl/ohos/resources.rs:ResourceReaderImpl",
+      "type": "class",
+      "name": "ResourceReaderImpl",
+      "filePath": "ports/servoshell/egl/ohos/resources.rs",
+      "lineRange": [10, 12],
+      "summary": "OHOS resource reader that reads bundled resources from a configured resource directory with sandbox-aware file access.",
+      "tags": ["ohos", "resources", "filesystem"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:ports/servoshell/desktop/tracing.rs",
+      "target": "class:ports/servoshell/desktop/tracing.rs:LogTarget",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/desktop/tracing.rs",
+      "target": "class:ports/servoshell/desktop/tracing.rs:LogTarget",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "class:ports/servoshell/desktop/webxr.rs:XrDiscoveryWebXrRegistry",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "class:ports/servoshell/desktop/webxr.rs:XrDiscoveryWebXrRegistry",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "function:ports/servoshell/desktop/webxr.rs:new_boxed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "function:ports/servoshell/desktop/webxr.rs:new_boxed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/desktop/webxr.rs",
+      "target": "function:ports/servoshell/desktop/webxr.rs:register",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "file:ports/servoshell/egl/app.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "file:ports/servoshell/egl/host_trait.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "class:ports/servoshell/egl/android/mod.rs:HostCallbacks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "class:ports/servoshell/egl/android/mod.rs:WakeupCallback",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "class:ports/servoshell/egl/android/mod.rs:WakeupCallback",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:android_main",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:android_main",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_init",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:Java_org_servo_servoview_JNIServo_init",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/android/mod.rs",
+      "target": "function:ports/servoshell/egl/android/mod.rs:get_options",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:EmbeddedPlatformWindow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:EmbeddedPlatformWindow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:VsyncRefreshDriver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:VsyncRefreshDriver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:AppInitOptions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:AppInitOptions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:App",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "class:ports/servoshell/egl/app.rs:App",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:add_platform_window",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/app.rs",
+      "target": "function:ports/servoshell/egl/app.rs:add_platform_window",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/host_trait.rs",
+      "target": "class:ports/servoshell/egl/host_trait.rs:HostTrait",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/host_trait.rs",
+      "target": "class:ports/servoshell/egl/host_trait.rs:HostTrait",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/log.rs",
+      "target": "class:ports/servoshell/egl/log.rs:LogRedirectError",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/log.rs",
+      "target": "class:ports/servoshell/egl/log.rs:LogRedirectError",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/log.rs",
+      "target": "function:ports/servoshell/egl/log.rs:redirect_stdout_and_stderr",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/log.rs",
+      "target": "function:ports/servoshell/egl/log.rs:redirect_stdout_and_stderr",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/mod.rs",
+      "target": "file:ports/servoshell/egl/log.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/mod.rs",
+      "target": "file:ports/servoshell/egl/ohos/mod.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:InitOpts",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:InitOpts",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:ServoAction",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:ServoAction",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "class:ports/servoshell/egl/ohos/mod.rs:HostCallbacks",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:init_app",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:do_action",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_surface_created_cb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:on_dispatch_touch_event_cb",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/mod.rs",
+      "target": "function:ports/servoshell/egl/ohos/mod.rs:show_alert",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/resources.rs",
+      "target": "class:ports/servoshell/egl/ohos/resources.rs:ResourceReaderImpl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:ports/servoshell/egl/ohos/resources.rs",
+      "target": "class:ports/servoshell/egl/ohos/resources.rs:ResourceReaderImpl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

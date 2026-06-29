@@ -1,0 +1,808 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/script/dom/visualviewport.rs",
+      "type": "file",
+      "name": "visualviewport.rs",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "summary": "Implements the VisualViewport Web API providing layout viewport dimensions, scroll offsets, and zoom scale with pinch-zoom integration and event dispatching.",
+      "tags": [
+        "dom",
+        "viewport",
+        "visual-viewport",
+        "layout",
+        "events"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        54,
+        65
+      ],
+      "summary": "Initializes VisualViewport with window reference, viewport rectangle, and initial scale.",
+      "tags": [
+        "constructor",
+        "init",
+        "dom"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:new_from_layout_viewport",
+      "type": "function",
+      "name": "new_from_layout_viewport",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        69,
+        83
+      ],
+      "summary": "Constructs VisualViewport from layout-level viewport dimensions.",
+      "tags": [
+        "constructor",
+        "layout",
+        "dom"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:update_scale",
+      "type": "function",
+      "name": "update_scale",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        88,
+        90
+      ],
+      "summary": "Updates the visual viewport scale factor.",
+      "tags": [
+        "setter",
+        "scale",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:check_for_update",
+      "type": "function",
+      "name": "check_for_update",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        92,
+        105
+      ],
+      "summary": "Compares old and new viewport state to determine if an event should be dispatched.",
+      "tags": [
+        "internal",
+        "update",
+        "event"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:update_from_pinch_zoom_infos",
+      "type": "function",
+      "name": "update_from_pinch_zoom_infos",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        108,
+        116
+      ],
+      "summary": "Updates viewport state from pinch-zoom gesture data.",
+      "tags": [
+        "handler",
+        "zoom",
+        "event"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:handle_scroll_event",
+      "type": "function",
+      "name": "handle_scroll_event",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        122,
+        130
+      ],
+      "summary": "Handles scroll events by queuing a VisualViewport resize/scroll event on the window.",
+      "tags": [
+        "handler",
+        "scroll",
+        "event"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:OffsetLeft",
+      "type": "function",
+      "name": "OffsetLeft",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        135,
+        144
+      ],
+      "summary": "Returns the left offset of the visual viewport relative to the layout viewport.",
+      "tags": [
+        "getter",
+        "layout",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:OffsetTop",
+      "type": "function",
+      "name": "OffsetTop",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        147,
+        156
+      ],
+      "summary": "Returns the top offset of the visual viewport relative to the layout viewport.",
+      "tags": [
+        "getter",
+        "layout",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:PageLeft",
+      "type": "function",
+      "name": "PageLeft",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        159,
+        169
+      ],
+      "summary": "Returns the page X scroll offset from the visual viewport.",
+      "tags": [
+        "getter",
+        "scroll",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:PageTop",
+      "type": "function",
+      "name": "PageTop",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        172,
+        182
+      ],
+      "summary": "Returns the page Y scroll offset from the visual viewport.",
+      "tags": [
+        "getter",
+        "scroll",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:Width",
+      "type": "function",
+      "name": "Width",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        185,
+        195
+      ],
+      "summary": "Returns the visual viewport width from layout data.",
+      "tags": [
+        "getter",
+        "layout",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:Height",
+      "type": "function",
+      "name": "Height",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        198,
+        208
+      ],
+      "summary": "Returns the visual viewport height from layout data.",
+      "tags": [
+        "getter",
+        "layout",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/visualviewport.rs:Scale",
+      "type": "function",
+      "name": "Scale",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        211,
+        222
+      ],
+      "summary": "Returns the current visual viewport zoom scale.",
+      "tags": [
+        "getter",
+        "scale",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/visualviewport.rs:VisualViewport",
+      "type": "class",
+      "name": "VisualViewport",
+      "filePath": "components/script/dom/visualviewport.rs",
+      "lineRange": [
+        26,
+        40
+      ],
+      "summary": "DOM VisualViewport interface providing layout viewport state, scroll offsets, and zoom tracking with event dispatch.",
+      "tags": [
+        "dom",
+        "viewport",
+        "web-api"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/script/dom/wakelock/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/script/dom/wakelock/mod.rs",
+      "summary": "Barrel module that re-exports WakeLock and WakeLockSentinel DOM types for the Screen Wake Lock API.",
+      "tags": [
+        "dom",
+        "wakelock",
+        "barrel",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/wakelock/wakelock.rs",
+      "type": "file",
+      "name": "wakelock.rs",
+      "filePath": "components/script/dom/wakelock/wakelock.rs",
+      "summary": "Implements the WakeLock Web API providing navigator.wakeLock.request() with IPC-based lock acquisition and permission handling.",
+      "tags": [
+        "dom",
+        "wakelock",
+        "web-api",
+        "screen"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/wakelock/wakelock.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/wakelock/wakelock.rs",
+      "lineRange": [
+        37,
+        42
+      ],
+      "summary": "Initializes a new WakeLock instance.",
+      "tags": [
+        "constructor",
+        "init",
+        "dom"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/wakelock/wakelock.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/wakelock/wakelock.rs",
+      "lineRange": [
+        44,
+        46
+      ],
+      "summary": "Constructs a WakeLock DOM object rooted to the global scope.",
+      "tags": [
+        "constructor",
+        "dom",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/wakelock/wakelock.rs:Request",
+      "type": "function",
+      "name": "Request",
+      "filePath": "components/script/dom/wakelock/wakelock.rs",
+      "lineRange": [
+        51,
+        95
+      ],
+      "summary": "Requests a wake lock of the given type via IPC, returning a promise resolved with a WakeLockSentinel.",
+      "tags": [
+        "web-api",
+        "wakelock",
+        "promise"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/wakelock/wakelock.rs:handle_response",
+      "type": "function",
+      "name": "handle_response",
+      "filePath": "components/script/dom/wakelock/wakelock.rs",
+      "lineRange": [
+        100,
+        122
+      ],
+      "summary": "Handles the IPC response from the wake lock request, resolving or rejecting the JS promise.",
+      "tags": [
+        "handler",
+        "promise",
+        "ipc"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/script/dom/wakelock/wakelock.rs:WakeLock",
+      "type": "class",
+      "name": "WakeLock",
+      "filePath": "components/script/dom/wakelock/wakelock.rs",
+      "lineRange": [
+        31,
+        34
+      ],
+      "summary": "DOM WakeLock interface providing request() for acquiring screen wake locks.",
+      "tags": [
+        "dom",
+        "wakelock",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/wakelock/wakelocksentinel.rs",
+      "type": "file",
+      "name": "wakelocksentinel.rs",
+      "filePath": "components/script/dom/wakelock/wakelocksentinel.rs",
+      "summary": "Implements the WakeLockSentinel Web API providing a handle for an acquired wake lock with release tracking and type inspection.",
+      "tags": [
+        "dom",
+        "wakelock",
+        "web-api",
+        "sentinel"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/wakelock/wakelocksentinel.rs:new_inherited",
+      "type": "function",
+      "name": "new_inherited",
+      "filePath": "components/script/dom/wakelock/wakelocksentinel.rs",
+      "lineRange": [
+        26,
+        32
+      ],
+      "summary": "Initializes a new WakeLockSentinel with the given lock type.",
+      "tags": [
+        "constructor",
+        "init",
+        "dom"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/wakelock/wakelocksentinel.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/wakelock/wakelocksentinel.rs",
+      "lineRange": [
+        34,
+        40
+      ],
+      "summary": "Constructs a WakeLockSentinel DOM object.",
+      "tags": [
+        "constructor",
+        "dom",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/wakelock/wakelocksentinel.rs:WakeLockSentinel",
+      "type": "class",
+      "name": "WakeLockSentinel",
+      "filePath": "components/script/dom/wakelock/wakelocksentinel.rs",
+      "lineRange": [
+        19,
+        23
+      ],
+      "summary": "DOM WakeLockSentinel interface providing access to the wake lock type and release state.",
+      "tags": [
+        "dom",
+        "wakelock",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/script/dom/webcrypto/crypto.rs",
+      "type": "file",
+      "name": "crypto.rs",
+      "filePath": "components/script/dom/webcrypto/crypto.rs",
+      "summary": "Implements the Crypto Web API providing SubtleCrypto access, cryptographically secure random number generation via getRandomValues, and randomUUID generation.",
+      "tags": [
+        "dom",
+        "webcrypto",
+        "crypto",
+        "random",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webcrypto/crypto.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/script/dom/webcrypto/crypto.rs",
+      "lineRange": [
+        39,
+        41
+      ],
+      "summary": "Constructs a Crypto DOM object.",
+      "tags": [
+        "constructor",
+        "dom",
+        "web-api"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/script/dom/webcrypto/crypto.rs:GetRandomValues",
+      "type": "function",
+      "name": "GetRandomValues",
+      "filePath": "components/script/dom/webcrypto/crypto.rs",
+      "lineRange": [
+        53,
+        82
+      ],
+      "summary": "Fills the provided typed array with cryptographically secure random values, throwing on non-integer types.",
+      "tags": [
+        "web-api",
+        "random",
+        "crypto",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/script/dom/webcrypto/crypto.rs:is_integer_buffer",
+      "type": "function",
+      "name": "is_integer_buffer",
+      "filePath": "components/script/dom/webcrypto/crypto.rs",
+      "lineRange": [
+        94,
+        107
+      ],
+      "summary": "Checks whether a typed array is an integer-based buffer type for getRandomValues validation.",
+      "tags": [
+        "utility",
+        "validation",
+        "type-check"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/script/dom/webcrypto/crypto.rs:Crypto",
+      "type": "class",
+      "name": "Crypto",
+      "filePath": "components/script/dom/webcrypto/crypto.rs",
+      "lineRange": [
+        26,
+        29
+      ],
+      "summary": "DOM Crypto interface providing SubtleCrypto access, getRandomValues, and randomUUID.",
+      "tags": [
+        "dom",
+        "crypto",
+        "web-api"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:new_from_layout_viewport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:update_scale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:check_for_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:update_from_pinch_zoom_infos",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:handle_scroll_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:OffsetLeft",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:OffsetTop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:PageLeft",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:PageTop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:Width",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:Height",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:Scale",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "class:components/script/dom/visualviewport.rs:VisualViewport",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "class:components/script/dom/visualviewport.rs:VisualViewport",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:new_from_layout_viewport",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:update_scale",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:update_from_pinch_zoom_infos",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/visualviewport.rs",
+      "target": "function:components/script/dom/visualviewport.rs:handle_scroll_event",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelock.rs",
+      "target": "function:components/script/dom/wakelock/wakelock.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelock.rs",
+      "target": "function:components/script/dom/wakelock/wakelock.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelock.rs",
+      "target": "function:components/script/dom/wakelock/wakelock.rs:Request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelock.rs",
+      "target": "function:components/script/dom/wakelock/wakelock.rs:handle_response",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelock.rs",
+      "target": "class:components/script/dom/wakelock/wakelock.rs:WakeLock",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelock.rs",
+      "target": "class:components/script/dom/wakelock/wakelock.rs:WakeLock",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelock.rs",
+      "target": "function:components/script/dom/wakelock/wakelock.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelock.rs",
+      "target": "function:components/script/dom/wakelock/wakelock.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelocksentinel.rs",
+      "target": "function:components/script/dom/wakelock/wakelocksentinel.rs:new_inherited",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelocksentinel.rs",
+      "target": "function:components/script/dom/wakelock/wakelocksentinel.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelocksentinel.rs",
+      "target": "class:components/script/dom/wakelock/wakelocksentinel.rs:WakeLockSentinel",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelocksentinel.rs",
+      "target": "class:components/script/dom/wakelock/wakelocksentinel.rs:WakeLockSentinel",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelocksentinel.rs",
+      "target": "function:components/script/dom/wakelock/wakelocksentinel.rs:new_inherited",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/wakelock/wakelocksentinel.rs",
+      "target": "function:components/script/dom/wakelock/wakelocksentinel.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webcrypto/crypto.rs",
+      "target": "function:components/script/dom/webcrypto/crypto.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webcrypto/crypto.rs",
+      "target": "function:components/script/dom/webcrypto/crypto.rs:GetRandomValues",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webcrypto/crypto.rs",
+      "target": "function:components/script/dom/webcrypto/crypto.rs:is_integer_buffer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webcrypto/crypto.rs",
+      "target": "class:components/script/dom/webcrypto/crypto.rs:Crypto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/script/dom/webcrypto/crypto.rs",
+      "target": "class:components/script/dom/webcrypto/crypto.rs:Crypto",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/webcrypto/crypto.rs",
+      "target": "function:components/script/dom/webcrypto/crypto.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/script/dom/wakelock/mod.rs",
+      "target": "file:components/script/dom/wakelock/wakelock.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/script/dom/wakelock/mod.rs",
+      "target": "file:components/script/dom/wakelock/wakelocksentinel.rs",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    }
+  ]
+}
