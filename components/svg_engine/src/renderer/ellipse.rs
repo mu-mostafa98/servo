@@ -5,7 +5,7 @@
 use webrender_api::{DisplayListBuilder, ClipChainId, SpatialId, units::LayoutPoint};
 
 use crate::shapes::{Ellipse, Rectangle};
-use crate::styles::*;
+use crate::style::*;
 use crate::renderer::Render;
 
 impl Render for Ellipse {

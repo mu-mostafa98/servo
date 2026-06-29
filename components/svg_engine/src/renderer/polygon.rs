@@ -8,7 +8,7 @@ use webrender_api::{
 };
 
 use crate::shapes::{Polygon, Polyline};
-use crate::styles::NodeStyle;
+use crate::style::NodeStyle;
 use crate::renderer::Render;
 
 impl Render for Polygon {

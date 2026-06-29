@@ -9,7 +9,7 @@ use webrender_api::{
 };
 
 use crate::shapes::{Path, Polyline};
-use crate::styles::NodeStyle;
+use crate::style::NodeStyle;
 use crate::renderer::Render;
 
 /// Tolerance for flattening bezier curves into line segments.

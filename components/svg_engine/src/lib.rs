@@ -3,8 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 mod shapes;
-mod styles;
-pub mod transform;
+pub mod style;
 pub mod render_tree;
 
 pub mod extract;

@@ -16,7 +16,7 @@ use webrender_api::{
 };
 
 use crate::render_tree::*;
-use crate::transform;
+use crate::style::transform;
 use crate::renderer::Render;
 
 /// Render an SVG render tree into the WebRender display list.
@@ -96,7 +96,7 @@ fn render_node(
     let mut pushed_count: u32 = 0;
 
     // Apply each transform operation in order.
-    for op in &node.transforms {
+    for op in &node.style.transform {
         let result = transform::apply_transform_op(op, cur_origin, cur_spatial_id, wr);
         cur_origin = result.child_origin;
         cur_spatial_id = result.child_spatial_id;

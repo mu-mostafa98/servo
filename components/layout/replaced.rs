@@ -37,7 +37,7 @@ use web_atoms::ns;
 use html5ever::LocalName;
 use svg_engine::extract::{extract_node_style, extract_tag, extract_node_style_from_css};
 use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo, extract_viewbox};
-use svg_engine::transform::extract_transforms;
+use svg_engine::style::transform::extract_transforms;
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
@@ -386,7 +386,8 @@ impl ReplacedContents {
                 .map(extract_node_style_from_css)
                 .unwrap_or_default(),
         };
-        let transforms = extract_transforms(&get_attr);
+        let mut style = style;
+        style.transform = extract_transforms(&get_attr);
 
         let children = node.dom_children()
             .filter_map(|child| Self::build_svg_render_node(child, context))
@@ -397,7 +398,6 @@ impl ReplacedContents {
                 .map(|s| s.to_string()),
             tag,
             style,
-            transforms,
             children,
         })
     }

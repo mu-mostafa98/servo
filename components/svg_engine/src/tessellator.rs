@@ -24,7 +24,7 @@ use webrender_api::{
     units::{LayoutPoint, LayoutRect, LayoutSize},
 };
 
-use crate::styles::FillRule;
+use crate::style::FillRule;
 
 /// Vertex constructor that extracts only the position from `FillVertex`.
 struct PosCtor;

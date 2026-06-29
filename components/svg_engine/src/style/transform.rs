@@ -137,11 +137,17 @@ pub(crate) fn to_layout_transform(xform: &Transform2D<f32, (), ()>) -> LayoutTra
 ///
 /// Supports: `translate(tx,ty)`, `scale(s)`, `scale(sx,sy)`, `rotate(a)`, `rotate(a,cx,cy)`.
 /// Multiple functions can be chained: `"translate(30,20) rotate(45)"` → `[Translate, Rotate]`.
+///
+/// This function is the implementation behind [`FromAttributes for Vec<TransformOp>`].
 pub fn extract_transforms(get_attr: &dyn Fn(&str) -> Option<String>) -> Vec<TransformOp> {
-    let attr = match get_attr("transform") {
-        Some(s) => s,
-        None => return Vec::new(),
-    };
+    match get_attr("transform") {
+        Some(s) => parse_transform_str(&s),
+        None => Vec::new(),
+    }
+}
+
+/// Parse a raw SVG `transform` attribute string into transform operations.
+fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
     let mut remaining = attr.trim().to_string();
     let mut ops = Vec::new();
 
@@ -189,4 +195,14 @@ pub fn extract_transforms(get_attr: &dyn Fn(&str) -> Option<String>) -> Vec<Tran
     }
 
     ops
+}
+
+// ======================= FromAttributes impl =======================
+
+use crate::shapes::FromAttributes;
+
+impl FromAttributes for Vec<TransformOp> {
+    fn from_attributes(_name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Self> {
+        Some(extract_transforms(get_attr))
+    }
 }

@@ -8,7 +8,7 @@ use style::values::generics::svg::SVGLength;
 use webrender_api::ColorF;
 
 use crate::extract::resolve_svg_paint;
-use crate::styles::FromComputedValues;
+use crate::style::FromComputedValues;
 
 /// SVG stroke properties.
 #[derive(Debug, Clone)]

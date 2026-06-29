@@ -17,7 +17,7 @@ use webrender_api::ColorF;
 
 use crate::render_tree::{Container, SvgTag};
 use crate::shapes::{FromAttributes, Shape};
-use crate::styles::*;
+use crate::style::*;
 
 // ======================= Tag Dispatch =======================
 
@@ -40,8 +40,14 @@ impl FromComputedValues for NodeStyle {
 
     fn from_computed_values(values: &ComputedValues) -> Option<Self> {
         Some(NodeStyle {
+            opacity: 1.0,
+            visibility: Visibility::Visible,
+            display: Display::Inline,
+            transform: Vec::new(),
             fill: FillParams::from_computed_values(values),
             stroke: StrokeParams::from_computed_values(values),
+            render_hints: None,
+            effects: None,
         })
     }
 }
@@ -117,6 +123,10 @@ impl FromCssAttrs for NodeStyle {
         }
 
         Some(NodeStyle {
+            opacity: 1.0,
+            visibility: Visibility::Visible,
+            display: Display::Inline,
+            transform: Vec::new(),
             fill: fill_color.map(|c| FillParams {
                 color: Some(c),
                 opacity: fill_opacity,
@@ -136,6 +146,8 @@ impl FromCssAttrs for NodeStyle {
                 dash_array: None,
                 dash_offset: 0.0,
             }),
+            render_hints: None,
+            effects: None,
         })
     }
 }

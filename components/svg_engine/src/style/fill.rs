@@ -7,7 +7,7 @@ use style::values::computed::svg::SVGOpacity;
 use webrender_api::ColorF;
 
 use crate::extract::resolve_svg_paint;
-use crate::styles::FromComputedValues;
+use crate::style::FromComputedValues;
 
 /// SVG fill properties.
 #[derive(Debug, Clone, Copy)]

@@ -23,7 +23,7 @@ use webrender_api::{
 };
 
 use crate::shapes::*;
-use crate::styles::NodeStyle;
+use crate::style::NodeStyle;
 
 // ----------------------- Render Trait -----------------------
 

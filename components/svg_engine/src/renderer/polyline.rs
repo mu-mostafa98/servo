@@ -9,7 +9,7 @@ use webrender_api::{
 };
 
 use crate::shapes::{Line, Polyline};
-use crate::styles::*;
+use crate::style::*;
 use crate::tessellator;
 use crate::renderer::Render;
 
@@ -55,7 +55,13 @@ impl Render for Polyline {
             if stroke.color.is_some() && stroke.width > 0.0 {
                 // Build the stroke-only style once, outside the loop.
                 let stroke_style = NodeStyle {
+                    opacity: 1.0,
+                    visibility: Visibility::Visible,
+                    display: Display::Inline,
+                    transform: Vec::new(),
                     fill: None,
+                    render_hints: None,
+                    effects: None,
                     stroke: Some(StrokeParams {
                         color: stroke.color,
                         opacity: stroke.opacity,

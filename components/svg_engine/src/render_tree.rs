@@ -3,9 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::shapes::Shape;
-use crate::styles::NodeStyle;
-use crate::transform::TransformOp;
-
+use crate::style::NodeStyle;
 #[derive(Debug)]
 pub struct SvgRenderTree {
     pub root: SvgRenderNode,
@@ -17,7 +15,6 @@ pub struct SvgRenderNode {
     pub id: Option<String>,
     pub tag: SvgTag,
     pub style: NodeStyle,
-    pub transforms: Vec<TransformOp>,
     pub children: Vec<SvgRenderNode>,
 }
 

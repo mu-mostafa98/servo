@@ -10,7 +10,7 @@ use webrender_api::{
 };
 
 use crate::shapes::Line;
-use crate::styles::*;
+use crate::style::*;
 use crate::renderer::{Render, make_common_props};
 
 impl Render for Line {
