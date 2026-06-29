@@ -231,6 +231,27 @@ pub fn extract_scale(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<(f32, 
     }
 }
 
+/// Parse `rotate(a)` or `rotate(a, cx, cy)` from the `transform` attribute.
+/// Returns `(angle_degrees, cx, cy)` where cx/cy are 0 if not specified.
+pub fn extract_rotate(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<(f32, f32, f32)> {
+    let attr = get_attr("transform")?;
+    let attr = attr.trim();
+    if !attr.starts_with("rotate(") || !attr.ends_with(')') {
+        return None;
+    }
+    let args = &attr[7..attr.len() - 1];  // remove "rotate(" and ")"
+    let values: Vec<f32> = args
+        .split(|c: char| c == ',' || c.is_whitespace())
+        .filter(|s| !s.is_empty())
+        .filter_map(|s| s.trim().parse::<f32>().ok())
+        .collect();
+    match values.len() {
+        1 => Some((values[0], 0.0, 0.0)),        // rotate(a)
+        3 => Some((values[0], values[1], values[2])),  // rotate(a, cx, cy)
+        _ => None,
+    }
+}
+
 fn parse_path(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<BezPath> {
     let value = get_attr("d")?;
     BezPath::from_svg(&value).ok()

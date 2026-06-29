@@ -35,7 +35,7 @@ use webrender_api::ImageKey;
 
 use web_atoms::ns;
 use html5ever::LocalName;
-use svg_engine::extract::{extract_node_style, extract_tag, extract_translate, extract_scale};
+use svg_engine::extract::{extract_node_style, extract_tag, extract_translate, extract_scale, extract_rotate};
 use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo};
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
@@ -362,6 +362,7 @@ impl ReplacedContents {
         let style = extract_node_style(&computed);
         let translate = extract_translate(&get_attr);
         let scale = extract_scale(&get_attr);
+        let rotate = extract_rotate(&get_attr);
 
         let children = node.dom_children()
             .filter_map(|child| Self::build_svg_render_node(child, context))
@@ -374,6 +375,7 @@ impl ReplacedContents {
             style,
             translate,
             scale,
+            rotate,
             children,
         })
     }

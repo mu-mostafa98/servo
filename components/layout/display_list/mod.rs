@@ -753,7 +753,8 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
             let spatial_id = self.spatial_id(state.spatial_id);
             let clip_chain_id = self.clip_chain_id(state.clip_id);
             let origin = rect.min;
-            render_svg_tree(svg_tree, &origin, spatial_id, clip_chain_id, self.wr());
+            let size = rect.size();
+            render_svg_tree(svg_tree, &origin, size, spatial_id, clip_chain_id, self.wr());
             return;
         }
 

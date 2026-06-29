@@ -18,6 +18,7 @@ pub struct SvgRenderNode {
     pub style: NodeStyle,
     pub translate: Option<(f32, f32)>,
     pub scale: Option<(f32, f32)>,
+    pub rotate: Option<(f32, f32, f32)>,  // (angle_deg, cx, cy)
     pub children: Vec<SvgRenderNode>,
 }
 
