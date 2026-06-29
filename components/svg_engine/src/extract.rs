@@ -272,3 +272,102 @@ pub fn extract_transforms(get_attr: &dyn Fn(&str) -> Option<String>) -> Vec<Tran
     ops
 }
 
+/// Parse a raw CSS `style` attribute string into a NodeStyle.
+///
+/// Used as a fallback when `ComputedValues` aren't available
+/// (e.g. for SVG child elements inside `<g>`).
+/// Supports: `fill`, `stroke`, `stroke-width`, `fill-opacity`,
+/// `stroke-opacity`, `fill-rule`, `opacity`.
+pub fn extract_node_style_from_css(style_str: &str) -> NodeStyle {
+    use crate::styles::*;
+    use webrender_api::ColorF;
+
+    let mut fill_color: Option<ColorF> = None;
+    let mut fill_opacity: f32 = 1.0;
+    let mut fill_rule = FillRule::NonZero;
+    let mut stroke_color: Option<ColorF> = None;
+    let mut stroke_opacity: f32 = 1.0;
+    let mut stroke_width: f32 = 1.0;
+    let mut has_stroke_width = false;
+
+    for decl in style_str.split(';') {
+        let decl = decl.trim();
+        if decl.is_empty() { continue; }
+        let parts: Vec<&str> = decl.splitn(2, ':').collect();
+        if parts.len() != 2 { continue; }
+        let prop = parts[0].trim();
+        let val = parts[1].trim();
+
+        match prop {
+            "fill" => { fill_color = parse_css_color(val); },
+            "fill-opacity" => {
+                if let Ok(v) = val.parse::<f32>() { fill_opacity = v.clamp(0.0, 1.0); }
+            },
+            "fill-rule" => {
+                fill_rule = if val == "evenodd" { FillRule::EvenOdd } else { FillRule::NonZero };
+            },
+            "stroke" => { stroke_color = parse_css_color(val); },
+            "stroke-width" => {
+                let v = val.trim_end_matches("px").trim();
+                if let Ok(w) = v.parse::<f32>() { stroke_width = w.max(0.0); has_stroke_width = true; }
+            },
+            "stroke-opacity" => {
+                if let Ok(v) = val.parse::<f32>() { stroke_opacity = v.clamp(0.0, 1.0); }
+            },
+            "opacity" => {
+                if let Ok(v) = val.parse::<f32>() { fill_opacity *= v; stroke_opacity *= v; }
+            },
+            _ => {},
+        }
+    }
+
+    NodeStyle {
+        fill: fill_color.map(|c| FillParams { color: Some(c), opacity: fill_opacity, fill_rule }),
+        stroke: stroke_color.map(|c| StrokeParams {
+            color: Some(c), opacity: stroke_opacity,
+            width: if has_stroke_width { stroke_width } else { 1.0 },
+            line_cap: LineCap::Butt, line_join: LineJoin::Miter,
+            miter_limit: 4.0, dash_array: None, dash_offset: 0.0,
+        }),
+    }
+}
+
+/// Parse a CSS color value (hex `#rrggbb` or named color).
+fn parse_css_color(val: &str) -> Option<ColorF> {
+    let val = val.trim();
+    if val == "none" || val == "transparent" { return None; }
+    if val.starts_with('#') {
+        let hex = &val[1..];
+        // #rgb → expand each digit
+        if hex.len() == 3 {
+            let r = u8::from_str_radix(&hex[0..1], 16).ok()? * 17;
+            let g = u8::from_str_radix(&hex[1..2], 16).ok()? * 17;
+            let b = u8::from_str_radix(&hex[2..3], 16).ok()? * 17;
+            return Some(ColorF::new(r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 1.0));
+        }
+        // #rrggbb
+        if hex.len() == 6 {
+            if let Ok(rgb) = u32::from_str_radix(hex, 16) {
+                return Some(ColorF::new(
+                    ((rgb >> 16) & 0xFF) as f32 / 255.0,
+                    ((rgb >> 8) & 0xFF) as f32 / 255.0,
+                    (rgb & 0xFF) as f32 / 255.0,
+                    1.0,
+                ));
+            }
+        }
+    }
+    match val {
+        "red" => Some(ColorF::new(1.0, 0.0, 0.0, 1.0)),
+        "green" => Some(ColorF::new(0.0, 0.502, 0.0, 1.0)),
+        "blue" => Some(ColorF::new(0.0, 0.0, 1.0, 1.0)),
+        "white" => Some(ColorF::new(1.0, 1.0, 1.0, 1.0)),
+        "black" => Some(ColorF::new(0.0, 0.0, 0.0, 1.0)),
+        "yellow" => Some(ColorF::new(1.0, 1.0, 0.0, 1.0)),
+        "orange" => Some(ColorF::new(1.0, 0.647, 0.0, 1.0)),
+        "purple" => Some(ColorF::new(0.502, 0.0, 0.502, 1.0)),
+        "gray" | "grey" => Some(ColorF::new(0.5, 0.5, 0.5, 1.0)),
+        _ => None,
+    }
+}
+

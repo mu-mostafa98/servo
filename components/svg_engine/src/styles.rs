@@ -21,6 +21,15 @@ pub struct NodeStyle {
     // pub effects: NodeEffects,
 }
 
+impl Default for NodeStyle {
+    fn default() -> Self {
+        NodeStyle {
+            fill: None,
+            stroke: None,
+        }
+    }
+}
+
 #[derive(Debug)]
 pub enum Visibility {
     Visible,

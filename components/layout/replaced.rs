@@ -353,13 +353,24 @@ impl ReplacedContents {
     ) -> Option<SvgRenderNode> {
         let element = node.as_element()?;
         let name = element.local_name().as_ref();
-        let computed = element.style(&context.style_context);
         let get_attr = |attr: &str| {
             element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
         };
 
         let tag = extract_tag(name, &get_attr)?;
-        let style = extract_node_style(&computed);
+
+        // SVG child elements often lack computed style data
+        // (e.g. <rect> inside <g>). Handle both cases.
+        let style = match element.style_data() {
+            Some(_) => {
+                let computed = element.style(&context.style_context);
+                extract_node_style(&computed)
+            },
+            None => get_attr("style")
+                .as_deref()
+                .map(svg_engine::extract::extract_node_style_from_css)
+                .unwrap_or_default(),
+        };
         let transforms = extract_transforms(&get_attr);
 
         let children = node.dom_children()
