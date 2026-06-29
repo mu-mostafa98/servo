@@ -31,12 +31,18 @@ fn render_node(
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
 ){
+    // Apply translate offset if present — simple coordinate shift, no reference frame.
+    let origin = match node.translate {
+        Some((tx, ty)) => LayoutPoint::new(svg_origin.x + tx, svg_origin.y + ty),
+        None => *svg_origin,
+    };
+
     if let SvgTag::Shape(shape) = &node.tag {
-        render_dispatch(shape, &node.style, svg_origin, spatial_id, clip_chain_id, wr);
+        render_dispatch(shape, &node.style, &origin, spatial_id, clip_chain_id, wr);
     }
 
     for child in &node.children {
-        render_node(child, svg_origin, spatial_id, clip_chain_id, wr);
+        render_node(child, &origin, spatial_id, clip_chain_id, wr);
     }
 }
 

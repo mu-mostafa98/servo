@@ -214,3 +214,25 @@ fn parse_path(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<BezPath> {
     let value = get_attr("d")?;
     BezPath::from_svg(&value).ok()
 }
+
+/// Parse a simple `translate(tx, ty)` from the `transform` attribute.
+/// Returns `(tx, ty)` offset.
+pub fn extract_translate(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<(f32, f32)> {
+    let attr = get_attr("transform")?;
+    let attr = attr.trim();
+    // Only supports: translate(10,20) or translate(10 20)
+    if !attr.starts_with("translate(") || !attr.ends_with(')') {
+        return None;
+    }
+    let args = &attr[10..attr.len() - 1];  // remove "translate(" and ")"
+    let values: Vec<f32> = args
+        .split(|c: char| c == ',' || c.is_whitespace())
+        .filter(|s| !s.is_empty())
+        .filter_map(|s| s.trim().parse::<f32>().ok())
+        .collect();
+    if values.len() == 2 {
+        Some((values[0], values[1]))
+    } else {
+        None
+    }
+}
