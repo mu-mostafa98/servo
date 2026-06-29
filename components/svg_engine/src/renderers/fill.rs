@@ -4,22 +4,22 @@
 
 //! Shared fill logic for SVG shapes.
 //!
-//! Tessellates a polygon (convex or concave) into triangles using
-//! lyon, then renders each triangle by mapping a unit rect through
-//! an affine transform via `push_reference_frame`.
+//! Tessellates a polygon into triangles using lyon, then each triangle
+//! is rendered via scanline rasterization: for each Y scanline, the
+//! horizontal span inside the triangle is computed and drawn with a
+//! `push_rect`.
 //!
-//! The transform maps `(0,0)→(1,1)` in unit space to the triangle
-//! `(v0, v1, v2)` so that `push_rect((0,0)→(1,1))` fills exactly
-//! the triangle area.
+//! This approach uses only `push_rect` which is known to work correctly
+//! in WebRender, avoiding `define_clip_image_mask` which requires a
+//! valid `ImageKey` to function as a polygon clip.
 
-use lyon::tessellation::{FillTessellator, FillOptions, FillVertex, FillVertexConstructor, VertexBuffers, BuffersBuilder};
 use lyon::math::Point as LyonPoint;
+use lyon::tessellation::{FillTessellator, FillOptions, FillVertex, FillVertexConstructor, VertexBuffers, BuffersBuilder};
 use lyon::path::polygon::Polygon;
 use webrender_api::{
     DisplayListBuilder, ClipChainId, SpatialId,
-    CommonItemProperties, PropertyBinding, ReferenceFrameKind,
-    SpaceAndClipInfo, TransformStyle,
-    units::{LayoutPoint, LayoutRect, LayoutSize, LayoutTransform},
+    CommonItemProperties, SpaceAndClipInfo,
+    units::{LayoutPoint, LayoutRect, LayoutSize},
 };
 
 use crate::styles::FillRule;
@@ -33,8 +33,7 @@ impl FillVertexConstructor<LyonPoint> for PosCtor {
     }
 }
 
-/// Fill an arbitrary polygon (convex or concave) using lyon tessellation.
-/// Each resulting triangle is rendered via an affine transform.
+/// Fill an arbitrary polygon using lyon tessellation + scanline rasterization.
 pub fn fill_polygon(
     points: &[LyonPoint],
     fill_rule: FillRule,
@@ -67,7 +66,7 @@ pub fn fill_polygon(
         return;
     }
 
-    // Render each triangle.
+    // Render each triangle using scanline rasterization.
     for tri in buffers.indices.chunks(3) {
         if tri.len() < 3 {
             continue;
@@ -76,19 +75,16 @@ pub fn fill_polygon(
         let v1 = buffers.vertices[tri[1] as usize];
         let v2 = buffers.vertices[tri[2] as usize];
 
-        render_triangle(v0, v1, v2, color, spatial_id, clip_chain_id, wr);
+        scanline_fill_triangle(v0, v1, v2, color, spatial_id, clip_chain_id, wr);
     }
 }
 
-/// Render a single triangle using an affine transform.
+/// Fill a single triangle using scanline rasterization.
 ///
-/// A unit rect `(0,0)→(1,1)` is transformed by a matrix that maps:
-///   - (0,0) → v0
-///   - (1,0) → v1
-///   - (0,1) → v2
-///
-/// The push_rect inside the transformed space fills exactly the triangle area.
-fn render_triangle(
+/// For each integer Y scanline from top to bottom, computes the
+/// horizontal span (left→right) that falls inside the triangle
+/// and draws it with `push_rect`.
+fn scanline_fill_triangle(
     v0: LyonPoint,
     v1: LyonPoint,
     v2: LyonPoint,
@@ -97,53 +93,65 @@ fn render_triangle(
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
 ) {
-    // Build the affine transform as a 4x4 matrix.
-    //
-    // WebRender applies:  parent = origin + transform * child
-    //
-    // We want:
-    //   (0,0) child → v0  →  origin = v0,  transform*(0,0) = (0,0)
-    //   (1,0) child → v1  →  transform*(1,0) = v1 - v0
-    //   (0,1) child → v2  →  transform*(0,1) = v2 - v0
-    //
-    // The 4x4 matrix layout (row-major in new()):
-    //   row 0: (col0.x, col1.x,  0, 0)
-    //   row 1: (col0.y, col1.y,  0, 0)
-    //   row 2: (     0,      0,  1, 0)
-    //   row 3: (     0,      0,  0, 1)
-    let col0x = v1.x - v0.x;
-    let col0y = v1.y - v0.y;
-    let col1x = v2.x - v0.x;
-    let col1y = v2.y - v0.y;
+    // Sort vertices by Y.
+    let (top, mid, bot) = sort_vertices_by_y(v0, v1, v2);
 
-    let transform = LayoutTransform::new(
-        col0x, col1x, 0.0, 0.0,
-        col0y, col1y, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0,
-    );
+    let top_y = top.y.ceil();
+    let bot_y = bot.y.floor();
+    if top_y > bot_y {
+        return;
+    }
 
-    let tri_spatial_id = wr.push_reference_frame(
-        LayoutPoint::new(v0.x, v0.y),
-        spatial_id,
-        TransformStyle::Flat,
-        PropertyBinding::Value(transform),
-        ReferenceFrameKind::Transform {
-            is_2d_scale_translation: false,
-            should_snap: false,
-            paired_with_perspective: false,
-        },
-    );
+    // Pre-compute edge vectors (non-vertical).
+    // Edge equations: x = start.x + (y - start.y) * (end.x - start.x) / (end.y - start.y)
+    let inv_dy_tm = if mid.y != top.y { 1.0 / (mid.y - top.y) } else { 0.0 };
+    let inv_dy_tb = if bot.y != top.y { 1.0 / (bot.y - top.y) } else { 0.0 };
+    let inv_dy_mb = if bot.y != mid.y { 1.0 / (bot.y - mid.y) } else { 0.0 };
 
-    // Push a unit rect in the transformed space — fills exactly the triangle.
-    let unit_rect = LayoutRect::from_origin_and_size(
-        LayoutPoint::new(0.0, 0.0),
-        LayoutSize::new(1.0, 1.0),
-    );
-    let common = CommonItemProperties::new(
-        unit_rect,
-        SpaceAndClipInfo { spatial_id: tri_spatial_id, clip_chain_id },
-    );
-    wr.push_rect(&common, unit_rect, color);
-    wr.pop_reference_frame();
+    let dx_tm = (mid.x - top.x) * inv_dy_tm;
+    let dx_tb = (bot.x - top.x) * inv_dy_tb;
+    let dx_mb = (bot.x - mid.x) * inv_dy_mb;
+
+    // Scanline rasterization: for each integer Y pixel row, compute the
+    // horizontal span of the triangle at the pixel center (y + 0.5).
+    // The center determines which edge pair to use (upper or lower half).
+    let y_start = top_y as i32;
+    let y_end = bot_y as i32;
+
+    for y in y_start..=y_end {
+        let yf = y as f32;
+        let center = yf + 0.5;
+
+        let (x_left, x_right) = if center < mid.y {
+            // Upper half: use top→mid and top→bot edges
+            let x_edge_a = top.x + dx_tm * (center - top.y);
+            let x_edge_b = top.x + dx_tb * (center - top.y);
+            (x_edge_a.min(x_edge_b), x_edge_a.max(x_edge_b))
+        } else {
+            // Lower half: use top→bot and mid→bot edges
+            let x_edge_a = top.x + dx_tb * (center - top.y);
+            let x_edge_b = mid.x + dx_mb * (center - mid.y);
+            (x_edge_a.min(x_edge_b), x_edge_a.max(x_edge_b))
+        };
+
+        let width = x_right - x_left;
+        if width > 0.0 {
+            let rect = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(x_left, yf),
+                LayoutSize::new(width, 1.0),
+            );
+            let common = CommonItemProperties::new(
+                rect,
+                SpaceAndClipInfo { spatial_id, clip_chain_id },
+            );
+            wr.push_rect(&common, rect, color);
+        }
+    }
+}
+
+/// Sort three points by their Y coordinate (ascending).
+fn sort_vertices_by_y(a: LyonPoint, b: LyonPoint, c: LyonPoint) -> (LyonPoint, LyonPoint, LyonPoint) {
+    let mut pts = [a, b, c];
+    pts.sort_by(|p, q| p.y.partial_cmp(&q.y).unwrap_or(std::cmp::Ordering::Equal));
+    (pts[0], pts[1], pts[2])
 }
