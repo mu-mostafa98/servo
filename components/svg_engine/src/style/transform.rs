@@ -17,7 +17,7 @@ use webrender_api::{
 };
 
 use crate::error::SvgResult;
-use crate::extract::{Extract, SvgExtractInput};
+use crate::extract::{Build, SvgBuildInput};
 
 // ------------------- Transform types ------------------
 
@@ -200,10 +200,10 @@ fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
     ops
 }
 
-// ======================= Extract impl =======================
+// ======================= Build impl =======================
 
-impl Extract for Vec<TransformOp> {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for Vec<TransformOp> {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         Ok(extract_transforms(&input.get_attr))
     }
 }

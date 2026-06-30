@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::error::SvgResult;
-use crate::extract::{Extract, SvgExtractInput};
+use crate::extract::{Build, SvgBuildInput};
 use crate::shapes::parse_length;
 
 /// SVG `<ellipse>` element.
@@ -15,8 +15,8 @@ pub struct Ellipse {
     pub ry: f32,
 }
 
-impl Extract for Ellipse {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for Ellipse {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         let rx = parse_length("rx", &input.get_attr)?;
         if rx < 0.0 {
             return Err(crate::error::SvgEngineError::ParseError(

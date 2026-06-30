@@ -5,7 +5,7 @@
 use kurbo::Point;
 
 use crate::error::SvgResult;
-use crate::extract::{Extract, SvgExtractInput};
+use crate::extract::{Build, SvgBuildInput};
 use crate::shapes::parse_points;
 
 /// SVG `<polygon>` element — a closed shape formed by connected line segments.
@@ -14,8 +14,8 @@ pub struct Polygon {
     pub points: Vec<Point>,
 }
 
-impl Extract for Polygon {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for Polygon {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         parse_points(&input.get_attr).map(|points| Polygon { points })
     }
 }

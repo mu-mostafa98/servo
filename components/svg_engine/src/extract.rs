@@ -2,25 +2,24 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! SVG attribute extraction — converts Servo style values and SVG markup
+//! SVG node construction — converts Servo style values and SVG markup
 //! into the SVG engine's native types.
 //!
-//! The central abstraction is the [`Extract`] trait — every SVG type that can
-//! be constructed from markup or computed style implements it. The caller
-//! passes a single [`SvgExtractInput`] bundle and receives a fully-constructed
-//! value.
+//! The central abstraction is the [`Build`] trait — a Factory Method that
+//! constructs SVG domain objects from a common input bundle. The caller
+//! passes a single [`SvgBuildInput`] and receives a fully-constructed value.
 //!
 //! # Architecture
 //!
 //! ```text
-//! SvgRenderNode::extract(input)
-//!   ├── SvgTag::extract(input)        → Container or Shape
-//!   │     └── Shape::extract(input)    → dispatches by element_name
-//!   │           └── Rectangle::extract, Circle::extract, …
-//!   └── NodeStyle::extract(input)      → fill, stroke, transforms
+//! SvgRenderNode::build(input)
+//!   ├── SvgTag::build(input)         → Container or Shape
+//!   │     └── Shape::build(input)    → dispatches by element_name
+//!   │           └── Rectangle::build, Circle::build, …
+//!   └── NodeStyle::build(input)      → fill, stroke, transforms
 //!         ├── FillParams::from_computed_values (internal helper)
 //!         ├── StrokeParams::from_computed_values (internal helper)
-//!         └── Vec<TransformOp>::extract          (internal)
+//!         └── Vec<TransformOp>::build          (internal)
 //! ```
 
 use style::properties::ComputedValues;
@@ -36,25 +35,25 @@ use crate::style::transform::TransformOp;
 use crate::style::fill::FillParams;
 use crate::style::stroke::StrokeParams;
 
-// ======================= Extract Trait =======================
+// ======================= Build Trait =======================
 
-/// Uniform extraction trait — every SVG type that can be built from DOM
+/// Factory Method trait — every SVG type that can be constructed from DOM
 /// attributes and/or computed style implements this.
 ///
-/// Returns [`SvgResult`] so that extraction failures carry a reason
+/// Returns [`SvgResult`] so that construction failures carry a reason
 /// (missing attribute, parse error, unimplemented feature).
-pub trait Extract: Sized {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self>;
+pub trait Build: Sized {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self>;
 }
 
-// ======================= Extraction Input =======================
+// ======================= Build Input =======================
 
-/// Bundle of all data sources needed to extract an SVG node.
+/// Bundle of all data sources needed to construct an SVG node.
 ///
 /// The caller (typically [`replaced.rs`](crate::traversal)) constructs one
 /// from the current DOM element and passes it by reference — each
-/// [`Extract`] impl reads only the fields it needs.
-pub struct SvgExtractInput<'a> {
+/// [`Build`] impl reads only the fields it needs.
+pub struct SvgBuildInput<'a> {
     /// Element tag name, e.g. `"rect"`, `"path"`, `"g"`.
     pub element_name: &'a str,
     /// Attribute accessor — given an attribute name, returns its string value.
@@ -66,24 +65,24 @@ pub struct SvgExtractInput<'a> {
     pub computed_values: Option<&'a ComputedValues>,
 }
 
-// ======================= SvgTag Extraction =======================
+// ======================= SvgTag Construction =======================
 
-impl Extract for SvgTag {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for SvgTag {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         match input.element_name {
             "svg" => Ok(SvgTag::Container(Container::Svg)),
             "g" => Ok(SvgTag::Container(Container::Group)),
-            _ => Shape::extract(input).map(SvgTag::Shape),
+            _ => Shape::build(input).map(SvgTag::Shape),
         }
     }
 }
 
-// ======================= SvgRenderNode Extraction =======================
+// ======================= SvgRenderNode Construction =======================
 
-impl Extract for SvgRenderNode {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
-        let tag = SvgTag::extract(input)?;
-        let style = NodeStyle::extract(input)?;
+impl Build for SvgRenderNode {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
+        let tag = SvgTag::build(input)?;
+        let style = NodeStyle::build(input)?;
         Ok(SvgRenderNode {
             id: None,          // caller sets this
             tag,
@@ -93,10 +92,10 @@ impl Extract for SvgRenderNode {
     }
 }
 
-// ======================= NodeStyle Extraction =======================
+// ======================= NodeStyle Construction =======================
 
-impl Extract for NodeStyle {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for NodeStyle {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         // Prefer Servo's computed style cascade; fall back to inline `style` attr.
         let mut style = match input.computed_values {
             Some(cv) => {
@@ -110,9 +109,9 @@ impl Extract for NodeStyle {
             },
         };
 
-        // Transforms are extracted internally — the caller does not need
+        // Transforms are constructed internally — the caller does not need
         // a separate `extract_transforms()` call.
-        style.transform = <Vec<TransformOp> as Extract>::extract(input).unwrap_or_default();
+        style.transform = <Vec<TransformOp> as Build>::build(input).unwrap_or_default();
 
         Ok(style)
     }
@@ -233,23 +232,23 @@ impl FromCssAttrs for NodeStyle {
 /// Parse an SVG element name and attribute accessor into a [`SvgTag`].
 ///
 /// Container elements return [`SvgTag::Container`] directly.
-/// Shape elements delegate to [`Shape::extract`].
+/// Shape elements delegate to [`Shape::build`].
 ///
-/// Prefer [`SvgTag::extract`](Extract::extract) directly for new code.
+/// Prefer [`SvgTag::build`](Build::build) directly for new code.
 pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<SvgTag> {
-    let input = SvgExtractInput {
+    let input = SvgBuildInput {
         element_name: name,
         get_attr,
         computed_values: None,
     };
-    SvgTag::extract(&input).ok()
+    SvgTag::build(&input).ok()
 }
 
 /// Convenience wrapper for external callers.
 ///
-/// Prefer [`NodeStyle::extract`](Extract::extract) directly for new code.
+/// Prefer [`NodeStyle::build`](Build::build) directly for new code.
 pub fn extract_node_style(computed_values: &ComputedValues) -> NodeStyle {
-    NodeStyle::extract(&SvgExtractInput {
+    NodeStyle::build(&SvgBuildInput {
         element_name: "",
         get_attr: &|_| None,
         computed_values: Some(computed_values),
@@ -259,7 +258,7 @@ pub fn extract_node_style(computed_values: &ComputedValues) -> NodeStyle {
 
 /// Parse a CSS `style` attribute string into a [`NodeStyle`].
 ///
-/// Prefer [`NodeStyle::extract`](Extract::extract) directly for new code.
+/// Prefer [`NodeStyle::build`](Build::build) directly for new code.
 pub fn extract_node_style_from_css(style_str: &str) -> NodeStyle {
     NodeStyle::from_css_attrs(style_str).unwrap_or_default()
 }

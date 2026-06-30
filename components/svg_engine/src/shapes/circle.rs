@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::error::SvgResult;
-use crate::extract::{Extract, SvgExtractInput};
+use crate::extract::{Build, SvgBuildInput};
 use crate::shapes::parse_length;
 
 /// SVG `<circle>` element.
@@ -14,8 +14,8 @@ pub struct Circle {
     pub r: f32,
 }
 
-impl Extract for Circle {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for Circle {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         let r = parse_length("r", &input.get_attr)?;
         if r < 0.0 {
             return Err(crate::error::SvgEngineError::ParseError(

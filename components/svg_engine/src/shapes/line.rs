@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::error::SvgResult;
-use crate::extract::{Extract, SvgExtractInput};
+use crate::extract::{Build, SvgBuildInput};
 use crate::shapes::parse_length;
 
 /// SVG `<line>` element.
@@ -15,8 +15,8 @@ pub struct Line {
     pub y2: f32,
 }
 
-impl Extract for Line {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for Line {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         Ok(Line {
             x1: parse_length("x1", &input.get_attr).unwrap_or(0.0),
             y1: parse_length("y1", &input.get_attr).unwrap_or(0.0),

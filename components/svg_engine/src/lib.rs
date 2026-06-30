@@ -12,5 +12,5 @@ mod traversal;
 mod renderer;
 mod tessellator;
 
-pub use extract::{Extract, SvgExtractInput, extract_node_style};
+pub use extract::{Build, SvgBuildInput, extract_node_style};
 pub use traversal::render_svg_tree;

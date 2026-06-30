@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::error::SvgResult;
-use crate::extract::{Extract, SvgExtractInput};
+use crate::extract::{Build, SvgBuildInput};
 use crate::shapes::parse_length;
 
 /// SVG `<rect>` element.
@@ -17,8 +17,8 @@ pub struct Rectangle {
     pub ry: Option<f32>,
 }
 
-impl Extract for Rectangle {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for Rectangle {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         let width = parse_length("width", &input.get_attr)?;
         if width < 0.0 {
             return Err(crate::error::SvgEngineError::ParseError(

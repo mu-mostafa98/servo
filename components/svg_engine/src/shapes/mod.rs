@@ -27,7 +27,7 @@ pub use self::path::Path;
 use kurbo::{BezPath, Point};
 
 use crate::error::SvgResult;
-use crate::extract::{Extract, SvgExtractInput};
+use crate::extract::{Build, SvgBuildInput};
 use crate::error::SvgEngineError;
 
 /// An SVG geometric shape.
@@ -42,18 +42,18 @@ pub enum Shape {
     Path(Path),
 }
 
-// ======================= Extract dispatch =======================
+// ======================= Build dispatch =======================
 
-impl Extract for Shape {
-    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+impl Build for Shape {
+    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
         match input.element_name {
-            "rect" => Rectangle::extract(input).map(Shape::Rect),
-            "circle" => Circle::extract(input).map(Shape::Circle),
-            "ellipse" => Ellipse::extract(input).map(Shape::Ellipse),
-            "line" => Line::extract(input).map(Shape::Line),
-            "polyline" => Polyline::extract(input).map(Shape::Polyline),
-            "polygon" => Polygon::extract(input).map(Shape::Polygon),
-            "path" => Path::extract(input).map(Shape::Path),
+            "rect" => Rectangle::build(input).map(Shape::Rect),
+            "circle" => Circle::build(input).map(Shape::Circle),
+            "ellipse" => Ellipse::build(input).map(Shape::Ellipse),
+            "line" => Line::build(input).map(Shape::Line),
+            "polyline" => Polyline::build(input).map(Shape::Polyline),
+            "polygon" => Polygon::build(input).map(Shape::Polygon),
+            "path" => Path::build(input).map(Shape::Path),
             other => Err(SvgEngineError::UnsupportedFeature(
                 format!("unknown shape element: {other}"),
             )),

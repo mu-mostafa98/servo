@@ -35,7 +35,7 @@ use webrender_api::ImageKey;
 
 use web_atoms::ns;
 use html5ever::LocalName;
-use svg_engine::extract::{Extract, SvgExtractInput};
+use svg_engine::extract::{Build, SvgBuildInput};
 use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo, extract_viewbox};
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
@@ -375,12 +375,12 @@ impl ReplacedContents {
         // and transform parsing internally.
         let computed = element.style_data()
             .map(|_| element.style(&context.style_context));
-        let input = SvgExtractInput {
+        let input = SvgBuildInput {
             element_name: name,
             get_attr: &get_attr,
             computed_values: computed.as_deref(),
         };
-        let mut svg_node = SvgRenderNode::extract(&input).ok()?;
+        let mut svg_node = SvgRenderNode::build(&input).ok()?;
 
         // Set id (only on the root level, from DOM).
         svg_node.id = element.attribute_as_str(&ns!(), &local_name!("id"))
