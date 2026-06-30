@@ -42,7 +42,6 @@ impl Render for Polyline {
             if stroke.color.is_some() && stroke.width > 0.0 {
                 // Build the stroke-only style once, outside the loop.
                 let stroke_style = NodeStyle {
-                    opacity: 1.0,
                     visibility: Visibility::Visible,
                     display: Display::Inline,
                     transform: Vec::new(),
