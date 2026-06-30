@@ -7,10 +7,10 @@ pub mod style;
 pub mod render_tree;
 pub mod error;
 
-pub mod extract;
+pub mod builder;
 mod traversal;
 mod renderer;
 mod tessellator;
 
-pub use extract::{Build, SvgBuildInput, extract_node_style};
+pub use builder::{Build, SvgBuildInput, extract_node_style};
 pub use traversal::render_svg_tree;

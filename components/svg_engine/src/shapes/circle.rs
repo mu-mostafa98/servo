@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::error::SvgResult;
-use crate::extract::{Build, SvgBuildInput};
+use crate::builder::{Build, SvgBuildInput};
 use crate::shapes::parse_length;
 
 /// SVG `<circle>` element.

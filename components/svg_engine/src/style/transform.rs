@@ -17,7 +17,7 @@ use webrender_api::{
 };
 
 use crate::error::SvgResult;
-use crate::extract::{Build, SvgBuildInput};
+use crate::builder::{Build, SvgBuildInput};
 
 // ------------------- Transform types ------------------
 

@@ -5,7 +5,7 @@
 use kurbo::BezPath;
 
 use crate::error::SvgResult;
-use crate::extract::{Build, SvgBuildInput};
+use crate::builder::{Build, SvgBuildInput};
 use crate::shapes::parse_path;
 
 /// SVG `<path>` element with its `d` attribute parsed into a [`BezPath`].

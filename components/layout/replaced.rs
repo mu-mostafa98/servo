@@ -35,7 +35,7 @@ use webrender_api::ImageKey;
 
 use web_atoms::ns;
 use html5ever::LocalName;
-use svg_engine::extract::{Build, SvgBuildInput};
+use svg_engine::builder::{Build, SvgBuildInput};
 use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo, extract_viewbox};
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};

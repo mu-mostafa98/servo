@@ -5,7 +5,7 @@
 use kurbo::Point;
 
 use crate::error::SvgResult;
-use crate::extract::{Build, SvgBuildInput};
+use crate::builder::{Build, SvgBuildInput};
 use crate::shapes::parse_points;
 
 /// SVG `<polygon>` element — a closed shape formed by connected line segments.

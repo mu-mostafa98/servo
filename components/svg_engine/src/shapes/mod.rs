@@ -5,7 +5,7 @@
 //! SVG Geometric Shapes Reference: https://www.w3.org/TR/SVG2/shapes.html
 //!
 //! This module defines SVG geometric shape structs based on the SVG 2 specification.
-//! Each shape has its own file with its [`Extract`](crate::extract::Extract) implementation.
+//! Each shape has its own file with its [`Build`](crate::builder::Build) implementation.
 //! Shared attribute-parsing helpers live in this module.
 
 pub(crate) mod rectangle;
@@ -27,7 +27,7 @@ pub use self::path::Path;
 use kurbo::{BezPath, Point};
 
 use crate::error::SvgResult;
-use crate::extract::{Build, SvgBuildInput};
+use crate::builder::{Build, SvgBuildInput};
 use crate::error::SvgEngineError;
 
 /// An SVG geometric shape.

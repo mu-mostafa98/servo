@@ -7,7 +7,7 @@ use style::values::computed::svg::{SVGOpacity, SVGStrokeDashArray};
 use style::values::generics::svg::SVGLength;
 use webrender_api::ColorF;
 
-use crate::extract::resolve_svg_paint;
+use crate::style::color::resolve_svg_paint;
 use crate::style::FromComputedValues;
 
 /// SVG stroke properties.
