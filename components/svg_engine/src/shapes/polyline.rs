@@ -6,7 +6,7 @@ use kurbo::Point;
 
 use crate::error::SvgResult;
 use crate::builder::{Build, SvgBuildInput};
-use crate::shapes::parse_points;
+use crate::shapes::attr_parsers::parse_points;
 
 /// SVG `<polyline>` element — an open sequence of connected line segments.
 #[derive(Debug, Clone)]

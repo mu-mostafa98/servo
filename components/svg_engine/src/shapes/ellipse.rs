@@ -4,7 +4,7 @@
 
 use crate::error::SvgResult;
 use crate::builder::{Build, SvgBuildInput};
-use crate::shapes::parse_length;
+use crate::shapes::attr_parsers::parse_length;
 
 /// SVG `<ellipse>` element.
 #[derive(Debug, Clone, Copy)]
