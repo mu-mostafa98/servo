@@ -2,24 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use webrender_api::{
-    DisplayListBuilder, ClipChainId, SpatialId,
-    units::LayoutPoint,
-};
-
 use crate::shapes::{Polygon, Polyline};
-use crate::style::NodeStyle;
-use crate::renderer::Render;
+use crate::renderer::{Render, RenderContext};
 
 impl Render for Polygon {
-    fn render(
-        &self,
-        style: &NodeStyle,
-        svg_origin: &LayoutPoint,
-        spatial_id: SpatialId,
-        clip_chain_id: ClipChainId,
-        wr: &mut DisplayListBuilder,
-    ) {
+    fn render(&self, ctx: &mut RenderContext) {
         // A polygon is a closed shape: append the first point to the end so the
         // stroke renders an edge from the last point back to the first.
         // The fill is unaffected — the tessellator already treats vertices as
@@ -32,6 +19,6 @@ impl Render for Polygon {
         let polyline = Polyline {
             points: closed_points,
         };
-        polyline.render(style, svg_origin, spatial_id, clip_chain_id, wr);
+        polyline.render(ctx);
     }
 }

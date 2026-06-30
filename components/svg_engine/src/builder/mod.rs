@@ -27,7 +27,6 @@ use style::properties::ComputedValues;
 use crate::error::SvgResult;
 use crate::render_tree::{Container, SvgRenderNode, SvgTag};
 use crate::shapes::Shape;
-use crate::style::FromCssAttrs;
 
 // ======================= Build Trait =======================
 
@@ -84,37 +83,4 @@ impl Build for SvgRenderNode {
             children: vec![],  // caller populates via recursive walk
         })
     }
-}
-
-// ======================= Legacy Convenience Wrappers =======================
-
-/// Parse an SVG element name and attribute accessor into a [`SvgTag`].
-///
-/// Prefer [`SvgTag::build`](Build::build) directly for new code.
-pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<SvgTag> {
-    let input = SvgBuildInput {
-        element_name: name,
-        get_attr,
-        computed_values: None,
-    };
-    SvgTag::build(&input).ok()
-}
-
-/// Convenience wrapper for external callers.
-///
-/// Prefer [`NodeStyle::build`](Build::build) directly for new code.
-pub fn extract_node_style(computed_values: &ComputedValues) -> crate::style::NodeStyle {
-    crate::style::NodeStyle::build(&SvgBuildInput {
-        element_name: "",
-        get_attr: &|_| None,
-        computed_values: Some(computed_values),
-    })
-    .unwrap_or_default()
-}
-
-/// Parse a CSS `style` attribute string into a [`NodeStyle`].
-///
-/// Prefer `NodeStyle::from_css_attrs` directly for new code.
-pub fn extract_node_style_from_css(style_str: &str) -> crate::style::NodeStyle {
-    crate::style::NodeStyle::from_css_attrs(style_str).unwrap_or_default()
 }

@@ -12,5 +12,5 @@ mod traversal;
 mod renderer;
 mod tessellator;
 
-pub use builder::{Build, SvgBuildInput, extract_node_style};
+pub use builder::{Build, SvgBuildInput};
 pub use traversal::render_svg_tree;

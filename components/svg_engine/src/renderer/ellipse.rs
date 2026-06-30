@@ -2,21 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use webrender_api::{DisplayListBuilder, ClipChainId, SpatialId, units::LayoutPoint};
-
 use crate::shapes::{Ellipse, Rectangle};
-use crate::style::*;
-use crate::renderer::Render;
+use crate::renderer::{Render, RenderContext};
 
 impl Render for Ellipse {
-    fn render(
-        &self,
-        style: &NodeStyle,
-        svg_origin: &LayoutPoint,
-        spatial_id: SpatialId,
-        clip_chain_id: ClipChainId,
-        wr: &mut DisplayListBuilder,
-    ) {
+    fn render(&self, ctx: &mut RenderContext) {
         if self.rx <= 0.0 || self.ry <= 0.0 {
             return;
         }
@@ -30,6 +20,6 @@ impl Render for Ellipse {
             rx: Some(self.rx),
             ry: Some(self.ry),
         };
-        rect.render(style, svg_origin, spatial_id, clip_chain_id, wr);
+        rect.render(ctx);
     }
 }

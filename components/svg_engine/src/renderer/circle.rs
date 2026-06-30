@@ -2,21 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use webrender_api::{DisplayListBuilder, ClipChainId, SpatialId, units::LayoutPoint};
-
 use crate::shapes::{Circle, Ellipse};
-use crate::style::*;
-use crate::renderer::Render;
+use crate::renderer::{Render, RenderContext};
 
 impl Render for Circle {
-    fn render(
-        &self,
-        style: &NodeStyle,
-        svg_origin: &LayoutPoint,
-        spatial_id: SpatialId,
-        clip_chain_id: ClipChainId,
-        wr: &mut DisplayListBuilder,
-    ) {
+    fn render(&self, ctx: &mut RenderContext) {
         // A circle is an ellipse with equal rx and ry.
         let ellipse = Ellipse {
             cx: self.cx,
@@ -24,6 +14,6 @@ impl Render for Circle {
             rx: self.r,
             ry: self.r,
         };
-        ellipse.render(style, svg_origin, spatial_id, clip_chain_id, wr);
+        ellipse.render(ctx);
     }
 }

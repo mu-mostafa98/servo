@@ -26,6 +26,21 @@ use webrender_api::{
 use crate::shapes::*;
 use crate::style::NodeStyle;
 
+// ----------------------- Render Context -----------------------
+
+/// Bundled rendering parameters passed to every [`Render::render`] call.
+///
+/// Using a single context struct avoids repeatedly threading 5+ parameters
+/// through the rendering pipeline and makes it easy to add new context
+/// (e.g. an accumulated transform for hit-testing).
+pub(crate) struct RenderContext<'a> {
+    pub style: &'a NodeStyle,
+    pub svg_origin: LayoutPoint,
+    pub spatial_id: SpatialId,
+    pub clip_chain_id: ClipChainId,
+    pub wr: &'a mut DisplayListBuilder,
+}
+
 // ----------------------- Render Trait -----------------------
 
 /// Convert an SVG shape into WebRender display list commands.
@@ -34,35 +49,21 @@ use crate::style::NodeStyle;
 /// code can call `shape.render(...)` without a central match.
 pub(crate) trait Render {
     /// Emit WebRender display list commands for this shape.
-    fn render(
-        &self,
-        style: &NodeStyle,
-        svg_origin: &LayoutPoint,
-        spatial_id: SpatialId,
-        clip_chain_id: ClipChainId,
-        wr: &mut DisplayListBuilder,
-    );
+    fn render(&self, ctx: &mut RenderContext);
 }
 
 // ----------------------- Delegation -----------------------
 
 impl Render for Shape {
-    fn render(
-        &self,
-        style: &NodeStyle,
-        svg_origin: &LayoutPoint,
-        spatial_id: SpatialId,
-        clip_chain_id: ClipChainId,
-        wr: &mut DisplayListBuilder,
-    ) {
+    fn render(&self, ctx: &mut RenderContext) {
         match self {
-            Shape::Rect(r) => r.render(style, svg_origin, spatial_id, clip_chain_id, wr),
-            Shape::Circle(c) => c.render(style, svg_origin, spatial_id, clip_chain_id, wr),
-            Shape::Ellipse(e) => e.render(style, svg_origin, spatial_id, clip_chain_id, wr),
-            Shape::Line(l) => l.render(style, svg_origin, spatial_id, clip_chain_id, wr),
-            Shape::Polyline(p) => p.render(style, svg_origin, spatial_id, clip_chain_id, wr),
-            Shape::Polygon(p) => p.render(style, svg_origin, spatial_id, clip_chain_id, wr),
-            Shape::Path(p) => p.render(style, svg_origin, spatial_id, clip_chain_id, wr),
+            Shape::Rect(r) => r.render(ctx),
+            Shape::Circle(c) => c.render(ctx),
+            Shape::Ellipse(e) => e.render(ctx),
+            Shape::Line(l) => l.render(ctx),
+            Shape::Polyline(p) => p.render(ctx),
+            Shape::Polygon(p) => p.render(ctx),
+            Shape::Path(p) => p.render(ctx),
         }
     }
 }

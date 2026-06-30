@@ -17,7 +17,7 @@ use webrender_api::{
 
 use crate::render_tree::*;
 use crate::renderer::transform;
-use crate::renderer::Render;
+use crate::renderer::{Render, RenderContext};
 
 /// Render an SVG render tree into the WebRender display list.
 ///
@@ -107,7 +107,14 @@ fn render_node(
 
     // Render this node if it's a shape — uses the Render trait to dispatch.
     if let SvgTag::Shape(shape) = &node.tag {
-        shape.render(&node.style, &cur_origin, cur_spatial_id, clip_chain_id, wr);
+        let mut ctx = RenderContext {
+            style: &node.style,
+            svg_origin: cur_origin,
+            spatial_id: cur_spatial_id,
+            clip_chain_id,
+            wr: &mut *wr,
+        };
+        shape.render(&mut ctx);
     }
 
     // Recurse into children.

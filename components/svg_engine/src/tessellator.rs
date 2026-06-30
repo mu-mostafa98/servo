@@ -19,11 +19,11 @@ use lyon::tessellation::{
 };
 use lyon::path::polygon::Polygon;
 use webrender_api::{
-    DisplayListBuilder, ClipChainId, SpatialId,
-    CommonItemProperties, SpaceAndClipInfo,
+    ColorF, CommonItemProperties, SpaceAndClipInfo,
     units::{LayoutPoint, LayoutRect, LayoutSize},
 };
 
+use crate::renderer::RenderContext;
 use crate::style::FillRule;
 
 /// Vertex constructor that extracts only the position from `FillVertex`.
@@ -39,10 +39,8 @@ impl FillVertexConstructor<LyonPoint> for PosCtor {
 pub fn tessellate_polygon(
     points: &[LyonPoint],
     fill_rule: FillRule,
-    color: webrender_api::ColorF,
-    spatial_id: SpatialId,
-    clip_chain_id: ClipChainId,
-    wr: &mut DisplayListBuilder,
+    color: ColorF,
+    ctx: &mut RenderContext,
 ) {
     if points.len() < 3 {
         return;
@@ -80,7 +78,7 @@ pub fn tessellate_polygon(
         let v1 = buffers.vertices[tri[1] as usize];
         let v2 = buffers.vertices[tri[2] as usize];
 
-        scanline_fill_triangle(v0, v1, v2, color, spatial_id, clip_chain_id, wr);
+        scanline_fill_triangle(v0, v1, v2, color, ctx);
     }
 }
 
@@ -93,10 +91,8 @@ fn scanline_fill_triangle(
     v0: LyonPoint,
     v1: LyonPoint,
     v2: LyonPoint,
-    color: webrender_api::ColorF,
-    spatial_id: SpatialId,
-    clip_chain_id: ClipChainId,
-    wr: &mut DisplayListBuilder,
+    color: ColorF,
+    ctx: &mut RenderContext,
 ) {
     // Sort vertices by Y.
     let (top, mid, bot) = sort_vertices_by_y(v0, v1, v2);
@@ -159,9 +155,12 @@ fn scanline_fill_triangle(
             );
             let common = CommonItemProperties::new(
                 rect,
-                SpaceAndClipInfo { spatial_id, clip_chain_id },
+                SpaceAndClipInfo {
+                    spatial_id: ctx.spatial_id,
+                    clip_chain_id: ctx.clip_chain_id,
+                },
             );
-            wr.push_rect(&common, rect, color);
+            ctx.wr.push_rect(&common, rect, color);
         }
     }
 }
