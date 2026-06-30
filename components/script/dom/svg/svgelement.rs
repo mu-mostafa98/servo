@@ -34,6 +34,8 @@ use crate::dom::node::{Node, NodeTraits};
 use crate::dom::scrolling_box::{ScrollAxisState, ScrollRequirement};
 use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
+use crate::dom::svg::svglineelement::SVGLineElement;
+use crate::dom::svg::svgpathelement::SVGPathElement;
 use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 
@@ -132,7 +134,12 @@ impl VirtualMethods for SVGElement {
                 &local_name!("rx") |
                 &local_name!("ry") |
                 &local_name!("x") |
-                &local_name!("y")
+                &local_name!("y") |
+                &local_name!("x1") |
+                &local_name!("y1") |
+                &local_name!("x2") |
+                &local_name!("y2") |
+                &local_name!("d")
         ) || self
             .super_type()
             .unwrap()
@@ -370,6 +377,17 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             self.parse_svg_attribute(&parser_context, "y", longhands::y::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
+        }
+        // <line>: https://svgwg.org/svg2-draft/shapes.html#LineElement
+        if element.downcast::<SVGLineElement>().is_some() {
+            self.parse_svg_attribute(&parser_context, "x1", longhands::x1::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "y1", longhands::y1::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "x2", longhands::x2::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "y2", longhands::y2::parse_declared, push);
+        }
+        // <path>: https://svgwg.org/svg2-draft/paths.html#PathElement
+        if element.downcast::<SVGPathElement>().is_some() {
+            self.parse_svg_attribute(&parser_context, "d", longhands::d::parse_declared, push);
         }
     }
 

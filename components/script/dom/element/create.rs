@@ -90,6 +90,10 @@ use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
+use crate::dom::svg::svglineelement::SVGLineElement;
+use crate::dom::svg::svgpathelement::SVGPathElement;
+use crate::dom::svg::svgpolygonelement::SVGPolygonElement;
+use crate::dom::svg::svgpolylineelement::SVGPolylineElement;
 use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 use crate::realms::enter_auto_realm;
@@ -115,6 +119,10 @@ fn create_svg_element(
         local_name!("circle") => make!(SVGCircleElement),
         local_name!("ellipse") => make!(SVGEllipseElement),
         local_name!("image") => make!(SVGImageElement),
+        local_name!("line") => make!(SVGLineElement),
+        local_name!("path") => make!(SVGPathElement),
+        local_name!("polygon") => make!(SVGPolygonElement),
+        local_name!("polyline") => make!(SVGPolylineElement),
         local_name!("rect") => make!(SVGRectElement),
         local_name!("svg") => make!(SVGSVGElement),
         _ => make!(SVGElement),

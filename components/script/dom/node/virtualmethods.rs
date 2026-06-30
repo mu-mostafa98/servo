@@ -69,6 +69,10 @@ use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
+use crate::dom::svg::svglineelement::SVGLineElement;
+use crate::dom::svg::svgpathelement::SVGPathElement;
+use crate::dom::svg::svgpolygonelement::SVGPolygonElement;
+use crate::dom::svg::svgpolylineelement::SVGPolylineElement;
 use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 
@@ -353,6 +357,22 @@ pub(crate) fn vtable_for(node: &Node) -> &dyn VirtualMethods {
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
             SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGRectElement),
         ))) => node.downcast::<SVGRectElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGLineElement),
+        ))) => node.downcast::<SVGLineElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGGeometryElement(
+                SVGGeometryElementTypeId::SVGPolylineElement,
+            ),
+        ))) => node.downcast::<SVGPolylineElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGGeometryElement(
+                SVGGeometryElementTypeId::SVGPolygonElement,
+            ),
+        ))) => node.downcast::<SVGPolygonElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGPathElement),
+        ))) => node.downcast::<SVGPathElement>().unwrap() as &dyn VirtualMethods,
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
             SVGGraphicsElementTypeId::SVGSVGElement,
         ))) => node.downcast::<SVGSVGElement>().unwrap() as &dyn VirtualMethods,
