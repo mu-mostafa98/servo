@@ -1,0 +1,968 @@
+{
+  "nodes": [
+    {
+      "id": "config:components/shared/profile/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/profile/Cargo.toml",
+      "summary": "Cargo manifest for the servo-profile-traits crate, defining profiling infrastructure dependencies including ipc-channel, servo-base, and the time crate.",
+      "tags": ["configuration", "rust", "dependencies"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/script/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/script/Cargo.toml",
+      "summary": "Cargo manifest for the servo-script-traits crate, listing all cross-component dependencies for script-level trait definitions used across Servo.",
+      "tags": ["configuration", "rust", "dependencies"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/script/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/script/lib.rs",
+      "summary": "Defines core Rust traits, enums, and structs used generically across Servo's script, layout, and constellation components, including ScriptThreadMessage, InitialScriptState, and the Painter trait.",
+      "tags": ["type-definition", "traits", "message-types"],
+      "complexity": "complex",
+      "languageNotes": "Rust crate root using derive macros (MallocSizeOf, Serialize, Deserialize) for IPC-safe types across component boundaries."
+    },
+    {
+      "id": "class:components/shared/script/lib.rs:ScriptThreadMessage",
+      "type": "class",
+      "name": "ScriptThreadMessage",
+      "filePath": "components/shared/script/lib.rs",
+      "lineRange": [152, 332],
+      "summary": "Large enum with over 30 variants representing all messages sent to the ScriptThread event loop from Constellation, Paint, and Layout, covering pipeline lifecycle, input events, navigation, and JavaScript evaluation.",
+      "tags": ["message-type", "enum", "ipc"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/script/lib.rs:InitialScriptState",
+      "type": "class",
+      "name": "InitialScriptState",
+      "filePath": "components/shared/script/lib.rs",
+      "lineRange": [369, 413],
+      "summary": "Struct bundling all channels, senders, and handles required to initialize a new ScriptThread, including constellation, embedder, profiling, WebGL, and WebXR channels.",
+      "tags": ["initialization", "struct", "channel-bundle"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/script/lib.rs:Painter",
+      "type": "class",
+      "name": "Painter",
+      "filePath": "components/shared/script/lib.rs",
+      "lineRange": [431, 440],
+      "summary": "Trait for paint worklet modules that can draw custom paint images for CSS properties.",
+      "tags": ["trait", "paint-worklet", "css"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/storage/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/storage/Cargo.toml",
+      "summary": "Cargo manifest for the servo-storage-traits crate with dependencies on profile_traits, servo-base, and servo-url.",
+      "tags": ["configuration", "rust", "dependencies"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/webgpu/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/webgpu/Cargo.toml",
+      "summary": "Cargo manifest for the servo-webgpu-traits crate with dependencies on wgpu-core and wgpu-types for WebGPU support.",
+      "tags": ["configuration", "rust", "dependencies", "webgpu"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/webxr/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/webxr/Cargo.toml",
+      "summary": "Cargo manifest for the servo-webxr-api crate that defines the Rust API for WebXR (VR/AR) device interaction.",
+      "tags": ["configuration", "rust", "dependencies", "webxr"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/paint/rendering_context.rs",
+      "type": "file",
+      "name": "rendering_context.rs",
+      "filePath": "components/shared/paint/rendering_context.rs",
+      "summary": "Provides OpenGL/GLES rendering context implementations (Surfman, Software, Window, Offscreen) via the RenderingContext trait, managing GPU surfaces, framebuffers, and swap chains.",
+      "tags": ["rendering", "opengl", "gpu", "context"],
+      "complexity": "complex",
+      "languageNotes": "Uses unsafe FFI to load OpenGL function pointers via gleam and glow crates, with multiple context implementations sharing a common Surfman backend."
+    },
+    {
+      "id": "class:components/shared/paint/rendering_context.rs:RenderingContext",
+      "type": "class",
+      "name": "RenderingContext",
+      "filePath": "components/shared/paint/rendering_context.rs",
+      "lineRange": [35, 88],
+      "summary": "Trait defining the interface for OpenGL/GLES rendering contexts, including methods for preparing, reading, resizing, presenting, and managing GPU surfaces.",
+      "tags": ["trait", "rendering", "opengl"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/paint/rendering_context.rs:SoftwareRenderingContext",
+      "type": "class",
+      "name": "SoftwareRenderingContext",
+      "filePath": "components/shared/paint/rendering_context.rs",
+      "lineRange": [289, 293],
+      "summary": "Software-based rendering context using Surfman with a software OpenGL adapter for fallback rendering in headless or CI environments.",
+      "tags": ["software-rendering", "opengl", "fallback"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/paint/rendering_context.rs:WindowRenderingContext",
+      "type": "class",
+      "name": "WindowRenderingContext",
+      "filePath": "components/shared/paint/rendering_context.rs",
+      "lineRange": [407, 411],
+      "summary": "Window-bound rendering context using Surfman to render to a native window identified by raw-window-handle, supporting optional refresh drivers for vsync-synchronized rendering.",
+      "tags": ["window-rendering", "opengl", "surfman"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/paint/rendering_context.rs:OffscreenRenderingContext",
+      "type": "class",
+      "name": "OffscreenRenderingContext",
+      "filePath": "components/shared/paint/rendering_context.rs",
+      "lineRange": [732, 736],
+      "summary": "Offscreen framebuffer-based rendering context parented to a WindowRenderingContext, supporting blit compositing for partial window rendering and sub-region painting.",
+      "tags": ["offscreen-rendering", "framebuffer", "compositing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/shared/embedder/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/embedder/lib.rs",
+      "summary": "Core embedder types crate defining the boundary between Servo's rendering/embedding layer and its script/constellation layers, including EmbedderMsg, EventLoopWaker, RefreshDriver, and all cross-process communication types.",
+      "tags": ["embedder", "ipc", "api", "type-definition"],
+      "complexity": "complex",
+      "languageNotes": "Key cross-process boundary crate with heavy use of serde for IPC serialization, deriving MallocSizeOf for memory profiling across components."
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:EventLoopWaker",
+      "type": "class",
+      "name": "EventLoopWaker",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [239, 248],
+      "summary": "Trait for embedders to implement to allow Servo to request that the embedder wake up the main event loop from any thread.",
+      "tags": ["trait", "event-loop", "embedder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:GenericEmbedderProxy",
+      "type": "class",
+      "name": "GenericEmbedderProxy",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [257, 260],
+      "summary": "Generic proxy for sending typed messages to the embedder, automatically waking the event loop after each send.",
+      "tags": ["proxy", "messaging", "embedder"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:RefreshDriver",
+      "type": "class",
+      "name": "RefreshDriver",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [287, 295],
+      "summary": "Trait for embedders to drive frame timing, allowing Servo to be notified of vsync or other frame start events for smooth animations.",
+      "tags": ["trait", "animation", "vsync", "framerate"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ViewportDetails",
+      "type": "class",
+      "name": "ViewportDetails",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [336, 343],
+      "summary": "Describes a WebView's viewport size and HiDPI scale factor, used to communicate layout dimensions between embedder and rendering layers.",
+      "tags": ["viewport", "layout", "hidpi"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:Image",
+      "type": "class",
+      "name": "Image",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [389, 397],
+      "summary": "A raster image format type used for favicons and clipboard images, encapsulating shared memory pixel data with width, height, and pixel format metadata.",
+      "tags": ["image", "raster", "pixel-data"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:EmbedderMsg",
+      "type": "class",
+      "name": "EmbedderMsg",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [466, 546],
+      "summary": "Large enum with 29 variants representing all messages sent from Servo to the embedder, covering page title changes, cursor updates, clipboard access, permission prompts, notifications, and accessibility tree updates.",
+      "tags": ["message-type", "enum", "embedder", "ipc"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebResourceResponse",
+      "type": "class",
+      "name": "WebResourceResponse",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [708, 723],
+      "summary": "Builder-pattern struct representing an HTTP response for intercepted web resource loads, with headers, status code, and status message fields.",
+      "tags": ["http", "response", "interception"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:ScriptToEmbedderChan",
+      "type": "class",
+      "name": "ScriptToEmbedderChan",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1117, 1117],
+      "summary": "Channel wrapper enabling the script thread to send EmbedderMsg to the embedder layer, automatically waking the event loop on each message.",
+      "tags": ["channel", "messaging", "cross-process"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:Notification",
+      "type": "class",
+      "name": "Notification",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [816, 847],
+      "summary": "Data structure for the Web Notification API, including title, body, icon, badge, image resources, and action list with both URL and raster image resource support.",
+      "tags": ["notification", "web-api", "data-structure"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:UntrustedNodeAddress",
+      "type": "class",
+      "name": "UntrustedNodeAddress",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [894, 894],
+      "summary": "Opaque wrapper around a raw pointer representing a DOM node address from layout, requiring validation before use since it comes from an untrusted source.",
+      "tags": ["node-address", "safety", "pointer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:UrlRequest",
+      "type": "class",
+      "name": "UrlRequest",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1164, 1171],
+      "summary": "Builder-pattern struct for configuring a URL load request with custom headers, used by the embedder API to trigger navigation.",
+      "tags": ["http", "request", "navigation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WakeLockDelegate",
+      "type": "class",
+      "name": "WakeLockDelegate",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [1198, 1208],
+      "summary": "Trait for platform-specific screen wake lock implementation, with acquire and release methods called when aggregate lock count transitions between zero and one.",
+      "tags": ["trait", "wakelock", "platform"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/base/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/base/Cargo.toml",
+      "summary": "Cargo manifest for servo-base, the foundational crate providing Epoch types, IDs, generic channels, and thread pool infrastructure with platform-specific dependencies.",
+      "tags": ["configuration", "rust", "dependencies", "core"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/background_hang_monitor/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/background_hang_monitor/Cargo.toml",
+      "summary": "Cargo manifest for servo-background-hang-monitor-api with dependencies on serde and servo-base.",
+      "tags": ["configuration", "rust", "dependencies"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/bluetooth/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/bluetooth/Cargo.toml",
+      "summary": "Cargo manifest for servo-bluetooth-traits with dependencies on embedder_traits, regex, serde, and servo-base.",
+      "tags": ["configuration", "rust", "dependencies", "bluetooth"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/canvas/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/canvas/Cargo.toml",
+      "summary": "Cargo manifest for servo-canvas-traits with canvas and WebGL type dependencies including gleam, glow, kurbo, and webxr-api.",
+      "tags": ["configuration", "rust", "dependencies", "canvas"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/constellation/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/constellation/Cargo.toml",
+      "summary": "Cargo manifest for servo-constellation-traits with dependencies across embedder, net, script, storage, canvas, and optional WebGPU support.",
+      "tags": ["configuration", "rust", "dependencies", "constellation"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/devtools/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/devtools/Cargo.toml",
+      "summary": "Cargo manifest for servo-devtools-traits with dependencies on embedder_traits, net_traits, servo-base, and servo-url.",
+      "tags": ["configuration", "rust", "dependencies", "devtools"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/fonts/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/fonts/Cargo.toml",
+      "summary": "Cargo manifest for servo-fonts-traits with font infrastructure dependencies including read-fonts, stylo, webrender-api, and platform-specific dwrote on Windows.",
+      "tags": ["configuration", "rust", "dependencies", "fonts"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/layout/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/layout/Cargo.toml",
+      "summary": "Cargo manifest for servo-layout-api crate with layout-related dependencies on scripts_traits, stylo, webrender_api, and net_traits.",
+      "tags": ["configuration", "rust", "dependencies", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/layout/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/layout/lib.rs",
+      "summary": "Defines core layout traits (Layout, LayoutFactory, ScriptThreadFactory) and shared data types used across script and layout threads, including image animation state, reflow request/result types, and DOM node layout wrappers.",
+      "tags": ["layout", "traits", "reflow", "image-animation", "type-definition"],
+      "complexity": "complex",
+      "languageNotes": "Uses bitflags! for RestyleReason and ReflowPhasesRun enums with bitwise operations, and SharedLayoutDataTrait pattern for thread-safe layout data."
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:Layout",
+      "type": "class",
+      "name": "Layout",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [270, 430],
+      "summary": "Central trait defining the complete layout engine interface with over 30 methods for reflow, styling, scrolling, accessibility, CSS queries, paint worklets, and stacking context management.",
+      "tags": ["trait", "layout", "reflow", "styling"],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:LayoutFactory",
+      "type": "class",
+      "name": "LayoutFactory",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [266, 268],
+      "summary": "Trait for creating Layout instances from a LayoutConfig, enabling the script thread to spawn layout threads.",
+      "tags": ["trait", "factory", "layout"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:ScriptThreadFactory",
+      "type": "class",
+      "name": "ScriptThreadFactory",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [435, 443],
+      "summary": "Trait for creating ScriptThread instances, required by layout_api to avoid circular dependencies with script_traits.",
+      "tags": ["trait", "factory", "script"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:ReflowRequest",
+      "type": "class",
+      "name": "ReflowRequest",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [687, 714],
+      "summary": "Struct encapsulating all data needed for a script-initiated reflow pass, including document node, epoch, viewport details, reflow goal, animations, and pending restyle information.",
+      "tags": ["struct", "reflow", "layout", "request"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:ReflowResult",
+      "type": "class",
+      "name": "ReflowResult",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [616, 634],
+      "summary": "Struct containing results returned from a layout pass to the script thread, including reflow phases run, statistics, pending images, iframe sizes, and SVG serialization needs.",
+      "tags": ["struct", "reflow", "layout", "result"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:ImageAnimationState",
+      "type": "class",
+      "name": "ImageAnimationState",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [773, 784],
+      "summary": "Tracks the active frame and loop state of an animated image, providing frame timing and advancement logic for GIF-like animations in layout.",
+      "tags": ["animation", "image", "frame-timing"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/shared/layout/lib.rs:AnimatingImages",
+      "type": "class",
+      "name": "AnimatingImages",
+      "filePath": "components/shared/layout/lib.rs",
+      "lineRange": [910, 917],
+      "summary": "Map-based collection tracking all currently animating images by OpaqueNode, with dirty tracking to signal script when animation frames need updating.",
+      "tags": ["animation", "collection", "tracking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/shared/net/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/shared/net/Cargo.toml",
+      "summary": "Cargo manifest for servo-net-traits crate with HTTP, networking, and TLS dependencies including tokio, hyper-util, rustls, and servo-config.",
+      "tags": ["configuration", "rust", "dependencies", "networking"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/shared/webgpu/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "summary": "Defines WebGPU trait types and data structures including the WebGPU channel wrapper, Adapter, ContextConfiguration, ShaderCompilationInfo, and error types for the GPU API abstraction layer.",
+      "tags": ["webgpu", "gpu", "api", "type-definition"],
+      "complexity": "moderate",
+      "languageNotes": "Re-exports from wgpu-core id markers for compute and render pass encoder types."
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:WebGPU",
+      "type": "class",
+      "name": "WebGPU",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [42, 42],
+      "summary": "A channel-based wrapper for sending WebGPURequest messages across threads, with an exit method for clean shutdown.",
+      "tags": ["channel", "webgpu", "messaging"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:ContextConfiguration",
+      "type": "class",
+      "name": "ContextConfiguration",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [62, 68],
+      "summary": "Describes WebGPU device context configuration including device ID, queue ID, image format, opacity, and size, with stride and buffer size calculation methods.",
+      "tags": ["webgpu", "configuration", "context"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/webgpu/lib.rs:ShaderCompilationInfo",
+      "type": "class",
+      "name": "ShaderCompilationInfo",
+      "filePath": "components/shared/webgpu/lib.rs",
+      "lineRange": [105, 111],
+      "summary": "Struct for shader compilation error diagnostics with source location tracking in UTF-16 code units, converting Naga parser/validation errors to the WebGPU spec format.",
+      "tags": ["shader", "compilation", "error-diagnostics"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/shared/webxr/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/shared/webxr/lib.rs",
+      "summary": "Re-export module for the WebXR Rust API crate, providing public access to device discovery, sessions, frames, input, layers, hit-testing, views, and mock testing utilities.",
+      "tags": ["webxr", "vr", "ar", "api"],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:components/media/servo-media/Cargo.toml",
+      "type": "config",
+      "name": "Cargo.toml",
+      "filePath": "components/media/servo-media/Cargo.toml",
+      "summary": "Cargo manifest for the servo-media crate that aggregates sub-crates for audio, player, streams, WebRTC, and media traits.",
+      "tags": ["configuration", "rust", "dependencies", "media"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebViewPoint",
+      "type": "class",
+      "name": "WebViewPoint",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [61, 64],
+      "summary": "Enum representing a point in a WebView, expressed either in device pixels or CSS page pixels with conversion methods.",
+      "tags": ["type", "point", "coordinates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebViewRect",
+      "type": "class",
+      "name": "WebViewRect",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [98, 101],
+      "summary": "Enum representing a rectangle in a WebView, expressed either in device pixels or CSS page pixels with conversion methods.",
+      "tags": ["type", "rectangle", "coordinates"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/shared/embedder/lib.rs:WebViewVector",
+      "type": "class",
+      "name": "WebViewVector",
+      "filePath": "components/shared/embedder/lib.rs",
+      "lineRange": [138, 141],
+      "summary": "Enum representing a 2D vector in a WebView, expressed either in device pixels or CSS page pixels with conversion methods.",
+      "tags": ["type", "vector", "coordinates"],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/shared/script/lib.rs",
+      "target": "class:components/shared/script/lib.rs:ScriptThreadMessage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/script/lib.rs",
+      "target": "class:components/shared/script/lib.rs:InitialScriptState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/script/lib.rs",
+      "target": "class:components/shared/script/lib.rs:Painter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/script/lib.rs",
+      "target": "class:components/shared/script/lib.rs:ScriptThreadMessage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/script/lib.rs",
+      "target": "class:components/shared/script/lib.rs:InitialScriptState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/script/lib.rs",
+      "target": "class:components/shared/script/lib.rs:Painter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/paint/rendering_context.rs",
+      "target": "class:components/shared/paint/rendering_context.rs:RenderingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/paint/rendering_context.rs",
+      "target": "class:components/shared/paint/rendering_context.rs:SoftwareRenderingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/paint/rendering_context.rs",
+      "target": "class:components/shared/paint/rendering_context.rs:WindowRenderingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/paint/rendering_context.rs",
+      "target": "class:components/shared/paint/rendering_context.rs:OffscreenRenderingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/paint/rendering_context.rs",
+      "target": "class:components/shared/paint/rendering_context.rs:RenderingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/paint/rendering_context.rs",
+      "target": "class:components/shared/paint/rendering_context.rs:SoftwareRenderingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/paint/rendering_context.rs",
+      "target": "class:components/shared/paint/rendering_context.rs:WindowRenderingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/paint/rendering_context.rs",
+      "target": "class:components/shared/paint/rendering_context.rs:OffscreenRenderingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:EventLoopWaker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:GenericEmbedderProxy",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:RefreshDriver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ViewportDetails",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:EmbedderMsg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebResourceResponse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScriptToEmbedderChan",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Notification",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:UntrustedNodeAddress",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:UrlRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WakeLockDelegate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewPoint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewRect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewVector",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:EventLoopWaker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:GenericEmbedderProxy",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:RefreshDriver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ViewportDetails",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:EmbedderMsg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebResourceResponse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:ScriptToEmbedderChan",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:Notification",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:UntrustedNodeAddress",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:UrlRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WakeLockDelegate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewPoint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewRect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/embedder/lib.rs",
+      "target": "class:components/shared/embedder/lib.rs:WebViewVector",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:Layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:LayoutFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ScriptThreadFactory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ReflowRequest",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ReflowResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ImageAnimationState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:AnimatingImages",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:Layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:LayoutFactory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ScriptThreadFactory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ReflowRequest",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ReflowResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:ImageAnimationState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/layout/lib.rs",
+      "target": "class:components/shared/layout/lib.rs:AnimatingImages",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:WebGPU",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:ContextConfiguration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:ShaderCompilationInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:WebGPU",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:ContextConfiguration",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/shared/webgpu/lib.rs",
+      "target": "class:components/shared/webgpu/lib.rs:ShaderCompilationInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

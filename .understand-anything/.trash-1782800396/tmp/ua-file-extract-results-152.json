@@ -1,0 +1,6581 @@
+{
+  "scriptCompleted": true,
+  "filesAnalyzed": 21,
+  "filesSkipped": [
+    "components/shared/base/encoding_rs/Cargo.toml",
+    "components/shared/base/iprofile/Cargo.toml",
+    "components/shared/base/profiler/Cargo.toml",
+    "components/media/backends/cubeb/Cargo.toml"
+  ],
+  "results": [
+    {
+      "path": "components/shared/profile/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 29,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "features",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "components/shared/script/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 49,
+      "nonEmptyLines": 46,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "features",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "components/shared/script/lib.rs",
+      "language": "Rust",
+      "fileCategory": "code",
+      "totalLines": 465,
+      "nonEmptyLines": 445,
+      "functions": [
+        {
+          "name": "area",
+          "startLine": 132,
+          "endLine": 137,
+          "params": []
+        },
+        {
+          "name": "fmt",
+          "startLine": 335,
+          "endLine": 338,
+          "params": [
+            "formatter"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 425,
+          "endLine": 427,
+          "params": [
+            "_"
+          ]
+        },
+        {
+          "name": "fmt",
+          "startLine": 443,
+          "endLine": 447,
+          "params": [
+            "fmt"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "NewPipelineInfo",
+          "startLine": 62,
+          "endLine": 84,
+          "methods": [],
+          "properties": [
+            "parent_info",
+            "new_pipeline_id",
+            "browsing_context_id",
+            "webview_id",
+            "opener",
+            "load_data",
+            "viewport_details",
+            "user_content_manager_id",
+            "theme",
+            "target_snapshot_params"
+          ]
+        },
+        {
+          "name": "DiscardBrowsingContext",
+          "startLine": 88,
+          "endLine": 93,
+          "methods": [],
+          "properties": [
+            "Yes",
+            "No"
+          ]
+        },
+        {
+          "name": "DocumentActivity",
+          "startLine": 103,
+          "endLine": 110,
+          "methods": [],
+          "properties": [
+            "Inactive",
+            "Active",
+            "FullyActive"
+          ]
+        },
+        {
+          "name": "ProgressiveWebMetricType",
+          "startLine": 114,
+          "endLine": 128,
+          "methods": [
+            "area"
+          ],
+          "properties": [
+            "FirstPaint",
+            "FirstContentfulPaint",
+            "LargestContentfulPaint",
+            "TimeToInteractive"
+          ]
+        },
+        {
+          "name": "UpdatePipelineIdReason",
+          "startLine": 142,
+          "endLine": 147,
+          "methods": [],
+          "properties": [
+            "Navigation",
+            "Traversal"
+          ]
+        },
+        {
+          "name": "ScriptThreadMessage",
+          "startLine": 152,
+          "endLine": 332,
+          "methods": [
+            "fmt"
+          ],
+          "properties": [
+            "SpawnPipeline",
+            "StopDelayingLoadEventsMode",
+            "Resize",
+            "ThemeChange",
+            "ResizeInactive",
+            "ExitFullScreen",
+            "UnloadDocument",
+            "ExitPipeline",
+            "ExitScriptThread",
+            "SendInputEvent",
+            "RefreshCursor",
+            "GetTitle",
+            "GetDocumentOrigin",
+            "SetDocumentActivity",
+            "SetThrottled",
+            "SetThrottledInContainingIframe",
+            "NavigateIframe",
+            "PostMessage",
+            "UpdatePipelineId",
+            "UpdateHistoryState",
+            "RemoveHistoryStates",
+            "FocusDocumentAsPartOfFocusingSteps",
+            "UnfocusDocumentAsPartOfFocusingSteps",
+            "FocusDocument",
+            "WebDriverScriptCommand",
+            "TickAllAnimations",
+            "WebFontLoaded",
+            "DispatchIFrameLoadEvent",
+            "DispatchStorageEvent",
+            "ReportCSSError",
+            "Reload",
+            "PaintMetric",
+            "MediaSessionAction",
+            "SetWebGPUPort",
+            "SetScrollStates",
+            "EvaluateJavaScript",
+            "SendImageKeysBatch",
+            "PreferencesUpdated",
+            "NoLongerWaitingOnAsychronousImageUpdates",
+            "ForwardKeyboardScroll",
+            "RequestScreenshotReadiness",
+            "EmbedderControlResponse",
+            "SetUserContents",
+            "DestroyUserContentManager",
+            "UpdatePinchZoomInfos",
+            "SetAccessibilityActive",
+            "TriggerGarbageCollection"
+          ]
+        },
+        {
+          "name": "DocumentState",
+          "startLine": 343,
+          "endLine": 348,
+          "methods": [],
+          "properties": [
+            "Idle",
+            "Pending"
+          ]
+        },
+        {
+          "name": "ConstellationInputEvent",
+          "startLine": 352,
+          "endLine": 362,
+          "methods": [],
+          "properties": [
+            "hit_test_result",
+            "pressed_mouse_buttons",
+            "active_keyboard_modifiers",
+            "event"
+          ]
+        },
+        {
+          "name": "InitialScriptState",
+          "startLine": 369,
+          "endLine": 413,
+          "methods": [],
+          "properties": [
+            "id",
+            "namespace_request_sender",
+            "constellation_to_script_sender",
+            "constellation_to_script_receiver",
+            "script_to_constellation_sender",
+            "script_to_embedder_sender",
+            "system_font_service",
+            "resource_threads",
+            "storage_threads",
+            "bluetooth_sender",
+            "time_profiler_sender",
+            "memory_profiler_sender",
+            "devtools_server_sender",
+            "pipeline_namespace_id",
+            "webgl_chan",
+            "webxr_registry",
+            "cross_process_paint_api",
+            "player_context",
+            "privileged_urls",
+            "user_contents_for_manager_id"
+          ]
+        },
+        {
+          "name": "PaintWorkletError",
+          "startLine": 417,
+          "endLine": 422,
+          "methods": [
+            "from"
+          ],
+          "properties": [
+            "Timeout",
+            "WorkletNotFound"
+          ]
+        },
+        {
+          "name": "Painter",
+          "startLine": 431,
+          "endLine": 440,
+          "methods": [
+            "draw_a_paint_image"
+          ],
+          "properties": []
+        },
+        {
+          "name": "DrawAPaintImageResult",
+          "startLine": 454,
+          "endLine": 465,
+          "methods": [],
+          "properties": [
+            "width",
+            "height",
+            "format",
+            "image_key",
+            "missing_image_urls"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "NewPipelineInfo",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "DiscardBrowsingContext",
+          "line": 88,
+          "isDefault": false
+        },
+        {
+          "name": "DocumentActivity",
+          "line": 103,
+          "isDefault": false
+        },
+        {
+          "name": "ProgressiveWebMetricType",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "area",
+          "line": 132,
+          "isDefault": false
+        },
+        {
+          "name": "UpdatePipelineIdReason",
+          "line": 142,
+          "isDefault": false
+        },
+        {
+          "name": "ScriptThreadMessage",
+          "line": 152,
+          "isDefault": false
+        },
+        {
+          "name": "DocumentState",
+          "line": 343,
+          "isDefault": false
+        },
+        {
+          "name": "ConstellationInputEvent",
+          "line": 352,
+          "isDefault": false
+        },
+        {
+          "name": "InitialScriptState",
+          "line": 369,
+          "isDefault": false
+        },
+        {
+          "name": "PaintWorkletError",
+          "line": 417,
+          "isDefault": false
+        },
+        {
+          "name": "Painter",
+          "line": 431,
+          "isDefault": false
+        },
+        {
+          "name": "DrawAPaintImageResult",
+          "line": 454,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "fmt",
+          "callee": "self.into",
+          "lineNumber": 336
+        },
+        {
+          "caller": "fmt",
+          "callee": "fmt.debug_tuple(\"Painter\")\n            .field(&format_args!(\"..\")).finish",
+          "lineNumber": 444
+        },
+        {
+          "caller": "fmt",
+          "callee": "fmt.debug_tuple(\"Painter\").field",
+          "lineNumber": 444
+        },
+        {
+          "caller": "fmt",
+          "callee": "fmt.debug_tuple",
+          "lineNumber": 444
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 13,
+        "functionCount": 4,
+        "classCount": 12
+      }
+    },
+    {
+      "path": "components/shared/storage/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 23,
+      "nonEmptyLines": 21,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "components/shared/webgpu/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 25,
+      "nonEmptyLines": 23,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "components/shared/webxr/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 28,
+      "nonEmptyLines": 26,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "components/shared/paint/rendering_context.rs",
+      "language": "Rust",
+      "fileCategory": "code",
+      "totalLines": 1018,
+      "nonEmptyLines": 889,
+      "functions": [
+        {
+          "name": "drop",
+          "startLine": 107,
+          "endLine": 111,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 115,
+          "endLine": 165,
+          "params": [
+            "connection",
+            "adapter",
+            "refresh_driver"
+          ]
+        },
+        {
+          "name": "create_surface",
+          "startLine": 167,
+          "endLine": 171,
+          "params": [
+            "surface_type"
+          ]
+        },
+        {
+          "name": "bind_surface",
+          "startLine": 173,
+          "endLine": 183,
+          "params": [
+            "surface"
+          ]
+        },
+        {
+          "name": "create_attached_swap_chain",
+          "startLine": 185,
+          "endLine": 189,
+          "params": []
+        },
+        {
+          "name": "resize_bound_surface",
+          "startLine": 191,
+          "endLine": 201,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "present_bound_surface",
+          "startLine": 203,
+          "endLine": 207,
+          "params": []
+        },
+        {
+          "name": "native_context",
+          "startLine": 210,
+          "endLine": 214,
+          "params": []
+        },
+        {
+          "name": "framebuffer",
+          "startLine": 216,
+          "endLine": 223,
+          "params": []
+        },
+        {
+          "name": "prepare_for_rendering",
+          "startLine": 225,
+          "endLine": 231,
+          "params": []
+        },
+        {
+          "name": "read_to_image",
+          "startLine": 233,
+          "endLine": 238,
+          "params": [
+            "source_rectangle"
+          ]
+        },
+        {
+          "name": "make_current",
+          "startLine": 240,
+          "endLine": 244,
+          "params": []
+        },
+        {
+          "name": "create_texture",
+          "startLine": 246,
+          "endLine": 264,
+          "params": [
+            "surface"
+          ]
+        },
+        {
+          "name": "destroy_texture",
+          "startLine": 266,
+          "endLine": 273,
+          "params": [
+            "surface_texture"
+          ]
+        },
+        {
+          "name": "connection",
+          "startLine": 275,
+          "endLine": 277,
+          "params": []
+        },
+        {
+          "name": "refresh_driver",
+          "startLine": 279,
+          "endLine": 281,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 296,
+          "endLine": 320,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "drop",
+          "startLine": 324,
+          "endLine": 328,
+          "params": []
+        },
+        {
+          "name": "prepare_for_rendering",
+          "startLine": 332,
+          "endLine": 334,
+          "params": []
+        },
+        {
+          "name": "read_to_image",
+          "startLine": 336,
+          "endLine": 338,
+          "params": [
+            "source_rectangle"
+          ]
+        },
+        {
+          "name": "size",
+          "startLine": 340,
+          "endLine": 342,
+          "params": []
+        },
+        {
+          "name": "resize",
+          "startLine": 344,
+          "endLine": 360,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "present",
+          "startLine": 363,
+          "endLine": 369,
+          "params": []
+        },
+        {
+          "name": "make_current",
+          "startLine": 371,
+          "endLine": 373,
+          "params": []
+        },
+        {
+          "name": "gleam_gl_api",
+          "startLine": 375,
+          "endLine": 377,
+          "params": []
+        },
+        {
+          "name": "glow_gl_api",
+          "startLine": 379,
+          "endLine": 381,
+          "params": []
+        },
+        {
+          "name": "create_texture",
+          "startLine": 383,
+          "endLine": 388,
+          "params": [
+            "surface"
+          ]
+        },
+        {
+          "name": "destroy_texture",
+          "startLine": 390,
+          "endLine": 392,
+          "params": [
+            "surface_texture"
+          ]
+        },
+        {
+          "name": "connection",
+          "startLine": 394,
+          "endLine": 396,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 414,
+          "endLine": 420,
+          "params": [
+            "display_handle",
+            "window_handle",
+            "size"
+          ]
+        },
+        {
+          "name": "new_with_refresh_driver",
+          "startLine": 422,
+          "endLine": 434,
+          "params": [
+            "display_handle",
+            "window_handle",
+            "size",
+            "refresh_driver"
+          ]
+        },
+        {
+          "name": "new_with_optional_refresh_driver",
+          "startLine": 436,
+          "endLine": 468,
+          "params": [
+            "display_handle",
+            "window_handle",
+            "size",
+            "refresh_driver"
+          ]
+        },
+        {
+          "name": "offscreen_context",
+          "startLine": 470,
+          "endLine": 475,
+          "params": [
+            "self",
+            "size"
+          ]
+        },
+        {
+          "name": "take_window",
+          "startLine": 481,
+          "endLine": 487,
+          "params": []
+        },
+        {
+          "name": "set_window",
+          "startLine": 493,
+          "endLine": 521,
+          "params": [
+            "window_handle",
+            "size"
+          ]
+        },
+        {
+          "name": "surfman_details",
+          "startLine": 523,
+          "endLine": 528,
+          "params": []
+        },
+        {
+          "name": "prepare_for_rendering",
+          "startLine": 532,
+          "endLine": 534,
+          "params": []
+        },
+        {
+          "name": "read_to_image",
+          "startLine": 536,
+          "endLine": 538,
+          "params": [
+            "source_rectangle"
+          ]
+        },
+        {
+          "name": "size",
+          "startLine": 540,
+          "endLine": 542,
+          "params": []
+        },
+        {
+          "name": "resize",
+          "startLine": 544,
+          "endLine": 549,
+          "params": [
+            "size"
+          ]
+        },
+        {
+          "name": "present",
+          "startLine": 552,
+          "endLine": 556,
+          "params": []
+        },
+        {
+          "name": "make_current",
+          "startLine": 558,
+          "endLine": 560,
+          "params": []
+        },
+        {
+          "name": "gleam_gl_api",
+          "startLine": 562,
+          "endLine": 564,
+          "params": []
+        },
+        {
+          "name": "glow_gl_api",
+          "startLine": 566,
+          "endLine": 568,
+          "params": []
+        },
+        {
+          "name": "create_texture",
+          "startLine": 570,
+          "endLine": 575,
+          "params": [
+            "surface"
+          ]
+        },
+        {
+          "name": "destroy_texture",
+          "startLine": 577,
+          "endLine": 579,
+          "params": [
+            "surface_texture"
+          ]
+        },
+        {
+          "name": "connection",
+          "startLine": 581,
+          "endLine": 583,
+          "params": []
+        },
+        {
+          "name": "refresh_driver",
+          "startLine": 585,
+          "endLine": 587,
+          "params": []
+        },
+        {
+          "name": "bind",
+          "startLine": 598,
+          "endLine": 602,
+          "params": []
+        },
+        {
+          "name": "drop",
+          "startLine": 606,
+          "endLine": 611,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 615,
+          "endLine": 679,
+          "params": [
+            "gl",
+            "size"
+          ]
+        },
+        {
+          "name": "read_to_image",
+          "startLine": 681,
+          "endLine": 683,
+          "params": [
+            "source_rectangle"
+          ]
+        },
+        {
+          "name": "read_framebuffer_to_image",
+          "startLine": 685,
+          "endLine": 729,
+          "params": [
+            "gl",
+            "framebuffer_id",
+            "source_rectangle"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 741,
+          "endLine": 753,
+          "params": [
+            "parent_context",
+            "size"
+          ]
+        },
+        {
+          "name": "parent_context",
+          "startLine": 755,
+          "endLine": 757,
+          "params": []
+        },
+        {
+          "name": "render_to_parent_callback",
+          "startLine": 759,
+          "endLine": 775,
+          "params": []
+        },
+        {
+          "name": "blit_framebuffer",
+          "startLine": 778,
+          "endLine": 815,
+          "params": [
+            "gl",
+            "source_rect",
+            "source_framebuffer_id",
+            "target_rect",
+            "target_framebuffer_id"
+          ]
+        },
+        {
+          "name": "size",
+          "startLine": 819,
+          "endLine": 821,
+          "params": []
+        },
+        {
+          "name": "resize",
+          "startLine": 823,
+          "endLine": 862,
+          "params": [
+            "new_size"
+          ]
+        },
+        {
+          "name": "prepare_for_rendering",
+          "startLine": 864,
+          "endLine": 866,
+          "params": []
+        },
+        {
+          "name": "present",
+          "startLine": 868,
+          "endLine": 868,
+          "params": []
+        },
+        {
+          "name": "make_current",
+          "startLine": 870,
+          "endLine": 872,
+          "params": []
+        },
+        {
+          "name": "gleam_gl_api",
+          "startLine": 874,
+          "endLine": 876,
+          "params": []
+        },
+        {
+          "name": "glow_gl_api",
+          "startLine": 878,
+          "endLine": 880,
+          "params": []
+        },
+        {
+          "name": "create_texture",
+          "startLine": 882,
+          "endLine": 887,
+          "params": [
+            "surface"
+          ]
+        },
+        {
+          "name": "destroy_texture",
+          "startLine": 889,
+          "endLine": 891,
+          "params": [
+            "surface_texture"
+          ]
+        },
+        {
+          "name": "connection",
+          "startLine": 893,
+          "endLine": 895,
+          "params": []
+        },
+        {
+          "name": "read_to_image",
+          "startLine": 897,
+          "endLine": 899,
+          "params": [
+            "source_rectangle"
+          ]
+        },
+        {
+          "name": "refresh_driver",
+          "startLine": 901,
+          "endLine": 903,
+          "params": []
+        },
+        {
+          "name": "print_diagnostics_information_on_context_creation_failure",
+          "startLine": 906,
+          "endLine": 948,
+          "params": [
+            "device",
+            "desired_api",
+            "desired_version"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "RenderingContext",
+          "startLine": 35,
+          "endLine": 88,
+          "methods": [
+            "read_to_image",
+            "size",
+            "resize",
+            "present",
+            "make_current",
+            "gleam_gl_api",
+            "glow_gl_api",
+            "prepare_for_rendering",
+            "size2d",
+            "create_texture",
+            "destroy_texture",
+            "connection",
+            "refresh_driver"
+          ],
+          "properties": []
+        },
+        {
+          "name": "SurfmanRenderingContext",
+          "startLine": 98,
+          "endLine": 104,
+          "methods": [
+            "drop",
+            "new",
+            "create_surface",
+            "bind_surface",
+            "create_attached_swap_chain",
+            "resize_bound_surface",
+            "present_bound_surface",
+            "native_context",
+            "framebuffer",
+            "prepare_for_rendering",
+            "read_to_image",
+            "make_current",
+            "create_texture",
+            "destroy_texture",
+            "connection",
+            "refresh_driver"
+          ],
+          "properties": [
+            "gleam_gl",
+            "glow_gl",
+            "device",
+            "context",
+            "refresh_driver"
+          ]
+        },
+        {
+          "name": "SoftwareRenderingContext",
+          "startLine": 289,
+          "endLine": 293,
+          "methods": [
+            "new",
+            "drop",
+            "prepare_for_rendering",
+            "read_to_image",
+            "size",
+            "resize",
+            "present",
+            "make_current",
+            "gleam_gl_api",
+            "glow_gl_api",
+            "create_texture",
+            "destroy_texture",
+            "connection"
+          ],
+          "properties": [
+            "size",
+            "surfman_rendering_info",
+            "swap_chain"
+          ]
+        },
+        {
+          "name": "WindowRenderingContext",
+          "startLine": 407,
+          "endLine": 411,
+          "methods": [
+            "new",
+            "new_with_refresh_driver",
+            "new_with_optional_refresh_driver",
+            "offscreen_context",
+            "take_window",
+            "set_window",
+            "surfman_details",
+            "prepare_for_rendering",
+            "read_to_image",
+            "size",
+            "resize",
+            "present",
+            "make_current",
+            "gleam_gl_api",
+            "glow_gl_api",
+            "create_texture",
+            "destroy_texture",
+            "connection",
+            "refresh_driver"
+          ],
+          "properties": [
+            "size",
+            "surfman_context"
+          ]
+        },
+        {
+          "name": "Framebuffer",
+          "startLine": 590,
+          "endLine": 595,
+          "methods": [
+            "bind",
+            "drop",
+            "new",
+            "read_to_image",
+            "read_framebuffer_to_image"
+          ],
+          "properties": [
+            "gl",
+            "framebuffer_id",
+            "renderbuffer_id",
+            "texture_id"
+          ]
+        },
+        {
+          "name": "OffscreenRenderingContext",
+          "startLine": 732,
+          "endLine": 736,
+          "methods": [
+            "new",
+            "parent_context",
+            "render_to_parent_callback",
+            "blit_framebuffer",
+            "size",
+            "resize",
+            "prepare_for_rendering",
+            "present",
+            "make_current",
+            "gleam_gl_api",
+            "glow_gl_api",
+            "create_texture",
+            "destroy_texture",
+            "connection",
+            "read_to_image",
+            "refresh_driver"
+          ],
+          "properties": [
+            "parent_context",
+            "size",
+            "framebuffer"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "RenderingContext",
+          "line": 35,
+          "isDefault": false
+        },
+        {
+          "name": "SoftwareRenderingContext",
+          "line": 289,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 296,
+          "isDefault": false
+        },
+        {
+          "name": "WindowRenderingContext",
+          "line": 407,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 414,
+          "isDefault": false
+        },
+        {
+          "name": "new_with_refresh_driver",
+          "line": 422,
+          "isDefault": false
+        },
+        {
+          "name": "offscreen_context",
+          "line": 470,
+          "isDefault": false
+        },
+        {
+          "name": "take_window",
+          "line": 481,
+          "isDefault": false
+        },
+        {
+          "name": "set_window",
+          "line": 493,
+          "isDefault": false
+        },
+        {
+          "name": "surfman_details",
+          "line": 523,
+          "isDefault": false
+        },
+        {
+          "name": "OffscreenRenderingContext",
+          "line": 732,
+          "isDefault": false
+        },
+        {
+          "name": "parent_context",
+          "line": 755,
+          "isDefault": false
+        },
+        {
+          "name": "render_to_parent_callback",
+          "line": 759,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "size2d",
+          "callee": "self.size",
+          "lineNumber": 51
+        },
+        {
+          "caller": "size2d",
+          "callee": "Size2D::new",
+          "lineNumber": 52
+        },
+        {
+          "caller": "drop",
+          "callee": "self.device.borrow_mut",
+          "lineNumber": 108
+        },
+        {
+          "caller": "drop",
+          "callee": "self.context.borrow_mut",
+          "lineNumber": 109
+        },
+        {
+          "caller": "drop",
+          "callee": "device.destroy_context",
+          "lineNumber": 110
+        },
+        {
+          "caller": "new",
+          "callee": "connection.create_device",
+          "lineNumber": 120
+        },
+        {
+          "caller": "new",
+          "callee": "connection.gl_api",
+          "lineNumber": 125
+        },
+        {
+          "caller": "new",
+          "callee": "device.create_context_descriptor",
+          "lineNumber": 131
+        },
+        {
+          "caller": "new",
+          "callee": "device\n            .create_context(&context_descriptor, None).inspect_err",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "device.create_context",
+          "lineNumber": 133
+        },
+        {
+          "caller": "new",
+          "callee": "print_diagnostics_information_on_context_creation_failure",
+          "lineNumber": 136
+        },
+        {
+          "caller": "new",
+          "callee": "gl::GlFns::load_with",
+          "lineNumber": 143
+        },
+        {
+          "caller": "new",
+          "callee": "device.get_proc_address",
+          "lineNumber": 143
+        },
+        {
+          "caller": "new",
+          "callee": "gl::GlesFns::load_with",
+          "lineNumber": 146
+        },
+        {
+          "caller": "new",
+          "callee": "device.get_proc_address",
+          "lineNumber": 146
+        },
+        {
+          "caller": "new",
+          "callee": "glow::Context::from_loader_function",
+          "lineNumber": 153
+        },
+        {
+          "caller": "new",
+          "callee": "device.get_proc_address",
+          "lineNumber": 154
+        },
+        {
+          "caller": "new",
+          "callee": "Ok",
+          "lineNumber": 158
+        },
+        {
+          "caller": "new",
+          "callee": "Arc::new",
+          "lineNumber": 160
+        },
+        {
+          "caller": "new",
+          "callee": "RefCell::new",
+          "lineNumber": 161
+        },
+        {
+          "caller": "new",
+          "callee": "RefCell::new",
+          "lineNumber": 162
+        },
+        {
+          "caller": "create_surface",
+          "callee": "self.device.borrow_mut",
+          "lineNumber": 168
+        },
+        {
+          "caller": "create_surface",
+          "callee": "self.context.borrow",
+          "lineNumber": 169
+        },
+        {
+          "caller": "create_surface",
+          "callee": "device.create_surface",
+          "lineNumber": 170
+        },
+        {
+          "caller": "bind_surface",
+          "callee": "self.device.borrow",
+          "lineNumber": 174
+        },
+        {
+          "caller": "bind_surface",
+          "callee": "self.context.borrow_mut",
+          "lineNumber": 175
+        },
+        {
+          "caller": "bind_surface",
+          "callee": "device\n            .bind_surface_to_context(context, surface).map_err",
+          "lineNumber": 176
+        },
+        {
+          "caller": "bind_surface",
+          "callee": "device.bind_surface_to_context",
+          "lineNumber": 176
+        },
+        {
+          "caller": "bind_surface",
+          "callee": "device.destroy_surface",
+          "lineNumber": 179
+        },
+        {
+          "caller": "bind_surface",
+          "callee": "Ok",
+          "lineNumber": 182
+        },
+        {
+          "caller": "create_attached_swap_chain",
+          "callee": "self.device.borrow_mut",
+          "lineNumber": 186
+        },
+        {
+          "caller": "create_attached_swap_chain",
+          "callee": "self.context.borrow_mut",
+          "lineNumber": 187
+        },
+        {
+          "caller": "create_attached_swap_chain",
+          "callee": "SwapChain::create_attached",
+          "lineNumber": 188
+        },
+        {
+          "caller": "resize_bound_surface",
+          "callee": "Err",
+          "lineNumber": 194
+        },
+        {
+          "caller": "resize_bound_surface",
+          "callee": "Size2D::new",
+          "lineNumber": 197
+        },
+        {
+          "caller": "resize_bound_surface",
+          "callee": "self.device\n            .borrow().resize_bound_surface",
+          "lineNumber": 198
+        },
+        {
+          "caller": "resize_bound_surface",
+          "callee": "self.device.borrow",
+          "lineNumber": 198
+        },
+        {
+          "caller": "resize_bound_surface",
+          "callee": "self.context.borrow_mut",
+          "lineNumber": 200
+        },
+        {
+          "caller": "present_bound_surface",
+          "callee": "self.device\n            .borrow().present_bound_surface",
+          "lineNumber": 204
+        },
+        {
+          "caller": "present_bound_surface",
+          "callee": "self.device.borrow",
+          "lineNumber": 204
+        },
+        {
+          "caller": "present_bound_surface",
+          "callee": "self.context.borrow_mut",
+          "lineNumber": 206
+        },
+        {
+          "caller": "native_context",
+          "callee": "self.device.borrow",
+          "lineNumber": 211
+        },
+        {
+          "caller": "native_context",
+          "callee": "self.context.borrow",
+          "lineNumber": 212
+        },
+        {
+          "caller": "native_context",
+          "callee": "device.native_context",
+          "lineNumber": 213
+        },
+        {
+          "caller": "framebuffer",
+          "callee": "self.device.borrow",
+          "lineNumber": 217
+        },
+        {
+          "caller": "framebuffer",
+          "callee": "self.context.borrow",
+          "lineNumber": 218
+        },
+        {
+          "caller": "framebuffer",
+          "callee": "device\n            .context_surface_info(context)\n            .unwrap_or(None).and_then",
+          "lineNumber": 219
+        },
+        {
+          "caller": "framebuffer",
+          "callee": "device\n            .context_surface_info(context).unwrap_or",
+          "lineNumber": 219
+        },
+        {
+          "caller": "framebuffer",
+          "callee": "device.context_surface_info",
+          "lineNumber": 219
+        },
+        {
+          "caller": "prepare_for_rendering",
+          "callee": "self\n            .framebuffer().map_or",
+          "lineNumber": 226
+        },
+        {
+          "caller": "prepare_for_rendering",
+          "callee": "self.framebuffer",
+          "lineNumber": 226
+        },
+        {
+          "caller": "prepare_for_rendering",
+          "callee": "framebuffer.0.into",
+          "lineNumber": 228
+        },
+        {
+          "caller": "prepare_for_rendering",
+          "callee": "self.gleam_gl.bind_framebuffer",
+          "lineNumber": 229
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "self\n            .framebuffer().map_or",
+          "lineNumber": 234
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "self.framebuffer",
+          "lineNumber": 234
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "framebuffer.0.into",
+          "lineNumber": 236
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "Framebuffer::read_framebuffer_to_image",
+          "lineNumber": 237
+        },
+        {
+          "caller": "make_current",
+          "callee": "self.device.borrow",
+          "lineNumber": 241
+        },
+        {
+          "caller": "make_current",
+          "callee": "self.context.borrow",
+          "lineNumber": 242
+        },
+        {
+          "caller": "make_current",
+          "callee": "device.make_context_current",
+          "lineNumber": 243
+        },
+        {
+          "caller": "create_texture",
+          "callee": "self.device.borrow",
+          "lineNumber": 250
+        },
+        {
+          "caller": "create_texture",
+          "callee": "self.context.borrow_mut",
+          "lineNumber": 251
+        },
+        {
+          "caller": "create_texture",
+          "callee": "device.surface_info",
+          "lineNumber": 256
+        },
+        {
+          "caller": "create_texture",
+          "callee": "device.create_surface_texture(context, surface).unwrap",
+          "lineNumber": 258
+        },
+        {
+          "caller": "create_texture",
+          "callee": "device.create_surface_texture",
+          "lineNumber": 258
+        },
+        {
+          "caller": "create_texture",
+          "callee": "device\n            .surface_texture_object(&surface_texture)\n            .map(|tex| tex.0.get()).unwrap_or",
+          "lineNumber": 259
+        },
+        {
+          "caller": "create_texture",
+          "callee": "device\n            .surface_texture_object(&surface_texture).map",
+          "lineNumber": 259
+        },
+        {
+          "caller": "create_texture",
+          "callee": "device.surface_texture_object",
+          "lineNumber": 259
+        },
+        {
+          "caller": "create_texture",
+          "callee": "tex.0.get",
+          "lineNumber": 261
+        },
+        {
+          "caller": "create_texture",
+          "callee": "Some",
+          "lineNumber": 263
+        },
+        {
+          "caller": "destroy_texture",
+          "callee": "self.device.borrow",
+          "lineNumber": 267
+        },
+        {
+          "caller": "destroy_texture",
+          "callee": "self.context.borrow_mut",
+          "lineNumber": 268
+        },
+        {
+          "caller": "destroy_texture",
+          "callee": "device\n            .destroy_surface_texture(context, surface_texture)\n            .map_err(|(error, _)| error).ok",
+          "lineNumber": 269
+        },
+        {
+          "caller": "destroy_texture",
+          "callee": "device\n            .destroy_surface_texture(context, surface_texture).map_err",
+          "lineNumber": 269
+        },
+        {
+          "caller": "destroy_texture",
+          "callee": "device.destroy_surface_texture",
+          "lineNumber": 269
+        },
+        {
+          "caller": "connection",
+          "callee": "Some",
+          "lineNumber": 276
+        },
+        {
+          "caller": "connection",
+          "callee": "self.device.borrow().connection",
+          "lineNumber": 276
+        },
+        {
+          "caller": "connection",
+          "callee": "self.device.borrow",
+          "lineNumber": 276
+        },
+        {
+          "caller": "refresh_driver",
+          "callee": "self.refresh_driver.clone",
+          "lineNumber": 280
+        },
+        {
+          "caller": "new",
+          "callee": "Err",
+          "lineNumber": 301
+        },
+        {
+          "caller": "new",
+          "callee": "Connection::new",
+          "lineNumber": 304
+        },
+        {
+          "caller": "new",
+          "callee": "connection.create_software_adapter",
+          "lineNumber": 305
+        },
+        {
+          "caller": "new",
+          "callee": "SurfmanRenderingContext::new",
+          "lineNumber": 306
+        },
+        {
+          "caller": "new",
+          "callee": "Size2D::new",
+          "lineNumber": 308
+        },
+        {
+          "caller": "new",
+          "callee": "surfman_rendering_info.create_surface",
+          "lineNumber": 310
+        },
+        {
+          "caller": "new",
+          "callee": "surfman_rendering_info.bind_surface",
+          "lineNumber": 311
+        },
+        {
+          "caller": "new",
+          "callee": "surfman_rendering_info.make_current",
+          "lineNumber": 312
+        },
+        {
+          "caller": "new",
+          "callee": "surfman_rendering_info.create_attached_swap_chain",
+          "lineNumber": 314
+        },
+        {
+          "caller": "new",
+          "callee": "Ok",
+          "lineNumber": 315
+        },
+        {
+          "caller": "new",
+          "callee": "Cell::new",
+          "lineNumber": 316
+        },
+        {
+          "caller": "drop",
+          "callee": "self.surfman_rendering_info.device.borrow_mut",
+          "lineNumber": 325
+        },
+        {
+          "caller": "drop",
+          "callee": "self.surfman_rendering_info.context.borrow_mut",
+          "lineNumber": 326
+        },
+        {
+          "caller": "drop",
+          "callee": "self.swap_chain.destroy",
+          "lineNumber": 327
+        },
+        {
+          "caller": "prepare_for_rendering",
+          "callee": "self.surfman_rendering_info.prepare_for_rendering",
+          "lineNumber": 333
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "self.surfman_rendering_info.read_to_image",
+          "lineNumber": 337
+        },
+        {
+          "caller": "size",
+          "callee": "self.size.get",
+          "lineNumber": 341
+        },
+        {
+          "caller": "resize",
+          "callee": "self.size.get",
+          "lineNumber": 350
+        },
+        {
+          "caller": "resize",
+          "callee": "self.size.set",
+          "lineNumber": 354
+        },
+        {
+          "caller": "resize",
+          "callee": "self.surfman_rendering_info.device.borrow_mut",
+          "lineNumber": 356
+        },
+        {
+          "caller": "resize",
+          "callee": "self.surfman_rendering_info.context.borrow_mut",
+          "lineNumber": 357
+        },
+        {
+          "caller": "resize",
+          "callee": "Size2D::new",
+          "lineNumber": 358
+        },
+        {
+          "caller": "resize",
+          "callee": "self.swap_chain.resize",
+          "lineNumber": 359
+        },
+        {
+          "caller": "present",
+          "callee": "self.surfman_rendering_info.device.borrow_mut",
+          "lineNumber": 364
+        },
+        {
+          "caller": "present",
+          "callee": "self.surfman_rendering_info.context.borrow_mut",
+          "lineNumber": 365
+        },
+        {
+          "caller": "present",
+          "callee": "self\n            .swap_chain.swap_buffers",
+          "lineNumber": 366
+        },
+        {
+          "caller": "make_current",
+          "callee": "self.surfman_rendering_info.make_current",
+          "lineNumber": 372
+        },
+        {
+          "caller": "gleam_gl_api",
+          "callee": "self.surfman_rendering_info.gleam_gl.clone",
+          "lineNumber": 376
+        },
+        {
+          "caller": "glow_gl_api",
+          "callee": "self.surfman_rendering_info.glow_gl.clone",
+          "lineNumber": 380
+        },
+        {
+          "caller": "create_texture",
+          "callee": "self.surfman_rendering_info.create_texture",
+          "lineNumber": 387
+        },
+        {
+          "caller": "destroy_texture",
+          "callee": "self.surfman_rendering_info.destroy_texture",
+          "lineNumber": 391
+        },
+        {
+          "caller": "connection",
+          "callee": "self.surfman_rendering_info.connection",
+          "lineNumber": 395
+        },
+        {
+          "caller": "new",
+          "callee": "Self::new_with_optional_refresh_driver",
+          "lineNumber": 419
+        },
+        {
+          "caller": "new_with_refresh_driver",
+          "callee": "Self::new_with_optional_refresh_driver",
+          "lineNumber": 428
+        },
+        {
+          "caller": "new_with_refresh_driver",
+          "callee": "Some",
+          "lineNumber": 432
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "Err",
+          "lineNumber": 446
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "Connection::from_display_handle",
+          "lineNumber": 449
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "connection.create_adapter",
+          "lineNumber": 450
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "SurfmanRenderingContext::new",
+          "lineNumber": 451
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "connection\n            .create_native_widget_from_window_handle(\n                window_handle,\n                Size2D::new(size.width as i32, size.height as i32),\n            ).expect",
+          "lineNumber": 453
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "connection.create_native_widget_from_window_handle",
+          "lineNumber": 453
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "Size2D::new",
+          "lineNumber": 456
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "surfman_context.create_surface",
+          "lineNumber": 460
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "surfman_context.bind_surface",
+          "lineNumber": 461
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "surfman_context.make_current",
+          "lineNumber": 462
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "Ok",
+          "lineNumber": 464
+        },
+        {
+          "caller": "new_with_optional_refresh_driver",
+          "callee": "Cell::new",
+          "lineNumber": 465
+        },
+        {
+          "caller": "offscreen_context",
+          "callee": "OffscreenRenderingContext::new",
+          "lineNumber": 474
+        },
+        {
+          "caller": "offscreen_context",
+          "callee": "self.clone",
+          "lineNumber": 474
+        },
+        {
+          "caller": "take_window",
+          "callee": "self.surfman_context.device.borrow_mut",
+          "lineNumber": 482
+        },
+        {
+          "caller": "take_window",
+          "callee": "self.surfman_context.context.borrow_mut",
+          "lineNumber": 483
+        },
+        {
+          "caller": "take_window",
+          "callee": "device.unbind_surface_from_context(&mut context)?.unwrap",
+          "lineNumber": 484
+        },
+        {
+          "caller": "take_window",
+          "callee": "device.unbind_surface_from_context",
+          "lineNumber": 484
+        },
+        {
+          "caller": "take_window",
+          "callee": "device.destroy_surface",
+          "lineNumber": 485
+        },
+        {
+          "caller": "take_window",
+          "callee": "Ok",
+          "lineNumber": 486
+        },
+        {
+          "caller": "set_window",
+          "callee": "self.surfman_context.device.borrow_mut",
+          "lineNumber": 498
+        },
+        {
+          "caller": "set_window",
+          "callee": "self.surfman_context.context.borrow_mut",
+          "lineNumber": 499
+        },
+        {
+          "caller": "set_window",
+          "callee": "device\n            .connection()\n            .create_native_widget_from_window_handle(\n                window_handle,\n                Size2D::new(size.width as i32, size.height as i32),\n            ).expect",
+          "lineNumber": 501
+        },
+        {
+          "caller": "set_window",
+          "callee": "device\n            .connection().create_native_widget_from_window_handle",
+          "lineNumber": 501
+        },
+        {
+          "caller": "set_window",
+          "callee": "device.connection",
+          "lineNumber": 501
+        },
+        {
+          "caller": "set_window",
+          "callee": "Size2D::new",
+          "lineNumber": 505
+        },
+        {
+          "caller": "set_window",
+          "callee": "device.create_surface",
+          "lineNumber": 511
+        },
+        {
+          "caller": "set_window",
+          "callee": "device\n            .bind_surface_to_context(&mut context, surface).map_err",
+          "lineNumber": 513
+        },
+        {
+          "caller": "set_window",
+          "callee": "device.bind_surface_to_context",
+          "lineNumber": 513
+        },
+        {
+          "caller": "set_window",
+          "callee": "device.destroy_surface",
+          "lineNumber": 516
+        },
+        {
+          "caller": "set_window",
+          "callee": "device.make_context_current",
+          "lineNumber": 519
+        },
+        {
+          "caller": "set_window",
+          "callee": "Ok",
+          "lineNumber": 520
+        },
+        {
+          "caller": "surfman_details",
+          "callee": "self.surfman_context.device.borrow_mut",
+          "lineNumber": 525
+        },
+        {
+          "caller": "surfman_details",
+          "callee": "self.surfman_context.context.borrow_mut",
+          "lineNumber": 526
+        },
+        {
+          "caller": "prepare_for_rendering",
+          "callee": "self.surfman_context.prepare_for_rendering",
+          "lineNumber": 533
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "self.surfman_context.read_to_image",
+          "lineNumber": 537
+        },
+        {
+          "caller": "size",
+          "callee": "self.size.get",
+          "lineNumber": 541
+        },
+        {
+          "caller": "resize",
+          "callee": "self.surfman_context.resize_bound_surface",
+          "lineNumber": 545
+        },
+        {
+          "caller": "resize",
+          "callee": "self.size.set",
+          "lineNumber": 546
+        },
+        {
+          "caller": "present",
+          "callee": "self.surfman_context.present_bound_surface",
+          "lineNumber": 553
+        },
+        {
+          "caller": "make_current",
+          "callee": "self.surfman_context.make_current",
+          "lineNumber": 559
+        },
+        {
+          "caller": "gleam_gl_api",
+          "callee": "self.surfman_context.gleam_gl.clone",
+          "lineNumber": 563
+        },
+        {
+          "caller": "glow_gl_api",
+          "callee": "self.surfman_context.glow_gl.clone",
+          "lineNumber": 567
+        },
+        {
+          "caller": "create_texture",
+          "callee": "self.surfman_context.create_texture",
+          "lineNumber": 574
+        },
+        {
+          "caller": "destroy_texture",
+          "callee": "self.surfman_context.destroy_texture",
+          "lineNumber": 578
+        },
+        {
+          "caller": "connection",
+          "callee": "self.surfman_context.connection",
+          "lineNumber": 582
+        },
+        {
+          "caller": "refresh_driver",
+          "callee": "self.surfman_context.refresh_driver",
+          "lineNumber": 586
+        },
+        {
+          "caller": "bind",
+          "callee": "self.gl.bind_framebuffer",
+          "lineNumber": 600
+        },
+        {
+          "caller": "drop",
+          "callee": "self.gl.bind_framebuffer",
+          "lineNumber": 607
+        },
+        {
+          "caller": "drop",
+          "callee": "self.gl.delete_textures",
+          "lineNumber": 608
+        },
+        {
+          "caller": "drop",
+          "callee": "self.gl.delete_renderbuffers",
+          "lineNumber": 609
+        },
+        {
+          "caller": "drop",
+          "callee": "self.gl.delete_framebuffers",
+          "lineNumber": 610
+        },
+        {
+          "caller": "new",
+          "callee": "gl.gen_framebuffers",
+          "lineNumber": 616
+        },
+        {
+          "caller": "new",
+          "callee": "gl.bind_framebuffer",
+          "lineNumber": 617
+        },
+        {
+          "caller": "new",
+          "callee": "gl.gen_textures",
+          "lineNumber": 619
+        },
+        {
+          "caller": "new",
+          "callee": "gl.bind_texture",
+          "lineNumber": 620
+        },
+        {
+          "caller": "new",
+          "callee": "gl.tex_image_2d",
+          "lineNumber": 621
+        },
+        {
+          "caller": "new",
+          "callee": "gl.tex_parameter_i",
+          "lineNumber": 632
+        },
+        {
+          "caller": "new",
+          "callee": "gl.tex_parameter_i",
+          "lineNumber": 637
+        },
+        {
+          "caller": "new",
+          "callee": "gl.framebuffer_texture_2d",
+          "lineNumber": 643
+        },
+        {
+          "caller": "new",
+          "callee": "gl.bind_texture",
+          "lineNumber": 651
+        },
+        {
+          "caller": "new",
+          "callee": "gl.gen_renderbuffers",
+          "lineNumber": 653
+        },
+        {
+          "caller": "new",
+          "callee": "gl.bind_renderbuffer",
+          "lineNumber": 655
+        },
+        {
+          "caller": "new",
+          "callee": "gl.renderbuffer_storage",
+          "lineNumber": 656
+        },
+        {
+          "caller": "new",
+          "callee": "gl.framebuffer_renderbuffer",
+          "lineNumber": 662
+        },
+        {
+          "caller": "new",
+          "callee": "framebuffer_ids\n                .first().expect",
+          "lineNumber": 671
+        },
+        {
+          "caller": "new",
+          "callee": "framebuffer_ids.first",
+          "lineNumber": 671
+        },
+        {
+          "caller": "new",
+          "callee": "renderbuffer_ids\n                .first().expect",
+          "lineNumber": 674
+        },
+        {
+          "caller": "new",
+          "callee": "renderbuffer_ids.first",
+          "lineNumber": 674
+        },
+        {
+          "caller": "new",
+          "callee": "texture_ids.first().expect",
+          "lineNumber": 677
+        },
+        {
+          "caller": "new",
+          "callee": "texture_ids.first",
+          "lineNumber": 677
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "Self::read_framebuffer_to_image",
+          "lineNumber": 682
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "gl.bind_framebuffer",
+          "lineNumber": 690
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "gl.bind_vertex_array",
+          "lineNumber": 698
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "gl.read_pixels",
+          "lineNumber": 700
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "source_rectangle.width",
+          "lineNumber": 703
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "source_rectangle.height",
+          "lineNumber": 704
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "gl.get_error",
+          "lineNumber": 708
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "source_rectangle.to_usize",
+          "lineNumber": 714
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "pixels.clone",
+          "lineNumber": 715
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "source_rectangle.width",
+          "lineNumber": 716
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "source_rectangle.height",
+          "lineNumber": 717
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "source_rectangle.height",
+          "lineNumber": 719
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "pixels[dst_start..dst_start + stride].clone_from_slice",
+          "lineNumber": 721
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "RgbaImage::from_raw",
+          "lineNumber": 724
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "source_rectangle.width",
+          "lineNumber": 725
+        },
+        {
+          "caller": "read_framebuffer_to_image",
+          "callee": "source_rectangle.height",
+          "lineNumber": 726
+        },
+        {
+          "caller": "new",
+          "callee": "RefCell::new",
+          "lineNumber": 747
+        },
+        {
+          "caller": "new",
+          "callee": "Framebuffer::new",
+          "lineNumber": 747
+        },
+        {
+          "caller": "new",
+          "callee": "parent_context.gleam_gl_api",
+          "lineNumber": 747
+        },
+        {
+          "caller": "new",
+          "callee": "Cell::new",
+          "lineNumber": 750
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "NonZeroU32::new(self.framebuffer.borrow().framebuffer_id).map",
+          "lineNumber": 762
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "NonZeroU32::new",
+          "lineNumber": 762
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "self.framebuffer.borrow",
+          "lineNumber": 762
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "self.parent_context.surfman_context.framebuffer",
+          "lineNumber": 763
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "self.size.get",
+          "lineNumber": 764
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "Size2D::new",
+          "lineNumber": 765
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "Some",
+          "lineNumber": 766
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "Box::new",
+          "lineNumber": 766
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "Self::blit_framebuffer",
+          "lineNumber": 767
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "Rect::new",
+          "lineNumber": 769
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "Point2D::origin",
+          "lineNumber": 769
+        },
+        {
+          "caller": "render_to_parent_callback",
+          "callee": "size.to_i32",
+          "lineNumber": 769
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.clear_color",
+          "lineNumber": 787
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.scissor",
+          "lineNumber": 788
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "target_rect.width",
+          "lineNumber": 791
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "target_rect.height",
+          "lineNumber": 792
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.enable",
+          "lineNumber": 794
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.clear",
+          "lineNumber": 795
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.disable",
+          "lineNumber": 796
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.bind_framebuffer",
+          "lineNumber": 798
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "Some",
+          "lineNumber": 798
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.bind_framebuffer",
+          "lineNumber": 799
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.blit_framebuffer",
+          "lineNumber": 801
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "source_rect.width",
+          "lineNumber": 804
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "source_rect.height",
+          "lineNumber": 805
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "target_rect.width",
+          "lineNumber": 808
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "target_rect.height",
+          "lineNumber": 809
+        },
+        {
+          "caller": "blit_framebuffer",
+          "callee": "gl.bind_framebuffer",
+          "lineNumber": 813
+        },
+        {
+          "caller": "size",
+          "callee": "self.size.get",
+          "lineNumber": 820
+        },
+        {
+          "caller": "resize",
+          "callee": "self.size.get",
+          "lineNumber": 829
+        },
+        {
+          "caller": "resize",
+          "callee": "self.parent_context.gleam_gl_api",
+          "lineNumber": 834
+        },
+        {
+          "caller": "resize",
+          "callee": "Framebuffer::new",
+          "lineNumber": 835
+        },
+        {
+          "caller": "resize",
+          "callee": "gl.clone",
+          "lineNumber": 835
+        },
+        {
+          "caller": "resize",
+          "callee": "std::mem::replace",
+          "lineNumber": 838
+        },
+        {
+          "caller": "resize",
+          "callee": "self.framebuffer.borrow_mut",
+          "lineNumber": 838
+        },
+        {
+          "caller": "resize",
+          "callee": "self.size.set",
+          "lineNumber": 839
+        },
+        {
+          "caller": "resize",
+          "callee": "new_size.min",
+          "lineNumber": 841
+        },
+        {
+          "caller": "resize",
+          "callee": "Rect::new(\n            Point2D::origin(),\n            Size2D::new(blit_size.width, blit_size.height),\n        ).to_i32",
+          "lineNumber": 842
+        },
+        {
+          "caller": "resize",
+          "callee": "Rect::new",
+          "lineNumber": 842
+        },
+        {
+          "caller": "resize",
+          "callee": "Point2D::origin",
+          "lineNumber": 843
+        },
+        {
+          "caller": "resize",
+          "callee": "Size2D::new",
+          "lineNumber": 844
+        },
+        {
+          "caller": "resize",
+          "callee": "NonZeroU32::new(old_framebuffer.framebuffer_id).map",
+          "lineNumber": 849
+        },
+        {
+          "caller": "resize",
+          "callee": "NonZeroU32::new",
+          "lineNumber": 849
+        },
+        {
+          "caller": "resize",
+          "callee": "NonZeroU32::new(self.framebuffer.borrow().framebuffer_id).map",
+          "lineNumber": 854
+        },
+        {
+          "caller": "resize",
+          "callee": "NonZeroU32::new",
+          "lineNumber": 854
+        },
+        {
+          "caller": "resize",
+          "callee": "self.framebuffer.borrow",
+          "lineNumber": 854
+        },
+        {
+          "caller": "resize",
+          "callee": "Self::blit_framebuffer",
+          "lineNumber": 855
+        },
+        {
+          "caller": "resize",
+          "callee": "self.glow_gl_api",
+          "lineNumber": 856
+        },
+        {
+          "caller": "prepare_for_rendering",
+          "callee": "self.framebuffer.borrow().bind",
+          "lineNumber": 865
+        },
+        {
+          "caller": "prepare_for_rendering",
+          "callee": "self.framebuffer.borrow",
+          "lineNumber": 865
+        },
+        {
+          "caller": "make_current",
+          "callee": "self.parent_context.make_current",
+          "lineNumber": 871
+        },
+        {
+          "caller": "gleam_gl_api",
+          "callee": "self.parent_context.gleam_gl_api",
+          "lineNumber": 875
+        },
+        {
+          "caller": "glow_gl_api",
+          "callee": "self.parent_context.glow_gl_api",
+          "lineNumber": 879
+        },
+        {
+          "caller": "create_texture",
+          "callee": "self.parent_context.create_texture",
+          "lineNumber": 886
+        },
+        {
+          "caller": "destroy_texture",
+          "callee": "self.parent_context.destroy_texture",
+          "lineNumber": 890
+        },
+        {
+          "caller": "connection",
+          "callee": "self.parent_context.connection",
+          "lineNumber": 894
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "self.framebuffer.borrow().read_to_image",
+          "lineNumber": 898
+        },
+        {
+          "caller": "read_to_image",
+          "callee": "self.framebuffer.borrow",
+          "lineNumber": 898
+        },
+        {
+          "caller": "refresh_driver",
+          "callee": "self.parent_context().refresh_driver",
+          "lineNumber": 902
+        },
+        {
+          "caller": "refresh_driver",
+          "callee": "self.parent_context",
+          "lineNumber": 902
+        },
+        {
+          "caller": "print_diagnostics_information_on_context_creation_failure",
+          "callee": "device\n        .create_context_descriptor(&ContextAttributes {\n            flags: ContextAttributeFlags::empty(),\n            version,\n        }).and_then",
+          "lineNumber": 918
+        },
+        {
+          "caller": "print_diagnostics_information_on_context_creation_failure",
+          "callee": "device.create_context_descriptor",
+          "lineNumber": 918
+        },
+        {
+          "caller": "print_diagnostics_information_on_context_creation_failure",
+          "callee": "ContextAttributeFlags::empty",
+          "lineNumber": 920
+        },
+        {
+          "caller": "print_diagnostics_information_on_context_creation_failure",
+          "callee": "device.create_context",
+          "lineNumber": 923
+        },
+        {
+          "caller": "print_diagnostics_information_on_context_creation_failure",
+          "callee": "glow::Context::from_loader_function",
+          "lineNumber": 928
+        },
+        {
+          "caller": "print_diagnostics_information_on_context_creation_failure",
+          "callee": "device.get_proc_address",
+          "lineNumber": 929
+        },
+        {
+          "caller": "print_diagnostics_information_on_context_creation_failure",
+          "callee": "device.destroy_context",
+          "lineNumber": 939
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "Connection::new",
+          "lineNumber": 964
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "connection.create_software_adapter",
+          "lineNumber": 965
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "connection.create_device",
+          "lineNumber": 966
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "device.create_context_descriptor",
+          "lineNumber": 967
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "GLVersion::new",
+          "lineNumber": 968
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "ContextAttributeFlags::empty",
+          "lineNumber": 969
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "device.create_context",
+          "lineNumber": 971
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "connection.gl_api",
+          "lineNumber": 973
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "gl::GlFns::load_with",
+          "lineNumber": 974
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "device.get_proc_address",
+          "lineNumber": 974
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "gl::GlesFns::load_with",
+          "lineNumber": 976
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "device.get_proc_address",
+          "lineNumber": 976
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "device.make_context_current",
+          "lineNumber": 980
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "Framebuffer::new",
+          "lineNumber": 984
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "PhysicalSize::new",
+          "lineNumber": 984
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "framebuffer.bind",
+          "lineNumber": 985
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "framebuffer\n                .gl.clear_color",
+          "lineNumber": 986
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "framebuffer.gl.clear",
+          "lineNumber": 989
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "Box2D::from_origin_and_size",
+          "lineNumber": 991
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "Point2D::zero",
+          "lineNumber": 991
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "Size2D::new",
+          "lineNumber": 991
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "framebuffer\n                .read_to_image(rect.to_i32()).expect",
+          "lineNumber": 992
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "framebuffer.read_to_image",
+          "lineNumber": 992
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "rect.to_i32",
+          "lineNumber": 993
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "Rgba",
+          "lineNumber": 998
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "device.destroy_context",
+          "lineNumber": 1002
+        },
+        {
+          "caller": "test_read_pixels",
+          "callee": "Ok",
+          "lineNumber": 1004
+        },
+        {
+          "caller": "test_minimum_size_error",
+          "callee": "SoftwareRenderingContext::new",
+          "lineNumber": 1009
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 13,
+        "functionCount": 70,
+        "classCount": 6
+      }
+    },
+    {
+      "path": "components/shared/embedder/lib.rs",
+      "language": "Rust",
+      "fileCategory": "code",
+      "totalLines": 1208,
+      "nonEmptyLines": 1103,
+      "functions": [
+        {
+          "name": "as_device_point",
+          "startLine": 68,
+          "endLine": 73,
+          "params": [
+            "scale"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 77,
+          "endLine": 79,
+          "params": [
+            "point"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 83,
+          "endLine": 85,
+          "params": [
+            "point"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 89,
+          "endLine": 91,
+          "params": [
+            "point"
+          ]
+        },
+        {
+          "name": "as_device_rect",
+          "startLine": 105,
+          "endLine": 110,
+          "params": [
+            "scale"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 114,
+          "endLine": 116,
+          "params": [
+            "rect"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 120,
+          "endLine": 125,
+          "params": [
+            "rect"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 129,
+          "endLine": 131,
+          "params": [
+            "rect"
+          ]
+        },
+        {
+          "name": "as_device_vector",
+          "startLine": 145,
+          "endLine": 150,
+          "params": [
+            "scale"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 154,
+          "endLine": 156,
+          "params": [
+            "vector"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 160,
+          "endLine": 162,
+          "params": [
+            "vector"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 166,
+          "endLine": 168,
+          "params": [
+            "vector"
+          ]
+        },
+        {
+          "name": "clone",
+          "startLine": 251,
+          "endLine": 253,
+          "params": []
+        },
+        {
+          "name": "send",
+          "startLine": 263,
+          "endLine": 269,
+          "params": [
+            "message"
+          ]
+        },
+        {
+          "name": "clone",
+          "startLine": 273,
+          "endLine": 278,
+          "params": []
+        },
+        {
+          "name": "layout_size",
+          "startLine": 348,
+          "endLine": 350,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 367,
+          "endLine": 369,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 406,
+          "endLine": 420,
+          "params": [
+            "width",
+            "height",
+            "data",
+            "range",
+            "format"
+          ]
+        },
+        {
+          "name": "data",
+          "startLine": 423,
+          "endLine": 425,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 442,
+          "endLine": 452,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "fmt",
+          "startLine": 549,
+          "endLine": 552,
+          "params": [
+            "formatter"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 567,
+          "endLine": 573,
+          "params": [
+            "title"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 597,
+          "endLine": 603,
+          "params": [
+            "duration",
+            "playback_rate",
+            "position"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 726,
+          "endLine": 733,
+          "params": [
+            "url"
+          ]
+        },
+        {
+          "name": "headers",
+          "startLine": 735,
+          "endLine": 738,
+          "params": [
+            "headers"
+          ]
+        },
+        {
+          "name": "status_code",
+          "startLine": 740,
+          "endLine": 743,
+          "params": [
+            "status_code"
+          ]
+        },
+        {
+          "name": "status_message",
+          "startLine": 745,
+          "endLine": 748,
+          "params": [
+            "status_message"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 761,
+          "endLine": 766,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 886,
+          "endLine": 888,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 902,
+          "endLine": 904,
+          "params": [
+            "o"
+          ]
+        },
+        {
+          "name": "serialize",
+          "startLine": 908,
+          "endLine": 910,
+          "params": [
+            "s"
+          ]
+        },
+        {
+          "name": "deserialize",
+          "startLine": 914,
+          "endLine": 917,
+          "params": [
+            "d"
+          ]
+        },
+        {
+          "name": "from_id",
+          "startLine": 923,
+          "endLine": 925,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "fmt",
+          "startLine": 1023,
+          "endLine": 1025,
+          "params": [
+            "f"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 1121,
+          "endLine": 1138,
+          "params": [
+            "embedder_chan",
+            "waker"
+          ]
+        },
+        {
+          "name": "send",
+          "startLine": 1141,
+          "endLine": 1143,
+          "params": [
+            "msg"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 1174,
+          "endLine": 1179,
+          "params": [
+            "url"
+          ]
+        },
+        {
+          "name": "headers",
+          "startLine": 1182,
+          "endLine": 1185,
+          "params": [
+            "headers"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "WebViewPoint",
+          "startLine": 61,
+          "endLine": 64,
+          "methods": [
+            "as_device_point",
+            "from",
+            "from",
+            "from"
+          ],
+          "properties": [
+            "Device",
+            "Page"
+          ]
+        },
+        {
+          "name": "WebViewRect",
+          "startLine": 98,
+          "endLine": 101,
+          "methods": [
+            "as_device_rect",
+            "from",
+            "from",
+            "from"
+          ],
+          "properties": [
+            "Device",
+            "Page"
+          ]
+        },
+        {
+          "name": "WebViewVector",
+          "startLine": 138,
+          "endLine": 141,
+          "methods": [
+            "as_device_vector",
+            "from",
+            "from",
+            "from"
+          ],
+          "properties": [
+            "Device",
+            "Page"
+          ]
+        },
+        {
+          "name": "Scroll",
+          "startLine": 173,
+          "endLine": 181,
+          "methods": [],
+          "properties": [
+            "Delta",
+            "Start",
+            "End"
+          ]
+        },
+        {
+          "name": "ShutdownState",
+          "startLine": 186,
+          "endLine": 190,
+          "methods": [],
+          "properties": [
+            "NotShuttingDown",
+            "ShuttingDown",
+            "FinishedShuttingDown"
+          ]
+        },
+        {
+          "name": "Cursor",
+          "startLine": 196,
+          "endLine": 233,
+          "methods": [],
+          "properties": [
+            "None",
+            "Default",
+            "Pointer",
+            "ContextMenu",
+            "Help",
+            "Progress",
+            "Wait",
+            "Cell",
+            "Crosshair",
+            "Text",
+            "VerticalText",
+            "Alias",
+            "Copy",
+            "Move",
+            "NoDrop",
+            "NotAllowed",
+            "Grab",
+            "Grabbing",
+            "EResize",
+            "NResize",
+            "NeResize",
+            "NwResize",
+            "SResize",
+            "SeResize",
+            "SwResize",
+            "WResize",
+            "EwResize",
+            "NsResize",
+            "NeswResize",
+            "NwseResize",
+            "ColResize",
+            "RowResize",
+            "AllScroll",
+            "ZoomIn",
+            "ZoomOut"
+          ]
+        },
+        {
+          "name": "EventLoopWaker",
+          "startLine": 239,
+          "endLine": 248,
+          "methods": [
+            "clone_box",
+            "wake"
+          ],
+          "properties": []
+        },
+        {
+          "name": "GenericEmbedderProxy",
+          "startLine": 257,
+          "endLine": 260,
+          "methods": [],
+          "properties": [
+            "sender",
+            "event_loop_waker"
+          ]
+        },
+        {
+          "name": "RefreshDriver",
+          "startLine": 287,
+          "endLine": 295,
+          "methods": [
+            "observe_next_frame"
+          ],
+          "properties": []
+        },
+        {
+          "name": "AuthenticationResponse",
+          "startLine": 299,
+          "endLine": 304,
+          "methods": [],
+          "properties": [
+            "username",
+            "password"
+          ]
+        },
+        {
+          "name": "AllowOrDeny",
+          "startLine": 308,
+          "endLine": 311,
+          "methods": [],
+          "properties": [
+            "Allow",
+            "Deny"
+          ]
+        },
+        {
+          "name": "RegisterOrUnregister",
+          "startLine": 315,
+          "endLine": 318,
+          "methods": [],
+          "properties": [
+            "Register",
+            "Unregister"
+          ]
+        },
+        {
+          "name": "ProtocolHandlerUpdateRegistration",
+          "startLine": 324,
+          "endLine": 331,
+          "methods": [],
+          "properties": [
+            "scheme",
+            "url",
+            "register_or_unregister"
+          ]
+        },
+        {
+          "name": "ViewportDetails",
+          "startLine": 336,
+          "endLine": 343,
+          "methods": [
+            "layout_size"
+          ],
+          "properties": [
+            "size",
+            "hidpi_scale_factor"
+          ]
+        },
+        {
+          "name": "ScreenMetrics",
+          "startLine": 356,
+          "endLine": 359,
+          "methods": [],
+          "properties": [
+            "screen_size",
+            "available_size"
+          ]
+        },
+        {
+          "name": "TraversalId",
+          "startLine": 363,
+          "endLine": 363,
+          "methods": [
+            "new"
+          ],
+          "properties": []
+        },
+        {
+          "name": "PixelFormat",
+          "startLine": 374,
+          "endLine": 385,
+          "methods": [],
+          "properties": [
+            "K8",
+            "KA8",
+            "RGB8",
+            "RGBA8",
+            "BGRA8"
+          ]
+        },
+        {
+          "name": "Image",
+          "startLine": 389,
+          "endLine": 397,
+          "methods": [
+            "new",
+            "data"
+          ],
+          "properties": [
+            "width",
+            "height",
+            "format",
+            "data",
+            "range"
+          ]
+        },
+        {
+          "name": "ConsoleLogLevel",
+          "startLine": 431,
+          "endLine": 439,
+          "methods": [],
+          "properties": [
+            "Log",
+            "Debug",
+            "Info",
+            "Warn",
+            "Error",
+            "Trace",
+            "Dir"
+          ]
+        },
+        {
+          "name": "BluetoothDeviceDescription",
+          "startLine": 457,
+          "endLine": 462,
+          "methods": [],
+          "properties": [
+            "address",
+            "name"
+          ]
+        },
+        {
+          "name": "EmbedderMsg",
+          "startLine": 466,
+          "endLine": 546,
+          "methods": [
+            "fmt"
+          ],
+          "properties": [
+            "Status",
+            "ChangePageTitle",
+            "MoveTo",
+            "ResizeTo",
+            "ShowSimpleDialog",
+            "AllowProtocolHandlerRequest",
+            "AllowUnload",
+            "ClearClipboard",
+            "GetClipboardText",
+            "SetClipboardText",
+            "SetCursor",
+            "NewFavicon",
+            "GetWindowRect",
+            "GetScreenMetrics",
+            "NotifyFullscreenStateChanged",
+            "NotifyLoadStatusChanged",
+            "GetSelectedBluetoothDevice",
+            "PromptPermission",
+            "RequestWakeLockPermission",
+            "OnDevtoolsStarted",
+            "RequestDevtoolsConnection",
+            "PlayGamepadHapticEffect",
+            "StopGamepadHapticEffect",
+            "ShowNotification",
+            "ShowConsoleApiMessage",
+            "ShowEmbedderControl",
+            "HideEmbedderControl",
+            "InputEventsHandled",
+            "AccessibilityTreeUpdate"
+          ]
+        },
+        {
+          "name": "MediaMetadata",
+          "startLine": 557,
+          "endLine": 564,
+          "methods": [
+            "new"
+          ],
+          "properties": [
+            "title",
+            "artist",
+            "album"
+          ]
+        },
+        {
+          "name": "MediaSessionPlaybackState",
+          "startLine": 579,
+          "endLine": 586,
+          "methods": [],
+          "properties": [
+            "None_",
+            "Playing",
+            "Paused"
+          ]
+        },
+        {
+          "name": "MediaPositionState",
+          "startLine": 590,
+          "endLine": 594,
+          "methods": [
+            "new"
+          ],
+          "properties": [
+            "duration",
+            "playback_rate",
+            "position"
+          ]
+        },
+        {
+          "name": "MediaSessionEvent",
+          "startLine": 608,
+          "endLine": 615,
+          "methods": [],
+          "properties": [
+            "SetMetadata",
+            "PlaybackStateChange",
+            "SetPositionState"
+          ]
+        },
+        {
+          "name": "PermissionFeature",
+          "startLine": 619,
+          "endLine": 633,
+          "methods": [],
+          "properties": [
+            "Geolocation",
+            "Notifications",
+            "Push",
+            "Midi",
+            "Camera",
+            "Microphone",
+            "Speaker",
+            "DeviceInfo",
+            "BackgroundSync",
+            "Bluetooth",
+            "PersistentStorage",
+            "ScreenWakeLock",
+            "Gamepad"
+          ]
+        },
+        {
+          "name": "InputMethodType",
+          "startLine": 639,
+          "endLine": 653,
+          "methods": [],
+          "properties": [
+            "Color",
+            "Date",
+            "DatetimeLocal",
+            "Email",
+            "Month",
+            "Number",
+            "Password",
+            "Search",
+            "Tel",
+            "Text",
+            "Time",
+            "Url",
+            "Week"
+          ]
+        },
+        {
+          "name": "DualRumbleEffectParams",
+          "startLine": 658,
+          "endLine": 663,
+          "methods": [],
+          "properties": [
+            "duration",
+            "start_delay",
+            "strong_magnitude",
+            "weak_magnitude"
+          ]
+        },
+        {
+          "name": "GamepadHapticEffectType",
+          "startLine": 668,
+          "endLine": 670,
+          "methods": [],
+          "properties": [
+            "DualRumble"
+          ]
+        },
+        {
+          "name": "WebResourceRequest",
+          "startLine": 673,
+          "endLine": 689,
+          "methods": [],
+          "properties": [
+            "method",
+            "headers",
+            "url",
+            "destination",
+            "referrer_url",
+            "is_for_main_frame",
+            "is_redirect"
+          ]
+        },
+        {
+          "name": "WebResourceResponseMsg",
+          "startLine": 692,
+          "endLine": 705,
+          "methods": [],
+          "properties": [
+            "Start",
+            "SendBodyData",
+            "FinishLoad",
+            "CancelLoad",
+            "DoNotIntercept"
+          ]
+        },
+        {
+          "name": "WebResourceResponse",
+          "startLine": 708,
+          "endLine": 723,
+          "methods": [
+            "new",
+            "headers",
+            "status_code",
+            "status_message"
+          ],
+          "properties": [
+            "url",
+            "headers",
+            "status_code",
+            "status_message"
+          ]
+        },
+        {
+          "name": "Theme",
+          "startLine": 753,
+          "endLine": 758,
+          "methods": [],
+          "properties": [
+            "Light",
+            "Dark"
+          ]
+        },
+        {
+          "name": "MediaSessionActionType",
+          "startLine": 772,
+          "endLine": 796,
+          "methods": [],
+          "properties": [
+            "Play",
+            "Pause",
+            "SeekBackward",
+            "SeekForward",
+            "PreviousTrack",
+            "NextTrack",
+            "SkipAd",
+            "Stop",
+            "SeekTo"
+          ]
+        },
+        {
+          "name": "LoadStatus",
+          "startLine": 801,
+          "endLine": 811,
+          "methods": [],
+          "properties": [
+            "Started",
+            "HeadParsed",
+            "Complete"
+          ]
+        },
+        {
+          "name": "Notification",
+          "startLine": 816,
+          "endLine": 847,
+          "methods": [],
+          "properties": [
+            "title",
+            "body",
+            "tag",
+            "language",
+            "require_interaction",
+            "silent",
+            "icon_url",
+            "icon_resource",
+            "badge_url",
+            "badge_resource",
+            "image_url",
+            "image_resource",
+            "actions"
+          ]
+        },
+        {
+          "name": "NotificationAction",
+          "startLine": 851,
+          "endLine": 860,
+          "methods": [],
+          "properties": [
+            "name",
+            "title",
+            "icon_url",
+            "icon_resource"
+          ]
+        },
+        {
+          "name": "ScreenGeometry",
+          "startLine": 868,
+          "endLine": 883,
+          "methods": [],
+          "properties": [
+            "size",
+            "available_size",
+            "window_rect"
+          ]
+        },
+        {
+          "name": "UntrustedNodeAddress",
+          "startLine": 894,
+          "endLine": 894,
+          "methods": [
+            "from",
+            "serialize",
+            "deserialize",
+            "from_id"
+          ],
+          "properties": []
+        },
+        {
+          "name": "PaintHitTestResult",
+          "startLine": 930,
+          "endLine": 939,
+          "methods": [],
+          "properties": [
+            "pipeline_id",
+            "point_in_viewport",
+            "external_scroll_id"
+          ]
+        },
+        {
+          "name": "AnimationState",
+          "startLine": 944,
+          "endLine": 953,
+          "methods": [],
+          "properties": [
+            "AnimationsPresent",
+            "AnimationCallbacksPresent",
+            "NoAnimationsPresent",
+            "NoAnimationCallbacksPresent"
+          ]
+        },
+        {
+          "name": "FocusSequenceNumber",
+          "startLine": 1020,
+          "endLine": 1020,
+          "methods": [
+            "fmt"
+          ],
+          "properties": []
+        },
+        {
+          "name": "JavaScriptEvaluationId",
+          "startLine": 1031,
+          "endLine": 1031,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "JSValue",
+          "startLine": 1035,
+          "endLine": 1047,
+          "methods": [],
+          "properties": [
+            "Undefined",
+            "Null",
+            "Boolean",
+            "Number",
+            "String",
+            "Element",
+            "ShadowRoot",
+            "Frame",
+            "Window",
+            "Array",
+            "Object"
+          ]
+        },
+        {
+          "name": "JavaScriptErrorInfo",
+          "startLine": 1051,
+          "endLine": 1057,
+          "methods": [],
+          "properties": [
+            "message",
+            "filename",
+            "stack",
+            "line_number",
+            "column"
+          ]
+        },
+        {
+          "name": "JavaScriptEvaluationResultSerializationError",
+          "startLine": 1062,
+          "endLine": 1076,
+          "methods": [],
+          "properties": [
+            "DetachedShadowRoot",
+            "StaleElementReference",
+            "UnknownType",
+            "OtherJavaScriptError"
+          ]
+        },
+        {
+          "name": "JavaScriptEvaluationError",
+          "startLine": 1080,
+          "endLine": 1096,
+          "methods": [],
+          "properties": [
+            "DocumentNotFound",
+            "CompilationFailure",
+            "EvaluationFailure",
+            "InternalError",
+            "WebViewNotReady",
+            "SerializationError"
+          ]
+        },
+        {
+          "name": "ScreenshotCaptureError",
+          "startLine": 1100,
+          "endLine": 1106,
+          "methods": [],
+          "properties": [
+            "CouldNotReadImage",
+            "WebViewDoesNotExist"
+          ]
+        },
+        {
+          "name": "RgbColor",
+          "startLine": 1109,
+          "endLine": 1113,
+          "methods": [],
+          "properties": [
+            "red",
+            "green",
+            "blue"
+          ]
+        },
+        {
+          "name": "ScriptToEmbedderChan",
+          "startLine": 1117,
+          "endLine": 1117,
+          "methods": [
+            "new",
+            "send"
+          ],
+          "properties": []
+        },
+        {
+          "name": "NewWebViewDetails",
+          "startLine": 1149,
+          "endLine": 1153,
+          "methods": [],
+          "properties": [
+            "webview_id",
+            "viewport_details",
+            "user_content_manager_id"
+          ]
+        },
+        {
+          "name": "UrlRequest",
+          "startLine": 1164,
+          "endLine": 1171,
+          "methods": [
+            "new",
+            "headers"
+          ],
+          "properties": [
+            "url",
+            "headers"
+          ]
+        },
+        {
+          "name": "WakeLockType",
+          "startLine": 1190,
+          "endLine": 1192,
+          "methods": [],
+          "properties": [
+            "Screen"
+          ]
+        },
+        {
+          "name": "WakeLockDelegate",
+          "startLine": 1198,
+          "endLine": 1208,
+          "methods": [
+            "acquire",
+            "release"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "WebViewPoint",
+          "line": 61,
+          "isDefault": false
+        },
+        {
+          "name": "as_device_point",
+          "line": 68,
+          "isDefault": false
+        },
+        {
+          "name": "WebViewRect",
+          "line": 98,
+          "isDefault": false
+        },
+        {
+          "name": "as_device_rect",
+          "line": 105,
+          "isDefault": false
+        },
+        {
+          "name": "WebViewVector",
+          "line": 138,
+          "isDefault": false
+        },
+        {
+          "name": "as_device_vector",
+          "line": 145,
+          "isDefault": false
+        },
+        {
+          "name": "Scroll",
+          "line": 173,
+          "isDefault": false
+        },
+        {
+          "name": "ShutdownState",
+          "line": 186,
+          "isDefault": false
+        },
+        {
+          "name": "Cursor",
+          "line": 196,
+          "isDefault": false
+        },
+        {
+          "name": "EventLoopWaker",
+          "line": 239,
+          "isDefault": false
+        },
+        {
+          "name": "GenericEmbedderProxy",
+          "line": 257,
+          "isDefault": false
+        },
+        {
+          "name": "send",
+          "line": 263,
+          "isDefault": false
+        },
+        {
+          "name": "RefreshDriver",
+          "line": 287,
+          "isDefault": false
+        },
+        {
+          "name": "AuthenticationResponse",
+          "line": 299,
+          "isDefault": false
+        },
+        {
+          "name": "AllowOrDeny",
+          "line": 308,
+          "isDefault": false
+        },
+        {
+          "name": "RegisterOrUnregister",
+          "line": 315,
+          "isDefault": false
+        },
+        {
+          "name": "ProtocolHandlerUpdateRegistration",
+          "line": 324,
+          "isDefault": false
+        },
+        {
+          "name": "ViewportDetails",
+          "line": 336,
+          "isDefault": false
+        },
+        {
+          "name": "layout_size",
+          "line": 348,
+          "isDefault": false
+        },
+        {
+          "name": "ScreenMetrics",
+          "line": 356,
+          "isDefault": false
+        },
+        {
+          "name": "TraversalId",
+          "line": 363,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 367,
+          "isDefault": false
+        },
+        {
+          "name": "PixelFormat",
+          "line": 374,
+          "isDefault": false
+        },
+        {
+          "name": "Image",
+          "line": 389,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 406,
+          "isDefault": false
+        },
+        {
+          "name": "data",
+          "line": 423,
+          "isDefault": false
+        },
+        {
+          "name": "ConsoleLogLevel",
+          "line": 431,
+          "isDefault": false
+        },
+        {
+          "name": "BluetoothDeviceDescription",
+          "line": 457,
+          "isDefault": false
+        },
+        {
+          "name": "EmbedderMsg",
+          "line": 466,
+          "isDefault": false
+        },
+        {
+          "name": "MediaMetadata",
+          "line": 557,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 567,
+          "isDefault": false
+        },
+        {
+          "name": "MediaSessionPlaybackState",
+          "line": 579,
+          "isDefault": false
+        },
+        {
+          "name": "MediaPositionState",
+          "line": 590,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 597,
+          "isDefault": false
+        },
+        {
+          "name": "MediaSessionEvent",
+          "line": 608,
+          "isDefault": false
+        },
+        {
+          "name": "PermissionFeature",
+          "line": 619,
+          "isDefault": false
+        },
+        {
+          "name": "InputMethodType",
+          "line": 639,
+          "isDefault": false
+        },
+        {
+          "name": "DualRumbleEffectParams",
+          "line": 658,
+          "isDefault": false
+        },
+        {
+          "name": "GamepadHapticEffectType",
+          "line": 668,
+          "isDefault": false
+        },
+        {
+          "name": "WebResourceRequest",
+          "line": 673,
+          "isDefault": false
+        },
+        {
+          "name": "WebResourceResponseMsg",
+          "line": 692,
+          "isDefault": false
+        },
+        {
+          "name": "WebResourceResponse",
+          "line": 708,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 726,
+          "isDefault": false
+        },
+        {
+          "name": "headers",
+          "line": 735,
+          "isDefault": false
+        },
+        {
+          "name": "status_code",
+          "line": 740,
+          "isDefault": false
+        },
+        {
+          "name": "status_message",
+          "line": 745,
+          "isDefault": false
+        },
+        {
+          "name": "Theme",
+          "line": 753,
+          "isDefault": false
+        },
+        {
+          "name": "MediaSessionActionType",
+          "line": 772,
+          "isDefault": false
+        },
+        {
+          "name": "LoadStatus",
+          "line": 801,
+          "isDefault": false
+        },
+        {
+          "name": "Notification",
+          "line": 816,
+          "isDefault": false
+        },
+        {
+          "name": "NotificationAction",
+          "line": 851,
+          "isDefault": false
+        },
+        {
+          "name": "ScreenGeometry",
+          "line": 868,
+          "isDefault": false
+        },
+        {
+          "name": "UntrustedNodeAddress",
+          "line": 894,
+          "isDefault": false
+        },
+        {
+          "name": "from_id",
+          "line": 923,
+          "isDefault": false
+        },
+        {
+          "name": "PaintHitTestResult",
+          "line": 930,
+          "isDefault": false
+        },
+        {
+          "name": "AnimationState",
+          "line": 944,
+          "isDefault": false
+        },
+        {
+          "name": "FocusSequenceNumber",
+          "line": 1020,
+          "isDefault": false
+        },
+        {
+          "name": "JavaScriptEvaluationId",
+          "line": 1031,
+          "isDefault": false
+        },
+        {
+          "name": "JSValue",
+          "line": 1035,
+          "isDefault": false
+        },
+        {
+          "name": "JavaScriptErrorInfo",
+          "line": 1051,
+          "isDefault": false
+        },
+        {
+          "name": "JavaScriptEvaluationResultSerializationError",
+          "line": 1062,
+          "isDefault": false
+        },
+        {
+          "name": "JavaScriptEvaluationError",
+          "line": 1080,
+          "isDefault": false
+        },
+        {
+          "name": "ScreenshotCaptureError",
+          "line": 1100,
+          "isDefault": false
+        },
+        {
+          "name": "RgbColor",
+          "line": 1109,
+          "isDefault": false
+        },
+        {
+          "name": "ScriptToEmbedderChan",
+          "line": 1117,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 1121,
+          "isDefault": false
+        },
+        {
+          "name": "send",
+          "line": 1141,
+          "isDefault": false
+        },
+        {
+          "name": "NewWebViewDetails",
+          "line": 1149,
+          "isDefault": false
+        },
+        {
+          "name": "UrlRequest",
+          "line": 1164,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 1174,
+          "isDefault": false
+        },
+        {
+          "name": "headers",
+          "line": 1182,
+          "isDefault": false
+        },
+        {
+          "name": "WakeLockType",
+          "line": 1190,
+          "isDefault": false
+        },
+        {
+          "name": "WakeLockDelegate",
+          "line": 1198,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "from",
+          "callee": "Self::Device",
+          "lineNumber": 78
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Page",
+          "lineNumber": 84
+        },
+        {
+          "caller": "from",
+          "callee": "Point2D::new",
+          "lineNumber": 84
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Page",
+          "lineNumber": 90
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Device",
+          "lineNumber": 115
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Page",
+          "lineNumber": 121
+        },
+        {
+          "caller": "from",
+          "callee": "Box2D::new",
+          "lineNumber": 121
+        },
+        {
+          "caller": "from",
+          "callee": "Point2D::new",
+          "lineNumber": 122
+        },
+        {
+          "caller": "from",
+          "callee": "Point2D::new",
+          "lineNumber": 123
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Page",
+          "lineNumber": 130
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Device",
+          "lineNumber": 155
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Page",
+          "lineNumber": 161
+        },
+        {
+          "caller": "from",
+          "callee": "Vector2D::new",
+          "lineNumber": 161
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Page",
+          "lineNumber": 167
+        },
+        {
+          "caller": "clone",
+          "callee": "self.clone_box",
+          "lineNumber": 252
+        },
+        {
+          "caller": "send",
+          "callee": "self.sender.send",
+          "lineNumber": 265
+        },
+        {
+          "caller": "send",
+          "callee": "self.event_loop_waker.wake",
+          "lineNumber": 268
+        },
+        {
+          "caller": "clone",
+          "callee": "self.sender.clone",
+          "lineNumber": 275
+        },
+        {
+          "caller": "clone",
+          "callee": "self.event_loop_waker.clone",
+          "lineNumber": 276
+        },
+        {
+          "caller": "layout_size",
+          "callee": "Size2D::from_untyped",
+          "lineNumber": 349
+        },
+        {
+          "caller": "layout_size",
+          "callee": "self.size.to_untyped",
+          "lineNumber": 349
+        },
+        {
+          "caller": "new",
+          "callee": "Self",
+          "lineNumber": 368
+        },
+        {
+          "caller": "new",
+          "callee": "Uuid::new_v4().to_string",
+          "lineNumber": 368
+        },
+        {
+          "caller": "new",
+          "callee": "Uuid::new_v4",
+          "lineNumber": 368
+        },
+        {
+          "caller": "data",
+          "callee": "self.range.clone",
+          "lineNumber": 424
+        },
+        {
+          "caller": "fmt",
+          "callee": "self.into",
+          "lineNumber": 550
+        },
+        {
+          "caller": "new",
+          "callee": "\"\".to_owned",
+          "lineNumber": 570
+        },
+        {
+          "caller": "new",
+          "callee": "\"\".to_owned",
+          "lineNumber": 571
+        },
+        {
+          "caller": "new",
+          "callee": "HeaderMap::new",
+          "lineNumber": 729
+        },
+        {
+          "caller": "new",
+          "callee": "b\"OK\".to_vec",
+          "lineNumber": 731
+        },
+        {
+          "caller": "from",
+          "callee": "Self::Option",
+          "lineNumber": 887
+        },
+        {
+          "caller": "from",
+          "callee": "UntrustedNodeAddress",
+          "lineNumber": 903
+        },
+        {
+          "caller": "serialize",
+          "callee": "(self.0 as usize).serialize",
+          "lineNumber": 909
+        },
+        {
+          "caller": "deserialize",
+          "callee": "Deserialize::deserialize",
+          "lineNumber": 915
+        },
+        {
+          "caller": "deserialize",
+          "callee": "Ok",
+          "lineNumber": 916
+        },
+        {
+          "caller": "deserialize",
+          "callee": "UntrustedNodeAddress::from_id",
+          "lineNumber": 916
+        },
+        {
+          "caller": "from_id",
+          "callee": "UntrustedNodeAddress",
+          "lineNumber": 924
+        },
+        {
+          "caller": "fmt",
+          "callee": "Display::fmt",
+          "lineNumber": 1024
+        },
+        {
+          "caller": "new",
+          "callee": "GenericCallback::new(move |embedder_msg| {\n            let msg = match embedder_msg {\n                Ok(embedder_msg) => embedder_msg,\n                Err(err) => {\n                    log::warn!(\"Script to Embedder message error: {err}\");\n                    return;\n                },\n            };\n            let _ = embedder_chan.send(msg);\n            waker.wake();\n        }).expect",
+          "lineNumber": 1125
+        },
+        {
+          "caller": "new",
+          "callee": "GenericCallback::new",
+          "lineNumber": 1125
+        },
+        {
+          "caller": "new",
+          "callee": "embedder_chan.send",
+          "lineNumber": 1133
+        },
+        {
+          "caller": "new",
+          "callee": "waker.wake",
+          "lineNumber": 1134
+        },
+        {
+          "caller": "new",
+          "callee": "ScriptToEmbedderChan",
+          "lineNumber": 1137
+        },
+        {
+          "caller": "send",
+          "callee": "self.0.send",
+          "lineNumber": 1142
+        },
+        {
+          "caller": "new",
+          "callee": "url.into",
+          "lineNumber": 1176
+        },
+        {
+          "caller": "new",
+          "callee": "HeaderMap::new",
+          "lineNumber": 1177
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 73,
+        "functionCount": 38,
+        "classCount": 54
+      }
+    },
+    {
+      "path": "components/shared/base/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 42,
+      "nonEmptyLines": 37,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "target.'cfg(any(target_os = \"macos\", target_os = \"ios\"))'.dependencies",
+          "level": 3,
+          "line": 35
+        },
+        {
+          "heading": "target.'cfg(all(unix, not(any(target_os = \"macos\", target_os = \"ios\"))))'.dependencies",
+          "level": 3,
+          "line": 38
+        },
+        {
+          "heading": "target.'cfg(target_os = \"windows\")'.dependencies",
+          "level": 3,
+          "line": 41
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 6
+      }
+    },
+    {
+      "path": "components/shared/background_hang_monitor/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 20,
+      "nonEmptyLines": 18,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 18
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "components/shared/bluetooth/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 20,
+      "nonEmptyLines": 18,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "components/shared/canvas/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 33,
+      "nonEmptyLines": 30,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "features",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 19
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "components/shared/constellation/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 50,
+      "nonEmptyLines": 47,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "features",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 20
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "components/shared/devtools/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 26,
+      "nonEmptyLines": 24,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "components/shared/fonts/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 35,
+      "nonEmptyLines": 32,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 16
+        },
+        {
+          "heading": "target.'cfg(target_os = \"windows\")'.dependencies",
+          "level": 3,
+          "line": 34
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 4
+      }
+    },
+    {
+      "path": "components/shared/layout/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 42,
+      "nonEmptyLines": 40,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    },
+    {
+      "path": "components/shared/layout/lib.rs",
+      "language": "Rust",
+      "fileCategory": "code",
+      "totalLines": 1083,
+      "nonEmptyLines": 961,
+      "functions": [
+        {
+          "name": "ratio_from_view_box",
+          "startLine": 169,
+          "endLine": 186,
+          "params": []
+        },
+        {
+          "name": "default",
+          "startLine": 500,
+          "endLine": 505,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 509,
+          "endLine": 514,
+          "params": [
+            "style"
+          ]
+        },
+        {
+          "name": "to_scrollable",
+          "startLine": 518,
+          "endLine": 523,
+          "params": []
+        },
+        {
+          "name": "establishes_scroll_container",
+          "startLine": 526,
+          "endLine": 530,
+          "params": []
+        },
+        {
+          "name": "needs_restyle",
+          "startLine": 609,
+          "endLine": 611,
+          "params": []
+        },
+        {
+          "name": "needs_frame",
+          "startLine": 653,
+          "endLine": 657,
+          "params": []
+        },
+        {
+          "name": "stylesheets_changed",
+          "startLine": 717,
+          "endLine": 721,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 754,
+          "endLine": 760,
+          "params": [
+            "value"
+          ]
+        },
+        {
+          "name": "combine_id_with_fragment_type",
+          "startLine": 763,
+          "endLine": 766,
+          "params": [
+            "id",
+            "fragment_type"
+          ]
+        },
+        {
+          "name": "node_id_from_scroll_id",
+          "startLine": 768,
+          "endLine": 770,
+          "params": [
+            "id"
+          ]
+        },
+        {
+          "name": "new",
+          "startLine": 787,
+          "endLine": 800,
+          "params": [
+            "image",
+            "last_update_time"
+          ]
+        },
+        {
+          "name": "image_key",
+          "startLine": 802,
+          "endLine": 804,
+          "params": []
+        },
+        {
+          "name": "duration_to_next_frame",
+          "startLine": 806,
+          "endLine": 821,
+          "params": [
+            "now"
+          ]
+        },
+        {
+          "name": "update_frame_for_animation_timeline_value",
+          "startLine": 826,
+          "endLine": 876,
+          "params": [
+            "now"
+          ]
+        },
+        {
+          "name": "is_finished",
+          "startLine": 879,
+          "endLine": 885,
+          "params": []
+        },
+        {
+          "name": "advance_completed_loops",
+          "startLine": 888,
+          "endLine": 892,
+          "params": []
+        },
+        {
+          "name": "maybe_insert_or_update",
+          "startLine": 920,
+          "endLine": 937,
+          "params": [
+            "node",
+            "image",
+            "current_timeline_value"
+          ]
+        },
+        {
+          "name": "remove",
+          "startLine": 939,
+          "endLine": 943,
+          "params": [
+            "node"
+          ]
+        },
+        {
+          "name": "clear_dirty",
+          "startLine": 946,
+          "endLine": 948,
+          "params": []
+        },
+        {
+          "name": "is_empty",
+          "startLine": 950,
+          "endLine": 952,
+          "params": []
+        },
+        {
+          "name": "new",
+          "startLine": 958,
+          "endLine": 965,
+          "params": []
+        },
+        {
+          "name": "drop",
+          "startLine": 969,
+          "endLine": 975,
+          "params": []
+        },
+        {
+          "name": "with_layout_state",
+          "startLine": 983,
+          "endLine": 986,
+          "params": [
+            "f"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "GenericLayoutDataTrait",
+          "startLine": 79,
+          "endLine": 81,
+          "methods": [
+            "as_any"
+          ],
+          "properties": []
+        },
+        {
+          "name": "LayoutDataTrait",
+          "startLine": 83,
+          "endLine": 83,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "StyleData",
+          "startLine": 87,
+          "endLine": 96,
+          "methods": [],
+          "properties": [
+            "element_data",
+            "parallel"
+          ]
+        },
+        {
+          "name": "DomParallelInfo",
+          "startLine": 100,
+          "endLine": 103,
+          "methods": [],
+          "properties": [
+            "children_to_process"
+          ]
+        },
+        {
+          "name": "LayoutNodeType",
+          "startLine": 106,
+          "endLine": 109,
+          "methods": [],
+          "properties": [
+            "Element",
+            "Text"
+          ]
+        },
+        {
+          "name": "LayoutElementType",
+          "startLine": 112,
+          "endLine": 136,
+          "methods": [],
+          "properties": [
+            "Element",
+            "HTMLBodyElement",
+            "HTMLBRElement",
+            "HTMLCanvasElement",
+            "HTMLHtmlElement",
+            "HTMLIFrameElement",
+            "HTMLImageElement",
+            "HTMLInputElement",
+            "HTMLMediaElement",
+            "HTMLObjectElement",
+            "HTMLOptGroupElement",
+            "HTMLOptionElement",
+            "HTMLParagraphElement",
+            "HTMLPreElement",
+            "HTMLSelectElement",
+            "HTMLTableCellElement",
+            "HTMLTableColElement",
+            "HTMLTableElement",
+            "HTMLTableRowElement",
+            "HTMLTableSectionElement",
+            "HTMLTextAreaElement",
+            "SVGImageElement",
+            "SVGSVGElement"
+          ]
+        },
+        {
+          "name": "ScriptSelection",
+          "startLine": 142,
+          "endLine": 150,
+          "methods": [],
+          "properties": [
+            "range",
+            "character_range",
+            "enabled"
+          ]
+        },
+        {
+          "name": "HTMLCanvasData",
+          "startLine": 153,
+          "endLine": 157,
+          "methods": [],
+          "properties": [
+            "image_key",
+            "width",
+            "height"
+          ]
+        },
+        {
+          "name": "SVGElementData",
+          "startLine": 159,
+          "endLine": 166,
+          "methods": [],
+          "properties": [
+            "source",
+            "width",
+            "height",
+            "svg_id",
+            "view_box"
+          ]
+        },
+        {
+          "name": "TrustedNodeAddress",
+          "startLine": 191,
+          "endLine": 191,
+          "methods": [],
+          "properties": []
+        },
+        {
+          "name": "PendingImageState",
+          "startLine": 198,
+          "endLine": 201,
+          "methods": [],
+          "properties": [
+            "Unrequested",
+            "PendingResponse"
+          ]
+        },
+        {
+          "name": "LayoutImageDestination",
+          "startLine": 205,
+          "endLine": 208,
+          "methods": [],
+          "properties": [
+            "BoxTreeConstruction",
+            "DisplayListBuilding"
+          ]
+        },
+        {
+          "name": "PendingImage",
+          "startLine": 214,
+          "endLine": 221,
+          "methods": [],
+          "properties": [
+            "state",
+            "node",
+            "id",
+            "origin",
+            "destination",
+            "is_internal_request"
+          ]
+        },
+        {
+          "name": "PendingRasterizationImage",
+          "startLine": 227,
+          "endLine": 231,
+          "methods": [],
+          "properties": [
+            "node",
+            "id",
+            "size"
+          ]
+        },
+        {
+          "name": "MediaFrame",
+          "startLine": 234,
+          "endLine": 238,
+          "methods": [],
+          "properties": [
+            "image_key",
+            "width",
+            "height"
+          ]
+        },
+        {
+          "name": "MediaMetadata",
+          "startLine": 240,
+          "endLine": 243,
+          "methods": [],
+          "properties": [
+            "width",
+            "height"
+          ]
+        },
+        {
+          "name": "HTMLMediaData",
+          "startLine": 245,
+          "endLine": 248,
+          "methods": [],
+          "properties": [
+            "current_frame",
+            "metadata"
+          ]
+        },
+        {
+          "name": "LayoutConfig",
+          "startLine": 250,
+          "endLine": 264,
+          "methods": [],
+          "properties": [
+            "id",
+            "webview_id",
+            "url",
+            "is_iframe",
+            "script_chan",
+            "image_cache",
+            "font_context",
+            "time_profiler_chan",
+            "paint_api",
+            "viewport_details",
+            "user_stylesheets",
+            "theme",
+            "embedder_chan"
+          ]
+        },
+        {
+          "name": "LayoutFactory",
+          "startLine": 266,
+          "endLine": 268,
+          "methods": [
+            "create"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Layout",
+          "startLine": 270,
+          "endLine": 430,
+          "methods": [
+            "device",
+            "set_theme",
+            "set_viewport_details",
+            "load_web_fonts_from_stylesheet",
+            "add_stylesheet",
+            "exit_now",
+            "collect_reports",
+            "set_quirks_mode",
+            "remove_stylesheet",
+            "remove_cached_image",
+            "reflow",
+            "ensure_stacking_context_tree",
+            "register_paint_worklet_modules",
+            "set_scroll_offsets_from_renderer",
+            "scroll_offset",
+            "needs_new_display_list",
+            "set_needs_new_display_list",
+            "node_rendering_type",
+            "query_containing_block",
+            "query_containing_block_is_descendant",
+            "query_padding",
+            "query_box_area",
+            "query_box_areas",
+            "query_client_rect",
+            "query_current_css_zoom",
+            "query_element_inner_outer_text",
+            "query_offset_parent",
+            "query_scroll_container",
+            "query_resolved_style",
+            "query_resolved_font_style",
+            "query_scrolling_area",
+            "query_text_index",
+            "query_elements_from_point",
+            "query_effective_overflow",
+            "stylist_mut",
+            "set_accessibility_active",
+            "accessibility_active",
+            "needs_accessibility_update",
+            "set_needs_accessibility_update"
+          ],
+          "properties": []
+        },
+        {
+          "name": "ScriptThreadFactory",
+          "startLine": 435,
+          "endLine": 443,
+          "methods": [
+            "create"
+          ],
+          "properties": []
+        },
+        {
+          "name": "BoxAreaType",
+          "startLine": 448,
+          "endLine": 452,
+          "methods": [],
+          "properties": [
+            "Content",
+            "Padding",
+            "Border"
+          ]
+        },
+        {
+          "name": "NodeRenderingType",
+          "startLine": 459,
+          "endLine": 467,
+          "methods": [],
+          "properties": [
+            "Rendered",
+            "DelegatesRendering",
+            "NotRendered"
+          ]
+        },
+        {
+          "name": "PhysicalSides",
+          "startLine": 470,
+          "endLine": 475,
+          "methods": [],
+          "properties": [
+            "left",
+            "top",
+            "right",
+            "bottom"
+          ]
+        },
+        {
+          "name": "OffsetParentResponse",
+          "startLine": 478,
+          "endLine": 481,
+          "methods": [],
+          "properties": [
+            "node_address",
+            "rect"
+          ]
+        },
+        {
+          "name": "AxesOverflow",
+          "startLine": 494,
+          "endLine": 497,
+          "methods": [
+            "default",
+            "from",
+            "to_scrollable",
+            "establishes_scroll_container"
+          ],
+          "properties": [
+            "x",
+            "y"
+          ]
+        },
+        {
+          "name": "ScrollContainerResponse",
+          "startLine": 534,
+          "endLine": 537,
+          "methods": [],
+          "properties": [
+            "Viewport",
+            "Element"
+          ]
+        },
+        {
+          "name": "QueryMsg",
+          "startLine": 540,
+          "endLine": 559,
+          "methods": [],
+          "properties": [
+            "BoxArea",
+            "BoxAreas",
+            "ClientRectQuery",
+            "CurrentCSSZoomQuery",
+            "EffectiveOverflow",
+            "ElementInnerOuterTextQuery",
+            "ElementsFromPoint",
+            "InnerWindowDimensionsQuery",
+            "NodesFromPointQuery",
+            "OffsetParentQuery",
+            "ScrollParentQuery",
+            "ResolvedFontStyleQuery",
+            "ResolvedStyleQuery",
+            "ScrollingAreaOrOffsetQuery",
+            "StyleQuery",
+            "TextIndexQuery",
+            "PaddingQuery",
+            "FlushForUpdateTheRenderingQuery"
+          ]
+        },
+        {
+          "name": "ReflowGoal",
+          "startLine": 567,
+          "endLine": 580,
+          "methods": [],
+          "properties": [
+            "UpdateTheRendering",
+            "LayoutQuery",
+            "UpdateScrollNode"
+          ]
+        },
+        {
+          "name": "IFrameSize",
+          "startLine": 583,
+          "endLine": 587,
+          "methods": [],
+          "properties": [
+            "browsing_context_id",
+            "pipeline_id",
+            "viewport_details"
+          ]
+        },
+        {
+          "name": "ReflowResult",
+          "startLine": 616,
+          "endLine": 634,
+          "methods": [],
+          "properties": [
+            "reflow_phases_run",
+            "reflow_statistics",
+            "pending_images",
+            "pending_rasterization_images",
+            "pending_svg_elements_for_serialization",
+            "iframe_sizes"
+          ]
+        },
+        {
+          "name": "ReflowStatistics",
+          "startLine": 661,
+          "endLine": 669,
+          "methods": [],
+          "properties": [
+            "rebuilt_fragment_count",
+            "restyle_fragment_count",
+            "only_descendants_changed_count"
+          ]
+        },
+        {
+          "name": "ReflowRequestRestyle",
+          "startLine": 674,
+          "endLine": 683,
+          "methods": [],
+          "properties": [
+            "reason",
+            "dirty_root",
+            "stylesheets_changed",
+            "pending_restyles"
+          ]
+        },
+        {
+          "name": "ReflowRequest",
+          "startLine": 687,
+          "endLine": 714,
+          "methods": [
+            "stylesheets_changed"
+          ],
+          "properties": [
+            "document",
+            "epoch",
+            "restyle",
+            "viewport_details",
+            "reflow_goal",
+            "origin",
+            "animation_timeline_value",
+            "animations",
+            "animating_images",
+            "highlighted_dom_node",
+            "document_context",
+            "rooted_nodes_for_accessibility_integrity_check"
+          ]
+        },
+        {
+          "name": "PendingRestyle",
+          "startLine": 726,
+          "endLine": 736,
+          "methods": [],
+          "properties": [
+            "snapshot",
+            "hint",
+            "damage"
+          ]
+        },
+        {
+          "name": "FragmentType",
+          "startLine": 744,
+          "endLine": 751,
+          "methods": [
+            "from"
+          ],
+          "properties": [
+            "FragmentBody",
+            "BeforePseudoContent",
+            "AfterPseudoContent"
+          ]
+        },
+        {
+          "name": "ImageAnimationState",
+          "startLine": 773,
+          "endLine": 784,
+          "methods": [
+            "new",
+            "image_key",
+            "duration_to_next_frame",
+            "update_frame_for_animation_timeline_value",
+            "is_finished",
+            "advance_completed_loops"
+          ],
+          "properties": [
+            "image",
+            "active_frame",
+            "frame_start_time",
+            "completed_loops"
+          ]
+        },
+        {
+          "name": "ElementsFromPointResult",
+          "startLine": 897,
+          "endLine": 907,
+          "methods": [],
+          "properties": [
+            "node",
+            "point_in_target",
+            "cursor"
+          ]
+        },
+        {
+          "name": "AnimatingImages",
+          "startLine": 910,
+          "endLine": 917,
+          "methods": [
+            "maybe_insert_or_update",
+            "remove",
+            "clear_dirty",
+            "is_empty"
+          ],
+          "properties": [
+            "node_to_state_map",
+            "dirty"
+          ]
+        },
+        {
+          "name": "ThreadStateRestorer",
+          "startLine": 955,
+          "endLine": 955,
+          "methods": [
+            "new",
+            "drop"
+          ],
+          "properties": []
+        }
+      ],
+      "exports": [
+        {
+          "name": "GenericLayoutDataTrait",
+          "line": 79,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutDataTrait",
+          "line": 83,
+          "isDefault": false
+        },
+        {
+          "name": "StyleData",
+          "line": 87,
+          "isDefault": false
+        },
+        {
+          "name": "DomParallelInfo",
+          "line": 100,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutNodeType",
+          "line": 106,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutElementType",
+          "line": 112,
+          "isDefault": false
+        },
+        {
+          "name": "ScriptSelection",
+          "line": 142,
+          "isDefault": false
+        },
+        {
+          "name": "HTMLCanvasData",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "SVGElementData",
+          "line": 159,
+          "isDefault": false
+        },
+        {
+          "name": "ratio_from_view_box",
+          "line": 169,
+          "isDefault": false
+        },
+        {
+          "name": "TrustedNodeAddress",
+          "line": 191,
+          "isDefault": false
+        },
+        {
+          "name": "PendingImageState",
+          "line": 198,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutImageDestination",
+          "line": 205,
+          "isDefault": false
+        },
+        {
+          "name": "PendingImage",
+          "line": 214,
+          "isDefault": false
+        },
+        {
+          "name": "PendingRasterizationImage",
+          "line": 227,
+          "isDefault": false
+        },
+        {
+          "name": "MediaFrame",
+          "line": 234,
+          "isDefault": false
+        },
+        {
+          "name": "MediaMetadata",
+          "line": 240,
+          "isDefault": false
+        },
+        {
+          "name": "HTMLMediaData",
+          "line": 245,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutConfig",
+          "line": 250,
+          "isDefault": false
+        },
+        {
+          "name": "LayoutFactory",
+          "line": 266,
+          "isDefault": false
+        },
+        {
+          "name": "Layout",
+          "line": 270,
+          "isDefault": false
+        },
+        {
+          "name": "ScriptThreadFactory",
+          "line": 435,
+          "isDefault": false
+        },
+        {
+          "name": "BoxAreaType",
+          "line": 448,
+          "isDefault": false
+        },
+        {
+          "name": "NodeRenderingType",
+          "line": 459,
+          "isDefault": false
+        },
+        {
+          "name": "PhysicalSides",
+          "line": 470,
+          "isDefault": false
+        },
+        {
+          "name": "OffsetParentResponse",
+          "line": 478,
+          "isDefault": false
+        },
+        {
+          "name": "AxesOverflow",
+          "line": 494,
+          "isDefault": false
+        },
+        {
+          "name": "to_scrollable",
+          "line": 518,
+          "isDefault": false
+        },
+        {
+          "name": "establishes_scroll_container",
+          "line": 526,
+          "isDefault": false
+        },
+        {
+          "name": "ScrollContainerResponse",
+          "line": 534,
+          "isDefault": false
+        },
+        {
+          "name": "QueryMsg",
+          "line": 540,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowGoal",
+          "line": 567,
+          "isDefault": false
+        },
+        {
+          "name": "IFrameSize",
+          "line": 583,
+          "isDefault": false
+        },
+        {
+          "name": "needs_restyle",
+          "line": 609,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowResult",
+          "line": 616,
+          "isDefault": false
+        },
+        {
+          "name": "needs_frame",
+          "line": 653,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowStatistics",
+          "line": 661,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowRequestRestyle",
+          "line": 674,
+          "isDefault": false
+        },
+        {
+          "name": "ReflowRequest",
+          "line": 687,
+          "isDefault": false
+        },
+        {
+          "name": "stylesheets_changed",
+          "line": 717,
+          "isDefault": false
+        },
+        {
+          "name": "PendingRestyle",
+          "line": 726,
+          "isDefault": false
+        },
+        {
+          "name": "FragmentType",
+          "line": 744,
+          "isDefault": false
+        },
+        {
+          "name": "combine_id_with_fragment_type",
+          "line": 763,
+          "isDefault": false
+        },
+        {
+          "name": "node_id_from_scroll_id",
+          "line": 768,
+          "isDefault": false
+        },
+        {
+          "name": "ImageAnimationState",
+          "line": 773,
+          "isDefault": false
+        },
+        {
+          "name": "new",
+          "line": 787,
+          "isDefault": false
+        },
+        {
+          "name": "image_key",
+          "line": 802,
+          "isDefault": false
+        },
+        {
+          "name": "duration_to_next_frame",
+          "line": 806,
+          "isDefault": false
+        },
+        {
+          "name": "update_frame_for_animation_timeline_value",
+          "line": 826,
+          "isDefault": false
+        },
+        {
+          "name": "ElementsFromPointResult",
+          "line": 897,
+          "isDefault": false
+        },
+        {
+          "name": "AnimatingImages",
+          "line": 910,
+          "isDefault": false
+        },
+        {
+          "name": "maybe_insert_or_update",
+          "line": 920,
+          "isDefault": false
+        },
+        {
+          "name": "remove",
+          "line": 939,
+          "isDefault": false
+        },
+        {
+          "name": "clear_dirty",
+          "line": 946,
+          "isDefault": false
+        },
+        {
+          "name": "is_empty",
+          "line": 950,
+          "isDefault": false
+        },
+        {
+          "name": "with_layout_state",
+          "line": 983,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "self.view_box?.chars",
+          "lineNumber": 170
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_integer(&mut iter).ok",
+          "lineNumber": 171
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_integer",
+          "lineNumber": 171
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_integer(&mut iter).ok",
+          "lineNumber": 172
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_integer",
+          "lineNumber": 172
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_unsigned_integer(&mut iter).ok",
+          "lineNumber": 174
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_unsigned_integer",
+          "lineNumber": 174
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_unsigned_integer(&mut iter).ok",
+          "lineNumber": 179
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "parse_unsigned_integer",
+          "lineNumber": 179
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "iter.skip_while",
+          "lineNumber": 184
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "char_is_whitespace",
+          "lineNumber": 184
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "iter.next().is_none().then",
+          "lineNumber": 185
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "iter.next().is_none",
+          "lineNumber": 185
+        },
+        {
+          "caller": "ratio_from_view_box",
+          "callee": "iter.next",
+          "lineNumber": 185
+        },
+        {
+          "caller": "from",
+          "callee": "style.clone_overflow_x",
+          "lineNumber": 511
+        },
+        {
+          "caller": "from",
+          "callee": "style.clone_overflow_y",
+          "lineNumber": 512
+        },
+        {
+          "caller": "to_scrollable",
+          "callee": "self.x.to_scrollable",
+          "lineNumber": 520
+        },
+        {
+          "caller": "to_scrollable",
+          "callee": "self.y.to_scrollable",
+          "lineNumber": 521
+        },
+        {
+          "caller": "establishes_scroll_container",
+          "callee": "self.x.is_scrollable",
+          "lineNumber": 529
+        },
+        {
+          "caller": "needs_restyle",
+          "callee": "self.is_empty",
+          "lineNumber": 610
+        },
+        {
+          "caller": "needs_frame",
+          "callee": "self.intersects",
+          "lineNumber": 654
+        },
+        {
+          "caller": "stylesheets_changed",
+          "callee": "self.restyle\n            .as_ref().is_some_and",
+          "lineNumber": 718
+        },
+        {
+          "caller": "stylesheets_changed",
+          "callee": "self.restyle.as_ref",
+          "lineNumber": 718
+        },
+        {
+          "caller": "new",
+          "callee": "Some",
+          "lineNumber": 791
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "self.is_finished",
+          "lineNumber": 807
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "self\n            .image\n            .frames\n            .get(self.active_frame)\n            .expect(\"Image frame should always be valid\")\n            .delay.unwrap_or_default",
+          "lineNumber": 810
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "self\n            .image\n            .frames\n            .get(self.active_frame).expect",
+          "lineNumber": 810
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "self\n            .image\n            .frames.get",
+          "lineNumber": 810
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "(now - self.frame_start_time).max",
+          "lineNumber": 818
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "Duration::from_secs_f64",
+          "lineNumber": 819
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "Some",
+          "lineNumber": 820
+        },
+        {
+          "caller": "duration_to_next_frame",
+          "callee": "time_since_frame_start.min",
+          "lineNumber": 820
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image.frames.len",
+          "lineNumber": 827
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.is_finished",
+          "lineNumber": 827
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames\n                .get(self.active_frame)\n                .unwrap()\n                .delay()\n                .unwrap().as_secs_f64",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames\n                .get(self.active_frame)\n                .unwrap()\n                .delay().unwrap",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames\n                .get(self.active_frame)\n                .unwrap().delay",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames\n                .get(self.active_frame).unwrap",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image\n                .frames.get",
+          "lineNumber": 832
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.image.frames.len",
+          "lineNumber": 841
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.advance_completed_loops",
+          "lineNumber": 847
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self.is_finished",
+          "lineNumber": 851
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames\n                .get(next_active_frame_id)\n                .unwrap()\n                .delay()\n                .unwrap().as_secs_f64",
+          "lineNumber": 861
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames\n                .get(next_active_frame_id)\n                .unwrap()\n                .delay().unwrap",
+          "lineNumber": 861
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames\n                .get(next_active_frame_id)\n                .unwrap().delay",
+          "lineNumber": 861
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames\n                .get(next_active_frame_id).unwrap",
+          "lineNumber": 861
+        },
+        {
+          "caller": "update_frame_for_animation_timeline_value",
+          "callee": "self\n                .image\n                .frames.get",
+          "lineNumber": 861
+        },
+        {
+          "caller": "is_finished",
+          "callee": "self.image.loop_count.as_ref",
+          "lineNumber": 880
+        },
+        {
+          "caller": "is_finished",
+          "callee": "self.completed_loops.is_some_and",
+          "lineNumber": 883
+        },
+        {
+          "caller": "is_finished",
+          "callee": "maximum_loops.get",
+          "lineNumber": 884
+        },
+        {
+          "caller": "advance_completed_loops",
+          "callee": "self.completed_loops.as_mut",
+          "lineNumber": 889
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "self.node_to_state_map.entry(node).or_insert_with",
+          "lineNumber": 926
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "self.node_to_state_map.entry",
+          "lineNumber": 926
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "ImageAnimationState::new",
+          "lineNumber": 928
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "image.clone",
+          "lineNumber": 928
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "ImageAnimationState::new",
+          "lineNumber": 935
+        },
+        {
+          "caller": "maybe_insert_or_update",
+          "callee": "image.clone",
+          "lineNumber": 935
+        },
+        {
+          "caller": "remove",
+          "callee": "self.node_to_state_map.remove(&node).is_some",
+          "lineNumber": 940
+        },
+        {
+          "caller": "remove",
+          "callee": "self.node_to_state_map.remove",
+          "lineNumber": 940
+        },
+        {
+          "caller": "clear_dirty",
+          "callee": "std::mem::take",
+          "lineNumber": 947
+        },
+        {
+          "caller": "is_empty",
+          "callee": "self.node_to_state_map.is_empty",
+          "lineNumber": 951
+        },
+        {
+          "caller": "new",
+          "callee": "thread_state::exit",
+          "lineNumber": 961
+        },
+        {
+          "caller": "new",
+          "callee": "thread_state::enter",
+          "lineNumber": 962
+        },
+        {
+          "caller": "drop",
+          "callee": "thread_state::exit",
+          "lineNumber": 972
+        },
+        {
+          "caller": "drop",
+          "callee": "thread_state::enter",
+          "lineNumber": 973
+        },
+        {
+          "caller": "with_layout_state",
+          "callee": "ThreadStateRestorer::new",
+          "lineNumber": 984
+        },
+        {
+          "caller": "with_layout_state",
+          "callee": "f",
+          "lineNumber": 985
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "std::iter::repeat_with(|| ImageFrame {\n            delay: Some(Duration::from_millis(100)),\n            byte_range: 0..1,\n            width: 100,\n            height: 100,\n        })\n        .take(10).collect",
+          "lineNumber": 1000
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "std::iter::repeat_with(|| ImageFrame {\n            delay: Some(Duration::from_millis(100)),\n            byte_range: 0..1,\n            width: 100,\n            height: 100,\n        }).take",
+          "lineNumber": 1000
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "std::iter::repeat_with",
+          "lineNumber": 1000
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Some",
+          "lineNumber": 1001
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Duration::from_millis",
+          "lineNumber": 1001
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Arc::new",
+          "lineNumber": 1015
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Some",
+          "lineNumber": 1018
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "ImageAnimationState::new",
+          "lineNumber": 1021
+        },
+        {
+          "caller": "test_animated_image_update",
+          "callee": "Arc::new",
+          "lineNumber": 1021
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "std::iter::repeat_with(|| ImageFrame {\n            delay: Some(Duration::from_millis(100)),\n            byte_range: 0..1,\n            width: 100,\n            height: 100,\n        })\n        .take(2).collect",
+          "lineNumber": 1041
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "std::iter::repeat_with(|| ImageFrame {\n            delay: Some(Duration::from_millis(100)),\n            byte_range: 0..1,\n            width: 100,\n            height: 100,\n        }).take",
+          "lineNumber": 1041
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "std::iter::repeat_with",
+          "lineNumber": 1041
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Some",
+          "lineNumber": 1042
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Duration::from_millis",
+          "lineNumber": 1042
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Arc::new",
+          "lineNumber": 1056
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Some",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Repeat::Finite",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "NonZeroU32::new(1).unwrap",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "NonZeroU32::new",
+          "lineNumber": 1059
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "ImageAnimationState::new",
+          "lineNumber": 1062
+        },
+        {
+          "caller": "test_finite_image_repeat",
+          "callee": "Arc::new",
+          "lineNumber": 1062
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 56,
+        "functionCount": 24,
+        "classCount": 40
+      }
+    },
+    {
+      "path": "components/shared/net/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 57,
+      "nonEmptyLines": 53,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "features",
+          "level": 1,
+          "line": 18
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 21
+        },
+        {
+          "heading": "dev-dependencies",
+          "level": 1,
+          "line": 56
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 5
+      }
+    },
+    {
+      "path": "components/shared/webgpu/lib.rs",
+      "language": "Rust",
+      "fileCategory": "code",
+      "totalLines": 184,
+      "nonEmptyLines": 162,
+      "functions": [
+        {
+          "name": "exit",
+          "startLine": 45,
+          "endLine": 49,
+          "params": [
+            "sender"
+          ]
+        },
+        {
+          "name": "stride",
+          "startLine": 71,
+          "endLine": 74,
+          "params": []
+        },
+        {
+          "name": "buffer_size",
+          "startLine": 76,
+          "endLine": 78,
+          "params": []
+        },
+        {
+          "name": "from",
+          "startLine": 82,
+          "endLine": 94,
+          "params": [
+            "config"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 114,
+          "endLine": 143,
+          "params": [
+            "error",
+            "source"
+          ]
+        },
+        {
+          "name": "from",
+          "startLine": 173,
+          "endLine": 183,
+          "params": [
+            "value"
+          ]
+        }
+      ],
+      "classes": [
+        {
+          "name": "WebGPU",
+          "startLine": 42,
+          "endLine": 42,
+          "methods": [
+            "exit"
+          ],
+          "properties": []
+        },
+        {
+          "name": "Adapter",
+          "startLine": 53,
+          "endLine": 59,
+          "methods": [],
+          "properties": [
+            "adapter_info",
+            "adapter_id",
+            "features",
+            "limits",
+            "channel"
+          ]
+        },
+        {
+          "name": "ContextConfiguration",
+          "startLine": 62,
+          "endLine": 68,
+          "methods": [
+            "stride",
+            "buffer_size"
+          ],
+          "properties": [
+            "device_id",
+            "queue_id",
+            "format",
+            "is_opaque",
+            "size"
+          ]
+        },
+        {
+          "name": "DeviceLostReason",
+          "startLine": 99,
+          "endLine": 102,
+          "methods": [],
+          "properties": [
+            "Unknown",
+            "Destroyed"
+          ]
+        },
+        {
+          "name": "ShaderCompilationInfo",
+          "startLine": 105,
+          "endLine": 111,
+          "methods": [
+            "from"
+          ],
+          "properties": [
+            "line_number",
+            "line_pos",
+            "offset",
+            "length",
+            "message"
+          ]
+        },
+        {
+          "name": "Pipeline",
+          "startLine": 147,
+          "endLine": 150,
+          "methods": [],
+          "properties": [
+            "id",
+            "label"
+          ]
+        },
+        {
+          "name": "Mapping",
+          "startLine": 153,
+          "endLine": 157,
+          "methods": [],
+          "properties": [
+            "data",
+            "mode",
+            "range"
+          ]
+        },
+        {
+          "name": "RequestDeviceError",
+          "startLine": 166,
+          "endLine": 170,
+          "methods": [
+            "from"
+          ],
+          "properties": [
+            "LimitsExceeded",
+            "UnsupportedFeature",
+            "Other"
+          ]
+        }
+      ],
+      "exports": [
+        {
+          "name": "WebGPU",
+          "line": 42,
+          "isDefault": false
+        },
+        {
+          "name": "exit",
+          "line": 45,
+          "isDefault": false
+        },
+        {
+          "name": "Adapter",
+          "line": 53,
+          "isDefault": false
+        },
+        {
+          "name": "ContextConfiguration",
+          "line": 62,
+          "isDefault": false
+        },
+        {
+          "name": "stride",
+          "line": 71,
+          "isDefault": false
+        },
+        {
+          "name": "buffer_size",
+          "line": 76,
+          "isDefault": false
+        },
+        {
+          "name": "DeviceLostReason",
+          "line": 99,
+          "isDefault": false
+        },
+        {
+          "name": "ShaderCompilationInfo",
+          "line": 105,
+          "isDefault": false
+        },
+        {
+          "name": "from",
+          "line": 114,
+          "isDefault": false
+        },
+        {
+          "name": "Pipeline",
+          "line": 147,
+          "isDefault": false
+        },
+        {
+          "name": "Mapping",
+          "line": 153,
+          "isDefault": false
+        },
+        {
+          "name": "RequestDeviceError",
+          "line": 166,
+          "isDefault": false
+        }
+      ],
+      "callGraph": [
+        {
+          "caller": "exit",
+          "callee": "self.0\n            .send(WebGPURequest::Exit(sender)).map_err",
+          "lineNumber": 46
+        },
+        {
+          "caller": "exit",
+          "callee": "self.0.send",
+          "lineNumber": 46
+        },
+        {
+          "caller": "exit",
+          "callee": "WebGPURequest::Exit",
+          "lineNumber": 47
+        },
+        {
+          "caller": "stride",
+          "callee": "(self.size.width * self.format.bytes_per_pixel() as u32).next_multiple_of",
+          "lineNumber": 72
+        },
+        {
+          "caller": "stride",
+          "callee": "self.format.bytes_per_pixel",
+          "lineNumber": 72
+        },
+        {
+          "caller": "buffer_size",
+          "callee": "self.stride",
+          "lineNumber": 77
+        },
+        {
+          "caller": "from",
+          "callee": "config.size.cast().cast_unit",
+          "lineNumber": 85
+        },
+        {
+          "caller": "from",
+          "callee": "config.size.cast",
+          "lineNumber": 85
+        },
+        {
+          "caller": "from",
+          "callee": "Some",
+          "lineNumber": 86
+        },
+        {
+          "caller": "from",
+          "callee": "config.stride",
+          "lineNumber": 86
+        },
+        {
+          "caller": "from",
+          "callee": "ImageDescriptorFlags::empty",
+          "lineNumber": 91
+        },
+        {
+          "caller": "from",
+          "callee": "e.inner.location",
+          "lineNumber": 116
+        },
+        {
+          "caller": "from",
+          "callee": "e.inner.location",
+          "lineNumber": 117
+        },
+        {
+          "caller": "len_utf16",
+          "callee": "s.chars().map(|c| c.len_utf16() as u64).sum",
+          "lineNumber": 125
+        },
+        {
+          "caller": "len_utf16",
+          "callee": "s.chars().map",
+          "lineNumber": 125
+        },
+        {
+          "caller": "len_utf16",
+          "callee": "s.chars",
+          "lineNumber": 125
+        },
+        {
+          "caller": "len_utf16",
+          "callee": "c.len_utf16",
+          "lineNumber": 125
+        },
+        {
+          "caller": "from",
+          "callee": "source[0..start].rfind('\\n').map(|pos| pos + 1).unwrap_or",
+          "lineNumber": 129
+        },
+        {
+          "caller": "from",
+          "callee": "source[0..start].rfind('\\n').map",
+          "lineNumber": 129
+        },
+        {
+          "caller": "from",
+          "callee": "source[0..start].rfind",
+          "lineNumber": 129
+        },
+        {
+          "caller": "from",
+          "callee": "len_utf16",
+          "lineNumber": 132
+        },
+        {
+          "caller": "from",
+          "callee": "len_utf16",
+          "lineNumber": 133
+        },
+        {
+          "caller": "from",
+          "callee": "len_utf16",
+          "lineNumber": 134
+        },
+        {
+          "caller": "from",
+          "callee": "error.to_string",
+          "lineNumber": 135
+        },
+        {
+          "caller": "from",
+          "callee": "error.to_string",
+          "lineNumber": 139
+        },
+        {
+          "caller": "from",
+          "callee": "Default::default",
+          "lineNumber": 140
+        },
+        {
+          "caller": "from",
+          "callee": "RequestDeviceError::LimitsExceeded",
+          "lineNumber": 176
+        },
+        {
+          "caller": "from",
+          "callee": "RequestDeviceError::UnsupportedFeature",
+          "lineNumber": 179
+        },
+        {
+          "caller": "from",
+          "callee": "RequestDeviceError::Other",
+          "lineNumber": 181
+        },
+        {
+          "caller": "from",
+          "callee": "e.to_string",
+          "lineNumber": 181
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 12,
+        "functionCount": 6,
+        "classCount": 8
+      }
+    },
+    {
+      "path": "components/shared/webxr/lib.rs",
+      "language": "Rust",
+      "fileCategory": "code",
+      "totalLines": 51,
+      "nonEmptyLines": 48,
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0
+      }
+    },
+    {
+      "path": "components/media/servo-media/Cargo.toml",
+      "language": "TOML",
+      "fileCategory": "config",
+      "totalLines": 22,
+      "nonEmptyLines": 20,
+      "sections": [
+        {
+          "heading": "package",
+          "level": 1,
+          "line": 1
+        },
+        {
+          "heading": "lib",
+          "level": 1,
+          "line": 12
+        },
+        {
+          "heading": "dependencies",
+          "level": 1,
+          "line": 16
+        }
+      ],
+      "metrics": {
+        "importCount": 0,
+        "exportCount": 0,
+        "functionCount": 0,
+        "classCount": 0,
+        "sectionCount": 3
+      }
+    }
+  ]
+}
