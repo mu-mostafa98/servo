@@ -1,0 +1,1146 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/flow/inline/construct.rs",
+      "type": "file",
+      "name": "construct.rs",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "summary": "Constructs inline formatting contexts by processing inline items into lines with text runs and fragments.",
+      "tags": [
+        "rust",
+        "layout",
+        "flow",
+        "inline"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/flow/inline/construct.rs:InlineFormattingContextBuilder",
+      "type": "class",
+      "name": "InlineFormattingContextBuilder",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        37,
+        108
+      ],
+      "summary": "Defines InlineFormattingContextBuilder with 16 methods and 14 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flow/inline/construct.rs:WhitespaceCollapse",
+      "type": "class",
+      "name": "WhitespaceCollapse",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        527,
+        553
+      ],
+      "summary": "Enum WhitespaceCollapse with variants: char_iterator, white_space_collapse, remove_collapsible_white_space_at_start, following_newline, have_seen_non_white_space_characters, inside_white_space, character_pending_to_return.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:is_document_white_space",
+      "type": "function",
+      "name": "is_document_white_space",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        123,
+        125
+      ],
+      "summary": "is_document_white_space in construct.rs (params: character).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        127,
+        140
+      ],
+      "summary": "new in construct.rs (params: info, context).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:currently_processing_inline_box",
+      "type": "function",
+      "name": "currently_processing_inline_box",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        142,
+        144
+      ],
+      "summary": "currently_processing_inline_box in construct.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:push_atomic",
+      "type": "function",
+      "name": "push_atomic",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        159,
+        192
+      ],
+      "summary": "push_atomic in construct.rs (params: independent_formatting_context_creator, old_layout_box).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:push_absolutely_positioned_box",
+      "type": "function",
+      "name": "push_absolutely_positioned_box",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        194,
+        218
+      ],
+      "summary": "push_absolutely_positioned_box in construct.rs (params: absolutely_positioned_box_creator, old_layout_box).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:push_float_box",
+      "type": "function",
+      "name": "push_float_box",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        220,
+        241
+      ],
+      "summary": "push_float_box in construct.rs (params: float_box_creator, old_layout_box).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:push_block_level_box",
+      "type": "function",
+      "name": "push_block_level_box",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        243,
+        247
+      ],
+      "summary": "push_block_level_box in construct.rs (params: block_level).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:start_inline_box",
+      "type": "function",
+      "name": "start_inline_box",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        249,
+        279
+      ],
+      "summary": "start_inline_box in construct.rs (params: inline_box_creator, old_layout_box).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:end_inline_box",
+      "type": "function",
+      "name": "end_inline_box",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        285,
+        296
+      ],
+      "summary": "end_inline_box in construct.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:push_text_with_possible_first_letter",
+      "type": "function",
+      "name": "push_text_with_possible_first_letter",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        305,
+        351
+      ],
+      "summary": "push_text_with_possible_first_letter in construct.rs (params: text, info, container_info, layout_context).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:push_text",
+      "type": "function",
+      "name": "push_text",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        353,
+        490
+      ],
+      "summary": "push_text in construct.rs (params: text, info).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:enter_display_contents",
+      "type": "function",
+      "name": "enter_display_contents",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        492,
+        494
+      ],
+      "summary": "enter_display_contents in construct.rs (params: shared_inline_styles).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:leave_display_contents",
+      "type": "function",
+      "name": "leave_display_contents",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        496,
+        498
+      ],
+      "summary": "leave_display_contents in construct.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        501,
+        520
+      ],
+      "summary": "finish in construct.rs (params: layout_context, has_first_formatted_line, is_single_line_text_input, default_bidi_level).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:new_1",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        556,
+        570
+      ],
+      "summary": "new in construct.rs (params: char_iterator, white_space_collapse, trim_beginning_white_space).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:next",
+      "type": "function",
+      "name": "next",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        591,
+        686
+      ],
+      "summary": "next in construct.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:new_2",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        729,
+        735
+      ],
+      "summary": "new in construct.rs (params: char_iterator, text_transform).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:next_1",
+      "type": "function",
+      "name": "next",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        744,
+        779
+      ],
+      "summary": "next in construct.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:new_3",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        790,
+        795
+      ],
+      "summary": "new in construct.rs (params: char_iterator, text_security).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:next_2",
+      "type": "function",
+      "name": "next",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        804,
+        822
+      ],
+      "summary": "next in construct.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:capitalize_string",
+      "type": "function",
+      "name": "capitalize_string",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        827,
+        853
+      ],
+      "summary": "capitalize_string in construct.rs (params: string, allow_word_at_start).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/construct.rs:first_letter_range",
+      "type": "function",
+      "name": "first_letter_range",
+      "filePath": "components/layout/flow/inline/construct.rs",
+      "lineRange": [
+        864,
+        928
+      ],
+      "summary": "first_letter_range in construct.rs (params: text).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/flow/inline/inline_box.rs",
+      "type": "file",
+      "name": "inline_box.rs",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "summary": "Implements inline box layout within an inline formatting context, handling nested inline elements.",
+      "tags": [
+        "rust",
+        "layout",
+        "flow",
+        "inline"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/flow/inline/inline_box.rs:InlineBox",
+      "type": "class",
+      "name": "InlineBox",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        29,
+        39
+      ],
+      "summary": "Defines InlineBox with 3 methods and 4 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/inline_box.rs:InlineBoxes",
+      "type": "class",
+      "name": "InlineBoxes",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        70,
+        79
+      ],
+      "summary": "Defines InlineBoxes with 6 methods and 2 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/inline_box.rs:InlineBoxContainerState",
+      "type": "class",
+      "name": "InlineBoxContainerState",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        201,
+        215
+      ],
+      "summary": "Defines InlineBoxContainerState with 2 methods and 4 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        42,
+        50
+      ],
+      "summary": "new in inline_box.rs (params: info, context).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        53,
+        55
+      ],
+      "summary": "layout_style in inline_box.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        57,
+        66
+      ],
+      "summary": "repair_style in inline_box.rs (params: context, node, new_style).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:len",
+      "type": "function",
+      "name": "len",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        82,
+        84
+      ],
+      "summary": "len in inline_box.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:iter",
+      "type": "function",
+      "name": "iter",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        86,
+        88
+      ],
+      "summary": "iter in inline_box.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:get",
+      "type": "function",
+      "name": "get",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        90,
+        92
+      ],
+      "summary": "get in inline_box.rs (params: identifier).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:end_inline_box",
+      "type": "function",
+      "name": "end_inline_box",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        94,
+        97
+      ],
+      "summary": "end_inline_box in inline_box.rs (params: identifier).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:start_inline_box",
+      "type": "function",
+      "name": "start_inline_box",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        99,
+        120
+      ],
+      "summary": "start_inline_box in inline_box.rs (params: inline_box).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:get_path",
+      "type": "function",
+      "name": "get_path",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        122,
+        171
+      ],
+      "summary": "get_path in inline_box.rs (params: from, to).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:new_1",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        218,
+        241
+      ],
+      "summary": "new in inline_box.rs (params: inline_box, containing_block, layout_context, parent_container, default_font).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/inline_box.rs:calculate_space_above_baseline",
+      "type": "function",
+      "name": "calculate_space_above_baseline",
+      "filePath": "components/layout/flow/inline/inline_box.rs",
+      "lineRange": [
+        243,
+        252
+      ],
+      "summary": "calculate_space_above_baseline in inline_box.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "class:components/layout/flow/inline/construct.rs:InlineFormattingContextBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "class:components/layout/flow/inline/construct.rs:InlineFormattingContextBuilder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "class:components/layout/flow/inline/construct.rs:WhitespaceCollapse",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "class:components/layout/flow/inline/construct.rs:WhitespaceCollapse",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:is_document_white_space",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:is_document_white_space",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:currently_processing_inline_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:currently_processing_inline_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_atomic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_atomic",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_absolutely_positioned_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_absolutely_positioned_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_float_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_float_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_block_level_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_block_level_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:start_inline_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:start_inline_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:end_inline_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:end_inline_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_text_with_possible_first_letter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_text_with_possible_first_letter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:push_text",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:enter_display_contents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:enter_display_contents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:leave_display_contents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:leave_display_contents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:finish",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:new_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:new_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:next",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:new_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:new_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:next_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:new_3",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:new_3",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:next_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:capitalize_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:capitalize_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/construct.rs",
+      "target": "function:components/layout/flow/inline/construct.rs:first_letter_range",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "class:components/layout/flow/inline/inline_box.rs:InlineBox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "class:components/layout/flow/inline/inline_box.rs:InlineBox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "class:components/layout/flow/inline/inline_box.rs:InlineBoxes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "class:components/layout/flow/inline/inline_box.rs:InlineBoxes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "class:components/layout/flow/inline/inline_box.rs:InlineBoxContainerState",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "class:components/layout/flow/inline/inline_box.rs:InlineBoxContainerState",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:len",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:len",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:iter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:iter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:get",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:get",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:end_inline_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:end_inline_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:start_inline_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:start_inline_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:get_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:get_path",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:new_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:new_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:calculate_space_above_baseline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/inline_box.rs",
+      "target": "function:components/layout/flow/inline/inline_box.rs:calculate_space_above_baseline",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

@@ -1,0 +1,1443 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/display_list/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/layout/display_list/mod.rs",
+      "summary": "Core display list builder that converts the fragment tree into WebRender display items for painting and hit testing.",
+      "tags": [
+        "rust",
+        "layout",
+        "module-barrel",
+        "display-list"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/display_list/mod.rs:DisplayListBuilder",
+      "type": "class",
+      "name": "DisplayListBuilder",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        88,
+        130
+      ],
+      "summary": "Enum DisplayListBuilder with variants: fragment_tree, current_reference_frame_scroll_node_id, webrender_display_list_builder, paint_info, inspector_highlight, paint_body_background, clip_map, image_resolver, device_pixel_ratio, paint_timing_handler, reflow_statistics.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/display_list/mod.rs:InspectorHighlight",
+      "type": "class",
+      "name": "InspectorHighlight",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        132,
+        141
+      ],
+      "summary": "Defines InspectorHighlight with 2 methods and 2 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:for_node",
+      "type": "function",
+      "name": "for_node",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        158,
+        167
+      ],
+      "summary": "for_node in mod.rs (params: node).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build",
+      "type": "function",
+      "name": "build",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        172,
+        238
+      ],
+      "summary": "build in mod.rs (params: stacking_context_tree, fragment_tree, image_resolver, device_pixel_ratio, highlighted_dom_node, debug, paint_timing_handler, reflow_statistics).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:add_all_spatial_nodes",
+      "type": "function",
+      "name": "add_all_spatial_nodes",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        270,
+        327
+      ],
+      "summary": "add_all_spatial_nodes in mod.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:add_clip_to_display_list",
+      "type": "function",
+      "name": "add_clip_to_display_list",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        336,
+        370
+      ],
+      "summary": "add_clip_to_display_list in mod.rs (params: clip).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:maybe_create_clip",
+      "type": "function",
+      "name": "maybe_create_clip",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        375,
+        393
+      ],
+      "summary": "maybe_create_clip in mod.rs (params: state, radii, rect, force_clip_creation).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:push_webrender_stacking_context_if_necessary",
+      "type": "function",
+      "name": "push_webrender_stacking_context_if_necessary",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        395,
+        468
+      ],
+      "summary": "push_webrender_stacking_context_if_necessary in mod.rs (params: stacking_context).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:common_properties",
+      "type": "function",
+      "name": "common_properties",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        470,
+        485
+      ],
+      "summary": "common_properties in mod.rs (params: state, clip_rect, style).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:paint_dom_inspector_highlight",
+      "type": "function",
+      "name": "paint_dom_inspector_highlight",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        488,
+        594
+      ],
+      "summary": "paint_dom_inspector_highlight in mod.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:check_if_paintable",
+      "type": "function",
+      "name": "check_if_paintable",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        596,
+        615
+      ],
+      "summary": "check_if_paintable in mod.rs (params: bounds, clip_rect, opacity).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:check_for_lcp_candidate",
+      "type": "function",
+      "name": "check_for_lcp_candidate",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        617,
+        636
+      ],
+      "summary": "check_for_lcp_candidate in mod.rs (params: state, clip_rect, bounds, tag, url).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_stacking_context",
+      "type": "function",
+      "name": "visit_stacking_context",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        642,
+        665
+      ],
+      "summary": "visit_stacking_context in mod.rs (params: stacking_context).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:leave_stacking_context",
+      "type": "function",
+      "name": "leave_stacking_context",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        667,
+        680
+      ],
+      "summary": "leave_stacking_context in mod.rs (params: _, stacking_context_state).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_box",
+      "type": "function",
+      "name": "visit_box",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        682,
+        697
+      ],
+      "summary": "visit_box in mod.rs (params: state, fragment).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_iframe",
+      "type": "function",
+      "name": "visit_iframe",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        699,
+        724
+      ],
+      "summary": "visit_iframe in mod.rs (params: state, fragment).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_image",
+      "type": "function",
+      "name": "visit_image",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        726,
+        796
+      ],
+      "summary": "visit_image in mod.rs (params: state, containing_block, fragment).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_text",
+      "type": "function",
+      "name": "visit_text",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        798,
+        811
+      ],
+      "summary": "visit_text in mod.rs (params: state, containing_block, fragment).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_box_for_root_background",
+      "type": "function",
+      "name": "visit_box_for_root_background",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        822,
+        898
+      ],
+      "summary": "visit_box_for_root_background in mod.rs (params: state).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_box_for_collapsed_table_borders",
+      "type": "function",
+      "name": "visit_box_for_collapsed_table_borders",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        908,
+        918
+      ],
+      "summary": "visit_box_for_collapsed_table_borders in mod.rs (params: state, fragment).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:register_fragment_of_highlighted_dom_node",
+      "type": "function",
+      "name": "register_fragment_of_highlighted_dom_node",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        922,
+        957
+      ],
+      "summary": "register_fragment_of_highlighted_dom_node in mod.rs (params: builder, traversal_state, fragment).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_display_list_for_text_fragment",
+      "type": "function",
+      "name": "build_display_list_for_text_fragment",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        961,
+        1109
+      ],
+      "summary": "build_display_list_for_text_fragment in mod.rs (params: fragment, builder, state, containing_block).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_display_list_for_text_decoration",
+      "type": "function",
+      "name": "build_display_list_for_text_decoration",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1111,
+        1174
+      ],
+      "summary": "build_display_list_for_text_decoration in mod.rs (params: state, parent_style, builder, rect, text_decoration, line).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_display_list_for_broken_image_border",
+      "type": "function",
+      "name": "build_display_list_for_broken_image_border",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1176,
+        1198
+      ],
+      "summary": "build_display_list_for_broken_image_border in mod.rs (params: builder, containing_block, common).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_display_list_for_text_selection",
+      "type": "function",
+      "name": "build_display_list_for_text_selection",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1202,
+        1335
+      ],
+      "summary": "build_display_list_for_text_selection in mod.rs (params: fragment, builder, state, containing_block_rect, fragment_x_offset, justification_adjustment).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1352,
+        1371
+      ],
+      "summary": "new in mod.rs (params: fragment, containing_block_origin).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:border_edge_clip",
+      "type": "function",
+      "name": "border_edge_clip",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1406,
+        1424
+      ],
+      "summary": "border_edge_clip in mod.rs (params: builder, state, force_clip_creation).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:padding_edge_clip",
+      "type": "function",
+      "name": "padding_edge_clip",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1426,
+        1441
+      ],
+      "summary": "padding_edge_clip in mod.rs (params: builder, state, force_clip_creation).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:content_edge_clip",
+      "type": "function",
+      "name": "content_edge_clip",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1443,
+        1461
+      ],
+      "summary": "content_edge_clip in mod.rs (params: builder, state, force_clip_creation).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_1",
+      "type": "function",
+      "name": "build",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1463,
+        1505
+      ],
+      "summary": "build in mod.rs (params: builder, state).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_hit_test",
+      "type": "function",
+      "name": "build_hit_test",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1507,
+        1528
+      ],
+      "summary": "build_hit_test in mod.rs (params: builder, state, rect).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_background_for_painter",
+      "type": "function",
+      "name": "build_background_for_painter",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1530,
+        1567
+      ],
+      "summary": "build_background_for_painter in mod.rs (params: builder, state, painter).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_background",
+      "type": "function",
+      "name": "build_background",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1569,
+        1614
+      ],
+      "summary": "build_background in mod.rs (params: builder, state).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_background_image",
+      "type": "function",
+      "name": "build_background_image",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1616,
+        1826
+      ],
+      "summary": "build_background_image in mod.rs (params: builder, state, painter).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_border_side",
+      "type": "function",
+      "name": "build_border_side",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1828,
+        1844
+      ],
+      "summary": "build_border_side in mod.rs (params: style_color).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_collapsed_table_borders",
+      "type": "function",
+      "name": "build_collapsed_table_borders",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1846,
+        1922
+      ],
+      "summary": "build_collapsed_table_borders in mod.rs (params: builder, state).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_border",
+      "type": "function",
+      "name": "build_border",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1924,
+        1958
+      ],
+      "summary": "build_border in mod.rs (params: builder, state).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_border_image",
+      "type": "function",
+      "name": "build_border_image",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        1961,
+        2087
+      ],
+      "summary": "build_border_image in mod.rs (params: builder, state, border, border_widths).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_outline",
+      "type": "function",
+      "name": "build_outline",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2089,
+        2135
+      ],
+      "summary": "build_outline in mod.rs (params: builder, state).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:build_box_shadow",
+      "type": "function",
+      "name": "build_box_shadow",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2137,
+        2199
+      ],
+      "summary": "build_box_shadow in mod.rs (params: builder, state).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:glyphs",
+      "type": "function",
+      "name": "glyphs",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2212,
+        2246
+      ],
+      "summary": "glyphs in mod.rs (params: shaped_text_slices, baseline_origin, justification_adjustment, include_whitespace).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:offset_radii",
+      "type": "function",
+      "name": "offset_radii",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2251,
+        2284
+      ],
+      "summary": "offset_radii in mod.rs (params: radii, offsets).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:resolve_border_image_outset",
+      "type": "function",
+      "name": "resolve_border_image_outset",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2287,
+        2304
+      ],
+      "summary": "resolve_border_image_outset in mod.rs (params: outset, border).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:resolve_border_image_width",
+      "type": "function",
+      "name": "resolve_border_image_width",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2307,
+        2332
+      ],
+      "summary": "resolve_border_image_width in mod.rs (params: width, border, border_area).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:resolve_border_image_slice",
+      "type": "function",
+      "name": "resolve_border_image_slice",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2335,
+        2352
+      ],
+      "summary": "resolve_border_image_slice in mod.rs (params: border_image_slice, size).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:normalize_radii",
+      "type": "function",
+      "name": "normalize_radii",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2354,
+        2372
+      ],
+      "summary": "normalize_radii in mod.rs (params: rect, radius).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:compute_margin_box_radius",
+      "type": "function",
+      "name": "compute_margin_box_radius",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2381,
+        2435
+      ],
+      "summary": "compute_margin_box_radius in mod.rs (params: radius, layout_rect, fragment).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:border_radius",
+      "type": "function",
+      "name": "border_radius",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2438,
+        2468
+      ],
+      "summary": "border_radius in mod.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/mod.rs:visit_fragment",
+      "type": "function",
+      "name": "visit_fragment",
+      "filePath": "components/layout/display_list/mod.rs",
+      "lineRange": [
+        2472,
+        2488
+      ],
+      "summary": "visit_fragment in mod.rs (params: builder).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/display_list/paint_timing_handler.rs",
+      "type": "file",
+      "name": "paint_timing_handler.rs",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "summary": "Tracks Largest Contentful Paint (LCP) candidates during display list construction for performance metrics.",
+      "tags": [
+        "rust",
+        "layout",
+        "display-list",
+        "handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/display_list/paint_timing_handler.rs:PaintTimingHandler",
+      "type": "class",
+      "name": "PaintTimingHandler",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        15,
+        25
+      ],
+      "summary": "Defines PaintTimingHandler with 7 methods and 4 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        28,
+        35
+      ],
+      "summary": "new in paint_timing_handler.rs (params: viewport_size).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:check_bounding_rect",
+      "type": "function",
+      "name": "check_bounding_rect",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        38,
+        49
+      ],
+      "summary": "check_bounding_rect in paint_timing_handler.rs (params: bounds, clip_rect).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:calculate_intersection_rect",
+      "type": "function",
+      "name": "calculate_intersection_rect",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        51,
+        73
+      ],
+      "summary": "calculate_intersection_rect in paint_timing_handler.rs (params: bounds, clip_rect, transform).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:update_lcp_candidate",
+      "type": "function",
+      "name": "update_lcp_candidate",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        75,
+        103
+      ],
+      "summary": "update_lcp_candidate in paint_timing_handler.rs (params: tag, bounds, clip_rect, transform, url).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:did_lcp_candidate_update",
+      "type": "function",
+      "name": "did_lcp_candidate_update",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        105,
+        107
+      ],
+      "summary": "did_lcp_candidate_update in paint_timing_handler.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:unset_lcp_candidate_updated",
+      "type": "function",
+      "name": "unset_lcp_candidate_updated",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        109,
+        111
+      ],
+      "summary": "unset_lcp_candidate_updated in paint_timing_handler.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/paint_timing_handler.rs:largest_contentful_paint_candidate",
+      "type": "function",
+      "name": "largest_contentful_paint_candidate",
+      "filePath": "components/layout/display_list/paint_timing_handler.rs",
+      "lineRange": [
+        113,
+        115
+      ],
+      "summary": "largest_contentful_paint_candidate in paint_timing_handler.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "class:components/layout/display_list/mod.rs:DisplayListBuilder",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "class:components/layout/display_list/mod.rs:DisplayListBuilder",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "class:components/layout/display_list/mod.rs:InspectorHighlight",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:for_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:add_all_spatial_nodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:add_all_spatial_nodes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:add_clip_to_display_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:add_clip_to_display_list",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:maybe_create_clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:push_webrender_stacking_context_if_necessary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:common_properties",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:paint_dom_inspector_highlight",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:check_if_paintable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:check_for_lcp_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_stacking_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:leave_stacking_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_iframe",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_box_for_root_background",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_box_for_collapsed_table_borders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:register_fragment_of_highlighted_dom_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_display_list_for_text_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_display_list_for_text_decoration",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_display_list_for_broken_image_border",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_display_list_for_text_selection",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:border_edge_clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:padding_edge_clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:content_edge_clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_hit_test",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_background_for_painter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_background",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_background_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_border_side",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_collapsed_table_borders",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_border",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_border_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_outline",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:build_box_shadow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:glyphs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:offset_radii",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:resolve_border_image_outset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:resolve_border_image_width",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:resolve_border_image_slice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:normalize_radii",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:normalize_radii",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:compute_margin_box_radius",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:compute_margin_box_radius",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:border_radius",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/mod.rs",
+      "target": "function:components/layout/display_list/mod.rs:visit_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "class:components/layout/display_list/paint_timing_handler.rs:PaintTimingHandler",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "class:components/layout/display_list/paint_timing_handler.rs:PaintTimingHandler",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:check_bounding_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:check_bounding_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:calculate_intersection_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:update_lcp_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:update_lcp_candidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:did_lcp_candidate_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:did_lcp_candidate_update",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:unset_lcp_candidate_updated",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:unset_lcp_candidate_updated",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:largest_contentful_paint_candidate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/paint_timing_handler.rs",
+      "target": "function:components/layout/display_list/paint_timing_handler.rs:largest_contentful_paint_candidate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

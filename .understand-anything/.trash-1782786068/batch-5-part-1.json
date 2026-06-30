@@ -1,0 +1,1529 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/accessibility_tree.rs",
+      "type": "file",
+      "name": "accessibility_tree.rs",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "summary": "Manages the accessibility tree, updating and maintaining accesskit nodes for screen readers and assistive technology.",
+      "tags": [
+        "rust",
+        "layout",
+        "test"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/accessibility_tree.rs:AccessibilityUpdate",
+      "type": "class",
+      "name": "AccessibilityUpdate",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        40,
+        49
+      ],
+      "summary": "Defines AccessibilityUpdate with 4 methods and 3 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/accessibility_tree.rs:AccessibilityNode",
+      "type": "class",
+      "name": "AccessibilityNode",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        51,
+        66
+      ],
+      "summary": "Defines AccessibilityNode with 20 methods and 4 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/accessibility_tree.rs:AccessibilityTree",
+      "type": "class",
+      "name": "AccessibilityTree",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        73,
+        100
+      ],
+      "summary": "Defines AccessibilityTree with 12 methods and 7 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/accessibility_tree.rs:TreeChange",
+      "type": "class",
+      "name": "TreeChange",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        107,
+        133
+      ],
+      "summary": "Enum TreeChange with variants: New, Moved, PendingMove, Removed.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        137,
+        147
+      ],
+      "summary": "new in accessibility_tree.rs (params: tree_id, embedder_epoch).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:update_tree",
+      "type": "function",
+      "name": "update_tree",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        151,
+        163
+      ],
+      "summary": "update_tree in accessibility_tree.rs (params: root_dom_node, rooted_nodes).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:update_node_and_descendants_from_dom_node",
+      "type": "function",
+      "name": "update_node_and_descendants_from_dom_node",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        168,
+        188
+      ],
+      "summary": "update_node_and_descendants_from_dom_node in accessibility_tree.rs (params: node, dom_node, update).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:get_or_create_node",
+      "type": "function",
+      "name": "get_or_create_node",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        190,
+        211
+      ],
+      "summary": "get_or_create_node in accessibility_tree.rs (params: dom_node, update).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:remove_stale_nodes",
+      "type": "function",
+      "name": "remove_stale_nodes",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        226,
+        266
+      ],
+      "summary": "remove_stale_nodes in accessibility_tree.rs (params: update).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:assert_removed_nodes_were_rooted",
+      "type": "function",
+      "name": "assert_removed_nodes_were_rooted",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        271,
+        295
+      ],
+      "summary": "assert_removed_nodes_were_rooted in accessibility_tree.rs (params: update, rooted_nodes).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:id_for_opaque",
+      "type": "function",
+      "name": "id_for_opaque",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        297,
+        306
+      ],
+      "summary": "id_for_opaque in accessibility_tree.rs (params: opaque).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:embedder_epoch",
+      "type": "function",
+      "name": "embedder_epoch",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        308,
+        310
+      ],
+      "summary": "embedder_epoch in accessibility_tree.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:assert_integrity",
+      "type": "function",
+      "name": "assert_integrity",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        315,
+        337
+      ],
+      "summary": "assert_integrity in accessibility_tree.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:print",
+      "type": "function",
+      "name": "print",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        339,
+        348
+      ],
+      "summary": "print in accessibility_tree.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:role_from_dom_node",
+      "type": "function",
+      "name": "role_from_dom_node",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        351,
+        362
+      ],
+      "summary": "role_from_dom_node in accessibility_tree.rs (params: dom_node).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:new_1",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        365,
+        367
+      ],
+      "summary": "new in accessibility_tree.rs (params: id).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:update_descendants_from_dom_node",
+      "type": "function",
+      "name": "update_descendants_from_dom_node",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        380,
+        408
+      ],
+      "summary": "update_descendants_from_dom_node in accessibility_tree.rs (params: dom_node, tree, update).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:set_subtree_state_change",
+      "type": "function",
+      "name": "set_subtree_state_change",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        421,
+        441
+      ],
+      "summary": "set_subtree_state_change in accessibility_tree.rs (params: change, tree, update).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:update_node_from_dom_node",
+      "type": "function",
+      "name": "update_node_from_dom_node",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        444,
+        458
+      ],
+      "summary": "update_node_from_dom_node in accessibility_tree.rs (params: dom_node).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:update_node_local",
+      "type": "function",
+      "name": "update_node_local",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        464,
+        481
+      ],
+      "summary": "update_node_local in accessibility_tree.rs (params: damage, tree).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:label_from_descendants",
+      "type": "function",
+      "name": "label_from_descendants",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        483,
+        506
+      ],
+      "summary": "label_from_descendants in accessibility_tree.rs (params: tree).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:print_1",
+      "type": "function",
+      "name": "print",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        508,
+        521
+      ],
+      "summary": "print in accessibility_tree.rs (params: tree, print_tree).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:set_children",
+      "type": "function",
+      "name": "set_children",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        531,
+        565
+      ],
+      "summary": "set_children in accessibility_tree.rs (params: children, tree, update).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:fmt",
+      "type": "function",
+      "name": "fmt",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        629,
+        641
+      ],
+      "summary": "fmt in accessibility_tree.rs (params: f).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:new_2",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        645,
+        651
+      ],
+      "summary": "new in accessibility_tree.rs (params: rooted_nodes).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:set_tree_state_change",
+      "type": "function",
+      "name": "set_tree_state_change",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        659,
+        678
+      ],
+      "summary": "set_tree_state_change in accessibility_tree.rs (params: node_id, change).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:finalize",
+      "type": "function",
+      "name": "finalize",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        684,
+        713
+      ],
+      "summary": "finalize in accessibility_tree.rs (params: tree).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/accessibility_tree.rs:test_accessibility_update_add_some_nodes_twice",
+      "type": "function",
+      "name": "test_accessibility_update_add_some_nodes_twice",
+      "filePath": "components/layout/accessibility_tree.rs",
+      "lineRange": [
+        718,
+        774
+      ],
+      "summary": "test_accessibility_update_add_some_nodes_twice in accessibility_tree.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/cell.rs",
+      "type": "file",
+      "name": "cell.rs",
+      "filePath": "components/layout/cell.rs",
+      "summary": "Provides ArcRefCell, WeakRefCell, and RefOrAtomicRef smart pointer types for thread-safe shared ownership with runtime borrow checking.",
+      "tags": [
+        "rust",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/cell.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/cell.rs",
+      "lineRange": [
+        19,
+        23
+      ],
+      "summary": "new in cell.rs (params: value).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/cell.rs:downgrade",
+      "type": "function",
+      "name": "downgrade",
+      "filePath": "components/layout/cell.rs",
+      "lineRange": [
+        25,
+        29
+      ],
+      "summary": "downgrade in cell.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/cell.rs:ptr_eq",
+      "type": "function",
+      "name": "ptr_eq",
+      "filePath": "components/layout/cell.rs",
+      "lineRange": [
+        31,
+        33
+      ],
+      "summary": "ptr_eq in cell.rs (params: other).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/cell.rs:upgrade",
+      "type": "function",
+      "name": "upgrade",
+      "filePath": "components/layout/cell.rs",
+      "lineRange": [
+        92,
+        94
+      ],
+      "summary": "upgrade in cell.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/layout/construct_modern.rs",
+      "type": "file",
+      "name": "construct_modern.rs",
+      "filePath": "components/layout/construct_modern.rs",
+      "summary": "Implements the modern container builder for constructing layout box trees from DOM nodes with parallel processing support.",
+      "tags": [
+        "rust",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/construct_modern.rs:finish",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/construct_modern.rs",
+      "lineRange": [
+        56,
+        173
+      ],
+      "summary": "finish in construct_modern.rs (params: builder).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/construct_modern.rs:handle_element",
+      "type": "function",
+      "name": "handle_element",
+      "filePath": "components/layout/construct_modern.rs",
+      "lineRange": [
+        224,
+        239
+      ],
+      "summary": "handle_element in construct_modern.rs (params: info, display, contents, box_slot).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/construct_modern.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/construct_modern.rs",
+      "lineRange": [
+        243,
+        258
+      ],
+      "summary": "new in construct_modern.rs (params: context, info, propagated_data).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/construct_modern.rs:wrap_any_text_in_anonymous_block_container",
+      "type": "function",
+      "name": "wrap_any_text_in_anonymous_block_container",
+      "filePath": "components/layout/construct_modern.rs",
+      "lineRange": [
+        268,
+        283
+      ],
+      "summary": "wrap_any_text_in_anonymous_block_container in construct_modern.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/construct_modern.rs:finish_1",
+      "type": "function",
+      "name": "finish",
+      "filePath": "components/layout/construct_modern.rs",
+      "lineRange": [
+        285,
+        303
+      ],
+      "summary": "finish in construct_modern.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/layout/context.rs",
+      "type": "file",
+      "name": "context.rs",
+      "filePath": "components/layout/context.rs",
+      "summary": "Provides layout context including image resolution, caching, and parallel layout configuration.",
+      "tags": [
+        "rust",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/context.rs:LayoutContext",
+      "type": "class",
+      "name": "LayoutContext",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        32,
+        59
+      ],
+      "summary": "Enum LayoutContext with variants: style_context, font_context, iframe_sizes, image_resolver, painter_id, allow_parallel_layout, parallelism_job_count_minimum, parallelism_job_size_minimum.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/context.rs:ImageResolver",
+      "type": "class",
+      "name": "ImageResolver",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        103,
+        135
+      ],
+      "summary": "Defines ImageResolver with 7 methods and 8 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/context.rs:should_parallelize",
+      "type": "function",
+      "name": "should_parallelize",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        62,
+        64
+      ],
+      "summary": "should_parallelize in context.rs (params: number_of_jobs).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:should_parallelize_layout",
+      "type": "function",
+      "name": "should_parallelize_layout",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        66,
+        71
+      ],
+      "summary": "should_parallelize_layout in context.rs (params: jobs).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:drop",
+      "type": "function",
+      "name": "drop",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        138,
+        148
+      ],
+      "summary": "drop in context.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/context.rs:get_or_request_image_or_meta",
+      "type": "function",
+      "name": "get_or_request_image_or_meta",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        152,
+        198
+      ],
+      "summary": "get_or_request_image_or_meta in context.rs (params: node, url, destination, is_internal_request).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/context.rs:handle_animated_image",
+      "type": "function",
+      "name": "handle_animated_image",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        200,
+        207
+      ],
+      "summary": "handle_animated_image in context.rs (params: node, image).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:get_cached_image_for_url",
+      "type": "function",
+      "name": "get_cached_image_for_url",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        209,
+        246
+      ],
+      "summary": "get_cached_image_for_url in context.rs (params: node, url, destination, is_internal_request).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/context.rs:rasterize_vector_image",
+      "type": "function",
+      "name": "rasterize_vector_image",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        248,
+        268
+      ],
+      "summary": "rasterize_vector_image in context.rs (params: image_id, size, node, svg_id).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/context.rs:queue_svg_element_for_serialization",
+      "type": "function",
+      "name": "queue_svg_element_for_serialization",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        270,
+        274
+      ],
+      "summary": "queue_svg_element_for_serialization in context.rs (params: element).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/context.rs:resolve_image",
+      "type": "function",
+      "name": "resolve_image",
+      "filePath": "components/layout/context.rs",
+      "lineRange": [
+        276,
+        348
+      ],
+      "summary": "resolve_image in context.rs (params: node, image).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout/display_list/background.rs",
+      "type": "file",
+      "name": "background.rs",
+      "filePath": "components/layout/display_list/background.rs",
+      "summary": "Computes CSS background layer geometry including painting area, positioning area, clipping, and tiling layout.",
+      "tags": [
+        "rust",
+        "layout",
+        "display-list"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:get_cyclic",
+      "type": "function",
+      "name": "get_cyclic",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        40,
+        42
+      ],
+      "summary": "get_cyclic in background.rs (params: values, layer_index).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:painting_area",
+      "type": "function",
+      "name": "painting_area",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        53,
+        79
+      ],
+      "summary": "painting_area in background.rs (params: fragment_builder, builder, layer_index).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:clip",
+      "type": "function",
+      "name": "clip",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        81,
+        111
+      ],
+      "summary": "clip in background.rs (params: fragment_builder, builder, state, layer_index).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:common_properties",
+      "type": "function",
+      "name": "common_properties",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        116,
+        136
+      ],
+      "summary": "common_properties in background.rs (params: fragment_builder, builder, state, layer_index, painting_area).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:positioning_area",
+      "type": "function",
+      "name": "positioning_area",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        141,
+        165
+      ],
+      "summary": "positioning_area in background.rs (params: fragment_builder, builder, layer_index).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:layout_layer",
+      "type": "function",
+      "name": "layout_layer",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        168,
+        291
+      ],
+      "summary": "layout_layer in background.rs (params: fragment_builder, painter, builder, state, layer_index, natural_sizes).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/display_list/background.rs:layout_1d",
+      "type": "function",
+      "name": "layout_1d",
+      "filePath": "components/layout/display_list/background.rs",
+      "lineRange": [
+        295,
+        380
+      ],
+      "summary": "layout_1d in background.rs (params: tile_size, repeat, position, painting_area_origin, painting_area_size, positioning_area_size).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "class:components/layout/accessibility_tree.rs:AccessibilityUpdate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "class:components/layout/accessibility_tree.rs:AccessibilityNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "class:components/layout/accessibility_tree.rs:AccessibilityTree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "class:components/layout/accessibility_tree.rs:AccessibilityTree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "class:components/layout/accessibility_tree.rs:TreeChange",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:update_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:update_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:update_node_and_descendants_from_dom_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:get_or_create_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:remove_stale_nodes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:assert_removed_nodes_were_rooted",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:id_for_opaque",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:embedder_epoch",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:embedder_epoch",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:assert_integrity",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:print",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:role_from_dom_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:new_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:new_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:update_descendants_from_dom_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:set_subtree_state_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:update_node_from_dom_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:update_node_local",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:label_from_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:print_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:set_children",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:fmt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:new_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:new_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:set_tree_state_change",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:finalize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/accessibility_tree.rs",
+      "target": "function:components/layout/accessibility_tree.rs:test_accessibility_update_add_some_nodes_twice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/cell.rs",
+      "target": "function:components/layout/cell.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/cell.rs",
+      "target": "function:components/layout/cell.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/cell.rs",
+      "target": "function:components/layout/cell.rs:downgrade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/cell.rs",
+      "target": "function:components/layout/cell.rs:downgrade",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/cell.rs",
+      "target": "function:components/layout/cell.rs:ptr_eq",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/cell.rs",
+      "target": "function:components/layout/cell.rs:ptr_eq",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/cell.rs",
+      "target": "function:components/layout/cell.rs:upgrade",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/cell.rs",
+      "target": "function:components/layout/cell.rs:upgrade",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/construct_modern.rs",
+      "target": "function:components/layout/construct_modern.rs:finish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/construct_modern.rs",
+      "target": "function:components/layout/construct_modern.rs:finish",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/construct_modern.rs",
+      "target": "function:components/layout/construct_modern.rs:handle_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/construct_modern.rs",
+      "target": "function:components/layout/construct_modern.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/construct_modern.rs",
+      "target": "function:components/layout/construct_modern.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/construct_modern.rs",
+      "target": "function:components/layout/construct_modern.rs:wrap_any_text_in_anonymous_block_container",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/construct_modern.rs",
+      "target": "function:components/layout/construct_modern.rs:finish_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/construct_modern.rs",
+      "target": "function:components/layout/construct_modern.rs:finish_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:LayoutContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:LayoutContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:ImageResolver",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "class:components/layout/context.rs:ImageResolver",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:should_parallelize",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:should_parallelize",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:should_parallelize_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:should_parallelize_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:drop",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:get_or_request_image_or_meta",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:get_or_request_image_or_meta",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:handle_animated_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:handle_animated_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:get_cached_image_for_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:get_cached_image_for_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:rasterize_vector_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:rasterize_vector_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:queue_svg_element_for_serialization",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:queue_svg_element_for_serialization",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:resolve_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/context.rs",
+      "target": "function:components/layout/context.rs:resolve_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:get_cyclic",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:get_cyclic",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:painting_area",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:painting_area",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:clip",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:common_properties",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:common_properties",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:positioning_area",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:positioning_area",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:layout_layer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:layout_layer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/display_list/background.rs",
+      "target": "function:components/layout/display_list/background.rs:layout_1d",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

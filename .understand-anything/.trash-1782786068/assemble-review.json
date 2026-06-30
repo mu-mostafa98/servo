@@ -1,0 +1,19 @@
+{
+  "fixedSectionOk": true,
+  "nodesRecovered": 0,
+  "edgesRestored": 0,
+  "crossBatchEdgesAdded": 0,
+  "typesRemapped": 0,
+  "complexityRemapped": 0,
+  "filePathFixed": 33,
+  "notes": [
+    "No 'Could not fix' issues were reported by the merge script — all node types, complexity values, and IDs were valid.",
+    "1154 duplicate nodes removed and 1040 tested_by edges dropped are consistent with combining 31 batch files from overlapping analyses.",
+    "All cross-batch edges verified: 1477 imports edges in graph cover all 1351 non-self importMap relationships where both source and target file nodes exist. The only 2 missing entries were self-imports (python/mach/mach/logging.py and python/servo/platform/__init__.py) which are scan data artifacts and correctly excluded.",
+    "29 importMap source files and 47 target paths missing from graph are files in the scan result that were never analyzed by any batch — expected for a partial analysis.",
+    "33 file nodes were missing the filePath field (name contained the path but filePath was absent). These were reconstructed from the name field. Originated from batch files where the field was omitted.",
+    "No dangling edges exist in the graph — all edge source/target references resolve to valid node IDs.",
+    "The 15 imports edges recovered from importMap by the merge script are correctly present in the graph.",
+    "Minor quality note: the graph has 8306 function nodes vs 1366 file nodes (6:1 ratio), which is expected for a Rust codebase with many small functions."
+  ]
+}

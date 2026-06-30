@@ -1,0 +1,1250 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "type": "file",
+      "name": "fragment_tree.rs",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "FragmentTree top-level container managing the root box fragment tree with scrollable overflow computation and fragment lookup by DOM node.",
+      "tags": [
+        "fragment-tree",
+        "container",
+        "traversal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/fragment_tree/fragment_tree.rs:FragmentTree",
+      "type": "class",
+      "name": "FragmentTree",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Top-level fragment tree container managing root box fragments and providing scrollable overflow computation.",
+      "tags": [
+        "data-structure",
+        "fragment"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        19,
+        39
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/fragment_tree.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Constructs a new instance with the given parameters.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        42,
+        53
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/fragment_tree.rs:root_box_fragment",
+      "type": "function",
+      "name": "root_box_fragment",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Root box fragment.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        59,
+        68
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/fragment_tree.rs:print",
+      "type": "function",
+      "name": "print",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Prints the fragment tree structure for debugging.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        70,
+        75
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/fragment_tree.rs:scrollable_overflow",
+      "type": "function",
+      "name": "scrollable_overflow",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Returns the computed scrollable overflow for this fragment.",
+      "tags": [
+        "function",
+        "overflow"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        77,
+        84
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/fragment_tree.rs:clear_scrollable_overflow",
+      "type": "function",
+      "name": "clear_scrollable_overflow",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Clears the cached scrollable overflow value.",
+      "tags": [
+        "function",
+        "overflow"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        86,
+        88
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/fragment_tree.rs:calculate_scrollable_overflow",
+      "type": "function",
+      "name": "calculate_scrollable_overflow",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Computes scrollable overflow area for this fragment and its descendants.",
+      "tags": [
+        "function",
+        "computation",
+        "overflow"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        92,
+        126
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/fragment_tree.rs:find",
+      "type": "function",
+      "name": "find",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Locates a descendant fragment by DOM node, position, or text offset.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        128,
+        140
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/fragment_tree.rs:body_fragment",
+      "type": "function",
+      "name": "body_fragment",
+      "filePath": "components/layout/fragment_tree/fragment_tree.rs",
+      "summary": "Finds the body element fragment in the fragment tree for scroll area computation.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        143,
+        187
+      ]
+    },
+    {
+      "id": "file:components/layout/layout_impl.rs",
+      "type": "file",
+      "name": "layout_impl.rs",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "LayoutThread implementing the main layout event loop handling reflow, style resolution, stacking context tree construction, display list building, and accessibility tree updates.",
+      "tags": [
+        "layout-engine",
+        "thread",
+        "reflow"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Large multi-responsibility struct handling reflow, style, display lists, and layout queries."
+    },
+    {
+      "id": "class:components/layout/layout_impl.rs:LayoutThread",
+      "type": "class",
+      "name": "LayoutThread",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Main layout thread managing reflow, style context, stacking context trees, display list building, and accessibility updates.",
+      "tags": [
+        "data-structure",
+        "layout-base"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        126,
+        235
+      ]
+    },
+    {
+      "id": "class:components/layout/layout_impl.rs:RegisteredPainterImpl",
+      "type": "class",
+      "name": "RegisteredPainterImpl",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Registered CSS paint worklet painter implementation for custom paint rendering.",
+      "tags": [
+        "data-structure"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1669,
+        1674
+      ]
+    },
+    {
+      "id": "class:components/layout/layout_impl.rs:LayoutFontMetricsProvider",
+      "type": "class",
+      "name": "LayoutFontMetricsProvider",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Font metrics provider bridging Servo font context to layout font measurement queries.",
+      "tags": [
+        "data-structure",
+        "layout-base"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1719,
+        1719
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:set_theme",
+      "type": "function",
+      "name": "set_theme",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Applies the system theme to the layout thread.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        260,
+        270
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:set_viewport_details",
+      "type": "function",
+      "name": "set_viewport_details",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Updates viewport dimensions for layout calculations.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        272,
+        285
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:load_web_fonts_from_stylesheet",
+      "type": "function",
+      "name": "load_web_fonts_from_stylesheet",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Loads web fonts referenced in a stylesheet.",
+      "tags": [
+        "function",
+        "style"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        287,
+        298
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:add_stylesheet",
+      "type": "function",
+      "name": "add_stylesheet",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Registers a user/author stylesheet for styling.",
+      "tags": [
+        "function",
+        "style"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        301,
+        319
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:node_rendering_type",
+      "type": "function",
+      "name": "node_rendering_type",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Node rendering type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        336,
+        361
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_containing_block_is_descendant",
+      "type": "function",
+      "name": "query_containing_block_is_descendant",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query containing block is descendant.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        374,
+        388
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_padding",
+      "type": "function",
+      "name": "query_padding",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query padding.",
+      "tags": [
+        "function",
+        "query",
+        "box-model"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        392,
+        403
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_box_area",
+      "type": "function",
+      "name": "query_box_area",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query box area.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        411,
+        435
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_box_areas",
+      "type": "function",
+      "name": "query_box_areas",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query box areas.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        442,
+        461
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_scroll_container",
+      "type": "function",
+      "name": "query_scroll_container",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query scroll container.",
+      "tags": [
+        "function",
+        "query",
+        "overflow"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        498,
+        508
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_resolved_style",
+      "type": "function",
+      "name": "query_resolved_style",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query resolved style.",
+      "tags": [
+        "function",
+        "query",
+        "style"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        511,
+        539
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_resolved_font_style",
+      "type": "function",
+      "name": "query_resolved_font_style",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query resolved font style.",
+      "tags": [
+        "function",
+        "query",
+        "style"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        542,
+        575
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_text_index",
+      "type": "function",
+      "name": "query_text_index",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query text index.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        586,
+        601
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_elements_from_point",
+      "type": "function",
+      "name": "query_elements_from_point",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query elements from point.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        604,
+        615
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:collect_reports",
+      "type": "function",
+      "name": "collect_reports",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Collect reports.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        627,
+        676
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:ensure_stacking_context_tree",
+      "type": "function",
+      "name": "ensure_stacking_context_tree",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Ensure stacking context tree.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        691,
+        700
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:set_scroll_offsets_from_renderer",
+      "type": "function",
+      "name": "set_scroll_offsets_from_renderer",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Syncs scroll offsets from the renderer thread.",
+      "tags": [
+        "function",
+        "overflow"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        710,
+        724
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:set_accessibility_active",
+      "type": "function",
+      "name": "set_accessibility_active",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Enables or disables accessibility tree construction.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        746,
+        759
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Constructs a new instance with the given parameters.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        775,
+        835
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:build_shared_style_context",
+      "type": "function",
+      "name": "build_shared_style_context",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Build shared style context.",
+      "tags": [
+        "function",
+        "style",
+        "construction"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        837,
+        856
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:load_all_web_fonts_from_stylesheet_with_guard",
+      "type": "function",
+      "name": "load_all_web_fonts_from_stylesheet_with_guard",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Load all web fonts from stylesheet with guard.",
+      "tags": [
+        "function",
+        "style"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        858,
+        887
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:can_skip_reflow_request_entirely",
+      "type": "function",
+      "name": "can_skip_reflow_request_entirely",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Can skip reflow request entirely.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        892,
+        927
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:maybe_print_reflow_event",
+      "type": "function",
+      "name": "maybe_print_reflow_event",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Maybe print reflow event.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        929,
+        947
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:handle_accessibility_tree_update",
+      "type": "function",
+      "name": "handle_accessibility_tree_update",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Handle accessibility tree update.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        960,
+        991
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:handle_reflow",
+      "type": "function",
+      "name": "handle_reflow",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Processes a reflow request from script, managing the full layout pipeline.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        995,
+        1072
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:prepare_stylist_for_reflow",
+      "type": "function",
+      "name": "prepare_stylist_for_reflow",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Prepare stylist for reflow.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        1075,
+        1137
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:restyle_and_build_trees",
+      "type": "function",
+      "name": "restyle_and_build_trees",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Performs style resolution and box tree construction for the document.",
+      "tags": [
+        "function",
+        "style"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        1140,
+        1343
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:build_stacking_context_tree_for_reflow",
+      "type": "function",
+      "name": "build_stacking_context_tree_for_reflow",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Build stacking context tree for reflow.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1345,
+        1356
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:build_stacking_context_tree",
+      "type": "function",
+      "name": "build_stacking_context_tree",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Build stacking context tree.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        1359,
+        1407
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:build_display_list",
+      "type": "function",
+      "name": "build_display_list",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Builds the display list for painting from the stacking context tree.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        1412,
+        1496
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:set_scroll_offset_from_script",
+      "type": "function",
+      "name": "set_scroll_offset_from_script",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Applies a scroll offset change from script to the layout.",
+      "tags": [
+        "function",
+        "overflow"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        1498,
+        1527
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:profiler_metadata",
+      "type": "function",
+      "name": "profiler_metadata",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Profiler metadata.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1530,
+        1544
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:clear_layout_trees_and_send_empty_display_list",
+      "type": "function",
+      "name": "clear_layout_trees_and_send_empty_display_list",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Clears layout state and sends an empty display list.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        1547,
+        1581
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:ensure_containing_block_calculation",
+      "type": "function",
+      "name": "ensure_containing_block_calculation",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Ensures the containing block calculation data is up to date.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1583,
+        1595
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:get_ua_stylesheets",
+      "type": "function",
+      "name": "get_ua_stylesheets",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Get ua stylesheets.",
+      "tags": [
+        "function",
+        "style"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        1598,
+        1657
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:draw_a_paint_image",
+      "type": "function",
+      "name": "draw_a_paint_image",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Draw a paint image.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1697,
+        1706
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:query_font_metrics",
+      "type": "function",
+      "name": "query_font_metrics",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Query font metrics.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        1722,
+        1776
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_impl.rs:necessary",
+      "type": "function",
+      "name": "necessary",
+      "filePath": "components/layout/layout_impl.rs",
+      "summary": "Necessary.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        1857,
+        1885
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "class:components/layout/fragment_tree/fragment_tree.rs:FragmentTree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "class:components/layout/fragment_tree/fragment_tree.rs:FragmentTree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:root_box_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:root_box_fragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:print",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:print",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:scrollable_overflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:scrollable_overflow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:clear_scrollable_overflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:clear_scrollable_overflow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:calculate_scrollable_overflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:find",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:find",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:body_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "target": "function:components/layout/fragment_tree/fragment_tree.rs:body_fragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "class:components/layout/layout_impl.rs:LayoutThread",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "class:components/layout/layout_impl.rs:LayoutThread",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "class:components/layout/layout_impl.rs:RegisteredPainterImpl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "class:components/layout/layout_impl.rs:LayoutFontMetricsProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:set_theme",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:set_viewport_details",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:load_web_fonts_from_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:add_stylesheet",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:node_rendering_type",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_containing_block_is_descendant",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_padding",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_box_area",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_box_areas",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_scroll_container",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_resolved_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_resolved_font_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_text_index",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_elements_from_point",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:collect_reports",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:ensure_stacking_context_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:set_scroll_offsets_from_renderer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:set_accessibility_active",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:build_shared_style_context",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:load_all_web_fonts_from_stylesheet_with_guard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:can_skip_reflow_request_entirely",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:maybe_print_reflow_event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:handle_accessibility_tree_update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:handle_reflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:prepare_stylist_for_reflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:restyle_and_build_trees",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:build_stacking_context_tree_for_reflow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:build_stacking_context_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:build_display_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:set_scroll_offset_from_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:profiler_metadata",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:clear_layout_trees_and_send_empty_display_list",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:ensure_containing_block_calculation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:ensure_containing_block_calculation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:get_ua_stylesheets",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:draw_a_paint_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:query_font_metrics",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_impl.rs",
+      "target": "function:components/layout/layout_impl.rs:necessary",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/fragment_tree.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_impl.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

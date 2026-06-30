@@ -1,0 +1,534 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/flow/inline/text_run.rs",
+      "type": "file",
+      "name": "text_run.rs",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "summary": "Handles text run shaping, glyph storage, and inline-level text fragment creation during layout.",
+      "tags": [
+        "rust",
+        "layout",
+        "flow",
+        "inline"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/flow/inline/text_run.rs:FontAndScriptInfo",
+      "type": "class",
+      "name": "FontAndScriptInfo",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        59,
+        89
+      ],
+      "summary": "Defines FontAndScriptInfo with 1 methods and 13 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/flow/inline/text_run.rs:TextRunSegment",
+      "type": "class",
+      "name": "TextRunSegment",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        157,
+        176
+      ],
+      "summary": "Defines TextRunSegment with 6 methods and 5 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/flow/inline/text_run.rs:TextRun",
+      "type": "class",
+      "name": "TextRun",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        419,
+        446
+      ],
+      "summary": "Defines TextRun with 5 methods and 6 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:simple_for_font",
+      "type": "function",
+      "name": "simple_for_font",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        95,
+        111
+      ],
+      "summary": "simple_for_font in text_run.rs (params: font).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        115,
+        153
+      ],
+      "summary": "from in text_run.rs (params: info).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        179,
+        191
+      ],
+      "summary": "new in text_run.rs (params: info, byte_range, character_range).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:is_compatible",
+      "type": "function",
+      "name": "is_compatible",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        195,
+        214
+      ],
+      "summary": "is_compatible in text_run.rs (params: new_font, new_script, new_bidi_level).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:update",
+      "type": "function",
+      "name": "update",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        218,
+        227
+      ],
+      "summary": "update in text_run.rs (params: next_byte_index, next_character_index, new_script).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items",
+      "type": "function",
+      "name": "layout_into_line_items",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        229,
+        261
+      ],
+      "summary": "layout_into_line_items in text_run.rs (params: text_run, soft_wrap_policy, ifc).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:shape_text",
+      "type": "function",
+      "name": "shape_text",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        266,
+        393
+      ],
+      "summary": "shape_text in text_run.rs (params: parent_style, formatting_context_text, linebreaker, old_text_run_item).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:new_1",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        449,
+        468
+      ],
+      "summary": "new in text_run.rs (params: base_fragment_info, inline_styles, text_range, character_range, old_text_run).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:segment_and_shape",
+      "type": "function",
+      "name": "segment_and_shape",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        470,
+        499
+      ],
+      "summary": "segment_and_shape in text_run.rs (params: formatting_context_text, layout_context, linebreaker, bidi_levels).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:segment_text_by_font",
+      "type": "function",
+      "name": "segment_text_by_font",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        504,
+        624
+      ],
+      "summary": "segment_text_by_font in text_run.rs (params: layout_context, formatting_context_text, bidi_levels, parent_style).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items_1",
+      "type": "function",
+      "name": "layout_into_line_items",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        626,
+        658
+      ],
+      "summary": "layout_into_line_items in text_run.rs (params: ifc).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:process_preserved_tab",
+      "type": "function",
+      "name": "process_preserved_tab",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        660,
+        693
+      ],
+      "summary": "process_preserved_tab in text_run.rs (params: ifc_layout, bidi_level).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:is_cursive_script",
+      "type": "function",
+      "name": "is_cursive_script",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        700,
+        711
+      ],
+      "summary": "is_cursive_script in text_run.rs (params: script).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:character_cannot_change_font",
+      "type": "function",
+      "name": "character_cannot_change_font",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        716,
+        735
+      ],
+      "summary": "character_cannot_change_font in text_run.rs (params: character).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:get_font_for_first_font_for_style",
+      "type": "function",
+      "name": "get_font_for_first_font_for_style",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        737,
+        748
+      ],
+      "summary": "get_font_for_first_font_for_style in text_run.rs (params: style, font_context).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/flow/inline/text_run.rs:new_2",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/flow/inline/text_run.rs",
+      "lineRange": [
+        757,
+        762
+      ],
+      "summary": "new in text_run.rs (params: iterator).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:FontAndScriptInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:FontAndScriptInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRunSegment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRunSegment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRun",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "class:components/layout/flow/inline/text_run.rs:TextRun",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:simple_for_font",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:simple_for_font",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:is_compatible",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:update",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:shape_text",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:segment_and_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:segment_and_shape",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:segment_text_by_font",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:layout_into_line_items_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:process_preserved_tab",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:is_cursive_script",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:character_cannot_change_font",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:get_font_for_first_font_for_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:get_font_for_first_font_for_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new_2",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/flow/inline/text_run.rs",
+      "target": "function:components/layout/flow/inline/text_run.rs:new_2",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

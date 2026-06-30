@@ -1,0 +1,807 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/formatting_contexts.rs",
+      "type": "file",
+      "name": "formatting_contexts.rs",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "summary": "Defines independent and block formatting context types used throughout the layout engine.",
+      "tags": [
+        "rust",
+        "layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/formatting_contexts.rs:IndependentFormattingContext",
+      "type": "class",
+      "name": "IndependentFormattingContext",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        38,
+        49
+      ],
+      "summary": "Defines IndependentFormattingContext with 22 methods and 4 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/layout/formatting_contexts.rs:IndependentFormattingContextContents",
+      "type": "class",
+      "name": "IndependentFormattingContextContents",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        52,
+        63
+      ],
+      "summary": "Defines IndependentFormattingContextContents with 2 methods and 5 properties.",
+      "tags": [
+        "rust",
+        "struct"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:subtree_size",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        66,
+        82
+      ],
+      "summary": "subtree_size in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:offset",
+      "type": "function",
+      "name": "offset",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        94,
+        99
+      ],
+      "summary": "offset in formatting_contexts.rs (params: block_offset).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        103,
+        115
+      ],
+      "summary": "new in formatting_contexts.rs (params: base, contents, propagated_data).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:rebuild",
+      "type": "function",
+      "name": "rebuild",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        117,
+        141
+      ],
+      "summary": "rebuild in formatting_contexts.rs (params: layout_context, node_and_style_info).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:construct",
+      "type": "function",
+      "name": "construct",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        143,
+        169
+      ],
+      "summary": "construct in formatting_contexts.rs (params: context, node_and_style_info, display_inside, contents, propagated_data).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:construct_contents",
+      "type": "function",
+      "name": "construct_contents",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        171,
+        263
+      ],
+      "summary": "construct_contents in formatting_contexts.rs (params: context, node_and_style_info, base_fragment_info, display_inside, contents, propagated_data).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:style",
+      "type": "function",
+      "name": "style",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        266,
+        268
+      ],
+      "summary": "style in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:base_fragment_info",
+      "type": "function",
+      "name": "base_fragment_info",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        271,
+        273
+      ],
+      "summary": "base_fragment_info in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:inline_content_sizes",
+      "type": "function",
+      "name": "inline_content_sizes",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        275,
+        282
+      ],
+      "summary": "inline_content_sizes in formatting_contexts.rs (params: layout_context, constraint_space).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:tentative_block_content_size",
+      "type": "function",
+      "name": "tentative_block_content_size",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        294,
+        304
+      ],
+      "summary": "tentative_block_content_size in formatting_contexts.rs (params: preferred_aspect_ratio, inline_stretch_size).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:tentative_block_content_size_with_dependency",
+      "type": "function",
+      "name": "tentative_block_content_size_with_dependency",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        309,
+        338
+      ],
+      "summary": "tentative_block_content_size_with_dependency in formatting_contexts.rs (params: preferred_aspect_ratio, inline_stretch_size).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:outer_inline_content_sizes",
+      "type": "function",
+      "name": "outer_inline_content_sizes",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        340,
+        361
+      ],
+      "summary": "outer_inline_content_sizes in formatting_contexts.rs (params: layout_context, containing_block, auto_minimum, auto_block_size_stretches_to_containing_block).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        363,
+        392
+      ],
+      "summary": "repair_style in formatting_contexts.rs (params: context, node, new_style).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:is_block_container",
+      "type": "function",
+      "name": "is_block_container",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        395,
+        397
+      ],
+      "summary": "is_block_container in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:is_replaced",
+      "type": "function",
+      "name": "is_replaced",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        400,
+        405
+      ],
+      "summary": "is_replaced in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:is_table",
+      "type": "function",
+      "name": "is_table",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        408,
+        413
+      ],
+      "summary": "is_table in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:is_grid",
+      "type": "function",
+      "name": "is_grid",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        416,
+        421
+      ],
+      "summary": "is_grid in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:layout_without_caching",
+      "type": "function",
+      "name": "layout_without_caching",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        427,
+        484
+      ],
+      "summary": "layout_without_caching in formatting_contexts.rs (params: layout_context, positioning_context, containing_block_for_children, containing_block, preferred_aspect_ratio, lazy_block_size).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:layout_and_is_cached",
+      "type": "function",
+      "name": "layout_and_is_cached",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        486,
+        526
+      ],
+      "summary": "layout_and_is_cached in formatting_contexts.rs (params: layout_context, positioning_context, containing_block_for_children, containing_block, preferred_aspect_ratio, lazy_block_size).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        528,
+        546
+      ],
+      "summary": "layout in formatting_contexts.rs (params: layout_context, positioning_context, containing_block_for_children, containing_block, preferred_aspect_ratio, lazy_block_size).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        549,
+        559
+      ],
+      "summary": "layout_style in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:preferred_aspect_ratio",
+      "type": "function",
+      "name": "preferred_aspect_ratio",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        562,
+        573
+      ],
+      "summary": "preferred_aspect_ratio in formatting_contexts.rs (params: padding_border_sums).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:attached_to_tree",
+      "type": "function",
+      "name": "attached_to_tree",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        575,
+        595
+      ],
+      "summary": "attached_to_tree in formatting_contexts.rs (params: layout_box).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:subtree_size_1",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        597,
+        599
+      ],
+      "summary": "subtree_size in formatting_contexts.rs.",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout/formatting_contexts.rs:compute_inline_content_sizes",
+      "type": "function",
+      "name": "compute_inline_content_sizes",
+      "filePath": "components/layout/formatting_contexts.rs",
+      "lineRange": [
+        603,
+        625
+      ],
+      "summary": "compute_inline_content_sizes in formatting_contexts.rs (params: layout_context, constraint_space).",
+      "tags": [
+        "rust",
+        "function"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "class:components/layout/formatting_contexts.rs:IndependentFormattingContext",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "class:components/layout/formatting_contexts.rs:IndependentFormattingContext",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "class:components/layout/formatting_contexts.rs:IndependentFormattingContextContents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "class:components/layout/formatting_contexts.rs:IndependentFormattingContextContents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:offset",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:offset",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:rebuild",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:rebuild",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:construct",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:construct",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:construct_contents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:base_fragment_info",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:base_fragment_info",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:inline_content_sizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:tentative_block_content_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:tentative_block_content_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:tentative_block_content_size_with_dependency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:tentative_block_content_size_with_dependency",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:outer_inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:outer_inline_content_sizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:is_block_container",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:is_block_container",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:is_replaced",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:is_replaced",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:is_table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:is_table",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:is_grid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:is_grid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:layout_without_caching",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:layout_and_is_cached",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:layout_and_is_cached",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:preferred_aspect_ratio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:preferred_aspect_ratio",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:attached_to_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:attached_to_tree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:subtree_size_1",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:subtree_size_1",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/formatting_contexts.rs",
+      "target": "function:components/layout/formatting_contexts.rs:compute_inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    }
+  ]
+}

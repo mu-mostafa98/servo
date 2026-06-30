@@ -1,0 +1,1404 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/fragment_tree/base_fragment.rs",
+      "type": "file",
+      "name": "base_fragment.rs",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Core fragment base types: BaseFragment, FragmentStatus, BaseFragmentInfo, and Tag, providing the foundation for all fragment tree nodes in the layout system.",
+      "tags": [
+        "fragment-tree",
+        "data-structure",
+        "base-types"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragment",
+      "type": "class",
+      "name": "BaseFragment",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Core fragment base with style, rect, status management using atomic fields for thread-safe access.",
+      "tags": [
+        "data-structure",
+        "fragment",
+        "layout-base"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        45,
+        66
+      ]
+    },
+    {
+      "id": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragmentInfo",
+      "type": "class",
+      "name": "BaseFragmentInfo",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Fragment metadata container holding the DOM tag reference and fragment flags for construction.",
+      "tags": [
+        "data-structure",
+        "fragment",
+        "layout-base"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        142,
+        148
+      ]
+    },
+    {
+      "id": "class:components/layout/fragment_tree/base_fragment.rs:Tag",
+      "type": "class",
+      "name": "Tag",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Fragment tag identifying the originating DOM node and pseudo-element chain for display list mapping.",
+      "tags": [
+        "data-structure"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        279,
+        282
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:fmt",
+      "type": "function",
+      "name": "fmt",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Implements Display/Debug formatting for this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        69,
+        79
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Constructs a new instance with the given parameters.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        83,
+        95
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:rect",
+      "type": "function",
+      "name": "rect",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Rect.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        98,
+        100
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:set_rect",
+      "type": "function",
+      "name": "set_rect",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Set rect.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        103,
+        105
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:translate_rect",
+      "type": "function",
+      "name": "translate_rect",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Translate rect.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        108,
+        110
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:set_rect_origin",
+      "type": "function",
+      "name": "set_rect_origin",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Set rect origin.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        113,
+        115
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:is_anonymous",
+      "type": "function",
+      "name": "is_anonymous",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Is anonymous.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        117,
+        119
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:status",
+      "type": "function",
+      "name": "status",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Status.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        121,
+        124
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:set_status",
+      "type": "function",
+      "name": "set_status",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Set status.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        126,
+        128
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Updates the style reference, triggering layout invalidation.",
+      "tags": [
+        "function",
+        "style"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        130,
+        133
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:style",
+      "type": "function",
+      "name": "style",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Style.",
+      "tags": [
+        "function",
+        "style"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        135,
+        137
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:anonymous",
+      "type": "function",
+      "name": "anonymous",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Anonymous.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        151,
+        156
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:new_for_testing",
+      "type": "function",
+      "name": "new_for_testing",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "New for testing.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        158,
+        166
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:from",
+      "type": "function",
+      "name": "from",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "Converts from another type into this type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        180,
+        225
+      ]
+    },
+    {
+      "id": "function:components/layout/fragment_tree/base_fragment.rs:to_display_list_fragment_id",
+      "type": "function",
+      "name": "to_display_list_fragment_id",
+      "filePath": "components/layout/fragment_tree/base_fragment.rs",
+      "summary": "To display list fragment id.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        298,
+        300
+      ]
+    },
+    {
+      "id": "file:components/layout/lists.rs",
+      "type": "file",
+      "name": "lists.rs",
+      "filePath": "components/layout/lists.rs",
+      "summary": "List marker generation utilities producing CSS list-style markers with counter representations and content strings.",
+      "tags": [
+        "lists",
+        "markers",
+        "counter"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/lists.rs:make_marker",
+      "type": "function",
+      "name": "make_marker",
+      "filePath": "components/layout/lists.rs",
+      "summary": "Creates a list item marker fragment with the appropriate counter value.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        18,
+        58
+      ]
+    },
+    {
+      "id": "function:components/layout/lists.rs:generate_counter_representation",
+      "type": "function",
+      "name": "generate_counter_representation",
+      "filePath": "components/layout/lists.rs",
+      "summary": "Generates the string representation for a CSS counter at a given value.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        68,
+        129
+      ]
+    },
+    {
+      "id": "function:components/layout/lists.rs:marker_string",
+      "type": "function",
+      "name": "marker_string",
+      "filePath": "components/layout/lists.rs",
+      "summary": "Generates the CSS list-style-type marker string for a counter value.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        132,
+        165
+      ]
+    },
+    {
+      "id": "file:components/layout/query.rs",
+      "type": "file",
+      "name": "query.rs",
+      "filePath": "components/layout/query.rs",
+      "summary": "Layout query processing handling offset parent, resolved style, scroll container, client rect, box areas, font metrics, and text index queries from script.",
+      "tags": [
+        "layout-queries",
+        "script-interface",
+        "dom-api"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/layout/query.rs:root_transform_for_layout_node",
+      "type": "function",
+      "name": "root_transform_for_layout_node",
+      "filePath": "components/layout/query.rs",
+      "summary": "Root transform for layout node.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        62,
+        72
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_padding_request",
+      "type": "function",
+      "name": "process_padding_request",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process padding request.",
+      "tags": [
+        "function",
+        "query",
+        "box-model"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        74,
+        91
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_box_area_request",
+      "type": "function",
+      "name": "process_box_area_request",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process box area request.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        93,
+        126
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_box_areas_request",
+      "type": "function",
+      "name": "process_box_areas_request",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process box areas request.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        128,
+        150
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_client_rect_request",
+      "type": "function",
+      "name": "process_client_rect_request",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process client rect request.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        152,
+        157
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_current_css_zoom_query",
+      "type": "function",
+      "name": "process_current_css_zoom_query",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process current css zoom query.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        165,
+        176
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_node_scroll_area_request",
+      "type": "function",
+      "name": "process_node_scroll_area_request",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process node scroll area request.",
+      "tags": [
+        "function",
+        "query",
+        "overflow"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        179,
+        205
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_resolved_style_request",
+      "type": "function",
+      "name": "process_resolved_style_request",
+      "filePath": "components/layout/query.rs",
+      "summary": "Handles script queries for computed style values on DOM nodes.",
+      "tags": [
+        "function",
+        "query",
+        "style"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        209,
+        427
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:resolved_size_should_be_used_value",
+      "type": "function",
+      "name": "resolved_size_should_be_used_value",
+      "filePath": "components/layout/query.rs",
+      "summary": "Resolved size should be used value.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        429,
+        444
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:should_honor_min_size_auto",
+      "type": "function",
+      "name": "should_honor_min_size_auto",
+      "filePath": "components/layout/query.rs",
+      "summary": "Should honor min size auto.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        446,
+        461
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:resolve_grid_template",
+      "type": "function",
+      "name": "resolve_grid_template",
+      "filePath": "components/layout/query.rs",
+      "summary": "Resolve grid template.",
+      "tags": [
+        "function",
+        "resolution"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        463,
+        518
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_resolved_style_request_for_unstyled_node",
+      "type": "function",
+      "name": "process_resolved_style_request_for_unstyled_node",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process resolved style request for unstyled node.",
+      "tags": [
+        "function",
+        "query",
+        "style"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        521,
+        567
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:shorthand_to_css_string",
+      "type": "function",
+      "name": "shorthand_to_css_string",
+      "filePath": "components/layout/query.rs",
+      "summary": "Shorthand to css string.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        569,
+        593
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:offset_parent_fragments",
+      "type": "function",
+      "name": "offset_parent_fragments",
+      "filePath": "components/layout/query.rs",
+      "summary": "Offset parent fragments.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        609,
+        669
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_offset_parent_query",
+      "type": "function",
+      "name": "process_offset_parent_query",
+      "filePath": "components/layout/query.rs",
+      "summary": "Processes an offset parent DOM query returning positioning parent info.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        672,
+        773
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:is_containing_block_for_position",
+      "type": "function",
+      "name": "is_containing_block_for_position",
+      "filePath": "components/layout/query.rs",
+      "summary": "Is containing block for position.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        785,
+        801
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:containing_block_for_node",
+      "type": "function",
+      "name": "containing_block_for_node",
+      "filePath": "components/layout/query.rs",
+      "summary": "Containing block for node.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        803,
+        824
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_scroll_container_query",
+      "type": "function",
+      "name": "process_scroll_container_query",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process scroll container query.",
+      "tags": [
+        "function",
+        "query",
+        "overflow"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        830,
+        917
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:get_the_text_steps",
+      "type": "function",
+      "name": "get_the_text_steps",
+      "filePath": "components/layout/query.rs",
+      "summary": "Collects text rendering steps for accessibility or text measurement.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        920,
+        968
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:default",
+      "type": "function",
+      "name": "default",
+      "filePath": "components/layout/query.rs",
+      "summary": "Default.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        995,
+        1004
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:rendered_text_collection_steps",
+      "type": "function",
+      "name": "rendered_text_collection_steps",
+      "filePath": "components/layout/query.rs",
+      "summary": "Collects all rendered text steps for a DOM node for accessibility.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        1009,
+        1368
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:find_character_offset_in_fragment_descendants",
+      "type": "function",
+      "name": "find_character_offset_in_fragment_descendants",
+      "filePath": "components/layout/query.rs",
+      "summary": "Find character offset in fragment descendants.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        1389,
+        1458
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_containing_block_query",
+      "type": "function",
+      "name": "process_containing_block_query",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process containing block query.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1460,
+        1463
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_containing_block_descendant_query",
+      "type": "function",
+      "name": "process_containing_block_descendant_query",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process containing block descendant query.",
+      "tags": [
+        "function",
+        "query"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1465,
+        1476
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_resolved_font_style_query",
+      "type": "function",
+      "name": "process_resolved_font_style_query",
+      "filePath": "components/layout/query.rs",
+      "summary": "Process resolved font style query.",
+      "tags": [
+        "function",
+        "query",
+        "style"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        1478,
+        1577
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:transform_au_rectangle",
+      "type": "function",
+      "name": "transform_au_rectangle",
+      "filePath": "components/layout/query.rs",
+      "summary": "Transform au rectangle.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1579,
+        1591
+      ]
+    },
+    {
+      "id": "function:components/layout/query.rs:process_effective_overflow_query",
+      "type": "function",
+      "name": "process_effective_overflow_query",
+      "filePath": "components/layout/query.rs",
+      "summary": "Processes a query for the effective overflow of a DOM node.",
+      "tags": [
+        "function",
+        "query",
+        "overflow"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        1593,
+        1602
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragmentInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:BaseFragmentInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:Tag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "class:components/layout/fragment_tree/base_fragment.rs:Tag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:fmt",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:set_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:set_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:translate_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:translate_rect",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:set_rect_origin",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:set_rect_origin",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:is_anonymous",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:is_anonymous",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:set_status",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:set_status",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:anonymous",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:anonymous",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:new_for_testing",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:new_for_testing",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:to_display_list_fragment_id",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/fragment_tree/base_fragment.rs",
+      "target": "function:components/layout/fragment_tree/base_fragment.rs:to_display_list_fragment_id",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:make_marker",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:make_marker",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:generate_counter_representation",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:generate_counter_representation",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:marker_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lists.rs",
+      "target": "function:components/layout/lists.rs:marker_string",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:root_transform_for_layout_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_padding_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_padding_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_box_area_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_box_area_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_box_areas_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_box_areas_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_client_rect_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_client_rect_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_current_css_zoom_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_current_css_zoom_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_node_scroll_area_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_node_scroll_area_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_style_request",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_style_request",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:resolved_size_should_be_used_value",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:should_honor_min_size_auto",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:resolve_grid_template",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_style_request_for_unstyled_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_style_request_for_unstyled_node",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:shorthand_to_css_string",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:offset_parent_fragments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_offset_parent_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_offset_parent_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:is_containing_block_for_position",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:containing_block_for_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_scroll_container_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_scroll_container_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:get_the_text_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:get_the_text_steps",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:default",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:rendered_text_collection_steps",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:find_character_offset_in_fragment_descendants",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:find_character_offset_in_fragment_descendants",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_containing_block_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_containing_block_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_containing_block_descendant_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_containing_block_descendant_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_font_style_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_resolved_font_style_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:transform_au_rectangle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:transform_au_rectangle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_effective_overflow_query",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/query.rs",
+      "target": "function:components/layout/query.rs:process_effective_overflow_query",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/fragment_tree/mod.rs",
+      "target": "file:components/layout/fragment_tree/base_fragment.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/lists.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/query.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

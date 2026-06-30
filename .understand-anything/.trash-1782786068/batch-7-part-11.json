@@ -1,0 +1,1385 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/layout/layout_box_base.rs",
+      "type": "file",
+      "name": "layout_box_base.rs",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "LayoutBoxBase providing the fundamental per-fragment box state including inline content size computation, cache management for independent formatting contexts, and fragment storage.",
+      "tags": [
+        "box-model",
+        "layout-base",
+        "caching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "class:components/layout/layout_box_base.rs:LayoutBoxBase",
+      "type": "class",
+      "name": "LayoutBoxBase",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Per-fragment layout base with inline content size caching, fragment storage, and independent formatting context cache management.",
+      "tags": [
+        "data-structure",
+        "fragment",
+        "layout-base"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        42,
+        65
+      ]
+    },
+    {
+      "id": "class:components/layout/layout_box_base.rs:IndependentFormattingContextLayoutResult",
+      "type": "class",
+      "name": "IndependentFormattingContextLayoutResult",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "IndependentFormattingContextLayoutResult type in the layout system.",
+      "tags": [
+        "data-structure",
+        "layout-base"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        364,
+        389
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:new",
+      "type": "function",
+      "name": "new",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Constructs a new instance with the given parameters.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        68,
+        83
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:set_subtree_size",
+      "type": "function",
+      "name": "set_subtree_size",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Sets the calculated subtree size for this layout box.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        87,
+        89
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:subtree_size",
+      "type": "function",
+      "name": "subtree_size",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Returns the total subtree size for this layout box.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        91,
+        93
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:inline_content_sizes",
+      "type": "function",
+      "name": "inline_content_sizes",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Computes the inline content size contributions from all fragments.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        97,
+        118
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:fragments",
+      "type": "function",
+      "name": "fragments",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Returns the list of child fragments.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        120,
+        122
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:add_fragment",
+      "type": "function",
+      "name": "add_fragment",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Adds a child fragment to this layout box.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        124,
+        126
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:set_fragment",
+      "type": "function",
+      "name": "set_fragment",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Replaces a child fragment at the given index.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        128,
+        130
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:clear_fragments",
+      "type": "function",
+      "name": "clear_fragments",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Clears all child fragments.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        132,
+        134
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:clear_fragments_and_dirty_fragment_cache",
+      "type": "function",
+      "name": "clear_fragments_and_dirty_fragment_cache",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Clears fragments and marks the fragment cache as dirty.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        138,
+        142
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:repair_style",
+      "type": "function",
+      "name": "repair_style",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Updates the style reference, triggering layout invalidation.",
+      "tags": [
+        "function",
+        "style"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        144,
+        151
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:parent_box",
+      "type": "function",
+      "name": "parent_box",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Returns the parent layout box reference.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        154,
+        156
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:invalidate_caches",
+      "type": "function",
+      "name": "invalidate_caches",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Invalidates all cached layout results.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        164,
+        188
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:invalidate_caches_for_fragment_tree_layout",
+      "type": "function",
+      "name": "invalidate_caches_for_fragment_tree_layout",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Invalidates caches specifically for fragment tree layout.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        196,
+        202
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:cached_independent_formatting_context_layout_if_applicable",
+      "type": "function",
+      "name": "cached_independent_formatting_context_layout_if_applicable",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Retrieves cached IFC layout if it exists and is still valid.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        204,
+        233
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:cache_independent_formatting_context_layout",
+      "type": "function",
+      "name": "cache_independent_formatting_context_layout",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Caches the IFC layout result for future incremental reuse.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        235,
+        251
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:cached_same_formatting_context_block_if_applicable",
+      "type": "function",
+      "name": "cached_same_formatting_context_block_if_applicable",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Retrieves cached same-formatting-context block layout if valid.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        253,
+        293
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:cache_same_formatting_context_block_layout",
+      "type": "function",
+      "name": "cache_same_formatting_context_block_layout",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Caches a same-formatting-context block layout result for reuse.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        295,
+        334
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:clear_scrollable_overflow_all_on_fragments",
+      "type": "function",
+      "name": "clear_scrollable_overflow_all_on_fragments",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Clears scrollable overflow on all child fragments.",
+      "tags": [
+        "function",
+        "overflow"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        336,
+        340
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_box_base.rs:mark_fragments_as_descendants_changed",
+      "type": "function",
+      "name": "mark_fragments_as_descendants_changed",
+      "filePath": "components/layout/layout_box_base.rs",
+      "summary": "Marks all fragments as having changed descendants.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        342,
+        348
+      ]
+    },
+    {
+      "id": "file:components/layout/layout_root.rs",
+      "type": "file",
+      "name": "layout_root.rs",
+      "filePath": "components/layout/layout_root.rs",
+      "summary": "LayoutRoot providing the try_layout entry point that runs the complete layout pipeline from style resolution through fragment tree layout.",
+      "tags": [
+        "layout",
+        "entry-point",
+        "toplevel"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/layout/layout_root.rs:try_from",
+      "type": "function",
+      "name": "try_from",
+      "filePath": "components/layout/layout_root.rs",
+      "summary": "Attempts to convert from the provided type into the target type.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        43,
+        60
+      ]
+    },
+    {
+      "id": "function:components/layout/layout_root.rs:try_layout",
+      "type": "function",
+      "name": "try_layout",
+      "filePath": "components/layout/layout_root.rs",
+      "summary": "Entry point for running complete layout from style application through fragment tree construction.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        64,
+        122
+      ]
+    },
+    {
+      "id": "file:components/layout/replaced.rs",
+      "type": "file",
+      "name": "replaced.rs",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Replaced element content handling for images, iframes, and SVG, including natural size computation, aspect ratio management, and fragment creation.",
+      "tags": [
+        "replaced-elements",
+        "images",
+        "svg",
+        "iframe"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "class:components/layout/replaced.rs:ReplacedContents",
+      "type": "class",
+      "name": "ReplacedContents",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Replaced element content management for images, iframes, and SVG with fragment creation and sizing.",
+      "tags": [
+        "data-structure"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        56,
+        60
+      ]
+    },
+    {
+      "id": "class:components/layout/replaced.rs:NaturalSizes",
+      "type": "class",
+      "name": "NaturalSizes",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Natural (intrinsic) width and height of replaced elements like images.",
+      "tags": [
+        "data-structure"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        80,
+        84
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_width_and_height",
+      "type": "function",
+      "name": "from_width_and_height",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "From width and height.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        87,
+        102
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_natural_size_in_dots",
+      "type": "function",
+      "name": "from_natural_size_in_dots",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "From natural size in dots.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        104,
+        112
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:empty",
+      "type": "function",
+      "name": "empty",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Empty.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        114,
+        120
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:for_element",
+      "type": "function",
+      "name": "for_element",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Determines the replaced content kind and sizing for a given DOM element.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        162,
+        228
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:svg_kind_size",
+      "type": "function",
+      "name": "svg_kind_size",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Computes SVG content size based on viewBox and intrinsic dimensions.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        230,
+        338
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:build_svg_render_tree",
+      "type": "function",
+      "name": "build_svg_render_tree",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Build svg render tree.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        340,
+        363
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:build_svg_render_node",
+      "type": "function",
+      "name": "build_svg_render_node",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Build svg render node.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        365,
+        403
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_content_property",
+      "type": "function",
+      "name": "from_content_property",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "From content property.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        405,
+        419
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_image_url",
+      "type": "function",
+      "name": "from_image_url",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "From image url.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        421,
+        460
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:from_image",
+      "type": "function",
+      "name": "from_image",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "From image.",
+      "tags": [
+        "function",
+        "conversion"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        462,
+        471
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:zero_sized_invalid_image",
+      "type": "function",
+      "name": "zero_sized_invalid_image",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Zero sized invalid image.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        473,
+        483
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:content_size",
+      "type": "function",
+      "name": "content_size",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Computes the content size of a replaced element given constraints.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        491,
+        507
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:calculate_fragment_rect",
+      "type": "function",
+      "name": "calculate_fragment_rect",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Calculates the fragment rectangle for a replaced element.",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        509,
+        570
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:make_fragments",
+      "type": "function",
+      "name": "make_fragments",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Creates fragment tree nodes from layout results.",
+      "tags": [
+        "function",
+        "construction"
+      ],
+      "complexity": "complex",
+      "lineRange": [
+        572,
+        740
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:preferred_aspect_ratio",
+      "type": "function",
+      "name": "preferred_aspect_ratio",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Computes the preferred aspect ratio for sizing calculations.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        742,
+        762
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:fallback_inline_size",
+      "type": "function",
+      "name": "fallback_inline_size",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Fallback inline size.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        769,
+        775
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:fallback_block_size",
+      "type": "function",
+      "name": "fallback_block_size",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Fallback block size.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        782,
+        788
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:logical_natural_sizes",
+      "type": "function",
+      "name": "logical_natural_sizes",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Logical natural sizes.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        790,
+        805
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:layout_style",
+      "type": "function",
+      "name": "layout_style",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Layout style.",
+      "tags": [
+        "function",
+        "layout",
+        "style"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        808,
+        810
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:layout",
+      "type": "function",
+      "name": "layout",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Performs layout computation and positions children within the available space.",
+      "tags": [
+        "function",
+        "layout"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        812,
+        844
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:compute_inline_content_sizes",
+      "type": "function",
+      "name": "compute_inline_content_sizes",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Computes intrinsic inline content sizes (min-content, max-content, preferred).",
+      "tags": [
+        "function",
+        "computation"
+      ],
+      "complexity": "simple",
+      "lineRange": [
+        848,
+        863
+      ]
+    },
+    {
+      "id": "function:components/layout/replaced.rs:try_to_parse_image_data_url",
+      "type": "function",
+      "name": "try_to_parse_image_data_url",
+      "filePath": "components/layout/replaced.rs",
+      "summary": "Try to parse image data url.",
+      "tags": [
+        "function"
+      ],
+      "complexity": "moderate",
+      "lineRange": [
+        866,
+        886
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "class:components/layout/layout_box_base.rs:LayoutBoxBase",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "class:components/layout/layout_box_base.rs:LayoutBoxBase",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "class:components/layout/layout_box_base.rs:IndependentFormattingContextLayoutResult",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "class:components/layout/layout_box_base.rs:IndependentFormattingContextLayoutResult",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:new",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:new",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:set_subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:set_subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:subtree_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:subtree_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:inline_content_sizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:fragments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:fragments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:add_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:add_fragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:set_fragment",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:set_fragment",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:clear_fragments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:clear_fragments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:clear_fragments_and_dirty_fragment_cache",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:clear_fragments_and_dirty_fragment_cache",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:repair_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:repair_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:parent_box",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:parent_box",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:invalidate_caches",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:invalidate_caches",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:invalidate_caches_for_fragment_tree_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:invalidate_caches_for_fragment_tree_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:cached_independent_formatting_context_layout_if_applicable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:cached_independent_formatting_context_layout_if_applicable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:cache_independent_formatting_context_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:cache_independent_formatting_context_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:cached_same_formatting_context_block_if_applicable",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:cached_same_formatting_context_block_if_applicable",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:cache_same_formatting_context_block_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:cache_same_formatting_context_block_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:clear_scrollable_overflow_all_on_fragments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:clear_scrollable_overflow_all_on_fragments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:mark_fragments_as_descendants_changed",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_box_base.rs",
+      "target": "function:components/layout/layout_box_base.rs:mark_fragments_as_descendants_changed",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/layout_root.rs",
+      "target": "function:components/layout/layout_root.rs:try_from",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_root.rs",
+      "target": "function:components/layout/layout_root.rs:try_layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/layout_root.rs",
+      "target": "function:components/layout/layout_root.rs:try_layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ReplacedContents",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:ReplacedContents",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:NaturalSizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "class:components/layout/replaced.rs:NaturalSizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_width_and_height",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_width_and_height",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_natural_size_in_dots",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_natural_size_in_dots",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:empty",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:empty",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:for_element",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:for_element",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:svg_kind_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:build_svg_render_tree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:build_svg_render_node",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_content_property",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_image_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_image_url",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:from_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:zero_sized_invalid_image",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:zero_sized_invalid_image",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:content_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:calculate_fragment_rect",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:make_fragments",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:make_fragments",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:preferred_aspect_ratio",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:preferred_aspect_ratio",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:fallback_inline_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:fallback_inline_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:fallback_block_size",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:fallback_block_size",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:logical_natural_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:logical_natural_sizes",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:layout_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:layout_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:layout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:layout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:compute_inline_content_sizes",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/replaced.rs",
+      "target": "function:components/layout/replaced.rs:try_to_parse_image_data_url",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_box_base.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/layout_root.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/layout/lib.rs",
+      "target": "file:components/layout/replaced.rs",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    }
+  ]
+}

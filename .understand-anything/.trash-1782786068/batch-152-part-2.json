@@ -1,0 +1,695 @@
+{
+  "nodes": [
+    {
+      "id": "file:components/svg_engine/src/lib.rs",
+      "type": "file",
+      "name": "lib.rs",
+      "filePath": "components/svg_engine/src/lib.rs",
+      "summary": "Entry point for the SVG engine crate declaring public modules (style, render_tree, extract) and re-exporting extract_node_style and render_svg_tree for external use.",
+      "tags": ["entry-point", "svg", "module"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/svg_engine/src/render_tree.rs",
+      "type": "file",
+      "name": "render_tree.rs",
+      "filePath": "components/svg_engine/src/render_tree.rs",
+      "summary": "Defines the SVG render tree data structures including SvgRenderTree, SvgRenderNode, viewport info, and the extract_viewbox parser.",
+      "tags": ["data-model", "svg", "render-tree"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/svg_engine/src/extract.rs",
+      "type": "file",
+      "name": "extract.rs",
+      "filePath": "components/svg_engine/src/extract.rs",
+      "summary": "Extracts SVG element tags and CSS-based node styles from Servo computed values and inline style strings, including color parsing and SVG paint resolution.",
+      "tags": ["utility", "svg", "css", "parsing"],
+      "complexity": "complex",
+      "languageNotes": "Implements FromComputedValues and FromCssAttrs traits for NodeStyle with support for hex colors (#rgb, #rrggbb) and named CSS colors."
+    },
+    {
+      "id": "file:components/svg_engine/src/render.rs",
+      "type": "file",
+      "name": "render.rs",
+      "filePath": "components/svg_engine/src/render.rs",
+      "summary": "Placeholder or removed render module referenced in the batch but not present on disk.",
+      "tags": ["removed", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/svg_engine/src/renderer/mod.rs",
+      "type": "file",
+      "name": "mod.rs",
+      "filePath": "components/svg_engine/src/renderer/mod.rs",
+      "summary": "Defines the Render trait implemented by all SVG shapes and provides the match dispatch converting Shape variants to individual renderer calls, plus a shared make_common_props helper.",
+      "tags": ["trait", "svg", "renderer", "dispatch"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/svg_engine/src/renderer/circle.rs",
+      "type": "file",
+      "name": "circle.rs",
+      "filePath": "components/svg_engine/src/renderer/circle.rs",
+      "summary": "Renders SVG circle shapes by delegating to the ellipse renderer with equal rx and ry radii.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/svg_engine/src/renderer/ellipse.rs",
+      "type": "file",
+      "name": "ellipse.rs",
+      "filePath": "components/svg_engine/src/renderer/ellipse.rs",
+      "summary": "Renders SVG ellipse shapes as rounded rectangles with 100% corner radii by delegating to the rect renderer.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/svg_engine/src/renderer/line.rs",
+      "type": "file",
+      "name": "line.rs",
+      "filePath": "components/svg_engine/src/renderer/line.rs",
+      "summary": "Renders SVG line segments using a rotated reference frame to draw strokes as horizontal rectangles aligned with the line angle.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/svg_engine/src/renderer/path.rs",
+      "type": "file",
+      "name": "path.rs",
+      "filePath": "components/svg_engine/src/renderer/path.rs",
+      "summary": "Renders SVG path elements by flattening bezier curves into line segments and delegating to the polyline renderer.",
+      "tags": ["svg", "shape", "renderer", "bezier"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/svg_engine/src/renderer/polygon.rs",
+      "type": "file",
+      "name": "polygon.rs",
+      "filePath": "components/svg_engine/src/renderer/polygon.rs",
+      "summary": "Renders SVG polygon shapes by closing the point list and delegating to the polyline renderer.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/svg_engine/src/renderer/polyline.rs",
+      "type": "file",
+      "name": "polyline.rs",
+      "filePath": "components/svg_engine/src/renderer/polyline.rs",
+      "summary": "Renders SVG polyline shapes using tessellation for fills and individual line segment rendering for strokes.",
+      "tags": ["svg", "shape", "renderer", "tessellation"],
+      "complexity": "complex",
+      "languageNotes": "Uses lyon tessellation for polygon fill and strokes each consecutive point pair as individual line segments for dashed-line and join-style support."
+    },
+    {
+      "id": "file:components/svg_engine/src/renderer/rect.rs",
+      "type": "file",
+      "name": "rect.rs",
+      "filePath": "components/svg_engine/src/renderer/rect.rs",
+      "summary": "Renders SVG rectangle shapes with optional rounded corners via WebRender display list commands for both fill and border-based stroke.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/svg_engine/src/render_tree.rs:extract_viewbox",
+      "type": "function",
+      "name": "extract_viewbox",
+      "filePath": "components/svg_engine/src/render_tree.rs",
+      "lineRange": [45, 56],
+      "summary": "Parses an SVG viewBox attribute string into optional (min_x, min_y, width, height) tuple, validating that width and height are positive.",
+      "tags": ["utility", "parsing", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/svg_engine/src/render_tree.rs:SvgRenderTree",
+      "type": "class",
+      "name": "SvgRenderTree",
+      "filePath": "components/svg_engine/src/render_tree.rs",
+      "lineRange": [8, 11],
+      "summary": "Root struct holding the SVG render tree root node and viewport information.",
+      "tags": ["data-model", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/svg_engine/src/render_tree.rs:SvgRenderNode",
+      "type": "class",
+      "name": "SvgRenderNode",
+      "filePath": "components/svg_engine/src/render_tree.rs",
+      "lineRange": [14, 19],
+      "summary": "A single node in the SVG render tree with optional ID, tag type, style, and child nodes.",
+      "tags": ["data-model", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/svg_engine/src/render_tree.rs:SvgTag",
+      "type": "class",
+      "name": "SvgTag",
+      "filePath": "components/svg_engine/src/render_tree.rs",
+      "lineRange": [22, 25],
+      "summary": "Enum distinguishing between SVG Shape and Container tags.",
+      "tags": ["enum", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/svg_engine/src/render_tree.rs:Container",
+      "type": "class",
+      "name": "Container",
+      "filePath": "components/svg_engine/src/render_tree.rs",
+      "lineRange": [28, 31],
+      "summary": "Enum of SVG container element types: Group and Svg.",
+      "tags": ["enum", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/svg_engine/src/render_tree.rs:ViewportInfo",
+      "type": "class",
+      "name": "ViewportInfo",
+      "filePath": "components/svg_engine/src/render_tree.rs",
+      "lineRange": [34, 39],
+      "summary": "Struct containing SVG viewport dimensions and an optional parsed viewBox tuple.",
+      "tags": ["data-model", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/extract.rs:extract_tag",
+      "type": "function",
+      "name": "extract_tag",
+      "filePath": "components/svg_engine/src/extract.rs",
+      "lineRange": [28, 34],
+      "summary": "Parses an SVG element name and attributes into a SvgTag, dispatching container elements (svg, g) directly and shape elements via Shape::from_attributes.",
+      "tags": ["utility", "parsing", "svg", "dispatch"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/extract.rs:from_computed_values",
+      "type": "function",
+      "name": "from_computed_values",
+      "filePath": "components/svg_engine/src/extract.rs",
+      "lineRange": [41, 52],
+      "summary": "Constructs a NodeStyle from Servo ComputedValues, extracting fill and stroke parameters while setting defaults for opacity, visibility, and display.",
+      "tags": ["utility", "svg", "style", "servo"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/extract.rs:extract_node_style",
+      "type": "function",
+      "name": "extract_node_style",
+      "filePath": "components/svg_engine/src/extract.rs",
+      "lineRange": [56, 58],
+      "summary": "Public convenience wrapper that extracts a NodeStyle from Servo ComputedValues, falling back to defaults.",
+      "tags": ["api", "utility", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/extract.rs:from_css_attrs",
+      "type": "function",
+      "name": "from_css_attrs",
+      "filePath": "components/svg_engine/src/extract.rs",
+      "lineRange": [63, 152],
+      "summary": "Parses an inline CSS style string into a NodeStyle, extracting fill color/opacity/rule, stroke color/opacity/width, and overall opacity.",
+      "tags": ["utility", "parsing", "css", "svg"],
+      "complexity": "complex",
+      "languageNotes": "Handles semicolon-separated CSS declarations with support for fill, stroke, opacity, fill-rule, stroke-width, stroke-opacity properties including px suffix stripping."
+    },
+    {
+      "id": "function:components/svg_engine/src/extract.rs:extract_node_style_from_css",
+      "type": "function",
+      "name": "extract_node_style_from_css",
+      "filePath": "components/svg_engine/src/extract.rs",
+      "lineRange": [156, 158],
+      "summary": "Public convenience wrapper that parses a CSS style string into a NodeStyle, falling back to defaults.",
+      "tags": ["api", "utility", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/extract.rs:resolve_svg_paint",
+      "type": "function",
+      "name": "resolve_svg_paint",
+      "filePath": "components/svg_engine/src/extract.rs",
+      "lineRange": [164, 183],
+      "summary": "Resolves an SVGPaint value to a concrete ColorF by handling currentColor, color space conversion to sRGB, and clamping color components.",
+      "tags": ["utility", "color", "svg"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/svg_engine/src/extract.rs:parse_css_color",
+      "type": "function",
+      "name": "parse_css_color",
+      "filePath": "components/svg_engine/src/extract.rs",
+      "lineRange": [186, 229],
+      "summary": "Parses CSS color values from hex notation (#rgb, #rrggbb) and named colors (red, green, blue, white, black, yellow, orange, purple, gray) into ColorF.",
+      "tags": ["utility", "color", "parsing", "css"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/mod.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/svg_engine/src/renderer/mod.rs",
+      "lineRange": [49, 66],
+      "summary": "Dispatches Shape variant rendering to the appropriate specialized renderer (rect, circle, ellipse, line, polyline, polygon, path).",
+      "tags": ["dispatch", "svg", "renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/mod.rs:make_common_props",
+      "type": "function",
+      "name": "make_common_props",
+      "filePath": "components/svg_engine/src/renderer/mod.rs",
+      "lineRange": [75, 81],
+      "summary": "Constructs a CommonItemProperties from bounds, spatial_id, and clip_chain_id for WebRender display list commands.",
+      "tags": ["utility", "webrender", "svg"],
+      "complexity": "simple"
+    },
+    {
+      "id": "class:components/svg_engine/src/renderer/mod.rs:Render",
+      "type": "class",
+      "name": "Render",
+      "filePath": "components/svg_engine/src/renderer/mod.rs",
+      "lineRange": [34, 44],
+      "summary": "Trait defining the render method that all SVG shape types implement to emit WebRender display list commands.",
+      "tags": ["trait", "svg", "renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/circle.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/svg_engine/src/renderer/circle.rs",
+      "lineRange": [12, 28],
+      "summary": "Renders an SVG circle by constructing an equivalent ellipse with equal rx and ry and delegating to the ellipse renderer.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/ellipse.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/svg_engine/src/renderer/ellipse.rs",
+      "lineRange": [12, 34],
+      "summary": "Renders an SVG ellipse as a rounded rectangle with 100% corner radii by delegating to the rectangle renderer.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/line.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/svg_engine/src/renderer/line.rs",
+      "lineRange": [17, 74],
+      "summary": "Renders an SVG line segment by computing midpoint and angle, creating a rotated reference frame, and drawing a horizontal rectangle as the stroke.",
+      "tags": ["svg", "shape", "renderer", "transform"],
+      "complexity": "moderate",
+      "languageNotes": "Uses LayoutTransform::rotation and a reference frame to rotate a horizontal rect into alignment with the line direction."
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/path.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/svg_engine/src/renderer/path.rs",
+      "lineRange": [21, 38],
+      "summary": "Renders an SVG path by flattening bezier curves into line segments and delegating to the polyline renderer.",
+      "tags": ["svg", "shape", "renderer", "bezier"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/path.rs:flatten_path",
+      "type": "function",
+      "name": "flatten_path",
+      "filePath": "components/svg_engine/src/renderer/path.rs",
+      "lineRange": [43, 67],
+      "summary": "Flattens a BezPath into a sequence of points by converting bezier curves to line segments using the kurbo library's flatten function at 0.1px tolerance.",
+      "tags": ["utility", "bezier", "geometry", "svg"],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/polygon.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/svg_engine/src/renderer/polygon.rs",
+      "lineRange": [15, 36],
+      "summary": "Renders an SVG polygon by closing the point list (appending first point to end) and delegating to the polyline renderer.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/polyline.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/svg_engine/src/renderer/polyline.rs",
+      "lineRange": [17, 89],
+      "summary": "Renders an SVG polyline by tessellating filled areas with lyon and stroking each consecutive point pair as individual line segments for dash/join support.",
+      "tags": ["svg", "shape", "renderer", "tessellation"],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/svg_engine/src/renderer/rect.rs:render",
+      "type": "function",
+      "name": "render",
+      "filePath": "components/svg_engine/src/renderer/rect.rs",
+      "lineRange": [17, 105],
+      "summary": "Renders an SVG rectangle with optional rounded corners using WebRender push_rect for fill and push_border for stroke, with clip-rounded-rect for corner masking.",
+      "tags": ["svg", "shape", "renderer"],
+      "complexity": "complex",
+      "languageNotes": "Uses WebRender's define_clip_rounded_rect for fill corner clipping and BorderDetails::Normal with BorderRadius for stroke rounded corners."
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "function:components/svg_engine/src/render_tree.rs:extract_viewbox",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:SvgRenderTree",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:SvgRenderNode",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:SvgTag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:Container",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:ViewportInfo",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "function:components/svg_engine/src/render_tree.rs:extract_viewbox",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:SvgRenderTree",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:SvgRenderNode",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:SvgTag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:Container",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/render_tree.rs",
+      "target": "class:components/svg_engine/src/render_tree.rs:ViewportInfo",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:extract_tag",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:from_computed_values",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:extract_node_style",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:from_css_attrs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:extract_node_style_from_css",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:resolve_svg_paint",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:parse_css_color",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:extract_tag",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:extract_node_style",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:extract_node_style_from_css",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/extract.rs",
+      "target": "function:components/svg_engine/src/extract.rs:resolve_svg_paint",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "function:components/svg_engine/src/renderer/mod.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "function:components/svg_engine/src/renderer/mod.rs:make_common_props",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "class:components/svg_engine/src/renderer/mod.rs:Render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "class:components/svg_engine/src/renderer/mod.rs:Render",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "function:components/svg_engine/src/renderer/mod.rs:make_common_props",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/circle.rs",
+      "target": "function:components/svg_engine/src/renderer/circle.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/ellipse.rs",
+      "target": "function:components/svg_engine/src/renderer/ellipse.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/line.rs",
+      "target": "function:components/svg_engine/src/renderer/line.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/path.rs",
+      "target": "function:components/svg_engine/src/renderer/path.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/path.rs",
+      "target": "function:components/svg_engine/src/renderer/path.rs:flatten_path",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/polygon.rs",
+      "target": "function:components/svg_engine/src/renderer/polygon.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/polyline.rs",
+      "target": "function:components/svg_engine/src/renderer/polyline.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/rect.rs",
+      "target": "function:components/svg_engine/src/renderer/rect.rs:render",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "file:components/svg_engine/src/renderer/rect.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "file:components/svg_engine/src/renderer/circle.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "file:components/svg_engine/src/renderer/ellipse.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "file:components/svg_engine/src/renderer/line.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "file:components/svg_engine/src/renderer/polyline.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "file:components/svg_engine/src/renderer/polygon.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/mod.rs",
+      "target": "file:components/svg_engine/src/renderer/path.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/circle.rs",
+      "target": "file:components/svg_engine/src/renderer/ellipse.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/ellipse.rs",
+      "target": "file:components/svg_engine/src/renderer/rect.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/path.rs",
+      "target": "file:components/svg_engine/src/renderer/polyline.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/polygon.rs",
+      "target": "file:components/svg_engine/src/renderer/polyline.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/svg_engine/src/renderer/polyline.rs",
+      "target": "file:components/svg_engine/src/renderer/line.rs",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ]
+}

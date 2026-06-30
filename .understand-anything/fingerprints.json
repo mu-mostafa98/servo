@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "gitCommitHash": "766b89e0fad9460b3461ff00e4ac6f42dd5ea523",
-  "generatedAt": "2026-06-29T12:59:21.176Z",
+  "gitCommitHash": "4747b6b49c8043f5056811090a04a9089ef15634",
+  "generatedAt": "2026-06-30T02:20:57.921Z",
   "files": {
     ".cargo/config.toml": {
       "filePath": ".cargo/config.toml",
@@ -15,12 +15,12 @@
     },
     ".claude/settings.local.json": {
       "filePath": ".claude/settings.local.json",
-      "contentHash": "ee5d4c7d24fde1523cc2fafe8e36ec546762d79d7b80f3335b7e23d81257cc47",
+      "contentHash": "62d602a20a20bbaf0c339da2bccfdb6490e52fc9a9b8357c72edded956e7eabd",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 36,
+      "totalLines": 67,
       "hasStructuralAnalysis": true
     },
     ".clippy.toml": {
@@ -31030,7 +31030,7 @@
     },
     "components/layout/display_list/mod.rs": {
       "filePath": "components/layout/display_list/mod.rs",
-      "contentHash": "ff79f82b2d789bfa9d7cc97d1f670ba3e25a703a877a006f72c284e0c1939ff4",
+      "contentHash": "1c9e706bef6f93b3b3149d3959aa0ffa2dc7096df6618177d18143dbae1480b0",
       "functions": [
         {
           "name": "for_node",
@@ -48387,7 +48387,7 @@
     },
     "components/layout/replaced.rs": {
       "filePath": "components/layout/replaced.rs",
-      "contentHash": "2473d75460499e9f1394be1a15f2f64232a6d7742a16c69367889f4d5d581b23",
+      "contentHash": "aec94ec7a172fc5b8114380bfa9af885816a104f40b3fe3ae2d8e1b79a43bdbb",
       "functions": [
         {
           "name": "from_width_and_height",
@@ -48923,8 +48923,7 @@
           "specifiers": [
             "extract_node_style",
             "extract_tag",
-            "extract_transforms",
-            "extract_viewbox"
+            "extract_node_style_from_css"
           ]
         },
         {
@@ -48932,7 +48931,14 @@
           "specifiers": [
             "SvgRenderNode",
             "SvgRenderTree",
-            "ViewportInfo"
+            "ViewportInfo",
+            "extract_viewbox"
+          ]
+        },
+        {
+          "source": "svg_engine::style::transform",
+          "specifiers": [
+            "extract_transforms"
           ]
         },
         {
@@ -49024,7 +49030,7 @@
         "layout_style",
         "layout"
       ],
-      "totalLines": 886,
+      "totalLines": 887,
       "hasStructuralAnalysis": true
     },
     "components/layout/sizing.rs": {
@@ -447183,6 +447189,1953 @@
       "exports": [],
       "totalLines": 13,
       "hasStructuralAnalysis": false
+    },
+    "components/svg_engine/src/extract.rs": {
+      "filePath": "components/svg_engine/src/extract.rs",
+      "contentHash": "7be4d23fa6f301c253196699d14e89c54010d9299b528181e55352577a9ec1b0",
+      "functions": [
+        {
+          "name": "extract_tag",
+          "params": [
+            "name",
+            "get_attr"
+          ],
+          "returnType": "Option<SvgTag>",
+          "exported": true,
+          "lineCount": 7
+        },
+        {
+          "name": "from_computed_values",
+          "params": [
+            "values"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "extract_node_style",
+          "params": [
+            "computed_values"
+          ],
+          "returnType": "NodeStyle",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "from_css_attrs",
+          "params": [
+            "style_str"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 90
+        },
+        {
+          "name": "extract_node_style_from_css",
+          "params": [
+            "style_str"
+          ],
+          "returnType": "NodeStyle",
+          "exported": true,
+          "lineCount": 3
+        },
+        {
+          "name": "resolve_svg_paint",
+          "params": [
+            "svg_paint",
+            "computed_values"
+          ],
+          "returnType": "Option<ColorF>",
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "parse_css_color",
+          "params": [
+            "val"
+          ],
+          "returnType": "Option<ColorF>",
+          "exported": false,
+          "lineCount": 44
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "style::properties",
+          "specifiers": [
+            "ComputedValues"
+          ]
+        },
+        {
+          "source": "style::values::computed::svg",
+          "specifiers": [
+            "SVGPaint",
+            "SVGPaintKind"
+          ]
+        },
+        {
+          "source": "style::color",
+          "specifiers": [
+            "ColorSpace"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "ColorF"
+          ]
+        },
+        {
+          "source": "crate::render_tree",
+          "specifiers": [
+            "Container",
+            "SvgTag"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes",
+            "Shape"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "*"
+          ]
+        }
+      ],
+      "exports": [
+        "extract_tag",
+        "extract_node_style",
+        "extract_node_style_from_css",
+        "resolve_svg_paint"
+      ],
+      "totalLines": 230,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/lib.rs": {
+      "filePath": "components/svg_engine/src/lib.rs",
+      "contentHash": "d48108cf3025e08c4a5075facc02283a38e9f8cd21fc2c2808d6bcb6a689f7c7",
+      "functions": [],
+      "classes": [],
+      "imports": [
+        {
+          "source": "extract",
+          "specifiers": [
+            "extract_node_style"
+          ]
+        },
+        {
+          "source": "traversal",
+          "specifiers": [
+            "render_svg_tree"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 16,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/render_tree.rs": {
+      "filePath": "components/svg_engine/src/render_tree.rs",
+      "contentHash": "c4b57d837f1273f0d14bacd7fb5f1ff07028154366341ea52b04ea5ecdaf4753",
+      "functions": [
+        {
+          "name": "extract_viewbox",
+          "params": [
+            "value"
+          ],
+          "returnType": "Option<(f32, f32, f32, f32)>",
+          "exported": true,
+          "lineCount": 12
+        }
+      ],
+      "classes": [
+        {
+          "name": "SvgRenderTree",
+          "methods": [],
+          "properties": [
+            "root",
+            "viewport"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "SvgRenderNode",
+          "methods": [],
+          "properties": [
+            "id",
+            "tag",
+            "style",
+            "children"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "SvgTag",
+          "methods": [],
+          "properties": [
+            "Shape",
+            "Container"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "Container",
+          "methods": [],
+          "properties": [
+            "Group",
+            "Svg"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "ViewportInfo",
+          "methods": [],
+          "properties": [
+            "width",
+            "height",
+            "view_box"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Shape"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "NodeStyle"
+          ]
+        }
+      ],
+      "exports": [
+        "SvgRenderTree",
+        "SvgRenderNode",
+        "SvgTag",
+        "Container",
+        "ViewportInfo",
+        "extract_viewbox"
+      ],
+      "totalLines": 56,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/renderer/circle.rs": {
+      "filePath": "components/svg_engine/src/renderer/circle.rs",
+      "contentHash": "0ced1d7cf8e14c62ec77073cd919fc0f581f8adbcb5fe9b00160448e754b6f9b",
+      "functions": [
+        {
+          "name": "render",
+          "params": [
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 17
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "ClipChainId",
+            "SpatialId",
+            "units::LayoutPoint"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Circle",
+            "Ellipse"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/renderer/ellipse.rs": {
+      "filePath": "components/svg_engine/src/renderer/ellipse.rs",
+      "contentHash": "4c8dd83739b48284659d2f99ae5c6dfc86691149e4fa6be5b6b1485ea5db5dab",
+      "functions": [
+        {
+          "name": "render",
+          "params": [
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 23
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "ClipChainId",
+            "SpatialId",
+            "units::LayoutPoint"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Ellipse",
+            "Rectangle"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 36,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/renderer/line.rs": {
+      "filePath": "components/svg_engine/src/renderer/line.rs",
+      "contentHash": "29d6f86475a22f2a31b74ba02e44cd1a49b6aa636a87568da8c4ded5e6dc7b6d",
+      "functions": [
+        {
+          "name": "render",
+          "params": [
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 58
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "euclid",
+          "specifiers": [
+            "Angle"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "ClipChainId",
+            "DisplayListBuilder",
+            "PropertyBinding",
+            "ReferenceFrameKind",
+            "SpatialId",
+            "TransformStyle"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Line"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render",
+            "make_common_props"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 76,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/renderer/mod.rs": {
+      "filePath": "components/svg_engine/src/renderer/mod.rs",
+      "contentHash": "89dd5303ae453424dd6690064c5f3c91986530750039503e6842c1ed689e9dc2",
+      "functions": [
+        {
+          "name": "render",
+          "params": [
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "make_common_props",
+          "params": [
+            "bounds",
+            "spatial_id",
+            "clip_chain_id"
+          ],
+          "returnType": "CommonItemProperties",
+          "exported": true,
+          "lineCount": 7
+        }
+      ],
+      "classes": [
+        {
+          "name": "Render",
+          "methods": [
+            "render"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 11
+        }
+      ],
+      "imports": [
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "ClipChainId",
+            "CommonItemProperties",
+            "DisplayListBuilder",
+            "SpaceAndClipInfo",
+            "SpatialId",
+            "units::LayoutPoint",
+            "units::LayoutRect"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "NodeStyle"
+          ]
+        }
+      ],
+      "exports": [
+        "Render",
+        "make_common_props"
+      ],
+      "totalLines": 82,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/renderer/path.rs": {
+      "filePath": "components/svg_engine/src/renderer/path.rs",
+      "contentHash": "fa6bc072385c6076a9354aef80a9d23999de640e7f5de6a94da9145b6eabb7d1",
+      "functions": [
+        {
+          "name": "render",
+          "params": [
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "flatten_path",
+          "params": [
+            "path"
+          ],
+          "returnType": "Vec<Point>",
+          "exported": false,
+          "lineCount": 25
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "kurbo",
+          "specifiers": [
+            "BezPath",
+            "PathEl",
+            "Point"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "ClipChainId",
+            "SpatialId",
+            "units::LayoutPoint"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Path",
+            "Polyline"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "NodeStyle"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 68,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/renderer/polygon.rs": {
+      "filePath": "components/svg_engine/src/renderer/polygon.rs",
+      "contentHash": "30b2e9b2d4051723801bc05696e6d73bfbaf1b68e6fb97326023aa2043c50f5b",
+      "functions": [
+        {
+          "name": "render",
+          "params": [
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 22
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "ClipChainId",
+            "SpatialId",
+            "units::LayoutPoint"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Polygon",
+            "Polyline"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "NodeStyle"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 38,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/renderer/polyline.rs": {
+      "filePath": "components/svg_engine/src/renderer/polyline.rs",
+      "contentHash": "b7d7dd6d89a1cc123c1783787b3a93ebe7ff429399277ca02cb3fd5ba7ce7c95",
+      "functions": [
+        {
+          "name": "render",
+          "params": [
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 73
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "lyon::math::Point as LyonPoint",
+          "specifiers": [
+            "lyon::math::Point as LyonPoint"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "ClipChainId",
+            "SpatialId",
+            "units::LayoutPoint"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Line",
+            "Polyline"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate",
+          "specifiers": [
+            "tessellator"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 91,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/renderer/rect.rs": {
+      "filePath": "components/svg_engine/src/renderer/rect.rs",
+      "contentHash": "9d65ad7de1ecea7962e18b1755020b374e230a2e9eb103b50fa3f04b2873d656",
+      "functions": [
+        {
+          "name": "render",
+          "params": [
+            "style",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 89
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "ClipChainId",
+            "SpatialId",
+            "BorderSide",
+            "BorderStyle",
+            "BorderDetails",
+            "NormalBorder",
+            "BorderRadius",
+            "ClipMode",
+            "ComplexClipRegion"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Rectangle"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render",
+            "make_common_props"
+          ]
+        }
+      ],
+      "exports": [],
+      "totalLines": 107,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/shapes/circle.rs": {
+      "filePath": "components/svg_engine/src/shapes/circle.rs",
+      "contentHash": "173ea1a938bd84865bd91f556495c0f99cca4db4498ef78b340cf8a7643f6ec4",
+      "functions": [
+        {
+          "name": "from_attributes",
+          "params": [
+            "_name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 7
+        }
+      ],
+      "classes": [
+        {
+          "name": "Circle",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [
+            "cx",
+            "cy",
+            "r"
+          ],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "imports": [
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes",
+            "parse_length"
+          ]
+        }
+      ],
+      "exports": [
+        "Circle"
+      ],
+      "totalLines": 24,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/shapes/ellipse.rs": {
+      "filePath": "components/svg_engine/src/shapes/ellipse.rs",
+      "contentHash": "e89e5d5f571aa2cb4a36571a9223af7f7bb0e5109b32cc0009e02bf4be0a2b2e",
+      "functions": [
+        {
+          "name": "from_attributes",
+          "params": [
+            "_name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 8
+        }
+      ],
+      "classes": [
+        {
+          "name": "Ellipse",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [
+            "cx",
+            "cy",
+            "rx",
+            "ry"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes",
+            "parse_length"
+          ]
+        }
+      ],
+      "exports": [
+        "Ellipse"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/shapes/line.rs": {
+      "filePath": "components/svg_engine/src/shapes/line.rs",
+      "contentHash": "2ad8931289c740d2a2f91f330ceb5aea43d01b916a9ab36ae388ec104b16398d",
+      "functions": [
+        {
+          "name": "from_attributes",
+          "params": [
+            "_name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 8
+        }
+      ],
+      "classes": [
+        {
+          "name": "Line",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [
+            "x1",
+            "y1",
+            "x2",
+            "y2"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes",
+            "parse_length"
+          ]
+        }
+      ],
+      "exports": [
+        "Line"
+      ],
+      "totalLines": 26,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/shapes/mod.rs": {
+      "filePath": "components/svg_engine/src/shapes/mod.rs",
+      "contentHash": "cdefe58c750dcdcd7f328042c3ee7ed76278deb0cd50b1bf54dbb71fe9e9aff7",
+      "functions": [
+        {
+          "name": "from_attributes",
+          "params": [
+            "name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 12
+        },
+        {
+          "name": "parse_length",
+          "params": [
+            "attr",
+            "get_attr"
+          ],
+          "returnType": "Option<f32>",
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "parse_points",
+          "params": [
+            "get_attr"
+          ],
+          "returnType": "Option<Vec<Point>>",
+          "exported": true,
+          "lineCount": 19
+        },
+        {
+          "name": "parse_path",
+          "params": [
+            "get_attr"
+          ],
+          "returnType": "Option<BezPath>",
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "classes": [
+        {
+          "name": "Shape",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [
+            "Rect",
+            "Circle",
+            "Ellipse",
+            "Line",
+            "Polyline",
+            "Polygon",
+            "Path"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "FromAttributes",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "self::rectangle",
+          "specifiers": [
+            "Rectangle"
+          ]
+        },
+        {
+          "source": "self::circle",
+          "specifiers": [
+            "Circle"
+          ]
+        },
+        {
+          "source": "self::ellipse",
+          "specifiers": [
+            "Ellipse"
+          ]
+        },
+        {
+          "source": "self::line",
+          "specifiers": [
+            "Line"
+          ]
+        },
+        {
+          "source": "self::polyline",
+          "specifiers": [
+            "Polyline"
+          ]
+        },
+        {
+          "source": "self::polygon",
+          "specifiers": [
+            "Polygon"
+          ]
+        },
+        {
+          "source": "self::path",
+          "specifiers": [
+            "Path"
+          ]
+        },
+        {
+          "source": "kurbo",
+          "specifiers": [
+            "BezPath",
+            "Point"
+          ]
+        }
+      ],
+      "exports": [
+        "Shape",
+        "FromAttributes",
+        "parse_length",
+        "parse_points",
+        "parse_path"
+      ],
+      "totalLines": 103,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/shapes/path.rs": {
+      "filePath": "components/svg_engine/src/shapes/path.rs",
+      "contentHash": "454b9fa1a7f26c2914a932bf29101672d0371d781581ae87f25c47df897b28c6",
+      "functions": [
+        {
+          "name": "from_attributes",
+          "params": [
+            "_name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "Path",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [
+            "path"
+          ],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "kurbo",
+          "specifiers": [
+            "BezPath"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes",
+            "parse_path"
+          ]
+        }
+      ],
+      "exports": [
+        "Path"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/shapes/polygon.rs": {
+      "filePath": "components/svg_engine/src/shapes/polygon.rs",
+      "contentHash": "00faf97bcd06ce4b96946f0c6cdaa956adfe72abeaa492de5efc9fb928fe8252",
+      "functions": [
+        {
+          "name": "from_attributes",
+          "params": [
+            "_name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "Polygon",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [
+            "points"
+          ],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "kurbo",
+          "specifiers": [
+            "Point"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes",
+            "parse_points"
+          ]
+        }
+      ],
+      "exports": [
+        "Polygon"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/shapes/polyline.rs": {
+      "filePath": "components/svg_engine/src/shapes/polyline.rs",
+      "contentHash": "c3bb44577898ce60c053b139aece5c2eab5cdb7f56eddd25b0118502502dc9cf",
+      "functions": [
+        {
+          "name": "from_attributes",
+          "params": [
+            "_name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "Polyline",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [
+            "points"
+          ],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "kurbo",
+          "specifiers": [
+            "Point"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes",
+            "parse_points"
+          ]
+        }
+      ],
+      "exports": [
+        "Polyline"
+      ],
+      "totalLines": 20,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/shapes/rectangle.rs": {
+      "filePath": "components/svg_engine/src/shapes/rectangle.rs",
+      "contentHash": "c323882232afbc0bc594907f1a08e51d655f5b52bc39d7fdcf3f7bf3b1b90577",
+      "functions": [
+        {
+          "name": "from_attributes",
+          "params": [
+            "_name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 10
+        }
+      ],
+      "classes": [
+        {
+          "name": "Rectangle",
+          "methods": [
+            "from_attributes"
+          ],
+          "properties": [
+            "x",
+            "y",
+            "width",
+            "height",
+            "rx",
+            "ry"
+          ],
+          "exported": true,
+          "lineCount": 8
+        }
+      ],
+      "imports": [
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes",
+            "parse_length"
+          ]
+        }
+      ],
+      "exports": [
+        "Rectangle"
+      ],
+      "totalLines": 30,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/style/effects.rs": {
+      "filePath": "components/svg_engine/src/style/effects.rs",
+      "contentHash": "d0670f6000ea3cc804dc7292e59bf1cf942f701b4fcfc515c3e3872108a80e13",
+      "functions": [],
+      "classes": [
+        {
+          "name": "Visibility",
+          "methods": [],
+          "properties": [
+            "Visible",
+            "Hidden",
+            "Collapse"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "Display",
+          "methods": [],
+          "properties": [
+            "Inline",
+            "Block",
+            "None"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "NodeEffects",
+          "methods": [],
+          "properties": [
+            "clip_path",
+            "mask"
+          ],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "Visibility",
+        "Display",
+        "NodeEffects"
+      ],
+      "totalLines": 35,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/style/fill.rs": {
+      "filePath": "components/svg_engine/src/style/fill.rs",
+      "contentHash": "ff19033189a1ba75efea9581af8a038b50f5c7fd16c399d62ac4739eb9df8e45",
+      "functions": [
+        {
+          "name": "from_computed_values",
+          "params": [
+            "values"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 22
+        }
+      ],
+      "classes": [
+        {
+          "name": "FillParams",
+          "methods": [
+            "from_computed_values"
+          ],
+          "properties": [
+            "color",
+            "opacity",
+            "fill_rule"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "FillRule",
+          "methods": [],
+          "properties": [
+            "NonZero",
+            "EvenOdd"
+          ],
+          "exported": true,
+          "lineCount": 4
+        }
+      ],
+      "imports": [
+        {
+          "source": "style::properties",
+          "specifiers": [
+            "ComputedValues"
+          ]
+        },
+        {
+          "source": "style::values::computed::svg",
+          "specifiers": [
+            "SVGOpacity"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "ColorF"
+          ]
+        },
+        {
+          "source": "crate::extract",
+          "specifiers": [
+            "resolve_svg_paint"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "FromComputedValues"
+          ]
+        }
+      ],
+      "exports": [
+        "FillParams",
+        "FillRule"
+      ],
+      "totalLines": 55,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/style/hints.rs": {
+      "filePath": "components/svg_engine/src/style/hints.rs",
+      "contentHash": "0a115820f43ca41c6d7c1320d8745f2999edf9d1f0f1e2409ae5862d16fcdd71",
+      "functions": [],
+      "classes": [
+        {
+          "name": "RenderHints",
+          "methods": [],
+          "properties": [
+            "vector_effect",
+            "color_rendering",
+            "color_interpolation",
+            "shape_rendering",
+            "text_rendering",
+            "image_rendering",
+            "paint_order"
+          ],
+          "exported": true,
+          "lineCount": 9
+        },
+        {
+          "name": "VectorEffect",
+          "methods": [],
+          "properties": [
+            "None",
+            "NonScalingStroke"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "ColorRendering",
+          "methods": [],
+          "properties": [
+            "Auto",
+            "OptimizeSpeed",
+            "OptimizeQuality"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "ColorInterpolation",
+          "methods": [],
+          "properties": [
+            "Auto",
+            "SRGB",
+            "LinearRGB"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "ShapeRendering",
+          "methods": [],
+          "properties": [
+            "Auto",
+            "OptimizeSpeed",
+            "CrispEdges",
+            "GeometricPrecision"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "TextRendering",
+          "methods": [],
+          "properties": [
+            "Auto",
+            "OptimizeSpeed",
+            "OptimizeLegibility",
+            "GeometricPrecision"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "ImageRendering",
+          "methods": [],
+          "properties": [
+            "Auto",
+            "OptimizeSpeed",
+            "OptimizeQuality"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "PaintOrder",
+          "methods": [],
+          "properties": [
+            "Normal"
+          ],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [],
+      "exports": [
+        "RenderHints",
+        "VectorEffect",
+        "ColorRendering",
+        "ColorInterpolation",
+        "ShapeRendering",
+        "TextRendering",
+        "ImageRendering",
+        "PaintOrder"
+      ],
+      "totalLines": 84,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/style/mod.rs": {
+      "filePath": "components/svg_engine/src/style/mod.rs",
+      "contentHash": "66bae95e26c39ae92fb3dd4027a4cf093925dbab577f2904d6b1c58b34b6ca69",
+      "functions": [
+        {
+          "name": "default",
+          "params": [],
+          "returnType": "Self",
+          "exported": false,
+          "lineCount": 12
+        }
+      ],
+      "classes": [
+        {
+          "name": "NodeStyle",
+          "methods": [
+            "default"
+          ],
+          "properties": [
+            "opacity",
+            "visibility",
+            "display",
+            "transform",
+            "fill",
+            "stroke",
+            "render_hints",
+            "effects"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "FromComputedValues",
+          "methods": [
+            "from_computed_values"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "FromCssAttrs",
+          "methods": [
+            "from_css_attrs"
+          ],
+          "properties": [],
+          "exported": true,
+          "lineCount": 3
+        }
+      ],
+      "imports": [
+        {
+          "source": "self::fill",
+          "specifiers": [
+            "FillParams",
+            "FillRule"
+          ]
+        },
+        {
+          "source": "self::stroke",
+          "specifiers": [
+            "StrokeParams",
+            "LineCap",
+            "LineJoin"
+          ]
+        },
+        {
+          "source": "self::hints",
+          "specifiers": [
+            "RenderHints",
+            "VectorEffect",
+            "ColorRendering",
+            "ColorInterpolation",
+            "ShapeRendering",
+            "TextRendering",
+            "ImageRendering",
+            "PaintOrder"
+          ]
+        },
+        {
+          "source": "self::effects",
+          "specifiers": [
+            "Visibility",
+            "Display",
+            "NodeEffects"
+          ]
+        },
+        {
+          "source": "self::transform",
+          "specifiers": [
+            "TransformOp"
+          ]
+        }
+      ],
+      "exports": [
+        "NodeStyle",
+        "FromComputedValues",
+        "FromCssAttrs"
+      ],
+      "totalLines": 81,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/style/stroke.rs": {
+      "filePath": "components/svg_engine/src/style/stroke.rs",
+      "contentHash": "31928a344691a73ebaecb76a8c6c4b7b28c998b1820eec8664e88d48e5d4ffa9",
+      "functions": [
+        {
+          "name": "from_computed_values",
+          "params": [
+            "values"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 67
+        }
+      ],
+      "classes": [
+        {
+          "name": "StrokeParams",
+          "methods": [
+            "from_computed_values"
+          ],
+          "properties": [
+            "color",
+            "opacity",
+            "width",
+            "line_cap",
+            "line_join",
+            "miter_limit",
+            "dash_array",
+            "dash_offset"
+          ],
+          "exported": true,
+          "lineCount": 10
+        },
+        {
+          "name": "LineCap",
+          "methods": [],
+          "properties": [
+            "Butt",
+            "Round",
+            "Square"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "LineJoin",
+          "methods": [],
+          "properties": [
+            "Miter",
+            "Round",
+            "Bevel"
+          ],
+          "exported": true,
+          "lineCount": 5
+        }
+      ],
+      "imports": [
+        {
+          "source": "style::properties",
+          "specifiers": [
+            "ComputedValues"
+          ]
+        },
+        {
+          "source": "style::values::computed::svg",
+          "specifiers": [
+            "SVGOpacity",
+            "SVGStrokeDashArray"
+          ]
+        },
+        {
+          "source": "style::values::generics::svg",
+          "specifiers": [
+            "SVGLength"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "ColorF"
+          ]
+        },
+        {
+          "source": "crate::extract",
+          "specifiers": [
+            "resolve_svg_paint"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "FromComputedValues"
+          ]
+        }
+      ],
+      "exports": [
+        "StrokeParams",
+        "LineCap",
+        "LineJoin"
+      ],
+      "totalLines": 115,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/style/transform.rs": {
+      "filePath": "components/svg_engine/src/style/transform.rs",
+      "contentHash": "01c4c4128b0e8153f190dd0b98d2200c1ebb32874f86b4bdd54efceee7978058",
+      "functions": [
+        {
+          "name": "apply_transform_op",
+          "params": [
+            "op",
+            "origin",
+            "spatial_id",
+            "wr"
+          ],
+          "returnType": "TransformResult",
+          "exported": true,
+          "lineCount": 36
+        },
+        {
+          "name": "push_reference_frame",
+          "params": [
+            "origin",
+            "parent_spatial_id",
+            "transform",
+            "wr"
+          ],
+          "returnType": "SpatialId",
+          "exported": false,
+          "lineCount": 18
+        },
+        {
+          "name": "build_rotation_transform",
+          "params": [
+            "angle_deg",
+            "cx",
+            "cy"
+          ],
+          "returnType": "LayoutTransform",
+          "exported": false,
+          "lineCount": 9
+        },
+        {
+          "name": "to_layout_transform",
+          "params": [
+            "xform"
+          ],
+          "returnType": "LayoutTransform",
+          "exported": true,
+          "lineCount": 20
+        },
+        {
+          "name": "extract_transforms",
+          "params": [
+            "get_attr"
+          ],
+          "returnType": "Vec<TransformOp>",
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "parse_transform_str",
+          "params": [
+            "attr"
+          ],
+          "returnType": "Vec<TransformOp>",
+          "exported": false,
+          "lineCount": 49
+        },
+        {
+          "name": "from_attributes",
+          "params": [
+            "_name",
+            "get_attr"
+          ],
+          "returnType": "Option<Self>",
+          "exported": false,
+          "lineCount": 3
+        }
+      ],
+      "classes": [
+        {
+          "name": "TransformOp",
+          "methods": [],
+          "properties": [
+            "Translate",
+            "Scale",
+            "Rotate"
+          ],
+          "exported": true,
+          "lineCount": 5
+        },
+        {
+          "name": "TransformResult",
+          "methods": [],
+          "properties": [
+            "child_origin",
+            "child_spatial_id",
+            "pushed_frame"
+          ],
+          "exported": true,
+          "lineCount": 6
+        }
+      ],
+      "imports": [
+        {
+          "source": "euclid",
+          "specifiers": [
+            "Transform2D"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "PropertyBinding",
+            "ReferenceFrameKind",
+            "SpatialId",
+            "TransformStyle"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "FromAttributes"
+          ]
+        }
+      ],
+      "exports": [
+        "TransformOp",
+        "TransformResult",
+        "apply_transform_op",
+        "to_layout_transform",
+        "extract_transforms"
+      ],
+      "totalLines": 209,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/tessellator.rs": {
+      "filePath": "components/svg_engine/src/tessellator.rs",
+      "contentHash": "4b45b9df11fe444e8489bb552e0dbd7e82962dc4102b8c193b3580440d7be169",
+      "functions": [
+        {
+          "name": "new_vertex",
+          "params": [
+            "vertex"
+          ],
+          "returnType": "LyonPoint",
+          "exported": false,
+          "lineCount": 3
+        },
+        {
+          "name": "tessellate_polygon",
+          "params": [
+            "points",
+            "fill_rule",
+            "color",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": true,
+          "lineCount": 47
+        },
+        {
+          "name": "scanline_fill_triangle",
+          "params": [
+            "v0",
+            "v1",
+            "v2",
+            "color",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 76
+        },
+        {
+          "name": "sort_vertices_by_y",
+          "params": [
+            "a",
+            "b",
+            "c"
+          ],
+          "returnType": "(LyonPoint, LyonPoint, LyonPoint)",
+          "exported": false,
+          "lineCount": 9
+        }
+      ],
+      "classes": [
+        {
+          "name": "PosCtor",
+          "methods": [
+            "new_vertex"
+          ],
+          "properties": [],
+          "exported": false,
+          "lineCount": 1
+        }
+      ],
+      "imports": [
+        {
+          "source": "lyon::math::Point as LyonPoint",
+          "specifiers": [
+            "lyon::math::Point as LyonPoint"
+          ]
+        },
+        {
+          "source": "lyon::tessellation",
+          "specifiers": [
+            "FillTessellator",
+            "FillOptions",
+            "FillVertex",
+            "FillVertexConstructor",
+            "VertexBuffers",
+            "BuffersBuilder"
+          ]
+        },
+        {
+          "source": "lyon::path::polygon",
+          "specifiers": [
+            "Polygon"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "ClipChainId",
+            "SpatialId",
+            "CommonItemProperties",
+            "SpaceAndClipInfo"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "FillRule"
+          ]
+        }
+      ],
+      "exports": [
+        "tessellate_polygon"
+      ],
+      "totalLines": 179,
+      "hasStructuralAnalysis": true
+    },
+    "components/svg_engine/src/traversal.rs": {
+      "filePath": "components/svg_engine/src/traversal.rs",
+      "contentHash": "e70cc06d6f3cafe184933a008bf76ae8284a2533a65ca309fafcd7cdeb472e74",
+      "functions": [
+        {
+          "name": "render_svg_tree",
+          "params": [
+            "tree",
+            "svg_origin",
+            "svg_size",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": true,
+          "lineCount": 53
+        },
+        {
+          "name": "render_node",
+          "params": [
+            "node",
+            "svg_origin",
+            "spatial_id",
+            "clip_chain_id",
+            "wr"
+          ],
+          "exported": false,
+          "lineCount": 36
+        }
+      ],
+      "classes": [],
+      "imports": [
+        {
+          "source": "euclid",
+          "specifiers": [
+            "Transform2D"
+          ]
+        },
+        {
+          "source": "webrender_api",
+          "specifiers": [
+            "DisplayListBuilder",
+            "ClipChainId",
+            "SpatialId",
+            "PropertyBinding",
+            "ReferenceFrameKind",
+            "TransformStyle"
+          ]
+        },
+        {
+          "source": "crate::render_tree",
+          "specifiers": [
+            "*"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "transform"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render"
+          ]
+        }
+      ],
+      "exports": [
+        "render_svg_tree"
+      ],
+      "totalLines": 123,
+      "hasStructuralAnalysis": true
     }
   }
 }
