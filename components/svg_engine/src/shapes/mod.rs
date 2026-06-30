@@ -5,7 +5,7 @@
 //! SVG Geometric Shapes Reference: https://www.w3.org/TR/SVG2/shapes.html
 //!
 //! This module defines SVG geometric shape structs based on the SVG 2 specification.
-//! Each shape has its own file with its [`FromAttributes`] implementation.
+//! Each shape has its own file with its [`Extract`](crate::extract::Extract) implementation.
 //! Shared attribute-parsing helpers live in this module.
 
 pub(crate) mod rectangle;
@@ -26,6 +26,10 @@ pub use self::path::Path;
 
 use kurbo::{BezPath, Point};
 
+use crate::error::SvgResult;
+use crate::extract::{Extract, SvgExtractInput};
+use crate::error::SvgEngineError;
+
 /// An SVG geometric shape.
 #[derive(Debug, Clone)]
 pub enum Shape {
@@ -38,45 +42,48 @@ pub enum Shape {
     Path(Path),
 }
 
-// ----------------------- FromAttributes Trait -----------------------
+// ======================= Extract dispatch =======================
 
-/// Parse a shape from SVG element attributes.
-///
-/// Every shape type implements this trait. Individual shapes ignore the `name`
-/// parameter, while [`Shape`] dispatches on it — matching the [`Render`](crate::renderer::Render) pattern.
-pub trait FromAttributes: Sized {
-    fn from_attributes(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Self>;
-}
-
-// ----------------------- Shape Dispatch -----------------------
-
-impl FromAttributes for Shape {
-    fn from_attributes(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Self> {
-        match name {
-            "rect" => Rectangle::from_attributes(name, get_attr).map(Shape::Rect),
-            "circle" => Circle::from_attributes(name, get_attr).map(Shape::Circle),
-            "ellipse" => Ellipse::from_attributes(name, get_attr).map(Shape::Ellipse),
-            "line" => Line::from_attributes(name, get_attr).map(Shape::Line),
-            "polyline" => Polyline::from_attributes(name, get_attr).map(Shape::Polyline),
-            "polygon" => Polygon::from_attributes(name, get_attr).map(Shape::Polygon),
-            "path" => Path::from_attributes(name, get_attr).map(Shape::Path),
-            _ => None,
+impl Extract for Shape {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+        match input.element_name {
+            "rect" => Rectangle::extract(input).map(Shape::Rect),
+            "circle" => Circle::extract(input).map(Shape::Circle),
+            "ellipse" => Ellipse::extract(input).map(Shape::Ellipse),
+            "line" => Line::extract(input).map(Shape::Line),
+            "polyline" => Polyline::extract(input).map(Shape::Polyline),
+            "polygon" => Polygon::extract(input).map(Shape::Polygon),
+            "path" => Path::extract(input).map(Shape::Path),
+            other => Err(SvgEngineError::UnsupportedFeature(
+                format!("unknown shape element: {other}"),
+            )),
         }
     }
 }
 
-// ----------------------- Attribute Parsing Helpers -----------------------
+// ======================= Attribute Parsing Helpers =======================
 
-/// Parse a named SVG length attribute (e.g. `x="10"`, `width="50%px"`).
+/// Parse a named SVG length attribute (e.g. `x="10"`, `width="50"`).
 /// Strips trailing `px` suffix and returns the raw float value.
-pub(crate) fn parse_length(attr: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<f32> {
-    let value = get_attr(attr)?;
-    value.trim_end_matches("px").trim().parse::<f32>().ok()
+pub(crate) fn parse_length(
+    attr: &str,
+    get_attr: &dyn Fn(&str) -> Option<String>,
+) -> SvgResult<f32> {
+    let value =
+        get_attr(attr).ok_or_else(|| SvgEngineError::MissingAttribute(attr.to_owned()))?;
+    value
+        .trim_end_matches("px")
+        .trim()
+        .parse::<f32>()
+        .map_err(|e| SvgEngineError::ParseError(format!("{attr}: {e}")))
 }
 
 /// Shared parser for the `points` attribute used by both `<polyline>` and `<polygon>`.
-pub(crate) fn parse_points(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Vec<Point>> {
-    let value = get_attr("points")?;
+pub(crate) fn parse_points(
+    get_attr: &dyn Fn(&str) -> Option<String>,
+) -> SvgResult<Vec<Point>> {
+    let value =
+        get_attr("points").ok_or_else(|| SvgEngineError::MissingAttribute("points".to_owned()))?;
     let coords: Vec<f64> = value
         .split(|c: char| c == ',' || c.is_whitespace())
         .filter(|s| !s.is_empty())
@@ -92,11 +99,20 @@ pub(crate) fn parse_points(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<
         })
         .collect();
 
-    if points.len() < 2 { None } else { Some(points) }
+    if points.len() < 2 {
+        return Err(SvgEngineError::ParseError(
+            "points attribute requires at least 2 coordinate pairs".to_owned(),
+        ));
+    }
+    Ok(points)
 }
 
 /// Parse the SVG path `d` attribute string into a [`BezPath`].
-pub(crate) fn parse_path(get_attr: &dyn Fn(&str) -> Option<String>) -> Option<BezPath> {
-    let value = get_attr("d")?;
-    BezPath::from_svg(&value).ok()
+pub(crate) fn parse_path(
+    get_attr: &dyn Fn(&str) -> Option<String>,
+) -> SvgResult<BezPath> {
+    let value =
+        get_attr("d").ok_or_else(|| SvgEngineError::MissingAttribute("d".to_owned()))?;
+    BezPath::from_svg(&value)
+        .map_err(|e| SvgEngineError::ParseError(format!("path: {e}")))
 }

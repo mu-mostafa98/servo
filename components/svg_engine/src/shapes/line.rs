@@ -2,7 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use crate::shapes::{FromAttributes, parse_length};
+use crate::error::SvgResult;
+use crate::extract::{Extract, SvgExtractInput};
+use crate::shapes::parse_length;
 
 /// SVG `<line>` element.
 #[derive(Debug, Clone, Copy)]
@@ -13,13 +15,13 @@ pub struct Line {
     pub y2: f32,
 }
 
-impl FromAttributes for Line {
-    fn from_attributes(_name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Self> {
-        Some(Line {
-            x1: parse_length("x1", get_attr)?,
-            y1: parse_length("y1", get_attr)?,
-            x2: parse_length("x2", get_attr)?,
-            y2: parse_length("y2", get_attr)?,
+impl Extract for Line {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+        Ok(Line {
+            x1: parse_length("x1", &input.get_attr).unwrap_or(0.0),
+            y1: parse_length("y1", &input.get_attr).unwrap_or(0.0),
+            x2: parse_length("x2", &input.get_attr).unwrap_or(0.0),
+            y2: parse_length("y2", &input.get_attr).unwrap_or(0.0),
         })
     }
 }

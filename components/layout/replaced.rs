@@ -35,9 +35,8 @@ use webrender_api::ImageKey;
 
 use web_atoms::ns;
 use html5ever::LocalName;
-use svg_engine::extract::{extract_node_style, extract_tag, extract_node_style_from_css};
+use svg_engine::extract::{Extract, SvgExtractInput};
 use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo, extract_viewbox};
-use svg_engine::style::transform::extract_transforms;
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
@@ -372,34 +371,27 @@ impl ReplacedContents {
             element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
         };
 
-        let tag = extract_tag(name, &get_attr)?;
-
-        // SVG child elements often lack computed style data
-        // (e.g. <rect> inside <g>). Handle both cases.
-        let style = match element.style_data() {
-            Some(_) => {
-                let computed = element.style(&context.style_context);
-                extract_node_style(&computed)
-            },
-            None => get_attr("style")
-                .as_deref()
-                .map(extract_node_style_from_css)
-                .unwrap_or_default(),
+        // Single unified extract call — handles tag dispatch, style extraction,
+        // and transform parsing internally.
+        let computed = element.style_data()
+            .map(|_| element.style(&context.style_context));
+        let input = SvgExtractInput {
+            element_name: name,
+            get_attr: &get_attr,
+            computed_values: computed.as_deref(),
         };
-        let mut style = style;
-        style.transform = extract_transforms(&get_attr);
+        let mut svg_node = SvgRenderNode::extract(&input).ok()?;
 
-        let children = node.dom_children()
+        // Set id (only on the root level, from DOM).
+        svg_node.id = element.attribute_as_str(&ns!(), &local_name!("id"))
+            .map(|s| s.to_string());
+
+        // Recurse into DOM children (the *DOM* node, not the SvgRenderNode).
+        svg_node.children = node.dom_children()
             .filter_map(|child| Self::build_svg_render_node(child, context))
             .collect();
 
-        Some(SvgRenderNode {
-            id: element.attribute_as_str(&ns!(), &local_name!("id"))
-                .map(|s| s.to_string()),
-            tag,
-            style,
-            children,
-        })
+        Some(svg_node)
     }
 
     fn from_content_property(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {

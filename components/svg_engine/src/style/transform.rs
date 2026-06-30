@@ -16,6 +16,9 @@ use webrender_api::{
     units::{LayoutPoint, LayoutTransform},
 };
 
+use crate::error::SvgResult;
+use crate::extract::{Extract, SvgExtractInput};
+
 // ------------------- Transform types ------------------
 
 /// A single SVG transform operation, in the order it was specified.
@@ -138,8 +141,8 @@ pub(crate) fn to_layout_transform(xform: &Transform2D<f32, (), ()>) -> LayoutTra
 /// Supports: `translate(tx,ty)`, `scale(s)`, `scale(sx,sy)`, `rotate(a)`, `rotate(a,cx,cy)`.
 /// Multiple functions can be chained: `"translate(30,20) rotate(45)"` → `[Translate, Rotate]`.
 ///
-/// This function is the implementation behind [`FromAttributes for Vec<TransformOp>`].
-pub fn extract_transforms(get_attr: &dyn Fn(&str) -> Option<String>) -> Vec<TransformOp> {
+/// This function is the implementation behind [`Extract for Vec<TransformOp>`].
+pub(crate) fn extract_transforms(get_attr: &dyn Fn(&str) -> Option<String>) -> Vec<TransformOp> {
     match get_attr("transform") {
         Some(s) => parse_transform_str(&s),
         None => Vec::new(),
@@ -197,12 +200,10 @@ fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
     ops
 }
 
-// ======================= FromAttributes impl =======================
+// ======================= Extract impl =======================
 
-use crate::shapes::FromAttributes;
-
-impl FromAttributes for Vec<TransformOp> {
-    fn from_attributes(_name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Self> {
-        Some(extract_transforms(get_attr))
+impl Extract for Vec<TransformOp> {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+        Ok(extract_transforms(&input.get_attr))
     }
 }

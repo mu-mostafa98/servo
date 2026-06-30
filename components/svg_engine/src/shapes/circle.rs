@@ -2,7 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use crate::shapes::{FromAttributes, parse_length};
+use crate::error::SvgResult;
+use crate::extract::{Extract, SvgExtractInput};
+use crate::shapes::parse_length;
 
 /// SVG `<circle>` element.
 #[derive(Debug, Clone, Copy)]
@@ -12,12 +14,19 @@ pub struct Circle {
     pub r: f32,
 }
 
-impl FromAttributes for Circle {
-    fn from_attributes(_name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Self> {
-        Some(Circle {
-            cx: parse_length("cx", get_attr)?,
-            cy: parse_length("cy", get_attr)?,
-            r: parse_length("r", get_attr)?,
+impl Extract for Circle {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+        let r = parse_length("r", &input.get_attr)?;
+        if r < 0.0 {
+            return Err(crate::error::SvgEngineError::ParseError(
+                "negative radius on <circle>".to_owned(),
+            ));
+        }
+
+        Ok(Circle {
+            cx: parse_length("cx", &input.get_attr).unwrap_or(0.0),
+            cy: parse_length("cy", &input.get_attr).unwrap_or(0.0),
+            r,
         })
     }
 }

@@ -4,7 +4,9 @@
 
 use kurbo::BezPath;
 
-use crate::shapes::{FromAttributes, parse_path};
+use crate::error::SvgResult;
+use crate::extract::{Extract, SvgExtractInput};
+use crate::shapes::parse_path;
 
 /// SVG `<path>` element with its `d` attribute parsed into a [`BezPath`].
 #[derive(Debug, Clone)]
@@ -12,8 +14,8 @@ pub struct Path {
     pub path: BezPath,
 }
 
-impl FromAttributes for Path {
-    fn from_attributes(_name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<Self> {
-        parse_path(get_attr).map(|path| Path { path })
+impl Extract for Path {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+        parse_path(&input.get_attr).map(|path| Path { path })
     }
 }

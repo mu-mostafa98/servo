@@ -5,11 +5,12 @@
 mod shapes;
 pub mod style;
 pub mod render_tree;
+pub mod error;
 
 pub mod extract;
 mod traversal;
 mod renderer;
 mod tessellator;
 
-pub use extract::extract_node_style;
+pub use extract::{Extract, SvgExtractInput, extract_node_style};
 pub use traversal::render_svg_tree;

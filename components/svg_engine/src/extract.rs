@@ -5,35 +5,120 @@
 //! SVG attribute extraction — converts Servo style values and SVG markup
 //! into the SVG engine's native types.
 //!
-//! This module is the dispatch hub:
-//! - Shape construction uses [`FromAttributes`] via [`extract_tag`]
-//! - Style construction uses [`FromComputedValues`] / [`FromCssAttrs`]
-//! - Transform/viewBox parsing delegates to their respective data modules.
+//! The central abstraction is the [`Extract`] trait — every SVG type that can
+//! be constructed from markup or computed style implements it. The caller
+//! passes a single [`SvgExtractInput`] bundle and receives a fully-constructed
+//! value.
+//!
+//! # Architecture
+//!
+//! ```text
+//! SvgRenderNode::extract(input)
+//!   ├── SvgTag::extract(input)        → Container or Shape
+//!   │     └── Shape::extract(input)    → dispatches by element_name
+//!   │           └── Rectangle::extract, Circle::extract, …
+//!   └── NodeStyle::extract(input)      → fill, stroke, transforms
+//!         ├── FillParams::from_computed_values (internal helper)
+//!         ├── StrokeParams::from_computed_values (internal helper)
+//!         └── Vec<TransformOp>::extract          (internal)
+//! ```
 
 use style::properties::ComputedValues;
 use style::values::computed::svg::{SVGPaint, SVGPaintKind};
 use style::color::ColorSpace;
 use webrender_api::ColorF;
 
-use crate::render_tree::{Container, SvgTag};
-use crate::shapes::{FromAttributes, Shape};
+use crate::error::SvgResult;
+use crate::render_tree::{Container, SvgRenderNode, SvgTag};
+use crate::shapes::Shape;
 use crate::style::*;
+use crate::style::transform::TransformOp;
+use crate::style::fill::FillParams;
+use crate::style::stroke::StrokeParams;
 
-// ======================= Tag Dispatch =======================
+// ======================= Extract Trait =======================
 
-/// Parse an SVG element name and attribute accessor into a [`SvgTag`].
+/// Uniform extraction trait — every SVG type that can be built from DOM
+/// attributes and/or computed style implements this.
 ///
-/// Container elements return [`SvgTag::Container`] directly.
-/// Shape elements delegate to [`Shape::from_attributes`].
-pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<SvgTag> {
-    match name {
-        "svg" => Some(SvgTag::Container(Container::Svg)),
-        "g" => Some(SvgTag::Container(Container::Group)),
-        _ => Shape::from_attributes(name, get_attr).map(SvgTag::Shape),
+/// Returns [`SvgResult`] so that extraction failures carry a reason
+/// (missing attribute, parse error, unimplemented feature).
+pub trait Extract: Sized {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self>;
+}
+
+// ======================= Extraction Input =======================
+
+/// Bundle of all data sources needed to extract an SVG node.
+///
+/// The caller (typically [`replaced.rs`](crate::traversal)) constructs one
+/// from the current DOM element and passes it by reference — each
+/// [`Extract`] impl reads only the fields it needs.
+pub struct SvgExtractInput<'a> {
+    /// Element tag name, e.g. `"rect"`, `"path"`, `"g"`.
+    pub element_name: &'a str,
+    /// Attribute accessor — given an attribute name, returns its string value.
+    /// This is the *only* bridge between the SVG engine and the DOM.
+    pub get_attr: &'a dyn Fn(&str) -> Option<String>,
+    /// Servo computed style, if available. When `Some`, the engine uses
+    /// the fully-resolved style cascade. When `None`, it falls back to
+    /// parsing the inline `style` attribute via `get_attr("style")`.
+    pub computed_values: Option<&'a ComputedValues>,
+}
+
+// ======================= SvgTag Extraction =======================
+
+impl Extract for SvgTag {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+        match input.element_name {
+            "svg" => Ok(SvgTag::Container(Container::Svg)),
+            "g" => Ok(SvgTag::Container(Container::Group)),
+            _ => Shape::extract(input).map(SvgTag::Shape),
+        }
     }
 }
 
-// ======================= FromComputedValues impls =======================
+// ======================= SvgRenderNode Extraction =======================
+
+impl Extract for SvgRenderNode {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+        let tag = SvgTag::extract(input)?;
+        let style = NodeStyle::extract(input)?;
+        Ok(SvgRenderNode {
+            id: None,          // caller sets this
+            tag,
+            style,
+            children: vec![],  // caller populates via recursive walk
+        })
+    }
+}
+
+// ======================= NodeStyle Extraction =======================
+
+impl Extract for NodeStyle {
+    fn extract(input: &SvgExtractInput) -> SvgResult<Self> {
+        // Prefer Servo's computed style cascade; fall back to inline `style` attr.
+        let mut style = match input.computed_values {
+            Some(cv) => {
+                Self::from_computed_values(cv).unwrap_or_default()
+            },
+            None => {
+                match (input.get_attr)("style") {
+                    Some(css) => Self::from_css_attrs(&css).unwrap_or_default(),
+                    None => NodeStyle::default(),
+                }
+            },
+        };
+
+        // Transforms are extracted internally — the caller does not need
+        // a separate `extract_transforms()` call.
+        style.transform = <Vec<TransformOp> as Extract>::extract(input).unwrap_or_default();
+
+        Ok(style)
+    }
+}
+
+// ======================= FromComputedValues for NodeStyle (internal helper) =======================
 
 impl FromComputedValues for NodeStyle {
     type Input = ComputedValues;
@@ -52,12 +137,7 @@ impl FromComputedValues for NodeStyle {
     }
 }
 
-/// Convenience wrapper for external callers.
-pub fn extract_node_style(computed_values: &ComputedValues) -> NodeStyle {
-    NodeStyle::from_computed_values(computed_values).unwrap_or_default()
-}
-
-// ======================= FromCssAttrs impls =======================
+// ======================= FromCssAttrs for NodeStyle (internal helper) =======================
 
 impl FromCssAttrs for NodeStyle {
     fn from_css_attrs(style_str: &str) -> Option<Self> {
@@ -135,11 +215,7 @@ impl FromCssAttrs for NodeStyle {
             stroke: stroke_color.map(|c| StrokeParams {
                 color: Some(c),
                 opacity: stroke_opacity,
-                width: if has_stroke_width {
-                    stroke_width
-                } else {
-                    1.0
-                },
+                width: if has_stroke_width { stroke_width } else { 1.0 },
                 line_cap: LineCap::Butt,
                 line_join: LineJoin::Miter,
                 miter_limit: 4.0,
@@ -152,7 +228,38 @@ impl FromCssAttrs for NodeStyle {
     }
 }
 
+// ======================= Legacy Convenience Wrappers =======================
+
+/// Parse an SVG element name and attribute accessor into a [`SvgTag`].
+///
+/// Container elements return [`SvgTag::Container`] directly.
+/// Shape elements delegate to [`Shape::extract`].
+///
+/// Prefer [`SvgTag::extract`](Extract::extract) directly for new code.
+pub fn extract_tag(name: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<SvgTag> {
+    let input = SvgExtractInput {
+        element_name: name,
+        get_attr,
+        computed_values: None,
+    };
+    SvgTag::extract(&input).ok()
+}
+
 /// Convenience wrapper for external callers.
+///
+/// Prefer [`NodeStyle::extract`](Extract::extract) directly for new code.
+pub fn extract_node_style(computed_values: &ComputedValues) -> NodeStyle {
+    NodeStyle::extract(&SvgExtractInput {
+        element_name: "",
+        get_attr: &|_| None,
+        computed_values: Some(computed_values),
+    })
+    .unwrap_or_default()
+}
+
+/// Parse a CSS `style` attribute string into a [`NodeStyle`].
+///
+/// Prefer [`NodeStyle::extract`](Extract::extract) directly for new code.
 pub fn extract_node_style_from_css(style_str: &str) -> NodeStyle {
     NodeStyle::from_css_attrs(style_str).unwrap_or_default()
 }
@@ -178,6 +285,7 @@ pub(crate) fn resolve_svg_paint(
             ))
         },
         SVGPaintKind::None => None,
+        // FIXME: handle gradient/pattern paint servers
         _ => None,
     }
 }
