@@ -19,7 +19,7 @@
 //!   └── NodeStyle::build(input)      → fill, stroke, transforms
 //!         ├── FillParams::from_computed_values (internal)
 //!         ├── StrokeParams::from_computed_values (internal)
-//!         └── Vec<TransformOp>::build          (in style/transform)
+//!         └── Vec<TransformOp>::build          (in style/transform_ops)
 //! ```
 
 use style::properties::ComputedValues;

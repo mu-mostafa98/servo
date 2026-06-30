@@ -16,6 +16,7 @@ pub(crate) mod line;
 pub(crate) mod polyline;
 pub(crate) mod polygon;
 pub(crate) mod path;
+pub(crate) mod transform;
 
 use webrender_api::{
     ClipChainId, CommonItemProperties, DisplayListBuilder, SpaceAndClipInfo, SpatialId,

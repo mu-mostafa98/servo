@@ -7,14 +7,16 @@
 //! This module defines style-related enums and structs based on the SVG 2 specification.
 //! Each style category has its own file — [`fill`] for fill properties, [`stroke`] for
 //! stroke properties, [`hints`] for rendering hints, [`effects`] for node effects,
-//! [`transform`] for SVG transform operations, and [`color`] for color parsing.
+//! [`transform_ops`] for SVG transform operations and parsing,
+//! WebRender integration lives in [`crate::renderer::transform`],
+//! and [`color`] for color parsing.
 
 pub(crate) mod fill;
 pub(crate) mod stroke;
 pub(crate) mod hints;
 pub(crate) mod effects;
 pub(crate) mod color;
-pub mod transform;
+pub(crate) mod transform_ops;
 
 pub use self::fill::{FillParams, FillRule};
 pub use self::stroke::{StrokeParams, LineCap, LineJoin};
@@ -26,7 +28,7 @@ pub use self::hints::{
 #[allow(unused_imports)]
 pub use self::effects::{Visibility, Display, NodeEffects};
 
-use self::transform::TransformOp;
+use self::transform_ops::TransformOp;
 use webrender_api::ColorF;
 
 use crate::builder::{Build, SvgBuildInput};
@@ -212,7 +214,7 @@ impl Build for NodeStyle {
         };
 
         // Transforms are constructed internally — the caller does not need
-        // a separate `extract_transforms()` call.
+        // a separate transform-build call.
         style.transform = <Vec<TransformOp> as Build>::build(input).unwrap_or_default();
 
         Ok(style)

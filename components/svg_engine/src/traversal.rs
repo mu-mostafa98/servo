@@ -16,7 +16,7 @@ use webrender_api::{
 };
 
 use crate::render_tree::*;
-use crate::style::transform;
+use crate::renderer::transform;
 use crate::renderer::Render;
 
 /// Render an SVG render tree into the WebRender display list.
