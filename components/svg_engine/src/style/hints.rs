@@ -42,7 +42,7 @@ pub enum ColorRendering {
 #[derive(Debug, Clone, Copy)]
 pub enum ColorInterpolation {
     Auto,
-    SRGB,
+    Srgb,
     LinearRGB,
 }
 

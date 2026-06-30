@@ -30,26 +30,38 @@ pub enum Container {
     Svg,
 }
 
+#[derive(Debug, Clone, Copy)]
+pub struct ViewBox {
+    pub min_x: f32,
+    pub min_y: f32,
+    pub width: f32,
+    pub height: f32,
+}
+
 #[derive(Debug, Clone)]
 pub struct ViewportInfo {
     pub width: f32,
     pub height: f32,
-    /// Parsed viewBox: `(min_x, min_y, width, height)` in user units.
-    pub view_box: Option<(f32, f32, f32, f32)>,
+    pub view_box: Option<ViewBox>,
 }
 
 // ======================= ViewBox Parsing =======================
 
-/// Parse the `viewBox` attribute value into `(min_x, min_y, width, height)`.
+/// Parse the `viewBox` attribute value into a [`ViewBox`].
 /// Expected format: `"0 0 200 200"` or `"0,0 200,200"`.
-pub fn extract_viewbox(value: &str) -> Option<(f32, f32, f32, f32)> {
+pub fn extract_viewbox(value: &str) -> Option<ViewBox> {
     let parts: Vec<f32> = value
         .split(|c: char| c == ',' || c.is_whitespace())
         .filter(|s| !s.is_empty())
         .filter_map(|s| s.trim().parse::<f32>().ok())
         .collect();
     if parts.len() == 4 && parts[2] > 0.0 && parts[3] > 0.0 {
-        Some((parts[0], parts[1], parts[2], parts[3]))
+        Some(ViewBox {
+            min_x: parts[0],
+            min_y: parts[1],
+            width: parts[2],
+            height: parts[3],
+        })
     } else {
         None
     }

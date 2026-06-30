@@ -49,11 +49,11 @@ pub fn render_svg_tree(
     // Apply viewBox transform if present.
     // Maps viewBox user-space to the SVG's actual pixel dimensions.
     let (root_origin, root_spatial_id, pop_frame) =
-        if let Some((vb_min_x, vb_min_y, vb_w, vb_h)) = tree.viewport.view_box {
-            let scale_x = svg_size.width / vb_w;
-            let scale_y = svg_size.height / vb_h;
+        if let Some(ref vb) = tree.viewport.view_box {
+            let scale_x = svg_size.width / vb.width;
+            let scale_y = svg_size.height / vb.height;
             // Combined: translate by (-minX, -minY), then scale
-            let t1: Transform2D<f32, (), ()> = Transform2D::translation(-vb_min_x, -vb_min_y);
+            let t1: Transform2D<f32, (), ()> = Transform2D::translation(-vb.min_x, -vb.min_y);
             let s: Transform2D<f32, (), ()> = Transform2D::scale(scale_x, scale_y);
             let combined = t1.then(&s);
             let lt = transform::to_layout_transform(&combined);
