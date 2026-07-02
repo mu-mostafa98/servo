@@ -72,3 +72,66 @@ pub fn extract_viewbox(value: &str) -> Option<ViewBox> {
         None
     }
 }
+
+// ======================= Tests =======================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn viewbox_valid() {
+        let vb = extract_viewbox("0 0 200 200").unwrap();
+        assert_eq!(vb.min_x, 0.0);
+        assert_eq!(vb.min_y, 0.0);
+        assert_eq!(vb.width, 200.0);
+        assert_eq!(vb.height, 200.0);
+    }
+
+    #[test]
+    fn viewbox_with_commas() {
+        let vb = extract_viewbox("10,20 300,400").unwrap();
+        assert_eq!(vb.min_x, 10.0);
+        assert_eq!(vb.min_y, 20.0);
+        assert_eq!(vb.width, 300.0);
+        assert_eq!(vb.height, 400.0);
+    }
+
+    #[test]
+    fn viewbox_invalid_too_few() {
+        assert!(extract_viewbox("0 0 200").is_none());
+    }
+
+    #[test]
+    fn viewbox_invalid_too_many() {
+        // Too many values — function requires exactly 4.
+        assert!(extract_viewbox("0 0 200 200 100").is_none());
+    }
+
+    #[test]
+    fn viewbox_zero_width() {
+        assert!(extract_viewbox("0 0 0 200").is_none());
+    }
+
+    #[test]
+    fn viewbox_negative_width() {
+        assert!(extract_viewbox("0 0 -100 200").is_none());
+    }
+
+    #[test]
+    fn viewbox_negative_coords() {
+        let vb = extract_viewbox("-100 -100 200 200").unwrap();
+        assert_eq!(vb.min_x, -100.0);
+        assert_eq!(vb.min_y, -100.0);
+    }
+
+    #[test]
+    fn viewbox_empty() {
+        assert!(extract_viewbox("").is_none());
+    }
+
+    #[test]
+    fn viewbox_garbage() {
+        assert!(extract_viewbox("abc def ghi jkl").is_none());
+    }
+}

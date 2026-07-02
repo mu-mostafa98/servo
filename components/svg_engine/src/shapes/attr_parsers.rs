@@ -59,3 +59,82 @@ pub(crate) fn parse_points(
     }
     Ok(points)
 }
+
+// ======================= Tests =======================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_length_missing_attr() {
+        let result = parse_length("width", &|_| None);
+        assert!(result.is_err());
+        assert!(result.unwrap_err().to_string().contains("missing SVG attribute: width"));
+    }
+
+    #[test]
+    fn parse_length_simple() {
+        let result = parse_length("x", &|_| Some("10".to_owned()));
+        assert_eq!(result.unwrap(), 10.0);
+    }
+
+    #[test]
+    fn parse_length_with_px() {
+        let result = parse_length("width", &|_| Some("50px".to_owned()));
+        assert_eq!(result.unwrap(), 50.0);
+    }
+
+    #[test]
+    fn parse_length_with_percent() {
+        let result = parse_length("width", &|_| Some("80%".to_owned()));
+        assert_eq!(result.unwrap(), 80.0);
+    }
+
+    #[test]
+    fn parse_length_invalid() {
+        let result = parse_length("r", &|_| Some("abc".to_owned()));
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_length_negative_allowed() {
+        let result = parse_length("x", &|_| Some("-5".to_owned()));
+        assert_eq!(result.unwrap(), -5.0);
+    }
+
+    #[test]
+    fn parse_points_two_pairs() {
+        let result = parse_points(&|_| Some("10,20 30,40".to_owned()));
+        let pts = result.unwrap();
+        assert_eq!(pts.len(), 2);
+        assert!((pts[0].x - 10.0).abs() < 0.001);
+        assert!((pts[0].y - 20.0).abs() < 0.001);
+        assert!((pts[1].x - 30.0).abs() < 0.001);
+        assert!((pts[1].y - 40.0).abs() < 0.001);
+    }
+
+    #[test]
+    fn parse_points_three_pairs() {
+        let result = parse_points(&|_| Some("0,0 50,100 100,0".to_owned()));
+        assert_eq!(result.unwrap().len(), 3);
+    }
+
+    #[test]
+    fn parse_points_missing() {
+        let result = parse_points(&|_| None);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_points_too_few() {
+        let result = parse_points(&|_| Some("10,20".to_owned()));
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn parse_points_comma_variants() {
+        let result = parse_points(&|_| Some("10,20 30,40  50,60".to_owned()));
+        assert_eq!(result.unwrap().len(), 3);
+    }
+}

@@ -81,3 +81,74 @@ pub(crate) fn parse_css_color(val: &str) -> Option<ColorF> {
         _ => None,
     }
 }
+
+// ======================= Tests =======================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parse_color_none() {
+        assert!(parse_css_color("none").is_none());
+    }
+
+    #[test]
+    fn parse_color_transparent() {
+        assert!(parse_css_color("transparent").is_none());
+    }
+
+    #[test]
+    fn parse_color_hex_6() {
+        let c = parse_css_color("#ff0000").unwrap();
+        assert!((c.r - 1.0).abs() < 0.01);
+        assert!((c.g - 0.0).abs() < 0.01);
+        assert!((c.b - 0.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_color_hex_3() {
+        let c = parse_css_color("#0f0").unwrap();
+        assert!((c.r - 0.0).abs() < 0.01);
+        assert!((c.g - 1.0).abs() < 0.01);
+        assert!((c.b - 0.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_color_hex_blue() {
+        let c = parse_css_color("#0000ff").unwrap();
+        assert!((c.b - 1.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_color_named_red() {
+        let c = parse_css_color("red").unwrap();
+        assert!((c.r - 1.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_color_named_black() {
+        let c = parse_css_color("black").unwrap();
+        assert!((c.r - 0.0).abs() < 0.01);
+        assert!((c.g - 0.0).abs() < 0.01);
+        assert!((c.b - 0.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_color_unknown() {
+        assert!(parse_css_color("unknowncolor").is_none());
+    }
+
+    #[test]
+    fn parse_color_with_whitespace() {
+        let c = parse_css_color("  #ff0000  ").unwrap();
+        assert!((c.r - 1.0).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_color_gray_grey_equivalent() {
+        let gray = parse_css_color("gray").unwrap();
+        let grey = parse_css_color("grey").unwrap();
+        assert!((gray.r - grey.r).abs() < 0.001);
+    }
+}

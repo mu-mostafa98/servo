@@ -37,3 +37,43 @@ impl std::error::Error for SvgEngineError {}
 
 /// Convenience alias for `Result<T, SvgEngineError>`.
 pub type SvgResult<T> = std::result::Result<T, SvgEngineError>;
+
+// ======================= Tests =======================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn display_missing_attribute() {
+        let err = SvgEngineError::MissingAttribute("width".to_owned());
+        assert_eq!(err.to_string(), "missing SVG attribute: width");
+    }
+
+    #[test]
+    fn display_parse_error() {
+        let err = SvgEngineError::ParseError("invalid number".to_owned());
+        assert_eq!(err.to_string(), "SVG parse error: invalid number");
+    }
+
+    #[test]
+    fn display_unsupported_feature() {
+        let err = SvgEngineError::UnsupportedFeature("gradients".to_owned());
+        assert_eq!(err.to_string(), "unsupported SVG feature: gradients");
+    }
+
+    #[test]
+    fn error_impl() {
+        let err = SvgEngineError::MissingAttribute("r".to_owned());
+        let err_ref: &dyn std::error::Error = &err;
+        assert!(!err_ref.to_string().is_empty());
+    }
+
+    #[test]
+    fn debug_vs_display() {
+        let err = SvgEngineError::ParseError("test".to_owned());
+        let debug = format!("{err:?}");
+        let display = format!("{err}");
+        assert_ne!(debug, display);
+    }
+}
