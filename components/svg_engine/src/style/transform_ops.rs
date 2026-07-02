@@ -19,13 +19,21 @@ pub enum TransformOp {
     Translate(f32, f32),
     Scale(f32, f32),
     Rotate(f32, f32, f32),  // (angle_deg, cx, cy)
+    /// Skew along the X axis by the given angle in degrees.
+    SkewX(f32),
+    /// Skew along the Y axis by the given angle in degrees.
+    SkewY(f32),
+    /// Arbitrary 2D transform matrix: matrix(a, b, c, d, e, f).
+    /// Represents the transform: [a c e; b d f; 0 0 1]
+    Matrix([f32; 6]),
 }
 
 // ======================= Transform string parsing =======================
 
 /// Parse a raw SVG `transform` attribute string into a list of [`TransformOp`]s.
 ///
-/// Supports: `translate(tx,ty)`, `scale(s)`, `scale(sx,sy)`, `rotate(a)`, `rotate(a,cx,cy)`.
+/// Supports: `translate(tx,ty)`, `scale(s)`, `scale(sx,sy)`, `rotate(a)`, `rotate(a,cx,cy)`,
+/// `skewX(a)`, `skewY(a)`, `matrix(a,b,c,d,e,f)`.
 pub(crate) fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
     let mut remaining = attr.trim().to_string();
     let mut ops = Vec::new();
@@ -63,6 +71,15 @@ pub(crate) fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
             },
             "rotate" if args.len() == 3 => {
                 ops.push(TransformOp::Rotate(args[0], args[1], args[2]));
+            },
+            "skewX" if args.len() == 1 => {
+                ops.push(TransformOp::SkewX(args[0]));
+            },
+            "skewY" if args.len() == 1 => {
+                ops.push(TransformOp::SkewY(args[0]));
+            },
+            "matrix" if args.len() == 6 => {
+                ops.push(TransformOp::Matrix([args[0], args[1], args[2], args[3], args[4], args[5]]));
             },
             _ => {},
         }
@@ -178,8 +195,52 @@ mod tests {
 
     #[test]
     fn transform_unknown_ignored() {
-        let ops = parse_transform_str("skewX(10)");
+        // skewX is now valid — use a truly unknown function name.
+        let ops = parse_transform_str("unknownFunc(10)");
         assert!(ops.is_empty());
+    }
+
+    #[test]
+    fn transform_skewx() {
+        let ops = parse_transform_str("skewX(10)");
+        assert_eq!(ops.len(), 1);
+        assert!(matches!(ops[0], TransformOp::SkewX(_)));
+        match &ops[0] {
+            TransformOp::SkewX(a) => assert!((*a - 10.0).abs() < 0.001),
+            _ => panic!("expected SkewX"),
+        }
+    }
+
+    #[test]
+    fn transform_skewy() {
+        let ops = parse_transform_str("skewY(20)");
+        assert_eq!(ops.len(), 1);
+        assert!(matches!(ops[0], TransformOp::SkewY(_)));
+    }
+
+    #[test]
+    fn transform_matrix() {
+        let ops = parse_transform_str("matrix(1,0,0,1,10,20)");
+        assert_eq!(ops.len(), 1);
+        match &ops[0] {
+            TransformOp::Matrix(m) => {
+                assert_eq!(m[0], 1.0);
+                assert_eq!(m[4], 10.0);
+                assert_eq!(m[5], 20.0);
+            },
+            _ => panic!("expected Matrix"),
+        }
+    }
+
+    #[test]
+    fn transform_all_types_chained() {
+        let ops = parse_transform_str("translate(10,0) skewX(15) scale(2) matrix(1,0,0,1,0,0) rotate(45)");
+        assert_eq!(ops.len(), 5);
+        assert!(matches!(ops[0], TransformOp::Translate(..)));
+        assert!(matches!(ops[1], TransformOp::SkewX(..)));
+        assert!(matches!(ops[2], TransformOp::Scale(..)));
+        assert!(matches!(ops[3], TransformOp::Matrix(..)));
+        assert!(matches!(ops[4], TransformOp::Rotate(..)));
     }
 
     #[test]

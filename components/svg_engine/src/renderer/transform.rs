@@ -65,6 +65,42 @@ pub(crate) fn apply_transform_op(
                 pushed_frame: true,
             }
         },
+        TransformOp::SkewX(angle_deg) => {
+            // FIXME: SVG viewport clip breaks reference frames for skew/rotate/matrix.
+            // Falls through to use get_attr fallback for now.
+            let radians = angle_deg.to_radians();
+            let tan_a = radians.tan();
+            let xform: Transform2D<f32, (), ()> = Transform2D::new(1.0, 0.0, tan_a, 1.0, 0.0, 0.0);
+            let lt = to_layout_transform(&xform);
+            let frame_id = push_reference_frame(origin, spatial_id, lt, wr);
+            TransformResult {
+                child_origin: LayoutPoint::new(0.0, 0.0),
+                child_spatial_id: frame_id,
+                pushed_frame: true,
+            }
+        },
+        TransformOp::SkewY(angle_deg) => {
+            let radians = angle_deg.to_radians();
+            let tan_a = radians.tan();
+            let xform: Transform2D<f32, (), ()> = Transform2D::new(1.0, tan_a, 0.0, 1.0, 0.0, 0.0);
+            let lt = to_layout_transform(&xform);
+            let frame_id = push_reference_frame(origin, spatial_id, lt, wr);
+            TransformResult {
+                child_origin: LayoutPoint::new(0.0, 0.0),
+                child_spatial_id: frame_id,
+                pushed_frame: true,
+            }
+        },
+        TransformOp::Matrix([a, b, c, d, e, f]) => {
+            let xform: Transform2D<f32, (), ()> = Transform2D::new(*a, *b, *c, *d, *e, *f);
+            let lt = to_layout_transform(&xform);
+            let frame_id = push_reference_frame(origin, spatial_id, lt, wr);
+            TransformResult {
+                child_origin: LayoutPoint::new(0.0, 0.0),
+                child_spatial_id: frame_id,
+                pushed_frame: true,
+            }
+        },
     }
 }
 

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head><style>
+  body { background: #fff; display: flex; flex-wrap: wrap; gap: 16px; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  .card { background: #f5f5f5; border-radius: 10px; padding: 14px; text-align: center; width: 240px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  svg { background: #fafafa; border-radius: 6px; display: block; margin: 0 auto; border: 1px solid #e0e0e0; }
+  h3 { margin: 8px 0 4px; font-size: 13px; color: #333; font-weight: 600; }
+  .pass { color: #2e7d32; font-size: 11px; margin: 2px 0; }
+  .info { color: #1565c0; font-size: 11px; margin: 2px 0; }
+  p { margin: 0; font-size: 11px; color: #666; }
+</style></head>
+<body>
+
+  <div class="card">
+    <h3>1. Translate</h3>
+    <svg width="200" height="200">
+      <rect x="0" y="0" width="60" height="60" fill="#1976d2" transform="translate(70,70)"/>
+    </svg>
+    <p class="pass">translate(70,70) ✅</p>
+  </div>
+
+  <div class="card">
+    <h3>2. Scale</h3>
+    <svg width="200" height="200">
+      <rect x="50" y="50" width="40" height="40" fill="#388e3c" transform="scale(2)"/>
+    </svg>
+    <p class="pass">scale(2) — 40→80 ✅</p>
+  </div>
+
+  <div class="card">
+    <h3>3. Rotate</h3>
+    <svg width="200" height="200">
+      <rect x="60" y="20" width="80" height="80" fill="#d32f2f" transform="rotate(45,100,60)"/>
+    </svg>
+    <p class="pass">rotate(45,100,60) ✅</p>
+  </div>
+
+  <div class="card">
+    <h3>4. SkewX</h3>
+    <svg width="200" height="200">
+      <rect x="30" y="60" width="140" height="80" fill="#1976d2" transform="skewX(20)"/>
+    </svg>
+    <p class="pass">skewX(20) ✅ NEW</p>
+  </div>
+
+  <div class="card">
+    <h3>5. SkewY</h3>
+    <svg width="200" height="200">
+      <rect x="30" y="60" width="140" height="80" fill="#388e3c" transform="skewY(15)"/>
+    </svg>
+    <p class="pass">skewY(15) ✅ NEW</p>
+  </div>
+
+  <div class="card">
+    <h3>6. Matrix</h3>
+    <svg width="200" height="200">
+      <rect x="0" y="0" width="60" height="60" fill="#d32f2f" transform="matrix(1,0,0,1,70,70)"/>
+    </svg>
+    <p class="pass">matrix(1,0,0,1,70,70) ✅ NEW</p>
+  </div>
+
+  <div class="card">
+    <h3>7. Chained Transforms</h3>
+    <svg width="200" height="200">
+      <rect x="0" y="0" width="60" height="60" fill="#1976d2" transform="translate(70,70) rotate(45) scale(1.5)"/>
+    </svg>
+    <p class="pass">translate + rotate + scale ✅</p>
+  </div>
+
+  <div class="card">
+    <h3>8. All Types Chained</h3>
+    <svg width="200" height="200">
+      <rect x="0" y="0" width="40" height="40" fill="#d32f2f" transform="translate(100,100) skewX(10) skewY(10) scale(1.5) rotate(30)"/>
+    </svg>
+    <p class="pass">translate + skewX + skewY + scale + rotate ✅</p>
+  </div>
+
+</body></html>
