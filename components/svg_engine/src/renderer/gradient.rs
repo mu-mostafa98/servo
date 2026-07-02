@@ -32,30 +32,44 @@ pub(crate) fn fill_rect_with_gradient(
 
 /// Radial gradient with custom colors: `outer_c` (outer ring) → `inner_c` (center).
 /// The iteration draws from outside to inside, with t=0 at outer and t=1 at center.
+/// Applies a circular clip so the concentric bands render as circles, not rectangles.
 fn fill_rect_with_radial_custom(
     bounds: LayoutRect, ctx: &mut RenderContext, opacity: f32,
     inner_c: ColorF, outer_c: ColorF,
 ) {
     let bw = bounds.size().width;
     let bh = bounds.size().height;
-    let cx = bounds.min.x + bw / 2.0;
-    let cy = bounds.min.y + bh / 2.0;
     let max_r = bw.min(bh) / 2.0;
-    let mut r = max_r;
-    while r > 0.0 {
-        let t = (max_r - r) / max_r.max(1.0);
-        let mut c = ColorF::new(
-            inner_c.r + (outer_c.r - inner_c.r) * t,
-            inner_c.g + (outer_c.g - inner_c.g) * t,
-            inner_c.b + (outer_c.b - inner_c.b) * t,
-            1.0,
-        );
-        c.a *= opacity;
-        let size = r * 2.0;
-        let rect = LayoutRect::from_origin_and_size(LayoutPoint::new(cx - r, cy - r), LayoutSize::new(size, size));
-        let common = CommonItemProperties::new(rect, SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: ctx.clip_chain_id });
-        ctx.wr.push_rect(&common, rect, c);
-        r -= 4.0;
+
+    // Clamp distance to max_r so corners also use the outer color.
+    let r2 = max_r * max_r;
+    let band_w = 2.0f32;
+    let mut x = 0.0f32;
+    while x < bw {
+        let dx = (x + band_w * 0.5 - bw * 0.5).abs();
+        let dx2 = dx * dx;
+        let mut y = 0.0f32;
+        while y < bh {
+            let dy = (y + 1.0 - bh * 0.5).abs();
+            let dist_sq = (dx2 + dy * dy) / r2.max(1.0);
+            let dist = dist_sq.sqrt().min(1.0);
+            let t = dist;
+            let mut c = ColorF::new(
+                inner_c.r + (outer_c.r - inner_c.r) * t,
+                inner_c.g + (outer_c.g - inner_c.g) * t,
+                inner_c.b + (outer_c.b - inner_c.b) * t,
+                1.0,
+            );
+            c.a *= opacity;
+            let cell = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(bounds.min.x + x, bounds.min.y + y),
+                LayoutSize::new(band_w, 2.0f32),
+            );
+            let common = CommonItemProperties::new(cell, SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: ctx.clip_chain_id });
+            ctx.wr.push_rect(&common, cell, c);
+            y += 2.0;
+        }
+        x += band_w;
     }
 }
 
@@ -63,8 +77,8 @@ pub(crate) fn fill_rect_with_radial_blue_green(
     bounds: LayoutRect, ctx: &mut RenderContext, opacity: f32,
 ) {
     fill_rect_with_radial_custom(bounds, ctx, opacity,
-        ColorF::new(0.102, 0.137, 0.494, 1.0), // center: #1a237e (dark blue)
-        ColorF::new(0.22, 0.557, 0.235, 1.0),  // outer: #388e3c (green)
+        ColorF::new(0.22, 0.557, 0.235, 1.0),  // center: #388e3c (green)
+        ColorF::new(0.102, 0.137, 0.494, 1.0), // outer: #1a237e (dark blue)
     );
 }
 
