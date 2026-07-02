@@ -14,6 +14,7 @@
 
 pub(crate) mod fill;
 pub(crate) mod stroke;
+pub(crate) mod gradient;
 pub(crate) mod hints;
 pub(crate) mod effects;
 pub(crate) mod visibility;

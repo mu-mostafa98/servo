@@ -358,6 +358,7 @@ impl ReplacedContents {
                 height: svg_height,
                 view_box,
             },
+            gradients: std::collections::HashMap::new(),
         }))
     }
 

@@ -17,6 +17,7 @@ pub(crate) mod polyline;
 pub(crate) mod polygon;
 pub(crate) mod path;
 pub(crate) mod transform;
+pub(crate) mod gradient;
 
 use webrender_api::{
     ClipChainId, CommonItemProperties, DisplayListBuilder, SpaceAndClipInfo, SpatialId,
@@ -81,3 +82,5 @@ pub(crate) fn make_common_props(
 ) -> CommonItemProperties {
     CommonItemProperties::new(bounds, SpaceAndClipInfo { spatial_id, clip_chain_id })
 }
+
+

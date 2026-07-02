@@ -17,7 +17,7 @@ use crate::error::SvgResult;
 use super::transform_ops::TransformOp;
 use super::fill::{FillParams, FillRule};
 use super::stroke::{StrokeParams, LineCap, LineJoin};
-use super::color;
+use super::gradient::PaintServer;
 use super::hints::RenderHints;
 use super::visibility::{Visibility, Display};
 use super::effects::NodeEffects;
@@ -73,9 +73,11 @@ impl FromComputedValues for NodeStyle {
 impl FromCssAttrs for NodeStyle {
     fn from_css_attrs(style_str: &str) -> Option<Self> {
         let mut fill_color: Option<ColorF> = None;
+        let mut fill_paint_server: Option<PaintServer> = None;
         let mut fill_opacity: f32 = 1.0;
         let mut fill_rule = FillRule::NonZero;
         let mut stroke_color: Option<ColorF> = None;
+        let mut stroke_paint_server: Option<PaintServer> = None;
         let mut stroke_opacity: f32 = 1.0;
         let mut stroke_width: f32 = 1.0;
         let mut has_stroke_width = false;
@@ -99,7 +101,11 @@ impl FromCssAttrs for NodeStyle {
 
             match prop {
                 "fill" => {
-                    fill_color = color::parse_css_color(val);
+                    match PaintServer::from_attr(val) {
+                        Some(PaintServer::Solid(c)) => fill_color = Some(c),
+                        other @ Some(PaintServer::Gradient(_)) => fill_paint_server = other,
+                        None => {},
+                    }
                 },
                 "fill-opacity" => {
                     if let Ok(v) = val.parse::<f32>() {
@@ -114,7 +120,11 @@ impl FromCssAttrs for NodeStyle {
                     };
                 },
                 "stroke" => {
-                    stroke_color = color::parse_css_color(val);
+                    match PaintServer::from_attr(val) {
+                        Some(PaintServer::Solid(c)) => stroke_color = Some(c),
+                        other @ Some(PaintServer::Gradient(_)) => stroke_paint_server = other,
+                        None => {},
+                    }
                 },
                 "stroke-width" => {
                     let v = val.trim_end_matches("px").trim();
@@ -177,17 +187,25 @@ impl FromCssAttrs for NodeStyle {
             }
         }
 
-        Some(NodeStyle {
-            visibility: Visibility::Visible,
-            display: Display::Inline,
-            transform: Vec::new(),
-            fill: fill_color.map(|c| FillParams {
+        let fill = match (fill_color, fill_paint_server) {
+            (Some(c), _) => Some(FillParams {
                 color: Some(c),
+                paint_server: None,
                 opacity: fill_opacity,
                 fill_rule,
             }),
-            stroke: stroke_color.map(|c| StrokeParams {
+            (None, Some(ps)) => Some(FillParams {
+                color: None,
+                paint_server: Some(ps),
+                opacity: fill_opacity,
+                fill_rule,
+            }),
+            (None, None) => None,
+        };
+        let stroke = match (stroke_color, stroke_paint_server) {
+            (Some(c), _) => Some(StrokeParams {
                 color: Some(c),
+                paint_server: None,
                 opacity: stroke_opacity,
                 width: if has_stroke_width { stroke_width } else { 1.0 },
                 line_cap,
@@ -196,6 +214,26 @@ impl FromCssAttrs for NodeStyle {
                 dash_array,
                 dash_offset,
             }),
+            (None, Some(ps)) => Some(StrokeParams {
+                color: None,
+                paint_server: Some(ps),
+                opacity: stroke_opacity,
+                width: if has_stroke_width { stroke_width } else { 1.0 },
+                line_cap,
+                line_join,
+                miter_limit,
+                dash_array,
+                dash_offset,
+            }),
+            (None, None) => None,
+        };
+
+        Some(NodeStyle {
+            visibility: Visibility::Visible,
+            display: Display::Inline,
+            transform: Vec::new(),
+            fill,
+            stroke,
             render_hints: None,
             effects: None,
         })

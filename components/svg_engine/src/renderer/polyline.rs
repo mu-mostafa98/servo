@@ -50,6 +50,7 @@ impl Render for Polyline {
                     effects: None,
                     stroke: Some(StrokeParams {
                         color: stroke.color,
+                        paint_server: None,
                         opacity: stroke.opacity,
                         width: stroke.width,
                         line_cap: stroke.line_cap,

@@ -2,12 +2,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+use std::collections::HashMap;
+
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
+use crate::style::gradient::GradientDef;
+
+/// The SVG render tree — a tree of [`SvgRenderNode`]s plus viewport info
+/// and gradient definitions collected from `<defs>`.
 #[derive(Debug)]
 pub struct SvgRenderTree {
     pub root: SvgRenderNode,
     pub viewport: ViewportInfo,
+    /// Gradient definitions keyed by their `id` (without the `#` prefix).
+    pub gradients: HashMap<String, GradientDef>,
 }
 
 #[derive(Debug)]

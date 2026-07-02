@@ -7,13 +7,16 @@ use style::values::computed::svg::{SVGOpacity, SVGStrokeDashArray};
 use style::values::generics::svg::SVGLength;
 use webrender_api::ColorF;
 
-use crate::style::color::resolve_svg_paint;
+use crate::style::color::{resolve_svg_paint, ResolvedPaint};
 use crate::style::FromComputedValues;
+use super::gradient::PaintServer;
 
 /// SVG stroke properties.
 #[derive(Debug, Clone)]
 pub struct StrokeParams {
     pub color: Option<ColorF>,
+    /// Paint server reference (gradient url). When set, takes priority over `color`.
+    pub paint_server: Option<PaintServer>,
     pub opacity: f32,
     pub width: f32,
     pub line_cap: LineCap,
@@ -24,7 +27,7 @@ pub struct StrokeParams {
 }
 
 /// SVG line cap style — how the ends of open paths are rendered.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum LineCap {
     Butt,
     Round,
@@ -32,7 +35,7 @@ pub enum LineCap {
 }
 
 /// SVG line join style — how corners are rendered in a polyline/polygon.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum LineJoin {
     Miter,
     Round,
@@ -46,7 +49,7 @@ impl FromComputedValues for StrokeParams {
 
     fn from_computed_values(values: &ComputedValues) -> Option<Self> {
         let inherited_svg = values.get_inherited_svg();
-        let color = resolve_svg_paint(&inherited_svg.stroke, values);
+        let paint = resolve_svg_paint(&inherited_svg.stroke, values);
         let opacity = match inherited_svg.stroke_opacity {
             SVGOpacity::Opacity(opacity) => opacity,
             _ => 1.0,
@@ -96,19 +99,38 @@ impl FromComputedValues for StrokeParams {
             _ => 0.0,
         };
 
-        if color.is_none() || width <= 0.0 {
+        if width <= 0.0 {
             return None;
         }
 
-        Some(StrokeParams {
-            color,
-            opacity,
-            width,
-            line_cap,
-            line_join,
-            miter_limit,
-            dash_array,
-            dash_offset,
-        })
+        match paint {
+            ResolvedPaint::Color(color) => {
+                Some(StrokeParams {
+                    color: Some(color),
+                    paint_server: None,
+                    opacity,
+                    width,
+                    line_cap,
+                    line_join,
+                    miter_limit,
+                    dash_array,
+                    dash_offset,
+                })
+            },
+            ResolvedPaint::PaintServer(id) => {
+                Some(StrokeParams {
+                    color: None,
+                    paint_server: Some(PaintServer::Gradient(id)),
+                    opacity,
+                    width,
+                    line_cap,
+                    line_join,
+                    miter_limit,
+                    dash_array,
+                    dash_offset,
+                })
+            },
+            ResolvedPaint::None => None,
+        }
     }
 }

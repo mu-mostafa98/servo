@@ -6,19 +6,22 @@ use style::properties::ComputedValues;
 use style::values::computed::svg::SVGOpacity;
 use webrender_api::ColorF;
 
-use crate::style::color::resolve_svg_paint;
+use crate::style::color::{resolve_svg_paint, ResolvedPaint};
 use crate::style::FromComputedValues;
+use super::gradient::PaintServer;
 
 /// SVG fill properties.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub struct FillParams {
     pub color: Option<ColorF>,
+    /// Paint server reference (gradient url). When set, takes priority over `color`.
+    pub paint_server: Option<PaintServer>,
     pub opacity: f32,
     pub fill_rule: FillRule,
 }
 
 /// SVG fill rule: determines how overlapping regions are filled.
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, PartialEq)]
 pub enum FillRule {
     NonZero,
     EvenOdd,
@@ -31,7 +34,7 @@ impl FromComputedValues for FillParams {
 
     fn from_computed_values(values: &ComputedValues) -> Option<Self> {
         let inherited_svg = values.get_inherited_svg();
-        let color = resolve_svg_paint(&inherited_svg.fill, values);
+        let paint = resolve_svg_paint(&inherited_svg.fill, values);
         let opacity = match inherited_svg.fill_opacity {
             SVGOpacity::Opacity(opacity) => opacity,
             _ => 1.0,
@@ -41,14 +44,24 @@ impl FromComputedValues for FillParams {
             style::computed_values::fill_rule::T::Evenodd => FillRule::EvenOdd,
         };
 
-        if color.is_none() {
-            return None;
+        match paint {
+            ResolvedPaint::Color(color) => {
+                Some(FillParams {
+                    color: Some(color),
+                    paint_server: None,
+                    opacity,
+                    fill_rule,
+                })
+            },
+            ResolvedPaint::PaintServer(id) => {
+                Some(FillParams {
+                    color: None,
+                    paint_server: Some(PaintServer::Gradient(id)),
+                    opacity,
+                    fill_rule,
+                })
+            },
+            ResolvedPaint::None => None,
         }
-
-        Some(FillParams {
-            color,
-            opacity,
-            fill_rule,
-        })
     }
 }
