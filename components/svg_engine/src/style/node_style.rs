@@ -79,6 +79,11 @@ impl FromCssAttrs for NodeStyle {
         let mut stroke_opacity: f32 = 1.0;
         let mut stroke_width: f32 = 1.0;
         let mut has_stroke_width = false;
+        let mut line_cap = LineCap::Butt;
+        let mut line_join = LineJoin::Miter;
+        let mut miter_limit: f32 = 4.0;
+        let mut dash_array: Option<Vec<f32>> = None;
+        let mut dash_offset: f32 = 0.0;
 
         for decl in style_str.split(';') {
             let decl = decl.trim();
@@ -123,6 +128,45 @@ impl FromCssAttrs for NodeStyle {
                         stroke_opacity = v.clamp(0.0, 1.0);
                     }
                 },
+                "stroke-linecap" => {
+                    line_cap = match val {
+                        "round" => LineCap::Round,
+                        "square" => LineCap::Square,
+                        _ => LineCap::Butt,
+                    };
+                },
+                "stroke-linejoin" => {
+                    line_join = match val {
+                        "round" => LineJoin::Round,
+                        "bevel" => LineJoin::Bevel,
+                        _ => LineJoin::Miter,
+                    };
+                },
+                "stroke-miterlimit" => {
+                    if let Ok(v) = val.parse::<f32>() {
+                        miter_limit = v.max(1.0);
+                    }
+                },
+                "stroke-dasharray" => {
+                    if val == "none" {
+                        dash_array = None;
+                    } else {
+                        let dashes: Vec<f32> = val
+                            .split(|c: char| c == ',' || c.is_whitespace())
+                            .filter(|s| !s.is_empty())
+                            .filter_map(|s| s.trim().parse::<f32>().ok())
+                            .collect();
+                        if !dashes.is_empty() {
+                            dash_array = Some(dashes);
+                        }
+                    }
+                },
+                "stroke-dashoffset" => {
+                    let v = val.trim_end_matches("px").trim();
+                    if let Ok(offset) = v.parse::<f32>() {
+                        dash_offset = offset;
+                    }
+                },
                 "opacity" => {
                     if let Ok(v) = val.parse::<f32>() {
                         fill_opacity *= v;
@@ -146,11 +190,11 @@ impl FromCssAttrs for NodeStyle {
                 color: Some(c),
                 opacity: stroke_opacity,
                 width: if has_stroke_width { stroke_width } else { 1.0 },
-                line_cap: LineCap::Butt,
-                line_join: LineJoin::Miter,
-                miter_limit: 4.0,
-                dash_array: None,
-                dash_offset: 0.0,
+                line_cap,
+                line_join,
+                miter_limit,
+                dash_array,
+                dash_offset,
             }),
             render_hints: None,
             effects: None,
@@ -180,5 +224,88 @@ impl Build for NodeStyle {
         style.transform = <Vec<TransformOp> as Build>::build(input).unwrap_or_default();
 
         Ok(style)
+    }
+}
+
+// ======================= Tests =======================
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn from_css_basic_fill_stroke() {
+        let ns = NodeStyle::from_css_attrs("fill:red;stroke:blue;stroke-width:2").unwrap();
+        assert!(ns.fill.is_some());
+        assert!(ns.stroke.is_some());
+        let fill = ns.fill.unwrap();
+        assert!((fill.color.unwrap().r - 1.0).abs() < 0.01);
+        let stroke = ns.stroke.unwrap();
+        assert!((stroke.width - 2.0).abs() < 0.001);
+    }
+
+    #[test]
+    fn from_css_stroke_linecap() {
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-linecap:round").unwrap();
+        assert_eq!(ns.stroke.unwrap().line_cap, LineCap::Round);
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-linecap:square").unwrap();
+        assert_eq!(ns.stroke.unwrap().line_cap, LineCap::Square);
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-linecap:butt").unwrap();
+        assert_eq!(ns.stroke.unwrap().line_cap, LineCap::Butt);
+    }
+
+    #[test]
+    fn from_css_stroke_linejoin() {
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-linejoin:round").unwrap();
+        assert_eq!(ns.stroke.unwrap().line_join, LineJoin::Round);
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-linejoin:bevel").unwrap();
+        assert_eq!(ns.stroke.unwrap().line_join, LineJoin::Bevel);
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-linejoin:miter").unwrap();
+        assert_eq!(ns.stroke.unwrap().line_join, LineJoin::Miter);
+    }
+
+    #[test]
+    fn from_css_stroke_miterlimit() {
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-miterlimit:8").unwrap();
+        let delta = (ns.stroke.unwrap().miter_limit - 8.0).abs();
+        assert!(delta < 0.001);
+    }
+
+    #[test]
+    fn from_css_stroke_dasharray() {
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-dasharray:5,10,15").unwrap();
+        let dashes = ns.stroke.unwrap().dash_array.unwrap();
+        assert_eq!(dashes, vec![5.0, 10.0, 15.0]);
+    }
+
+    #[test]
+    fn from_css_stroke_dashoffset() {
+        let ns = NodeStyle::from_css_attrs("stroke:black;stroke-dashoffset:3").unwrap();
+        let delta = (ns.stroke.unwrap().dash_offset - 3.0).abs();
+        assert!(delta < 0.001);
+    }
+
+    #[test]
+    fn from_css_fill_rule() {
+        let ns = NodeStyle::from_css_attrs("fill:red;fill-rule:evenodd").unwrap();
+        assert_eq!(ns.fill.unwrap().fill_rule, FillRule::EvenOdd);
+        let ns = NodeStyle::from_css_attrs("fill:red;fill-rule:nonzero").unwrap();
+        assert_eq!(ns.fill.unwrap().fill_rule, FillRule::NonZero);
+    }
+
+    #[test]
+    fn from_css_empty() {
+        let ns = NodeStyle::from_css_attrs("").unwrap();
+        assert!(ns.fill.is_none());
+        assert!(ns.stroke.is_none());
+    }
+
+    #[test]
+    fn from_css_opacity_affects_both() {
+        let ns = NodeStyle::from_css_attrs("fill:red;stroke:blue;opacity:0.5").unwrap();
+        let delta_fill = (ns.fill.unwrap().opacity - 0.5).abs();
+        let delta_stroke = (ns.stroke.unwrap().opacity - 0.5).abs();
+        assert!(delta_fill < 0.001);
+        assert!(delta_stroke < 0.001);
     }
 }
