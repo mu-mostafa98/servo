@@ -9,7 +9,7 @@ use style::attr::AttrValue;
 
 use crate::dom::bindings::inheritance::{
     Castable, DocumentFragmentTypeId, ElementTypeId, HTMLElementTypeId, HTMLMediaElementTypeId,
-    NodeTypeId, SVGElementTypeId, SVGGeometryElementTypeId, SVGGraphicsElementTypeId,
+    NodeTypeId, SVGElementTypeId, SVGGradientElementTypeId, SVGGeometryElementTypeId, SVGGraphicsElementTypeId,
 };
 use crate::dom::bindings::str::DOMString;
 use crate::dom::document::Document;
@@ -71,11 +71,14 @@ use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svggelement::SVGGElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
+use crate::dom::svg::svglineargradientelement::SVGLinearGradientElement;
 use crate::dom::svg::svglineelement::SVGLineElement;
 use crate::dom::svg::svgpathelement::SVGPathElement;
 use crate::dom::svg::svgpolygonelement::SVGPolygonElement;
 use crate::dom::svg::svgpolylineelement::SVGPolylineElement;
+use crate::dom::svg::svgradialgradientelement::SVGRadialGradientElement;
 use crate::dom::svg::svgrectelement::SVGRectElement;
+use crate::dom::svg::svgstopelement::SVGStopElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 use crate::dom::svg::svgsymbolelement::SVGSymbolElement;
 use crate::dom::svg::svguseelement::SVGUseElement;
@@ -392,6 +395,15 @@ pub(crate) fn vtable_for(node: &Node) -> &dyn VirtualMethods {
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
             SVGGraphicsElementTypeId::SVGDefsElement,
         ))) => node.downcast::<SVGDefsElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGradientElement(
+            SVGGradientElementTypeId::SVGLinearGradientElement,
+        ))) => node.downcast::<SVGLinearGradientElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGradientElement(
+            SVGGradientElementTypeId::SVGRadialGradientElement,
+        ))) => node.downcast::<SVGRadialGradientElement>().unwrap() as &dyn VirtualMethods,
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGStopElement)) => {
+            node.downcast::<SVGStopElement>().unwrap() as &dyn VirtualMethods
+        },
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGElement)) => {
             node.downcast::<SVGElement>().unwrap() as &dyn VirtualMethods
         },
