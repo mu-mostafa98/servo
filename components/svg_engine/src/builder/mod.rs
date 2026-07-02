@@ -65,6 +65,9 @@ impl Build for SvgTag {
         match input.element_name {
             "svg" => Ok(SvgTag::Container(Container::Svg)),
             "g" => Ok(SvgTag::Container(Container::Group)),
+            "defs" => Ok(SvgTag::Container(Container::Defs)),
+            "use" => Ok(SvgTag::Container(Container::Use)),
+            "symbol" => Ok(SvgTag::Container(Container::Symbol)),
             _ => Shape::build(input).map(SvgTag::Shape),
         }
     }

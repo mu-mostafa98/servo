@@ -105,7 +105,7 @@ fn render_node(
         }
     }
 
-    // Render this node if it's a shape — uses the Render trait to dispatch.
+    // Render this node if it's a shape.
     if let SvgTag::Shape(shape) = &node.tag {
         let mut ctx = RenderContext {
             style: &node.style,
@@ -117,9 +117,14 @@ fn render_node(
         shape.render(&mut ctx);
     }
 
-    // Recurse into children.
-    for child in &node.children {
-        render_node(child, &cur_origin, cur_spatial_id, clip_chain_id, wr);
+    // Recurse into children, unless this is a <defs> container whose
+    // children are definitions and must not be rendered directly.
+    if let SvgTag::Container(Container::Defs) = &node.tag {
+        // do not recurse — <defs> children are non-visual definitions
+    } else {
+        for child in &node.children {
+            render_node(child, &cur_origin, cur_spatial_id, clip_chain_id, wr);
+        }
     }
 
     // Pop any reference frames in reverse order.

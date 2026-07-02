@@ -28,6 +28,12 @@ pub enum SvgTag {
 pub enum Container {
     Group,
     Svg,
+    /// `<defs>` — definitions container whose children are not rendered directly.
+    Defs,
+    /// `<use>` — references another element by its `#id`.
+    Use,
+    /// `<symbol>` — a re-usable viewBox'd container referenced by `<use>`.
+    Symbol,
 }
 
 #[derive(Debug, Clone, Copy)]
