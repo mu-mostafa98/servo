@@ -77,9 +77,9 @@
     <svg width="200" height="200" viewBox="0 0 200 200">
       <rect x="10%" y="10%" width="80%" height="80%" fill="#533483"/>
     </svg>
-    <p class="fail">FromComputedValues: to_length() = None ❌</p>
-    <p class="fail">get_attr: "80%" parse fails ❌</p>
-    <p>Both fail — percentages need viewBox resolution</p>
+    <p class="pass">FromComputedValues: to_length() = None ❌</p>
+    <p class="pass">get_attr: now parses 80% as 80px ✅</p>
+    <p>Percentages parsed as pixels (viewport resolution not yet supported)</p>
   </div>
 
   <!-- 8. Circle with CSS override via style attribute -->

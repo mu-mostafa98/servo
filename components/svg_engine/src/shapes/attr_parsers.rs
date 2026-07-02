@@ -23,6 +23,8 @@ pub(crate) fn parse_length(
     value
         .trim_end_matches("px")
         .trim()
+        .trim_end_matches('%')
+        .trim()
         .parse::<f32>()
         .map_err(|e| SvgEngineError::ParseError(format!("{attr}: {e}")))
 }
