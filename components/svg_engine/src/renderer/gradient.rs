@@ -125,17 +125,13 @@ fn render_radial(rg: &crate::style::gradient::RadialGradient, bounds: LayoutRect
     let bw = bounds.size().width;
     let bh = bounds.size().height;
 
-    let (_cx, _cy, fx, fy, radius) = match rg.units {
+    let (fx, fy, radius) = match rg.units {
         GradientUnits::ObjectBoundingBox => (
-            rg.cx.to_object_bbox() * bw,
-            rg.cy.to_object_bbox() * bh,
             rg.fx.to_object_bbox() * bw,
             rg.fy.to_object_bbox() * bh,
             rg.r.to_object_bbox() * bw.max(bh),
         ),
         GradientUnits::UserSpaceOnUse => (
-            rg.cx.to_user_space(bw),
-            rg.cy.to_user_space(bh),
             rg.fx.to_user_space(bw),
             rg.fy.to_user_space(bh),
             rg.r.to_user_space(bw.max(bh)),
