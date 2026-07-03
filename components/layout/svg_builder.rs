@@ -236,9 +236,186 @@ fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<String> {
     element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
 }
 
+fn default_stroke_params() -> StrokeParams {
+    StrokeParams {
+        color: None, paint_server: None, opacity: 1.0, width: 1.0,
+        line_cap: LineCap::Butt, line_join: LineJoin::Miter,
+        miter_limit: 4.0, dash_array: None, dash_offset: 0.0,
+    }
+}
+
+/// Build fill and stroke from SVG presentation attributes + parent inheritance.
+///
+/// Called when `style_data()` is `None`. Logic (priority low → high):
+/// 1. Inherit fill/stroke from `parent_style`
+/// 2. Override with individual presentation attributes on the element
+///
+/// Inline `style` is NOT handled here — the caller may overlay it.
+fn build_presentation_style(
+    element: &ServoLayoutElement,
+    parent_style: Option<&NodeStyle>,
+) -> NodeStyle {
+    // 1. Inherit fill and stroke from parent
+    let mut fill = parent_style.and_then(|p| p.fill.clone());
+    let mut stroke = parent_style.and_then(|p| p.stroke.clone());
+
+    // SVG 2 initial value for fill is black (only when there is no parent)
+    if fill.is_none() && parent_style.is_none() {
+        fill = Some(FillParams {
+            color: Some(ColorF::new(0.0, 0.0, 0.0, 1.0)),
+            paint_server: None, opacity: 1.0, fill_rule: FillRule::NonZero,
+        });
+    }
+
+    // ── fill ──
+    if let Some(fill_val) = get_attr(element, "fill") {
+        if fill_val == "none" {
+            fill = Some(FillParams {
+                color: None, paint_server: None,
+                opacity: fill.as_ref().map(|f| f.opacity).unwrap_or(1.0),
+                fill_rule: fill.as_ref().map(|f| f.fill_rule).unwrap_or(FillRule::NonZero),
+            });
+        } else {
+            match PaintServer::from_attr(&fill_val) {
+                Some(PaintServer::Solid(c)) => {
+                    let opacity = fill.as_ref().map(|f| f.opacity).unwrap_or(1.0);
+                    let rule = fill.as_ref().map(|f| f.fill_rule).unwrap_or(FillRule::NonZero);
+                    fill = Some(FillParams { color: Some(c), paint_server: None, opacity, fill_rule: rule });
+                },
+                Some(ps @ PaintServer::Gradient(_)) => {
+                    let opacity = fill.as_ref().map(|f| f.opacity).unwrap_or(1.0);
+                    let rule = fill.as_ref().map(|f| f.fill_rule).unwrap_or(FillRule::NonZero);
+                    fill = Some(FillParams { color: None, paint_server: Some(ps), opacity, fill_rule: rule });
+                },
+                None => {
+                    fill = Some(FillParams {
+                        color: None, paint_server: None,
+                        opacity: fill.as_ref().map(|f| f.opacity).unwrap_or(1.0),
+                        fill_rule: fill.as_ref().map(|f| f.fill_rule).unwrap_or(FillRule::NonZero),
+                    });
+                },
+            }
+        }
+    }
+
+    // ── fill-opacity ──
+    if let Some(opacity_str) = get_attr(element, "fill-opacity") {
+        if let Ok(o) = opacity_str.parse::<f32>() {
+            fill.get_or_insert_with(|| FillParams {
+                color: None, paint_server: None, opacity: 1.0, fill_rule: FillRule::NonZero,
+            }).opacity = o.clamp(0.0, 1.0);
+        }
+    }
+
+    // ── fill-rule ──
+    if let Some(rule_str) = get_attr(element, "fill-rule") {
+        let rule = if rule_str == "evenodd" { FillRule::EvenOdd } else { FillRule::NonZero };
+        fill.get_or_insert_with(|| FillParams {
+            color: None, paint_server: None, opacity: 1.0, fill_rule: FillRule::NonZero,
+        }).fill_rule = rule;
+    }
+
+    // ── stroke ──
+    if let Some(stroke_val) = get_attr(element, "stroke") {
+        if stroke_val == "none" {
+            let s = stroke.get_or_insert_with(default_stroke_params);
+            s.color = None; s.paint_server = None;
+        } else {
+            match PaintServer::from_attr(&stroke_val) {
+                Some(PaintServer::Solid(c)) => {
+                    let s = stroke.get_or_insert_with(default_stroke_params);
+                    s.color = Some(c); s.paint_server = None;
+                },
+                Some(ps @ PaintServer::Gradient(_)) => {
+                    let s = stroke.get_or_insert_with(default_stroke_params);
+                    s.color = None; s.paint_server = Some(ps);
+                },
+                None => {
+                    let s = stroke.get_or_insert_with(default_stroke_params);
+                    s.color = None; s.paint_server = None;
+                },
+            }
+        }
+    }
+
+    // ── stroke-width ──
+    if let Some(sw_str) = get_attr(element, "stroke-width") {
+        let v = sw_str.trim_end_matches("px").trim();
+        if let Ok(w) = v.parse::<f32>() {
+            stroke.get_or_insert_with(default_stroke_params).width = w.max(0.0);
+        }
+    }
+
+    // ── stroke-opacity ──
+    if let Some(so_str) = get_attr(element, "stroke-opacity") {
+        if let Ok(o) = so_str.parse::<f32>() {
+            stroke.get_or_insert_with(default_stroke_params).opacity = o.clamp(0.0, 1.0);
+        }
+    }
+
+    // ── stroke-linecap ──
+    if let Some(lc_str) = get_attr(element, "stroke-linecap") {
+        let lc = match lc_str.as_str() {
+            "round" => LineCap::Round, "square" => LineCap::Square,
+            _ => LineCap::Butt,
+        };
+        stroke.get_or_insert_with(default_stroke_params).line_cap = lc;
+    }
+
+    // ── stroke-linejoin ──
+    if let Some(lj_str) = get_attr(element, "stroke-linejoin") {
+        let lj = match lj_str.as_str() {
+            "round" => LineJoin::Round, "bevel" => LineJoin::Bevel,
+            _ => LineJoin::Miter,
+        };
+        stroke.get_or_insert_with(default_stroke_params).line_join = lj;
+    }
+
+    // ── stroke-miterlimit ──
+    if let Some(ml_str) = get_attr(element, "stroke-miterlimit") {
+        if let Ok(v) = ml_str.parse::<f32>() {
+            stroke.get_or_insert_with(default_stroke_params).miter_limit = v.max(1.0);
+        }
+    }
+
+    // ── stroke-dasharray ──
+    if let Some(da_str) = get_attr(element, "stroke-dasharray") {
+        if da_str == "none" {
+            if let Some(ref mut s) = stroke { s.dash_array = None; }
+        } else {
+            let d: Vec<f32> = da_str
+                .split(|c: char| c == ',' || c.is_whitespace())
+                .filter(|s| !s.is_empty())
+                .filter_map(|s| s.trim().parse::<f32>().ok())
+                .collect();
+            if !d.is_empty() {
+                stroke.get_or_insert_with(default_stroke_params).dash_array = Some(d);
+            }
+        }
+    }
+
+    // ── stroke-dashoffset ──
+    if let Some(ds_str) = get_attr(element, "stroke-dashoffset") {
+        let v = ds_str.trim_end_matches("px").trim();
+        if let Ok(o) = v.parse::<f32>() {
+            stroke.get_or_insert_with(default_stroke_params).dash_offset = o;
+        }
+    }
+
+    NodeStyle {
+        visibility: Visibility::Visible, display: Display::Inline,
+        transform: Vec::new(), fill, stroke,
+        render_hints: None, effects: None,
+    }
+}
+
 // ======================= Style Construction =======================
 
-fn build_style(node: ServoLayoutNode, context: &LayoutContext) -> NodeStyle {
+fn build_style(
+    node: ServoLayoutNode,
+    context: &LayoutContext,
+    parent_style: Option<&NodeStyle>,
+) -> NodeStyle {
     let element = node.as_element().unwrap();
     let mut style = match element.style_data() {
         Some(_) => {
@@ -246,10 +423,15 @@ fn build_style(node: ServoLayoutNode, context: &LayoutContext) -> NodeStyle {
             NodeStyle::from_computed_values(&computed).unwrap_or_default()
         },
         None => {
-            match get_attr(&element, "style") {
-                Some(css) => NodeStyle::from_css_attrs(&css).unwrap_or_default(),
-                None => NodeStyle::default(),
+            // Priority: inherit → presentation attrs → inline style
+            let mut style = build_presentation_style(&element, parent_style);
+            if let Some(css) = get_attr(&element, "style") {
+                if let Some(css_style) = NodeStyle::from_css_attrs(&css) {
+                    if css_style.fill.is_some() { style.fill = css_style.fill; }
+                    if css_style.stroke.is_some() { style.stroke = css_style.stroke; }
+                }
             }
+            style
         },
     };
     style.transform = parse_transform_str(&get_attr(&element, "transform").unwrap_or_default());
@@ -363,20 +545,24 @@ fn extract_viewport_info(node: ServoLayoutNode) -> ViewportInfo {
 
 // ======================= Render Node & Tree Construction =======================
 
-fn build_svg_render_node(node: ServoLayoutNode, context: &LayoutContext) -> Option<SvgRenderNode> {
+fn build_svg_render_node(
+    node: ServoLayoutNode,
+    context: &LayoutContext,
+    parent_style: Option<&NodeStyle>,
+) -> Option<SvgRenderNode> {
     let element = node.as_element()?;
     let tag = build_tag(&element)?;
-    let style = build_style(node, context);
+    let style = build_style(node, context, parent_style);
     let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string());
     let children = node.dom_children()
-        .filter_map(|child| build_svg_render_node(child, context))
+        .filter_map(|child| build_svg_render_node(child, context, Some(&style)))
         .collect();
     Some(SvgRenderNode { id, tag, style, children })
 }
 
 /// Main entry point — builds a complete `SvgRenderTree` from an SVG DOM element.
 pub(crate) fn build_svg_render_tree(node: ServoLayoutNode, context: &LayoutContext) -> Option<Arc<SvgRenderTree>> {
-    let root = build_svg_render_node(node, context)?;
+    let root = build_svg_render_node(node, context, None)?;
     let viewport = extract_viewport_info(node);
     let gradients = collect_gradients(node);
     Some(Arc::new(SvgRenderTree { root, viewport, gradients }))
