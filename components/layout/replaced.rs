@@ -37,6 +37,7 @@ use web_atoms::ns;
 use html5ever::LocalName;
 use svg_engine::builder::{Build, SvgBuildInput};
 use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo, extract_viewbox};
+use svg_engine::style::gradient::parse_gradient_element;
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
@@ -351,6 +352,53 @@ impl ReplacedContents {
         let svg_height = get_attr("height").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(150.0);
         let view_box = get_attr("viewBox").as_deref().and_then(extract_viewbox);
 
+        // Collect gradient definitions from <defs> children.
+        let mut gradients = std::collections::HashMap::new();
+        for defs_child in node.dom_children() {
+            if let Some(defs_elem) = defs_child.as_element() {
+                if defs_elem.local_name() == &local_name!("defs") {
+                    for grad_child in defs_child.dom_children() {
+                        if let Some(grad_elem) = grad_child.as_element() {
+                            let grad_name = grad_elem.local_name().as_ref().to_string();
+                            if grad_name == "linearGradient" || grad_name == "radialGradient" {
+                                // Collect <stop> children
+                                let mut stop_attrs: Vec<Vec<(String, String)>> = Vec::new();
+                                for stop_child in grad_child.dom_children() {
+                                    if let Some(stop_elem) = stop_child.as_element() {
+                                        if stop_elem.local_name() == &local_name!("stop") {
+                                            let mut attrs: Vec<(String, String)> = Vec::new();
+                                            if let Some(offset) = stop_elem.attribute_as_str(&ns!(), &local_name!("offset")) {
+                                                attrs.push(("offset".to_owned(), offset.to_string()));
+                                            }
+                                            if let Some(color) = stop_elem.attribute_as_str(&ns!(), &local_name!("stop-color")) {
+                                                attrs.push(("stop-color".to_owned(), color.to_string()));
+                                            }
+                                            if !attrs.is_empty() {
+                                                stop_attrs.push(attrs);
+                                            }
+                                        }
+                                    }
+                                }
+                                let grad_get_attr = |attr: &str| {
+                                    grad_elem.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
+                                };
+                                if let Ok(def) = parse_gradient_element(&grad_name, &grad_get_attr, &stop_attrs) {
+                                    match &def {
+                                        svg_engine::style::gradient::GradientDef::Linear(lg) => {
+                                            gradients.insert(lg.id.clone(), def);
+                                        },
+                                        svg_engine::style::gradient::GradientDef::Radial(rg) => {
+                                            gradients.insert(rg.id.clone(), def);
+                                        },
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
         Some(Arc::new(SvgRenderTree {
             root,
             viewport: ViewportInfo {
@@ -358,7 +406,7 @@ impl ReplacedContents {
                 height: svg_height,
                 view_box,
             },
-            gradients: std::collections::HashMap::new(),
+            gradients,
         }))
     }
 

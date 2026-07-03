@@ -19,6 +19,8 @@ pub(crate) mod path;
 pub(crate) mod transform;
 pub(crate) mod gradient;
 
+use std::collections::HashMap;
+
 use webrender_api::{
     ClipChainId, CommonItemProperties, DisplayListBuilder, SpaceAndClipInfo, SpatialId,
     units::LayoutPoint, units::LayoutRect,
@@ -26,20 +28,19 @@ use webrender_api::{
 
 use crate::shapes::*;
 use crate::style::NodeStyle;
+use crate::style::gradient::GradientDef;
 
 // ----------------------- Render Context -----------------------
 
 /// Bundled rendering parameters passed to every [`Render::render`] call.
-///
-/// Using a single context struct avoids repeatedly threading 5+ parameters
-/// through the rendering pipeline and makes it easy to add new context
-/// (e.g. an accumulated transform for hit-testing).
 pub(crate) struct RenderContext<'a> {
     pub style: &'a NodeStyle,
     pub svg_origin: LayoutPoint,
     pub spatial_id: SpatialId,
     pub clip_chain_id: ClipChainId,
     pub wr: &'a mut DisplayListBuilder,
+    /// Gradient definitions from the render tree, keyed by their `id`.
+    pub gradients: &'a HashMap<String, GradientDef>,
 }
 
 // ----------------------- Render Trait -----------------------

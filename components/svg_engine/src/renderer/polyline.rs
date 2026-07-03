@@ -67,6 +67,7 @@ impl Render for Polyline {
                     spatial_id: ctx.spatial_id,
                     clip_chain_id: ctx.clip_chain_id,
                     wr: &mut *ctx.wr,
+                    gradients: ctx.gradients,
                 };
 
                 // Stroke each consecutive pair: (p0→p1), (p1→p2), ..., (pn-2→pn-1).

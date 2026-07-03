@@ -56,10 +56,7 @@ impl Render for Rectangle {
                     ctx.clip_chain_id = old_clip;
                 },
                 Some(_) => {
-                    let old_clip = ctx.clip_chain_id;
-                    ctx.clip_chain_id = clip;
-                    gradient::fill_rect_with_gradient(bounds, ctx, fill.opacity);
-                    ctx.clip_chain_id = old_clip;
+                    // Pattern paint servers not yet implemented.
                 },
                 None => {
                     if let Some(mut color) = fill.color {
