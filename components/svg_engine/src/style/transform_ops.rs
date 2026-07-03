@@ -10,9 +10,6 @@
 //! **No WebRender dependency** — pure data types and string parsing only.
 //! WebRender integration lives in [`crate::renderer::transform`].
 
-use crate::error::SvgResult;
-use crate::builder::{Build, SvgBuildInput};
-
 /// A single SVG transform operation, in the order it was specified.
 #[derive(Debug, Clone)]
 pub enum TransformOp {
@@ -34,7 +31,7 @@ pub enum TransformOp {
 ///
 /// Supports: `translate(tx,ty)`, `scale(s)`, `scale(sx,sy)`, `rotate(a)`, `rotate(a,cx,cy)`,
 /// `skewX(a)`, `skewY(a)`, `matrix(a,b,c,d,e,f)`.
-pub(crate) fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
+pub fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
     let mut remaining = attr.trim().to_string();
     let mut ops = Vec::new();
 
@@ -91,18 +88,6 @@ pub(crate) fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
     }
 
     ops
-}
-
-// ======================= Build impl =======================
-
-impl Build for Vec<TransformOp> {
-    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
-        let attr = match (input.get_attr)("transform") {
-            Some(s) => s,
-            None => return Ok(Vec::new()),
-        };
-        Ok(parse_transform_str(&attr))
-    }
 }
 
 // ======================= Tests =======================

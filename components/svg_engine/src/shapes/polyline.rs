@@ -4,18 +4,8 @@
 
 use kurbo::Point;
 
-use crate::error::SvgResult;
-use crate::builder::{Build, SvgBuildInput};
-use crate::shapes::attr_parsers::parse_points;
-
 /// SVG `<polyline>` element — an open sequence of connected line segments.
 #[derive(Debug, Clone)]
 pub struct Polyline {
     pub points: Vec<Point>,
-}
-
-impl Build for Polyline {
-    fn build(input: &SvgBuildInput) -> SvgResult<Self> {
-        parse_points(&input.get_attr).map(|points| Polyline { points })
-    }
 }

@@ -33,11 +33,7 @@ use url::Url;
 use web_atoms::local_name;
 use webrender_api::ImageKey;
 
-use web_atoms::ns;
-use html5ever::LocalName;
-use svg_engine::builder::{Build, SvgBuildInput};
-use svg_engine::render_tree::{SvgRenderNode, SvgRenderTree, ViewportInfo, extract_viewbox};
-use svg_engine::style::gradient::parse_gradient_element;
+use svg_engine::render_tree::SvgRenderTree;
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
@@ -341,106 +337,7 @@ impl ReplacedContents {
         node: ServoLayoutNode<'_>,
         context: &LayoutContext,
     ) -> Option<Arc<SvgRenderTree>> {
-        let root = Self::build_svg_render_node(node, context)?;
-
-        // Extract viewBox and dimensions from the SVG element attributes.
-        let element = node.as_element()?;
-        let get_attr = |attr: &str| {
-            element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
-        };
-        let svg_width = get_attr("width").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(300.0);
-        let svg_height = get_attr("height").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(150.0);
-        let view_box = get_attr("viewBox").as_deref().and_then(extract_viewbox);
-
-        // Collect gradient definitions from <defs> children.
-        let mut gradients = std::collections::HashMap::new();
-        for defs_child in node.dom_children() {
-            if let Some(defs_elem) = defs_child.as_element() {
-                if defs_elem.local_name() == &local_name!("defs") {
-                    for grad_child in defs_child.dom_children() {
-                        if let Some(grad_elem) = grad_child.as_element() {
-                            let grad_name = grad_elem.local_name().as_ref().to_string();
-                            if grad_name == "linearGradient" || grad_name == "radialGradient" {
-                                // Collect <stop> children
-                                let mut stop_attrs: Vec<Vec<(String, String)>> = Vec::new();
-                                for stop_child in grad_child.dom_children() {
-                                    if let Some(stop_elem) = stop_child.as_element() {
-                                        if stop_elem.local_name() == &local_name!("stop") {
-                                            let mut attrs: Vec<(String, String)> = Vec::new();
-                                            if let Some(offset) = stop_elem.attribute_as_str(&ns!(), &local_name!("offset")) {
-                                                attrs.push(("offset".to_owned(), offset.to_string()));
-                                            }
-                                            if let Some(color) = stop_elem.attribute_as_str(&ns!(), &local_name!("stop-color")) {
-                                                attrs.push(("stop-color".to_owned(), color.to_string()));
-                                            }
-                                            if !attrs.is_empty() {
-                                                stop_attrs.push(attrs);
-                                            }
-                                        }
-                                    }
-                                }
-                                let grad_get_attr = |attr: &str| {
-                                    grad_elem.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
-                                };
-                                if let Ok(def) = parse_gradient_element(&grad_name, &grad_get_attr, &stop_attrs) {
-                                    match &def {
-                                        svg_engine::style::gradient::GradientDef::Linear(lg) => {
-                                            gradients.insert(lg.id.clone(), def);
-                                        },
-                                        svg_engine::style::gradient::GradientDef::Radial(rg) => {
-                                            gradients.insert(rg.id.clone(), def);
-                                        },
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        Some(Arc::new(SvgRenderTree {
-            root,
-            viewport: ViewportInfo {
-                width: svg_width,
-                height: svg_height,
-                view_box,
-            },
-            gradients,
-        }))
-    }
-
-    fn build_svg_render_node(
-        node: ServoLayoutNode<'_>,
-        context: &LayoutContext,
-    ) -> Option<SvgRenderNode> {
-        let element = node.as_element()?;
-        let name = element.local_name().as_ref();
-        let get_attr = |attr: &str| {
-            element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
-        };
-
-        // Single unified extract call — handles tag dispatch, style extraction,
-        // and transform parsing internally.
-        let computed = element.style_data()
-            .map(|_| element.style(&context.style_context));
-        let input = SvgBuildInput {
-            element_name: name,
-            get_attr: &get_attr,
-            computed_values: computed.as_deref(),
-        };
-        let mut svg_node = SvgRenderNode::build(&input).ok()?;
-
-        // Set id (only on the root level, from DOM).
-        svg_node.id = element.attribute_as_str(&ns!(), &local_name!("id"))
-            .map(|s| s.to_string());
-
-        // Recurse into DOM children (the *DOM* node, not the SvgRenderNode).
-        svg_node.children = node.dom_children()
-            .filter_map(|child| Self::build_svg_render_node(child, context))
-            .collect();
-
-        Some(svg_node)
+        crate::svg_builder::build_svg_render_tree(node, context)
     }
 
     fn from_content_property(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {

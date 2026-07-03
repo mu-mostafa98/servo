@@ -7,10 +7,11 @@
 //! This module defines style-related enums and structs based on the SVG 2 specification.
 //! Each style category has its own file — [`fill`] for fill properties, [`stroke`] for
 //! stroke properties, [`hints`] for rendering hints, [`effects`] for node effects,
-//! [`visibility`] for SVG visibility/display, [`node_style`] for the combined node style,
-//! [`transform_ops`] for SVG transform operations and parsing,
-//! WebRender integration lives in [`crate::renderer::transform`],
-//! and [`color`] for color parsing.
+//! [`visibility`] for SVG visibility/display, [`transform_ops`] for SVG transform
+//! operations, and [`color`] for color parsing.
+//!
+//! Style construction (FromComputedValues, FromCssAttrs) lives in
+//! [`crate::layout::svg_builder`].
 
 pub(crate) mod fill;
 pub(crate) mod stroke;
@@ -18,9 +19,8 @@ pub mod gradient;
 pub(crate) mod hints;
 pub(crate) mod effects;
 pub(crate) mod visibility;
-pub(crate) mod node_style;
-pub(crate) mod color;
-pub(crate) mod transform_ops;
+pub mod color;
+pub mod transform_ops;
 
 pub use self::fill::{FillParams, FillRule};
 pub use self::stroke::{StrokeParams, LineCap, LineJoin};
@@ -30,26 +30,30 @@ pub use self::hints::{
 };
 pub use self::visibility::{Visibility, Display};
 pub use self::effects::NodeEffects;
-pub use self::node_style::NodeStyle;
+use self::transform_ops::TransformOp;
 
-// ----------------------- FromComputedValues Trait -----------------------
-
-/// Construct a style value from Servo's [`ComputedValues`](style::properties::ComputedValues).
-///
-/// Every SVG style type implements this trait so that construction from
-/// the style system is uniform and dispatchable.
-pub trait FromComputedValues: Sized {
-    type Input;
-    fn from_computed_values(values: &Self::Input) -> Option<Self>;
+/// Combined fill + stroke styling for an SVG render node.
+#[derive(Debug, Clone)]
+pub struct NodeStyle {
+    pub visibility: Visibility,
+    pub display: Display,
+    pub transform: Vec<TransformOp>,
+    pub fill: Option<FillParams>,
+    pub stroke: Option<StrokeParams>,
+    pub render_hints: Option<RenderHints>,
+    pub effects: Option<NodeEffects>,
 }
 
-// ----------------------- FromCssAttrs Trait -----------------------
-
-/// Parse a style value from a CSS `style` attribute string
-/// (e.g. `"fill:red;stroke:blue;stroke-width:2"`).
-///
-/// Used as a fallback when `ComputedValues` aren't available
-/// (e.g. for SVG child elements inside `<g>`).
-pub trait FromCssAttrs: Sized {
-    fn from_css_attrs(style_str: &str) -> Option<Self>;
+impl Default for NodeStyle {
+    fn default() -> Self {
+        NodeStyle {
+            visibility: Visibility::Visible,
+            display: Display::Inline,
+            transform: Vec::new(),
+            fill: None,
+            stroke: None,
+            render_hints: None,
+            effects: None,
+        }
+    }
 }

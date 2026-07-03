@@ -14,7 +14,7 @@ use crate::error::{SvgEngineError, SvgResult};
 
 /// Parse a named SVG length attribute (e.g. `x="10"`, `width="50"`).
 /// Strips trailing `px` suffix and returns the raw float value.
-pub(crate) fn parse_length(
+pub fn parse_length(
     attr: &str,
     get_attr: &dyn Fn(&str) -> Option<String>,
 ) -> SvgResult<f32> {
@@ -32,7 +32,7 @@ pub(crate) fn parse_length(
 /// Parse an SVG `points` attribute value into a list of coordinate pairs.
 ///
 /// Used by both `<polyline>` and `<polygon>`.
-pub(crate) fn parse_points(
+pub fn parse_points(
     get_attr: &dyn Fn(&str) -> Option<String>,
 ) -> SvgResult<Vec<Point>> {
     let value =
