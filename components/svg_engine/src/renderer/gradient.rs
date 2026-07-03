@@ -14,7 +14,7 @@ use webrender_api::{
 };
 
 use crate::renderer::RenderContext;
-use crate::style::gradient::{GradientDef, GradientStop};
+use crate::style::gradient::{GradientDef, GradientStop, GradientUnits};
 
 const CELL_SIZE: f32 = 4.0;
 const CELL_SIZE_RADIAL: f32 = 2.0;
@@ -69,13 +69,26 @@ fn render_linear(lg: &crate::style::gradient::LinearGradient, bounds: LayoutRect
     let bw = bounds.size().width;
     let bh = bounds.size().height;
 
-    // Determine gradient vector direction from the gradient coordinates.
-    // For objectBoundingBox (default), x1/x2 are in the 0-1 range.
-    // If coordinates look like percentages (0-100), normalize them.
-    let gx1 = lg.x1;
-    let gy1 = lg.y1;
-    let gx2 = lg.x2;
-    let gy2 = lg.y2;
+    let (gx1, gy1, gx2, gy2) = match lg.units {
+        GradientUnits::ObjectBoundingBox => (
+            lg.x1.to_object_bbox(),
+            lg.y1.to_object_bbox(),
+            lg.x2.to_object_bbox(),
+            lg.y2.to_object_bbox(),
+        ),
+        GradientUnits::UserSpaceOnUse => (
+            lg.x1.to_user_space(bw),
+            lg.y1.to_user_space(bh),
+            lg.x2.to_user_space(bw),
+            lg.y2.to_user_space(bh),
+        ),
+    };
+
+    let (gx1, gy1, gx2, gy2) = if lg.units == GradientUnits::ObjectBoundingBox {
+        (gx1 * bw, gy1 * bh, gx2 * bw, gy2 * bh)
+    } else {
+        (gx1, gy1, gx2, gy2)
+    };
 
     let dx = gx2 - gx1;
     let dy = gy2 - gy1;
@@ -94,11 +107,8 @@ fn render_linear(lg: &crate::style::gradient::LinearGradient, bounds: LayoutRect
     while y < bh {
         let mut x = 0.0;
         while x < bw {
-            // Project (x,y) onto the gradient vector to get t.
-            let px = x / bw.max(1.0);
-            let py = y / bh.max(1.0);
-            // Dot product of (px - gx1, py - gy1) with normalized gradient direction
-            let t = ((px - gx1) * dx + (py - gy1) * dy) / len_sq;
+            // Project the pixel position onto the gradient vector to get t.
+            let t = ((x - gx1) * dx + (y - gy1) * dy) / len_sq;
             let mut c = color_at_t(&lg.stops, t);
             c.a *= opacity;
             let cw = CELL_SIZE.min(bw - x);
@@ -115,32 +125,38 @@ fn render_radial(rg: &crate::style::gradient::RadialGradient, bounds: LayoutRect
     let bw = bounds.size().width;
     let bh = bounds.size().height;
 
-    // Normalize coordinates (0-100 → 0-1 if they look like percentages)
-    // Radial gradients use cx/cy/r in the objectBoundingBox coordinate system.
-    let cx_norm = rg.cx / 100.0;
-    let cy_norm = rg.cy / 100.0;
-    let r_norm = rg.r / 100.0;
+    let (_cx, _cy, fx, fy, radius) = match rg.units {
+        GradientUnits::ObjectBoundingBox => (
+            rg.cx.to_object_bbox() * bw,
+            rg.cy.to_object_bbox() * bh,
+            rg.fx.to_object_bbox() * bw,
+            rg.fy.to_object_bbox() * bh,
+            rg.r.to_object_bbox() * bw.max(bh),
+        ),
+        GradientUnits::UserSpaceOnUse => (
+            rg.cx.to_user_space(bw),
+            rg.cy.to_user_space(bh),
+            rg.fx.to_user_space(bw),
+            rg.fy.to_user_space(bh),
+            rg.r.to_user_space(bw.max(bh)),
+        ),
+    };
 
-    let cx = cx_norm * bw;
-    let cy = cy_norm * bh;
-    let max_r = r_norm * bw.max(bh);
-    let r2 = max_r * max_r;
-
-    if max_r <= 0.0 {
+    if radius <= 0.0 {
         return;
     }
 
+    let r2 = radius * radius;
     let cell = CELL_SIZE_RADIAL;
     let mut y = 0.0;
     while y < bh {
         let mut x = 0.0;
         while x < bw {
-            let dx = x - cx;
-            let dy = y - cy;
+            let dx = x - fx;
+            let dy = y - fy;
             let dist_sq = (dx * dx + dy * dy) / r2.max(1.0);
             let dist = dist_sq.sqrt().min(1.0);
-            let t = dist; // 0 at center, 1 at edge
-            let mut c = color_at_t(&rg.stops, t);
+            let mut c = color_at_t(&rg.stops, dist);
             c.a *= opacity;
             let cw = cell.min(bw - x);
             let ch = cell.min(bh - y);

@@ -28,14 +28,44 @@ pub enum GradientDef {
     Radial(RadialGradient),
 }
 
+/// How gradient coordinates are interpreted.
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum GradientUnits {
+    ObjectBoundingBox,
+    UserSpaceOnUse,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum GradientLength {
+    Number(f32),
+    Percentage(f32),
+}
+
+impl GradientLength {
+    pub fn to_object_bbox(self) -> f32 {
+        match self {
+            GradientLength::Number(v) => v,
+            GradientLength::Percentage(p) => p / 100.0,
+        }
+    }
+
+    pub fn to_user_space(self, axis_len: f32) -> f32 {
+        match self {
+            GradientLength::Number(v) => v,
+            GradientLength::Percentage(p) => p / 100.0 * axis_len,
+        }
+    }
+}
+
 /// SVG `<linearGradient>` element data.
 #[derive(Debug, Clone)]
 pub struct LinearGradient {
     pub id: String,
-    pub x1: f32,
-    pub y1: f32,
-    pub x2: f32,
-    pub y2: f32,
+    pub x1: GradientLength,
+    pub y1: GradientLength,
+    pub x2: GradientLength,
+    pub y2: GradientLength,
+    pub units: GradientUnits,
     pub stops: Vec<GradientStop>,
 }
 
@@ -43,11 +73,12 @@ pub struct LinearGradient {
 #[derive(Debug, Clone)]
 pub struct RadialGradient {
     pub id: String,
-    pub cx: f32,
-    pub cy: f32,
-    pub r: f32,
-    pub fx: f32,
-    pub fy: f32,
+    pub cx: GradientLength,
+    pub cy: GradientLength,
+    pub r: GradientLength,
+    pub fx: GradientLength,
+    pub fy: GradientLength,
+    pub units: GradientUnits,
     pub stops: Vec<GradientStop>,
 }
 
@@ -107,31 +138,58 @@ pub fn parse_gradient_element(
         stops.push(GradientStop { offset: 1.0, color: ColorF::new(0.0, 0.0, 0.0, 1.0) });
     }
 
+    stops.sort_by(|a, b| a.offset.partial_cmp(&b.offset).unwrap_or(std::cmp::Ordering::Equal));
+
+    let gradient_units = get_attr("gradientUnits")
+        .and_then(|val| parse_gradient_units(&val))
+        .unwrap_or(GradientUnits::ObjectBoundingBox);
+
     match element_name {
         "linearGradient" => {
-            let x1 = parse_length_attr("x1", get_attr).unwrap_or(0.0);
-            let y1 = parse_length_attr("y1", get_attr).unwrap_or(0.0);
-            let x2 = parse_length_attr("x2", get_attr).unwrap_or(100.0);
-            let y2 = parse_length_attr("y2", get_attr).unwrap_or(100.0);
-            Ok(GradientDef::Linear(LinearGradient { id, x1, y1, x2, y2, stops }))
+            let x1 = parse_length_attr("x1", get_attr).unwrap_or(GradientLength::Number(0.0));
+            let y1 = parse_length_attr("y1", get_attr).unwrap_or(GradientLength::Number(0.0));
+            let x2 = parse_length_attr("x2", get_attr).unwrap_or(match gradient_units {
+                GradientUnits::ObjectBoundingBox => GradientLength::Percentage(100.0),
+                GradientUnits::UserSpaceOnUse => GradientLength::Number(100.0),
+            });
+            let y2 = parse_length_attr("y2", get_attr).unwrap_or(match gradient_units {
+                GradientUnits::ObjectBoundingBox => GradientLength::Number(0.0),
+                GradientUnits::UserSpaceOnUse => GradientLength::Number(0.0),
+            });
+            Ok(GradientDef::Linear(LinearGradient { id, x1, y1, x2, y2, units: gradient_units, stops }))
         },
         "radialGradient" => {
-            let cx = parse_length_attr("cx", get_attr).unwrap_or(50.0);
-            let cy = parse_length_attr("cy", get_attr).unwrap_or(50.0);
-            let r = parse_length_attr("r", get_attr).unwrap_or(50.0);
+            let cx = parse_length_attr("cx", get_attr).unwrap_or(GradientLength::Percentage(50.0));
+            let cy = parse_length_attr("cy", get_attr).unwrap_or(GradientLength::Percentage(50.0));
+            let r = parse_length_attr("r", get_attr).unwrap_or(GradientLength::Percentage(50.0));
             let fx = parse_length_attr("fx", get_attr).unwrap_or(cx);
             let fy = parse_length_attr("fy", get_attr).unwrap_or(cy);
-            Ok(GradientDef::Radial(RadialGradient { id, cx, cy, r, fx, fy, stops }))
+            Ok(GradientDef::Radial(RadialGradient { id, cx, cy, r, fx, fy, units: gradient_units, stops }))
         },
         _ => Err(SvgEngineError::UnsupportedFeature(format!("unknown gradient: {element_name}"))),
     }
 }
 
-/// Parse a length attribute (strips px, falls back to f32).
-fn parse_length_attr(attr: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<f32> {
+/// Parse a length attribute from a gradient coordinate.
+/// Percent values are stored explicitly so they can be interpreted
+/// correctly in objectBoundingBox coordinates.
+fn parse_length_attr(attr: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<GradientLength> {
     let v = get_attr(attr)?;
-    let trimmed = v.trim_end_matches("px").trim().trim_end_matches('%').trim();
-    trimmed.parse::<f32>().ok()
+    let trimmed = v.trim();
+    if let Some(pct) = trimmed.strip_suffix('%') {
+        pct.trim().parse::<f32>().ok().map(GradientLength::Percentage)
+    } else {
+        let trimmed = trimmed.trim_end_matches("px").trim();
+        trimmed.parse::<f32>().ok().map(GradientLength::Number)
+    }
+}
+
+fn parse_gradient_units(val: &str) -> Option<GradientUnits> {
+    match val.trim() {
+        "objectBoundingBox" => Some(GradientUnits::ObjectBoundingBox),
+        "userSpaceOnUse" => Some(GradientUnits::UserSpaceOnUse),
+        _ => None,
+    }
 }
 
 /// Parse a stop offset value (e.g. "0", "0.5", "50%", "100%").
