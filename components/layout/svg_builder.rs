@@ -244,28 +244,22 @@ fn default_stroke_params() -> StrokeParams {
     }
 }
 
-/// Build fill and stroke from SVG presentation attributes + parent inheritance.
+/// Build fill and stroke from SVG presentation attributes.
 ///
-/// Called when `style_data()` is `None`. Logic (priority low → high):
-/// 1. Inherit fill/stroke from `parent_style`
-/// 2. Override with individual presentation attributes on the element
+/// Called ONLY when `style_data()` is `None` (should no longer happen
+/// after the svg > * { display: none } CSS hack was removed — kept as
+/// a safety fallback for edge cases).
 ///
-/// Inline `style` is NOT handled here — the caller may overlay it.
-fn build_presentation_style(
-    element: &ServoLayoutElement,
-    parent_style: Option<&NodeStyle>,
-) -> NodeStyle {
-    // 1. Inherit fill and stroke from parent
-    let mut fill = parent_style.and_then(|p| p.fill.clone());
-    let mut stroke = parent_style.and_then(|p| p.stroke.clone());
-
-    // SVG 2 initial value for fill is black (only when there is no parent)
-    if fill.is_none() && parent_style.is_none() {
-        fill = Some(FillParams {
-            color: Some(ColorF::new(0.0, 0.0, 0.0, 1.0)),
-            paint_server: None, opacity: 1.0, fill_rule: FillRule::NonZero,
-        });
-    }
+/// Applies SVG 2 initial values (fill=black, stroke=none) and overlays
+/// any presentation attributes found on the element. Inline `style` is
+/// NOT handled here — the caller may overlay it.
+fn build_presentation_style(element: &ServoLayoutElement) -> NodeStyle {
+    // SVG 2 initial values
+    let mut fill = Some(FillParams {
+        color: Some(ColorF::new(0.0, 0.0, 0.0, 1.0)),
+        paint_server: None, opacity: 1.0, fill_rule: FillRule::NonZero,
+    });
+    let mut stroke: Option<StrokeParams> = None;
 
     // ── fill ──
     if let Some(fill_val) = get_attr(element, "fill") {
@@ -414,7 +408,6 @@ fn build_presentation_style(
 fn build_style(
     node: ServoLayoutNode,
     context: &LayoutContext,
-    parent_style: Option<&NodeStyle>,
 ) -> NodeStyle {
     let element = node.as_element().unwrap();
     let mut style = match element.style_data() {
@@ -423,8 +416,9 @@ fn build_style(
             NodeStyle::from_computed_values(&computed).unwrap_or_default()
         },
         None => {
-            // Priority: inherit → presentation attrs → inline style
-            let mut style = build_presentation_style(&element, parent_style);
+            // Safety fallback: should not fire after servo.css "svg > * { display: none }"
+            // was removed, since SVG children now get their styles computed by the cascade.
+            let mut style = build_presentation_style(&element);
             if let Some(css) = get_attr(&element, "style") {
                 if let Some(css_style) = NodeStyle::from_css_attrs(&css) {
                     if css_style.fill.is_some() { style.fill = css_style.fill; }
@@ -545,24 +539,20 @@ fn extract_viewport_info(node: ServoLayoutNode) -> ViewportInfo {
 
 // ======================= Render Node & Tree Construction =======================
 
-fn build_svg_render_node(
-    node: ServoLayoutNode,
-    context: &LayoutContext,
-    parent_style: Option<&NodeStyle>,
-) -> Option<SvgRenderNode> {
+fn build_svg_render_node(node: ServoLayoutNode, context: &LayoutContext) -> Option<SvgRenderNode> {
     let element = node.as_element()?;
     let tag = build_tag(&element)?;
-    let style = build_style(node, context, parent_style);
+    let style = build_style(node, context);
     let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string());
     let children = node.dom_children()
-        .filter_map(|child| build_svg_render_node(child, context, Some(&style)))
+        .filter_map(|child| build_svg_render_node(child, context))
         .collect();
     Some(SvgRenderNode { id, tag, style, children })
 }
 
 /// Main entry point — builds a complete `SvgRenderTree` from an SVG DOM element.
 pub(crate) fn build_svg_render_tree(node: ServoLayoutNode, context: &LayoutContext) -> Option<Arc<SvgRenderTree>> {
-    let root = build_svg_render_node(node, context, None)?;
+    let root = build_svg_render_node(node, context)?;
     let viewport = extract_viewport_info(node);
     let gradients = collect_gradients(node);
     Some(Arc::new(SvgRenderTree { root, viewport, gradients }))
