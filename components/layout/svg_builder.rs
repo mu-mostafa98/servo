@@ -5,7 +5,7 @@
 //! SVG render tree construction — bridges Servo's DOM and style system
 //! with the SVG engine's render tree types.
 
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 use html5ever::{LocalName, local_name};
@@ -23,7 +23,7 @@ use svg_engine::shapes::*;
 use svg_engine::shapes::attr_parsers::{parse_length, parse_points};
 use svg_engine::style::*;
 use svg_engine::style::gradient::{GradientDef, PaintServer, parse_gradient_element};
-use svg_engine::style::transform_ops::parse_transform_str;
+use svg_engine::style::transform_ops::{parse_transform_str, TransformOp};
 use svg_engine::render_tree::extract_viewbox;
 
 use web_atoms::ns;
@@ -287,20 +287,140 @@ fn extract_viewport_info(node: ServoLayoutNode) -> ViewportInfo {
 
 // ======================= Render Node & Tree Construction =======================
 
-fn build_svg_render_node(node: ServoLayoutNode, context: &LayoutContext) -> Option<SvgRenderNode> {
+/// Recursively search the SVG DOM subtree for an element by its `id`.
+fn find_element_by_id<'dom>(node: ServoLayoutNode<'dom>, target_id: &str) -> Option<ServoLayoutNode<'dom>> {
+    if let Some(element) = node.as_element() {
+        if let Some(id) = element.attribute_as_str(&ns!(), &local_name!("id")) {
+            if id == target_id {
+                return Some(node);
+            }
+        }
+    }
+    for child in node.dom_children() {
+        if child.as_element().is_some() {
+            if let Some(found) = find_element_by_id(child, target_id) {
+                return Some(found);
+            }
+        }
+    }
+    None
+}
+
+/// Apply `<use>`'s computed style to the root of a cloned subtree.
+///
+/// For the root render node, if its corresponding DOM element did NOT have an
+/// explicit presentation attribute for `fill` or `stroke`, override it with
+/// the `<use>` element's computed value (per SVG 2 shadow tree spec).
+///
+/// Children are NOT overridden — they get their styles from their own DOM
+/// position via Stylo's cascade (e.g. a child of `<g fill="crimson">`
+/// already inherits crimson correctly).
+fn apply_use_style_to_root<'dom>(
+    render_node: &mut SvgRenderNode,
+    dom_node: ServoLayoutNode<'dom>,
+    use_style: &NodeStyle,
+) {
+    if let Some(element) = dom_node.as_element() {
+        if let Some(use_fill) = &use_style.fill {
+            if get_attr(&element, "fill").is_none() {
+                render_node.style.fill = Some(use_fill.clone());
+            }
+        }
+        if let Some(use_stroke) = &use_style.stroke {
+            if get_attr(&element, "stroke").is_none() {
+                render_node.style.stroke = Some(use_stroke.clone());
+            }
+        }
+    }
+}
+
+/// Build children for a `<use>` element — resolves the href, finds the target
+/// element in the SVG DOM, and builds its render subtree.
+///
+/// Applies x/y offset as a `translate` transform on the cloned content.
+/// Tracks `resolving` ids to detect and break circular references.
+fn build_use_children<'dom>(
+    element: &ServoLayoutElement<'dom>,
+    context: &LayoutContext,
+    root_node: ServoLayoutNode<'dom>,
+    use_style: &NodeStyle,
+    resolving: &mut HashSet<String>,
+) -> Vec<SvgRenderNode> {
+    // Read href / xlink:href attribute.
+    let href_id = get_attr(element, "href")
+        .or_else(|| get_attr(element, "xlink:href"))
+        .and_then(|v| {
+            let trimmed = v.trim_start_matches('#');
+            if trimmed.is_empty() { None } else { Some(trimmed.to_owned()) }
+        });
+    let Some(ref_id) = href_id else { return vec![] };
+
+    // Cycle detection — skip if we're already resolving this id.
+    if !resolving.insert(ref_id.clone()) {
+        return vec![]; // circular reference, skip
+    }
+
+    // Find the target element in the full SVG DOM tree.
+    let mut result = match find_element_by_id(root_node, &ref_id) {
+        Some(target) => {
+            // Build the target's render subtree.
+            let Some(mut node) = build_svg_render_node(target, context, root_node, resolving) else {
+                resolving.remove(&ref_id);
+                return vec![];
+            };
+
+            // Apply <use>'s computed style to the cloned root node
+            apply_use_style_to_root(&mut node, target, use_style);
+
+            vec![node]
+        },
+        None => vec![],
+    };
+
+    resolving.remove(&ref_id);
+
+    // Apply x/y offset as a translate transform on the cloned content.
+    let x = get_attr(element, "x").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(0.0);
+    let y = get_attr(element, "y").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(0.0);
+    if x != 0.0 || y != 0.0 {
+        for child in &mut result {
+            if child.style.transform.is_empty() {
+                child.style.transform = vec![TransformOp::Translate(x, y)];
+            } else {
+                child.style.transform.insert(0, TransformOp::Translate(x, y));
+            }
+        }
+    }
+
+    result
+}
+
+fn build_svg_render_node<'dom>(
+    node: ServoLayoutNode<'dom>,
+    context: &LayoutContext,
+    root_node: ServoLayoutNode<'dom>,
+    resolving: &mut HashSet<String>,
+) -> Option<SvgRenderNode> {
     let element = node.as_element()?;
     let tag = build_tag(&element)?;
     let style = build_style(node, context);
     let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string());
-    let children = node.dom_children()
-        .filter_map(|child| build_svg_render_node(child, context))
-        .collect();
+    let children = match &tag {
+        SvgTag::Container(Container::Use) => {
+            build_use_children(&element, context, root_node, &style, resolving)
+        },
+        _ => {
+            node.dom_children()
+                .filter_map(|child| build_svg_render_node(child, context, root_node, resolving))
+                .collect()
+        },
+    };
     Some(SvgRenderNode { id, tag, style, children })
 }
 
 /// Main entry point — builds a complete `SvgRenderTree` from an SVG DOM element.
-pub(crate) fn build_svg_render_tree(node: ServoLayoutNode, context: &LayoutContext) -> Option<Arc<SvgRenderTree>> {
-    let root = build_svg_render_node(node, context)?;
+pub(crate) fn build_svg_render_tree<'dom>(node: ServoLayoutNode<'dom>, context: &LayoutContext) -> Option<Arc<SvgRenderTree>> {
+    let root = build_svg_render_node(node, context, node, &mut HashSet::new())?;
     let viewport = extract_viewport_info(node);
     let gradients = collect_gradients(node);
     Some(Arc::new(SvgRenderTree { root, viewport, gradients }))
