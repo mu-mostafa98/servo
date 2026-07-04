@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  .fill-red    { fill: #E74C3C; }
+  .fill-blue   { fill: #3498DB; }
+  .fill-green  { fill: #2ECC71; }
+  .fill-yellow { fill: #F1C40F; }
+  .semi-fill   { fill: #9B59B6; fill-opacity: 0.3; }
+  .stroke-red  { stroke: #E74C3C; stroke-width: 3; }
+  .stroke-blue { stroke: #3498DB; stroke-width: 4; }
+  .fill-stroke { fill: #F1C40F; stroke: #E74C3C; stroke-width: 4; }
+  .thick-stroke { fill: #2ECC71; stroke: #333; stroke-width: 8; }
+</style>
+</head>
+<body>
+
+<h2>1. Ellipses — basic positions and sizes</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="150">
+  <ellipse class="fill-red"    cx="70"  cy="70"  rx="50" ry="30" />
+  <ellipse class="fill-blue"   cx="190" cy="70"  rx="40" ry="50" />
+  <ellipse class="fill-green"  cx="320" cy="70"  rx="60" ry="25" />
+</svg>
+
+<h2>2. Circles</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120">
+  <circle class="fill-red"   cx="50"  cy="50" r="40" />
+  <circle class="fill-blue"  cx="150" cy="50" r="40" />
+  <circle class="fill-green" cx="250" cy="50" r="40" />
+</svg>
+
+<h2>3. Fill opacity with ellipses</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="120">
+  <ellipse class="semi-fill" cx="80" cy="60" rx="70" ry="40" />
+</svg>
+
+<h2>4. Ellipse inheritance from parent &lt;svg&gt; via CSS class</h2>
+<svg class="fill-red" xmlns="http://www.w3.org/2000/svg" width="200" height="100">
+  <ellipse cx="80" cy="50" rx="60" ry="30" />
+</svg>
+
+<h2>5. Ellipse with fill: none (should be invisible)</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="200" height="80">
+  <ellipse style="fill: none;" cx="80" cy="40" rx="70" ry="30" />
+</svg>
+
+<h2>6. Inline styles on ellipse</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="100">
+  <ellipse style="fill: #E74C3C;" cx="80"  cy="50" rx="60" ry="30" />
+</svg>
+
+<h2>7. Stroke on circles</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="100">
+  <circle class="stroke-red"   cx="60"  cy="50" r="30" />
+  <circle class="stroke-blue"  cx="170" cy="50" r="30" />
+  <circle class="fill-stroke"  cx="280" cy="50" r="30" />
+</svg>
+
+<h2>8. Stroke on ellipses</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120">
+  <ellipse class="stroke-red"   cx="80"  cy="60" rx="60" ry="30" />
+  <ellipse class="stroke-blue"  cx="230" cy="60" rx="50" ry="40" />
+  <ellipse class="thick-stroke" cx="350" cy="60" rx="30" ry="45" />
+</svg>
+
+<h2>9. Rect with fill and stroke</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="120">
+  <rect class="fill-red"    x="20"  y="20" width="70"  height="70" />
+  <rect class="fill-stroke" x="120" y="20" width="70"  height="70" />
+  <rect class="thick-stroke" x="220" y="20" width="70" height="70" />
+  <rect class="stroke-blue" x="320" y="20" width="60" height="70" />
+</svg>
+
+</body>
+</html>

@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SVG Shapes Overview</title>
+<style>
+  body { font-family: sans-serif; margin: 20px; }
+  .section { margin-bottom: 40px; border-bottom: 1px solid #ddd; padding-bottom: 20px; }
+  .section h2 { font-size: 18px; color: #333; margin-bottom: 4px; }
+  .section .desc { font-size: 13px; color: #666; margin-bottom: 12px; }
+  svg { border: 1px solid #ccc; margin-right: 20px; margin-bottom: 10px; }
+
+  .fill-red    { fill: #E74C3C; }
+  .fill-blue   { fill: #3498DB; }
+  .fill-green  { fill: #2ECC71; }
+  .fill-yellow { fill: #F1C40F; }
+  .fill-none   { fill: none; }
+  .fill-orange { fill: #F39C12; }
+  .fill-purple { fill: #9B59B6; }
+  .fill-teal   { fill: #1ABC9C; }
+
+  .s-black  { stroke: #333; stroke-width: 2; }
+  .s-red    { stroke: #E74C3C; stroke-width: 2; }
+  .s-blue   { stroke: #3498DB; stroke-width: 2; }
+  .s-thick  { stroke: #333; stroke-width: 4; }
+  .s-none   { stroke: none; }
+</style>
+</head>
+<body>
+<h1>SVG Shapes: Unification Concept</h1>
+<p>All SVG shapes are specializations of <b>&lt;rect&gt;</b>.</p>
+
+<!-- ===== PART 1: Rectangles ===== -->
+<div class="section">
+<h2>Part 1: &lt;rect&gt; — styling</h2>
+<div class="desc">Rectangles with various fill, stroke, and opacity combinations.</div>
+
+<svg width="600" height="140">
+  <rect class="fill-red s-none"   x="10" y="10" width="60" height="60" rx="4" />
+  <rect class="fill-blue s-black" x="90" y="10" width="60" height="60" />
+  <rect class="fill-green fill-none s-red"  x="170" y="10" width="60" height="60" />
+  <rect class="fill-yellow s-thick" x="250" y="10" width="60" height="60" rx="8" />
+  <rect class="fill-purple s-blue"  x="330" y="10" width="60" height="60" rx="12" />
+  <rect class="fill-orange s-black" x="410" y="10" width="60" height="60" rx="30" />
+</svg>
+<p style="font-size:12px;color:#888;">← fill, stroke, rx/ry rounded corners, stroke-width, stroke-opacity</p>
+</div>
+
+<!-- ===== PART 2: Ellipse using <rect> ===== -->
+<div class="section">
+<h2>Part 2: Ellipse via &lt;rect&gt;</h2>
+<div class="desc">Ramping rx/ry on a rect creates rounder shapes, converging to an ellipse.</div>
+
+<svg width="620" height="110">
+  <rect class="fill-red s-black"   x="10"  y="10" width="60" height="60" rx="0"  ry="0" />
+  <rect class="fill-blue s-black"  x="90"  y="10" width="60" height="60" rx="10" ry="10" />
+  <rect class="fill-green s-black" x="170" y="10" width="60" height="60" rx="20" ry="20" />
+  <rect class="fill-yellow s-black" x="250" y="10" width="60" height="60" rx="28" ry="28" />
+  <rect class="fill-orange s-black" x="330" y="10" width="60" height="60" rx="30" ry="30" />
+  <rect class="fill-purple s-black" x="410" y="10" width="60" height="60" rx="30" ry="30" />
+  <rect class="fill-teal s-black"   x="490" y="10" width="60" height="60" rx="30" ry="30" />
+</svg>
+<p style="font-size:12px;color:#888;">← rect rx/ry: 0 → 10 → 20 → 28 → 30 (beyond half-size, it's visually an ellipse)</p>
+
+<svg width="620" height="120">
+  <rect class="fill-red s-black"   x="10"  y="10" width="80" height="50" rx="0"  ry="0" />
+  <rect class="fill-blue s-black"  x="110" y="10" width="80" height="50" rx="10" ry="10" />
+  <rect class="fill-green s-black" x="210" y="10" width="80" height="50" rx="20" ry="20" />
+  <rect class="fill-yellow s-black" x="310" y="10" width="80" height="50" rx="25" ry="25" />
+  <rect class="fill-orange s-black" x="410" y="10" width="80" height="50" rx="40" ry="25" />
+  <rect class="fill-purple s-black" x="520" y="10" width="80" height="50" rx="80" ry="25" />
+</svg>
+<p style="font-size:12px;color:#888;">← wide rect (80×50): rx/ry capped at min(w,h)/2 = 25, then rx=80 clipped to 25 → pure ellipse</p>
+
+<svg width="620" height="120">
+  <rect class="fill-red s-black"   x="10"  y="10" width="50" height="80" rx="0"  ry="0" />
+  <rect class="fill-blue s-black"  x="80"  y="10" width="50" height="80" rx="10" ry="10" />
+  <rect class="fill-green s-black" x="160" y="10" width="50" height="80" rx="20" ry="20" />
+  <rect class="fill-yellow s-black" x="240" y="10" width="50" height="80" rx="25" ry="25" />
+  <rect class="fill-orange s-black" x="320" y="10" width="50" height="80" rx="25" ry="40" />
+  <rect class="fill-purple s-black" x="400" y="10" width="50" height="80" rx="25" ry="80" />
+</svg>
+<p style="font-size:12px;color:#888;">← tall rect (50×80): same concept, ry clipping at 40 → pure ellipse</p>
+</div>
+
+<!-- ===== PART 3: Ellipse using <ellipse> ===== -->
+<div class="section">
+<h2>Part 3: &lt;ellipse&gt; tag</h2>
+<div class="desc">Native ellipse elements — the reference implementation vs the rect-based approximation above.</div>
+
+<svg width="620" height="120">
+  <ellipse class="fill-red s-black"   cx="45"  cy="45" rx="35" ry="15" />
+  <ellipse class="fill-blue s-black"  cx="140" cy="45" rx="40" ry="25" />
+  <ellipse class="fill-green s-black" cx="250" cy="45" rx="50" ry="35" />
+  <ellipse class="fill-yellow s-black" cx="370" cy="45" rx="30" ry="40" />
+  <ellipse class="fill-orange s-black" cx="470" cy="45" rx="45" ry="20" />
+  <ellipse class="fill-purple s-black" cx="570" cy="45" rx="20" ry="45" />
+</svg>
+</div>
+
+<!-- ===== PART 4: Circle using <ellipse> ===== -->
+<div class="section">
+<h2>Part 4: Circle via &lt;ellipse&gt; tag</h2>
+<div class="desc">An ellipse with rx == ry is a circle. Ramping rx toward ry shows the transition.</div>
+
+<svg width="600" height="120">
+  <ellipse class="fill-red s-black"   cx="45"  cy="50" rx="40" ry="10" />
+  <ellipse class="fill-blue s-black"  cx="140" cy="50" rx="40" ry="20" />
+  <ellipse class="fill-green s-black" cx="240" cy="50" rx="40" ry="30" />
+  <ellipse class="fill-yellow s-black" cx="340" cy="50" rx="40" ry="38" />
+  <ellipse class="fill-orange s-black" cx="440" cy="50" rx="40" ry="40" />
+  <ellipse class="fill-purple s-black" cx="545" cy="50" rx="40" ry="40" />
+</svg>
+<p style="font-size:12px;color:#888;">← ellipse ry: 10 → 20 → 30 → 38 → 40 (=rx) → pure circle</p>
+</div>
+
+<!-- ===== PART 5: Circle using <circle> ===== -->
+<div class="section">
+<h2>Part 5: &lt;circle&gt; tag</h2>
+<div class="desc">Native circle elements.</div>
+
+<svg width="600" height="120">
+  <circle class="fill-red s-black"   cx="50"  cy="50" r="15" />
+  <circle class="fill-blue s-black"  cx="140" cy="50" r="25" />
+  <circle class="fill-green s-black" cx="240" cy="50" r="35" />
+  <circle class="fill-yellow s-black" cx="350" cy="50" r="40" />
+  <circle class="fill-orange s-black" cx="460" cy="50" r="20" />
+  <circle class="fill-purple s-black" cx="550" cy="50" r="45" />
+</svg>
+</div>
+
+<!-- ===== PART 6: Line using <rect> ===== -->
+<div class="section">
+<h2>Part 6: Line via &lt;rect&gt;</h2>
+<div class="desc">Angled lines approximated with rotated rectangles (using CSS transform). A thin long rotated rect is visually a line.</div>
+
+<svg width="600" height="240">
+  <rect class="fill-red s-none"   x="50"  y="90"  width="200" height="6"  transform="rotate(0, 150, 93)" />
+  <rect class="fill-blue s-none"  x="50"  y="90"  width="200" height="6"  transform="rotate(15, 150, 93)" />
+  <rect class="fill-green s-none" x="50"  y="90"  width="200" height="6"  transform="rotate(30, 150, 93)" />
+  <rect class="fill-orange s-none" x="50" y="90"  width="200" height="6"  transform="rotate(45, 150, 93)" />
+  <rect class="fill-purple s-none" x="50" y="90"  width="200" height="6"  transform="rotate(60, 150, 93)" />
+</svg>
+<p style="font-size:12px;color:#888;">← rect width=200, height=6 rotated 0° → 15° → 30° → 45° → 60°</p>
+
+<svg width="600" height="240">
+  <rect class="fill-red s-black"   x="50"  y="90"  width="200" height="4"  transform="rotate(-30, 150, 92)" />
+  <rect class="fill-blue s-black"  x="50"  y="90"  width="200" height="8"  transform="rotate(-15, 150, 94)" />
+  <rect class="fill-green s-black" x="50"  y="90"  width="200" height="12" transform="rotate(0, 150, 96)" />
+  <rect class="fill-orange s-black" x="50" y="90"  width="200" height="16" transform="rotate(15, 150, 98)" />
+  <rect class="fill-purple s-black" x="50" y="90"  width="200" height="20" transform="rotate(30, 150, 100)" />
+</svg>
+<p style="font-size:12px;color:#888;">← varying stroke width via rect height: 4 → 8 → 12 → 16 → 20</p>
+</div>
+
+<!-- ===== PART 7: Line using <line> ===== -->
+<div class="section">
+<h2>Part 7: &lt;line&gt; tag</h2>
+<div class="desc">Native line elements — direct representation of the same angled lines from Part 6.</div>
+
+<svg width="600" height="120">
+  <line class="s-red"   x1="50" y1="15" x2="550" y2="15" />
+  <line class="s-blue"  x1="50" y1="40" x2="550" y2="40" />
+  <line class="s-black" x1="50" y1="65" x2="550" y2="65" />
+  <line class="s-thick" x1="50" y1="95" x2="550" y2="95" />
+</svg>
+
+<svg width="600" height="120">
+  <line class="s-red"   x1="30"  y1="100" x2="570" y2="20" />
+  <line class="s-blue"  x1="50"  y1="100" x2="550" y2="40" />
+  <line class="s-black" x1="80"  y1="100" x2="520" y2="60" />
+  <line class="s-thick" x1="110" y1="100" x2="490" y2="80" />
+</svg>
+<p style="font-size:12px;color:#888;">← angled lines with different colors and stroke widths</p>
+</div>
+
+</body>
+</html>

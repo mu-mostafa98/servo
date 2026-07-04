@@ -1,0 +1,59 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+* License, v. 2.0. If a copy of the MPL was not distributed with this
+* file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+//! SVG Property Reference: https://www.w3.org/TR/SVG2/propidx.html
+//!
+//! This module defines style-related enums and structs based on the SVG 2 specification.
+//! Each style category has its own file — [`fill`] for fill properties, [`stroke`] for
+//! stroke properties, [`hints`] for rendering hints, [`effects`] for node effects,
+//! [`visibility`] for SVG visibility/display, [`transform_ops`] for SVG transform
+//! operations, and [`color`] for color parsing.
+//!
+//! Style construction (FromComputedValues, FromCssAttrs) lives in
+//! [`crate::layout::svg_builder`].
+
+pub(crate) mod fill;
+pub(crate) mod stroke;
+pub mod gradient;
+pub(crate) mod hints;
+pub(crate) mod effects;
+pub(crate) mod visibility;
+pub mod color;
+pub mod transform_ops;
+
+pub use self::fill::{FillParams, FillRule};
+pub use self::stroke::{StrokeParams, LineCap, LineJoin};
+pub use self::hints::{
+    RenderHints, VectorEffect, ColorRendering, ColorInterpolation,
+    ShapeRendering, TextRendering, ImageRendering, PaintOrder,
+};
+pub use self::visibility::{Visibility, Display};
+pub use self::effects::NodeEffects;
+use self::transform_ops::TransformOp;
+
+/// Combined fill + stroke styling for an SVG render node.
+#[derive(Debug, Clone)]
+pub struct NodeStyle {
+    pub visibility: Visibility,
+    pub display: Display,
+    pub transform: Vec<TransformOp>,
+    pub fill: Option<FillParams>,
+    pub stroke: Option<StrokeParams>,
+    pub render_hints: Option<RenderHints>,
+    pub effects: Option<NodeEffects>,
+}
+
+impl Default for NodeStyle {
+    fn default() -> Self {
+        NodeStyle {
+            visibility: Visibility::Visible,
+            display: Display::Inline,
+            transform: Vec::new(),
+            fill: None,
+            stroke: None,
+            render_hints: None,
+            effects: None,
+        }
+    }
+}

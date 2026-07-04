@@ -30,6 +30,7 @@ mod query;
 mod quotes;
 mod replaced;
 mod sizing;
+pub mod svg_builder;
 mod style_ext;
 pub mod table;
 mod traversal;
