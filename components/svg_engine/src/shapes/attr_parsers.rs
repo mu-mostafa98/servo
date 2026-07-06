@@ -21,17 +21,40 @@ use crate::error::{SvgEngineError, SvgResult};
 /// Parse a named SVG length attribute (e.g. `x="10"`, `width="50%"`).
 ///
 /// Handles all CSS/SVG length units via [`svgtypes::Length`].
-/// Returns the raw numeric value (unitless); unit conversion for `em`/`ex`/etc.
-/// must be performed by the caller if needed.
+/// Converts `em`/`ex`/`in`/`cm`/`mm`/`pt`/`pc` to pixels using the
+/// provided `font_size` (default 16px for SVG).
+///
+/// Percent values are returned as-is (caller must resolve against
+/// the appropriate reference dimension).
 pub fn parse_length(
     attr: &str,
     get_attr: &dyn Fn(&str) -> Option<String>,
+    font_size: f32,
 ) -> SvgResult<f32> {
     let value =
         get_attr(attr).ok_or_else(|| SvgEngineError::MissingAttribute(attr.to_owned()))?;
     let len: SvgLength = value.parse()
         .map_err(|e| SvgEngineError::ParseError(format!("{attr}: {e}")))?;
-    Ok(len.number as f32)
+    Ok(to_px(len, font_size))
+}
+
+/// Convert an [`svgtypes::Length`] to a pixel value using CSS/SVG unit conventions.
+fn to_px(len: SvgLength, font_size: f32) -> f32 {
+    let n = len.number as f32;
+    match len.unit {
+        // Absolute units
+        svgtypes::LengthUnit::None | svgtypes::LengthUnit::Px => n,
+        svgtypes::LengthUnit::In => n * 96.0,
+        svgtypes::LengthUnit::Cm => n * 96.0 / 2.54,
+        svgtypes::LengthUnit::Mm => n * 96.0 / 25.4,
+        svgtypes::LengthUnit::Pt => n * 96.0 / 72.0,
+        svgtypes::LengthUnit::Pc => n * 96.0 / 6.0,
+        // Font-relative units
+        svgtypes::LengthUnit::Em => n * font_size,
+        svgtypes::LengthUnit::Ex => n * font_size * 0.5,
+        // Percent — returned as-is (caller resolves against reference).
+        svgtypes::LengthUnit::Percent => n,
+    }
 }
 
 /// Parse an SVG `points` attribute value into a list of coordinate pairs.
@@ -61,54 +84,86 @@ pub fn parse_points(
 mod tests {
     use super::*;
 
+    const FS: f32 = 16.0;
+
     #[test]
     fn parse_length_missing_attr() {
-        let result = parse_length("width", &|_| None);
+        let result = parse_length("width", &|_| None, FS);
         assert!(result.is_err());
         assert!(result.unwrap_err().to_string().contains("missing SVG attribute: width"));
     }
 
     #[test]
     fn parse_length_simple() {
-        let result = parse_length("x", &|_| Some("10".to_owned()));
+        let result = parse_length("x", &|_| Some("10".to_owned()), FS);
         assert_eq!(result.unwrap(), 10.0);
     }
 
     #[test]
     fn parse_length_with_px() {
-        let result = parse_length("width", &|_| Some("50px".to_owned()));
+        let result = parse_length("width", &|_| Some("50px".to_owned()), FS);
         assert_eq!(result.unwrap(), 50.0);
     }
 
     #[test]
     fn parse_length_with_percent() {
-        let result = parse_length("width", &|_| Some("80%".to_owned()));
+        let result = parse_length("width", &|_| Some("80%".to_owned()), FS);
         assert_eq!(result.unwrap(), 80.0);
     }
 
     #[test]
     fn parse_length_invalid() {
-        let result = parse_length("r", &|_| Some("abc".to_owned()));
+        let result = parse_length("r", &|_| Some("abc".to_owned()), FS);
         assert!(result.is_err());
     }
 
     #[test]
     fn parse_length_negative_allowed() {
-        let result = parse_length("x", &|_| Some("-5".to_owned()));
+        let result = parse_length("x", &|_| Some("-5".to_owned()), FS);
         assert_eq!(result.unwrap(), -5.0);
     }
 
     #[test]
     fn parse_length_with_em() {
-        // svgtypes handles em correctly; our previous parser failed on this.
-        let result = parse_length("x", &|_| Some("2em".to_owned()));
-        assert_eq!(result.unwrap(), 2.0);
+        // 2em at default 16px = 32px
+        let result = parse_length("x", &|_| Some("2em".to_owned()), 16.0);
+        assert_eq!(result.unwrap(), 32.0);
+    }
+
+    #[test]
+    fn parse_length_with_ex() {
+        // 3ex at default 16px = 3 * 16 * 0.5 = 24px
+        let result = parse_length("x", &|_| Some("3ex".to_owned()), 16.0);
+        assert_eq!(result.unwrap(), 24.0);
     }
 
     #[test]
     fn parse_length_with_cm() {
-        let result = parse_length("width", &|_| Some("5cm".to_owned()));
-        assert_eq!(result.unwrap(), 5.0);
+        // 5cm = 5 * 96/2.54 px
+        let result = parse_length("width", &|_| Some("5cm".to_owned()), FS);
+        let expected = 5.0 * 96.0 / 2.54;
+        assert!((result.unwrap() - expected).abs() < 0.01);
+    }
+
+    #[test]
+    fn parse_length_with_font_size_override() {
+        // 2em at 20px = 40px
+        let result = parse_length("x", &|_| Some("2em".to_owned()), 20.0);
+        assert_eq!(result.unwrap(), 40.0);
+    }
+
+    #[test]
+    fn parse_length_with_in() {
+        // 1in = 96px
+        let result = parse_length("width", &|_| Some("1in".to_owned()), FS);
+        assert_eq!(result.unwrap(), 96.0);
+    }
+
+    #[test]
+    fn parse_length_with_pt() {
+        // 12pt = 12 * 96/72 = 16px
+        let result = parse_length("width", &|_| Some("12pt".to_owned()), FS);
+        assert!((result.unwrap() - 16.0).abs() < 0.01);
     }
 
     #[test]

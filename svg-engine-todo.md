@@ -97,23 +97,11 @@
 
 ---
 
-### 8. SVG viewport clip always applied regardless of `overflow`
+### ✓ 9. CSS `transform` property on SVG elements is ignored
 
-**File:** [components/svg_engine/src/traversal.rs:41-46](components/svg_engine/src/traversal.rs#L41-L46)
+**Fixed in:** [layout/svg_builder.rs](components/layout/svg_builder.rs)
 
-**Problem:** The viewport clip rect is always defined. Per the SVG spec, `overflow="visible"` should allow content outside the viewport.
-
-**NOT YET FIXED** — requires overflow property plumbing.
-
----
-
-### 9. CSS `transform` property on SVG elements is ignored
-
-**File:** [components/layout/svg_builder.rs:249](components/layout/svg_builder.rs#L249)
-
-**Problem:** Stylo-computed CSS `transform` is overwritten by the raw attribute.
-
-**NOT YET FIXED** — requires merging computed + attribute transforms.
+**Fix (2026-07-06):** Added `css_transform_from_computed()` helper that reads the CSS `transform` from Stylo computed values via `to_transform_3d_matrix()` and converts it to a `TransformOp::Matrix`. The `build_style` function now merges CSS transforms (applied first) with the SVG `transform` attribute (applied second), matching the SVG spec ordering.
 
 ---
 
@@ -127,21 +115,15 @@
 
 **File:** [components/layout/svg_builder.rs:407-447](components/layout/svg_builder.rs#L407-L447)
 
-### 12. `build_style_from_attrs` ignores CSS `visibility`
-
-**File:** [components/layout/svg_builder.rs:341-351](components/layout/svg_builder.rs#L341-L351)
-
 ### 13. `preserveAspectRatio` not implemented
 
 **File:** [components/svg_engine/src/traversal.rs:50-71](components/svg_engine/src/traversal.rs#L50-L71)
 
-### 14. `em`/`ex` units in length attributes not properly resolved
+### ✓ 14. `em`/`ex` units in length attributes not properly resolved
 
-**File:** [components/svg_engine/src/shapes/attr_parsers.rs:33-35](components/svg_engine/src/shapes/attr_parsers.rs#L33-L35)
+**Fixed in:** [shapes/attr_parsers.rs](components/svg_engine/src/shapes/attr_parsers.rs) + [layout/svg_builder.rs](components/layout/svg_builder.rs)
 
-### 15. `stroke-linecap` ignored for polylines
-
-**File:** [components/svg_engine/src/renderer/stroke.rs:93-138](components/svg_engine/src/renderer/stroke.rs#L93-L138)
+**Fix (2026-07-06):** Added `font_size` parameter to `parse_length()` with standard CSS/SVG unit conversion (em, ex, in, cm, mm, pt, pc → px). Updated all callers in `svg_builder.rs` to pass the SVG default font-size of 16px. Added 5 unit tests.
 
 ---
 
@@ -198,12 +180,12 @@
 | #6 currentColor default | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | FromComputedValues for FillParams |
 | #7 Dashed line strokes | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | dash_intervals, emit_rotated_rects_for_segment |
 | #8 Viewport overflow clip | **✓ FIXED** | [traversal.rs](components/svg_engine/src/traversal.rs) + [render_tree.rs](components/svg_engine/src/render_tree.rs) | overflow_visible check on ViewportInfo |
-| #9 CSS transform ignored | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 249 |
+| #9 CSS transform ignored | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | css_transform_from_computed |
 | #10 Limited clip paths | Not fixed | [shapes/mod.rs](components/svg_engine/src/shapes/mod.rs) | 58-65 |
 | #11 Nested defs collection | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 407-447 |
 | #12 visibility in attrs | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | build_style_from_attrs visibility attr |
 | #13 preserveAspectRatio | Not fixed | [traversal.rs](components/svg_engine/src/traversal.rs) | 50-71 |
-| #14 em/ex units | Not fixed | [shapes/attr_parsers.rs](components/svg_engine/src/shapes/attr_parsers.rs) | 33-35 |
+| #14 em/ex units | **✓ FIXED** | [shapes/attr_parsers.rs](components/svg_engine/src/shapes/attr_parsers.rs) | parse_length font_size conversion |
 | #15 linecap for polylines | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | draw_capped_rect with LineCap |
 | #16 Gradient perf | Not fixed | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | 85-98 |
 | #17 NaN in tessellator | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | scanline NaN guard |
@@ -216,4 +198,5 @@
 - [svg_style_test.html](svg-style-test.html) — opacity, visibility, clip-path, patterns, masks, filters, viewport overflow, visibility in pattern shapes
 - [svg_gradient_test.html](svg_gradient_test.html) — linear/radial gradients, stops, units
 - [svg_polyline_polygon_test.html](svg_polyline_polygon_test.html) — polys, paths, fill-rule
+- [svg_transform_debug.html](svg-transform-debug.html) — CSS &amp; SVG transforms, em/ex/in/pt length unit conversion
 - [svg_bug_demo.html](svg-bug-demo.html) — Regression test for all fixed bugs
