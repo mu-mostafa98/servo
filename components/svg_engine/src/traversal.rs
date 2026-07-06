@@ -37,13 +37,17 @@ pub fn render_svg_tree(
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
 ) {
-    // Apply SVG viewport clip.
+    // Apply SVG viewport clip (unless overflow: visible).
     let svg_bounds = LayoutRect::from_origin_and_size(*svg_origin, svg_size);
-    let svg_clip_id = wr.define_clip_rect(spatial_id, svg_bounds);
-    let svg_clip_chain = wr.define_clip_chain(
-        clip_chain_option(clip_chain_id),
-        [svg_clip_id],
-    );
+    let svg_clip_chain = if !tree.viewport.overflow_visible {
+        let svg_clip_id = wr.define_clip_rect(spatial_id, svg_bounds);
+        wr.define_clip_chain(
+            clip_chain_option(clip_chain_id),
+            [svg_clip_id],
+        )
+    } else {
+        clip_chain_id
+    };
 
     // Apply viewBox transform if present.
     let (root_origin, root_spatial_id, pop_frame) =

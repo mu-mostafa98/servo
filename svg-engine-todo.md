@@ -67,6 +67,30 @@
 
 ---
 
+### ✓ 8. SVG viewport clip always applied regardless of `overflow`
+
+**Fixed in:** [traversal.rs](components/svg_engine/src/traversal.rs) + [layout/svg_builder.rs](components/layout/svg_builder.rs) + [render_tree.rs](components/svg_engine/src/render_tree.rs)
+
+**Fix (2026-07-06):** Added `overflow_visible: bool` to `ViewportInfo`. Modified `extract_viewport_info` to check the computed CSS `overflow` property on the `<svg>` element via `node.style()`. When both `overflow-x` and `overflow-y` are `Visible`, the viewport clip is skipped entirely, allowing content outside the SVG bounds to render.
+
+---
+
+### ✓ 12. `visibility` attribute ignored in `build_style_from_attrs`
+
+**Fixed in:** [layout/svg_builder.rs](components/layout/svg_builder.rs)
+
+**Fix (2026-07-06):** Added `read_attr("visibility")` parsing in `build_style_from_attrs` so that pattern shapes with `visibility="hidden"` respect the property. Previously all pattern shapes were unconditionally `Visibility::Visible`.
+
+---
+
+### ✓ 15. `stroke-linecap` ignored for polylines
+
+**Fixed in:** [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs)
+
+**Fix (2026-07-06):** Added a `draw_capped_rect` helper that applies the three SVG line cap styles: **butt** (exact rect), **square** (extended by half-width past each endpoint), and **round** (extended plus a pill-shaped rounded-rect clip for semicircular ends). Integrated into `emit_rotated_rects_for_segment` (solid-stroke dashes), the gradient dash path, the no-dash gradient path, and `draw_rotated_stroke_segment` (used for gradient polyline strokes).
+
+---
+
 ### ✓ 7. Dashed strokes not rendered for `<line>` elements
 
 **Fixed in:** [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs)
@@ -169,23 +193,23 @@
 | #5 fill="none" vs inheritance | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | build_style_from_attrs explicit none |
 | #6 currentColor default | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 88-103 |
 | #7 Dashed line strokes | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | dash_intervals, emit_rotated_rects_for_segment |
-| #8 Viewport overflow clip | Not fixed | [traversal.rs](components/svg_engine/src/traversal.rs) | 41-46 |
+| #8 Viewport overflow clip | **✓ FIXED** | [traversal.rs](components/svg_engine/src/traversal.rs) + [render_tree.rs](components/svg_engine/src/render_tree.rs) | overflow_visible check on ViewportInfo |
 | #9 CSS transform ignored | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 249 |
 | #10 Limited clip paths | Not fixed | [shapes/mod.rs](components/svg_engine/src/shapes/mod.rs) | 58-65 |
 | #11 Nested defs collection | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 407-447 |
-| #12 visibility in attrs | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 341-351 |
+| #12 visibility in attrs | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | build_style_from_attrs visibility attr |
 | #13 preserveAspectRatio | Not fixed | [traversal.rs](components/svg_engine/src/traversal.rs) | 50-71 |
 | #14 em/ex units | Not fixed | [shapes/attr_parsers.rs](components/svg_engine/src/shapes/attr_parsers.rs) | 33-35 |
-| #15 linecap for polylines | Not fixed | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | stroke_polyline |
+| #15 linecap for polylines | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | draw_capped_rect with LineCap |
 | #16 Gradient perf | Not fixed | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | 85-98 |
 | #17 NaN in tessellator | Not fixed | [tessellator.rs](components/svg_engine/src/tessellator.rs) | scanline loop |
 | #18 partial_cmp NaN | Not fixed | [tessellator.rs](components/svg_engine/src/tessellator.rs) | 221 |
 
 ## Visual Test Files
 
-- [svg_line_test.html](svg_line_test.html) — `<line>` rendering including dashes, angles, widths, opacity, gradient strokes
+- [svg_line_test.html](svg_line_test.html) — `<line>` rendering including dashes, angles, widths, opacity, gradient strokes, line caps (butt/square/round) with solid &amp; dashed &amp; gradient strokes
 - [svg_ellipse_test.html](svg_ellipse_test.html) — `<ellipse>`, `<circle>`, `<rect>` with fills, strokes, fill="none" inheritance, patterns
-- [svg_style_test.html](svg-style-test.html) — opacity, visibility, clip-path, patterns, masks, filters
+- [svg_style_test.html](svg-style-test.html) — opacity, visibility, clip-path, patterns, masks, filters, viewport overflow, visibility in pattern shapes
 - [svg_gradient_test.html](svg_gradient_test.html) — linear/radial gradients, stops, units
 - [svg_polyline_polygon_test.html](svg_polyline_polygon_test.html) — polys, paths, fill-rule
 - [svg_bug_demo.html](svg-bug-demo.html) — Regression test for all fixed bugs

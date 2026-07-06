@@ -92,6 +92,8 @@ pub struct ViewportInfo {
     pub width: f32,
     pub height: f32,
     pub view_box: Option<ViewBox>,
+    /// When true, the viewport clip is omitted (CSS `overflow: visible`).
+    pub overflow_visible: bool,
 }
 
 /// A clip path definition collected from `<clipPath>`.

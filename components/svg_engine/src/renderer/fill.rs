@@ -206,7 +206,11 @@ fn handle_pattern_fill(
             (bx + def.x * bw, by + def.y * bh)
         },
         PatternUnits::UserSpaceOnUse => {
-            (bx + def.x, by + def.y)
+            // Per SVG spec, pattern x/y are in user space (the SVG viewport
+            // coordinate system), not relative to the element being filled.
+            // Convert from SVG user space to document layout space by adding
+            // the SVG viewport origin.
+            (ctx.svg_origin.x + def.x, ctx.svg_origin.y + def.y)
         },
     };
 

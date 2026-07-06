@@ -13,7 +13,7 @@
 use euclid::Angle;
 use webrender_api::{
     BorderSide, BorderStyle, BorderDetails, NormalBorder, BorderRadius,
-    ColorF, PropertyBinding, ReferenceFrameKind, TransformStyle,
+    ClipMode, ComplexClipRegion, ColorF, PropertyBinding, ReferenceFrameKind, TransformStyle,
     units::{LayoutPoint, LayoutRect, LayoutSize, LayoutSideOffsets, LayoutTransform},
 };
 
@@ -21,7 +21,7 @@ use lyon::math::Point as LyonPoint;
 
 use crate::renderer::{RenderContext, make_common_props, to_colorf, effective_stroke_width, clip_chain_option, ZERO_LENGTH_EPSILON};
 use crate::renderer::gradient;
-use crate::style::{NodeStyle, Visibility, Display, StrokeParams};
+use crate::style::{NodeStyle, Visibility, Display, StrokeParams, LineCap};
 use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
 
 // ======================= Dash Interval Decomposition =======================
@@ -139,17 +139,6 @@ pub(crate) fn stroke_line_segment(
         color.a *= stroke.opacity * ctx.style.opacity;
         emit_rotated_rects_for_segment(len, half_w, color, stroke, line_spatial_id, ctx);
     } else if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
-        // Gradient stroke: fill the rotated rect with the gradient.
-        // For gradient strokes, dashes are rendered as gradient-filled
-        // sub-rects along the full-segment gradient projection.
-        let full_bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(-len / 2.0, -half_w),
-            LayoutSize::new(len, stroke_width),
-        );
-        // Gradient stroke: fill the rotated rect with the gradient.
-        // NOTE: For userSpaceOnUse gradients the coordinates are in the parent
-        // (unrotated) frame, so the gradient bands appear rotated with the line.
-        // This is correct for objectBoundingBox (default) mode.
         if let Some(dash_array) = &stroke.dash_array {
             if !dash_array.is_empty() {
                 let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
@@ -157,21 +146,51 @@ pub(crate) fn stroke_line_segment(
                     if t1 <= t0 { continue; }
                     let dash_start = -len / 2.0 + t0 * len;
                     let dash_len = (t1 - t0) * len;
-                    let dash_bounds = LayoutRect::from_origin_and_size(
+                    let mut grad_bounds = LayoutRect::from_origin_and_size(
                         LayoutPoint::new(dash_start, -half_w),
                         LayoutSize::new(dash_len, stroke_width),
                     );
+                    // Apply cap extension for square/round caps.
+                    if stroke.line_cap != LineCap::Butt {
+                        let ext = half_w;
+                        grad_bounds = LayoutRect::from_origin_and_size(
+                            LayoutPoint::new(dash_start - ext, -half_w),
+                            LayoutSize::new(dash_len + 2.0 * ext, stroke_width),
+                        );
+                    }
+
+                    // Build clip chain for round caps BEFORE creating grad_ctx
+                    // (which borrows ctx.wr mutably).
+                    let round_chain = if stroke.line_cap == LineCap::Round {
+                        let radii = BorderRadius {
+                            top_left: LayoutSize::new(half_w, half_w),
+                            top_right: LayoutSize::new(half_w, half_w),
+                            bottom_left: LayoutSize::new(half_w, half_w),
+                            bottom_right: LayoutSize::new(half_w, half_w),
+                        };
+                        let clip_id = ctx.wr.define_clip_rounded_rect(
+                            line_spatial_id,
+                            ComplexClipRegion { rect: grad_bounds, radii, mode: ClipMode::Clip },
+                        );
+                        Some(ctx.wr.define_clip_chain(
+                            clip_chain_option(ctx.clip_chain_id),
+                            [clip_id],
+                        ))
+                    } else {
+                        None
+                    };
+
                     let mut grad_ctx = RenderContext {
                         style: ctx.style,
                         svg_origin: LayoutPoint::new(0.0, 0.0),
                         spatial_id: line_spatial_id,
-                        clip_chain_id: ctx.clip_chain_id,
+                        clip_chain_id: round_chain.unwrap_or(ctx.clip_chain_id),
                         wr: &mut *ctx.wr,
                         paints: ctx.paints,
                         accumulated_scale: ctx.accumulated_scale,
                     };
                     gradient::fill_rect_with_gradient_by_id(
-                        id, dash_bounds, &mut grad_ctx,
+                        id, grad_bounds, &mut grad_ctx,
                         stroke.opacity * ctx.style.opacity,
                     );
                 }
@@ -179,17 +198,50 @@ pub(crate) fn stroke_line_segment(
                 return;
             }
         }
+        // Gradient stroke (no dashes) — fill full rotated rect with gradient.
+        let mut grad_bounds = LayoutRect::from_origin_and_size(
+            LayoutPoint::new(-len / 2.0, -half_w),
+            LayoutSize::new(len, stroke_width),
+        );
+        if stroke.line_cap != LineCap::Butt {
+            let ext = half_w;
+            grad_bounds = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(-len / 2.0 - ext, -half_w),
+                LayoutSize::new(len + 2.0 * ext, stroke_width),
+            );
+        }
+
+        // Build clip chain for round caps before creating grad_ctx.
+        let round_chain = if stroke.line_cap == LineCap::Round {
+            let radii = BorderRadius {
+                top_left: LayoutSize::new(half_w, half_w),
+                top_right: LayoutSize::new(half_w, half_w),
+                bottom_left: LayoutSize::new(half_w, half_w),
+                bottom_right: LayoutSize::new(half_w, half_w),
+            };
+            let clip_id = ctx.wr.define_clip_rounded_rect(
+                line_spatial_id,
+                ComplexClipRegion { rect: grad_bounds, radii, mode: ClipMode::Clip },
+            );
+            Some(ctx.wr.define_clip_chain(
+                clip_chain_option(ctx.clip_chain_id),
+                [clip_id],
+            ))
+        } else {
+            None
+        };
+
         let mut grad_ctx = RenderContext {
             style: ctx.style,
             svg_origin: LayoutPoint::new(0.0, 0.0),
             spatial_id: line_spatial_id,
-            clip_chain_id: ctx.clip_chain_id,
+            clip_chain_id: round_chain.unwrap_or(ctx.clip_chain_id),
             wr: &mut *ctx.wr,
             paints: ctx.paints,
             accumulated_scale: ctx.accumulated_scale,
         };
         gradient::fill_rect_with_gradient_by_id(
-            id, full_bounds, &mut grad_ctx,
+            id, grad_bounds, &mut grad_ctx,
             stroke.opacity * ctx.style.opacity,
         );
     }
@@ -224,8 +276,7 @@ fn emit_rotated_rects_for_segment(
                     LayoutPoint::new(dash_start, -half_w),
                     LayoutSize::new(dash_len, stroke_width),
                 );
-                let common = make_common_props(bounds, line_spatial_id, ctx.clip_chain_id);
-                ctx.wr.push_rect(&common, bounds, color);
+                draw_capped_rect(bounds, half_w, color, stroke.line_cap, line_spatial_id, ctx);
             }
             return;
         }
@@ -235,8 +286,59 @@ fn emit_rotated_rects_for_segment(
         LayoutPoint::new(-len / 2.0, -half_w),
         LayoutSize::new(len, stroke_width),
     );
-    let common = make_common_props(full_bounds, line_spatial_id, ctx.clip_chain_id);
-    ctx.wr.push_rect(&common, full_bounds, color);
+    draw_capped_rect(full_bounds, half_w, color, stroke.line_cap, line_spatial_id, ctx);
+}
+
+/// Draw a single rotated-rect with the given line cap style.
+///
+/// - **Butt**: rect covers the exact bounds.
+/// - **Square**: rect extends by `half_w` at each end.
+/// - **Round**: rect extends by `half_w` and uses a pill-shaped clip
+///   (semicircular end caps).
+fn draw_capped_rect(
+    bounds: LayoutRect,
+    half_w: f32,
+    color: ColorF,
+    line_cap: LineCap,
+    spatial_id: webrender_api::SpatialId,
+    ctx: &mut RenderContext,
+) {
+    match line_cap {
+        LineCap::Butt => {
+            let common = make_common_props(bounds, spatial_id, ctx.clip_chain_id);
+            ctx.wr.push_rect(&common, bounds, color);
+        },
+        LineCap::Square => {
+            let extended = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(bounds.min.x - half_w, bounds.min.y),
+                LayoutSize::new(bounds.size().width + 2.0 * half_w, bounds.size().height),
+            );
+            let common = make_common_props(extended, spatial_id, ctx.clip_chain_id);
+            ctx.wr.push_rect(&common, extended, color);
+        },
+        LineCap::Round => {
+            let extended = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(bounds.min.x - half_w, bounds.min.y),
+                LayoutSize::new(bounds.size().width + 2.0 * half_w, bounds.size().height),
+            );
+            let radii = BorderRadius {
+                top_left: LayoutSize::new(half_w, half_w),
+                top_right: LayoutSize::new(half_w, half_w),
+                bottom_left: LayoutSize::new(half_w, half_w),
+                bottom_right: LayoutSize::new(half_w, half_w),
+            };
+            let clip_id = ctx.wr.define_clip_rounded_rect(
+                spatial_id,
+                ComplexClipRegion { rect: extended, radii, mode: ClipMode::Clip },
+            );
+            let chain = ctx.wr.define_clip_chain(
+                clip_chain_option(ctx.clip_chain_id),
+                [clip_id],
+            );
+            let common = make_common_props(extended, spatial_id, chain);
+            ctx.wr.push_rect(&common, extended, color);
+        },
+    }
 }
 
 // ======================= Rect stroke =======================
@@ -501,7 +603,7 @@ fn stroke_polyline_gradient(
             // Draw this sub-segment as a solid-colored rotated rect.
             // The color was evaluated in global (parent) coordinates so the
             // gradient spans the entire polyline uniformly.
-            draw_rotated_stroke_segment(p0x, p0y, p1x, p1y, piece_color, adjusted_width, ctx);
+            draw_rotated_stroke_segment(p0x, p0y, p1x, p1y, piece_color, adjusted_width, stroke.line_cap, ctx);
         }
     }
 }
@@ -513,6 +615,7 @@ fn draw_rotated_stroke_segment(
     x1: f32, y1: f32, x2: f32, y2: f32,
     color: ColorF,
     stroke_width: f32,
+    line_cap: LineCap,
     ctx: &mut RenderContext,
 ) {
     let dx = x2 - x1;
@@ -543,8 +646,7 @@ fn draw_rotated_stroke_segment(
         LayoutSize::new(len, stroke_width),
     );
 
-    let common = make_common_props(line_bounds, line_spatial_id, ctx.clip_chain_id);
-    ctx.wr.push_rect(&common, line_bounds, color);
+    draw_capped_rect(line_bounds, half_w, color, line_cap, line_spatial_id, ctx);
     ctx.wr.pop_reference_frame();
 }
 

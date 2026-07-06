@@ -352,8 +352,13 @@ fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle {
         }
     });
 
+    let svg_visibility = read_attr("visibility").map_or(Visibility::Visible, |v| match v.trim() {
+        "hidden" | "collapse" => Visibility::Hidden,
+        _ => Visibility::Visible,
+    });
+
     NodeStyle {
-        visibility: Visibility::Visible,
+        visibility: svg_visibility,
         display: Display::Inline,
         transform: Vec::new(),
         fill,
@@ -679,13 +684,25 @@ fn collect_filters(node: ServoLayoutNode) -> HashMap<String, FilterDef> {
 
 // ======================= Viewport Extraction =======================
 
-fn extract_viewport_info(node: ServoLayoutNode) -> ViewportInfo {
+fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>, context: &LayoutContext) -> ViewportInfo {
     let element = node.as_element().unwrap();
     let get = |attr: &str| element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string());
     let svg_width = get("width").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(300.0);
     let svg_height = get("height").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(150.0);
     let view_box = get("viewBox").as_deref().and_then(extract_viewbox);
-    ViewportInfo { width: svg_width, height: svg_height, view_box }
+
+    // Check if overflow was explicitly set to "visible".
+    // SVG defaults to overflow:hidden for <svg> elements, but CSS's
+    // initial value is visible, so we cannot trust the computed value.
+    // Only skip the viewport clip when the author explicitly sets
+    // overflow: visible via attribute or inline style.
+    let overflow_visible = get("overflow")
+        .or_else(|| {
+            get("style").and_then(|s| parse_inline_style_prop(&s, "overflow"))
+        })
+        .map_or(false, |v| v.trim().eq_ignore_ascii_case("visible"));
+
+    ViewportInfo { width: svg_width, height: svg_height, view_box, overflow_visible }
 }
 
 // ======================= Render Node & Tree Construction =======================
@@ -844,7 +861,7 @@ fn build_svg_render_node<'dom>(
 /// Main entry point — builds a complete `SvgRenderTree` from an SVG DOM element.
 pub(crate) fn build_svg_render_tree<'dom>(node: ServoLayoutNode<'dom>, context: &LayoutContext) -> Option<Arc<SvgRenderTree>> {
     let root = build_svg_render_node(node, context, node, &mut HashSet::new())?;
-    let viewport = extract_viewport_info(node);
+    let viewport = extract_viewport_info(node, context);
     let gradients = collect_gradients(node);
     let clip_paths = collect_clip_paths(node);
     let patterns = collect_patterns(node, context);

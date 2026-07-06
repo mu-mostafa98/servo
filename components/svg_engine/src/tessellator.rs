@@ -248,7 +248,7 @@ fn scanline_fill_triangle(
                     cx += CELL;
                 }
             },
-            FillStyle::Pattern { shapes, tile_w, tile_h, ox, oy, opacity } => {
+            FillStyle::Pattern { shapes, tile_w, tile_h, ox, oy, opacity: _opacity } => {
                 // Render pattern shapes using proper shape.render() calls,
                 // grouped by tile column and clipped to the polygon
                 // boundary per scanline.  This matches the quality of the
@@ -286,6 +286,9 @@ fn scanline_fill_triangle(
                     );
 
                     for (shape, shape_style) in shapes.iter() {
+                        if !shape_style.is_visible() {
+                            continue;
+                        }
                         let mut shape_ctx = RenderContext {
                             style: shape_style,
                             svg_origin: tile_origin,
