@@ -220,9 +220,17 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
     }
 }
 
-/// Gradient stroke for polylines: evaluate the gradient at each segment's
-/// midpoint and render as a solid color, so the gradient spans the whole
-/// shape uniformly rather than per-segment.
+/// Minimum subdivision size for gradient strokes along polylines.
+/// Smaller values give smoother gradient transitions at the cost
+/// of more WebRender draw calls.  4px matches the fill scanline
+/// rasterizer cell size.
+const STROKE_GRADIENT_SUBDIVISION_PX: f32 = 4.0;
+
+/// Gradient stroke for polylines: subdivides each line segment into
+/// small pieces (~4px) and evaluates the gradient at each piece's
+/// midpoint in **absolute coordinates**, so the gradient varies
+/// smoothly along the entire polyline rather than being constant
+/// per full segment.
 fn stroke_polyline_gradient(
     pts: &[LyonPoint],
     ctx: &mut RenderContext,
@@ -235,7 +243,7 @@ fn stroke_polyline_gradient(
         return;
     };
 
-    // Compute overall bounding box of the polyline
+    // Compute overall bounding box of the polyline.
     let mut min_x = f32::MAX; let mut min_y = f32::MAX;
     let mut max_x = f32::MIN; let mut max_y = f32::MIN;
     for p in pts {
@@ -277,7 +285,31 @@ fn stroke_polyline_gradient(
         },
     };
 
+    // Pre-compute radial focal point and radius in absolute space for later use.
+    let rad_fx_fy_r2 = match grad_def {
+        GradientDef::Radial(rg) => {
+            let (fx, fy, r2) = match rg.units {
+                GradientUnits::ObjectBoundingBox => {
+                    let scale = bbox_w.max(bbox_h);
+                    (ctx.svg_origin.x + min_x + rg.fx.to_object_bbox() * bbox_w,
+                     ctx.svg_origin.y + min_y + rg.fy.to_object_bbox() * bbox_h,
+                     (rg.r.to_object_bbox() * scale).max(1.0))
+                },
+                GradientUnits::UserSpaceOnUse => {
+                    let scale = bbox_w.max(bbox_h);
+                    (ctx.svg_origin.x + rg.fx.to_user_space(bbox_w),
+                     ctx.svg_origin.y + rg.fy.to_user_space(bbox_h),
+                     rg.r.to_user_space(scale).max(1.0))
+                },
+            };
+            Some((fx, fy, r2))
+        },
+        GradientDef::Linear(_) => None,
+    };
+
     let opacity = stroke.opacity * ctx.style.opacity;
+    // Clamp subdivision size so extremely short segments still split at least once.
+    let subdiv = STROKE_GRADIENT_SUBDIVISION_PX.max(adjusted_width * 0.25);
 
     for pair in pts.windows(2) {
         let ax = ctx.svg_origin.x + pair[0].x as f32;
@@ -285,77 +317,90 @@ fn stroke_polyline_gradient(
         let bx = ctx.svg_origin.x + pair[1].x as f32;
         let by = ctx.svg_origin.y + pair[1].y as f32;
 
-        // Evaluate gradient at segment midpoint.
-        let mx = (ax + bx) / 2.0;
-        let my = (ay + by) / 2.0;
-        let segment_color = match grad_def {
-            GradientDef::Linear(lg) => {
-                let t = gradient::gradient_projection(mx, my, gx1, gy1, gx2, gy2);
-                let mut c = gradient::color_at_t(&lg.stops, t);
-                c.a *= opacity;
-                c
-            },
-            GradientDef::Radial(rg) => {
-                let (fx, fy, r2) = match rg.units {
-                    GradientUnits::ObjectBoundingBox => {
-                        let scale = bbox_w.max(bbox_h);
-                        (ctx.svg_origin.x + min_x + rg.fx.to_object_bbox() * bbox_w,
-                         ctx.svg_origin.y + min_y + rg.fy.to_object_bbox() * bbox_h,
-                         (rg.r.to_object_bbox() * scale).max(1.0))
-                    },
-                    GradientUnits::UserSpaceOnUse => {
-                        let scale = bbox_w.max(bbox_h);
-                        (ctx.svg_origin.x + rg.fx.to_user_space(bbox_w),
-                         ctx.svg_origin.y + rg.fy.to_user_space(bbox_h),
-                         rg.r.to_user_space(scale).max(1.0))
-                    },
-                };
-                let dx = mx - fx;
-                let dy = my - fy;
-                let dist_sq = (dx * dx + dy * dy) / (r2 * r2).max(1.0);
-                let t = dist_sq.sqrt().min(1.0);
-                let mut c = gradient::color_at_t(&rg.stops, t);
-                c.a *= opacity;
-                c
-            },
-        };
+        let seg_dx = bx - ax;
+        let seg_dy = by - ay;
+        let seg_len = (seg_dx * seg_dx + seg_dy * seg_dy).sqrt();
+        if seg_len < ZERO_LENGTH_EPSILON { continue; }
 
-        // Create a temporary solid-color stroke style for this segment.
-        let seg_style = NodeStyle {
-            visibility: Visibility::Visible,
-            display: Display::Inline,
-            transform: Vec::new(),
-            fill: None,
-            render_hints: None,
-            effects: None,
-            opacity: 1.0,
-            stroke: Some(StrokeParams {
-                color: Some(svgtypes::Color::new_rgba(
-                    (segment_color.r * 255.0).round() as u8,
-                    (segment_color.g * 255.0).round() as u8,
-                    (segment_color.b * 255.0).round() as u8,
-                    (segment_color.a * 255.0).round() as u8,
-                )),
-                paint_server: None,
-                opacity: 1.0,
-                width: adjusted_width,
-                line_cap: stroke.line_cap,
-                line_join: stroke.line_join,
-                miter_limit: stroke.miter_limit,
-                dash_array: stroke.dash_array.clone(),
-                dash_offset: stroke.dash_offset,
-            }),
-        };
+        let num_pieces = (seg_len / subdiv).ceil() as u32;
+        let num_pieces = num_pieces.max(1);
 
-        let mut seg_ctx = RenderContext {
-            style: &seg_style,
-            svg_origin: ctx.svg_origin,
-            spatial_id: ctx.spatial_id,
-            clip_chain_id: ctx.clip_chain_id,
-            wr: &mut *ctx.wr,
-            paints: ctx.paints,
-            accumulated_scale: ctx.accumulated_scale,
-        };
-        stroke_line_segment(ax, ay, bx, by, &mut seg_ctx);
+        for i in 0..num_pieces {
+            let t0 = (i as f32) / (num_pieces as f32);
+            let t1 = ((i + 1) as f32) / (num_pieces as f32);
+            let p0x = ax + seg_dx * t0;
+            let p0y = ay + seg_dy * t0;
+            let p1x = ax + seg_dx * t1;
+            let p1y = ay + seg_dy * t1;
+            let mx = (p0x + p1x) / 2.0;
+            let my = (p0y + p1y) / 2.0;
+
+            // Evaluate gradient at sub-segment midpoint (absolute coordinates).
+            let piece_color = match grad_def {
+                GradientDef::Linear(lg) => {
+                    let t = gradient::gradient_projection(mx, my, gx1, gy1, gx2, gy2);
+                    let mut c = gradient::color_at_t(&lg.stops, t);
+                    c.a *= opacity;
+                    c
+                },
+                GradientDef::Radial(rg) => {
+                    let (fx, fy, r2) = rad_fx_fy_r2.unwrap();
+                    let dx = mx - fx;
+                    let dy = my - fy;
+                    let dist_sq = (dx * dx + dy * dy) / (r2 * r2).max(1.0);
+                    let t = dist_sq.sqrt().min(1.0);
+                    let mut c = gradient::color_at_t(&rg.stops, t);
+                    c.a *= opacity;
+                    c
+                },
+            };
+
+            // Draw this sub-segment as a solid-colored rotated rect.
+            // The color was evaluated in global (parent) coordinates so the
+            // gradient spans the entire polyline uniformly.
+            draw_rotated_stroke_segment(p0x, p0y, p1x, p1y, piece_color, adjusted_width, ctx);
+        }
     }
+}
+
+/// Draw a single rotated-rect line segment with a solid color.
+/// This is the inner rendering step extracted from [`stroke_line_segment`]
+/// so we can call it per-sub-segment without creating a full [`NodeStyle`].
+fn draw_rotated_stroke_segment(
+    x1: f32, y1: f32, x2: f32, y2: f32,
+    color: ColorF,
+    stroke_width: f32,
+    ctx: &mut RenderContext,
+) {
+    let dx = x2 - x1;
+    let dy = y2 - y1;
+    let len = (dx * dx + dy * dy).sqrt();
+    if len < ZERO_LENGTH_EPSILON { return; }
+
+    let mx = (x1 + x2) / 2.0;
+    let my = (y1 + y2) / 2.0;
+    let angle = dy.atan2(dx);
+    let half_w = stroke_width / 2.0;
+
+    let transform = LayoutTransform::rotation(0.0, 0.0, 1.0, Angle::radians(angle));
+    let line_spatial_id = ctx.wr.push_reference_frame(
+        LayoutPoint::new(mx, my),
+        ctx.spatial_id,
+        TransformStyle::Flat,
+        PropertyBinding::Value(transform),
+        ReferenceFrameKind::Transform {
+            is_2d_scale_translation: false,
+            should_snap: false,
+            paired_with_perspective: false,
+        },
+    );
+
+    let line_bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(-len / 2.0, -half_w),
+        LayoutSize::new(len, stroke_width),
+    );
+
+    let common = make_common_props(line_bounds, line_spatial_id, ctx.clip_chain_id);
+    ctx.wr.push_rect(&common, line_bounds, color);
+    ctx.wr.pop_reference_frame();
 }

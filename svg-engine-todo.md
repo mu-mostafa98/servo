@@ -11,9 +11,11 @@
 
 **Fixed in:** [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) + [renderer/line.rs](components/svg_engine/src/renderer/line.rs)
 
-**Fix:** Extracted a shared `stroke_line_segment` helper that handles both solid-color and gradient paint servers. `Line::render` and `stroke_polyline` both delegate to it. The old `stroke_polyline` guarded on `stroke.color.is_some()` — now it checks both `color` and `paint_server`.
+**Fix (visibility):** Extracted a shared `stroke_line_segment` helper that handles both solid-color and gradient paint servers. `Line::render` and `stroke_polyline` both delegate to it. The old `stroke_polyline` guarded on `stroke.color.is_some()` — now it checks both `color` and `paint_server`.
 
-**Second fix (regression):** `stroke_polyline` was passing local coordinates to `stroke_line_segment` which expects absolute coordinates (with `svg_origin` already added). Fixed by adding `svg_origin` in the call site.
+**Fix (regression):** `stroke_polyline` was passing local coordinates to `stroke_line_segment` which expects absolute coordinates (with `svg_origin` already added). Fixed by adding `svg_origin` in the call site.
+
+**Fix (per-segment solid color, 2026-07-06):** `stroke_polyline_gradient` was evaluating the gradient at each full segment's midpoint and drawing the entire segment as a single solid color. Changed to subdivide each segment into ~4px pieces and evaluate the gradient at each piece's midpoint in absolute (parent-frame) coordinates, so the gradient varies smoothly along the entire polyline. Added `draw_rotated_stroke_segment` helper to avoid per-piece `NodeStyle`/`RenderContext` allocation.
 
 ---
 
@@ -29,7 +31,9 @@
 
 **Fixed in:** [renderer/fill.rs](components/svg_engine/src/renderer/fill.rs) + [tessellator.rs](components/svg_engine/src/tessellator.rs)
 
-**Fix:** Added `FillStyle::Pattern` variant to the tessellator. When `fill_polygon` encounters a pattern paint server, it computes tile dimensions/origin in absolute space and evaluates the pattern per-pixel using point-in-shape geometry (rect/circle/ellipse hit testing). Only solid-filled shapes in patterns are evaluated — gradient/pattern-filled pattern shapes are skipped.
+**Fix (v1):** Added `FillStyle::Pattern` variant to the tessellator. When `fill_polygon` encounters a pattern paint server, it computes tile dimensions/origin in absolute space and evaluates the pattern per-pixel using point-in-shape geometry (rect/circle/ellipse hit testing). Only solid-filled shapes in patterns are evaluated — gradient/pattern-filled pattern shapes are skipped.
+
+**Fix (v2 — shape rendering, 2026-07-06):** Replaced the per-pixel `pattern_color_at` evaluation with proper `shape.render()` calls inside the scanline loop, grouped by tile column. For each scanline the tessellator clips each tile's shape rendering to the polygon boundary via a per-tile clip rect. This means pattern shapes (circles, rounded rects) are now rendered as proper WebRender primitives with anti-aliasing, matching the quality of the rect-based pattern path. Removed the now-unused `point_in_shape` and `pattern_color_at` helpers.
 
 ---
 
@@ -160,9 +164,9 @@
 
 | Issue | Status | File | Lines |
 |-------|--------|------|-------|
-| #1 Gradient strokes dropped | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | stroke_line_segment, stroke_polyline |
+| #1 Gradient strokes dropped | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | stroke_line_segment, stroke_polyline, draw_rotated_stroke_segment |
 | #2 Radial gradient fills rect | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | RadialGradient variant |
-| #3 Pattern fills rect | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | Pattern variant |
+| #3 Pattern fills rect | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | shape.render() per tile, clip to polygon |
 | #4 userSpaceOnUse origin | **✓ FIXED** | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | offset_x/offset_y in strategies |
 | #5 fill="none" vs inheritance | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 293-310 |
 | #6 currentColor default | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 88-103 |

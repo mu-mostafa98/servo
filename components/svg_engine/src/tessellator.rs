@@ -24,7 +24,8 @@ use webrender_api::{
     units::{LayoutPoint, LayoutRect, LayoutSize},
 };
 
-use crate::renderer::{RenderContext, shape_rendering_value, to_colorf};
+use crate::renderer::{RenderContext, shape_rendering_value, clip_chain_option};
+use crate::renderer::Render;
 use crate::renderer::gradient::{color_at_t, gradient_projection};
 use crate::shapes::Shape;
 use crate::style::FillRule;
@@ -65,57 +66,6 @@ pub(crate) enum FillStyle<'a> {
         ox: f32, oy: f32,
         opacity: f32,
     },
-}
-
-// ======================= Point-in-Shape Helpers =======================
-
-/// Check whether a point `(px, py)` (in shape-local coordinates) falls inside
-/// a shape.  Used for per-pixel pattern evaluation.
-///
-/// Only rect, circle, and ellipse are supported — polyline/polygon/path
-/// return `false` (they do not contribute to the pattern color at this
-/// position, which is a simplification for common pattern shapes).
-fn point_in_shape(px: f32, py: f32, shape: &Shape) -> bool {
-    match shape {
-        Shape::Rect(r) => {
-            px >= r.x && px <= r.x + r.width &&
-            py >= r.y && py <= r.y + r.height
-        },
-        Shape::Circle(c) => {
-            let dx = px - c.cx;
-            let dy = py - c.cy;
-            dx * dx + dy * dy <= c.r * c.r
-        },
-        Shape::Ellipse(e) => {
-            if e.rx <= 0.0 || e.ry <= 0.0 { return false; }
-            let dx = (px - e.cx) / e.rx;
-            let dy = (py - e.cy) / e.ry;
-            dx * dx + dy * dy <= 1.0
-        },
-        // Line / polyline / polygon / path — no fill contribution or too complex.
-        Shape::Line(_) | Shape::Polyline(_) | Shape::Polygon(_) | Shape::Path(_) => false,
-    }
-}
-
-/// Evaluate the pattern at a tile-local position `(tx, ty)` using the painter's
-/// model (last shape in the list is on top).  Returns `Some(ColorF)` if a shape
-/// with a solid fill covers the point, `None` if the point is transparent.
-fn pattern_color_at(
-    tx: f32, ty: f32,
-    shapes: &[(Shape, NodeStyle)],
-) -> Option<ColorF> {
-    // Iterate in reverse (painter's order: last drawn = on top).
-    for (shape, style) in shapes.iter().rev() {
-        if point_in_shape(tx, ty, shape) {
-            if let Some(ref fill) = style.fill {
-                if let Some(ref svg_color) = fill.color {
-                    return Some(to_colorf(svg_color));
-                }
-                // Gradient/pattern fills inside patterns — skip (complex).
-            }
-        }
-    }
-    None
 }
 
 // ======================= Tessellation =======================
@@ -299,31 +249,54 @@ fn scanline_fill_triangle(
                 }
             },
             FillStyle::Pattern { shapes, tile_w, tile_h, ox, oy, opacity } => {
-                let mut cx = x_left;
-                while cx < x_right {
-                    // Use a smaller cell (2px) for pattern fills so that
-                    // small pattern shapes (e.g. a 5px circle) don't look
-                    // overly blocky.
-                    let cw = 2.0f32.min(x_right - cx);
-                    let rx = cx + cw / 2.0;
-                    let ry = center;
+                // Render pattern shapes using proper shape.render() calls,
+                // grouped by tile column and clipped to the polygon
+                // boundary per scanline.  This matches the quality of the
+                // rect-based pattern path (pixel-perfect rounded rects for
+                // circles) instead of the blocky per-pixel evaluation the
+                // old code produced.
+                let row = ((center - oy) / tile_h).floor() as i32;
+                let col_start = ((x_left - ox) / tile_w).floor() as i32;
+                let col_end = ((x_right - ox) / tile_w).ceil() as i32;
 
-                    // Compute tile-local position (handle negative coordinates).
-                    let tile_x = ((rx - ox) % tile_w + tile_w) % tile_w;
-                    let tile_y = ((ry - oy) % tile_h + tile_h) % tile_h;
+                for col in col_start..col_end {
+                    let tile_origin = LayoutPoint::new(
+                        ox + col as f32 * tile_w,
+                        oy + row as f32 * tile_h,
+                    );
+                    let tile_x0 = tile_origin.x;
+                    let tile_x1 = tile_origin.x + tile_w;
 
-                    if let Some(mut color) = pattern_color_at(tile_x, tile_y, shapes) {
-                        color.a *= opacity;
-                        let cell_rect = LayoutRect::from_origin_and_size(
-                            LayoutPoint::new(cx, yf), LayoutSize::new(cw, 1.0),
-                        );
-                        let common = CommonItemProperties::new(
-                            cell_rect,
-                            SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: ctx.clip_chain_id },
-                        );
-                        ctx.wr.push_rect(&common, cell_rect, color);
+                    let span_x0 = tile_x0.max(x_left);
+                    let span_x1 = tile_x1.min(x_right);
+                    if span_x0 >= span_x1 { continue; }
+
+                    // Clip this tile's rendering to the scanline span
+                    // that falls inside the polygon.
+                    let clip_bounds = LayoutRect::from_origin_and_size(
+                        LayoutPoint::new(span_x0, yf),
+                        LayoutSize::new(span_x1 - span_x0, 1.0),
+                    );
+                    let clip_id = ctx.wr.define_clip_rect(
+                        ctx.spatial_id, clip_bounds,
+                    );
+                    let tile_chain = ctx.wr.define_clip_chain(
+                        clip_chain_option(ctx.clip_chain_id),
+                        [clip_id],
+                    );
+
+                    for (shape, shape_style) in shapes.iter() {
+                        let mut shape_ctx = RenderContext {
+                            style: shape_style,
+                            svg_origin: tile_origin,
+                            spatial_id: ctx.spatial_id,
+                            clip_chain_id: tile_chain,
+                            wr: &mut *ctx.wr,
+                            paints: ctx.paints,
+                            accumulated_scale: ctx.accumulated_scale,
+                        };
+                        shape.render(&mut shape_ctx);
                     }
-                    cx += cw;
                 }
             },
         }
