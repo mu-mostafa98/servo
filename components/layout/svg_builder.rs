@@ -361,7 +361,7 @@ fn build_use_children<'dom>(
     }
 
     // Find the target element in the full SVG DOM tree.
-    let mut result = match find_element_by_id(root_node, &ref_id) {
+    let result = match find_element_by_id(root_node, &ref_id) {
         Some(target) => {
             // Build the target's render subtree.
             let Some(mut node) = build_svg_render_node(target, context, root_node, resolving) else {
@@ -379,19 +379,6 @@ fn build_use_children<'dom>(
 
     resolving.remove(&ref_id);
 
-    // Apply x/y offset as a translate transform on the cloned content.
-    let x = get_attr(element, "x").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(0.0);
-    let y = get_attr(element, "y").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(0.0);
-    if x != 0.0 || y != 0.0 {
-        for child in &mut result {
-            if child.style.transform.is_empty() {
-                child.style.transform = vec![TransformOp::Translate(x, y)];
-            } else {
-                child.style.transform.insert(0, TransformOp::Translate(x, y));
-            }
-        }
-    }
-
     result
 }
 
@@ -403,10 +390,17 @@ fn build_svg_render_node<'dom>(
 ) -> Option<SvgRenderNode> {
     let element = node.as_element()?;
     let tag = build_tag(&element)?;
-    let style = build_style(node, context);
+    let mut style = build_style(node, context);
     let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string());
     let children = match &tag {
         SvgTag::Container(Container::Use) => {
+            // x and y on <use> offset the cloned content in the parent space,
+            // applied BEFORE the transform attribute (per SVG 2 spec).
+            let x = get_attr(&element, "x").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(0.0);
+            let y = get_attr(&element, "y").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(0.0);
+            if x != 0.0 || y != 0.0 {
+                style.transform.insert(0, TransformOp::Translate(x, y));
+            }
             build_use_children(&element, context, root_node, &style, resolving)
         },
         _ => {

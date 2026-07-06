@@ -4,9 +4,6 @@
 
 //! SVG render tree traversal — walks the [`SvgRenderTree`] and emits
 //! WebRender display list commands via each shape's [`Render`] impl.
-//!
-//! The entry point is [`render_svg_tree`], which sets up the viewport clip
-//! and viewBox transform, then recursively walks the node tree.
 
 use std::collections::HashMap;
 
@@ -31,19 +28,13 @@ pub fn render_svg_tree(
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
 ) {
-    // Apply SVG viewport clip.
     let svg_bounds = LayoutRect::from_origin_and_size(*svg_origin, svg_size);
     let svg_clip_id = wr.define_clip_rect(spatial_id, svg_bounds);
     let svg_clip_chain = wr.define_clip_chain(
-        if clip_chain_id == ClipChainId::INVALID {
-            None
-        } else {
-            Some(clip_chain_id)
-        },
+        if clip_chain_id == ClipChainId::INVALID { None } else { Some(clip_chain_id) },
         [svg_clip_id],
     );
 
-    // Apply viewBox transform if present.
     let (root_origin, root_spatial_id, pop_frame) =
         if let Some(ref vb) = tree.viewport.view_box {
             let scale_x = svg_size.width / vb.width;
@@ -53,14 +44,11 @@ pub fn render_svg_tree(
             let combined = t1.then(&s);
             let lt = transform::to_layout_transform(&combined);
             let frame_id = wr.push_reference_frame(
-                *svg_origin,
-                spatial_id,
+                *svg_origin, spatial_id,
                 TransformStyle::Flat,
                 PropertyBinding::Value(lt),
                 ReferenceFrameKind::Transform {
-                    is_2d_scale_translation: false,
-                    should_snap: false,
-                    paired_with_perspective: false,
+                    is_2d_scale_translation: false, should_snap: false, paired_with_perspective: false,
                 },
             );
             (LayoutPoint::new(0.0, 0.0), frame_id, true)
@@ -70,17 +58,14 @@ pub fn render_svg_tree(
 
     render_node(&tree.root, &root_origin, root_spatial_id, svg_clip_chain, wr, &tree.gradients);
 
-    if pop_frame {
-        wr.pop_reference_frame();
-    }
+    if pop_frame { wr.pop_reference_frame(); }
 }
 
-/// Recursively render a single node and its children.
 fn render_node(
     node: &SvgRenderNode,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
-    clip_chain_id: ClipChainId,
+    mut clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
     gradients: &HashMap<String, GradientDef>,
 ) {
@@ -88,17 +73,21 @@ fn render_node(
     let mut cur_origin = *svg_origin;
     let mut pushed_count: u32 = 0;
 
-    // Apply each transform operation in order.
     for op in &node.style.transform {
         let result = transform::apply_transform_op(op, cur_origin, cur_spatial_id, wr);
         cur_origin = result.child_origin;
         cur_spatial_id = result.child_spatial_id;
         if result.pushed_frame {
             pushed_count += 1;
+            // WebRender clip chains defined against a parent spatial_id may not
+            // resolve correctly across reference frame boundaries. Invalidate the
+            // clip chain inside ref frames — content that overflows the SVG viewport
+            // due to rotation will not be clipped, but the important thing is that
+            // the content renders at all.
+            clip_chain_id = ClipChainId::INVALID;
         }
     }
 
-    // Render this node if it's a shape.
     if let SvgTag::Shape(shape) = &node.tag {
         let mut ctx = RenderContext {
             style: &node.style,
@@ -111,18 +100,13 @@ fn render_node(
         shape.render(&mut ctx);
     }
 
-    // Recurse into children, unless this is a <defs> container whose
-    // children are definitions and must not be rendered directly.
     if let SvgTag::Container(Container::Defs) = &node.tag {
-        // do not recurse — <defs> children are non-visual definitions
+        // do not recurse
     } else {
         for child in &node.children {
             render_node(child, &cur_origin, cur_spatial_id, clip_chain_id, wr, gradients);
         }
     }
 
-    // Pop any reference frames in reverse order.
-    for _ in 0..pushed_count {
-        wr.pop_reference_frame();
-    }
+    for _ in 0..pushed_count { wr.pop_reference_frame(); }
 }
