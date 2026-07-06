@@ -7,49 +7,44 @@
 //! These functions parse raw SVG attribute strings into typed values.
 //! They are shared by multiple shape or element types and live in their
 //! own file to keep each shape file focused on its own `Build` impl.
+//!
+//! Length parsing is backed by [`svgtypes::Length`] for spec‑compliant handling
+//! of all SVG length units (`px`, `em`, `ex`, `in`, `cm`, `mm`, `pt`, `pc`, `%`).
+
+use svgtypes::Length as SvgLength;
+use svgtypes::PointsParser;
 
 use kurbo::Point;
 
 use crate::error::{SvgEngineError, SvgResult};
 
-/// Parse a named SVG length attribute (e.g. `x="10"`, `width="50"`).
-/// Strips trailing `px` suffix and returns the raw float value.
+/// Parse a named SVG length attribute (e.g. `x="10"`, `width="50%"`).
+///
+/// Handles all CSS/SVG length units via [`svgtypes::Length`].
+/// Returns the raw numeric value (unitless); unit conversion for `em`/`ex`/etc.
+/// must be performed by the caller if needed.
 pub fn parse_length(
     attr: &str,
     get_attr: &dyn Fn(&str) -> Option<String>,
 ) -> SvgResult<f32> {
     let value =
         get_attr(attr).ok_or_else(|| SvgEngineError::MissingAttribute(attr.to_owned()))?;
-    value
-        .trim_end_matches("px")
-        .trim()
-        .trim_end_matches('%')
-        .trim()
-        .parse::<f32>()
-        .map_err(|e| SvgEngineError::ParseError(format!("{attr}: {e}")))
+    let len: SvgLength = value.parse()
+        .map_err(|e| SvgEngineError::ParseError(format!("{attr}: {e}")))?;
+    Ok(len.number as f32)
 }
 
 /// Parse an SVG `points` attribute value into a list of coordinate pairs.
 ///
-/// Used by both `<polyline>` and `<polygon>`.
+/// Used by both `<polyline>` and `<polygon>`.  Delegates to
+/// [`svgtypes::PointsParser`] for SVG-spec-compliant parsing.
 pub fn parse_points(
     get_attr: &dyn Fn(&str) -> Option<String>,
 ) -> SvgResult<Vec<Point>> {
     let value =
         get_attr("points").ok_or_else(|| SvgEngineError::MissingAttribute("points".to_owned()))?;
-    let coords: Vec<f64> = value
-        .split(|c: char| c == ',' || c.is_whitespace())
-        .filter(|s| !s.is_empty())
-        .filter_map(|s| s.parse::<f64>().ok())
-        .collect();
-
-    let points: Vec<Point> = coords
-        .chunks(2)
-        .filter_map(|chunk| {
-            let x = *chunk.first()?;
-            let y = *chunk.get(1)?;
-            Some(Point::new(x, y))
-        })
+    let points: Vec<Point> = PointsParser::from(value.as_str())
+        .map(|(x, y)| Point::new(x, y))
         .collect();
 
     if points.len() < 2 {
@@ -101,6 +96,19 @@ mod tests {
     fn parse_length_negative_allowed() {
         let result = parse_length("x", &|_| Some("-5".to_owned()));
         assert_eq!(result.unwrap(), -5.0);
+    }
+
+    #[test]
+    fn parse_length_with_em() {
+        // svgtypes handles em correctly; our previous parser failed on this.
+        let result = parse_length("x", &|_| Some("2em".to_owned()));
+        assert_eq!(result.unwrap(), 2.0);
+    }
+
+    #[test]
+    fn parse_length_with_cm() {
+        let result = parse_length("width", &|_| Some("5cm".to_owned()));
+        assert_eq!(result.unwrap(), 5.0);
     }
 
     #[test]

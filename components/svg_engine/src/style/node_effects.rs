@@ -7,10 +7,12 @@
 //! These types are future SVG spec stubs and are not yet wired into
 //! the rendering pipeline.
 
-/// SVG node effects — clip-path, mask.
+/// SVG node effects — clip-path, mask, filter.
 #[allow(dead_code)]
 #[derive(Debug, Clone)]
 pub struct NodeEffects {
     pub clip_path: Option<String>,
     pub mask: Option<String>,
+    /// Reference to a `<filter>` element (e.g., `url(#myBlur)`).
+    pub filter: Option<String>,
 }

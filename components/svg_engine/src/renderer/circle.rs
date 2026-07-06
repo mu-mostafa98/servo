@@ -5,6 +5,11 @@
 use crate::shapes::{Circle, Ellipse};
 use crate::renderer::{Render, RenderContext};
 
+/// Renders an SVG `<circle>`.
+///
+/// LSP contract:
+/// - Delegates to [`Ellipse::render`] with `rx = ry = r`.
+/// - All LSP invariants are preserved through the delegation chain.
 impl Render for Circle {
     fn render(&self, ctx: &mut RenderContext) {
         // A circle is an ellipse with equal rx and ry.

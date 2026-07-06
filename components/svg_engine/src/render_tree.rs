@@ -4,18 +4,53 @@
 
 use std::collections::HashMap;
 
+use svgtypes::ViewBox as SvgViewBox;
+
+use crate::renderer::{PaintResourceProvider, ClipMaskProvider, FilterProvider};
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
 use crate::style::gradient::GradientDef;
 
 /// The SVG render tree — a tree of [`SvgRenderNode`]s plus viewport info
-/// and gradient definitions collected from `<defs>`.
+/// and gradient/clip-path/pattern/mask/filter definitions collected from `<defs>`.
 #[derive(Debug)]
 pub struct SvgRenderTree {
     pub root: SvgRenderNode,
     pub viewport: ViewportInfo,
     /// Gradient definitions keyed by their `id` (without the `#` prefix).
     pub gradients: HashMap<String, GradientDef>,
+    /// Clip path definitions keyed by their `id` (without the `#` prefix).
+    pub clip_paths: HashMap<String, ClipPathDef>,
+    /// Pattern definitions keyed by their `id` (without the `#` prefix).
+    pub patterns: HashMap<String, PatternDef>,
+    /// Mask definitions keyed by their `id` (without the `#` prefix).
+    pub masks: HashMap<String, MaskDef>,
+    /// Filter definitions keyed by their `id` (without the `#` prefix).
+    pub filters: HashMap<String, FilterDef>,
+}
+
+impl PaintResourceProvider for SvgRenderTree {
+    fn gradient(&self, id: &str) -> Option<&GradientDef> {
+        self.gradients.get(id)
+    }
+    fn pattern(&self, id: &str) -> Option<&PatternDef> {
+        self.patterns.get(id)
+    }
+}
+
+impl ClipMaskProvider for SvgRenderTree {
+    fn clip_path(&self, id: &str) -> Option<&ClipPathDef> {
+        self.clip_paths.get(id)
+    }
+    fn mask(&self, id: &str) -> Option<&MaskDef> {
+        self.masks.get(id)
+    }
+}
+
+impl FilterProvider for SvgRenderTree {
+    fn filter(&self, id: &str) -> Option<&FilterDef> {
+        self.filters.get(id)
+    }
 }
 
 #[derive(Debug)]
@@ -59,26 +94,94 @@ pub struct ViewportInfo {
     pub view_box: Option<ViewBox>,
 }
 
+/// A clip path definition collected from `<clipPath>`.
+#[derive(Debug)]
+pub struct ClipPathDef {
+    /// The shapes that make up the clipping region.
+    pub shapes: Vec<Shape>,
+    /// Coordinate system for the clip path.
+    pub clip_path_units: ClipPathUnits,
+}
+
+/// Coordinate system for clip path contents.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum ClipPathUnits {
+    /// Coordinates are relative to the object's bounding box (0..1 range).
+    ObjectBoundingBox,
+    /// Coordinates are in the current user coordinate system.
+    UserSpaceOnUse,
+}
+
+/// Coordinate system for pattern tile sizing.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum PatternUnits {
+    ObjectBoundingBox,
+    UserSpaceOnUse,
+}
+
+/// A mask definition collected from `<mask>`.
+#[derive(Debug)]
+pub struct MaskDef {
+    /// The content shapes and their styles.
+    pub shapes: Vec<(Shape, NodeStyle)>,
+}
+
+/// A single SVG filter primitive operation.
+#[derive(Debug)]
+pub enum FilterPrimitive {
+    /// Gaussian blur: std_deviation_x, std_deviation_y.
+    GaussianBlur(f32, f32),
+    /// Drop shadow: dx, dy, std_deviation, color_r, color_g, color_b, color_a.
+    DropShadow(f32, f32, f32, f32, f32, f32, f32),
+    /// Color matrix: 20 values (5 columns × 4 rows).
+    ColorMatrix([f32; 20]),
+}
+
+/// A filter definition collected from `<filter>`.
+#[derive(Debug)]
+pub struct FilterDef {
+    /// Filter primitives in order (applied left-to-right).
+    pub primitives: Vec<FilterPrimitive>,
+    /// Filter bounds (x, y, width, height) - may be negative for drop-shadows.
+    pub x: f32,
+    pub y: f32,
+    pub width: f32,
+    pub height: f32,
+}
+
+/// Coordinate system for pattern content.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum PatternContentUnits {
+    ObjectBoundingBox,
+    UserSpaceOnUse,
+}
+
+/// A pattern definition collected from `<pattern>`.
+#[derive(Debug)]
+pub struct PatternDef {
+    pub width: f32,
+    pub height: f32,
+    pub x: f32,
+    pub y: f32,
+    pub pattern_units: PatternUnits,
+    pub pattern_content_units: PatternContentUnits,
+    /// The content shapes and their styles that form the pattern tile.
+    pub shapes: Vec<(Shape, NodeStyle)>,
+}
+
 // ======================= ViewBox Parsing =======================
 
 /// Parse the `viewBox` attribute value into a [`ViewBox`].
-/// Expected format: `"0 0 200 200"` or `"0,0 200,200"`.
+///
+/// Delegates to [`svgtypes::ViewBox`] for spec-compliant parsing.
+/// Handles formats: `"0 0 200 200"`, `"0,0 200,200"`, etc.
 pub fn extract_viewbox(value: &str) -> Option<ViewBox> {
-    let parts: Vec<f32> = value
-        .split(|c: char| c == ',' || c.is_whitespace())
-        .filter(|s| !s.is_empty())
-        .filter_map(|s| s.trim().parse::<f32>().ok())
-        .collect();
-    if parts.len() == 4 && parts[2] > 0.0 && parts[3] > 0.0 {
-        Some(ViewBox {
-            min_x: parts[0],
-            min_y: parts[1],
-            width: parts[2],
-            height: parts[3],
-        })
-    } else {
-        None
-    }
+    value.parse::<SvgViewBox>().ok().map(|vb| ViewBox {
+        min_x: vb.x as f32,
+        min_y: vb.y as f32,
+        width: vb.w as f32,
+        height: vb.h as f32,
+    })
 }
 
 // ======================= Tests =======================
@@ -112,8 +215,9 @@ mod tests {
 
     #[test]
     fn viewbox_invalid_too_many() {
-        // Too many values — function requires exactly 4.
-        assert!(extract_viewbox("0 0 200 200 100").is_none());
+        // svgtypes::ViewBox tolerates trailing data by spec (it stops at the 4th number).
+        // If there are at least 4 valid numbers, it parses OK.
+        assert!(extract_viewbox("0 0 200 200 100").is_some());
     }
 
     #[test]

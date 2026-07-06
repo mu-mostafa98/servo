@@ -10,10 +10,12 @@ use std::sync::Arc;
 
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
+use style::values::computed::basic_shape::ClipPath;
 use style::values::computed::svg::{SVGOpacity, SVGStrokeDashArray, SVGPaint, SVGPaintKind};
+use style::values::computed::svg::VectorEffect as StyloVectorEffect;
 use style::values::generics::svg::SVGLength;
+use style::values::specified::box_ as stylo_box;
 use style::color::ColorSpace;
-use webrender_api::ColorF;
 
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use crate::context::LayoutContext;
@@ -26,6 +28,7 @@ use svg_engine::style::gradient::{GradientDef, PaintServer, parse_gradient_eleme
 use svg_engine::style::transform_ops::{parse_transform_str, TransformOp};
 use svg_engine::render_tree::extract_viewbox;
 
+use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
 // ======================= FromComputedValues Trait =======================
@@ -38,7 +41,7 @@ pub trait FromComputedValues: Sized {
 // ======================= ResolvedPaint =======================
 
 enum ResolvedPaint {
-    Color(ColorF),
+    Color(SvgColor),
     PaintServer(String),
     None,
 }
@@ -49,11 +52,11 @@ fn resolve_svg_paint(svg_paint: &SVGPaint, computed_values: &style::properties::
             let current_color = computed_values.clone_color();
             let absolute = color.resolve_to_absolute(&current_color);
             let srgb = absolute.to_color_space(ColorSpace::Srgb);
-            ResolvedPaint::Color(ColorF::new(
-                srgb.components.0.clamp(0.0, 1.0),
-                srgb.components.1.clamp(0.0, 1.0),
-                srgb.components.2.clamp(0.0, 1.0),
-                srgb.alpha,
+            ResolvedPaint::Color(SvgColor::new_rgba(
+                (srgb.components.0.clamp(0.0, 1.0) * 255.0) as u8,
+                (srgb.components.1.clamp(0.0, 1.0) * 255.0) as u8,
+                (srgb.components.2.clamp(0.0, 1.0) * 255.0) as u8,
+                (srgb.alpha.clamp(0.0, 1.0) * 255.0) as u8,
             ))
         },
         SVGPaintKind::None => ResolvedPaint::None,
@@ -147,11 +150,78 @@ impl FromComputedValues for NodeStyle {
     type Input = style::properties::ComputedValues;
 
     fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self> {
+        // Map CSS visibility → svg_engine visibility
+        let svg_visibility = match values.get_inherited_box().visibility {
+            style::computed_values::visibility::T::Visible => Visibility::Visible,
+            style::computed_values::visibility::T::Hidden => Visibility::Hidden,
+            style::computed_values::visibility::T::Collapse => Visibility::Collapse,
+        };
+
+        // Map CSS display → svg_engine display
+        let display = values.get_box().display;
+        let svg_display = if display.outside() == stylo_box::DisplayOutside::None ||
+                            display.inside() == stylo_box::DisplayInside::None
+        {
+            Display::None
+        } else {
+            Display::Inline
+        };
+
+        // Map vector-effect → svg_engine vector_effect hint
+        let ve = values.get_svg().vector_effect;
+        let vector_effect_hint = if ve.intersects(StyloVectorEffect::NON_SCALING_STROKE) {
+            Some(VectorEffect::NonScalingStroke)
+        } else {
+            None
+        };
+
+        // Map clip-path → svg_engine effects
+        let clip_path_ref = match &values.get_svg().clip_path {
+            ClipPath::Url(style::url::ComputedUrl::Valid(u)) => u.fragment().map(|s| s.to_owned()),
+            ClipPath::Url(style::url::ComputedUrl::Invalid(s)) => {
+                let trimmed = s.trim_start_matches('#');
+                if !trimmed.is_empty() { Some(trimmed.to_owned()) } else { None }
+            },
+            _ => None,
+        };
+        let effects = clip_path_ref.map(|ref_id| NodeEffects {
+            clip_path: Some(ref_id.clone()),
+            mask: None,
+            filter: None,
+        });
+
+        // Map shape-rendering → svg_engine shape_rendering hint
+        let sr = values.get_inherited_svg().shape_rendering;
+        let shape_rendering_hint = match sr {
+            style::computed_values::shape_rendering::T::Optimizespeed => {
+                Some(ShapeRendering::OptimizeSpeed)
+            },
+            style::computed_values::shape_rendering::T::Crispedges => {
+                Some(ShapeRendering::CrispEdges)
+            },
+            style::computed_values::shape_rendering::T::Geometricprecision => {
+                Some(ShapeRendering::GeometricPrecision)
+            },
+            _ => None, // Auto → default behavior
+        };
+
         Some(NodeStyle {
-            visibility: Visibility::Visible, display: Display::Inline, transform: Vec::new(),
+            visibility: svg_visibility,
+            display: svg_display,
+            transform: Vec::new(),
             fill: FillParams::from_computed_values(values),
             stroke: StrokeParams::from_computed_values(values),
-            render_hints: None, effects: None,
+            render_hints: Some(RenderHints {
+                vector_effect: vector_effect_hint,
+                shape_rendering: shape_rendering_hint,
+                color_rendering: None,
+                color_interpolation: None,
+                text_rendering: None,
+                image_rendering: None,
+                paint_order: None,
+            }),
+            effects,
+            opacity: values.get_effects().opacity,
         })
     }
 }
@@ -178,6 +248,106 @@ fn build_style(
     };
     style.transform = parse_transform_str(&get_attr(&element, "transform").unwrap_or_default());
     style
+}
+
+/// Parse a CSS inline style attribute and extract specific CSS property values.
+/// Handles formats like `"stroke: white; stroke-width: 4"` and `"fill: red"`.
+fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Option<String> {
+    for part in style_value.split(';') {
+        let mut parts = part.splitn(2, ':');
+        let key = parts.next()?.trim();
+        let val = parts.next()?.trim();
+        if key.eq_ignore_ascii_case(prop_name) && !val.is_empty() {
+            return Some(val.to_owned());
+        }
+    }
+    None
+}
+
+/// Build a NodeStyle by parsing SVG presentation attributes directly from the DOM,
+/// falling back to inline CSS `style` attribute if needed.
+/// Used for elements inside `<pattern>` where Servo's style system may not
+/// compute styles.
+fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle {
+    // Read from presentation attributes first, then fall back to `style=""` attribute.
+    let style_attr = get_attr(element, "style");
+
+    let read_attr = |name: &str| -> Option<String> {
+        get_attr(element, name).or_else(|| {
+            style_attr.as_ref().and_then(|s| parse_inline_style_prop(s, name))
+        })
+    };
+
+    let fill_attr = read_attr("fill");
+    let stroke_attr = read_attr("stroke");
+    let fill_opacity = read_attr("fill-opacity")
+        .and_then(|v| v.parse::<f32>().ok())
+        .unwrap_or(1.0);
+    let stroke_opacity = read_attr("stroke-opacity")
+        .and_then(|v| v.parse::<f32>().ok())
+        .unwrap_or(1.0);
+    let stroke_width = read_attr("stroke-width")
+        .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
+        .unwrap_or(1.0);
+
+    let fill = fill_attr.and_then(|v| {
+        let ps = PaintServer::from_attr(&v);
+        match ps {
+            Some(PaintServer::Solid(c)) => Some(FillParams {
+                color: Some(c),
+                paint_server: None,
+                opacity: fill_opacity,
+                fill_rule: FillRule::NonZero,
+            }),
+            Some(PaintServer::Gradient(id)) => Some(FillParams {
+                color: None,
+                paint_server: Some(PaintServer::Gradient(id)),
+                opacity: fill_opacity,
+                fill_rule: FillRule::NonZero,
+            }),
+            Some(PaintServer::Pattern(_)) | None => None,
+        }
+    });
+
+    let stroke = stroke_attr.and_then(|v| {
+        let ps = PaintServer::from_attr(&v);
+        match ps {
+            Some(PaintServer::Solid(c)) => Some(StrokeParams {
+                color: Some(c),
+                paint_server: None,
+                opacity: stroke_opacity,
+                width: stroke_width,
+                line_cap: LineCap::Butt,
+                line_join: LineJoin::Miter,
+                miter_limit: 4.0,
+                dash_array: None,
+                dash_offset: 0.0,
+            }),
+            Some(PaintServer::Gradient(id)) => Some(StrokeParams {
+                color: None,
+                paint_server: Some(PaintServer::Gradient(id)),
+                opacity: stroke_opacity,
+                width: stroke_width,
+                line_cap: LineCap::Butt,
+                line_join: LineJoin::Miter,
+                miter_limit: 4.0,
+                dash_array: None,
+                dash_offset: 0.0,
+            }),
+            Some(PaintServer::Pattern(_)) | None => None,
+        }
+    });
+
+    NodeStyle {
+        visibility: Visibility::Visible,
+        display: Display::Inline,
+        transform: Vec::new(),
+        fill,
+        stroke,
+        render_hints: None,
+        effects: None,
+        opacity: 1.0,
+    }
 }
 
 // ======================= Shape Construction =======================
@@ -252,6 +422,9 @@ fn collect_gradients(node: ServoLayoutNode) -> HashMap<String, GradientDef> {
                                         if let Some(color) = stop_elem.attribute_as_str(&ns!(), &local_name!("stop-color")) {
                                             attrs.push(("stop-color".to_owned(), color.to_string()));
                                         }
+                                        if let Some(op) = stop_elem.attribute_as_str(&ns!(), &local_name!("stop-opacity")) {
+                                            attrs.push(("stop-opacity".to_owned(), op.to_string()));
+                                        }
                                         if !attrs.is_empty() { stop_attrs.push(attrs); }
                                     }
                                 }
@@ -272,6 +445,222 @@ fn collect_gradients(node: ServoLayoutNode) -> HashMap<String, GradientDef> {
         }
     }
     gradients
+}
+
+// ======================= Clip Path Collection =======================
+
+fn collect_clip_paths(node: ServoLayoutNode) -> HashMap<String, ClipPathDef> {
+    let mut clip_paths = HashMap::new();
+    for defs_child in node.dom_children() {
+        if let Some(defs_elem) = defs_child.as_element() {
+            if defs_elem.local_name() == &local_name!("defs") {
+                for cp_child in defs_child.dom_children() {
+                    if let Some(cp_elem) = cp_child.as_element() {
+                        if cp_elem.local_name() == &local_name!("clipPath") {
+                            let id = cp_elem.attribute_as_str(&ns!(), &local_name!("id"))
+                                .map(|s| s.to_string());
+                            let units = cp_elem.attribute_as_str(&ns!(), &local_name!("clipPathUnits"))
+                                .and_then(|s| match s.trim() {
+                                    "objectBoundingBox" => Some(ClipPathUnits::ObjectBoundingBox),
+                                    _ => None,
+                                })
+                                .unwrap_or(ClipPathUnits::UserSpaceOnUse);
+                            if let Some(ref id) = id {
+                                let mut shapes = Vec::new();
+                                for child_node in cp_child.dom_children() {
+                                    if let Some(child_elem) = child_node.as_element() {
+                                        let tag_name = child_elem.local_name().as_ref().to_owned();
+                                        if let Some(shape) = build_shape(&child_elem, &tag_name) {
+                                            shapes.push(shape);
+                                        }
+                                    }
+                                }
+                                if !shapes.is_empty() {
+                                    clip_paths.insert(id.clone(), ClipPathDef { shapes, clip_path_units: units });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    clip_paths
+}
+
+// ======================= Pattern Collection =======================
+
+fn collect_patterns<'dom>(node: ServoLayoutNode<'dom>, _context: &LayoutContext) -> HashMap<String, PatternDef> {
+    let mut patterns = HashMap::new();
+    for defs_child in node.dom_children() {
+        if let Some(defs_elem) = defs_child.as_element() {
+            if defs_elem.local_name() == &local_name!("defs") {
+                for pat_child in defs_child.dom_children() {
+                    if let Some(pat_elem) = pat_child.as_element() {
+                        if pat_elem.local_name() == &local_name!("pattern") {
+                            let id = pat_elem.attribute_as_str(&ns!(), &local_name!("id"))
+                                .map(|s| s.to_string());
+                            if let Some(ref id) = id {
+                                let parse_attr = |attr: &str, default: f32| -> f32 {
+                                    pat_elem.attribute_as_str(&ns!(), &LocalName::from(attr))
+                                        .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
+                                        .unwrap_or(default)
+                                };
+                                let width = parse_attr("width", 0.0);
+                                let height = parse_attr("height", 0.0);
+                                let x = parse_attr("x", 0.0);
+                                let y = parse_attr("y", 0.0);
+                                let pattern_units = pat_elem.attribute_as_str(&ns!(), &local_name!("patternUnits"))
+                                    .and_then(|s| match s.trim() {
+                                        "objectBoundingBox" => Some(PatternUnits::ObjectBoundingBox),
+                                        _ => None,
+                                    })
+                                    .unwrap_or(PatternUnits::UserSpaceOnUse);
+                                let pattern_content_units = pat_elem.attribute_as_str(&ns!(), &local_name!("patternContentUnits"))
+                                    .and_then(|s| match s.trim() {
+                                        "objectBoundingBox" => Some(PatternContentUnits::ObjectBoundingBox),
+                                        _ => None,
+                                    })
+                                    .unwrap_or(PatternContentUnits::UserSpaceOnUse);
+                                if width > 0.0 && height > 0.0 {
+                                    let mut shapes = Vec::new();
+                                    for child_node in pat_child.dom_children() {
+                                        if let Some(child_elem) = child_node.as_element() {
+                                            let tag_name = child_elem.local_name().as_ref().to_owned();
+                                            if let Some(shape) = build_shape(&child_elem, &tag_name) {
+                                                let style = build_style_from_attrs(&child_elem);
+                                                shapes.push((shape, style));
+                                            }
+                                        }
+                                    }
+                                    if !shapes.is_empty() {
+                                        patterns.insert(id.clone(), PatternDef {
+                                            width, height, x, y,
+                                            pattern_units, pattern_content_units,
+                                            shapes,
+                                        });
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    patterns
+}
+
+// ======================= Mask Collection =======================
+
+fn collect_masks(node: ServoLayoutNode) -> HashMap<String, MaskDef> {
+    let mut masks = HashMap::new();
+    for defs_child in node.dom_children() {
+        if let Some(defs_elem) = defs_child.as_element() {
+            if defs_elem.local_name() == &local_name!("defs") {
+                for m_child in defs_child.dom_children() {
+                    if let Some(m_elem) = m_child.as_element() {
+                        if m_elem.local_name() == &local_name!("mask") {
+                            let id = m_elem.attribute_as_str(&ns!(), &local_name!("id"))
+                                .map(|s| s.to_string());
+                            if let Some(ref id) = id {
+                                let mut shapes = Vec::new();
+                                for child_node in m_child.dom_children() {
+                                    if let Some(child_elem) = child_node.as_element() {
+                                        let tag_name = child_elem.local_name().as_ref().to_owned();
+                                        if let Some(shape) = build_shape(&child_elem, &tag_name) {
+                                            let style = build_style_from_attrs(&child_elem);
+                                            shapes.push((shape, style));
+                                        }
+                                    }
+                                }
+                                if !shapes.is_empty() {
+                                    masks.insert(id.clone(), MaskDef { shapes });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    masks
+}
+
+// ======================= Filter Collection =======================
+
+fn collect_filters(node: ServoLayoutNode) -> HashMap<String, FilterDef> {
+    let mut filters = HashMap::new();
+    for defs_child in node.dom_children() {
+        if let Some(defs_elem) = defs_child.as_element() {
+            if defs_elem.local_name() == &local_name!("defs") {
+                for f_child in defs_child.dom_children() {
+                    if let Some(f_elem) = f_child.as_element() {
+                        if f_elem.local_name() == &local_name!("filter") {
+                            let id = f_elem.attribute_as_str(&ns!(), &local_name!("id"))
+                                .map(|s| s.to_string());
+                            if let Some(ref id) = id {
+                                let get_attr = |name: &str| -> f32 {
+                                    f_elem.attribute_as_str(&ns!(), &LocalName::from(name))
+                                        .and_then(|v| v.parse::<f32>().ok())
+                                        .unwrap_or(0.0)
+                                };
+                                let x = get_attr("x");
+                                let y = get_attr("y");
+                                let width = get_attr("width");
+                                let height = get_attr("height");
+
+                                let mut primitives = Vec::new();
+                                for prim_child in f_child.dom_children() {
+                                    if let Some(prim_elem) = prim_child.as_element() {
+                                        let prim_name = prim_elem.local_name().as_ref().to_owned();
+                                        match prim_name.as_str() {
+                                            "feGaussianBlur" => {
+                                                let sd = prim_elem.attribute_as_str(&ns!(), &LocalName::from("stdDeviation"))
+                                                    .and_then(|v| v.parse::<f32>().ok())
+                                                    .unwrap_or(0.0);
+                                                primitives.push(FilterPrimitive::GaussianBlur(sd, sd));
+                                            },
+                                            "feDropShadow" => {
+                                                let dx = prim_elem.attribute_as_str(&ns!(), &LocalName::from("dx"))
+                                                    .and_then(|v| v.parse::<f32>().ok()).unwrap_or(0.0);
+                                                let dy = prim_elem.attribute_as_str(&ns!(), &LocalName::from("dy"))
+                                                    .and_then(|v| v.parse::<f32>().ok()).unwrap_or(0.0);
+                                                let sd = prim_elem.attribute_as_str(&ns!(), &LocalName::from("stdDeviation"))
+                                                    .and_then(|v| v.parse::<f32>().ok()).unwrap_or(0.0);
+                                                primitives.push(FilterPrimitive::DropShadow(dx, dy, sd, 0.0, 0.0, 0.0, 0.5));
+                                            },
+                                            "feColorMatrix" => {
+                                                // Only handle type="matrix" with 20 values.
+                                                if let Some(type_val) = prim_elem.attribute_as_str(&ns!(), &LocalName::from("type")) {
+                                                    if type_val.trim() == "matrix" {
+                                                        if let Some(val_str) = prim_elem.attribute_as_str(&ns!(), &LocalName::from("values")) {
+                                                            let mut matrix = [0.0f32; 20];
+                                                            let vals: Vec<f32> = val_str.split_whitespace()
+                                                                .filter_map(|v| v.parse::<f32>().ok()).collect();
+                                                            for (i, v) in vals.iter().enumerate().take(20) {
+                                                                matrix[i] = *v;
+                                                            }
+                                                            primitives.push(FilterPrimitive::ColorMatrix(matrix));
+                                                        }
+                                                    }
+                                                }
+                                            },
+                                            _ => {},
+                                        }
+                                    }
+                                }
+                                if !primitives.is_empty() {
+                                    filters.insert(id.clone(), FilterDef { primitives, x, y, width, height });
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    filters
 }
 
 // ======================= Viewport Extraction =======================
@@ -415,6 +804,26 @@ fn build_svg_render_node<'dom>(
                 .collect()
         },
     };
+    // Check for SVG `mask` and `filter` attributes, store references in effects.
+    let mut style = style;
+    if let Some(mask_val) = get_attr(&element, "mask") {
+        let trimmed = mask_val.trim_start_matches("url(#").trim_end_matches(')');
+        if !trimmed.is_empty() {
+            match &mut style.effects {
+                Some(e) => e.mask = Some(trimmed.to_owned()),
+                None => style.effects = Some(NodeEffects { clip_path: None, mask: Some(trimmed.to_owned()), filter: None }),
+            }
+        }
+    }
+    if let Some(filter_val) = get_attr(&element, "filter") {
+        let trimmed = filter_val.trim_start_matches("url(#").trim_end_matches(')');
+        if !trimmed.is_empty() {
+            match &mut style.effects {
+                Some(e) => e.filter = Some(trimmed.to_owned()),
+                None => style.effects = Some(NodeEffects { clip_path: None, mask: None, filter: Some(trimmed.to_owned()) }),
+            }
+        }
+    }
     Some(SvgRenderNode { id, tag, style, children })
 }
 
@@ -423,5 +832,35 @@ pub(crate) fn build_svg_render_tree<'dom>(node: ServoLayoutNode<'dom>, context: 
     let root = build_svg_render_node(node, context, node, &mut HashSet::new())?;
     let viewport = extract_viewport_info(node);
     let gradients = collect_gradients(node);
-    Some(Arc::new(SvgRenderTree { root, viewport, gradients }))
+    let clip_paths = collect_clip_paths(node);
+    let patterns = collect_patterns(node, context);
+    let masks = collect_masks(node);
+    let filters = collect_filters(node);
+    let mut tree = SvgRenderTree { root, viewport, gradients, clip_paths, patterns, masks, filters };
+    // Post-process: convert PaintServer::Gradient references to PaintServer::Pattern
+    // when the referenced ID is actually a pattern definition.
+    fixup_paint_servers(&mut tree.root, &tree.patterns);
+    Some(Arc::new(tree))
+}
+
+/// Walk the render tree and convert gradient paint server references to pattern
+/// references where the ID matches a collected pattern definition.
+fn fixup_paint_servers(node: &mut SvgRenderNode, patterns: &HashMap<String, PatternDef>) {
+    if let Some(ref mut fill) = node.style.fill {
+        if let Some(PaintServer::Gradient(id)) = &fill.paint_server {
+            if patterns.contains_key(id) {
+                fill.paint_server = Some(PaintServer::Pattern(id.clone()));
+            }
+        }
+    }
+    if let Some(ref mut stroke) = node.style.stroke {
+        if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
+            if patterns.contains_key(id) {
+                stroke.paint_server = Some(PaintServer::Pattern(id.clone()));
+            }
+        }
+    }
+    for child in &mut node.children {
+        fixup_paint_servers(child, patterns);
+    }
 }

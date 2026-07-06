@@ -6,7 +6,7 @@
 //!
 //! This module defines style-related enums and structs based on the SVG 2 specification.
 //! Each style category has its own file — [`fill`] for fill properties, [`stroke`] for
-//! stroke properties, [`hints`] for rendering hints, [`effects`] for node effects,
+//! stroke properties, [`hints`] for rendering hints, [`node_effects`] for node effects,
 //! [`visibility`] for SVG visibility/display, [`transform_ops`] for SVG transform
 //! operations, and [`color`] for color parsing.
 //!
@@ -17,7 +17,7 @@ pub(crate) mod fill;
 pub(crate) mod stroke;
 pub mod gradient;
 pub(crate) mod hints;
-pub(crate) mod effects;
+pub(crate) mod node_effects;
 pub(crate) mod visibility;
 pub mod color;
 pub mod transform_ops;
@@ -29,7 +29,7 @@ pub use self::hints::{
     ShapeRendering, TextRendering, ImageRendering, PaintOrder,
 };
 pub use self::visibility::{Visibility, Display};
-pub use self::effects::NodeEffects;
+pub use self::node_effects::NodeEffects;
 use self::transform_ops::TransformOp;
 
 /// Combined fill + stroke styling for an SVG render node.
@@ -42,6 +42,9 @@ pub struct NodeStyle {
     pub stroke: Option<StrokeParams>,
     pub render_hints: Option<RenderHints>,
     pub effects: Option<NodeEffects>,
+    /// Element-level opacity (the CSS `opacity` property).
+    /// Applied as a multiplier on top of fill-/stroke-opacity.
+    pub opacity: f32,
 }
 
 impl Default for NodeStyle {
@@ -54,6 +57,22 @@ impl Default for NodeStyle {
             stroke: None,
             render_hints: None,
             effects: None,
+            opacity: 1.0,
         }
+    }
+}
+
+// ======================= Convenience Methods =======================
+
+impl NodeStyle {
+    /// Whether the element is visible (per the SVG `visibility` property).
+    pub fn is_visible(&self) -> bool {
+        matches!(self.visibility, Visibility::Visible)
+    }
+
+    /// Whether the element is displayed (per the SVG `display` property).
+    /// Returns `false` for `display: none`.
+    pub fn is_displayed(&self) -> bool {
+        !matches!(self.display, Display::None)
     }
 }

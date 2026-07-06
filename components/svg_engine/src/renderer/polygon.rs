@@ -5,6 +5,12 @@
 use crate::shapes::{Polygon, Polyline};
 use crate::renderer::{Render, RenderContext};
 
+/// Renders an SVG `<polygon>`.
+///
+/// LSP contract:
+/// - Closes the point list by appending the first point, then delegates
+///   to [`Polyline::render`].  This ensures the stroke closes back to start.
+/// - All LSP invariants are preserved through the delegation chain.
 impl Render for Polygon {
     fn render(&self, ctx: &mut RenderContext) {
         // A polygon is a closed shape: append the first point to the end so the

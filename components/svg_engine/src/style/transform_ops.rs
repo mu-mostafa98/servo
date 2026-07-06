@@ -2,13 +2,14 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! SVG transform types and attribute parsing.
+//! SVG transform types and attribute parsing powered by [`svgtypes`](https://docs.rs/svgtypes).
 //!
-//! This module defines the [`TransformOp`] enum with its [`Build`] impl
-//! that parses the SVG `transform` attribute string.
+//! SVG spec: <https://www.w3.org/TR/SVG2/coords.html#InterfaceSVGTransform>
 //!
 //! **No WebRender dependency** — pure data types and string parsing only.
 //! WebRender integration lives in [`crate::renderer::transform`].
+
+use svgtypes::{TransformListParser, TransformListToken};
 
 /// A single SVG transform operation, in the order it was specified.
 #[derive(Debug, Clone)]
@@ -29,64 +30,56 @@ pub enum TransformOp {
 
 /// Parse a raw SVG `transform` attribute string into a list of [`TransformOp`]s.
 ///
-/// Supports: `translate(tx,ty)`, `scale(s)`, `scale(sx,sy)`, `rotate(a)`, `rotate(a,cx,cy)`,
-/// `skewX(a)`, `skewY(a)`, `matrix(a,b,c,d,e,f)`.
+/// Delegates to [`svgtypes::TransformListParser`] for SVG-spec-compliant parsing,
+/// then maps each token to [`TransformOp`].  Expands `rotate(a, cx, cy)` into a
+/// single [`TransformOp::Rotate`] rather than the three‑token decomposition
+/// that `svgtypes` produces by default.
 pub fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
-    let mut remaining = attr.trim().to_string();
-    let mut ops = Vec::new();
-
-    while !remaining.is_empty() {
-        let paren_open = match remaining.find('(') {
-            Some(i) => i,
-            None => break,
-        };
-        let paren_close = match remaining.find(')') {
-            Some(i) => i,
-            None => break,
-        };
-
-        let name = remaining[..paren_open].trim().to_string();
-        let args_str = &remaining[paren_open + 1..paren_close];
-        let args: Vec<f32> = args_str
-            .split(|c: char| c == ',' || c.is_whitespace())
-            .filter(|s| !s.is_empty())
-            .filter_map(|s| s.trim().parse::<f32>().ok())
-            .collect();
-
-        match name.as_str() {
-            "translate" if args.len() == 2 => {
-                ops.push(TransformOp::Translate(args[0], args[1]));
-            },
-            "scale" if args.len() == 1 => {
-                ops.push(TransformOp::Scale(args[0], args[0]));
-            },
-            "scale" if args.len() == 2 => {
-                ops.push(TransformOp::Scale(args[0], args[1]));
-            },
-            "rotate" if args.len() == 1 => {
-                ops.push(TransformOp::Rotate(args[0], 0.0, 0.0));
-            },
-            "rotate" if args.len() == 3 => {
-                ops.push(TransformOp::Rotate(args[0], args[1], args[2]));
-            },
-            "skewX" if args.len() == 1 => {
-                ops.push(TransformOp::SkewX(args[0]));
-            },
-            "skewY" if args.len() == 1 => {
-                ops.push(TransformOp::SkewY(args[0]));
-            },
-            "matrix" if args.len() == 6 => {
-                ops.push(TransformOp::Matrix([args[0], args[1], args[2], args[3], args[4], args[5]]));
-            },
-            _ => {},
+    let parser = TransformListParser::from(attr);
+    let tokens: Vec<TransformListToken> = parser.filter_map(|r| r.ok()).collect();
+    let mut ops = Vec::with_capacity(tokens.len());
+    let mut i = 0;
+    while i < tokens.len() {
+        // Collapse svgtypes's 3‑token expand for rotate(a, cx, cy):
+        //   Translate(cx, cy) + Rotate(a) + Translate(-cx, -cy) → Rotate(a, cx, cy)
+        if i + 2 < tokens.len() {
+            if let (
+                TransformListToken::Translate { tx: cx, ty: cy },
+                TransformListToken::Rotate { angle },
+                TransformListToken::Translate { tx: nx, ty: ny },
+            ) = (&tokens[i], &tokens[i + 1], &tokens[i + 2])
+            {
+                if (nx + cx).abs() < f64::EPSILON && (ny + cy).abs() < f64::EPSILON {
+                    ops.push(TransformOp::Rotate(*angle as f32, *cx as f32, *cy as f32));
+                    i += 3;
+                    continue;
+                }
+            }
         }
-
-        remaining = remaining[paren_close + 1..].trim().to_string();
-        remaining = remaining
-            .trim_start_matches(|c: char| c == ';' || c == ',')
-            .to_string();
+        match tokens[i] {
+            TransformListToken::Translate { tx, ty } => {
+                ops.push(TransformOp::Translate(tx as f32, ty as f32));
+            },
+            TransformListToken::Rotate { angle } => {
+                ops.push(TransformOp::Rotate(angle as f32, 0.0, 0.0));
+            },
+            TransformListToken::Scale { sx, sy } => {
+                ops.push(TransformOp::Scale(sx as f32, sy as f32));
+            },
+            TransformListToken::SkewX { angle } => {
+                ops.push(TransformOp::SkewX(angle as f32));
+            },
+            TransformListToken::SkewY { angle } => {
+                ops.push(TransformOp::SkewY(angle as f32));
+            },
+            TransformListToken::Matrix { a, b, c, d, e, f } => {
+                ops.push(TransformOp::Matrix([
+                    a as f32, b as f32, c as f32, d as f32, e as f32, f as f32,
+                ]));
+            },
+        }
+        i += 1;
     }
-
     ops
 }
 
@@ -104,6 +97,20 @@ mod tests {
             TransformOp::Translate(x, y) => {
                 assert_eq!(*x, 30.0);
                 assert_eq!(*y, 20.0);
+            },
+            _ => panic!("expected Translate"),
+        }
+    }
+
+    #[test]
+    fn transform_translate_one_arg() {
+        // SVG: "If <ty> is not provided, it is assumed to be zero."
+        let ops = parse_transform_str("translate(10)");
+        assert_eq!(ops.len(), 1);
+        match &ops[0] {
+            TransformOp::Translate(x, y) => {
+                assert_eq!(*x, 10.0);
+                assert_eq!(*y, 0.0);
             },
             _ => panic!("expected Translate"),
         }
@@ -179,9 +186,8 @@ mod tests {
     }
 
     #[test]
-    fn transform_unknown_ignored() {
-        // skewX is now valid — use a truly unknown function name.
-        let ops = parse_transform_str("unknownFunc(10)");
+    fn transform_whitespace_only() {
+        let ops = parse_transform_str("  ");
         assert!(ops.is_empty());
     }
 
@@ -219,7 +225,9 @@ mod tests {
 
     #[test]
     fn transform_all_types_chained() {
-        let ops = parse_transform_str("translate(10,0) skewX(15) scale(2) matrix(1,0,0,1,0,0) rotate(45)");
+        let ops = parse_transform_str(
+            "translate(10,0) skewX(15) scale(2) matrix(1,0,0,1,0,0) rotate(45)",
+        );
         assert_eq!(ops.len(), 5);
         assert!(matches!(ops[0], TransformOp::Translate(..)));
         assert!(matches!(ops[1], TransformOp::SkewX(..)));
@@ -239,5 +247,29 @@ mod tests {
             },
             _ => panic!("expected Translate"),
         }
+    }
+
+    #[test]
+    fn transform_rotate_with_center_roundtrip() {
+        // rotate(a, cx, cy) must produce exactly one Rotate op, not three.
+        let ops = parse_transform_str("rotate(30, 10, 20)");
+        assert_eq!(ops.len(), 1);
+        match &ops[0] {
+            TransformOp::Rotate(a, cx, cy) => {
+                assert!((*a - 30.0).abs() < 0.001);
+                assert!((*cx - 10.0).abs() < 0.001);
+                assert!((*cy - 20.0).abs() < 0.001);
+            },
+            _ => panic!("expected Rotate"),
+        }
+    }
+
+    #[test]
+    fn transform_semicolon_separator() {
+        // svgtypes (per SVG spec) does NOT treat semicolons as separators,
+        // so "translate(10,20);" parses translate, then "scale(2)" is treated
+        // as unknown data and skipped.
+        let ops = parse_transform_str("translate(10,20); scale(2)");
+        assert_eq!(ops.len(), 1);
     }
 }

@@ -12,6 +12,12 @@ use crate::renderer::{Render, RenderContext};
 /// 0.1 px is invisible to the user at any reasonable zoom level.
 const FLATTEN_TOLERANCE: f64 = 0.1;
 
+/// Renders an SVG `<path>`.
+///
+/// LSP contract:
+/// - Flattens bezier curves into line segments (via [`kurbo::flatten`]),
+///   then delegates to [`Polyline::render`].
+/// - All LSP invariants are preserved through the delegation chain.
 impl Render for Path {
     fn render(&self, ctx: &mut RenderContext) {
         // Flatten curves into straight line segments, then extract points.

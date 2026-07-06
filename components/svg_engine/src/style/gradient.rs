@@ -7,18 +7,23 @@
 //! These types store parsed gradient definitions collected from `<defs>`.
 //! The actual rendering converts gradients into multiple `push_rect` calls
 //! with interpolated colors (software gradient rendering).
+//!
+//! **No WebRender dependency** — pure SVG data types via `svgtypes::Color`.
 
-use webrender_api::ColorF;
+use svgtypes::Color as SvgColor;
+use svgtypes::Length as SvgLength;
 
 use crate::error::{SvgEngineError, SvgResult};
 
-/// A paint server reference — either a solid color or a gradient ID.
+/// A paint server reference — either a solid color, gradient ID, or pattern ID.
 #[derive(Debug, Clone)]
 pub enum PaintServer {
     /// Solid color fill/stroke.
-    Solid(ColorF),
+    Solid(SvgColor),
     /// Reference to a gradient defined elsewhere (e.g. `url(#myGrad)`).
     Gradient(String),
+    /// Reference to a pattern defined elsewhere (e.g. `url(#myPattern)`).
+    Pattern(String),
 }
 
 /// Definitions collected from `<defs>` during render tree construction.
@@ -88,7 +93,7 @@ pub struct GradientStop {
     /// Offset in the range 0.0 – 1.0.
     pub offset: f32,
     /// Color at this offset.
-    pub color: ColorF,
+    pub color: SvgColor,
 }
 
 impl PaintServer {
@@ -124,18 +129,24 @@ pub fn parse_gradient_element(
         let offset = attrs.iter()
             .find(|(k, _)| k == "offset")
             .and_then(|(_, v)| parse_offset(v));
-        let color = attrs.iter()
+        let mut color = attrs.iter()
             .find(|(k, _)| k == "stop-color")
             .and_then(|(_, v)| crate::style::color::parse_css_color(v))
-            .unwrap_or(ColorF::new(0.0, 0.0, 0.0, 1.0));
+            .unwrap_or(SvgColor::new_rgb(0, 0, 0));
+        if let Some(stop_opacity) = attrs.iter()
+            .find(|(k, _)| k == "stop-opacity")
+            .and_then(|(_, v)| parse_offset(v))
+        {
+            color.alpha = (color.alpha as f32 * stop_opacity).round() as u8;
+        }
         if let Some(offset) = offset {
             stops.push(GradientStop { offset, color });
         }
     }
 
     if stops.is_empty() {
-        stops.push(GradientStop { offset: 0.0, color: ColorF::new(0.0, 0.0, 0.0, 1.0) });
-        stops.push(GradientStop { offset: 1.0, color: ColorF::new(0.0, 0.0, 0.0, 1.0) });
+        stops.push(GradientStop { offset: 0.0, color: SvgColor::new_rgb(0, 0, 0) });
+        stops.push(GradientStop { offset: 1.0, color: SvgColor::new_rgb(0, 0, 0) });
     }
 
     stops.sort_by(|a, b| a.offset.partial_cmp(&b.offset).unwrap_or(std::cmp::Ordering::Equal));
@@ -171,16 +182,18 @@ pub fn parse_gradient_element(
 }
 
 /// Parse a length attribute from a gradient coordinate.
-/// Percent values are stored explicitly so they can be interpreted
-/// correctly in objectBoundingBox coordinates.
+///
+/// Delegates to [`svgtypes::Length`] for spec-compliant SVG length parsing
+/// that handles all units (`px`, `em`, `ex`, `cm`, `mm`, `in`, `pt`, `pc`, `%`).
+/// Percent values are kept explicit so they can be interpreted correctly
+/// in objectBoundingBox coordinates.
 fn parse_length_attr(attr: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<GradientLength> {
     let v = get_attr(attr)?;
-    let trimmed = v.trim();
-    if let Some(pct) = trimmed.strip_suffix('%') {
-        pct.trim().parse::<f32>().ok().map(GradientLength::Percentage)
+    let len: SvgLength = v.parse().ok()?;
+    if len.unit == svgtypes::LengthUnit::Percent {
+        Some(GradientLength::Percentage(len.number as f32))
     } else {
-        let trimmed = trimmed.trim_end_matches("px").trim();
-        trimmed.parse::<f32>().ok().map(GradientLength::Number)
+        Some(GradientLength::Number(len.number as f32))
     }
 }
 

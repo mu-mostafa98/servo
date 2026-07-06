@@ -5,6 +5,11 @@
 use crate::shapes::{Ellipse, Rectangle};
 use crate::renderer::{Render, RenderContext};
 
+/// Renders an SVG `<ellipse>`.
+///
+/// LSP contract:
+/// - Delegates to [`Rectangle::render`] with 100% corner radii.
+/// - All LSP invariants are preserved through the delegation chain.
 impl Render for Ellipse {
     fn render(&self, ctx: &mut RenderContext) {
         if self.rx <= 0.0 || self.ry <= 0.0 {

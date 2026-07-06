@@ -127,6 +127,12 @@ impl VirtualMethods for SVGElement {
                 &local_name!("stroke-dashoffset") |
                 &local_name!("stroke-miterlimit") |
                 &local_name!("stroke-opacity") |
+                &local_name!("vector-effect") |
+                &local_name!("visibility") |
+                &local_name!("opacity") |
+                &local_name!("clip-path") |
+                &local_name!("mask") |
+                &local_name!("filter") |
                 &local_name!("cx") |
                 &local_name!("cy") |
                 &local_name!("r") |
@@ -349,6 +355,36 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             &parser_context,
             "stroke-opacity",
             longhands::stroke_opacity::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "vector-effect",
+            longhands::vector_effect::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "clip-path",
+            longhands::clip_path::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "visibility",
+            longhands::visibility::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "opacity",
+            longhands::opacity::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "mask",
+            longhands::mask_image::parse_declared,
             push,
         );
 

@@ -136,6 +136,32 @@ fn build_rotation_transform(angle_deg: f32, cx: f32, cy: f32) -> LayoutTransform
     to_layout_transform(&combined)
 }
 
+/// Compute the approximate uniform scale factor from a list of transform operations.
+///
+/// Returns the product of all scale factors in the transform chain.
+/// Used to compensate stroke widths for `vector-effect: non-scaling-stroke`.
+pub(crate) fn compute_transform_scale(ops: &[TransformOp]) -> f32 {
+    let mut scale_x: f32 = 1.0;
+    let mut scale_y: f32 = 1.0;
+    for op in ops {
+        match op {
+            TransformOp::Scale(sx, sy) => {
+                scale_x *= sx.abs();
+                scale_y *= sy.abs();
+            },
+            TransformOp::Matrix([a, b, c, d, _, _]) => {
+                // Approximate scale as sqrt of the 2x2 matrix determinant.
+                let det = (a * d - b * c).abs();
+                let s = if det > 0.0 { det.sqrt() } else { 1.0 };
+                scale_x *= s;
+                scale_y *= s;
+            },
+            _ => {} // Translate, Rotate, Skew → no scale contribution
+        }
+    }
+    scale_x.max(scale_y)
+}
+
 /// Convert a `Transform2D` to a `LayoutTransform` suitable for WebRender.
 pub(crate) fn to_layout_transform(xform: &Transform2D<f32, (), ()>) -> LayoutTransform {
     // Transform2D stores column-vector: P' = [m11 m21 m31; m12 m22 m32; 0 0 1] * P

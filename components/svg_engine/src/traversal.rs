@@ -5,22 +5,28 @@
 //! SVG render tree traversal — walks the [`SvgRenderTree`] and emits
 //! WebRender display list commands via each shape's [`Render`] impl.
 //!
-//! The entry point is [`render_svg_tree`], which sets up the viewport clip
-//! and viewBox transform, then recursively walks the node tree.
-
-use std::collections::HashMap;
+//! **Single responsibility:** coordinate the tree walk.  Clip/mask/filter
+//! resolution is delegated to [`crate::effects`]; transform application is
+//! delegated to [`crate::renderer::transform`]; per-shape rendering is
+//! delegated to the [`Render`] trait.
+//!
+//! The entry point is [`render_svg_tree`], which sets up the viewport
+//! clip and viewBox transform, then recursively walks the node tree.
 
 use euclid::Transform2D;
 use webrender_api::{
-    DisplayListBuilder, ClipChainId, SpatialId,
-    PropertyBinding, ReferenceFrameKind, TransformStyle,
-    units::{LayoutPoint, LayoutRect, LayoutSize},
+    ClipChainId, DisplayListBuilder,
+    MixBlendMode, PrimitiveFlags, PropertyBinding,
+    RasterSpace, ReferenceFrameKind, SpatialId, StackingContextFlags,
+    TransformStyle, units::{LayoutPoint, LayoutRect, LayoutSize},
 };
 
+use crate::effects::clip::{resolve_node_clip_path, build_mask_clips};
+use crate::effects::filter::get_filter_ops;
 use crate::render_tree::*;
 use crate::renderer::transform;
-use crate::renderer::{Render, RenderContext};
-use crate::style::gradient::GradientDef;
+use crate::renderer::{Render, RenderContext, clip_chain_option};
+use crate::renderer::{PaintResourceProvider, ClipMaskProvider, FilterProvider};
 
 /// Render an SVG render tree into the WebRender display list.
 pub fn render_svg_tree(
@@ -35,11 +41,7 @@ pub fn render_svg_tree(
     let svg_bounds = LayoutRect::from_origin_and_size(*svg_origin, svg_size);
     let svg_clip_id = wr.define_clip_rect(spatial_id, svg_bounds);
     let svg_clip_chain = wr.define_clip_chain(
-        if clip_chain_id == ClipChainId::INVALID {
-            None
-        } else {
-            Some(clip_chain_id)
-        },
+        clip_chain_option(clip_chain_id),
         [svg_clip_id],
     );
 
@@ -68,27 +70,86 @@ pub fn render_svg_tree(
             (*svg_origin, spatial_id, false)
         };
 
-    render_node(&tree.root, &root_origin, root_spatial_id, svg_clip_chain, wr, &tree.gradients);
+    render_node(
+        &tree.root, &root_origin, root_spatial_id, svg_clip_chain, wr,
+        tree, tree, tree, 1.0,
+    );
 
     if pop_frame {
         wr.pop_reference_frame();
     }
 }
 
+// ======================= Recursive Node Rendering =======================
+
 /// Recursively render a single node and its children.
+///
+/// `parent_scale` is the accumulated transform scale from all ancestor
+/// transforms (excluding this node's own transforms). Used for
+/// `vector-effect: non-scaling-stroke` compensation.
 fn render_node(
     node: &SvgRenderNode,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
-    gradients: &HashMap<String, GradientDef>,
+    paints: &impl PaintResourceProvider,
+    clips: &impl ClipMaskProvider,
+    filters: &impl FilterProvider,
+    parent_scale: f32,
 ) {
+    if !node.style.is_displayed() {
+        return;
+    }
+
+    let (cur_origin, cur_spatial_id, pushed_count, accumulated_scale) =
+        apply_node_transforms(node, svg_origin, spatial_id, parent_scale, wr);
+
+    // Resolve effects (clip-path, mask, filter).
+    let node_clip_chain = resolve_node_clip_path(
+        node, clips, &cur_origin, cur_spatial_id, clip_chain_id, wr,
+    );
+    let mask_clips = build_mask_clips(
+        node, clips, &cur_origin, cur_spatial_id, node_clip_chain, wr,
+    );
+    let filter_ops = get_filter_ops(node, filters);
+
+    // Render shape if this node is a visible shape.
+    render_shape(
+        node, &cur_origin, cur_spatial_id, node_clip_chain,
+        &mask_clips, &filter_ops, accumulated_scale, paints, wr,
+    );
+
+    // Recurse into children (skip <defs> — non-visual).
+    recurse_children(
+        node, &cur_origin, cur_spatial_id, node_clip_chain,
+        clip_chain_id, paints, clips, filters, accumulated_scale, wr,
+    );
+
+    // Pop reference frames pushed by transforms.
+    for _ in 0..pushed_count {
+        wr.pop_reference_frame();
+    }
+}
+
+/// Apply this node's transform operations onto the WebRender display list.
+///
+/// Returns the new origin, spatial id, number of reference frames pushed,
+/// and the accumulated scale factor (for `vector-effect: non-scaling-stroke`).
+fn apply_node_transforms(
+    node: &SvgRenderNode,
+    svg_origin: &LayoutPoint,
+    spatial_id: SpatialId,
+    parent_scale: f32,
+    wr: &mut DisplayListBuilder,
+) -> (LayoutPoint, SpatialId, u32, f32) {
     let mut cur_spatial_id = spatial_id;
     let mut cur_origin = *svg_origin;
     let mut pushed_count: u32 = 0;
 
-    // Apply each transform operation in order.
+    let node_scale = transform::compute_transform_scale(&node.style.transform);
+    let accumulated_scale = parent_scale * node_scale;
+
     for op in &node.style.transform {
         let result = transform::apply_transform_op(op, cur_origin, cur_spatial_id, wr);
         cur_origin = result.child_origin;
@@ -98,31 +159,114 @@ fn render_node(
         }
     }
 
-    // Render this node if it's a shape.
-    if let SvgTag::Shape(shape) = &node.tag {
+    (cur_origin, cur_spatial_id, pushed_count, accumulated_scale)
+}
+
+/// Render a shape node into the WebRender display list, handling filter
+/// stacking contexts and mask clip chains.
+fn render_shape(
+    node: &SvgRenderNode,
+    cur_origin: &LayoutPoint,
+    cur_spatial_id: SpatialId,
+    node_clip_chain: ClipChainId,
+    mask_clips: &Option<Vec<ClipChainId>>,
+    filter_ops: &Option<Vec<webrender_api::FilterOp>>,
+    accumulated_scale: f32,
+    paints: &dyn PaintResourceProvider,
+    wr: &mut DisplayListBuilder,
+) {
+    let SvgTag::Shape(shape) = &node.tag else { return };
+    if !node.style.is_visible() {
+        return;
+    }
+
+    // Push a stacking context when filters are present.
+    let pushed_filter = if let Some(ops) = filter_ops {
+        wr.push_stacking_context(
+            cur_spatial_id,
+            PrimitiveFlags::default(),
+            clip_chain_option(node_clip_chain),
+            TransformStyle::Flat,
+            MixBlendMode::Normal,
+            ops,
+            &[], // filter_datas
+            RasterSpace::Screen,
+            StackingContextFlags::empty(),
+            None, // snapshot
+        );
+        true
+    } else {
+        false
+    };
+
+    // Determine the clip chain to use (mask clips or node clip).
+    let effective_clip = if let Some(clips) = mask_clips {
+        clips.first().copied().unwrap_or(node_clip_chain)
+    } else {
+        node_clip_chain
+    };
+
+    // Render shape once (with masks: once per mask shape for union).
+    if let Some(clips) = mask_clips {
+        for &mask_chain in clips {
+            let mut ctx = RenderContext {
+                style: &node.style,
+                svg_origin: *cur_origin,
+                spatial_id: cur_spatial_id,
+                clip_chain_id: mask_chain,
+                wr: &mut *wr,
+                paints,
+                accumulated_scale,
+            };
+            shape.render(&mut ctx);
+        }
+    } else {
         let mut ctx = RenderContext {
             style: &node.style,
-            svg_origin: cur_origin,
+            svg_origin: *cur_origin,
             spatial_id: cur_spatial_id,
-            clip_chain_id,
+            clip_chain_id: effective_clip,
             wr: &mut *wr,
-            gradients,
+            paints,
+            accumulated_scale,
         };
         shape.render(&mut ctx);
     }
 
-    // Recurse into children, unless this is a <defs> container whose
-    // children are definitions and must not be rendered directly.
+    // Pop the stacking context if we pushed one for filters.
+    if pushed_filter {
+        wr.pop_stacking_context();
+    }
+}
+
+/// Recursively render child nodes.  Skips `<defs>` containers whose
+/// children are non-visual definitions.
+fn recurse_children(
+    node: &SvgRenderNode,
+    cur_origin: &LayoutPoint,
+    cur_spatial_id: SpatialId,
+    node_clip_chain: ClipChainId,
+    parent_clip_chain: ClipChainId,
+    paints: &impl PaintResourceProvider,
+    clips: &impl ClipMaskProvider,
+    filters: &impl FilterProvider,
+    accumulated_scale: f32,
+    wr: &mut DisplayListBuilder,
+) {
     if let SvgTag::Container(Container::Defs) = &node.tag {
-        // do not recurse — <defs> children are non-visual definitions
-    } else {
-        for child in &node.children {
-            render_node(child, &cur_origin, cur_spatial_id, clip_chain_id, wr, gradients);
-        }
+        return; // <defs> children are non-visual definitions.
     }
 
-    // Pop any reference frames in reverse order.
-    for _ in 0..pushed_count {
-        wr.pop_reference_frame();
+    let recurse_clip_chain = if node_clip_chain != parent_clip_chain {
+        node_clip_chain
+    } else {
+        parent_clip_chain
+    };
+
+    for child in &node.children {
+        render_node(
+            child, cur_origin, cur_spatial_id, recurse_clip_chain, wr,
+            paints, clips, filters, accumulated_scale,
+        );
     }
 }
