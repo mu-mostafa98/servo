@@ -47,13 +47,13 @@
 
 ---
 
-### 5. `fill="none"` vs "no fill specified" inheritance confusion
+### ✓ 5. `fill="none"` vs "no fill specified" inheritance confusion
 
-**File:** [components/layout/svg_builder.rs:293-310](components/layout/svg_builder.rs#L293-L310)
+**Fixed in:** [layout/svg_builder.rs](components/layout/svg_builder.rs)
 
-**Problem:** When a presentation attribute says `fill="none"`, `PaintServer::from_attr` returns `None`, which causes `build_style_from_attrs` to produce `fill: None`. In the renderer, `fill: None` means "do not fill" — same behavior as `fill="none"`. But `fill="none"` is a *final* value (the element and its children have no fill), while no fill attribute means "inherit from parent."
+**Fix (2026-07-06):** `build_style_from_attrs` now returns `Some(FillParams { color: None, paint_server: None })` when the `fill` attribute is `"none"` (explicitly no paint), vs `None` when there is no fill attribute at all (inherit from parent). The renderer already handled both cases identically (skip fill), so this is a data model fix that enables correct inheritance in the future. Previously both cases produced `fill: None` at the `NodeStyle` level, conflating "no value" with "explicitly none."
 
-**NOT YET FIXED** — requires tri-state enum change.
+**Note:** The `FromComputedValues` path (CSS-styled elements, the main rendering path) was already correct — Stylo resolves inheritance before it reaches the renderer, so a child inheriting `fill="red"` from a parent gets the resolved color. The fix primarily affects the `build_style_from_attrs` path used for pattern-definition shapes.
 
 ---
 
@@ -67,13 +67,11 @@
 
 ---
 
-### 7. Dashed strokes not rendered for `<line>` elements
+### ✓ 7. Dashed strokes not rendered for `<line>` elements
 
-**File:** [components/svg_engine/src/renderer/line.rs](components/svg_engine/src/renderer/line.rs)
+**Fixed in:** [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs)
 
-**Problem:** The `<line>` renderer reads `stroke.width` and `stroke.color` but ignores `stroke.dash_array` and `stroke.dash_offset`.
-
-**NOT YET FIXED** — requires dash decomposition or WebRender border dash support.
+**Fix (2026-07-06):** Added a `dash_intervals()` function that decomposes a line segment into dash/gap intervals based on `stroke-dasharray` and `stroke-dashoffset`. Modified `stroke_line_segment()` to branch on `stroke.dash_array`: when present, it decomposes each segment and draws multiple rotated sub-rects (one per dash interval) inside a single reference frame. Also handles gradient strokes with dashes — each dash is rendered as a gradient-filled sub-rect. Added 14 unit tests for `dash_intervals()` covering basic patterns, offsets, wrap-around, negative offsets, zero-length segments, and edge cases.
 
 ---
 
@@ -168,9 +166,9 @@
 | #2 Radial gradient fills rect | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | RadialGradient variant |
 | #3 Pattern fills rect | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | shape.render() per tile, clip to polygon |
 | #4 userSpaceOnUse origin | **✓ FIXED** | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | offset_x/offset_y in strategies |
-| #5 fill="none" vs inheritance | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 293-310 |
+| #5 fill="none" vs inheritance | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | build_style_from_attrs explicit none |
 | #6 currentColor default | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 88-103 |
-| #7 Dashed line strokes | Not fixed | [renderer/line.rs](components/svg_engine/src/renderer/line.rs) | line.rs |
+| #7 Dashed line strokes | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | dash_intervals, emit_rotated_rects_for_segment |
 | #8 Viewport overflow clip | Not fixed | [traversal.rs](components/svg_engine/src/traversal.rs) | 41-46 |
 | #9 CSS transform ignored | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 249 |
 | #10 Limited clip paths | Not fixed | [shapes/mod.rs](components/svg_engine/src/shapes/mod.rs) | 58-65 |
@@ -182,3 +180,12 @@
 | #16 Gradient perf | Not fixed | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | 85-98 |
 | #17 NaN in tessellator | Not fixed | [tessellator.rs](components/svg_engine/src/tessellator.rs) | scanline loop |
 | #18 partial_cmp NaN | Not fixed | [tessellator.rs](components/svg_engine/src/tessellator.rs) | 221 |
+
+## Visual Test Files
+
+- [svg_line_test.html](svg_line_test.html) — `<line>` rendering including dashes, angles, widths, opacity, gradient strokes
+- [svg_ellipse_test.html](svg_ellipse_test.html) — `<ellipse>`, `<circle>`, `<rect>` with fills, strokes, fill="none" inheritance, patterns
+- [svg_style_test.html](svg-style-test.html) — opacity, visibility, clip-path, patterns, masks, filters
+- [svg_gradient_test.html](svg_gradient_test.html) — linear/radial gradients, stops, units
+- [svg_polyline_polygon_test.html](svg_polyline_polygon_test.html) — polys, paths, fill-rule
+- [svg_bug_demo.html](svg-bug-demo.html) — Regression test for all fixed bugs

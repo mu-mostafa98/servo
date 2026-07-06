@@ -24,6 +24,77 @@ use crate::renderer::gradient;
 use crate::style::{NodeStyle, Visibility, Display, StrokeParams};
 use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
 
+// ======================= Dash Interval Decomposition =======================
+
+/// Decompose a line segment of length `seg_len` into dash/gap intervals
+/// based on the SVG `stroke-dasharray` and `stroke-dashoffset`.
+///
+/// Returns a list of `(t0, t1)` pairs along the segment [0, 1] where
+/// dashes should be drawn.  Returns a single `[(0, 1)]` interval when
+/// dash_array is empty or all gaps (no dashes remaining after offset).
+///
+/// Uses `butt` line caps — each dash covers exactly its interval.
+pub(crate) fn dash_intervals(
+    seg_len: f32,
+    dash_array: &[f32],
+    dash_offset: f32,
+) -> Vec<(f32, f32)> {
+    if dash_array.is_empty() || seg_len <= 0.0 {
+        return vec![(0.0, 1.0)];
+    }
+
+    let pattern_len: f32 = dash_array.iter().sum();
+    if pattern_len <= 1e-6 {
+        return vec![(0.0, 1.0)];
+    }
+
+    // Normalise offset into [0, pattern_len).
+    let offset = ((dash_offset % pattern_len) + pattern_len) % pattern_len;
+
+    let mut intervals = Vec::new();
+    let mut pos = 0.0;                 // distance consumed along the segment
+    let mut pi: usize = 0;            // index into dash_array
+    let mut seg_rem = dash_array[0];  // remaining length in current array entry
+    let mut is_dash = true;           // index 0 is a dash (even = dash, odd = gap)
+
+    // Advance past the offset so we start at the right pattern position.
+    let mut o = offset;
+    while o > 0.0 {
+        if o < seg_rem {
+            seg_rem -= o;
+            o = 0.0;
+        } else {
+            o -= seg_rem;
+            pi += 1;
+            is_dash = !is_dash;
+            seg_rem = dash_array[pi % dash_array.len()];
+        }
+    }
+
+    // Walk the segment and record dash intervals.
+    while pos < seg_len - 1e-6 {
+        let remaining = seg_len - pos;
+        let consume = remaining.min(seg_rem);
+
+        if is_dash && consume > 0.0 {
+            let t0 = pos / seg_len;
+            let t1 = (pos + consume) / seg_len;
+            intervals.push((t0, t1));
+        }
+
+        pos += consume;
+        seg_rem -= consume;
+
+        if seg_rem <= 1e-6 && pos < seg_len - 1e-6 {
+            pi += 1;
+            is_dash = !is_dash;
+            seg_rem = dash_array[pi % dash_array.len()];
+        }
+    }
+
+    intervals
+}
+
 // ======================= Shared line-segment stroke =======================
 
 /// Render a single line segment as a rotated rect filled with the stroke color
@@ -63,21 +134,51 @@ pub(crate) fn stroke_line_segment(
         },
     );
 
-    let line_bounds = LayoutRect::from_origin_and_size(
-        LayoutPoint::new(-len / 2.0, -half_w),
-        LayoutSize::new(len, stroke_width),
-    );
-
     if let Some(svg_color) = stroke.color {
         let mut color = to_colorf(&svg_color);
         color.a *= stroke.opacity * ctx.style.opacity;
-        let common = make_common_props(line_bounds, line_spatial_id, ctx.clip_chain_id);
-        ctx.wr.push_rect(&common, line_bounds, color);
+        emit_rotated_rects_for_segment(len, half_w, color, stroke, line_spatial_id, ctx);
     } else if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
+        // Gradient stroke: fill the rotated rect with the gradient.
+        // For gradient strokes, dashes are rendered as gradient-filled
+        // sub-rects along the full-segment gradient projection.
+        let full_bounds = LayoutRect::from_origin_and_size(
+            LayoutPoint::new(-len / 2.0, -half_w),
+            LayoutSize::new(len, stroke_width),
+        );
         // Gradient stroke: fill the rotated rect with the gradient.
         // NOTE: For userSpaceOnUse gradients the coordinates are in the parent
         // (unrotated) frame, so the gradient bands appear rotated with the line.
         // This is correct for objectBoundingBox (default) mode.
+        if let Some(dash_array) = &stroke.dash_array {
+            if !dash_array.is_empty() {
+                let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
+                for (t0, t1) in intervals {
+                    if t1 <= t0 { continue; }
+                    let dash_start = -len / 2.0 + t0 * len;
+                    let dash_len = (t1 - t0) * len;
+                    let dash_bounds = LayoutRect::from_origin_and_size(
+                        LayoutPoint::new(dash_start, -half_w),
+                        LayoutSize::new(dash_len, stroke_width),
+                    );
+                    let mut grad_ctx = RenderContext {
+                        style: ctx.style,
+                        svg_origin: LayoutPoint::new(0.0, 0.0),
+                        spatial_id: line_spatial_id,
+                        clip_chain_id: ctx.clip_chain_id,
+                        wr: &mut *ctx.wr,
+                        paints: ctx.paints,
+                        accumulated_scale: ctx.accumulated_scale,
+                    };
+                    gradient::fill_rect_with_gradient_by_id(
+                        id, dash_bounds, &mut grad_ctx,
+                        stroke.opacity * ctx.style.opacity,
+                    );
+                }
+                ctx.wr.pop_reference_frame();
+                return;
+            }
+        }
         let mut grad_ctx = RenderContext {
             style: ctx.style,
             svg_origin: LayoutPoint::new(0.0, 0.0),
@@ -88,12 +189,54 @@ pub(crate) fn stroke_line_segment(
             accumulated_scale: ctx.accumulated_scale,
         };
         gradient::fill_rect_with_gradient_by_id(
-            id, line_bounds, &mut grad_ctx,
+            id, full_bounds, &mut grad_ctx,
             stroke.opacity * ctx.style.opacity,
         );
     }
 
     ctx.wr.pop_reference_frame();
+}
+
+/// Draw the on-parts of a line segment as rotated sub-rects, respecting
+/// `stroke-dasharray`.  Falls back to a single full-length rect when
+/// dashes are not enabled or dash_array is empty.
+///
+/// Must be called inside a push_reference_frame / pop_reference_frame pair
+/// where the frame is rotated to align with the segment direction.
+fn emit_rotated_rects_for_segment(
+    len: f32,
+    half_w: f32,
+    color: ColorF,
+    stroke: &StrokeParams,
+    line_spatial_id: webrender_api::SpatialId,
+    ctx: &mut RenderContext,
+) {
+    let stroke_width = half_w * 2.0;
+
+    if let Some(dash_array) = &stroke.dash_array {
+        if !dash_array.is_empty() {
+            let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
+            for (t0, t1) in intervals {
+                if t1 <= t0 { continue; }
+                let dash_start = -len / 2.0 + t0 * len;
+                let dash_len = (t1 - t0) * len;
+                let bounds = LayoutRect::from_origin_and_size(
+                    LayoutPoint::new(dash_start, -half_w),
+                    LayoutSize::new(dash_len, stroke_width),
+                );
+                let common = make_common_props(bounds, line_spatial_id, ctx.clip_chain_id);
+                ctx.wr.push_rect(&common, bounds, color);
+            }
+            return;
+        }
+    }
+    // No dashes or empty array — full segment.
+    let full_bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(-len / 2.0, -half_w),
+        LayoutSize::new(len, stroke_width),
+    );
+    let common = make_common_props(full_bounds, line_spatial_id, ctx.clip_chain_id);
+    ctx.wr.push_rect(&common, full_bounds, color);
 }
 
 // ======================= Rect stroke =======================
@@ -403,4 +546,126 @@ fn draw_rotated_stroke_segment(
     let common = make_common_props(line_bounds, line_spatial_id, ctx.clip_chain_id);
     ctx.wr.push_rect(&common, line_bounds, color);
     ctx.wr.pop_reference_frame();
+}
+
+// ======================= Tests =======================
+
+#[cfg(test)]
+mod tests {
+    use super::dash_intervals;
+
+    fn approx(a: &[(f32, f32)], b: &[(f32, f32)]) -> bool {
+        if a.len() != b.len() {
+            return false;
+        }
+        const EPS: f32 = 0.001;
+        for (i, (x, y)) in a.iter().enumerate() {
+            let (bx, by) = b[i];
+            if (x - bx).abs() > EPS || (y - by).abs() > EPS {
+                return false;
+            }
+        }
+        true
+    }
+
+    #[test]
+    fn empty_dash_array_returns_full_segment() {
+        assert_eq!(dash_intervals(100.0, &[], 0.0), vec![(0.0, 1.0)]);
+    }
+
+    #[test]
+    fn single_dash_no_gap() {
+        // Single value [10] means 10-on, 10-off, 10-on, 10-off, ...
+        let r = dash_intervals(20.0, &[10.0], 0.0);
+        assert!(approx(&r, &[(0.0, 0.5)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn basic_dash_pattern() {
+        let r = dash_intervals(20.0, &[6.0, 4.0], 0.0);
+        // 6 dash, 4 gap, 6 dash, 4 gap (but only 20 total)
+        // 0-6 dash, 6-10 gap, 10-16 dash, 16-20 gap
+        assert!(approx(&r, &[(0.0, 0.3), (0.5, 0.8)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn dash_offset_shifts_pattern() {
+        let r = dash_intervals(20.0, &[6.0, 4.0], 5.0);
+        // offset=5 into [6,4]: 5 consumed from first 6 → 1 left of dash
+        // 0-1 dash, 1-5 gap, 5-11 dash, 11-15 gap, 15-20 dash (partial)
+        // Wait, let me re-check: offset=5 means we start 5 units into the pattern.
+        // pattern [6,4] at offset 5: we've consumed 5 of the first 6 → 1 of dash left
+        // 0-1 dash, 1-5 gap (4 units), 5-11 dash (6 units), 11-15 gap (4 units), 15-20 dash (5 units)
+        assert!(approx(&r, &[(0.0, 0.05), (0.25, 0.55), (0.75, 1.0)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn dash_offset_start_of_gap() {
+        let r = dash_intervals(20.0, &[6.0, 4.0], 6.0);
+        // offset=6: consumed all 6 of dash → at start of gap
+        // 0-4 gap, 4-10 dash, 10-14 gap, 14-20 dash
+        assert!(approx(&r, &[(0.2, 0.5), (0.7, 1.0)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn dash_offset_middle_of_gap() {
+        let r = dash_intervals(20.0, &[6.0, 4.0], 8.0);
+        // offset=8: consumed 6 dash + 2 gap → 2 of gap left
+        // 0-2 gap, 2-8 dash, 8-12 gap, 12-18 dash, 18-20 gap
+        assert!(approx(&r, &[(0.1, 0.4), (0.6, 0.9)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn segment_shorter_than_dash() {
+        let r = dash_intervals(3.0, &[10.0, 5.0], 0.0);
+        assert!(approx(&r, &[(0.0, 1.0)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn segment_shorter_than_gap() {
+        let r = dash_intervals(3.0, &[2.0, 10.0], 2.0);
+        // offset=2: consumed all 2 of dash → at start of 10-unit gap
+        // Entire segment is in gap → no dashes
+        assert!(r.is_empty(), "got {:?}", r);
+    }
+
+    #[test]
+    fn single_element_pattern_alternating() {
+        let r = dash_intervals(30.0, &[5.0], 0.0);
+        // [5] means 5-on, 5-off, 5-on, 5-off, ...
+        // 0-5 dash, 5-10 gap, 10-15 dash, 15-20 gap, 20-25 dash, 25-30 gap
+        assert!(approx(&r, &[(0.0, 1.0/6.0), (1.0/3.0, 0.5), (2.0/3.0, 5.0/6.0)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn zero_length_segment() {
+        assert_eq!(dash_intervals(0.0, &[5.0, 2.0], 0.0), vec![(0.0, 1.0)]);
+    }
+
+    #[test]
+    fn negative_offset() {
+        let r = dash_intervals(20.0, &[6.0, 4.0], -2.0);
+        // offset=-2: from end of pattern [6,4]=10, -2 = position 8
+        // = middle of gap (consumed 6 dash + 2 gap → 2 of gap left)
+        assert!(approx(&r, &[(0.1, 0.4), (0.6, 0.9)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn large_offset_wraps_pattern() {
+        let r = dash_intervals(20.0, &[6.0, 4.0], 25.0);
+        // offset=25: 25 % 10 = 5, same as offset=5 test
+        assert!(approx(&r, &[(0.0, 0.05), (0.25, 0.55), (0.75, 1.0)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn segment_exactly_one_dash() {
+        let r = dash_intervals(6.0, &[6.0, 4.0], 0.0);
+        assert!(approx(&r, &[(0.0, 1.0)]), "got {:?}", r);
+    }
+
+    #[test]
+    fn segment_exactly_one_full_pattern() {
+        let r = dash_intervals(10.0, &[6.0, 4.0], 0.0);
+        assert!(approx(&r, &[(0.0, 0.6)]), "got {:?}", r);
+    }
 }

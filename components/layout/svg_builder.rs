@@ -290,24 +290,38 @@ fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle {
         .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
         .unwrap_or(1.0);
 
-    let fill = fill_attr.and_then(|v| {
-        let ps = PaintServer::from_attr(&v);
-        match ps {
-            Some(PaintServer::Solid(c)) => Some(FillParams {
-                color: Some(c),
-                paint_server: None,
-                opacity: fill_opacity,
-                fill_rule: FillRule::NonZero,
-            }),
-            Some(PaintServer::Gradient(id)) => Some(FillParams {
-                color: None,
-                paint_server: Some(PaintServer::Gradient(id)),
-                opacity: fill_opacity,
-                fill_rule: FillRule::NonZero,
-            }),
-            Some(PaintServer::Pattern(_)) | None => None,
-        }
-    });
+    let fill = match fill_attr {
+        Some(v) => {
+            let ps = PaintServer::from_attr(&v);
+            match ps {
+                Some(PaintServer::Solid(c)) => Some(FillParams {
+                    color: Some(c),
+                    paint_server: None,
+                    opacity: fill_opacity,
+                    fill_rule: FillRule::NonZero,
+                }),
+                Some(PaintServer::Gradient(id)) => Some(FillParams {
+                    color: None,
+                    paint_server: Some(PaintServer::Gradient(id)),
+                    opacity: fill_opacity,
+                    fill_rule: FillRule::NonZero,
+                }),
+                Some(PaintServer::Pattern(_)) => None,
+                None => {
+                    // fill="none" (or unparseable) — explicit none, keeps
+                    // fill visible for inheritance but produces no draw
+                    // commands (renderer checks fill.color / paint_server).
+                    Some(FillParams {
+                        color: None,
+                        paint_server: None,
+                        opacity: fill_opacity,
+                        fill_rule: FillRule::NonZero,
+                    })
+                },
+            }
+        },
+        None => None, // no fill attribute — inherit from parent
+    };
 
     let stroke = stroke_attr.and_then(|v| {
         let ps = PaintServer::from_attr(&v);
