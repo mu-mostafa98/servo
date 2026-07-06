@@ -20,7 +20,8 @@ use lyon::math::Point as LyonPoint;
 use crate::renderer::{RenderContext, to_colorf};
 use crate::renderer::gradient;
 use crate::renderer::pattern;
-use crate::style::gradient::{GradientDef, PaintServer};
+use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
+use crate::render_tree::PatternUnits;
 use crate::tessellator;
 use crate::tessellator::FillStyle;
 
@@ -80,38 +81,74 @@ pub(crate) fn fill_polygon(
 ) {
     let Some(fill) = &ctx.style.fill else { return };
     let opacity = fill.opacity * ctx.style.opacity;
+    let bx = bounds.min.x;
+    let by = bounds.min.y;
+    let bw = bounds.size().width.max(1.0);
+    let bh = bounds.size().height.max(1.0);
 
     match &fill.paint_server {
         Some(PaintServer::Gradient(id)) => {
             if ctx.paints.has_pattern(id) {
-                pattern::fill_rect_with_pattern_by_id(id, bounds, ctx, opacity);
-            } else if let Some(grad_def) = ctx.paints.gradient(id) {
+                // Pattern ID overlaps gradient ID — delegate to pattern handler.
+                handle_pattern_fill(id, pts, bounds, fill_rule, ctx, opacity);
+                return;
+            }
+            if let Some(grad_def) = ctx.paints.gradient(id) {
                 match grad_def {
                     GradientDef::Linear(lg) => {
-                        let bx = bounds.min.x;
-                        let by = bounds.min.y;
-                        let bw = bounds.size().width.max(1.0);
-                        let bh = bounds.size().height.max(1.0);
+                        // Convert all gradient coordinates to absolute space
+                        // so the scanline rasterizer always works in a single
+                        // uniform coordinate system (bug #4 fix).
+                        let (gx1, gy1, gx2, gy2) = match lg.units {
+                            GradientUnits::ObjectBoundingBox => (
+                                bx + lg.x1.to_object_bbox() * bw,
+                                by + lg.y1.to_object_bbox() * bh,
+                                bx + lg.x2.to_object_bbox() * bw,
+                                by + lg.y2.to_object_bbox() * bh,
+                            ),
+                            GradientUnits::UserSpaceOnUse => (
+                                ctx.svg_origin.x + lg.x1.to_user_space(bw),
+                                ctx.svg_origin.y + lg.y1.to_user_space(bh),
+                                ctx.svg_origin.x + lg.x2.to_user_space(bw),
+                                ctx.svg_origin.y + lg.y2.to_user_space(bh),
+                            ),
+                        };
                         let fill_style = FillStyle::LinearGradient {
                             stops: &lg.stops,
-                            x1: lg.x1.to_object_bbox(),
-                            y1: lg.y1.to_object_bbox(),
-                            x2: lg.x2.to_object_bbox(),
-                            y2: lg.y2.to_object_bbox(),
-                            units: lg.units,
-                            bx, by, bw, bh,
+                            gx1, gy1, gx2, gy2,
                             opacity,
                         };
                         tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
                     },
-                    GradientDef::Radial(_rg) => {
-                        gradient::fill_rect_with_gradient_by_id(id, bounds, ctx, opacity);
+                    GradientDef::Radial(rg) => {
+                        // Convert radial gradient to absolute coordinates.
+                        let (fx, fy, r2) = match rg.units {
+                            GradientUnits::ObjectBoundingBox => {
+                                let scale = bw.max(bh);
+                                (bx + rg.fx.to_object_bbox() * bw,
+                                 by + rg.fy.to_object_bbox() * bh,
+                                 (rg.r.to_object_bbox() * scale).max(1.0))
+                            },
+                            GradientUnits::UserSpaceOnUse => {
+                                let scale = bw.max(bh);
+                                (ctx.svg_origin.x + rg.fx.to_user_space(bw),
+                                 ctx.svg_origin.y + rg.fy.to_user_space(bh),
+                                 rg.r.to_user_space(scale).max(1.0))
+                            },
+                        };
+                        let r2 = r2 * r2;
+                        let fill_style = FillStyle::RadialGradient {
+                            stops: &rg.stops,
+                            fx, fy, r2,
+                            opacity,
+                        };
+                        tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
                     },
                 }
             }
         },
         Some(PaintServer::Pattern(id)) => {
-            pattern::fill_rect_with_pattern_by_id(id, bounds, ctx, opacity);
+            handle_pattern_fill(id, pts, bounds, fill_rule, ctx, opacity);
         },
         _ => {
             if let Some(svg_color) = fill.color {
@@ -122,6 +159,64 @@ pub(crate) fn fill_polygon(
             }
         },
     }
+}
+
+/// Helper: fill a polygon with a pattern paint server, evaluating the pattern
+/// per-pixel in the tessellator's scanline loop.
+fn handle_pattern_fill(
+    id: &str,
+    pts: &[LyonPoint],
+    bounds: LayoutRect,
+    fill_rule: crate::style::FillRule,
+    ctx: &mut RenderContext,
+    opacity: f32,
+) {
+    let def = match ctx.paints.pattern(id) {
+        Some(d) => d,
+        None => {
+            log::warn!("SVG pattern \"{}\" not found in definitions", id);
+            return;
+        },
+    };
+
+    if def.shapes.is_empty() {
+        return;
+    }
+
+    let bw = bounds.size().width.max(1.0);
+    let bh = bounds.size().height.max(1.0);
+    let bx = bounds.min.x;
+    let by = bounds.min.y;
+
+    let (tile_w, tile_h) = match def.pattern_units {
+        PatternUnits::ObjectBoundingBox => {
+            (def.width * bw, def.height * bh)
+        },
+        PatternUnits::UserSpaceOnUse => {
+            (def.width, def.height)
+        },
+    };
+
+    if tile_w <= 0.0 || tile_h <= 0.0 {
+        return;
+    }
+
+    let (ox, oy) = match def.pattern_units {
+        PatternUnits::ObjectBoundingBox => {
+            (bx + def.x * bw, by + def.y * bh)
+        },
+        PatternUnits::UserSpaceOnUse => {
+            (bx + def.x, by + def.y)
+        },
+    };
+
+    let fill_style = FillStyle::Pattern {
+        shapes: &def.shapes,
+        tile_w, tile_h,
+        ox, oy,
+        opacity,
+    };
+    tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
 }
 
 // ======================= Utility =======================

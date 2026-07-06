@@ -106,6 +106,11 @@ struct LinearStrategy<'a> {
     gy1: f32,
     gx2: f32,
     gy2: f32,
+    /// Offset to add to (x, y) pixel positions before computing gradient
+    /// projection.  This converts render_gradient's relative coordinates
+    /// into the absolute coordinate space that the gradient line uses.
+    offset_x: f32,
+    offset_y: f32,
 }
 
 impl GradientStrategy for LinearStrategy<'_> {
@@ -118,7 +123,10 @@ impl GradientStrategy for LinearStrategy<'_> {
     }
 
     fn compute_t(&self, x: f32, y: f32, _bw: f32, _bh: f32) -> f32 {
-        gradient_projection(x, y, self.gx1, self.gy1, self.gx2, self.gy2)
+        gradient_projection(
+            x + self.offset_x, y + self.offset_y,
+            self.gx1, self.gy1, self.gx2, self.gy2,
+        )
     }
 }
 
@@ -129,6 +137,10 @@ struct RadialStrategy<'a> {
     fx: f32,
     fy: f32,
     r2: f32, // radius squared
+    /// Offset to add to (x, y) pixel positions before computing distance
+    /// from the focal point.  Converts relative coords to absolute.
+    offset_x: f32,
+    offset_y: f32,
 }
 
 impl GradientStrategy for RadialStrategy<'_> {
@@ -141,8 +153,8 @@ impl GradientStrategy for RadialStrategy<'_> {
     }
 
     fn compute_t(&self, x: f32, y: f32, _bw: f32, _bh: f32) -> f32 {
-        let dx = x - self.fx;
-        let dy = y - self.fy;
+        let dx = (x + self.offset_x) - self.fx;
+        let dy = (y + self.offset_y) - self.fy;
         let dist_sq = (dx * dx + dy * dy) / self.r2.max(1.0);
         dist_sq.sqrt().min(1.0)
     }
@@ -179,31 +191,33 @@ fn render_linear(
 ) {
     let bw = bounds.size().width;
     let bh = bounds.size().height;
+    let bx = bounds.min.x;
+    let by = bounds.min.y;
 
+    // Convert all gradient coordinates to absolute space and set
+    // offset = (bx, by) so that pixel positions from render_gradient
+    // are also interpreted as absolute.  This makes userSpaceOnUse
+    // correct regardless of the shape's position (bug #4 fix).
     let (gx1, gy1, gx2, gy2) = match lg.units {
         GradientUnits::ObjectBoundingBox => (
-            lg.x1.to_object_bbox(),
-            lg.y1.to_object_bbox(),
-            lg.x2.to_object_bbox(),
-            lg.y2.to_object_bbox(),
+            bx + lg.x1.to_object_bbox() * bw,
+            by + lg.y1.to_object_bbox() * bh,
+            bx + lg.x2.to_object_bbox() * bw,
+            by + lg.y2.to_object_bbox() * bh,
         ),
         GradientUnits::UserSpaceOnUse => (
-            lg.x1.to_user_space(bw),
-            lg.y1.to_user_space(bh),
-            lg.x2.to_user_space(bw),
-            lg.y2.to_user_space(bh),
+            ctx.svg_origin.x + lg.x1.to_user_space(bw),
+            ctx.svg_origin.y + lg.y1.to_user_space(bh),
+            ctx.svg_origin.x + lg.x2.to_user_space(bw),
+            ctx.svg_origin.y + lg.y2.to_user_space(bh),
         ),
-    };
-
-    let (gx1, gy1, gx2, gy2) = if lg.units == GradientUnits::ObjectBoundingBox {
-        (gx1 * bw, gy1 * bh, gx2 * bw, gy2 * bh)
-    } else {
-        (gx1, gy1, gx2, gy2)
     };
 
     let strategy = LinearStrategy {
         stops: &lg.stops,
         gx1, gy1, gx2, gy2,
+        offset_x: bx,
+        offset_y: by,
     };
     render_gradient(bounds, ctx, opacity, &strategy);
 }
@@ -217,16 +231,20 @@ fn render_radial(
 ) {
     let bw = bounds.size().width;
     let bh = bounds.size().height;
+    let bx = bounds.min.x;
+    let by = bounds.min.y;
 
+    // Convert all coordinates to absolute space with (bx, by) offset
+    // for correct userSpaceOnUse behavior (bug #4 fix).
     let (fx, fy, radius) = match rg.units {
         GradientUnits::ObjectBoundingBox => (
-            rg.fx.to_object_bbox() * bw,
-            rg.fy.to_object_bbox() * bh,
+            bx + rg.fx.to_object_bbox() * bw,
+            by + rg.fy.to_object_bbox() * bh,
             rg.r.to_object_bbox() * bw.max(bh),
         ),
         GradientUnits::UserSpaceOnUse => (
-            rg.fx.to_user_space(bw),
-            rg.fy.to_user_space(bh),
+            ctx.svg_origin.x + rg.fx.to_user_space(bw),
+            ctx.svg_origin.y + rg.fy.to_user_space(bh),
             rg.r.to_user_space(bw.max(bh)),
         ),
     };
@@ -239,6 +257,8 @@ fn render_radial(
         stops: &rg.stops,
         fx, fy,
         r2: radius * radius,
+        offset_x: bx,
+        offset_y: by,
     };
     render_gradient(bounds, ctx, opacity, &strategy);
 }

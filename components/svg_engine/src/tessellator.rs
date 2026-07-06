@@ -24,10 +24,12 @@ use webrender_api::{
     units::{LayoutPoint, LayoutRect, LayoutSize},
 };
 
-use crate::renderer::{RenderContext, shape_rendering_value};
+use crate::renderer::{RenderContext, shape_rendering_value, to_colorf};
 use crate::renderer::gradient::{color_at_t, gradient_projection};
+use crate::shapes::Shape;
 use crate::style::FillRule;
-use crate::style::gradient::{GradientStop, GradientUnits};
+use crate::style::gradient::GradientStop;
+use crate::style::NodeStyle;
 
 // ======================= Fill Style =======================
 
@@ -35,14 +37,85 @@ use crate::style::gradient::{GradientStop, GradientUnits};
 pub(crate) enum FillStyle<'a> {
     /// Solid uniform color.
     Solid(ColorF),
-    /// Linear gradient with absolute coordinates (in shifted-pts space).
+    /// Linear gradient with absolute coordinates.
     LinearGradient {
         stops: &'a [GradientStop],
-        x1: f32, y1: f32, x2: f32, y2: f32,
-        units: GradientUnits,
-        bx: f32, by: f32, bw: f32, bh: f32,
+        /// Gradient line start (absolute) in the same space as pixel positions.
+        gx1: f32, gy1: f32,
+        /// Gradient line end (absolute).
+        gx2: f32, gy2: f32,
         opacity: f32,
     },
+    /// Radial gradient evaluated per pixel.
+    RadialGradient {
+        stops: &'a [GradientStop],
+        /// Focal point (absolute coordinates in the same space as pixel positions).
+        fx: f32, fy: f32,
+        /// Radius squared (absolute space).
+        r2: f32,
+        opacity: f32,
+    },
+    /// Pattern evaluated per pixel (shape hit-testing in tile-local coords).
+    Pattern {
+        /// The pattern's child shapes and their styles.
+        shapes: &'a [(Shape, NodeStyle)],
+        /// Tile dimensions in absolute space.
+        tile_w: f32, tile_h: f32,
+        /// Tile origin offset in absolute space.
+        ox: f32, oy: f32,
+        opacity: f32,
+    },
+}
+
+// ======================= Point-in-Shape Helpers =======================
+
+/// Check whether a point `(px, py)` (in shape-local coordinates) falls inside
+/// a shape.  Used for per-pixel pattern evaluation.
+///
+/// Only rect, circle, and ellipse are supported — polyline/polygon/path
+/// return `false` (they do not contribute to the pattern color at this
+/// position, which is a simplification for common pattern shapes).
+fn point_in_shape(px: f32, py: f32, shape: &Shape) -> bool {
+    match shape {
+        Shape::Rect(r) => {
+            px >= r.x && px <= r.x + r.width &&
+            py >= r.y && py <= r.y + r.height
+        },
+        Shape::Circle(c) => {
+            let dx = px - c.cx;
+            let dy = py - c.cy;
+            dx * dx + dy * dy <= c.r * c.r
+        },
+        Shape::Ellipse(e) => {
+            if e.rx <= 0.0 || e.ry <= 0.0 { return false; }
+            let dx = (px - e.cx) / e.rx;
+            let dy = (py - e.cy) / e.ry;
+            dx * dx + dy * dy <= 1.0
+        },
+        // Line / polyline / polygon / path — no fill contribution or too complex.
+        Shape::Line(_) | Shape::Polyline(_) | Shape::Polygon(_) | Shape::Path(_) => false,
+    }
+}
+
+/// Evaluate the pattern at a tile-local position `(tx, ty)` using the painter's
+/// model (last shape in the list is on top).  Returns `Some(ColorF)` if a shape
+/// with a solid fill covers the point, `None` if the point is transparent.
+fn pattern_color_at(
+    tx: f32, ty: f32,
+    shapes: &[(Shape, NodeStyle)],
+) -> Option<ColorF> {
+    // Iterate in reverse (painter's order: last drawn = on top).
+    for (shape, style) in shapes.iter().rev() {
+        if point_in_shape(tx, ty, shape) {
+            if let Some(ref fill) = style.fill {
+                if let Some(ref svg_color) = fill.color {
+                    return Some(to_colorf(svg_color));
+                }
+                // Gradient/pattern fills inside patterns — skip (complex).
+            }
+        }
+    }
+    None
 }
 
 // ======================= Tessellation =======================
@@ -183,19 +256,13 @@ fn scanline_fill_triangle(
                 );
                 ctx.wr.push_rect(&common, rect, *c);
             },
-            FillStyle::LinearGradient { stops, x1, y1, x2, y2, units, bx, by, bw, bh, opacity } => {
-                let ry = center - by;
-                let (gx1, gy1, gx2, gy2) = match units {
-                    GradientUnits::ObjectBoundingBox =>
-                        (x1 * bw, y1 * bh, x2 * bw, y2 * bh),
-                    GradientUnits::UserSpaceOnUse =>
-                        (x1 - bx, y1 - by, x2 - bx, y2 - by),
-                };
+            FillStyle::LinearGradient { stops, gx1, gy1, gx2, gy2, opacity } => {
                 let mut cx = x_left;
                 while cx < x_right {
                     let cw = CELL.min(x_right - cx);
-                    let rx = (cx + cw / 2.0) - bx;
-                    let t = gradient_projection(rx, ry, gx1, gy1, gx2, gy2);
+                    let rx = cx + cw / 2.0;
+                    let ry = center;
+                    let t = gradient_projection(rx, ry, *gx1, *gy1, *gx2, *gy2);
                     let mut c = color_at_t(stops, t);
                     c.a *= opacity;
                     let cell_rect = LayoutRect::from_origin_and_size(
@@ -207,6 +274,56 @@ fn scanline_fill_triangle(
                     );
                     ctx.wr.push_rect(&common, cell_rect, c);
                     cx += CELL;
+                }
+            },
+            FillStyle::RadialGradient { stops, fx, fy, r2, opacity } => {
+                let mut cx = x_left;
+                while cx < x_right {
+                    let cw = CELL.min(x_right - cx);
+                    let rx = cx + cw / 2.0;
+                    let dx = rx - fx;
+                    let dy = center - fy;
+                    let dist_sq = (dx * dx + dy * dy) / r2.max(1.0);
+                    let t = dist_sq.sqrt().min(1.0);
+                    let mut c = color_at_t(stops, t);
+                    c.a *= opacity;
+                    let cell_rect = LayoutRect::from_origin_and_size(
+                        LayoutPoint::new(cx, yf), LayoutSize::new(cw, 1.0),
+                    );
+                    let common = CommonItemProperties::new(
+                        cell_rect,
+                        SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: ctx.clip_chain_id },
+                    );
+                    ctx.wr.push_rect(&common, cell_rect, c);
+                    cx += CELL;
+                }
+            },
+            FillStyle::Pattern { shapes, tile_w, tile_h, ox, oy, opacity } => {
+                let mut cx = x_left;
+                while cx < x_right {
+                    // Use a smaller cell (2px) for pattern fills so that
+                    // small pattern shapes (e.g. a 5px circle) don't look
+                    // overly blocky.
+                    let cw = 2.0f32.min(x_right - cx);
+                    let rx = cx + cw / 2.0;
+                    let ry = center;
+
+                    // Compute tile-local position (handle negative coordinates).
+                    let tile_x = ((rx - ox) % tile_w + tile_w) % tile_w;
+                    let tile_y = ((ry - oy) % tile_h + tile_h) % tile_h;
+
+                    if let Some(mut color) = pattern_color_at(tile_x, tile_y, shapes) {
+                        color.a *= opacity;
+                        let cell_rect = LayoutRect::from_origin_and_size(
+                            LayoutPoint::new(cx, yf), LayoutSize::new(cw, 1.0),
+                        );
+                        let common = CommonItemProperties::new(
+                            cell_rect,
+                            SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: ctx.clip_chain_id },
+                        );
+                        ctx.wr.push_rect(&common, cell_rect, color);
+                    }
+                    cx += cw;
                 }
             },
         }
