@@ -98,7 +98,28 @@ impl FromComputedValues for FillParams {
         match paint {
             ResolvedPaint::Color(color) => Some(FillParams { color: Some(color), paint_server: None, opacity, fill_rule }),
             ResolvedPaint::PaintServer(id) => Some(FillParams { color: None, paint_server: Some(PaintServer::Gradient(id)), opacity, fill_rule }),
-            ResolvedPaint::None => None,
+            ResolvedPaint::None => {
+                // SVG 2: fill defaults to currentColor when not explicitly set.
+                // Explicit fill="none" (SVGPaintKind::None) → no fill.
+                // Anything else (unset, unknown paint kind) → inherit currentColor.
+                if matches!(inherited_svg.fill.kind, SVGPaintKind::None) {
+                    None
+                } else {
+                    let current_color = values.clone_color();
+                    let srgb = current_color.to_color_space(ColorSpace::Srgb);
+                    Some(FillParams {
+                        color: Some(SvgColor::new_rgba(
+                            (srgb.components.0.clamp(0.0, 1.0) * 255.0) as u8,
+                            (srgb.components.1.clamp(0.0, 1.0) * 255.0) as u8,
+                            (srgb.components.2.clamp(0.0, 1.0) * 255.0) as u8,
+                            (srgb.alpha.clamp(0.0, 1.0) * 255.0) as u8,
+                        )),
+                        paint_server: None,
+                        opacity,
+                        fill_rule,
+                    })
+                }
+            },
         }
     }
 }
@@ -684,7 +705,7 @@ fn collect_filters(node: ServoLayoutNode) -> HashMap<String, FilterDef> {
 
 // ======================= Viewport Extraction =======================
 
-fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>, context: &LayoutContext) -> ViewportInfo {
+fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>, _context: &LayoutContext) -> ViewportInfo {
     let element = node.as_element().unwrap();
     let get = |attr: &str| element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string());
     let svg_width = get("width").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(300.0);

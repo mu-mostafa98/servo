@@ -194,7 +194,9 @@ fn scanline_fill_triangle(
         };
 
         let width = x_right - x_left;
-        if width <= 0.0 { continue; }
+        // NaN guard: skip scanlines where the span is NaN or non-positive.
+        // NaN comparisons always return false, so `!(width > 0.0)` catches both.
+        if !(width > 0.0) { continue; }
 
         match fill {
             FillStyle::Solid(c) => {
@@ -307,10 +309,87 @@ fn scanline_fill_triangle(
 }
 
 /// Sort three points by their Y coordinate (ascending).
+///
+/// NaN-resistant: if a Y coordinate is NaN, it is treated as less-than
+/// all finite values so it consistently floats to the front.
 fn sort_vertices_by_y(
     a: LyonPoint, b: LyonPoint, c: LyonPoint,
 ) -> (LyonPoint, LyonPoint, LyonPoint) {
     let mut pts = [a, b, c];
-    pts.sort_by(|p, q| p.y.partial_cmp(&q.y).unwrap_or(std::cmp::Ordering::Equal));
+    pts.sort_by(|p, q| {
+        match (p.y.is_nan(), q.y.is_nan()) {
+            (true, true) => std::cmp::Ordering::Equal,
+            (true, false) => std::cmp::Ordering::Less,    // NaN < finite
+            (false, true) => std::cmp::Ordering::Greater,  // finite > NaN
+            (false, false) => p.y.partial_cmp(&q.y).unwrap_or(std::cmp::Ordering::Equal),
+        }
+    });
     (pts[0], pts[1], pts[2])
+}
+
+// ======================= Tests =======================
+
+#[cfg(test)]
+mod tests {
+    use lyon::math::Point as LyonPoint;
+    use super::sort_vertices_by_y;
+
+    #[test]
+    fn sort_normal() {
+        let (t, m, b) = sort_vertices_by_y(
+            LyonPoint::new(0.0, 10.0),
+            LyonPoint::new(5.0, 5.0),
+            LyonPoint::new(10.0, 0.0),
+        );
+        assert_eq!(t.y, 0.0);
+        assert_eq!(m.y, 5.0);
+        assert_eq!(b.y, 10.0);
+    }
+
+    #[test]
+    fn sort_reverse() {
+        let (t, m, b) = sort_vertices_by_y(
+            LyonPoint::new(0.0, 10.0),
+            LyonPoint::new(5.0, 5.0),
+            LyonPoint::new(10.0, 0.0),
+        );
+        assert!(t.y <= m.y && m.y <= b.y);
+    }
+
+    #[test]
+    fn sort_nan_first() {
+        // NaN should float to the front (treated as top)
+        let (t, m, b) = sort_vertices_by_y(
+            LyonPoint::new(0.0, f32::NAN),
+            LyonPoint::new(5.0, 5.0),
+            LyonPoint::new(10.0, 10.0),
+        );
+        assert!(t.y.is_nan());
+        assert_eq!(m.y, 5.0);
+        assert_eq!(b.y, 10.0);
+    }
+
+    #[test]
+    fn sort_nan_last() {
+        let (t, m, b) = sort_vertices_by_y(
+            LyonPoint::new(0.0, 0.0),
+            LyonPoint::new(5.0, 5.0),
+            LyonPoint::new(10.0, f32::NAN),
+        );
+        assert!(t.y.is_nan() || b.y.is_nan());
+        // Both finite values should be in order relative to each other
+        let finite_ys: Vec<f32> = [t.y, m.y, b.y].iter().copied().filter(|y| !y.is_nan()).collect();
+        assert_eq!(finite_ys.len(), 2);
+        assert!(finite_ys[0] <= finite_ys[1]);
+    }
+
+    #[test]
+    fn sort_all_nan_does_not_panic() {
+        let (_t, _m, _b) = sort_vertices_by_y(
+            LyonPoint::new(0.0, f32::NAN),
+            LyonPoint::new(5.0, f32::NAN),
+            LyonPoint::new(10.0, f32::NAN),
+        );
+        // Just verifying no panic/UB
+    }
 }

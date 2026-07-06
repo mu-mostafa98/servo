@@ -57,13 +57,11 @@
 
 ---
 
-### 6. `currentColor` not supported as default fill
+### ✓ 6. `currentColor` not supported as default fill
 
-**File:** [components/layout/svg_builder.rs:88-103](components/layout/svg_builder.rs#L88-L103)
+**Fixed in:** [layout/svg_builder.rs](components/layout/svg_builder.rs)
 
-**Problem:** SVG 2 spec says fill defaults to `currentColor`. Currently, elements with no fill attribute get `fill: None` → rendered invisible.
-
-**NOT YET FIXED** — requires passing currentColor through the pipeline.
+**Fix (2026-07-06):** Modified `FromComputedValues for FillParams` to return `currentColor` as the default fill when no fill paint is specified (SVG 2 spec behavior). When `fill="none"` is explicitly set (`SVGPaintKind::None`), returns `None` (no fill). For all other cases (unset/unknown paint kind) falls back to the computed CSS `color` property value (`currentColor`). Elements without a fill attribute now render as visible shapes using the inherited `color` value instead of being invisible.
 
 ---
 
@@ -153,13 +151,19 @@
 
 **File:** [components/svg_engine/src/renderer/gradient.rs:85-98](components/svg_engine/src/renderer/gradient.rs#L85-L98)
 
-### 17. No NaN guard in scanline rasterizer
+### ✓ 17. No NaN guard in scanline rasterizer
 
-**File:** [components/svg_engine/src/tessellator.rs:159-222](components/svg_engine/src/tessellator.rs#L159-L222)
+**Fixed in:** [tessellator.rs](components/svg_engine/src/tessellator.rs)
 
-### 18. `sort_vertices_by_y` uses `partial_cmp` with NaN fallback
+**Fix:** Changed `width <= 0.0` to `!(width > 0.0)` which catches NaN, preventing zero-width or NaN-dimensioned rects.
 
-**File:** [components/svg_engine/src/tessellator.rs:221](components/svg_engine/src/tessellator.rs#L221)
+---
+
+### ✓ 18. `sort_vertices_by_y` uses `partial_cmp` with NaN fallback
+
+**Fixed in:** [tessellator.rs](components/svg_engine/src/tessellator.rs)
+
+**Fix:** Replaced `unwrap_or(Equal)` with explicit `is_nan()` checks creating a total order. NaN sorts as less than all finite values. Added 5 unit tests.
 
 ---
 
@@ -191,7 +195,7 @@
 | #3 Pattern fills rect | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | shape.render() per tile, clip to polygon |
 | #4 userSpaceOnUse origin | **✓ FIXED** | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | offset_x/offset_y in strategies |
 | #5 fill="none" vs inheritance | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | build_style_from_attrs explicit none |
-| #6 currentColor default | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 88-103 |
+| #6 currentColor default | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | FromComputedValues for FillParams |
 | #7 Dashed line strokes | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | dash_intervals, emit_rotated_rects_for_segment |
 | #8 Viewport overflow clip | **✓ FIXED** | [traversal.rs](components/svg_engine/src/traversal.rs) + [render_tree.rs](components/svg_engine/src/render_tree.rs) | overflow_visible check on ViewportInfo |
 | #9 CSS transform ignored | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 249 |
@@ -202,13 +206,13 @@
 | #14 em/ex units | Not fixed | [shapes/attr_parsers.rs](components/svg_engine/src/shapes/attr_parsers.rs) | 33-35 |
 | #15 linecap for polylines | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | draw_capped_rect with LineCap |
 | #16 Gradient perf | Not fixed | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | 85-98 |
-| #17 NaN in tessellator | Not fixed | [tessellator.rs](components/svg_engine/src/tessellator.rs) | scanline loop |
-| #18 partial_cmp NaN | Not fixed | [tessellator.rs](components/svg_engine/src/tessellator.rs) | 221 |
+| #17 NaN in tessellator | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | scanline NaN guard |
+| #18 partial_cmp NaN | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | sort_vertices_by_y is_nan check |
 
 ## Visual Test Files
 
 - [svg_line_test.html](svg_line_test.html) — `<line>` rendering including dashes, angles, widths, opacity, gradient strokes, line caps (butt/square/round) with solid &amp; dashed &amp; gradient strokes
-- [svg_ellipse_test.html](svg_ellipse_test.html) — `<ellipse>`, `<circle>`, `<rect>` with fills, strokes, fill="none" inheritance, patterns
+- [svg_ellipse_test.html](svg_ellipse_test.html) — `<ellipse>`, `<circle>`, `<rect>` with fills, strokes, fill="none" inheritance, patterns, currentColor default fill
 - [svg_style_test.html](svg-style-test.html) — opacity, visibility, clip-path, patterns, masks, filters, viewport overflow, visibility in pattern shapes
 - [svg_gradient_test.html](svg_gradient_test.html) — linear/radial gradients, stops, units
 - [svg_polyline_polygon_test.html](svg_polyline_polygon_test.html) — polys, paths, fill-rule
