@@ -369,8 +369,9 @@ pub(crate) fn stroke_rect(bounds: LayoutRect, radii: Option<BorderRadius>, ctx: 
         let common = make_common_props(bounds, ctx.spatial_id, ctx.clip_chain_id);
         ctx.wr.push_border(&common, bounds, widths, details);
     } else if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
-        // Gradient border: render gradient across the full rect, then clip
-        // the interior with white so only the border band shows the gradient.
+        // Gradient border: render gradient clipped to the outer shape
+        // (with radii for circles/ellipses), then punch out the interior
+        // with white so only the border band shows the gradient.
         let stroke_width = effective_stroke_width(ctx, stroke.width);
         let inset = stroke_width;
         let inner_bounds = LayoutRect::from_origin_and_size(
@@ -380,20 +381,60 @@ pub(crate) fn stroke_rect(bounds: LayoutRect, radii: Option<BorderRadius>, ctx: 
                 (bounds.size().height - inset * 2.0).max(0.0),
             ),
         );
+        // Compute inner radii for the punch-out (outer radii shrunk by stroke).
+        let inner_radii = radii.map(|r| BorderRadius {
+            top_left: LayoutSize::new(
+                (r.top_left.width - stroke_width).max(0.0),
+                (r.top_left.height - stroke_width).max(0.0),
+            ),
+            top_right: LayoutSize::new(
+                (r.top_right.width - stroke_width).max(0.0),
+                (r.top_right.height - stroke_width).max(0.0),
+            ),
+            bottom_left: LayoutSize::new(
+                (r.bottom_left.width - stroke_width).max(0.0),
+                (r.bottom_left.height - stroke_width).max(0.0),
+            ),
+            bottom_right: LayoutSize::new(
+                (r.bottom_right.width - stroke_width).max(0.0),
+                (r.bottom_right.height - stroke_width).max(0.0),
+            ),
+        });
+
+        // Phase 1: fill the full rect with gradient, clipped to outer radii.
+        let outer_clip = if let Some(r) = radii {
+            let clip_id = ctx.wr.define_clip_rounded_rect(
+                ctx.spatial_id,
+                ComplexClipRegion { rect: bounds, radii: r, mode: ClipMode::Clip },
+            );
+            ctx.wr.define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id])
+        } else {
+            ctx.clip_chain_id
+        };
+        let saved_clip = ctx.clip_chain_id;
+        ctx.clip_chain_id = outer_clip;
         gradient::fill_rect_with_gradient_by_id(id, bounds, ctx, stroke.opacity);
+
+        // Phase 2: punch out the interior so only the border band remains.
         if inner_bounds.size().width > 0.0 && inner_bounds.size().height > 0.0 {
-            let inner_clip_id = ctx.wr.define_clip_rect(ctx.spatial_id, inner_bounds);
+            let inner_clip_id = if let Some(ir) = inner_radii {
+                ctx.wr.define_clip_rounded_rect(
+                    ctx.spatial_id,
+                    ComplexClipRegion { rect: inner_bounds, radii: ir, mode: ClipMode::Clip },
+                )
+            } else {
+                ctx.wr.define_clip_rect(ctx.spatial_id, inner_bounds)
+            };
             let inner_chain = ctx.wr.define_clip_chain(
                 clip_chain_option(ctx.clip_chain_id),
                 [inner_clip_id],
             );
-            let old_clip = ctx.clip_chain_id;
             ctx.clip_chain_id = inner_chain;
             let white = ColorF::new(1.0, 1.0, 1.0, 1.0);
             let common = make_common_props(bounds, ctx.spatial_id, inner_chain);
             ctx.wr.push_rect(&common, bounds, white);
-            ctx.clip_chain_id = old_clip;
         }
+        ctx.clip_chain_id = saved_clip;
     }
 }
 

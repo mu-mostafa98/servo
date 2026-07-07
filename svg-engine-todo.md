@@ -111,9 +111,13 @@
 
 **File:** [components/svg_engine/src/shapes/mod.rs:58-65](components/svg_engine/src/shapes/mod.rs#L58-L65)
 
-### 11. Gradients inside nested `<g>` inside `<defs>` not collected
+### ✓ 11. Gradients inside nested `<g>` inside `<defs>` not collected
 
-**File:** [components/layout/svg_builder.rs:407-447](components/layout/svg_builder.rs#L407-L447)
+**Fixed in:** [layout/svg_builder.rs](components/layout/svg_builder.rs)
+
+**Fix (2026-07-06):** Added `find_elements_by_tag()` recursive DOM search helper. Previously each collector only iterated direct children of `<defs>`, missing definitions nested inside `<g>` groups.
+
+---
 
 ### 13. `preserveAspectRatio` not implemented
 
@@ -182,12 +186,12 @@
 | #8 Viewport overflow clip | **✓ FIXED** | [traversal.rs](components/svg_engine/src/traversal.rs) + [render_tree.rs](components/svg_engine/src/render_tree.rs) | overflow_visible check on ViewportInfo |
 | #9 CSS transform ignored | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | css_transform_from_computed |
 | #10 Limited clip paths | Not fixed | [shapes/mod.rs](components/svg_engine/src/shapes/mod.rs) | 58-65 |
-| #11 Nested defs collection | Not fixed | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 407-447 |
+| #11 Nested defs collection | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 407-447 |
 | #12 visibility in attrs | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | build_style_from_attrs visibility attr |
 | #13 preserveAspectRatio | Not fixed | [traversal.rs](components/svg_engine/src/traversal.rs) | 50-71 |
 | #14 em/ex units | **✓ FIXED** | [shapes/attr_parsers.rs](components/svg_engine/src/shapes/attr_parsers.rs) | parse_length font_size conversion |
 | #15 linecap for polylines | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | draw_capped_rect with LineCap |
-| #16 Gradient perf | Not fixed | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | 85-98 |
+| #16 Gradient perf | **✓ FIXED** | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | 85-98 |
 | #17 NaN in tessellator | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | scanline NaN guard |
 | #18 partial_cmp NaN | **✓ FIXED** | [tessellator.rs](components/svg_engine/src/tessellator.rs) | sort_vertices_by_y is_nan check |
 
@@ -196,7 +200,7 @@
 - [svg_line_test.html](svg_line_test.html) — `<line>` rendering including dashes, angles, widths, opacity, gradient strokes, line caps (butt/square/round) with solid &amp; dashed &amp; gradient strokes
 - [svg_ellipse_test.html](svg_ellipse_test.html) — `<ellipse>`, `<circle>`, `<rect>` with fills, strokes, fill="none" inheritance, patterns, currentColor default fill
 - [svg_style_test.html](svg-style-test.html) — opacity, visibility, clip-path, patterns, masks, filters, viewport overflow, visibility in pattern shapes
-- [svg_gradient_test.html](svg_gradient_test.html) — linear/radial gradients, stops, units
+- [svg_gradient_test.html](svg_gradient_test.html) — linear/radial gradients, stops, units, gradientTransform, CSS variable stops
 - [svg_polyline_polygon_test.html](svg_polyline_polygon_test.html) — polys, paths, fill-rule
 - [svg_transform_debug.html](svg-transform-debug.html) — CSS &amp; SVG transforms, em/ex/in/pt length unit conversion
 - [svg_bug_demo.html](svg-bug-demo.html) — Regression test for all fixed bugs

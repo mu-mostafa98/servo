@@ -18,6 +18,7 @@ use webrender_api::{
 use crate::renderer::{RenderContext, shape_rendering_value, ZERO_LENGTH_EPSILON};
 use crate::renderer::to_colorf;
 use crate::style::gradient::{GradientDef, GradientStop, GradientUnits};
+use crate::style::transform_ops::TransformOp;
 
 // ======================= Shared color math =======================
 
@@ -157,25 +158,63 @@ impl GradientStrategy for RadialStrategy<'_> {
         let dy = (y + self.offset_y) - self.fy;
         let dist_sq = (dx * dx + dy * dy) / self.r2.max(1.0);
         dist_sq.sqrt().min(1.0)
-    }
 }
-
+    }
 // ======================= Public API =======================
 
-/// Fill `bounds` with the gradient identified by `id`.
-///
-/// Looks up the gradient definition via the paint resource provider.
+/// Apply gradientTransform ops to gradient endpoints in the gradient's
+/// own coordinate space. SVG positive angle = CW rotation (y-down coords).
+fn apply_grad_transform(
+    gx: &mut f32, gy: &mut f32,
+    ops: &[TransformOp],
+) {
+    use euclid::Transform2D;
+    let mut m = Transform2D::<f32, (), ()>::identity();
+    for op in ops {
+        match op {
+            TransformOp::Translate(tx, ty) => {
+                m = m.then(&Transform2D::translation(*tx, *ty));
+            },
+            TransformOp::Scale(sx, sy) => {
+                m = m.then(&Transform2D::scale(*sx, *sy));
+            },
+            TransformOp::Rotate(a, cx, cy) => {
+                let rad = a.to_radians();
+                let (s, c) = rad.sin_cos();
+                // CW in SVG y-down coords: [c, s; -s, c]
+                let r: Transform2D<f32, (), ()> = Transform2D::new(c, s, -s, c, 0.0, 0.0);
+                m = m.then(&Transform2D::translation(-*cx, -*cy))
+                    .then(&r)
+                    .then(&Transform2D::translation(*cx, *cy));
+            },
+            TransformOp::SkewX(a) => {
+                let rad = a.to_radians();
+                m = m.then(&Transform2D::new(1.0, 0.0, rad.tan(), 1.0, 0.0, 0.0));
+            },
+            TransformOp::SkewY(a) => {
+                let rad = a.to_radians();
+                m = m.then(&Transform2D::new(1.0, rad.tan(), 0.0, 1.0, 0.0, 0.0));
+            },
+            TransformOp::Matrix(v) => {
+                m = m.then(&Transform2D::new(v[0], v[1], v[2], v[3], v[4], v[5]));
+            },
+        }
+    }
+    let p = m.transform_point(euclid::Point2D::new(*gx, *gy));
+    *gx = p.x;
+    *gy = p.y;
+}
+
 pub(crate) fn fill_rect_with_gradient_by_id(
     id: &str, bounds: LayoutRect, ctx: &mut RenderContext, opacity: f32,
 ) {
     let def = match ctx.paints.gradient(id) {
         Some(d) => d,
         None => {
-            log::warn!("SVG gradient \"{}\" not found in definitions", id);
+            log::warn!("SVG gradient \"{} not found in definitions", id);
             return;
         },
     };
-
     match def {
         GradientDef::Linear(lg) => render_linear(lg, bounds, ctx, opacity),
         GradientDef::Radial(rg) => render_radial(rg, bounds, ctx, opacity),
@@ -183,6 +222,7 @@ pub(crate) fn fill_rect_with_gradient_by_id(
 }
 
 /// Render a linear gradient.
+/// gradientTransform is applied in gradient coordinate space (normed bbox or user space).
 fn render_linear(
     lg: &crate::style::gradient::LinearGradient,
     bounds: LayoutRect,
@@ -194,23 +234,30 @@ fn render_linear(
     let bx = bounds.min.x;
     let by = bounds.min.y;
 
-    // Convert all gradient coordinates to absolute space and set
-    // offset = (bx, by) so that pixel positions from render_gradient
-    // are also interpreted as absolute.  This makes userSpaceOnUse
-    // correct regardless of the shape's position (bug #4 fix).
     let (gx1, gy1, gx2, gy2) = match lg.units {
-        GradientUnits::ObjectBoundingBox => (
-            bx + lg.x1.to_object_bbox() * bw,
-            by + lg.y1.to_object_bbox() * bh,
-            bx + lg.x2.to_object_bbox() * bw,
-            by + lg.y2.to_object_bbox() * bh,
-        ),
-        GradientUnits::UserSpaceOnUse => (
-            ctx.svg_origin.x + lg.x1.to_user_space(bw),
-            ctx.svg_origin.y + lg.y1.to_user_space(bh),
-            ctx.svg_origin.x + lg.x2.to_user_space(bw),
-            ctx.svg_origin.y + lg.y2.to_user_space(bh),
-        ),
+        GradientUnits::ObjectBoundingBox => {
+            let mut x1 = lg.x1.to_object_bbox();
+            let mut y1 = lg.y1.to_object_bbox();
+            let mut x2 = lg.x2.to_object_bbox();
+            let mut y2 = lg.y2.to_object_bbox();
+            for op in &lg.transform {
+                apply_grad_transform(&mut x1, &mut y1, &[op.clone()]);
+                apply_grad_transform(&mut x2, &mut y2, &[op.clone()]);
+            }
+            (bx + x1 * bw, by + y1 * bh, bx + x2 * bw, by + y2 * bh)
+        },
+        GradientUnits::UserSpaceOnUse => {
+            let mut x1 = lg.x1.to_user_space(bw);
+            let mut y1 = lg.y1.to_user_space(bh);
+            let mut x2 = lg.x2.to_user_space(bw);
+            let mut y2 = lg.y2.to_user_space(bh);
+            for op in &lg.transform {
+                apply_grad_transform(&mut x1, &mut y1, &[op.clone()]);
+                apply_grad_transform(&mut x2, &mut y2, &[op.clone()]);
+            }
+            (ctx.svg_origin.x + x1, ctx.svg_origin.y + y1,
+             ctx.svg_origin.x + x2, ctx.svg_origin.y + y2)
+        },
     };
 
     let strategy = LinearStrategy {

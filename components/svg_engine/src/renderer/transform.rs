@@ -129,9 +129,9 @@ fn push_reference_frame(
 fn build_rotation_transform(angle_deg: f32, cx: f32, cy: f32) -> LayoutTransform {
     let radians = angle_deg.to_radians();
     let (s, c) = radians.sin_cos();
-    let t1: Transform2D<f32, (), ()> = Transform2D::translation(-cx, -cy);
+    let t1: Transform2D<f32, (), ()> = Transform2D::translation(cx, cy);
     let rotate: Transform2D<f32, (), ()> = Transform2D::new(c, -s, s, c, 0.0, 0.0);
-    let t2: Transform2D<f32, (), ()> = Transform2D::translation(cx, cy);
+    let t2: Transform2D<f32, (), ()> = Transform2D::translation(-cx, -cy);
     let combined = t1.then(&rotate).then(&t2);
     to_layout_transform(&combined)
 }

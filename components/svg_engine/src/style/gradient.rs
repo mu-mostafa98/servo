@@ -14,6 +14,7 @@ use svgtypes::Color as SvgColor;
 use svgtypes::Length as SvgLength;
 
 use crate::error::{SvgEngineError, SvgResult};
+use crate::style::transform_ops::{parse_transform_str, TransformOp};
 
 /// A paint server reference — either a solid color, gradient ID, or pattern ID.
 #[derive(Debug, Clone)]
@@ -72,6 +73,8 @@ pub struct LinearGradient {
     pub y2: GradientLength,
     pub units: GradientUnits,
     pub stops: Vec<GradientStop>,
+    /// Transform applied to gradient coordinates (gradientTransform attribute).
+    pub transform: Vec<TransformOp>,
 }
 
 /// SVG `<radialGradient>` element data.
@@ -85,6 +88,8 @@ pub struct RadialGradient {
     pub fy: GradientLength,
     pub units: GradientUnits,
     pub stops: Vec<GradientStop>,
+    /// Transform applied to gradient coordinates (gradientTransform attribute).
+    pub transform: Vec<TransformOp>,
 }
 
 /// A single `<stop>` element in a gradient.
@@ -167,7 +172,10 @@ pub fn parse_gradient_element(
                 GradientUnits::ObjectBoundingBox => GradientLength::Number(0.0),
                 GradientUnits::UserSpaceOnUse => GradientLength::Number(0.0),
             });
-            Ok(GradientDef::Linear(LinearGradient { id, x1, y1, x2, y2, units: gradient_units, stops }))
+            Ok(GradientDef::Linear(LinearGradient {
+                id, x1, y1, x2, y2, units: gradient_units, stops,
+                transform: parse_transform_str(&get_attr("gradientTransform").unwrap_or_default()),
+            }))
         },
         "radialGradient" => {
             let cx = parse_length_attr("cx", get_attr).unwrap_or(GradientLength::Percentage(50.0));
@@ -175,7 +183,10 @@ pub fn parse_gradient_element(
             let r = parse_length_attr("r", get_attr).unwrap_or(GradientLength::Percentage(50.0));
             let fx = parse_length_attr("fx", get_attr).unwrap_or(cx);
             let fy = parse_length_attr("fy", get_attr).unwrap_or(cy);
-            Ok(GradientDef::Radial(RadialGradient { id, cx, cy, r, fx, fy, units: gradient_units, stops }))
+            Ok(GradientDef::Radial(RadialGradient {
+                id, cx, cy, r, fx, fy, units: gradient_units, stops,
+                transform: parse_transform_str(&get_attr("gradientTransform").unwrap_or_default()),
+            }))
         },
         _ => Err(SvgEngineError::UnsupportedFeature(format!("unknown gradient: {element_name}"))),
     }

@@ -35,6 +35,11 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
     let Some(fill) = &ctx.style.fill else { return };
     let opacity = fill.opacity * ctx.style.opacity;
 
+    // Use the shape's clip chain so gradient/pattern fills respect
+    // rounded-rect clips (needed for circles/ellipses with corners).
+    let orig_clip = ctx.clip_chain_id;
+    ctx.clip_chain_id = clip;
+
     match &fill.paint_server {
         Some(PaintServer::Gradient(id)) => {
             // Guard: sometimes a pattern ID overlaps a gradient ID in the maps.
@@ -62,6 +67,8 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
             }
         },
     }
+
+    ctx.clip_chain_id = orig_clip;
 }
 
 // ======================= Polygon fill =======================
