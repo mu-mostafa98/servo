@@ -510,20 +510,24 @@ fn build_style(
     let element = node.as_element().unwrap();
 
     // Get values from Servo's style system (handles CSS cascade, inheritance,
-    // and class selectors).  When style_data() is None (e.g. SVG child elements
-    // that never created a layout box), node.style() falls back to
-    // default_computed_values which supplies the SVG property defaults.
-    let computed = node.style(&context.style_context);
-    let mut style = NodeStyle::from_computed_values(&computed).unwrap_or_default();
+    // and class selectors).  SVG child elements that never created a layout box
+    // have no style_data() — calling node.style() would panic.  Fall back to
+    // NodeStyle defaults in that case so presentation attributes still apply.
+    let (mut style, css_transform) = if element.style_data().is_some() {
+        let computed = node.style(&context.style_context);
+        let style = NodeStyle::from_computed_values(&computed).unwrap_or_default();
+        let css_transform = css_transform_from_computed(&computed);
+        (style, css_transform)
+    } else {
+        (NodeStyle::default(), Vec::new())
+    };
 
-    // Read CSS 'transform' from computed style and merge with
-    // the SVG 'transform' attribute.  CSS comes first (applied
-    // before the attribute transform in the pipeline).
-    let css_ops = css_transform_from_computed(&computed);
+    // Merge CSS 'transform' with SVG 'transform' attribute.
+    // CSS comes first (applied before the attribute transform in the pipeline).
     let attr_ops = parse_transform_str(
         &get_attr(&element, "transform").unwrap_or_default(),
     );
-    style.transform = [css_ops, attr_ops].concat();
+    style.transform = [css_transform, attr_ops].concat();
 
     // Overlay presentation attributes onto the computed style.
     // Presentation attributes (e.g. fill="red") take precedence over
