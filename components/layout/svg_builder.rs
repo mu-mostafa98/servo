@@ -253,6 +253,19 @@ fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<String> {
     element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
 }
 
+/// Extract the fragment from a `url(#fragment)` CSS/SVG URL value.
+fn extract_url_fragment(value: &str) -> Option<String> {
+    let trimmed = value.trim();
+    // Handle url(#id) syntax
+    if let Some(inner) = trimmed.strip_prefix("url(") {
+        let inner = inner.trim_end_matches(')').trim();
+        inner.strip_prefix('#').map(|s| s.to_owned())
+    } else {
+        // Also handle bare #id references (used in SVG presentation attributes)
+        trimmed.strip_prefix('#').map(|s| s.to_owned())
+    }
+}
+
 // ======================= SVG Inline CSS Support =======================
 
 /// A simple mapping from class name to (property → value) parsed from
@@ -535,6 +548,28 @@ fn build_style(
     // Servo's CSS engine does not process SVG-namespaced <style> elements,
     // so we handle common class selectors here as a fallback.
     apply_css_class_rules(&element, css_rules, &mut style);
+
+    // Read mask and filter references from the DOM element (presentation
+    // attributes).  These may not reach the computed style via Servo's
+    // CSS cascade for SVG-namespaced elements, so we check explicitly.
+    let mask_ref = get_attr(&element, "mask")
+        .as_deref()
+        .and_then(extract_url_fragment);
+    let filter_ref = get_attr(&element, "filter")
+        .as_deref()
+        .and_then(extract_url_fragment);
+
+    // Merge into effects — preserve existing clip-path from computed style.
+    if mask_ref.is_some() || filter_ref.is_some() {
+        let existing = style.effects.take().unwrap_or(NodeEffects {
+            clip_path: None, mask: None, filter: None,
+        });
+        style.effects = Some(NodeEffects {
+            clip_path: existing.clip_path,
+            mask: mask_ref.or(existing.mask),
+            filter: filter_ref.or(existing.filter),
+        });
+    }
 
     style
 }

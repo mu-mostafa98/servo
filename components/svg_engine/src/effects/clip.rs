@@ -17,6 +17,7 @@ use webrender_api::{
 use crate::render_tree::{ClipPathUnits, SvgRenderNode};
 use crate::renderer::ClipMaskProvider;
 use crate::renderer::clip_chain_option;
+use crate::shapes::ClipGeometry;
 
 // ======================= Clip Path Resolution =======================
 
@@ -44,16 +45,23 @@ pub(crate) fn resolve_node_clip_path(
 
     let mut current_chain = parent_clip_chain;
     for shape in &clip_def.shapes {
-        let clip_info = shape.clip_info(svg_origin, clip_def.clip_path_units);
-        let Some((bounds, radii)) = clip_info else { continue };
+        let Some(geometry) = shape.clip_info(svg_origin, clip_def.clip_path_units) else {
+            continue;
+        };
 
-        let clip_id = if let Some(r) = radii {
-            wr.define_clip_rounded_rect(
-                spatial_id,
-                ComplexClipRegion { rect: bounds, radii: r, mode: ClipMode::Clip },
-            )
-        } else {
-            wr.define_clip_rect(spatial_id, bounds)
+        let clip_id = match geometry {
+            ClipGeometry::RoundedRect { bounds, radii } => {
+                wr.define_clip_rounded_rect(
+                    spatial_id,
+                    ComplexClipRegion { rect: bounds, radii, mode: ClipMode::Clip },
+                )
+            },
+            ClipGeometry::Polygon { bounds } => {
+                // WebRender 0.69 does not support arbitrary polygon clip paths
+                // natively.  Fall back to bounding-rect clip, which is safe and
+                // at least restricts the painted area to the shape's bounding box.
+                wr.define_clip_rect(spatial_id, bounds)
+            },
         };
 
         let parent = clip_chain_option(current_chain);
@@ -92,16 +100,21 @@ pub(crate) fn build_mask_clips(
 
     let mut clips = Vec::with_capacity(mask_def.shapes.len());
     for (shape, _style) in &mask_def.shapes {
-        let clip_info = shape.clip_info(svg_origin, ClipPathUnits::UserSpaceOnUse);
-        let Some((bounds, radii)) = clip_info else { continue };
+        let Some(geometry) = shape.clip_info(svg_origin, ClipPathUnits::UserSpaceOnUse) else {
+            continue;
+        };
 
-        let clip_id = if let Some(r) = radii {
-            wr.define_clip_rounded_rect(
-                spatial_id,
-                ComplexClipRegion { rect: bounds, radii: r, mode: ClipMode::Clip },
-            )
-        } else {
-            wr.define_clip_rect(spatial_id, bounds)
+        let clip_id = match geometry {
+            ClipGeometry::RoundedRect { bounds, radii } => {
+                wr.define_clip_rounded_rect(
+                    spatial_id,
+                    ComplexClipRegion { rect: bounds, radii, mode: ClipMode::Clip },
+                )
+            },
+            ClipGeometry::Polygon { bounds } => {
+                // Same bounding-rect fallback as clip-path above.
+                wr.define_clip_rect(spatial_id, bounds)
+            },
         };
 
         let chain = wr.define_clip_chain(

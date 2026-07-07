@@ -36,6 +36,20 @@ use crate::render_tree::ClipPathUnits;
 /// Scale factor for objectBoundingBox clip-path coordinates (0..1 → 0..100).
 const OBJECT_BBOX_REF_SIZE: f32 = 100.0;
 
+/// Clip geometry result — either a rounded-rect clip (radii radius) or a
+/// polygon clip (polygon points).  The polygon variant pre-computes the
+/// bounding rect so callers can still size an image mask or bounding clip.
+#[derive(Debug, Clone)]
+pub(crate) enum ClipGeometry {
+    RoundedRect {
+        bounds: LayoutRect,
+        radii: BorderRadius,
+    },
+    Polygon {
+        bounds: LayoutRect,
+    },
+}
+
 /// An SVG geometric shape.
 #[derive(Debug, Clone)]
 pub enum Shape {
@@ -57,13 +71,13 @@ impl Shape {
         &self,
         svg_origin: &LayoutPoint,
         units: ClipPathUnits,
-    ) -> Option<(LayoutRect, Option<BorderRadius>)> {
+    ) -> Option<ClipGeometry> {
         match self {
             Shape::Rect(r) => clip_info_rect(r, svg_origin, units),
             Shape::Circle(c) => clip_info_circle(c, svg_origin, units),
             Shape::Ellipse(e) => clip_info_ellipse(e, svg_origin, units),
-            Shape::Polygon(p) => clip_info_points(&p.points, svg_origin, units),
-            Shape::Polyline(p) => clip_info_points(&p.points, svg_origin, units),
+            Shape::Polygon(p) => clip_info_polygon(&p.points, svg_origin, units),
+            Shape::Polyline(p) => clip_info_polygon(&p.points, svg_origin, units),
             Shape::Path(p) => clip_info_path(&p.path, svg_origin, units),
             Shape::Line(_) => None,
         }
@@ -74,7 +88,7 @@ impl Shape {
 
 fn clip_info_rect(
     r: &Rectangle, svg_origin: &LayoutPoint, units: ClipPathUnits,
-) -> Option<(LayoutRect, Option<BorderRadius>)> {
+) -> Option<ClipGeometry> {
     let (x, y, w, h) = if units == ClipPathUnits::ObjectBoundingBox {
         (r.x * OBJECT_BBOX_REF_SIZE, r.y * OBJECT_BBOX_REF_SIZE,
          r.width * OBJECT_BBOX_REF_SIZE, r.height * OBJECT_BBOX_REF_SIZE)
@@ -95,12 +109,18 @@ fn clip_info_rect(
         },
         _ => None,
     };
-    Some((bounds, radii))
+    Some(match radii {
+        Some(r) => ClipGeometry::RoundedRect { bounds, radii: r },
+        None => {
+            // Plain rect — use the bounding rect as a polygon
+            ClipGeometry::Polygon { bounds }
+        },
+    })
 }
 
 fn clip_info_circle(
     c: &Circle, svg_origin: &LayoutPoint, units: ClipPathUnits,
-) -> Option<(LayoutRect, Option<BorderRadius>)> {
+) -> Option<ClipGeometry> {
     let (cx, cy, r) = if units == ClipPathUnits::ObjectBoundingBox {
         (c.cx * OBJECT_BBOX_REF_SIZE, c.cy * OBJECT_BBOX_REF_SIZE, c.r * OBJECT_BBOX_REF_SIZE)
     } else {
@@ -110,13 +130,12 @@ fn clip_info_circle(
         LayoutPoint::new(svg_origin.x + cx - r, svg_origin.y + cy - r),
         LayoutSize::new(r * 2.0, r * 2.0),
     );
-    let radii = all_equal_radius(r, r);
-    Some((bounds, Some(radii)))
+    Some(ClipGeometry::RoundedRect { bounds, radii: all_equal_radius(r, r) })
 }
 
 fn clip_info_ellipse(
     e: &Ellipse, svg_origin: &LayoutPoint, units: ClipPathUnits,
-) -> Option<(LayoutRect, Option<BorderRadius>)> {
+) -> Option<ClipGeometry> {
     let (cx, cy, rx, ry) = if units == ClipPathUnits::ObjectBoundingBox {
         (e.cx * OBJECT_BBOX_REF_SIZE, e.cy * OBJECT_BBOX_REF_SIZE,
          e.rx * OBJECT_BBOX_REF_SIZE, e.ry * OBJECT_BBOX_REF_SIZE)
@@ -127,8 +146,7 @@ fn clip_info_ellipse(
         LayoutPoint::new(svg_origin.x + cx - rx, svg_origin.y + cy - ry),
         LayoutSize::new(rx * 2.0, ry * 2.0),
     );
-    let radii = all_equal_radius(rx, ry);
-    Some((bounds, Some(radii)))
+    Some(ClipGeometry::RoundedRect { bounds, radii: all_equal_radius(rx, ry) })
 }
 
 /// Build a BorderRadius with the same (rx, ry) on all four corners.
@@ -140,11 +158,11 @@ fn all_equal_radius(rx: f32, ry: f32) -> BorderRadius {
 }
 
 /// Compute clip geometry from a list of kurbo points (polygon/polyline).
-fn clip_info_points(
+fn clip_info_polygon(
     pts: &[kurbo::Point],
     svg_origin: &LayoutPoint,
     units: ClipPathUnits,
-) -> Option<(LayoutRect, Option<BorderRadius>)> {
+) -> Option<ClipGeometry> {
     if pts.len() < 2 {
         return None;
     }
@@ -166,21 +184,20 @@ fn clip_info_points(
         if y > max_y { max_y = y; }
     }
 
-    let w = (max_x - min_x).max(1.0);
-    let h = (max_y - min_y).max(1.0);
     let bounds = LayoutRect::from_origin_and_size(
         LayoutPoint::new(svg_origin.x + min_x, svg_origin.y + min_y),
-        LayoutSize::new(w, h),
+        LayoutSize::new((max_x - min_x).max(1.0), (max_y - min_y).max(1.0)),
     );
-    Some((bounds, None))
+    Some(ClipGeometry::Polygon { bounds })
 }
 
 /// Compute clip geometry from a BezPath.
+/// Uses the bounding box as a polygon (compatible clip for non-rect shapes).
 fn clip_info_path(
     path: &kurbo::BezPath,
     svg_origin: &LayoutPoint,
     units: ClipPathUnits,
-) -> Option<(LayoutRect, Option<BorderRadius>)> {
+) -> Option<ClipGeometry> {
     let mut min_x = f32::MAX;
     let mut min_y = f32::MAX;
     let mut max_x = f32::MIN;
@@ -205,11 +222,9 @@ fn clip_info_path(
         return None;
     }
 
-    let w = (max_x - min_x).max(1.0);
-    let h = (max_y - min_y).max(1.0);
     let bounds = LayoutRect::from_origin_and_size(
         LayoutPoint::new(svg_origin.x + min_x, svg_origin.y + min_y),
-        LayoutSize::new(w, h),
+        LayoutSize::new((max_x - min_x).max(1.0), (max_y - min_y).max(1.0)),
     );
-    Some((bounds, None))
+    Some(ClipGeometry::Polygon { bounds })
 }
