@@ -8,6 +8,7 @@
 //! Each shape has its own file with its struct definition.
 //! Shape construction is handled by the integration layer in `components/layout/svg_builder.rs`.
 
+use kurbo::ParamCurve;
 pub(crate) mod rectangle;
 pub(crate) mod circle;
 pub(crate) mod ellipse;
@@ -51,7 +52,7 @@ impl Shape {
     /// Return clip geometry for this shape, if supported.
     ///
     /// Returns `None` for shapes that cannot participate in clip paths
-    /// (path, polyline, polygon, line).
+    /// (line only — has no area).
     pub(crate) fn clip_info(
         &self,
         svg_origin: &LayoutPoint,
@@ -61,7 +62,10 @@ impl Shape {
             Shape::Rect(r) => clip_info_rect(r, svg_origin, units),
             Shape::Circle(c) => clip_info_circle(c, svg_origin, units),
             Shape::Ellipse(e) => clip_info_ellipse(e, svg_origin, units),
-            _ => None,
+            Shape::Polygon(p) => clip_info_points(&p.points, svg_origin, units),
+            Shape::Polyline(p) => clip_info_points(&p.points, svg_origin, units),
+            Shape::Path(p) => clip_info_path(&p.path, svg_origin, units),
+            Shape::Line(_) => None,
         }
     }
 }
@@ -133,4 +137,79 @@ fn all_equal_radius(rx: f32, ry: f32) -> BorderRadius {
         top_left: LayoutSize::new(rx, ry), top_right: LayoutSize::new(rx, ry),
         bottom_left: LayoutSize::new(rx, ry), bottom_right: LayoutSize::new(rx, ry),
     }
+}
+
+/// Compute clip geometry from a list of kurbo points (polygon/polyline).
+fn clip_info_points(
+    pts: &[kurbo::Point],
+    svg_origin: &LayoutPoint,
+    units: ClipPathUnits,
+) -> Option<(LayoutRect, Option<BorderRadius>)> {
+    if pts.len() < 2 {
+        return None;
+    }
+
+    let mut min_x = f32::MAX;
+    let mut min_y = f32::MAX;
+    let mut max_x = f32::MIN;
+    let mut max_y = f32::MIN;
+
+    for p in pts {
+        let (x, y) = if units == ClipPathUnits::ObjectBoundingBox {
+            (p.x as f32 * OBJECT_BBOX_REF_SIZE, p.y as f32 * OBJECT_BBOX_REF_SIZE)
+        } else {
+            (p.x as f32, p.y as f32)
+        };
+        if x < min_x { min_x = x; }
+        if y < min_y { min_y = y; }
+        if x > max_x { max_x = x; }
+        if y > max_y { max_y = y; }
+    }
+
+    let w = (max_x - min_x).max(1.0);
+    let h = (max_y - min_y).max(1.0);
+    let bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(svg_origin.x + min_x, svg_origin.y + min_y),
+        LayoutSize::new(w, h),
+    );
+    Some((bounds, None))
+}
+
+/// Compute clip geometry from a BezPath.
+fn clip_info_path(
+    path: &kurbo::BezPath,
+    svg_origin: &LayoutPoint,
+    units: ClipPathUnits,
+) -> Option<(LayoutRect, Option<BorderRadius>)> {
+    let mut min_x = f32::MAX;
+    let mut min_y = f32::MAX;
+    let mut max_x = f32::MIN;
+    let mut max_y = f32::MIN;
+    let mut has_points = false;
+
+    for seg in path.segments() {
+        let p = seg.end();
+        let (x, y) = if units == ClipPathUnits::ObjectBoundingBox {
+            (p.x as f32 * OBJECT_BBOX_REF_SIZE, p.y as f32 * OBJECT_BBOX_REF_SIZE)
+        } else {
+            (p.x as f32, p.y as f32)
+        };
+        if x < min_x { min_x = x; }
+        if y < min_y { min_y = y; }
+        if x > max_x { max_x = x; }
+        if y > max_y { max_y = y; }
+        has_points = true;
+    }
+
+    if !has_points {
+        return None;
+    }
+
+    let w = (max_x - min_x).max(1.0);
+    let h = (max_y - min_y).max(1.0);
+    let bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(svg_origin.x + min_x, svg_origin.y + min_y),
+        LayoutSize::new(w, h),
+    );
+    Some((bounds, None))
 }

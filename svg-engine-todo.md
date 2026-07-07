@@ -107,9 +107,13 @@
 
 ## P2 — Limitations & Edge Cases
 
-### 10. Clip paths limited to rect/circle/ellipse shapes
+### ✓ 10. Clip paths limited to rect/circle/ellipse shapes
 
-**File:** [components/svg_engine/src/shapes/mod.rs:58-65](components/svg_engine/src/shapes/mod.rs#L58-L65)
+**Fixed in:** [shapes/mod.rs](components/svg_engine/src/shapes/mod.rs)
+
+**Fix (2026-07-07):** Added `clip_info_points()` and `clip_info_path()` helper functions that compute axis-aligned bounding boxes for Polygon, Polyline, and Path shapes. Previously these shapes returned `None` from `clip_info()`, causing clip-paths referencing them to be silently dropped. The bounding box clip is an approximation — pixel-perfect clipping would require a clip-image mask, but this gives correct containment for most practical cases.
+
+---
 
 ### ✓ 11. Gradients inside nested `<g>` inside `<defs>` not collected
 
@@ -117,9 +121,13 @@
 
 **Fix (2026-07-06):** Added `find_elements_by_tag()` recursive DOM search helper. Previously each collector only iterated direct children of `<defs>`, missing definitions nested inside `<g>` groups.
 
----
+### ✓ 13. `preserveAspectRatio` not implemented
 
-### 13. `preserveAspectRatio` not implemented
+**Fixed in:** [traversal.rs](components/svg_engine/src/traversal.rs) + [render_tree.rs](components/svg_engine/src/render_tree.rs) + [layout/svg_builder.rs](components/layout/svg_builder.rs)
+
+**Fix (2026-07-07):** Added `AspectAlign`/`MeetOrSlice`/`AspectRatio` types, `parse_aspect_ratio()` parser, and `viewbox_transform()` function that computes the correct scale/offset per the SVG spec. Supports all nine alignment values (xMinYMin through xMaxYMax), none (non-uniform stretch), meet (fit within viewport), and slice (cover viewport). Defaults to `xMidYMid meet` per SVG spec.
+
+---
 
 **File:** [components/svg_engine/src/traversal.rs:50-71](components/svg_engine/src/traversal.rs#L50-L71)
 
@@ -185,10 +193,10 @@
 | #7 Dashed line strokes | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | dash_intervals, emit_rotated_rects_for_segment |
 | #8 Viewport overflow clip | **✓ FIXED** | [traversal.rs](components/svg_engine/src/traversal.rs) + [render_tree.rs](components/svg_engine/src/render_tree.rs) | overflow_visible check on ViewportInfo |
 | #9 CSS transform ignored | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | css_transform_from_computed |
-| #10 Limited clip paths | Not fixed | [shapes/mod.rs](components/svg_engine/src/shapes/mod.rs) | 58-65 |
+| #10 Limited clip paths | **✓ FIXED** | [shapes/mod.rs](components/svg_engine/src/shapes/mod.rs) | polygon, polyline, path bounding box clip |
 | #11 Nested defs collection | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | 407-447 |
 | #12 visibility in attrs | **✓ FIXED** | [layout/svg_builder.rs](components/layout/svg_builder.rs) | build_style_from_attrs visibility attr |
-| #13 preserveAspectRatio | Not fixed | [traversal.rs](components/svg_engine/src/traversal.rs) | 50-71 |
+| #13 preserveAspectRatio | **✓ FIXED** | [traversal.rs](components/svg_engine/src/traversal.rs) + [render_tree.rs](components/svg_engine/src/render_tree.rs) | viewbox_transform with meet/slice, alignment |
 | #14 em/ex units | **✓ FIXED** | [shapes/attr_parsers.rs](components/svg_engine/src/shapes/attr_parsers.rs) | parse_length font_size conversion |
 | #15 linecap for polylines | **✓ FIXED** | [renderer/stroke.rs](components/svg_engine/src/renderer/stroke.rs) | draw_capped_rect with LineCap |
 | #16 Gradient perf | **✓ FIXED** | [renderer/gradient.rs](components/svg_engine/src/renderer/gradient.rs) | 85-98 |
@@ -199,7 +207,7 @@
 
 - [svg_line_test.html](svg_line_test.html) — `<line>` rendering including dashes, angles, widths, opacity, gradient strokes, line caps (butt/square/round) with solid &amp; dashed &amp; gradient strokes
 - [svg_ellipse_test.html](svg_ellipse_test.html) — `<ellipse>`, `<circle>`, `<rect>` with fills, strokes, fill="none" inheritance, patterns, currentColor default fill
-- [svg_style_test.html](svg-style-test.html) — opacity, visibility, clip-path, patterns, masks, filters, viewport overflow, visibility in pattern shapes
+- [svg_style_test.html](svg-style-test.html) — opacity, visibility, clip-path (rect/circle/ellipse/poly/path), patterns, masks, filters, viewport overflow, preserveAspectRatio
 - [svg_gradient_test.html](svg_gradient_test.html) — linear/radial gradients, stops, units, gradientTransform, CSS variable stops
 - [svg_polyline_polygon_test.html](svg_polyline_polygon_test.html) — polys, paths, fill-rule
 - [svg_transform_debug.html](svg-transform-debug.html) — CSS &amp; SVG transforms, em/ex/in/pt length unit conversion

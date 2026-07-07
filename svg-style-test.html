@@ -557,3 +557,76 @@
 
 </body>
 </html>
+
+    <!-- ========================================================== -->
+    <h2>30. clip-path with polygon</h2>
+
+    <div class="test">
+        <div class="note">Red rect clipped by a triangle polygon. Only content inside the triangular region should show.</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="poly-clip">
+                    <polygon points="60,5 5,95 115,95"/>
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="120" height="100" fill="red" clip-path="url(#poly-clip)" />
+        </svg>
+        <div class="expected">Expected: Red triangle (isosceles) with clipped corners. Only area inside the polygon visible.</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Blue rect clipped by a path (heart/curve shape via bounding box approximation)</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="path-clip">
+                    <path d="M 10,50 C 10,20 50,10 60,40 C 70,10 110,20 110,50 C 110,80 60,95 60,95 C 60,95 10,80 10,50 Z"/>
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="120" height="100" fill="blue" clip-path="url(#path-clip)" />
+        </svg>
+        <div class="expected">Expected: Blue rect clipped by the path's bounding box (approximate).</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Green rect clipped by a polyline (line strips — bounding box clip)</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="line-clip">
+                    <polyline points="10,90 60,10 110,90"/>
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="120" height="100" fill="green" clip-path="url(#line-clip)" />
+        </svg>
+        <div class="expected">Expected: Green rect clipped by the polyline's bounding box.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>31. preserveAspectRatio test</h2>
+
+    <div class="test">
+        <div class="note">viewBox 0 0 100 200 in 200x200 viewport with xMidYMid meet (default)</div>
+        <svg width="200" height="200" viewBox="0 0 100 200">
+            <rect x="0" y="0" width="100" height="100" fill="red"/>
+            <rect x="0" y="100" width="100" height="100" fill="blue"/>
+        </svg>
+        <div class="expected">Expected: Red/blue split rect vertically centered in the viewport (meet scaling).</div>
+    </div>
+
+    <div class="test">
+        <div class="note">viewBox 0 0 200 100 in 200x200 viewport with xMidYMid meet (default) — should be centered horizontally</div>
+        <svg width="200" height="200" viewBox="0 0 200 100">
+            <rect x="0" y="0" width="100" height="100" fill="purple"/>
+            <rect x="100" y="0" width="100" height="100" fill="orange"/>
+        </svg>
+        <div class="expected">Expected: Purple/orange split rect horizontally centered in viewport.</div>
+    </div>
+
+    <div class="test">
+        <div class="note">preserveAspectRatio="none" — stretch to fill (viewBox 0 0 100 200 in 200x200)</div>
+        <svg width="200" height="200" viewBox="0 0 100 200" preserveAspectRatio="none">
+            <circle cx="50" cy="100" r="50" fill="teal"/>
+        </svg>
+        <div class="expected">Expected: Ellipse (stretched circle) fills the entire 200x200 viewport.</div>
+    </div>
+</body>
+</html>

@@ -799,7 +799,11 @@ fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>, _context: &LayoutCon
         })
         .map_or(false, |v| v.trim().eq_ignore_ascii_case("visible"));
 
-    ViewportInfo { width: svg_width, height: svg_height, view_box, overflow_visible }
+    // preserveAspectRatio: only apply when explicitly set (backward compat).
+    let aspect_ratio = get("preserveAspectRatio")
+        .map(|v| parse_aspect_ratio(&v));
+
+    ViewportInfo { width: svg_width, height: svg_height, view_box, overflow_visible, aspect_ratio }
 }
 
 // ======================= Render Node & Tree Construction =======================

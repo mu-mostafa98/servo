@@ -11,6 +11,38 @@ use crate::shapes::Shape;
 use crate::style::NodeStyle;
 use crate::style::gradient::GradientDef;
 
+// ======================= PreserveAspectRatio =======================
+
+/// SVG `preserveAspectRatio` alignment type.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum AspectAlign {
+    None,
+    XMinYMin, XMidYMin, XMaxYMin,
+    XMinYMid, XMidYMid, XMaxYMid,
+    XMinYMax, XMidYMax, XMaxYMax,
+}
+
+/// SVG `preserveAspectRatio` meet-or-slice.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum MeetOrSlice {
+    Meet,
+    Slice,
+}
+
+/// Parsed `preserveAspectRatio` value.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub struct AspectRatio {
+    pub align: AspectAlign,
+    pub meet_or_slice: MeetOrSlice,
+}
+
+impl Default for AspectRatio {
+    fn default() -> Self {
+        // SVG spec: viewBox alone implies preserveAspectRatio="xMidYMid meet".
+        AspectRatio { align: AspectAlign::XMidYMid, meet_or_slice: MeetOrSlice::Meet }
+    }
+}
+
 /// The SVG render tree — a tree of [`SvgRenderNode`]s plus viewport info
 /// and gradient/clip-path/pattern/mask/filter definitions collected from `<defs>`.
 #[derive(Debug)]
@@ -94,6 +126,8 @@ pub struct ViewportInfo {
     pub view_box: Option<ViewBox>,
     /// When true, the viewport clip is omitted (CSS `overflow: visible`).
     pub overflow_visible: bool,
+    /// Parsed preserveAspectRatio (defaults to xMidYMid meet).
+    pub aspect_ratio: Option<AspectRatio>,
 }
 
 /// A clip path definition collected from `<clipPath>`.
@@ -169,6 +203,40 @@ pub struct PatternDef {
     pub pattern_content_units: PatternContentUnits,
     /// The content shapes and their styles that form the pattern tile.
     pub shapes: Vec<(Shape, NodeStyle)>,
+}
+
+// ======================= AspectRatio Parsing =======================
+
+/// Parse a `preserveAspectRatio` attribute value.
+///
+/// SVG spec: `<align> <meetOrSlice>?`
+/// Defaults to `xMidYMid meet`.
+pub fn parse_aspect_ratio(value: &str) -> AspectRatio {
+    let value = value.trim();
+    if value.is_empty() || value.eq_ignore_ascii_case("none") {
+        return AspectRatio { align: AspectAlign::None, meet_or_slice: MeetOrSlice::Meet };
+    }
+
+    let parts: Vec<&str> = value.split_whitespace().collect();
+    let align = match parts.first().copied().unwrap_or("xMidYMid") {
+        "none" => AspectAlign::None,
+        "xMinYMin" => AspectAlign::XMinYMin,
+        "xMidYMin" => AspectAlign::XMidYMin,
+        "xMaxYMin" => AspectAlign::XMaxYMin,
+        "xMinYMid" => AspectAlign::XMinYMid,
+        "xMidYMid" => AspectAlign::XMidYMid,
+        "xMaxYMid" => AspectAlign::XMaxYMid,
+        "xMinYMax" => AspectAlign::XMinYMax,
+        "xMidYMax" => AspectAlign::XMidYMax,
+        "xMaxYMax" => AspectAlign::XMaxYMax,
+        _ => AspectAlign::XMidYMid,
+    };
+    let meet_or_slice = parts.get(1).copied().and_then(|s| {
+        if s.eq_ignore_ascii_case("slice") { Some(MeetOrSlice::Slice) }
+        else { None }
+    }).unwrap_or(MeetOrSlice::Meet);
+
+    AspectRatio { align, meet_or_slice }
 }
 
 // ======================= ViewBox Parsing =======================
