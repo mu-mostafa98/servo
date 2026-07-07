@@ -1,7 +1,7 @@
 {
   "version": "1.0.0",
-  "gitCommitHash": "7f42b92075c94172fc338aa48663ea98f769d57c",
-  "generatedAt": "2026-07-05T17:04:45.916Z",
+  "gitCommitHash": "5dbc7b30fe0f5aab911d3e3c6268a09f6553f228",
+  "generatedAt": "2026-07-07T05:59:40.682Z",
   "files": {
     ".cargo/config.toml": {
       "filePath": ".cargo/config.toml",
@@ -15,12 +15,12 @@
     },
     ".claude/settings.local.json": {
       "filePath": ".claude/settings.local.json",
-      "contentHash": "ee5d4c7d24fde1523cc2fafe8e36ec546762d79d7b80f3335b7e23d81257cc47",
+      "contentHash": "62d602a20a20bbaf0c339da2bccfdb6490e52fc9a9b8357c72edded956e7eabd",
       "functions": [],
       "classes": [],
       "imports": [],
       "exports": [],
-      "totalLines": 36,
+      "totalLines": 67,
       "hasStructuralAnalysis": true
     },
     ".clippy.toml": {
@@ -448303,8 +448303,15 @@
     },
     "components/svg_engine/src/render_tree.rs": {
       "filePath": "components/svg_engine/src/render_tree.rs",
-      "contentHash": "e892bc30bea0a5a711d7bc000e6d16e1d1653d5e24bef12b45ebac07ed5f70e5",
+      "contentHash": "1fcd2d60623009b727cbad146bbeec7c0f5ea56253b726cf9ac65805c5ef4511",
       "functions": [
+        {
+          "name": "default",
+          "params": [],
+          "returnType": "Self",
+          "exported": false,
+          "lineCount": 4
+        },
         {
           "name": "gradient",
           "params": [
@@ -448351,6 +448358,15 @@
           "lineCount": 3
         },
         {
+          "name": "parse_aspect_ratio",
+          "params": [
+            "value"
+          ],
+          "returnType": "AspectRatio",
+          "exported": true,
+          "lineCount": 27
+        },
+        {
           "name": "extract_viewbox",
           "params": [
             "value"
@@ -448361,6 +448377,46 @@
         }
       ],
       "classes": [
+        {
+          "name": "AspectAlign",
+          "methods": [],
+          "properties": [
+            "None",
+            "XMinYMin",
+            "XMidYMin",
+            "XMaxYMin",
+            "XMinYMid",
+            "XMidYMid",
+            "XMaxYMid",
+            "XMinYMax",
+            "XMidYMax",
+            "XMaxYMax"
+          ],
+          "exported": true,
+          "lineCount": 6
+        },
+        {
+          "name": "MeetOrSlice",
+          "methods": [],
+          "properties": [
+            "Meet",
+            "Slice"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
+        {
+          "name": "AspectRatio",
+          "methods": [
+            "default"
+          ],
+          "properties": [
+            "align",
+            "meet_or_slice"
+          ],
+          "exported": true,
+          "lineCount": 4
+        },
         {
           "name": "SvgRenderTree",
           "methods": [
@@ -448435,10 +448491,12 @@
           "properties": [
             "width",
             "height",
-            "view_box"
+            "view_box",
+            "overflow_visible",
+            "aspect_ratio"
           ],
           "exported": true,
-          "lineCount": 5
+          "lineCount": 9
         },
         {
           "name": "ClipPathDef",
@@ -448570,6 +448628,9 @@
         }
       ],
       "exports": [
+        "AspectAlign",
+        "MeetOrSlice",
+        "AspectRatio",
         "SvgRenderTree",
         "SvgRenderNode",
         "SvgTag",
@@ -448584,9 +448645,10 @@
         "FilterDef",
         "PatternContentUnits",
         "PatternDef",
+        "parse_aspect_ratio",
         "extract_viewbox"
       ],
-      "totalLines": 250,
+      "totalLines": 320,
       "hasStructuralAnalysis": true
     },
     "components/svg_engine/src/renderer/circle.rs": {
@@ -448659,7 +448721,7 @@
     },
     "components/svg_engine/src/renderer/line.rs": {
       "filePath": "components/svg_engine/src/renderer/line.rs",
-      "contentHash": "e356db2a5ff392c46cba8dca11761140510733dff3e4fd6cb688acca90d2fb82",
+      "contentHash": "455c52e2910d86abdfecbbc079a22e551c88f74245f6c2386488f169d666720e",
       "functions": [
         {
           "name": "render",
@@ -448667,25 +448729,11 @@
             "ctx"
           ],
           "exported": false,
-          "lineCount": 54
+          "lineCount": 15
         }
       ],
       "classes": [],
       "imports": [
-        {
-          "source": "euclid",
-          "specifiers": [
-            "Angle"
-          ]
-        },
-        {
-          "source": "webrender_api",
-          "specifiers": [
-            "PropertyBinding",
-            "ReferenceFrameKind",
-            "TransformStyle"
-          ]
-        },
         {
           "source": "crate::shapes",
           "specifiers": [
@@ -448696,16 +448744,18 @@
           "source": "crate::renderer",
           "specifiers": [
             "Render",
-            "RenderContext",
-            "make_common_props",
-            "to_colorf",
-            "effective_stroke_width",
-            "ZERO_LENGTH_EPSILON"
+            "RenderContext"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "stroke"
           ]
         }
       ],
       "exports": [],
-      "totalLines": 79,
+      "totalLines": 36,
       "hasStructuralAnalysis": true
     },
     "components/svg_engine/src/renderer/mod.rs": {
@@ -449172,7 +449222,7 @@
     },
     "components/svg_engine/src/shapes/mod.rs": {
       "filePath": "components/svg_engine/src/shapes/mod.rs",
-      "contentHash": "c89496215b2a3874826d8e15d66e0c1c265fa8587954040e99d36de5d1ded290",
+      "contentHash": "8766014d4bd93bcbc13fc36703d33df0a1a413e532e8ee22dd58ef2892ddfa12",
       "functions": [
         {
           "name": "clip_info",
@@ -449182,7 +449232,7 @@
           ],
           "returnType": "Option<(LayoutRect, Option<BorderRadius>)>",
           "exported": true,
-          "lineCount": 12
+          "lineCount": 15
         },
         {
           "name": "clip_info_rect",
@@ -449226,6 +449276,28 @@
           "returnType": "BorderRadius",
           "exported": false,
           "lineCount": 6
+        },
+        {
+          "name": "clip_info_points",
+          "params": [
+            "pts",
+            "svg_origin",
+            "units"
+          ],
+          "returnType": "Option<(LayoutRect, Option<BorderRadius>)>",
+          "exported": false,
+          "lineCount": 34
+        },
+        {
+          "name": "clip_info_path",
+          "params": [
+            "path",
+            "svg_origin",
+            "units"
+          ],
+          "returnType": "Option<(LayoutRect, Option<BorderRadius>)>",
+          "exported": false,
+          "lineCount": 37
         }
       ],
       "classes": [
@@ -449248,6 +449320,12 @@
         }
       ],
       "imports": [
+        {
+          "source": "kurbo",
+          "specifiers": [
+            "ParamCurve"
+          ]
+        },
         {
           "source": "self::rectangle",
           "specifiers": [
@@ -449307,7 +449385,7 @@
         "Shape",
         "clip_info"
       ],
-      "totalLines": 137,
+      "totalLines": 216,
       "hasStructuralAnalysis": true
     },
     "components/svg_engine/src/shapes/path.rs": {
@@ -449758,7 +449836,7 @@
     },
     "components/svg_engine/src/tessellator.rs": {
       "filePath": "components/svg_engine/src/tessellator.rs",
-      "contentHash": "330656b343d94c992c4514bdd8548045f3539331c4ac19a91e4ccc88619476b6",
+      "contentHash": "69668d4eaf13a22c1d86eb2f7e50d364663db8c46a49a0f51e62cb943ca02802",
       "functions": [
         {
           "name": "tessellate_to_triangles",
@@ -449812,7 +449890,7 @@
             "ctx"
           ],
           "exported": false,
-          "lineCount": 79
+          "lineCount": 151
         },
         {
           "name": "sort_vertices_by_y",
@@ -449823,7 +449901,7 @@
           ],
           "returnType": "(LyonPoint, LyonPoint, LyonPoint)",
           "exported": false,
-          "lineCount": 7
+          "lineCount": 14
         }
       ],
       "classes": [
@@ -449832,10 +449910,12 @@
           "methods": [],
           "properties": [
             "Solid",
-            "LinearGradient"
+            "LinearGradient",
+            "RadialGradient",
+            "Pattern"
           ],
           "exported": true,
-          "lineCount": 12
+          "lineCount": 32
         },
         {
           "name": "PosCtor",
@@ -449883,7 +449963,14 @@
           "source": "crate::renderer",
           "specifiers": [
             "RenderContext",
-            "shape_rendering_value"
+            "shape_rendering_value",
+            "clip_chain_option"
+          ]
+        },
+        {
+          "source": "crate::renderer",
+          "specifiers": [
+            "Render"
           ]
         },
         {
@@ -449891,6 +449978,12 @@
           "specifiers": [
             "color_at_t",
             "gradient_projection"
+          ]
+        },
+        {
+          "source": "crate::shapes",
+          "specifiers": [
+            "Shape"
           ]
         },
         {
@@ -449902,8 +449995,13 @@
         {
           "source": "crate::style::gradient",
           "specifiers": [
-            "GradientStop",
-            "GradientUnits"
+            "GradientStop"
+          ]
+        },
+        {
+          "source": "crate::style",
+          "specifiers": [
+            "NodeStyle"
           ]
         }
       ],
@@ -449911,12 +450009,12 @@
         "FillStyle",
         "tessellate_polygon"
       ],
-      "totalLines": 224,
+      "totalLines": 396,
       "hasStructuralAnalysis": true
     },
     "components/svg_engine/src/traversal.rs": {
       "filePath": "components/svg_engine/src/traversal.rs",
-      "contentHash": "59372e061a7889cb810cd740d7551b4fdf848a172d61160e084927e2349a6d93",
+      "contentHash": "5d28eb7814b8f5a26dfe9b0abf968de852a95e553dedaa53dbe981fcd27042b9",
       "functions": [
         {
           "name": "render_svg_tree",
@@ -449929,7 +450027,7 @@
             "wr"
           ],
           "exported": true,
-          "lineCount": 50
+          "lineCount": 52
         },
         {
           "name": "render_node",
@@ -449945,7 +450043,7 @@
             "parent_scale"
           ],
           "exported": false,
-          "lineCount": 44
+          "lineCount": 31
         },
         {
           "name": "apply_node_transforms",
@@ -449958,7 +450056,7 @@
           ],
           "returnType": "(LayoutPoint, SpatialId, u32, f32)",
           "exported": false,
-          "lineCount": 25
+          "lineCount": 20
         },
         {
           "name": "render_shape",
@@ -449974,7 +450072,7 @@
             "wr"
           ],
           "exported": false,
-          "lineCount": 74
+          "lineCount": 44
         },
         {
           "name": "recurse_children",
@@ -449991,7 +450089,20 @@
             "wr"
           ],
           "exported": false,
-          "lineCount": 29
+          "lineCount": 19
+        },
+        {
+          "name": "viewbox_transform",
+          "params": [
+            "vb_w",
+            "vb_h",
+            "vp_w",
+            "vp_h",
+            "ar"
+          ],
+          "returnType": "(f32, f32, f32, f32)",
+          "exported": false,
+          "lineCount": 31
         }
       ],
       "classes": [],
@@ -450062,7 +450173,7 @@
       "exports": [
         "render_svg_tree"
       ],
-      "totalLines": 273,
+      "totalLines": 225,
       "hasStructuralAnalysis": true
     }
   }
