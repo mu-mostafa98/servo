@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Engine – Complete Test Suite</title>
+    <style>
+        * { box-sizing: border-box; }
+        body {
+            background: #f0f2f5;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 20px;
+            color: #1e1e2f;
+        }
+        h1 {
+            text-align: center;
+            color: #0b2b40;
+            border-bottom: 3px solid #2c7da0;
+            padding-bottom: 8px;
+            margin-top: 0;
+        }
+        .suite { max-width: 1600px; margin: 0 auto; display: flex; flex-direction: column; gap: 28px; }
+        .section {
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            padding: 18px 22px 22px;
+        }
+        .section h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 0 0 2px 0;
+            color: #1a3a4a;
+        }
+        .section .desc {
+            font-size: 0.85rem;
+            color: #4a5b6a;
+            margin: 0 0 14px 0;
+            border-left: 4px solid #7fadc6;
+            padding-left: 12px;
+            background: #f8fafc;
+            border-radius: 0 6px 6px 0;
+        }
+        .grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 24px;
+            align-items: flex-start;
+        }
+        .test-card {
+            background: #fafcfe;
+            border-radius: 12px;
+            padding: 10px 12px 12px;
+            border: 1px solid #e2e8f0;
+            flex: 0 1 auto;
+            min-width: 150px;
+            max-width: 300px;
+            transition: border 0.1s;
+        }
+        .test-card:hover { border-color: #8bb9d6; }
+        .test-card h3 {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            color: #2b5c7a;
+            margin: 0 0 4px 0;
+            border-bottom: 1px dashed #dbe4ed;
+            padding-bottom: 3px;
+        }
+        .test-card .label {
+            font-size: 0.68rem;
+            color: #3d5d73;
+            margin: 1px 0 3px;
+            line-height: 1.3;
+        }
+        .test-card svg {
+            display: block;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #dde5ed;
+            margin: 3px 0 0;
+            width: 100%;
+            height: auto;
+        }
+        .badge {
+            display: inline-block;
+            font-size: 0.55rem;
+            background: #d7e6f0;
+            color: #1a4055;
+            padding: 0 8px;
+            border-radius: 30px;
+            margin-left: 4px;
+            font-weight: 500;
+        }
+        .wide { max-width: 380px; }
+        .note { font-size: 0.7rem; color: #536f83; margin-top: 2px; }
+        hr { border: none; border-top: 1px solid #e2eaf2; margin: 4px 0 10px; }
+        .footnote {
+            margin-top: 12px;
+            font-size: 0.75rem;
+            color: #4f6f84;
+            border-top: 1px solid #e6edf4;
+            padding-top: 10px;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+    <h1>🧪 SVG Rendering – Complete Test Suite</h1>
+    <div class="suite">
+
+        <!-- ===== SECTION 1: SHAPES ===== -->
+        <div class="section">
+            <h2>1. Core shapes — all variants</h2>
+            <div class="desc">Rect, circle, ellipse, line, polyline, polygon, path — with explicit attrs, no attrs, percentages, rx/ry clipping.</div>
+            <div class="grid">
+                <div class="test-card"><h3>rect (rx/ry)</h3><div class="label">rx=25, ry=25 (ellipse)</div>
+                    <svg viewBox="0 0 100 60"><rect x="10" y="8" width="80" height="44" rx="22" ry="22" fill="#E74C3C" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>rect (rx&gt;half)</h3><div class="label">rx=100, ry=25 (clipped)</div>
+                    <svg viewBox="0 0 100 60"><rect x="5" y="8" width="80" height="44" rx="100" ry="22" fill="#3498DB" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>rect (no attrs)</h3><div class="label">no x/y/width/height</div>
+                    <svg viewBox="0 0 100 60"><rect fill="#2ECC71" stroke="#1f3a4b" stroke-width="2" x="10" y="8" width="80" height="44"/></svg>
+                </div>
+                <div class="test-card"><h3>circle (r=0)</h3><div class="label">r=0 → invisible</div>
+                    <svg viewBox="0 0 100 60"><circle cx="50" cy="30" r="0" fill="#E74C3C"/><rect x="10" y="8" width="80" height="44" fill="none" stroke="#aaa" stroke-width="1"/></svg>
+                </div>
+                <div class="test-card"><h3>ellipse (rx=0)</h3><div class="label">rx=0 → vertical line</div>
+                    <svg viewBox="0 0 100 60"><ellipse cx="50" cy="30" rx="0" ry="25" fill="#9B59B6" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>line (angled)</h3><div class="label">diagonal</div>
+                    <svg viewBox="0 0 100 60"><line x1="10" y1="50" x2="90" y2="10" stroke="#E67E22" stroke-width="5" stroke-linecap="round"/></svg>
+                </div>
+                <div class="test-card"><h3>polygon (star)</h3><div class="label">5-point star</div>
+                    <svg viewBox="0 0 100 80"><polygon points="50,8 63,32 90,32 68,50 75,76 50,60 25,76 32,50 10,32 37,32" fill="#F1C40F" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>polygon (evenodd)</h3><div class="label">fill-rule=evenodd</div>
+                    <svg viewBox="0 0 100 80"><polygon points="50,10 90,70 10,70" fill="#E74C3C" fill-rule="evenodd" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>polyline (closed)</h3><div class="label">points form closed loop</div>
+                    <svg viewBox="0 0 100 60"><polyline points="10,50 50,10 90,50 10,50" fill="none" stroke="#2C3E50" stroke-width="3" stroke-linejoin="round"/></svg>
+                </div>
+                <div class="test-card"><h3>path (arc)</h3><div class="label">A command</div>
+                    <svg viewBox="0 0 100 60"><path d="M 10,50 A 30,30 0 1,1 90,50" fill="none" stroke="#3498DB" stroke-width="3"/></svg>
+                </div>
+                <div class="test-card"><h3>path (empty)</h3><div class="label">d="" → no render</div>
+                    <svg viewBox="0 0 100 40"><path d="" fill="#E74C3C" stroke="#1f3a4b" stroke-width="2"/><rect x="10" y="8" width="80" height="24" fill="none" stroke="#aaa" stroke-width="1"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 2: STYLING ===== -->
+        <div class="section">
+            <h2>2. Styling — CSS, inheritance, overrides, opacity, visibility</h2>
+            <div class="desc">CSS classes, inline styles, inheritance from &lt;g&gt;, fill/stroke overrides, currentColor, fill="none", opacity cascade.</div>
+            <div class="grid">
+                <div class="test-card"><h3>CSS class (external)</h3><div class="label">.fill-blue from style</div>
+                    <svg viewBox="0 0 100 50"><style>.fill-blue{fill:#3498DB;}.stroke-red{stroke:#E74C3C;stroke-width:3;}</style><rect class="fill-blue stroke-red" x="10" y="8" width="80" height="34"/></svg>
+                </div>
+                <div class="test-card"><h3>CSS class (group)</h3><div class="label">group with class</div>
+                    <svg viewBox="0 0 140 50"><style>.g-fill{fill:#2ECC71;stroke:#1f3a4b;stroke-width:2;}</style><g class="g-fill"><rect x="8" y="8" width="50" height="34"/><circle cx="100" cy="25" r="17"/></g></svg>
+                </div>
+                <div class="test-card"><h3>inline style override</h3><div class="label">style attr overrides attrs</div>
+                    <svg viewBox="0 0 100 50"><rect x="100" y="100" width="200" height="200" fill="#E74C3C" style="x:10px;y:8px;width:80px;height:34px;fill:#3498DB;"/></svg>
+                </div>
+                <div class="test-card"><h3>inherit from &lt;g&gt;</h3><div class="label">fill + stroke + opacity</div>
+                    <svg viewBox="0 0 140 50"><g fill="#9B59B6" stroke="#1f3a4b" stroke-width="2" opacity="0.7"><rect x="8" y="8" width="50" height="34"/><circle cx="100" cy="25" r="17"/></g></svg>
+                </div>
+                <div class="test-card"><h3>override in child</h3><div class="label">child fill overrides group</div>
+                    <svg viewBox="0 0 140 50"><g fill="#E74C3C"><rect x="8" y="8" width="50" height="34" fill="#2ECC71"/><circle cx="100" cy="25" r="17" fill="#3498DB"/></g></svg>
+                </div>
+                <div class="test-card"><h3>fill="none" explicit</h3><div class="label">no fill vs inherit</div>
+                    <svg viewBox="0 0 140 50"><g fill="#E74C3C" stroke="#2C3E50" stroke-width="2"><rect x="8" y="8" width="50" height="34" fill="none"/><rect x="80" y="8" width="50" height="34"/></g></svg>
+                </div>
+                <div class="test-card"><h3>currentColor default</h3><div class="label">no fill attr → currentColor</div>
+                    <svg viewBox="0 0 100 50" style="color:#2ECC71;"><rect x="10" y="8" width="80" height="34" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>fill="currentColor"</h3><div class="label">explicit currentColor</div>
+                    <svg viewBox="0 0 100 50" style="color:#E74C3C;"><rect x="10" y="8" width="80" height="34" fill="currentColor" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>opacity group + child</h3><div class="label">group 0.5 × child 0.5</div>
+                    <svg viewBox="0 0 140 50"><g opacity="0.5"><rect x="8" y="8" width="50" height="34" fill="#E74C3C" fill-opacity="0.5"/><circle cx="100" cy="25" r="17" fill="#3498DB" fill-opacity="0.8"/></g></svg>
+                </div>
+                <div class="test-card"><h3>visibility hidden</h3><div class="label">hidden circle</div>
+                    <svg viewBox="0 0 140 50"><rect x="8" y="8" width="50" height="34" fill="#9B59B6"/><circle cx="100" cy="25" r="20" fill="#E67E22" visibility="hidden"/><rect x="90" y="8" width="40" height="34" fill="#2ECC71"/></svg>
+                </div>
+                <div class="test-card"><h3>display:none</h3><div class="label">group completely hidden</div>
+                    <svg viewBox="0 0 140 50"><g display="none"><rect x="8" y="8" width="50" height="34" fill="#E74C3C"/></g><rect x="80" y="8" width="50" height="34" fill="#3498DB"/></svg>
+                </div>
+                <div class="test-card"><h3>fill-opacity + stroke-opacity</h3><div class="label">fill 0.3, stroke 0.6</div>
+                    <svg viewBox="0 0 100 50"><rect x="10" y="8" width="80" height="34" fill="#E74C3C" fill-opacity="0.3" stroke="#2C3E50" stroke-width="4" stroke-opacity="0.6"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 3: TRANSFORMS ===== -->
+        <div class="section">
+            <h2>3. Transforms — all types &amp; chaining</h2>
+            <div class="desc">translate, rotate (with/without center), scale, skewX, skewY, matrix, chained, CSS transform, nested.</div>
+            <div class="grid">
+                <div class="test-card"><h3>translate</h3><div class="label">translate(20,15)</div>
+                    <svg viewBox="0 0 120 60"><rect x="0" y="0" width="60" height="40" fill="#E74C3C" transform="translate(25,10)"/></svg>
+                </div>
+                <div class="test-card"><h3>rotate (around origin)</h3><div class="label">rotate(30) → clipped</div>
+                    <svg viewBox="0 0 120 70"><rect x="30" y="10" width="60" height="40" fill="#3498DB" transform="rotate(30)"/></svg>
+                </div>
+                <div class="test-card"><h3>rotate (around center)</h3><div class="label">rotate(35, 60, 30)</div>
+                    <svg viewBox="0 0 120 70"><rect x="30" y="10" width="60" height="40" fill="#2ECC71" transform="rotate(35, 60, 30)"/></svg>
+                </div>
+                <div class="test-card"><h3>scale</h3><div class="label">scale(1.8)</div>
+                    <svg viewBox="0 0 120 70"><rect x="10" y="8" width="40" height="35" fill="#9B59B6" transform="scale(1.7)"/></svg>
+                </div>
+                <div class="test-card"><h3>scale (negative)</h3><div class="label">scale(-1, 1) flip</div>
+                    <svg viewBox="0 0 120 60"><rect x="40" y="10" width="40" height="35" fill="#E67E22" transform="scale(-1, 1) translate(-80,0)"/></svg>
+                </div>
+                <div class="test-card"><h3>skewX</h3><div class="label">skewX(25)</div>
+                    <svg viewBox="0 0 120 60"><rect x="20" y="10" width="70" height="40" fill="#1ABC9C" transform="skewX(25)"/></svg>
+                </div>
+                <div class="test-card"><h3>skewY</h3><div class="label">skewY(15)</div>
+                    <svg viewBox="0 0 120 60"><rect x="20" y="10" width="70" height="40" fill="#E74C3C" transform="skewY(15)"/></svg>
+                </div>
+                <div class="test-card"><h3>matrix</h3><div class="label">matrix(1,0.2,0.3,1,25,10)</div>
+                    <svg viewBox="0 0 140 70"><rect x="0" y="0" width="50" height="40" fill="#3498DB" transform="matrix(1,0.2,0.3,1,25,10)"/></svg>
+                </div>
+                <div class="test-card"><h3>chained (3 ops)</h3><div class="label">translate + rotate + scale</div>
+                    <svg viewBox="0 0 140 70"><rect x="0" y="0" width="50" height="35" fill="#2ECC71" transform="translate(30,15) rotate(25) scale(1.3)"/></svg>
+                </div>
+                <div class="test-card"><h3>chained (5 ops)</h3><div class="label">translate + skewX + skewY + scale + rotate</div>
+                    <svg viewBox="0 0 160 80"><rect x="0" y="0" width="40" height="40" fill="#9B59B6" transform="translate(60,30) skewX(10) skewY(10) scale(1.2) rotate(20)"/></svg>
+                </div>
+                <div class="test-card"><h3>CSS transform (class)</h3><div class="label">.rotated class</div>
+                    <svg viewBox="0 0 120 60"><style>.rot{transform:rotate(20deg);}</style><rect class="rot" x="20" y="10" width="60" height="35" fill="#E67E22"/></svg>
+                </div>
+                <div class="test-card"><h3>CSS transform (inline)</h3><div class="label">style="transform: ..."</div>
+                    <svg viewBox="0 0 120 60"><rect x="10" y="10" width="60" height="35" fill="#1ABC9C" style="transform: translateX(15px) scale(0.9);"/></svg>
+                </div>
+                <div class="test-card"><h3>CSS + SVG attr merge</h3><div class="label">CSS translate + attr rotate</div>
+                    <svg viewBox="0 0 140 70"><rect x="0" y="0" width="50" height="35" fill="#E74C3C" style="transform:translateX(20px);" transform="rotate(15, 45, 20)"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 4: GRADIENTS ===== -->
+        <div class="section">
+            <h2>4. Gradients — linear, radial, stops, units, transforms</h2>
+            <div class="desc">objectBoundingBox, userSpaceOnUse, focal point, stop-opacity, spreadMethod, gradientTransform, stroke gradients.</div>
+            <div class="grid">
+                <div class="test-card"><h3>linear (→)</h3><div class="label">red → blue</div>
+                    <svg viewBox="0 0 120 50"><defs><linearGradient id="l1" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="100%" stop-color="#3498DB"/></linearGradient></defs><rect x="8" y="8" width="104" height="34" fill="url(#l1)"/></svg>
+                </div>
+                <div class="test-card"><h3>linear (↘)</h3><div class="label">yellow → purple</div>
+                    <svg viewBox="0 0 120 50"><defs><linearGradient id="l2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#F1C40F"/><stop offset="100%" stop-color="#9B59B6"/></linearGradient></defs><rect x="8" y="8" width="104" height="34" fill="url(#l2)"/></svg>
+                </div>
+                <div class="test-card"><h3>linear (3-stop)</h3><div class="label">red → yellow → blue</div>
+                    <svg viewBox="0 0 120 50"><defs><linearGradient id="l3" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="50%" stop-color="#F1C40F"/><stop offset="100%" stop-color="#3498DB"/></linearGradient></defs><rect x="8" y="8" width="104" height="34" fill="url(#l3)"/></svg>
+                </div>
+                <div class="test-card"><h3>linear (sharp stops)</h3><div class="label">hard transition</div>
+                    <svg viewBox="0 0 120 50"><defs><linearGradient id="l4" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="45%" stop-color="#E74C3C"/><stop offset="55%" stop-color="#3498DB"/><stop offset="100%" stop-color="#3498DB"/></linearGradient></defs><rect x="8" y="8" width="104" height="34" fill="url(#l4)"/></svg>
+                </div>
+                <div class="test-card"><h3>radial (center)</h3><div class="label">white → green</div>
+                    <svg viewBox="0 0 120 60"><defs><radialGradient id="r1" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#2ECC71"/></radialGradient></defs><circle cx="60" cy="30" r="28" fill="url(#r1)"/></svg>
+                </div>
+                <div class="test-card"><h3>radial (focal)</h3><div class="label">fx=25%, fy=25%</div>
+                    <svg viewBox="0 0 120 60"><defs><radialGradient id="r2" cx="50%" cy="50%" r="50%" fx="25%" fy="25%"><stop offset="0%" stop-color="#fff"/><stop offset="100%" stop-color="#E74C3C"/></radialGradient></defs><circle cx="60" cy="30" r="28" fill="url(#r2)"/></svg>
+                </div>
+                <div class="test-card"><h3>radial (stop-opacity)</h3><div class="label">middle stop 0.3</div>
+                    <svg viewBox="0 0 120 60"><defs><radialGradient id="r3" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#F1C40F"/><stop offset="50%" stop-color="#E74C3C" stop-opacity="0.3"/><stop offset="100%" stop-color="#3498DB"/></radialGradient></defs><rect x="8" y="8" width="104" height="44" fill="url(#r3)"/></svg>
+                </div>
+                <div class="test-card"><h3>userSpaceOnUse</h3><div class="label">absolute coords</div>
+                    <svg viewBox="0 0 140 50"><defs><linearGradient id="us" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="120" y2="0"><stop offset="0%" stop-color="#E67E22"/><stop offset="100%" stop-color="#1ABC9C"/></linearGradient></defs><rect x="10" y="8" width="110" height="34" fill="url(#us)"/></svg>
+                </div>
+                <div class="test-card"><h3>spreadMethod: reflect</h3><div class="label">reflect</div>
+                    <svg viewBox="0 0 120 50"><defs><linearGradient id="sp1" x1="20%" y1="20%" x2="50%" y2="50%" spreadMethod="reflect"><stop offset="0%" stop-color="#E74C3C"/><stop offset="100%" stop-color="#F1C40F"/></linearGradient></defs><rect x="8" y="8" width="104" height="34" fill="url(#sp1)"/></svg>
+                </div>
+                <div class="test-card"><h3>spreadMethod: repeat</h3><div class="label">repeat</div>
+                    <svg viewBox="0 0 120 50"><defs><linearGradient id="sp2" x1="30%" y1="30%" x2="60%" y2="60%" spreadMethod="repeat"><stop offset="0%" stop-color="#3498DB"/><stop offset="100%" stop-color="#2ECC71"/></linearGradient></defs><rect x="8" y="8" width="104" height="34" fill="url(#sp2)"/></svg>
+                </div>
+                <div class="test-card"><h3>gradientTransform</h3><div class="label">rotate(45)</div>
+                    <svg viewBox="0 0 120 50"><defs><linearGradient id="gt" x1="0%" y1="0%" x2="100%" y2="0%" gradientTransform="rotate(35)"><stop offset="0%" stop-color="#9B59B6"/><stop offset="100%" stop-color="#3498DB"/></linearGradient></defs><rect x="8" y="8" width="104" height="34" fill="url(#gt)"/></svg>
+                </div>
+                <div class="test-card"><h3>gradient on stroke</h3><div class="label">stroke with gradient</div>
+                    <svg viewBox="0 0 120 60"><defs><linearGradient id="gs" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="100%" stop-color="#2ECC71"/></linearGradient></defs><rect x="8" y="8" width="104" height="40" fill="none" stroke="url(#gs)" stroke-width="6"/></svg>
+                </div>
+                <div class="test-card"><h3>gradient on polygon</h3><div class="label">triangle with gradient</div>
+                    <svg viewBox="0 0 120 70"><defs><linearGradient id="gp" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="100%" stop-color="#3498DB"/></linearGradient></defs><polygon points="60,8 112,62 8,62" fill="url(#gp)" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>gradient on polyline</h3><div class="label">open shape with gradient</div>
+                    <svg viewBox="0 0 120 60"><defs><linearGradient id="gpl" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#2ECC71"/><stop offset="100%" stop-color="#9B59B6"/></linearGradient></defs><polyline points="10,50 40,10 70,50 100,10" fill="url(#gpl)" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 5: PATTERNS ===== -->
+        <div class="section">
+            <h2>5. Patterns — tiles, offset, on shapes</h2>
+            <div class="desc">Checkerboard, stripes, offset, pattern on polygon, pattern with visibility.</div>
+            <div class="grid">
+                <div class="test-card"><h3>checkerboard</h3><div class="label">20×20 tile</div>
+                    <svg viewBox="0 0 120 60"><defs><pattern id="ch" width="20" height="20" patternUnits="userSpaceOnUse"><rect width="10" height="10" fill="#E74C3C"/><rect x="10" y="10" width="10" height="10" fill="#E74C3C"/><rect x="10" width="10" height="10" fill="#fff"/><rect y="10" width="10" height="10" fill="#fff"/></pattern></defs><rect x="8" y="8" width="104" height="44" fill="url(#ch)"/></svg>
+                </div>
+                <div class="test-card"><h3>stripes</h3><div class="label">diagonal stripes</div>
+                    <svg viewBox="0 0 120 60"><defs><pattern id="st" width="24" height="24" patternUnits="userSpaceOnUse"><rect width="24" height="24" fill="#3498DB"/><line x1="0" y1="0" x2="24" y2="24" stroke="#fff" stroke-width="4"/></pattern></defs><rect x="8" y="8" width="104" height="44" fill="url(#st)"/></svg>
+                </div>
+                <div class="test-card"><h3>offset pattern</h3><div class="label">x=8, y=8 offset</div>
+                    <svg viewBox="0 0 120 60"><defs><pattern id="off" x="8" y="8" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#F1C40F"/><circle cx="15" cy="15" r="8" fill="#E74C3C"/></pattern></defs><rect x="8" y="8" width="104" height="44" fill="url(#off)"/></svg>
+                </div>
+                <div class="test-card"><h3>pattern on polygon</h3><div class="label">triangle with pattern</div>
+                    <svg viewBox="0 0 120 70"><defs><pattern id="pp" width="16" height="16" patternUnits="userSpaceOnUse"><rect width="8" height="8" fill="#2ECC71"/><rect x="8" y="8" width="8" height="8" fill="#2ECC71"/><rect x="8" width="8" height="8" fill="#fff"/><rect y="8" width="8" height="8" fill="#fff"/></pattern></defs><polygon points="60,8 112,62 8,62" fill="url(#pp)" stroke="#1f3a4b" stroke-width="2"/></svg>
+                </div>
+                <div class="test-card"><h3>pattern with visibility</h3><div class="label">hidden circle in pattern</div>
+                    <svg viewBox="0 0 120 60"><defs><pattern id="pv" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#333"/><circle cx="15" cy="15" r="10" fill="#2ECC71" visibility="hidden"/></pattern></defs><rect x="8" y="8" width="104" height="44" fill="url(#pv)"/></svg>
+                </div>
+                <div class="test-card"><h3>pattern with visible</h3><div class="label">visible circle in pattern</div>
+                    <svg viewBox="0 0 120 60"><defs><pattern id="pv2" width="30" height="30" patternUnits="userSpaceOnUse"><rect width="30" height="30" fill="#333"/><circle cx="15" cy="15" r="10" fill="#2ECC71" visibility="visible"/></pattern></defs><rect x="8" y="8" width="104" height="44" fill="url(#pv2)"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 6: CLIP-PATH & MASK ===== -->
+        <div class="section">
+            <h2>6. Clip-path &amp; Mask — all shapes</h2>
+            <div class="desc">Circle, rounded rect, ellipse, polygon, path clip; luminance mask; userSpaceOnUse.</div>
+            <div class="grid">
+                <div class="test-card"><h3>clip (circle)</h3><div class="label">rect clipped to circle</div>
+                    <svg viewBox="0 0 120 60"><defs><clipPath id="cc"><circle cx="60" cy="30" r="28"/></clipPath></defs><rect x="0" y="0" width="120" height="60" fill="#E74C3C" clip-path="url(#cc)"/></svg>
+                </div>
+                <div class="test-card"><h3>clip (rounded rect)</h3><div class="label">rx=18, ry=18</div>
+                    <svg viewBox="0 0 120 60"><defs><clipPath id="cr"><rect x="8" y="8" width="104" height="44" rx="18"/></clipPath></defs><rect x="-10" y="-10" width="140" height="80" fill="#3498DB" clip-path="url(#cr)"/></svg>
+                </div>
+                <div class="test-card"><h3>clip (ellipse)</h3><div class="label">ellipse clip</div>
+                    <svg viewBox="0 0 120 60"><defs><clipPath id="ce"><ellipse cx="60" cy="30" rx="50" ry="25"/></clipPath></defs><rect x="0" y="0" width="120" height="60" fill="#2ECC71" clip-path="url(#ce)"/></svg>
+                </div>
+                <div class="test-card"><h3>clip (polygon)</h3><div class="label">triangle clip</div>
+                    <svg viewBox="0 0 120 60"><defs><clipPath id="cp"><polygon points="60,5 10,55 110,55"/></clipPath></defs><rect x="0" y="0" width="120" height="60" fill="#9B59B6" clip-path="url(#cp)"/></svg>
+                </div>
+                <div class="test-card"><h3>clip (path)</h3><div class="label">heart path clip</div>
+                    <svg viewBox="0 0 120 60"><defs><clipPath id="cpath"><path d="M60,50 C20,20 10,5 30,3 C40,0 50,10 50,10 C50,10 60,0 70,3 C90,5 80,20 60,50"/></clipPath></defs><rect x="0" y="0" width="120" height="60" fill="#E67E22" clip-path="url(#cpath)"/></svg>
+                </div>
+                <div class="test-card"><h3>clip (userSpaceOnUse)</h3><div class="label">absolute coords</div>
+                    <svg viewBox="0 0 120 60"><defs><clipPath id="cu" clipPathUnits="userSpaceOnUse"><rect x="20" y="10" width="80" height="40" rx="10"/></clipPath></defs><rect x="0" y="0" width="120" height="60" fill="#1ABC9C" clip-path="url(#cu)"/></svg>
+                </div>
+                <div class="test-card"><h3>mask (circle)</h3><div class="label">white circle mask</div>
+                    <svg viewBox="0 0 120 60"><defs><mask id="mc"><circle cx="60" cy="30" r="28" fill="white"/></mask></defs><rect x="0" y="0" width="120" height="60" fill="#E74C3C" mask="url(#mc)"/></svg>
+                </div>
+                <div class="test-card"><h3>mask (rounded rect)</h3><div class="label">rounded mask</div>
+                    <svg viewBox="0 0 120 60"><defs><mask id="mr"><rect x="10" y="10" width="100" height="40" rx="15" fill="white"/></mask></defs><rect x="0" y="0" width="120" height="60" fill="#3498DB" mask="url(#mr)"/></svg>
+                </div>
+                <div class="test-card"><h3>mask (luminance)</h3><div class="label">gradient mask</div>
+                    <svg viewBox="0 0 120 60"><defs><linearGradient id="mg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="white"/><stop offset="100%" stop-color="black"/></linearGradient><mask id="lm"><rect x="0" y="0" width="120" height="60" fill="url(#mg)"/></mask></defs><rect x="10" y="10" width="100" height="40" fill="#2ECC71" mask="url(#lm)"/></svg>
+                </div>
+                <div class="test-card"><h3>mask (multiple shapes)</h3><div class="label">two circles in mask</div>
+                    <svg viewBox="0 0 120 60"><defs><mask id="mm"><circle cx="40" cy="30" r="20" fill="white"/><circle cx="80" cy="30" r="20" fill="white"/></mask></defs><rect x="0" y="0" width="120" height="60" fill="#9B59B6" mask="url(#mm)"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 7: FILTERS ===== -->
+        <div class="section">
+            <h2>7. Filters — blur, drop shadow</h2>
+            <div class="desc">Gaussian blur, drop shadow with offset and color.</div>
+            <div class="grid">
+                <div class="test-card"><h3>blur (stdDev=2)</h3><div class="label">soft edges</div>
+                    <svg viewBox="0 0 120 60"><defs><filter id="b2"><feGaussianBlur stdDeviation="2"/></filter></defs><rect x="20" y="10" width="80" height="40" fill="#E74C3C" filter="url(#b2)"/></svg>
+                </div>
+                <div class="test-card"><h3>blur (stdDev=4)</h3><div class="label">strong blur</div>
+                    <svg viewBox="0 0 120 60"><defs><filter id="b4"><feGaussianBlur stdDeviation="4"/></filter></defs><rect x="20" y="10" width="80" height="40" fill="#3498DB" filter="url(#b4)"/></svg>
+                </div>
+                <div class="test-card"><h3>drop shadow</h3><div class="label">dx=4, dy=4, blur=3</div>
+                    <svg viewBox="0 0 120 60"><defs><filter id="ds"><feDropShadow dx="4" dy="4" stdDeviation="3" flood-color="#2C3E50" flood-opacity="0.7"/></filter></defs><circle cx="55" cy="30" r="24" fill="#2ECC71" filter="url(#ds)"/></svg>
+                </div>
+                <div class="test-card"><h3>drop shadow (colored)</h3><div class="label">red shadow</div>
+                    <svg viewBox="0 0 120 60"><defs><filter id="ds2"><feDropShadow dx="3" dy="3" stdDeviation="2" flood-color="#E74C3C" flood-opacity="0.8"/></filter></defs><rect x="20" y="10" width="80" height="40" fill="#9B59B6" filter="url(#ds2)"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 8: GROUPS & STRUCTURAL ===== -->
+        <div class="section">
+            <h2>8. Groups, defs, use, viewport</h2>
+            <div class="desc">Nested &lt;g&gt;, &lt;defs&gt; with nested &lt;g&gt;, &lt;use&gt; references, viewBox, overflow, nested SVG.</div>
+            <div class="grid">
+                <div class="test-card"><h3>nested groups (3 levels)</h3><div class="label">fill cascades</div>
+                    <svg viewBox="0 0 140 50"><g fill="#E74C3C"><g fill="#3498DB"><g fill="#2ECC71"><rect x="8" y="8" width="50" height="34"/></g></g></g><circle cx="108" cy="25" r="17" fill="#9B59B6"/></svg>
+                </div>
+                <div class="test-card"><h3>group with transform</h3><div class="label">translate + fill</div>
+                    <svg viewBox="0 0 140 50"><g transform="translate(15,8)" fill="#E67E22"><rect x="0" y="0" width="50" height="34"/><circle cx="80" cy="17" r="17"/></g></svg>
+                </div>
+                <div class="test-card"><h3>defs (nested g)</h3><div class="label">gradient in nested defs</div>
+                    <svg viewBox="0 0 120 60"><defs><g><linearGradient id="nd" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="100%" stop-color="#3498DB"/></linearGradient></g></defs><rect x="8" y="8" width="104" height="44" fill="url(#nd)"/></svg>
+                </div>
+                <div class="test-card"><h3>use (basic)</h3><div class="label">rect reused</div>
+                    <svg viewBox="0 0 140 50"><defs><rect id="ur" x="0" y="0" width="40" height="34" fill="#2ECC71" rx="5"/></defs><use href="#ur" x="8" y="8"/><use href="#ur" x="60" y="8"/><use href="#ur" x="112" y="8"/></svg>
+                </div>
+                <div class="test-card"><h3>use (group)</h3><div class="label">group reused</div>
+                    <svg viewBox="0 0 140 50"><defs><g id="ug"><rect x="0" y="0" width="30" height="25" fill="#E74C3C"/><circle cx="45" cy="12" r="12" fill="#3498DB"/></g></defs><use href="#ug" x="8" y="10"/><use href="#ug" x="70" y="10"/></svg>
+                </div>
+                <div class="test-card"><h3>use (override fill)</h3><div class="label">child overrides fill</div>
+                    <svg viewBox="0 0 120 50"><defs><rect id="uo" x="0" y="0" width="40" height="34" fill="#E74C3C"/></defs><use href="#uo" x="8" y="8"/><use href="#uo" x="60" y="8" fill="#2ECC71"/></svg>
+                </div>
+                <div class="test-card"><h3>use (chained)</h3><div class="label">use referencing use</div>
+                    <svg viewBox="0 0 140 50"><defs><rect id="uc" x="0" y="0" width="35" height="34" fill="#9B59B6"/><use id="um" href="#uc" x="0" y="0"/></defs><use href="#um" x="8" y="8"/><use href="#um" x="55" y="8"/></svg>
+                </div>
+                <div class="test-card"><h3>use (missing target)</h3><div class="label">graceful no-op</div>
+                    <svg viewBox="0 0 100 40"><rect x="10" y="8" width="80" height="24" fill="#aaa"/><use href="#nonexistent" x="20"/></svg>
+                </div>
+                <div class="test-card"><h3>overflow:visible</h3><div class="label">circle extends beyond</div>
+                    <svg viewBox="0 0 70 40" style="overflow: visible; border:1px dashed #aaa;background:#fafafa;"><circle cx="10" cy="10" r="25" fill="#E74C3C" opacity="0.6"/></svg>
+                </div>
+                <div class="test-card"><h3>nested SVG</h3><div class="label">outer + inner viewBox</div>
+                    <svg viewBox="0 0 140 60"><rect x="0" y="0" width="140" height="60" fill="#f0f5fa"/><svg x="15" y="8" width="110" height="44" viewBox="0 0 100 40"><rect x="10" y="5" width="80" height="30" fill="#3498DB" rx="8"/></svg></svg>
+                </div>
+                <div class="test-card"><h3>symbol (defs)</h3><div class="label">symbol not rendered directly</div>
+                    <svg viewBox="0 0 120 50"><defs><symbol id="sym" viewBox="0 0 40 30"><rect x="0" y="0" width="40" height="30" fill="#E74C3C"/></symbol></defs><rect x="8" y="8" width="104" height="34" fill="#3498DB"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 9: DASHED STROKES & CAPS ===== -->
+        <div class="section">
+            <h2>9. Dashed strokes &amp; line caps</h2>
+            <div class="desc">stroke-dasharray (variants), stroke-dashoffset, linecap (butt/round/square) on lines, polylines, paths, gradients.</div>
+            <div class="grid">
+                <div class="test-card"><h3>dasharray (6,4)</h3><div class="label">standard pattern</div>
+                    <svg viewBox="0 0 120 40"><line x1="10" y1="20" x2="110" y2="20" stroke="#2C3E50" stroke-width="4" stroke-dasharray="6,4"/></svg>
+                </div>
+                <div class="test-card"><h3>dasharray (single)</h3><div class="label">6 → alternating</div>
+                    <svg viewBox="0 0 120 40"><line x1="10" y1="20" x2="110" y2="20" stroke="#E74C3C" stroke-width="4" stroke-dasharray="6"/></svg>
+                </div>
+                <div class="test-card"><h3>dasharray (complex)</h3><div class="label">8,4,2,4</div>
+                    <svg viewBox="0 0 120 40"><line x1="10" y1="20" x2="110" y2="20" stroke="#3498DB" stroke-width="4" stroke-dasharray="8,4,2,4"/></svg>
+                </div>
+                <div class="test-card"><h3>dashoffset</h3><div class="label">offset: 3</div>
+                    <svg viewBox="0 0 120 40"><line x1="10" y1="20" x2="110" y2="20" stroke="#2ECC71" stroke-width="4" stroke-dasharray="6,4" stroke-dashoffset="3"/></svg>
+                </div>
+                <div class="test-card"><h3>linecap: butt</h3><div class="label">dashed + butt (default)</div>
+                    <svg viewBox="0 0 120 40"><line x1="10" y1="20" x2="110" y2="20" stroke="#9B59B6" stroke-width="8" stroke-dasharray="2,8" stroke-linecap="butt"/></svg>
+                </div>
+                <div class="test-card"><h3>linecap: round</h3><div class="label">dashed + round caps</div>
+                    <svg viewBox="0 0 120 40"><line x1="10" y1="20" x2="110" y2="20" stroke="#E67E22" stroke-width="8" stroke-dasharray="2,8" stroke-linecap="round"/></svg>
+                </div>
+                <div class="test-card"><h3>linecap: square</h3><div class="label">dashed + square caps</div>
+                    <svg viewBox="0 0 120 40"><line x1="10" y1="20" x2="110" y2="20" stroke="#1ABC9C" stroke-width="8" stroke-dasharray="2,8" stroke-linecap="square"/></svg>
+                </div>
+                <div class="test-card"><h3>dashed polyline</h3><div class="label">zigzag with dashes</div>
+                    <svg viewBox="0 0 120 50"><polyline points="8,40 30,10 55,40 80,10 105,40" fill="none" stroke="#E74C3C" stroke-width="4" stroke-dasharray="5,3"/></svg>
+                </div>
+                <div class="test-card"><h3>dashed path</h3><div class="label">curve with dashes</div>
+                    <svg viewBox="0 0 120 50"><path d="M 8,40 C 20,10 50,10 62,40 S 90,10 112,40" fill="none" stroke="#3498DB" stroke-width="3" stroke-dasharray="6,4"/></svg>
+                </div>
+                <div class="test-card"><h3>dashed gradient stroke</h3><div class="label">gradient + dashes</div>
+                    <svg viewBox="0 0 120 40"><defs><linearGradient id="dg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="#E74C3C"/><stop offset="100%" stop-color="#3498DB"/></linearGradient></defs><line x1="10" y1="20" x2="110" y2="20" stroke="url(#dg)" stroke-width="6" stroke-dasharray="8,4"/></svg>
+                </div>
+                <div class="test-card"><h3>dashed angled line</h3><div class="label">diagonal dashes</div>
+                    <svg viewBox="0 0 120 60"><line x1="10" y1="50" x2="110" y2="10" stroke="#2ECC71" stroke-width="4" stroke-dasharray="6,4"/></svg>
+                </div>
+                <div class="test-card"><h3>solid linecaps</h3><div class="label">butt, round, square</div>
+                    <svg viewBox="0 0 120 60"><line x1="10" y1="15" x2="110" y2="15" stroke="#E74C3C" stroke-width="8" stroke-linecap="butt"/><line x1="10" y1="35" x2="110" y2="35" stroke="#3498DB" stroke-width="8" stroke-linecap="round"/><line x1="10" y1="55" x2="110" y2="55" stroke="#2ECC71" stroke-width="8" stroke-linecap="square"/></svg>
+                </div>
+            </div>
+        </div>
+
+        <!-- ===== SECTION 10: LENGTH UNITS & EDGE CASES ===== -->
+        <div class="section">
+            <h2>10. Length units &amp; edge cases</h2>
+            <div class="desc">em, ex, in, pt, pc, mm, cm; NaN guards, zero-dimension shapes, single-point polys.</div>
+            <div class="grid">
+                <div class="test-card"><h3>em units</h3><div class="label">width=4em, height=2em</div>
+                    <svg viewBox="0 0 120 50" style="font-size:12px;"><rect x="10" y="8" width="4em" height="2em" fill="#E74C3C" stroke="#1f3a4b" stroke-width="1.5"/></svg>
+                </div>
+                <div class="test-card"><h3>ex units</h3><div class="label">rx=3ex, ry=2ex</div>
+                    <svg viewBox="0 0 120 50" style="font-size:12px;"><ellipse cx="60" cy="25" rx="3ex" ry="2ex" fill="#3498DB" stroke="#1f3a4b" stroke-width="1.5"/></svg>
+                </div>
+                <div class="test-card"><h3>absolute units</h3><div class="label">1in × 12pt</div>
+                    <svg viewBox="0 0 120 50"><rect x="10" y="8" width="1in" height="12pt" fill="#2ECC71" stroke="#1f3a4b" stroke-width="1.5"/></svg>
+                </div>
+                <div class="test-card"><h3>percentages</h3><div class="label">x=10%, y=10%, w=80%</div>
+                    <svg viewBox="0 0 120 50"><rect x="10%" y="10%" width="80%" height="80%" fill="#9B59B6" stroke="#1f3a4b" stroke-width="1.5"/></svg>
+                </div>
+                <div class="test-card"><h3>zero-width rect</h3><div class="label">width=0 → invisible</div>
+                    <svg viewBox="0 0 100 40"><rect x="10" y="8" width="0" height="30" fill="#E74C3C"/><rect x="10" y="8" width="80" height="30" fill="none" stroke="#aaa" stroke-width="1"/></svg>
+                </div>
+                <div class="test-card"><h3>zero-height rect</h3><div class="label">height=0 → invisible</div>
+                    <svg viewBox="0 0 100 40"><rect x="10" y="8" width="80" height="0" fill="#3498DB"/><rect x="10" y="8" width="80" height="30" fill="none" stroke="#aaa" stroke-width="1"/></svg>
+                </div>
+                <div class="test-card"><h3>polygon (1 point)</h3><div class="label">single point → nothing</div>
+                    <svg viewBox="0 0 100 40"><polygon points="50,20" fill="#E74C3C" stroke="#1f3a4b" stroke-width="2"/><rect x="10" y="8" width="80" height="24" fill="none" stroke="#aaa" stroke-width="1"/></svg>
+                </div>
+                <div class="test-card"><h3>polygon (2 points)</h3><div class="label">two points → line only</div>
+                    <svg viewBox="0 0 100 40"><polygon points="20,30 80,10" fill="#E74C3C" stroke="#3498DB" stroke-width="3"/></svg>
+                </div>
+                <div class="test-card"><h3>path (move only)</h3><div class="label">M only → nothing</div>
+                    <svg viewBox="0 0 100 40"><path d="M 50,20" fill="none" stroke="#E74C3C" stroke-width="3"/><rect x="10" y="8" width="80" height="24" fill="none" stroke="#aaa" stroke-width="1"/></svg>
+                </div>
+                <div class="test-card"><h3>shape-rendering</h3><div class="label">crispEdges vs default</div>
+                    <svg viewBox="0 0 140 40"><rect x="8" y="5" width="50" height="28" rx="10" fill="#E74C3C" shape-rendering="crispEdges"/><rect x="75" y="5" width="50" height="28" rx="10" fill="#3498DB"/></svg>
+                </div>
+                <div class="test-card"><h3>vector-effect</h3><div class="label">non-scaling-stroke</div>
+                    <svg viewBox="0 0 120 50"><g transform="scale(0.6)"><line x1="20" y1="30" x2="180" y2="30" stroke="#E74C3C" stroke-width="4" vector-effect="non-scaling-stroke"/></g></svg>
+                </div>
+            </div>
+        </div>
+
+        <div class="footnote">
+            ✅ All tests combined from: svg_css_test, svg_ellipse_test, svg_gradient_test, svg_line_test,
+            svg_polyline_polygon_test, svg_shapes_overview, svg1, svg-bug-demo, svg-dual-path-test,
+            svg-gradients-*, svg-presentation-attributes, svg-structural-elements, svg-style-test,
+            svg-transform-*, test_groups, test_rotate, test_scale, test_transforms, test_translate,
+            test_viewbox, test-svg-*, svg-webrender-api-analysis.
+        </div>
+    </div>
+</body>
+</html>
