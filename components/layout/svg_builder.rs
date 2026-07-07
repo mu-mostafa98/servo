@@ -9,7 +9,7 @@ use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 use html5ever::{LocalName, local_name};
-use layout_api::{LayoutElement, LayoutNode};
+use layout_api::{LayoutElement, LayoutNode, LayoutNodeType};
 use style::values::computed::basic_shape::ClipPath;
 use style::values::computed::svg::{SVGOpacity, SVGStrokeDashArray, SVGPaint, SVGPaintKind};
 use style::values::computed::svg::VectorEffect as StyloVectorEffect;
@@ -253,29 +253,289 @@ fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<String> {
     element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
 }
 
+// ======================= SVG Inline CSS Support =======================
+
+/// A simple mapping from class name to (property → value) parsed from
+/// `<style>` elements inside an SVG subtree. Only supports class selectors
+/// (`.foo { ... }`) with simple property:value declarations — exactly the
+/// pattern used in the SVG test suite and most inline-SVG demos.
+type CssClassRules = HashMap<String, HashMap<String, String>>;
+
+/// Collect CSS class rules from all `<style>` elements inside the SVG DOM subtree.
+/// Servo's CSS engine ordinarily processes only HTML-namespaced `<style>` elements;
+/// `<style>` inside `<svg>` is created in the SVG namespace and its rules never
+/// reach the stylesheet.  This function fills the gap for the SVG engine path.
+fn collect_svg_css_rules<'dom>(root_node: ServoLayoutNode<'dom>) -> CssClassRules {
+    let mut all_rules: CssClassRules = HashMap::new();
+    // Walk the subtree looking for <style> elements (any namespace).
+    let mut stack: Vec<ServoLayoutNode<'dom>> = vec![root_node];
+    while let Some(node) = stack.pop() {
+        if let Some(element) = node.as_element() {
+            if element.local_name().as_ref() == "style" {
+                if let Some(css_text) = extract_style_text_content(node) {
+                    let rules = parse_svg_class_rules(&css_text);
+                    for (cls, props) in rules {
+                        all_rules.entry(cls).or_default().extend(props);
+                    }
+                }
+            }
+        }
+        for child in node.dom_children() {
+            stack.push(child);
+        }
+    }
+    all_rules
+}
+
+/// Extract the raw CSS text content from a `<style>` DOM element.
+/// Iterates children to find Text nodes (the style element itself is
+/// an Element, so calling text_content() on it directly would panic).
+fn extract_style_text_content<'dom>(node: ServoLayoutNode<'dom>) -> Option<String> {
+    let mut text = String::new();
+    for child in node.dom_children() {
+        if let Some(LayoutNodeType::Text) = child.type_id() {
+            text.push_str(&child.text_content());
+        }
+    }
+    let trimmed = text.trim().to_string();
+    if trimmed.is_empty() { None } else { Some(trimmed) }
+}
+
+/// Parse simple CSS class rules like:
+///   `.fill-red { fill: #E74C3C; }`
+///   `.my-class { fill: red; stroke: blue; opacity: 0.5; }`
+///
+/// Returns a map from class name to (property → value).
+/// Only handles class selectors (`.name { ... }`). Other selectors are ignored.
+fn parse_svg_class_rules(css_text: &str) -> CssClassRules {
+    let mut rules: CssClassRules = HashMap::new();
+    // Split on `}` to get individual rule blocks, then process each.
+    for block in css_text.split('}') {
+        let block = block.trim();
+        if block.is_empty() { continue; }
+        // Split on the first `{` to get selector and declarations.
+        let mut parts = block.splitn(2, '{');
+        let selector = parts.next().unwrap_or("").trim();
+        let declarations = parts.next().unwrap_or("").trim();
+        if selector.is_empty() || declarations.is_empty() { continue; }
+        // Only handle class selectors: ".className"
+        if !selector.starts_with('.') { continue; }
+        let class_name = selector[1..].trim();
+        if class_name.is_empty() || class_name.contains(' ') { continue; }
+        let props = parse_svg_declarations(declarations);
+        rules.insert(class_name.to_owned(), props);
+    }
+    rules
+}
+
+/// Parse a CSS declaration block string like `"fill: #E74C3C; stroke: blue"`
+/// into a property→value map.
+fn parse_svg_declarations(block: &str) -> HashMap<String, String> {
+    let mut props = HashMap::new();
+    for decl in block.split(';') {
+        let decl = decl.trim();
+        if decl.is_empty() { continue; }
+        let mut parts = decl.splitn(2, ':');
+        let name = parts.next().unwrap_or("").trim().to_lowercase();
+        let value = parts.next().unwrap_or("").trim();
+        if name.is_empty() || value.is_empty() { continue; }
+        props.insert(name, value.to_owned());
+    }
+    props
+}
+
+/// Apply collected CSS class rules to a NodeStyle based on the element's `class` attribute.
+fn apply_css_class_rules(
+    element: &ServoLayoutElement,
+    css_rules: &CssClassRules,
+    style: &mut NodeStyle,
+) {
+    let Some(class_attr) = get_attr(element, "class") else { return };
+    for class_name in class_attr.split_whitespace() {
+        let Some(props) = css_rules.get(class_name) else { continue };
+        for (prop, value) in props {
+            apply_css_property(style, prop, value);
+        }
+    }
+}
+
+/// Apply a single CSS property:value pair to a NodeStyle.
+fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
+    match prop {
+        "fill" | "fill-color" => {
+            if let Some(ps) = PaintServer::from_attr(value) {
+                match ps {
+                    PaintServer::Solid(c) => {
+                        style.fill = Some(FillParams {
+                            color: Some(c),
+                            paint_server: None,
+                            opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(1.0),
+                            fill_rule: style.fill.as_ref().map(|f| f.fill_rule).unwrap_or(FillRule::NonZero),
+                        });
+                    },
+                    PaintServer::Gradient(id) => {
+                        style.fill = Some(FillParams {
+                            color: None,
+                            paint_server: Some(PaintServer::Gradient(id)),
+                            opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(1.0),
+                            fill_rule: style.fill.as_ref().map(|f| f.fill_rule).unwrap_or(FillRule::NonZero),
+                        });
+                    },
+                    PaintServer::Pattern(_) => {},
+                }
+            } else if value.eq_ignore_ascii_case("none") {
+                style.fill = None;
+            }
+        },
+        "fill-opacity" => {
+            if let Ok(op) = value.parse::<f32>() {
+                if let Some(ref mut fill) = style.fill {
+                    fill.opacity = op.clamp(0.0, 1.0);
+                }
+            }
+        },
+        "stroke" | "stroke-color" => {
+            if let Some(ps) = PaintServer::from_attr(value) {
+                match ps {
+                    PaintServer::Solid(c) => {
+                        style.stroke = Some(StrokeParams {
+                            color: Some(c),
+                            paint_server: None,
+                            opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(1.0),
+                            width: style.stroke.as_ref().map(|s| s.width).unwrap_or(1.0),
+                            line_cap: style.stroke.as_ref().map(|s| s.line_cap).unwrap_or(LineCap::Butt),
+                            line_join: style.stroke.as_ref().map(|s| s.line_join).unwrap_or(LineJoin::Miter),
+                            miter_limit: style.stroke.as_ref().map(|s| s.miter_limit).unwrap_or(4.0),
+                            dash_array: style.stroke.as_ref().and_then(|s| s.dash_array.clone()),
+                            dash_offset: style.stroke.as_ref().map(|s| s.dash_offset).unwrap_or(0.0),
+                        });
+                    },
+                    PaintServer::Gradient(id) => {
+                        style.stroke = Some(StrokeParams {
+                            color: None,
+                            paint_server: Some(PaintServer::Gradient(id)),
+                            opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(1.0),
+                            width: style.stroke.as_ref().map(|s| s.width).unwrap_or(1.0),
+                            line_cap: style.stroke.as_ref().map(|s| s.line_cap).unwrap_or(LineCap::Butt),
+                            line_join: style.stroke.as_ref().map(|s| s.line_join).unwrap_or(LineJoin::Miter),
+                            miter_limit: style.stroke.as_ref().map(|s| s.miter_limit).unwrap_or(4.0),
+                            dash_array: style.stroke.as_ref().and_then(|s| s.dash_array.clone()),
+                            dash_offset: style.stroke.as_ref().map(|s| s.dash_offset).unwrap_or(0.0),
+                        });
+                    },
+                    PaintServer::Pattern(_) => {},
+                }
+            } else if value.eq_ignore_ascii_case("none") {
+                style.stroke = None;
+            }
+        },
+        "stroke-width" => {
+            if let Ok(w) = value.trim_end_matches("px").parse::<f32>() {
+                if let Some(ref mut s) = style.stroke { s.width = w.max(0.0); }
+            }
+        },
+        "stroke-opacity" => {
+            if let Ok(op) = value.parse::<f32>() {
+                if let Some(ref mut s) = style.stroke { s.opacity = op.clamp(0.0, 1.0); }
+            }
+        },
+        "stroke-linecap" => {
+            let lc = match value {
+                "round" => LineCap::Round,
+                "square" => LineCap::Square,
+                _ => LineCap::Butt,
+            };
+            if let Some(ref mut s) = style.stroke { s.line_cap = lc; }
+        },
+        "stroke-linejoin" => {
+            let lj = match value {
+                "round" => LineJoin::Round,
+                "bevel" => LineJoin::Bevel,
+                _ => LineJoin::Miter,
+            };
+            if let Some(ref mut s) = style.stroke { s.line_join = lj; }
+        },
+        "stroke-dasharray" => {
+            if value != "none" {
+                let dashes: Vec<f32> = value.split(',')
+                    .filter_map(|v| v.trim().parse::<f32>().ok())
+                    .collect();
+                if !dashes.is_empty() {
+                    if let Some(ref mut s) = style.stroke { s.dash_array = Some(dashes); }
+                }
+            } else {
+                if let Some(ref mut s) = style.stroke { s.dash_array = None; }
+            }
+        },
+        "stroke-dashoffset" => {
+            if let Ok(off) = value.parse::<f32>() {
+                if let Some(ref mut s) = style.stroke { s.dash_offset = off; }
+            }
+        },
+        "opacity" => {
+            if let Ok(op) = value.parse::<f32>() {
+                style.opacity = op.clamp(0.0, 1.0);
+            }
+        },
+        "visibility" => {
+            style.visibility = match value {
+                "hidden" | "collapse" => Visibility::Hidden,
+                _ => Visibility::Visible,
+            };
+        },
+        _ => {},
+    }
+}
+
 // ======================= Style Construction =======================
 
 fn build_style(
     node: ServoLayoutNode,
     context: &LayoutContext,
+    css_rules: &CssClassRules,
 ) -> NodeStyle {
     let element = node.as_element().unwrap();
-    let style = match element.style_data() {
-        Some(_) => {
-            let computed = node.style(&context.style_context);
-            let mut s = NodeStyle::from_computed_values(&computed).unwrap_or_default();
-            // Read CSS 'transform' from computed style and merge with
-            // the SVG 'transform' attribute.  CSS comes first (applied
-            // before the attribute transform in the pipeline).
-            let css_ops = css_transform_from_computed(&computed);
-            let attr_ops = parse_transform_str(
-                &get_attr(&element, "transform").unwrap_or_default(),
-            );
-            s.transform = [css_ops, attr_ops].concat();
-            s
-        },
-        None => NodeStyle::default(),
-    };
+
+    // Get values from Servo's style system (handles CSS cascade, inheritance,
+    // and class selectors).  When style_data() is None (e.g. SVG child elements
+    // that never created a layout box), node.style() falls back to
+    // default_computed_values which supplies the SVG property defaults.
+    let computed = node.style(&context.style_context);
+    let mut style = NodeStyle::from_computed_values(&computed).unwrap_or_default();
+
+    // Read CSS 'transform' from computed style and merge with
+    // the SVG 'transform' attribute.  CSS comes first (applied
+    // before the attribute transform in the pipeline).
+    let css_ops = css_transform_from_computed(&computed);
+    let attr_ops = parse_transform_str(
+        &get_attr(&element, "transform").unwrap_or_default(),
+    );
+    style.transform = [css_ops, attr_ops].concat();
+
+    // Overlay presentation attributes onto the computed style.
+    // Presentation attributes (e.g. fill="red") take precedence over
+    // CSS cascade defaults but are overridden by inline style="" and
+    // CSS class rules that the style system resolved.
+    let attr_style = build_style_from_attrs(&element);
+    if attr_style.fill.is_some() {
+        style.fill = attr_style.fill;
+    }
+    if attr_style.stroke.is_some() {
+        style.stroke = attr_style.stroke;
+    }
+    match attr_style.visibility {
+        Visibility::Visible => {},
+        _ => style.visibility = attr_style.visibility,
+    }
+    if (attr_style.opacity - 1.0).abs() > f32::EPSILON {
+        style.opacity = attr_style.opacity;
+    }
+
+    // Apply CSS class rules from <style> elements inside the SVG subtree.
+    // Servo's CSS engine does not process SVG-namespaced <style> elements,
+    // so we handle common class selectors here as a fallback.
+    apply_css_class_rules(&element, css_rules, &mut style);
+
     style
 }
 
@@ -830,10 +1090,11 @@ fn build_svg_render_node<'dom>(
     context: &LayoutContext,
     root_node: ServoLayoutNode<'dom>,
     resolving: &mut HashSet<String>,
+    css_rules: &CssClassRules,
 ) -> Option<SvgRenderNode> {
     let element = node.as_element()?;
     let tag = build_tag(&element)?;
-    let style = build_style(node, context);
+    let style = build_style(node, context, css_rules);
     let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string());
 
     // Resolve children, handling <use> element references.
@@ -849,7 +1110,7 @@ fn build_svg_render_node<'dom>(
                 Some(ref_id) if !resolving.contains(&ref_id) => {
                     resolving.insert(ref_id.clone());
                     let result = find_element_by_id(root_node, &ref_id)
-                        .and_then(|target| build_svg_render_node(target, context, root_node, resolving))
+                        .and_then(|target| build_svg_render_node(target, context, root_node, resolving, css_rules))
                         .map(|target_node| target_node.children)
                         .unwrap_or_default();
                     resolving.remove(&ref_id);
@@ -860,7 +1121,7 @@ fn build_svg_render_node<'dom>(
         },
         _ => {
             node.dom_children()
-                .filter_map(|child| build_svg_render_node(child, context, root_node, resolving))
+                .filter_map(|child| build_svg_render_node(child, context, root_node, resolving, css_rules))
                 .collect()
         },
     };
@@ -899,7 +1160,10 @@ fn fixup_paint_servers(node: &mut SvgRenderNode, patterns: &HashMap<String, Patt
 
 /// Main entry point — builds a complete `SvgRenderTree` from an SVG DOM element.
 pub(crate) fn build_svg_render_tree<'dom>(node: ServoLayoutNode<'dom>, context: &LayoutContext) -> Option<Arc<SvgRenderTree>> {
-    let root = build_svg_render_node(node, context, node, &mut HashSet::new())?;
+    // Collect CSS class rules from <style> elements inside the SVG subtree
+    // before building the render tree, so build_style can apply them.
+    let css_rules = collect_svg_css_rules(node);
+    let root = build_svg_render_node(node, context, node, &mut HashSet::new(), &css_rules)?;
     let viewport = extract_viewport_info(node, context);
     let gradients = collect_gradients(node);
     let clip_paths = collect_clip_paths(node);

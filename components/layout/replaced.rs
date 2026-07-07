@@ -239,7 +239,7 @@ impl ReplacedContents {
                 NaturalSizes {
                     width: None,
                     height: None,
-                    ratio: None,
+                    ratio: svg_data.ratio_from_view_box(),
                 },
             );
         }
