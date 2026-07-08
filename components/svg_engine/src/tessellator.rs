@@ -210,6 +210,7 @@ fn scanline_fill_triangle(
             },
             FillStyle::LinearGradient { stops, gx1, gy1, gx2, gy2, opacity } => {
                 let mut cx = x_left;
+                let mut pending: Option<(ColorF, f32, f32)> = None; // (color, seg_start, seg_end)
                 while cx < x_right {
                     let cw = CELL.min(x_right - cx);
                     let rx = cx + cw / 2.0;
@@ -217,19 +218,30 @@ fn scanline_fill_triangle(
                     let t = gradient_projection(rx, ry, *gx1, *gy1, *gx2, *gy2);
                     let mut c = color_at_t(stops, t);
                     c.a *= opacity;
-                    let cell_rect = LayoutRect::from_origin_and_size(
-                        LayoutPoint::new(cx, yf), LayoutSize::new(cw, 1.0),
-                    );
-                    let common = CommonItemProperties::new(
-                        cell_rect,
-                        SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: ctx.clip_chain_id },
-                    );
-                    ctx.wr.push_rect(&common, cell_rect, c);
+
+                    match pending {
+                        Some((ref prev_c, ref mut seg_start, ref mut seg_end))
+                            if colors_nearly_equal(&c, prev_c) => {
+                            // Same color — extend current segment.
+                            *seg_end = cx + cw;
+                        },
+                        _ => {
+                            // Color changed — flush pending segment, start new one.
+                            if let Some((ref pc, ps, pe)) = pending.take() {
+                                emit_gradient_rect(ps, pe, yf, pc, ctx);
+                            }
+                            pending = Some((c, cx, cx + cw));
+                        },
+                    }
                     cx += CELL;
+                }
+                if let Some((ref c, start, end)) = pending {
+                    emit_gradient_rect(start, end, yf, c, ctx);
                 }
             },
             FillStyle::RadialGradient { stops, fx, fy, r2, opacity } => {
                 let mut cx = x_left;
+                let mut pending: Option<(ColorF, f32, f32)> = None;
                 while cx < x_right {
                     let cw = CELL.min(x_right - cx);
                     let rx = cx + cw / 2.0;
@@ -239,15 +251,23 @@ fn scanline_fill_triangle(
                     let t = dist_sq.sqrt().min(1.0);
                     let mut c = color_at_t(stops, t);
                     c.a *= opacity;
-                    let cell_rect = LayoutRect::from_origin_and_size(
-                        LayoutPoint::new(cx, yf), LayoutSize::new(cw, 1.0),
-                    );
-                    let common = CommonItemProperties::new(
-                        cell_rect,
-                        SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: ctx.clip_chain_id },
-                    );
-                    ctx.wr.push_rect(&common, cell_rect, c);
+
+                    match pending {
+                        Some((ref prev_c, ref mut seg_start, ref mut seg_end))
+                            if colors_nearly_equal(&c, prev_c) => {
+                            *seg_end = cx + cw;
+                        },
+                        _ => {
+                            if let Some((ref pc, ps, pe)) = pending.take() {
+                                emit_gradient_rect(ps, pe, yf, pc, ctx);
+                            }
+                            pending = Some((c, cx, cx + cw));
+                        },
+                    }
                     cx += CELL;
+                }
+                if let Some((ref c, start, end)) = pending {
+                    emit_gradient_rect(start, end, yf, c, ctx);
                 }
             },
             FillStyle::Pattern { shapes, tile_w, tile_h, ox, oy, opacity: _opacity } => {
@@ -325,6 +345,43 @@ fn sort_vertices_by_y(
         }
     });
     (pts[0], pts[1], pts[2])
+}
+
+// ======================= RLE Optimization Helpers =======================
+
+/// Epsilon for comparing two colors as "close enough to merge" in the RLE
+/// scanline optimization.  Prevents excessive `push_rect` calls when gradient
+/// colors barely change between adjacent 4px cells.
+const COLOR_MERGE_EPSILON: f32 = 1.0 / 256.0;
+
+/// Return `true` if two colors are close enough to merge into a single rect.
+fn colors_nearly_equal(a: &ColorF, b: &ColorF) -> bool {
+    (a.r - b.r).abs() <= COLOR_MERGE_EPSILON &&
+    (a.g - b.g).abs() <= COLOR_MERGE_EPSILON &&
+    (a.b - b.b).abs() <= COLOR_MERGE_EPSILON &&
+    (a.a - b.a).abs() <= COLOR_MERGE_EPSILON
+}
+
+/// Emit a single `push_rect` for a merged gradient segment (one or more
+/// adjacent cells with the same evaluated color).  Reduces WebRender
+/// draw-call count compared to emitting one rect per 4px cell.
+fn emit_gradient_rect(
+    x_start: f32,
+    x_end: f32,
+    y: f32,
+    color: &ColorF,
+    ctx: &mut RenderContext,
+) {
+    let w = x_end - x_start;
+    if w <= 0.0 { return; }
+    let rect = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(x_start, y), LayoutSize::new(w, 1.0),
+    );
+    let common = CommonItemProperties::new(
+        rect,
+        SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: ctx.clip_chain_id },
+    );
+    ctx.wr.push_rect(&common, rect, *color);
 }
 
 // ======================= Tests =======================

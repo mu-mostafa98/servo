@@ -6,7 +6,16 @@
 //!
 //! This module defines SVG geometric shape structs based on the SVG 2 specification.
 //! Each shape has its own file with its struct definition.
-//! Shape construction is handled by the integration layer in `components/layout/svg_builder.rs`.
+//!
+//! Shape construction is handled by the [`BuildFromElement`] trait, which provides
+//! a **Factory Method** pattern — each shape type knows how to construct itself
+//! from DOM attributes via the generic [`AttrAccessor`] trait.
+//!
+//! To build a shape from DOM data:
+//! ```ignore
+//! let rect = Rectangle::from_attrs(16.0, &element).unwrap();
+//! let shape = Shape::Rect(rect);
+//! ```
 
 use kurbo::ParamCurve;
 pub(crate) mod rectangle;
@@ -25,6 +34,7 @@ pub use self::line::Line;
 pub use self::polyline::Polyline;
 pub use self::polygon::Polygon;
 pub use self::path::Path;
+// AttrAccessor and BuildFromElement are defined in this module below.
 
 use webrender_api::{
     BorderRadius,
@@ -48,6 +58,59 @@ pub(crate) enum ClipGeometry {
     Polygon {
         bounds: LayoutRect,
     },
+}
+
+// ======================= Factory Method Pattern =======================
+
+/// A generic attribute accessor — abstracts over DOM element attribute access
+/// so that [`BuildFromElement`] can be implemented in pure Rust without
+/// depending on any specific DOM implementation.
+///
+/// # Testability
+///
+/// You can implement this trait on a simple test struct:
+/// ```rust
+/// use std::collections::HashMap;
+/// use svg_engine::shapes::AttrAccessor;
+///
+/// struct TestElement { attrs: HashMap<String, String> }
+/// impl AttrAccessor for TestElement {
+///     fn get_attr(&self, name: &str) -> Option<String> {
+///         self.attrs.get(name).cloned()
+///     }
+/// }
+/// ```
+pub trait AttrAccessor {
+    /// Return the value of attribute `name`, or `None` if missing.
+    fn get_attr(&self, name: &str) -> Option<String>;
+}
+
+// Implement AttrAccessor for closures — allows passing `|a| get_attr(elem, a)`
+// directly from layout integration code.
+impl<F> AttrAccessor for F
+where
+    F: Fn(&str) -> Option<String>,
+{
+    fn get_attr(&self, name: &str) -> Option<String> {
+        (self)(name)
+    }
+}
+
+/// **Factory Method** — each SVG shape type implements this trait to construct
+/// itself from DOM attributes.
+///
+/// The `font_size` parameter is used for resolving relative length units (em, ex).
+/// The `attrs` parameter provides attribute lookup, abstracted via [`AttrAccessor`]
+/// so the engine crate has no DOM dependency.
+///
+/// # Example
+///
+/// ```ignore
+/// let rect = Rectangle::from_attrs(16.0, &element).unwrap();
+/// ```
+pub trait BuildFromElement: Sized {
+    /// Construct this shape from DOM attributes.
+    fn from_attrs(font_size: f32, attrs: &impl AttrAccessor) -> Option<Self>;
 }
 
 /// An SVG geometric shape.
@@ -228,3 +291,6 @@ fn clip_info_path(
     );
     Some(ClipGeometry::Polygon { bounds })
 }
+
+#[cfg(test)]
+mod tests;

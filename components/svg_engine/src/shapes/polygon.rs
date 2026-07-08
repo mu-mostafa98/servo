@@ -9,3 +9,10 @@ use kurbo::Point;
 pub struct Polygon {
     pub points: Vec<Point>,
 }
+
+impl crate::shapes::BuildFromElement for Polygon {
+    fn from_attrs(_font_size: f32, attrs: &impl crate::shapes::AttrAccessor) -> Option<Self> {
+        use crate::shapes::attr_parsers::parse_points;
+        parse_points(&|a| attrs.get_attr(a)).ok().map(|pts| Polygon { points: pts })
+    }
+}

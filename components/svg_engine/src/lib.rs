@@ -28,6 +28,8 @@ pub mod shapes;
 pub mod style;
 pub mod render_tree;
 pub mod error;
+pub mod visitor;
+pub mod domelement;
 
 mod traversal;
 mod renderer;

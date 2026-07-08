@@ -99,6 +99,18 @@ pub enum SvgTag {
     Container(Container),
 }
 
+impl From<Shape> for SvgTag {
+    fn from(shape: Shape) -> Self {
+        SvgTag::Shape(shape)
+    }
+}
+
+impl From<Container> for SvgTag {
+    fn from(container: Container) -> Self {
+        SvgTag::Container(container)
+    }
+}
+
 #[derive(Debug)]
 pub enum Container {
     Group,
@@ -193,7 +205,7 @@ pub enum PatternContentUnits {
 }
 
 /// A pattern definition collected from `<pattern>`.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct PatternDef {
     pub width: f32,
     pub height: f32,
@@ -252,6 +264,73 @@ pub fn extract_viewbox(value: &str) -> Option<ViewBox> {
         width: vb.w as f32,
         height: vb.h as f32,
     })
+}
+
+// ======================= Visitor Pattern =======================
+
+/// Traversal decision for the visitor pattern.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum VisitDecision {
+    /// Continue traversal into children.
+    Continue,
+    /// Skip children but continue traversal at the parent's next sibling.
+    SkipChildren,
+    /// Stop all traversal entirely.
+    Stop,
+}
+
+/// Visitor for read-only operations on the render tree.
+pub trait SvgRenderTreeVisitor {
+    /// Called for each node. Return `VisitDecision` to control traversal.
+    fn visit_node(&mut self, node: &SvgRenderNode) -> VisitDecision;
+}
+
+/// Visitor for mutation operations on the render tree.
+pub trait SvgRenderTreeVisitorMut {
+    /// Called for each node with mutable access. Return `VisitDecision` to control traversal.
+    fn visit_node_mut(&mut self, node: &mut SvgRenderNode) -> VisitDecision;
+}
+
+impl SvgRenderNode {
+    /// Accept a read-only visitor, traversing the tree in pre-order.
+    pub fn accept(&self, visitor: &mut dyn SvgRenderTreeVisitor) {
+        let decision = visitor.visit_node(self);
+        match decision {
+            VisitDecision::Continue => {
+                for child in &self.children {
+                    child.accept(visitor);
+                }
+            },
+            VisitDecision::SkipChildren => {},
+            VisitDecision::Stop => return,
+        }
+    }
+
+    /// Accept a mutable visitor, traversing the tree in pre-order.
+    pub fn accept_mut(&mut self, visitor: &mut dyn SvgRenderTreeVisitorMut) {
+        let decision = visitor.visit_node_mut(self);
+        match decision {
+            VisitDecision::Continue => {
+                for child in &mut self.children {
+                    child.accept_mut(visitor);
+                }
+            },
+            VisitDecision::SkipChildren => {},
+            VisitDecision::Stop => return,
+        }
+    }
+}
+
+impl SvgRenderTree {
+    /// Visit every node in the tree with a read-only visitor.
+    pub fn visit(&self, visitor: &mut dyn SvgRenderTreeVisitor) {
+        self.root.accept(visitor);
+    }
+
+    /// Visit every node in the tree with a mutable visitor.
+    pub fn visit_mut(&mut self, visitor: &mut dyn SvgRenderTreeVisitorMut) {
+        self.root.accept_mut(visitor);
+    }
 }
 
 // ======================= Tests =======================
