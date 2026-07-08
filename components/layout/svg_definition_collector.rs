@@ -34,8 +34,8 @@ use super::svg_style_builder::{get_attr, build_style_from_attrs};
 pub(crate) trait DefinitionParser {
     /// The type of the parsed definition.
     type Definition;
-    /// The SVG tag name to search for (e.g., "linearGradient", "clipPath").
-    fn tag_name() -> &'static str;
+    /// The SVG tag names to search for (e.g. `{"linearGradient", "radialGradient"}`).
+    fn tag_names() -> &'static [&'static str];
     /// Parse a definition from a DOM element node. Returns `(id_attr_value, definition)`.
     fn parse(node: ServoLayoutNode, context: &LayoutContext) -> Option<(String, Self::Definition)>;
 }
@@ -55,8 +55,10 @@ impl DefinitionCollector {
         for defs_child in node.dom_children() {
             if let Some(defs_elem) = defs_child.as_element() {
                 if defs_elem.local_name() == &local_name!("defs") {
-                    // Deep-recursive search inside `<defs>` for the target tag.
-                    find_elements_by_tag(defs_child, T::tag_name(), &mut candidates);
+                    // Deep-recursive search inside `<defs>` for each target tag.
+                    for tag in T::tag_names() {
+                        find_elements_by_tag(defs_child, tag, &mut candidates);
+                    }
                 }
             }
         }
@@ -98,7 +100,7 @@ pub(crate) struct GradientParser;
 
 impl DefinitionParser for GradientParser {
     type Definition = GradientDef;
-    fn tag_name() -> &'static str { "linearGradient" } // actual search handles both types
+    fn tag_names() -> &'static [&'static str] { &["linearGradient", "radialGradient"] }
 
     fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
@@ -144,7 +146,7 @@ pub(crate) struct ClipPathParser;
 
 impl DefinitionParser for ClipPathParser {
     type Definition = ClipPathDef;
-    fn tag_name() -> &'static str { "clipPath" }
+    fn tag_names() -> &'static [&'static str] { &["clipPath"] }
 
     fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
@@ -178,7 +180,7 @@ pub(crate) struct PatternParser;
 
 impl DefinitionParser for PatternParser {
     type Definition = PatternDef;
-    fn tag_name() -> &'static str { "pattern" }
+    fn tag_names() -> &'static [&'static str] { &["pattern"] }
 
     fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
@@ -233,7 +235,7 @@ pub(crate) struct MaskParser;
 
 impl DefinitionParser for MaskParser {
     type Definition = MaskDef;
-    fn tag_name() -> &'static str { "mask" }
+    fn tag_names() -> &'static [&'static str] { &["mask"] }
 
     fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
@@ -262,7 +264,7 @@ pub(crate) struct FilterParser;
 
 impl DefinitionParser for FilterParser {
     type Definition = FilterDef;
-    fn tag_name() -> &'static str { "filter" }
+    fn tag_names() -> &'static [&'static str] { &["filter"] }
 
     fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
@@ -362,6 +364,18 @@ pub(crate) fn build_shape_core(element: &ServoLayoutElement, tag_name: &str) -> 
         "polygon" => Polygon::from_attrs(fs, &attrs).map(Shape::Polygon),
         "path" => Path::from_attrs(fs, &attrs).map(Shape::Path),
         _ => None,
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::GradientParser;
+
+    #[test]
+    fn gradient_parser_collects_both_linear_and_radial_tags() {
+        let tags = GradientParser::tag_names();
+        assert!(tags.contains(&"linearGradient"));
+        assert!(tags.contains(&"radialGradient"));
     }
 }
 
