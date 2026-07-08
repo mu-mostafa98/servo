@@ -128,7 +128,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
 
 // ======================= Tag Dispatch =======================
 
-fn build_tag(element: &ServoLayoutElement) -> Option<SvgTag> {
+fn build_tag<'dom>(element: &ServoLayoutElement<'dom>) -> Option<SvgTag> {
     let tag = element.local_name().as_ref();
     match tag {
         "svg" => Some(SvgTag::Container(Container::Svg)),
