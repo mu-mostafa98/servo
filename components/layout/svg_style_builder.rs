@@ -678,6 +678,16 @@ pub(crate) fn build_style(
     apply_stroke_presentation_attrs(&element, &mut style);
     apply_fill_presentation_attrs(&element, &mut style);
 
+    // Read `display` presentation attribute (SVG display="none" maps to
+    // CSS display: none, hiding the element and all its children).
+    let display_attr = get_attr(&element, "display")
+        .or_else(|| get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "display")));
+    if let Some(v) = display_attr {
+        if v.trim().eq_ignore_ascii_case("none") {
+            style.display = Display::None;
+        }
+    }
+
     let vis_attr = get_attr(&element, "visibility")
         .or_else(|| get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility")));
     if let Some(v) = vis_attr {
@@ -815,6 +825,15 @@ pub(crate) fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle 
 
     apply_stroke_presentation_attrs(element, &mut style);
     apply_fill_presentation_attrs(element, &mut style);
+
+    // Read `display` presentation attribute.
+    let display_attr = get_attr(element, "display")
+        .or_else(|| get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "display")));
+    if let Some(v) = display_attr {
+        if v.trim().eq_ignore_ascii_case("none") {
+            style.display = Display::None;
+        }
+    }
 
     style
 }
