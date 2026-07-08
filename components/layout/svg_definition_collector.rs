@@ -282,15 +282,20 @@ impl DefinitionParser for FilterParser {
         for prim_child in node.dom_children() {
             if let Some(prim_elem) = prim_child.as_element() {
                 let pname = prim_elem.local_name().as_ref().to_owned();
+                // Read primitive-specific attributes from the child element, not the <filter> parent.
+                let prim_get = |attr: &str| prim_elem.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string());
+                let prim_get_float = |attr: &str, default: f32| -> f32 {
+                    prim_get(attr).and_then(|v| v.parse::<f32>().ok()).unwrap_or(default)
+                };
                 match pname.as_str() {
                     "feGaussianBlur" => {
-                        let std_dev = get_float("stdDeviation", 0.0);
+                        let std_dev = prim_get_float("stdDeviation", 0.0);
                         primitives.push(FilterPrimitive::GaussianBlur(std_dev, std_dev));
                     },
                     "feDropShadow" => {
-                        let dx = get_float("dx", 2.0);
-                        let dy = get_float("dy", 2.0);
-                        let std_dev = get_float("stdDeviation", 2.0);
+                        let dx = prim_get_float("dx", 2.0);
+                        let dy = prim_get_float("dy", 2.0);
+                        let std_dev = prim_get_float("stdDeviation", 2.0);
                         primitives.push(FilterPrimitive::DropShadow(dx, dy, std_dev, 0.0, 0.0, 0.0, 0.5));
                     },
                     "feColorMatrix" => {
