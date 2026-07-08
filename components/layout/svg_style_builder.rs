@@ -470,6 +470,184 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
     }
 }
 
+// ======================= Field-level Presentation Attribute Merge =======================
+
+/// Apply stroke-related SVG presentation attributes to an existing style,
+/// field by field.  Only overrides fields where the corresponding attribute
+/// exists on the element — computed values for absent attributes are preserved.
+fn apply_stroke_presentation_attrs(
+    element: &ServoLayoutElement,
+    style: &mut NodeStyle,
+) {
+    let style_attr = get_attr(element, "style");
+
+    let read_attr = |name: &str| -> Option<String> {
+        get_attr(element, name).or_else(|| {
+            style_attr.as_ref().and_then(|s| parse_inline_style_prop(s, name))
+        })
+    };
+
+    // Resolve color/paint-server first (this determines if stroke exists at all).
+    let stroke_color_or_server = read_attr("stroke");
+    if stroke_color_or_server.is_none() {
+        // No stroke attribute — skip.  Computed style's stroke is untouched.
+        return;
+    }
+    let stroke_value = stroke_color_or_server.unwrap();
+    if stroke_value.eq_ignore_ascii_case("none") {
+        style.stroke = None;
+        return;
+    }
+
+    // Ensure we have a StrokeParams to modify (take computed or create fresh).
+    let stroke = style.stroke.get_or_insert_with(|| StrokeParams {
+        color: None,
+        paint_server: None,
+        opacity: 1.0,
+        width: 1.0,
+        line_cap: LineCap::Butt,
+        line_join: LineJoin::Miter,
+        miter_limit: 4.0,
+        dash_array: None,
+        dash_offset: 0.0,
+    });
+
+    // Apply color/paint-server
+    match PaintServer::from_attr(&stroke_value) {
+        Some(PaintServer::Solid(c)) => {
+            stroke.color = Some(c);
+            stroke.paint_server = None;
+        },
+        Some(PaintServer::Gradient(id)) => {
+            stroke.color = None;
+            stroke.paint_server = Some(PaintServer::Gradient(id));
+        },
+        Some(PaintServer::Pattern(_)) => {
+            stroke.color = None;
+            stroke.paint_server = None;
+        },
+        None => {
+            // Unparseable — keep existing color/server, treat as "none" color
+            stroke.color = None;
+            stroke.paint_server = None;
+        },
+    }
+
+    // stroke-width
+    if let Some(v) = read_attr("stroke-width") {
+        stroke.width = v.trim_end_matches("px").parse::<f32>().unwrap_or(1.0).max(0.0);
+    }
+
+    // stroke-opacity
+    if let Some(v) = read_attr("stroke-opacity") {
+        stroke.opacity = v.parse::<f32>().unwrap_or(1.0).clamp(0.0, 1.0);
+    }
+
+    // stroke-linecap
+    if let Some(v) = read_attr("stroke-linecap") {
+        stroke.line_cap = match v.trim() {
+            "round" => LineCap::Round,
+            "square" => LineCap::Square,
+            _ => LineCap::Butt,
+        };
+    }
+
+    // stroke-linejoin
+    if let Some(v) = read_attr("stroke-linejoin") {
+        stroke.line_join = match v.trim() {
+            "round" => LineJoin::Round,
+            "bevel" => LineJoin::Bevel,
+            _ => LineJoin::Miter,
+        };
+    }
+
+    // stroke-miterlimit
+    if let Some(v) = read_attr("stroke-miterlimit") {
+        if let Ok(ml) = v.parse::<f32>() {
+            stroke.miter_limit = ml;
+        }
+    }
+
+    // stroke-dasharray
+    if let Some(v) = read_attr("stroke-dasharray") {
+        if v.eq_ignore_ascii_case("none") {
+            stroke.dash_array = None;
+        } else {
+            let dashes: Vec<f32> = v.split(|c| c == ',' || c == ' ')
+                .filter_map(|s| { let t = s.trim(); if t.is_empty() { None } else { t.parse::<f32>().ok() } })
+                .collect();
+            stroke.dash_array = if dashes.is_empty() { None } else { Some(dashes) };
+        }
+    }
+
+    // stroke-dashoffset
+    if let Some(v) = read_attr("stroke-dashoffset") {
+        stroke.dash_offset = v.trim_end_matches("px").parse::<f32>().unwrap_or(0.0);
+    }
+}
+
+/// Apply fill-related SVG presentation attributes to an existing style,
+/// field by field.
+fn apply_fill_presentation_attrs(
+    element: &ServoLayoutElement,
+    style: &mut NodeStyle,
+) {
+    let style_attr = get_attr(element, "style");
+
+    let read_attr = |name: &str| -> Option<String> {
+        get_attr(element, name).or_else(|| {
+            style_attr.as_ref().and_then(|s| parse_inline_style_prop(s, name))
+        })
+    };
+
+    let fill_value = read_attr("fill");
+    if fill_value.is_none() {
+        return; // No fill attribute — computed style untouched.
+    }
+    let fill_value = fill_value.unwrap();
+    if fill_value.eq_ignore_ascii_case("none") {
+        style.fill = None;
+        return;
+    }
+
+    let fill = style.fill.get_or_insert_with(|| FillParams {
+        color: None,
+        paint_server: None,
+        opacity: 1.0,
+        fill_rule: FillRule::NonZero,
+    });
+
+    match PaintServer::from_attr(&fill_value) {
+        Some(PaintServer::Solid(c)) => {
+            fill.color = Some(c);
+            fill.paint_server = None;
+        },
+        Some(PaintServer::Gradient(id)) => {
+            fill.color = None;
+            fill.paint_server = Some(PaintServer::Gradient(id));
+        },
+        Some(PaintServer::Pattern(id)) => {
+            fill.color = None;
+            fill.paint_server = Some(PaintServer::Pattern(id));
+        },
+        None => {
+            fill.color = None;
+            fill.paint_server = None;
+        },
+    }
+
+    if let Some(v) = read_attr("fill-opacity") {
+        fill.opacity = v.parse::<f32>().unwrap_or(1.0).clamp(0.0, 1.0);
+    }
+
+    if let Some(v) = read_attr("fill-rule") {
+        fill.fill_rule = match v.trim() {
+            "evenodd" | "even-odd" => FillRule::EvenOdd,
+            _ => FillRule::NonZero,
+        };
+    }
+}
+
 // ======================= Style Construction =======================
 
 pub(crate) fn build_style(
@@ -493,19 +671,28 @@ pub(crate) fn build_style(
     );
     style.transform = [css_transform, attr_ops].concat();
 
-    let attr_style = build_style_from_attrs(&element);
-    if attr_style.fill.is_some() {
-        style.fill = attr_style.fill;
+    // Apply SVG presentation attributes field-by-field into the style.
+    // This merges into whatever the computed style resolved, rather than
+    // replacing entire sub-structs — so computed values for attributes that
+    // aren't explicitly set as DOM attributes are preserved.
+    apply_stroke_presentation_attrs(&element, &mut style);
+    apply_fill_presentation_attrs(&element, &mut style);
+
+    let vis_attr = get_attr(&element, "visibility")
+        .or_else(|| get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility")));
+    if let Some(v) = vis_attr {
+        match v.trim() {
+            "hidden" | "collapse" => style.visibility = Visibility::Hidden,
+            _ => {},
+        }
     }
-    if attr_style.stroke.is_some() {
-        style.stroke = attr_style.stroke;
-    }
-    match attr_style.visibility {
-        Visibility::Visible => {},
-        _ => style.visibility = attr_style.visibility,
-    }
-    if (attr_style.opacity - 1.0).abs() > f32::EPSILON {
-        style.opacity = attr_style.opacity;
+
+    let opacity_attr = get_attr(&element, "opacity")
+        .or_else(|| get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "opacity")));
+    if let Some(v) = opacity_attr {
+        if let Ok(op) = v.parse::<f32>() {
+            style.opacity = op.clamp(0.0, 1.0);
+        }
     }
 
     apply_css_class_rules(&element, css_rules, &mut style);
@@ -603,99 +790,31 @@ fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Option<String>
 }
 
 /// Build a NodeStyle by parsing SVG presentation attributes directly from the DOM.
+/// Used for elements inside `<pattern>` and `<mask>` where the computed style may
+/// not be available. Delegates to the field-level merge functions so all attributes
+/// (including stroke-dasharray, stroke-linecap, etc.) are handled consistently.
 pub(crate) fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle {
-    let style_attr = get_attr(element, "style");
+    let mut style = NodeStyle::default();
 
-    let read_attr = |name: &str| -> Option<String> {
-        get_attr(element, name).or_else(|| {
-            style_attr.as_ref().and_then(|s| parse_inline_style_prop(s, name))
-        })
-    };
-
-    let fill_attr = read_attr("fill");
-    let stroke_attr = read_attr("stroke");
-    let fill_opacity = read_attr("fill-opacity")
-        .and_then(|v| v.parse::<f32>().ok())
-        .unwrap_or(1.0);
-    let stroke_opacity = read_attr("stroke-opacity")
-        .and_then(|v| v.parse::<f32>().ok())
-        .unwrap_or(1.0);
-    let stroke_width = read_attr("stroke-width")
-        .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
-        .unwrap_or(1.0);
-
-    let fill = match fill_attr {
-        Some(v) => {
-            let ps = PaintServer::from_attr(&v);
-            match ps {
-                Some(PaintServer::Solid(c)) => Some(FillParams {
-                    color: Some(c),
-                    paint_server: None,
-                    opacity: fill_opacity,
-                    fill_rule: FillRule::NonZero,
-                }),
-                Some(PaintServer::Gradient(id)) => Some(FillParams {
-                    color: None,
-                    paint_server: Some(PaintServer::Gradient(id)),
-                    opacity: fill_opacity,
-                    fill_rule: FillRule::NonZero,
-                }),
-                Some(PaintServer::Pattern(_)) => None,
-                None => {
-                    Some(FillParams {
-                        color: None,
-                        paint_server: None,
-                        opacity: fill_opacity,
-                        fill_rule: FillRule::NonZero,
-                    })
-                },
-            }
-        },
-        None => None,
-    };
-
-    let stroke = stroke_attr.and_then(|v| {
-        let ps = PaintServer::from_attr(&v);
-        match ps {
-            Some(PaintServer::Solid(c)) => Some(StrokeParams {
-                color: Some(c),
-                paint_server: None,
-                opacity: stroke_opacity,
-                width: stroke_width,
-                line_cap: LineCap::Butt,
-                line_join: LineJoin::Miter,
-                miter_limit: 4.0,
-                dash_array: None,
-                dash_offset: 0.0,
-            }),
-            Some(PaintServer::Gradient(id)) => Some(StrokeParams {
-                color: None,
-                paint_server: Some(PaintServer::Gradient(id)),
-                opacity: stroke_opacity,
-                width: stroke_width,
-                line_cap: LineCap::Butt,
-                line_join: LineJoin::Miter,
-                miter_limit: 4.0,
-                dash_array: None,
-                dash_offset: 0.0,
-            }),
-            Some(PaintServer::Pattern(_)) | None => None,
+    let vis_attr = get_attr(element, "visibility")
+        .or_else(|| get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility")));
+    if let Some(v) = vis_attr {
+        match v.trim() {
+            "hidden" | "collapse" => style.visibility = Visibility::Hidden,
+            _ => {},
         }
-    });
-
-    let svg_visibility = read_attr("visibility").map_or(Visibility::Visible, |v| match v.trim() {
-        "hidden" | "collapse" => Visibility::Hidden,
-        _ => Visibility::Visible,
-    });
-
-    NodeStyle {
-        visibility: svg_visibility,
-        display: Display::Inline,
-        transform: Vec::new(),
-        fill,
-        stroke,
-        render_hints: None,
-        effects: None,
-        opacity: 1.0,
     }
+
+    let opacity_attr = get_attr(element, "opacity")
+        .or_else(|| get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "opacity")));
+    if let Some(v) = opacity_attr {
+        if let Ok(op) = v.parse::<f32>() {
+            style.opacity = op.clamp(0.0, 1.0);
+        }
+    }
+
+    apply_stroke_presentation_attrs(element, &mut style);
+    apply_fill_presentation_attrs(element, &mut style);
+
+    style
 }
