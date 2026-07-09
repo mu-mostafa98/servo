@@ -22,11 +22,11 @@ use web_atoms::ns;
 
 use crate::context::LayoutContext;
 
-use super::svg_style_builder::{
+use super::style::{
     collect_svg_css_rules,
     build_style,
 };
-use super::svg_definition_collector::{
+use super::collects::{
     DefinitionCollector,
     GradientParser, ClipPathParser, PatternParser, MaskParser, FilterParser,
     build_shape_core,

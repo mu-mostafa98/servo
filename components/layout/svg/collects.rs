@@ -24,7 +24,7 @@ use web_atoms::ns;
 
 use crate::context::LayoutContext;
 
-use super::svg_style_builder::{get_attr, build_style_from_attrs};
+use super::style::{get_attr, build_style_from_attrs};
 
 // ======================= Strategy Pattern =======================
 

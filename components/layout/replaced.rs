@@ -337,7 +337,7 @@ impl ReplacedContents {
         node: ServoLayoutNode<'_>,
         context: &LayoutContext,
     ) -> Option<Arc<SvgRenderTree>> {
-        crate::svg_builder::build_svg_render_tree(node, context)
+        crate::svg::build_svg_render_tree(node, context)
     }
 
     fn from_content_property(node: ServoLayoutNode<'_>, context: &LayoutContext) -> Option<Self> {
