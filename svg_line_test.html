@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>SVG Line Test</title>
+    <style>
+        body { font-family: sans-serif; margin: 20px; }
+        .section { margin-bottom: 30px; }
+        .section h2 { font-size: 16px; margin-bottom: 8px; }
+        svg { border: 1px solid #ccc; margin-right: 20px; margin-bottom: 20px; }
+
+        .s-black-2  { stroke: black; stroke-width: 2; }
+        .s-black-1  { stroke: black; stroke-width: 1; }
+        .s-black-4  { stroke: black; stroke-width: 4; }
+        .s-black-8  { stroke: black; stroke-width: 8; }
+        .s-red-3    { stroke: red; stroke-width: 3; }
+        .s-green-3  { stroke: green; stroke-width: 3; }
+        .s-blue-3   { stroke: blue; stroke-width: 3; }
+        .s-purple-3 { stroke: purple; stroke-width: 3; }
+        .s-red-8    { stroke: red; stroke-width: 8; }
+        .s-gray-1   { stroke: #333; stroke-width: 1; }
+        .s-red-2    { stroke: red; stroke-width: 2; }
+        .s-green-4  { stroke: green; stroke-width: 4; }
+        .s-blue-6   { stroke: blue; stroke-width: 6; }
+        .s-red-4    { stroke: red; stroke-width: 4; }
+        .s-blue-4   { stroke: blue; stroke-width: 4; }
+
+        .o-10 { stroke-opacity: 1.0; }
+        .o-06 { stroke-opacity: 0.6; }
+        .o-03 { stroke-opacity: 0.3; }
+        .o-01 { stroke-opacity: 0.1; }
+        .o-05 { stroke-opacity: 0.5; }
+
+        /* Dash pattern test classes */
+        .dash-a { stroke-dasharray: 4, 2; }
+        .dash-b { stroke-dasharray: 6, 4; }
+        .dash-c { stroke-dasharray: 12, 6; }
+        .dash-d { stroke-dasharray: 6; }
+        .dash-e { stroke-dasharray: 4, 12; }
+        .dash-f { stroke-dasharray: 8, 4, 2, 4; }
+        .dash-g { stroke-dasharray: 6, 4; stroke-dashoffset: 3; }
+    </style>
+</head>
+<body>
+    <h1>SVG &lt;line&gt; Element Test</h1>
+
+    <div class="section">
+        <h2>Axis-aligned lines</h2>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="20" y1="50" x2="180" y2="50"/>
+        </svg>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="100" y1="20" x2="100" y2="80"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Angled lines</h2>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="10" y1="90" x2="190" y2="10"/>
+        </svg>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="10" y1="10" x2="190" y2="90"/>
+        </svg>
+        <svg width="200" height="100">
+            <line class="s-black-2" x1="10" y1="10" x2="190" y2="50"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Varying stroke widths</h2>
+        <svg width="300" height="120">
+            <line class="s-black-1" x1="20" y1="30" x2="280" y2="30"/>
+            <line class="s-black-2" x1="20" y1="50" x2="280" y2="50"/>
+            <line class="s-black-4" x1="20" y1="70" x2="280" y2="70"/>
+            <line class="s-black-8" x1="20" y1="95" x2="280" y2="95"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Stroke colors</h2>
+        <svg width="300" height="120">
+            <line class="s-red-3" x1="20" y1="30" x2="280" y2="30"/>
+            <line class="s-green-3" x1="20" y1="55" x2="280" y2="55"/>
+            <line class="s-blue-3" x1="20" y1="80" x2="280" y2="80"/>
+            <line class="s-purple-3" x1="20" y1="105" x2="280" y2="105"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Stroke opacity</h2>
+        <svg width="300" height="120">
+            <line class="s-red-8 o-10" x1="20" y1="30" x2="280" y2="30"/>
+            <line class="s-red-8 o-06" x1="20" y1="55" x2="280" y2="55"/>
+            <line class="s-red-8 o-03" x1="20" y1="80" x2="280" y2="80"/>
+            <line class="s-red-8 o-01" x1="20" y1="105" x2="280" y2="105"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Grid pattern</h2>
+        <svg width="200" height="200">
+            <line class="s-gray-1" x1="20" y1="20" x2="180" y2="20"/>
+            <line class="s-gray-1" x1="20" y1="60" x2="180" y2="60"/>
+            <line class="s-gray-1" x1="20" y1="100" x2="180" y2="100"/>
+            <line class="s-gray-1" x1="20" y1="140" x2="180" y2="140"/>
+            <line class="s-gray-1" x1="20" y1="180" x2="180" y2="180"/>
+            <line class="s-gray-1" x1="20" y1="20" x2="20" y2="180"/>
+            <line class="s-gray-1" x1="60" y1="20" x2="60" y2="180"/>
+            <line class="s-gray-1" x1="100" y1="20" x2="100" y2="180"/>
+            <line class="s-gray-1" x1="140" y1="20" x2="140" y2="180"/>
+            <line class="s-gray-1" x1="180" y1="20" x2="180" y2="180"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Dashed lines — varying dash patterns</h2>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-a" x1="20" y1="30" x2="380" y2="30"/>
+            <text x="20" y="55" font-size="11" fill="#666">dasharray: 4,2</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-b" x1="20" y1="30" x2="380" y2="30"/>
+            <text x="20" y="55" font-size="11" fill="#666">dasharray: 6,4</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-c" x1="20" y1="30" x2="380" y2="30"/>
+            <text x="20" y="55" font-size="11" fill="#666">dasharray: 12,6</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-d" x1="20" y1="30" x2="380" y2="30"/>
+            <text x="20" y="55" font-size="11" fill="#666">dasharray: 6 (single value, alternating)</text>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Dashed lines — offset &amp; long gap</h2>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-b" x1="20" y1="30" x2="380" y2="30"/>
+            <text x="20" y="55" font-size="11" fill="#666">dasharray: 6,4 (no offset)</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-g" x1="20" y1="30" x2="380" y2="30"/>
+            <text x="20" y="55" font-size="11" fill="#666">dasharray: 6,4 | offset: 3</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-e" x1="20" y1="30" x2="380" y2="30"/>
+            <text x="20" y="55" font-size="11" fill="#666">dasharray: 4,12 (long gap)</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-f" x1="20" y1="30" x2="380" y2="30"/>
+            <text x="20" y="55" font-size="11" fill="#666">dasharray: 8,4,2,4 (complex)</text>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Dashed angled lines</h2>
+        <svg width="300" height="100">
+            <line class="s-black-4 dash-a" x1="20" y1="80" x2="280" y2="20"/>
+        </svg>
+        <svg width="300" height="100">
+            <line class="s-black-4 dash-b" x1="20" y1="80" x2="280" y2="20"/>
+        </svg>
+        <svg width="300" height="100">
+            <line class="s-black-4 dash-c" x1="20" y1="80" x2="280" y2="20"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Dashed polylines (via stroke-dasharray)</h2>
+        <svg width="300" height="120">
+            <polyline class="s-red-4 dash-a" fill="none" points="20,90 80,20 150,90 220,20 280,90"/>
+        </svg>
+        <svg width="300" height="120">
+            <polyline class="s-blue-4 dash-b" fill="none" points="20,90 80,20 150,90 220,20 280,90"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Gradient stroke with dashes</h2>
+        <svg width="400" height="60">
+            <defs>
+                <linearGradient id="gradDash" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="red"/>
+                    <stop offset="50%" stop-color="yellow"/>
+                    <stop offset="100%" stop-color="blue"/>
+                </linearGradient>
+            </defs>
+            <line stroke="url(#gradDash)" stroke-width="6" stroke-dasharray="8,4" x1="20" y1="30" x2="380" y2="30"/>
+        </svg>
+    </div>
+        <svg width="300" height="200">
+            <line class="s-black-1" x1="30" y1="170" x2="270" y2="30"/>
+            <line class="s-red-2" x1="40" y1="170" x2="270" y2="40"/>
+            <line class="s-green-4" x1="55" y1="170" x2="270" y2="55"/>
+            <line class="s-blue-6" x1="80" y1="170" x2="270" y2="80"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Fill vs stroke (line has no fill)</h2>
+        <svg width="200" height="100">
+            <line class="s-black-4 o-05" x1="20" y1="50" x2="180" y2="50"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Line caps — solid strokes</h2>
+        <svg width="400" height="100">
+            <line class="s-black-4" stroke-linecap="butt" x1="30" y1="30" x2="370" y2="30"/>
+            <text x="30" y="55" font-size="11" fill="#666">butt (default)</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4" stroke-linecap="square" x1="30" y1="30" x2="370" y2="30"/>
+            <text x="30" y="55" font-size="11" fill="#666">square (extends past endpoints)</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4" stroke-linecap="round" x1="30" y1="30" x2="370" y2="30"/>
+            <text x="30" y="55" font-size="11" fill="#666">round (semicircular ends)</text>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Line caps — dashed strokes</h2>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-b" stroke-linecap="butt" x1="30" y1="30" x2="370" y2="30"/>
+            <text x="30" y="55" font-size="11" fill="#666">butt + dasharray: 6,4</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-b" stroke-linecap="square" x1="30" y1="30" x2="370" y2="30"/>
+            <text x="30" y="55" font-size="11" fill="#666">square + dasharray: 6,4</text>
+        </svg>
+        <svg width="400" height="100">
+            <line class="s-black-4 dash-b" stroke-linecap="round" x1="30" y1="30" x2="370" y2="30"/>
+            <text x="30" y="55" font-size="11" fill="#666">round + dasharray: 6,4</text>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Line caps — thick dashes for visibility</h2>
+        <svg width="400" height="100">
+            <line stroke="red" stroke-width="12" stroke-dasharray="2,8" stroke-linecap="butt" x1="30" y1="30" x2="370" y2="30"/>
+            <text x="30" y="60" font-size="11" fill="#666">butt (dash=2, gap=8, w=12)</text>
+        </svg>
+        <svg width="400" height="100">
+            <line stroke="red" stroke-width="12" stroke-dasharray="2,8" stroke-linecap="round" x1="30" y1="30" x2="370" y2="30"/>
+            <text x="30" y="60" font-size="11" fill="#666">round (each dash has round ends)</text>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Line caps — polylines</h2>
+        <svg width="300" height="120">
+            <polyline stroke="red" stroke-width="8" fill="none" stroke-linecap="round" points="20,90 80,20 150,90 220,20 280,90"/>
+        </svg>
+        <svg width="300" height="120">
+            <polyline stroke="blue" stroke-width="8" fill="none" stroke-linecap="square" points="20,90 80,20 150,90 220,20 280,90"/>
+        </svg>
+    </div>
+
+    <div class="section">
+        <h2>Line caps — gradient strokes</h2>
+        <svg width="400" height="100">
+            <defs>
+                <linearGradient id="capGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" stop-color="red"/>
+                    <stop offset="50%" stop-color="yellow"/>
+                    <stop offset="100%" stop-color="blue"/>
+                </linearGradient>
+            </defs>
+            <line stroke="url(#capGrad)" stroke-width="8" stroke-dasharray="12,6" x1="30" y1="40" x2="370" y2="40"/>
+        </svg>
+    </div>
+</body>
+</html>

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head><style>
+  body { background: #1a1a2e; display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; font-family: sans-serif; color: white; }
+  .card { background: #16213e; border-radius: 12px; padding: 16px; text-align: center; width: 260px; }
+  svg { background: #0f3460; border-radius: 8px; display: block; margin: 0 auto; }
+  h3 { margin: 8px 0 4px; font-size: 14px; }
+  .pass { color: #4ade80; }
+  .fail { color: #f87171; }
+  p { margin: 0; font-size: 11px; color: #aaa; }
+</style></head>
+<body>
+
+  <!-- 1. Simple explicit attributes — BOTH paths work -->
+  <div class="card">
+    <h3>1. Explicit attrs ✅ Both work</h3>
+    <svg width="200" height="200">
+      <circle cx="100" cy="100" r="80" fill="#e94560"/>
+    </svg>
+    <p class="pass">FromComputedValues: cx=100, cy=100, r=80 ✅</p>
+    <p class="pass">get_attr: cx="100", cy="100", r="80" ✅</p>
+  </div>
+
+  <!-- 2. Child rect inside <g> (no explicit computed style for width/height via position struct) -->
+  <div class="card">
+    <h3>2. Child rect in &lt;g&gt; ⚠️</h3>
+    <svg width="200" height="200">
+      <g fill="#533483">
+        <rect x="20" y="30" width="160" height="140" rx="20"/>
+      </g>
+    </svg>
+    <p class="pass">get_attr: width="160" ✅</p>
+    <p class="fail">FromComputedValues: pos.width = Auto ❌</p>
+  </div>
+
+  <!-- 3. Rect without rx/ry → rx/ry default to Auto in stylo -->
+  <div class="card">
+    <h3>3. Rect without rx/ry ⚠️</h3>
+    <svg width="200" height="200">
+      <rect x="20" y="30" width="160" height="140" fill="#0f3460" stroke="#e94560" stroke-width="3"/>
+    </svg>
+    <p class="pass">get_attr: ry=None (optional) ✅</p>
+    <p class="fail">FromComputedValues: ry = Auto ❌</p>
+  </div>
+
+  <!-- 4. CSS override test — FromComputedValues should WIN -->
+  <div class="card">
+    <h3>4. CSS override 🎯 FromCV wins</h3>
+    <svg width="200" height="200">
+      <rect x="100" y="100" width="200" height="200" fill="#e94560" style="x: 10px; y: 10px; width: 180px; height: 180px;"/>
+    </svg>
+    <p class="pass">FromComputedValues: x=10, y=10 (CSS wins) ✅</p>
+    <p class="fail">get_attr: x=100, y=100 (wrong!) ❌</p>
+  </div>
+
+  <!-- 5. Nested SVG — width/height on SVG root element -->
+  <div class="card">
+    <h3>5. Nested &lt;svg&gt; ✅</h3>
+    <svg width="200" height="200" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="45" fill="#533483"/>
+    </svg>
+    <p>viewBox scaling — needs get_attr for viewBox</p>
+  </div>
+
+  <!-- 6. Ellipse with explicit attributes -->
+  <div class="card">
+    <h3>6. Ellipse explicit ✅</h3>
+    <svg width="200" height="200">
+      <ellipse cx="100" cy="100" rx="90" ry="50" fill="#e94560"/>
+    </svg>
+    <p>FromComputedValues + get_attr both work</p>
+  </div>
+
+  <!-- 7. Percentage x/y — to_length() can't resolve percentages -->
+  <div class="card">
+    <h3>7. Percentage coords ⚠️</h3>
+    <svg width="200" height="200" viewBox="0 0 200 200">
+      <rect x="10%" y="10%" width="80%" height="80%" fill="#533483"/>
+    </svg>
+    <p class="pass">FromComputedValues: to_length() = None ❌</p>
+    <p class="pass">get_attr: now parses 80% as 80px ✅</p>
+    <p>Percentages parsed as pixels (viewport resolution not yet supported)</p>
+  </div>
+
+  <!-- 8. Circle with CSS override via style attribute -->
+  <div class="card">
+    <h3>8. CSS override circle ✅</h3>
+    <svg width="200" height="200">
+      <circle cx="200" cy="200" r="200" fill="#0f3460" style="cx: 100px; cy: 100px; r: 80px;"/>
+    </svg>
+    <p class="pass">FromComputedValues: cx=100 (CSS wins) ✅</p>
+    <p class="fail">get_attr: cx=200 (wrong!) ❌</p>
+  </div>
+
+</body></html>

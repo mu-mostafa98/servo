@@ -9,8 +9,8 @@ use embedder_traits::UntrustedNodeAddress;
 use euclid::Size2D;
 use fonts::FontContext;
 use layout_api::{
-    AnimatingImages, IFrameSizes, LayoutImageDestination, LayoutNode, PendingImage,
-    PendingImageState, PendingRasterizationImage,
+    AnimatingImages, IFrameSizes, LayoutImageDestination, PendingImage, PendingImageState,
+    PendingRasterizationImage,
 };
 use net_traits::image_cache::{
     Image as CachedImage, ImageCache, ImageCacheResult, ImageOrMetadataAvailable, PendingImageId,
@@ -18,6 +18,7 @@ use net_traits::image_cache::{
 use net_traits::request::InternalRequest;
 use parking_lot::{Mutex, RwLock};
 use pixels::RasterImage;
+#[cfg(not(feature = "svg-engine"))]
 use script::layout_dom::ServoLayoutNode;
 use servo_base::id::PainterId;
 use servo_url::{ImmutableOrigin, ServoUrl};
@@ -271,6 +272,7 @@ impl ImageResolver {
         result
     }
 
+    #[cfg(not(feature = "svg-engine"))]
     pub(crate) fn queue_svg_element_for_serialization(&self, element: ServoLayoutNode<'_>) {
         self.pending_svg_elements_for_serialization
             .lock()

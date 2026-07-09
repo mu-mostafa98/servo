@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>SVG Style Properties Test Suite</title>
+    <style>
+        body { background: #1a1a1a; color: #ccc; font-family: monospace; margin: 20px; }
+        h2 { color: #4CAF50; margin-top: 30px; }
+        .test { background: #2a2a2a; border: 1px solid #444; border-radius: 6px; padding: 12px; margin: 10px 0; display: inline-block; }
+        .test svg { display: block; background: #87CEEB; }
+        .note { color: #aaa; font-size: 0.85em; margin: 4px 0 8px; }
+        .expected { color: #FFD700; font-size: 0.85em; margin: 4px 0; }
+    </style>
+</head>
+<body>
+    <h1>SVG Style Properties — Test Suite</h1>
+    <p>Each test shows expected vs actual behavior. If a test looks wrong, that property is not working.</p>
+
+    <!-- ========================================================== -->
+    <h2>1. opacity</h2>
+
+    <div class="test">
+        <div class="note">Three circles at opacity 1.0, 0.5, 0.2 (left→right)</div>
+        <svg width="220" height="70">
+            <circle cx="40" cy="35" r="30" style="fill: red; opacity: 1.0" />
+            <circle cx="110" cy="35" r="30" style="fill: red; opacity: 0.5" />
+            <circle cx="180" cy="35" r="30" style="fill: red; opacity: 0.2" />
+        </svg>
+        <div class="expected">Expected: Middle circle is half transparent, right is very faint</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>2. stop-opacity (gradient stops)</h2>
+
+    <div class="test">
+        <div class="note">Linear gradient: red(0.3) → blue — left side should be semi-transparent</div>
+        <svg width="220" height="40">
+            <defs>
+                <linearGradient id="g-stop-opacity" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="red" stop-opacity="0.3" />
+                    <stop offset="100%" stop-color="blue" />
+                </linearGradient>
+            </defs>
+            <rect width="220" height="40" fill="url(#g-stop-opacity)" />
+        </svg>
+        <div class="expected">Expected: Left side (red) should be semi-transparent, fading to opaque blue</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Radial gradient with stop-opacity 0.4 on middle stop</div>
+        <svg width="220" height="40">
+            <defs>
+                <radialGradient id="g-stop-opacity-2" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" stop-color="yellow" />
+                    <stop offset="50%" stop-color="red" stop-opacity="0.4" />
+                    <stop offset="100%" stop-color="blue" />
+                </radialGradient>
+            </defs>
+            <rect width="220" height="40" fill="url(#g-stop-opacity-2)" />
+        </svg>
+        <div class="expected">Expected: Middle ring of radial gradient should be translucent red</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>3. visibility</h2>
+
+    <div class="test">
+        <div class="note">Three rects: visible, hidden, visible (hidden should not paint)</div>
+        <svg width="220" height="70">
+            <rect x="10" y="10" width="50" height="50" style="fill: red" />
+            <!-- hidden rect — should NOT show, but layout space is preserved -->
+            <rect x="70" y="10" width="50" height="50" style="fill: green; visibility: hidden" />
+            <rect x="130" y="10" width="50" height="50" style="fill: blue" />
+        </svg>
+        <div class="expected">Expected: Only red and blue rects visible. Green rect area shows background behind SVG.</div>
+    </div>
+
+    <div class="test">
+        <div class="note">visibility:hidden on group — all children hidden</div>
+        <svg width="120" height="70">
+            <g style="visibility: hidden">
+                <rect x="10" y="10" width="40" height="40" style="fill: red" />
+                <rect x="60" y="10" width="40" height="40" style="fill: green" />
+            </g>
+        </svg>
+        <div class="expected">Expected: No rects visible (both hidden by group)</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>4. display: none</h2>
+
+    <div class="test">
+        <div class="note">Group with display:none — children should NOT render</div>
+        <svg width="220" height="70">
+            <g style="display: none">
+                <rect x="10" y="10" width="50" height="50" style="fill: red" />
+                <rect x="70" y="10" width="50" height="50" style="fill: green" />
+            </g>
+            <!-- Outside the display:none group — should still show -->
+            <rect x="130" y="10" width="50" height="50" style="fill: blue" />
+        </svg>
+        <div class="expected">Expected: Only blue rect visible. Red and green rects completely vanish (no layout space).</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>5. vector-effect: non-scaling-stroke</h2>
+
+    <div class="test">
+        <div class="note">Top line: non-scaling-stroke (should stay 2px). Bottom line: normal (scales with transform)</div>
+        <svg width="300" height="120">
+            <g transform="scale(0.6)">
+                <!-- Non-scaling stroke -->
+                <line x1="10" y1="30" x2="500" y2="30" style="stroke: red; stroke-width: 3; vector-effect: non-scaling-stroke" />
+                <!-- Normal stroke -->
+                <line x1="10" y1="130" x2="500" y2="130" style="stroke: blue; stroke-width: 3" />
+            </g>
+        </svg>
+        <div class="expected">Expected: Red line = 3px thick. Blue line = ~1.8px thick (3 × 0.6). Red line is visibly thicker.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>6. fill-opacity &amp; stroke-opacity</h2>
+
+    <div class="test">
+        <div class="note">Rect: fill-opacity 0.3 + stroke-opacity 0.5</div>
+        <svg width="120" height="70">
+            <rect x="10" y="10" width="80" height="50" rx="8" style="fill: red; fill-opacity: 0.3; stroke: blue; stroke-width: 6; stroke-opacity: 0.5" />
+        </svg>
+        <div class="expected">Expected: Faded red fill, semi-transparent blue stroke</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>7. Combined: group opacity × fill-opacity</h2>
+
+    <div class="test">
+        <div class="note">Group opacity 0.5 + child fill-opacity 0.5 = 0.25 total</div>
+        <svg width="120" height="70">
+            <g style="opacity: 0.5">
+                <rect x="10" y="10" width="80" height="50" rx="8" style="fill: red; fill-opacity: 0.5" />
+            </g>
+        </svg>
+        <div class="expected">Expected: Very faint red (0.5 × 0.5 = 0.25 alpha times red color)</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>8. visibility:hidden inside group with opacity</h2>
+
+    <div class="test">
+        <div class="note">Group opacity 0.6, one child visibility:hidden</div>
+        <svg width="220" height="70">
+            <g style="opacity: 0.6">
+                <rect x="10" y="10" width="50" height="50" style="fill: red" />
+                <rect x="70" y="10" width="50" height="50" style="fill: green; visibility: hidden" />
+                <rect x="130" y="10" width="50" height="50" style="fill: blue" />
+            </g>
+        </svg>
+        <div class="expected">Expected: Red and blue dimmed by 0.6 opacity. Green rect not visible.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>9. Landscape-like composite (smoke test)</h2>
+
+    <div class="test">
+        <div class="note">Multi-layer scene using opacity, gradients, visibility</div>
+        <svg width="300" height="150">
+            <!-- Sky -->
+            <rect width="300" height="150" style="fill: #87CEEB" />
+            <!-- Sun glow layers (all use opacity) -->
+            <circle cx="240" cy="50" r="100" style="fill: #FFD700; opacity: 0.08" />
+            <circle cx="240" cy="50" r="50" style="fill: #FFE4B5; opacity: 0.2" />
+            <circle cx="240" cy="50" r="20" style="fill: #FFF8DC" />
+            <!-- Mountains with opacity -->
+            <path d="M 0,120 Q 40,60 80,90 T 160,50 T 240,80 T 300,60 L 300,150 L 0,150 Z" style="fill: #A9C4D9; opacity: 0.6"/>
+            <path d="M 0,140 Q 60,80 120,110 T 220,70 T 300,100 L 300,150 L 0,150 Z" style="fill: #6B8E6B; opacity: 0.7"/>
+            <!-- River -->
+            <path d="M 150,100 Q 140,120 160,150 L 200,150 Q 180,120 170,100 Z" style="fill: #5B9BD5; opacity: 0.8" />
+            <!-- Hidden cloud (should not render) -->
+            <ellipse cx="80" cy="40" rx="50" ry="15" style="fill: white; opacity: 0.5; visibility: hidden" />
+            <!-- Visible cloud -->
+            <ellipse cx="200" cy="30" rx="40" ry="12" style="fill: white; opacity: 0.4" />
+        </svg>
+        <div class="expected">Expected: Scene with translucent sun glow, mountains, river, and one visible cloud</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>10. clip-path with circle</h2>
+
+    <div class="test">
+        <div class="note">Rect clipped to a circle — only content inside the circle should show</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="circle-clip">
+                    <circle cx="60" cy="45" r="40" />
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="120" height="90" fill="red" clip-path="url(#circle-clip)" />
+        </svg>
+        <div class="expected">Expected: Red circle visible. Corners of the rect clipped away outside the circle.</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Blue rect clipped to circle with outline showing boundary</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="circle-clip-2">
+                    <circle cx="60" cy="45" r="40" />
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="120" height="90" fill="blue" clip-path="url(#circle-clip-2)" />
+            <circle cx="60" cy="45" r="40" style="fill: none; stroke: white; stroke-width: 2" />
+        </svg>
+        <div class="expected">Expected: Blue circle with white outline showing exact clip boundary.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>11. clip-path with rounded rect</h2>
+
+    <div class="test">
+        <div class="note">Rect clipped to a rounded rectangle</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="rounded-clip">
+                    <rect x="0" y="0" width="200" height="80" rx="20" ry="20" />
+                </clipPath>
+            </defs>
+            <rect x="-50" y="-50" width="300" height="180" fill="green" clip-path="url(#rounded-clip)" />
+        </svg>
+        <div class="expected">Expected: Green rect clipped to rounded corners (20px radius).</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>12. clip-path with ellipse</h2>
+
+    <div class="test">
+        <div class="note">Elliptical clip with gradient fill</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="ellipse-clip">
+                    <ellipse cx="110" cy="45" rx="100" ry="40" />
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="220" height="90" fill="red" clip-path="url(#ellipse-clip)" />
+        </svg>
+        <div class="expected">Expected: Red ellipse visible, corners clipped away.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>13. clip-path with userSpaceOnUse</h2>
+
+    <div class="test">
+        <div class="note">Rect clipped using userSpaceOnUse coordinates</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="us-clip" clipPathUnits="userSpaceOnUse">
+                    <rect x="20" y="10" width="80" height="60" rx="10" />
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="200" height="80" fill="orange" clip-path="url(#us-clip)" />
+        </svg>
+        <div class="expected">Expected: Orange rounded rect visible from (20,10) to (100,70).</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>14. shape-rendering: crispEdges</h2>
+
+    <div class="test">
+        <div class="note">Rounded rects: top=crispEdges (sharp), bottom=default (smooth)</div>
+        <svg width="220" height="130">
+            <rect x="10" y="10" width="200" height="40" rx="15" ry="15" style="fill: red; stroke: black; stroke-width: 2" />
+            <rect x="10" y="70" width="200" height="40" rx="15" ry="15" style="fill: red; stroke: black; stroke-width: 2; shape-rendering: crispEdges" />
+        </svg>
+        <div class="expected">Expected: Both rects look similar on screen. Bottom one may have sharper/crisper corner edges.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>15. shape-rendering: geometricPrecision (tessellation)</h2>
+
+    <div class="test">
+        <div class="note">Complex polygon fill: left=geometricPrecision (smooth), right=optimizeSpeed (fast)</div>
+        <svg width="300" height="120">
+            <!-- geometricPrecision → finer triangles, smoother edges -->
+            <polygon points="10,10 50,10 60,40 40,60 20,50 5,30" style="fill: blue; shape-rendering: geometricPrecision" />
+            <!-- optimizeSpeed → coarser triangles, faster -->
+            <polygon points="110,10 150,10 160,40 140,60 120,50 105,30" style="fill: blue; shape-rendering: optimizeSpeed" />
+            <!-- Reference: default -->
+            <polygon points="210,10 250,10 260,40 240,60 220,50 205,30" style="fill: blue" />
+        </svg>
+        <div class="expected">Expected: Left polygon has smoothest edges (most triangles). Right polygon may show slightly coarser edges. Middle = default.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>16. shape-rendering with gradient</h2>
+
+    <div class="test">
+        <div class="note">Gradient fills: left=geometricPrecision (smooth), right=optimizeSpeed (faster bands)</div>
+        <svg width="300" height="70">
+            <defs>
+                <linearGradient id="sr-grad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="red" />
+                    <stop offset="50%" stop-color="green" />
+                    <stop offset="100%" stop-color="blue" />
+                </linearGradient>
+            </defs>
+            <!-- geometricPrecision → smaller cells (smoother) -->
+            <rect x="0" y="0" width="100" height="50" fill="url(#sr-grad)" shape-rendering="geometricPrecision" />
+            <!-- Default -->
+            <rect x="110" y="0" width="80" height="50" fill="url(#sr-grad)" />
+            <!-- optimizeSpeed → larger cells (fewer bands, faster) -->
+            <rect x="200" y="0" width="80" height="50" fill="url(#sr-grad)" shape-rendering="optimizeSpeed" />
+        </svg>
+        <div class="expected">Expected: Left is smoothest gradient (many thin bands). Right shows coarser banding. Middle = default.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>17. Pattern: checkerboard</h2>
+
+    <div class="test">
+        <div class="note">Checkerboard pattern — 20x20 tile with alternating red/white squares</div>
+        <svg width="220" height="100">
+            <defs>
+                <pattern id="checker" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <rect width="10" height="10" fill="red" />
+                    <rect x="10" y="10" width="10" height="10" fill="red" />
+                    <rect x="10" width="10" height="10" fill="white" />
+                    <rect y="10" width="10" height="10" fill="white" />
+                </pattern>
+            </defs>
+            <rect x="0" y="0" width="200" height="80" fill="url(#checker)" />
+        </svg>
+        <div class="expected">Expected: Checkerboard pattern with red and white alternating 10x10 squares, repeating across the full rect.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>18. Pattern: stripes</h2>
+
+    <div class="test">
+        <div class="note">Diagonal stripe pattern</div>
+        <svg width="220" height="100">
+            <defs>
+                <pattern id="stripes" width="30" height="30" patternUnits="userSpaceOnUse">
+                    <rect width="30" height="30" fill="blue" />
+                    <line x1="0" y1="0" x2="30" y2="30" style="stroke: white; stroke-width: 4" />
+                </pattern>
+            </defs>
+            <rect x="0" y="0" width="200" height="80" fill="url(#stripes)" />
+        </svg>
+        <div class="expected">Expected: Blue rect with white diagonal stripes repeating every 30px.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>19. Pattern: with pattern offset</h2>
+
+    <div class="test">
+        <div class="note">Pattern shifted by x=10,y=10 offset, each tile is 40x40 with a circle</div>
+        <svg width="220" height="100">
+            <defs>
+                <pattern id="offset-pattern" x="10" y="10" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <rect width="40" height="40" fill="yellow" />
+                    <circle cx="20" cy="20" r="10" fill="red" />
+                </pattern>
+            </defs>
+            <rect x="0" y="0" width="200" height="80" fill="url(#offset-pattern)" />
+        </svg>
+        <div class="expected">Expected: Yellow rect with red circles every 40px, shifted 10px down and right.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>20. Polygon with gradient fill</h2>
+
+    <div class="test">
+        <div class="note">Triangle polygon filled with linear gradient</div>
+        <svg width="220" height="100">
+            <defs>
+                <linearGradient id="poly-grad" x1="0" y1="0" x2="1" y2="0">
+                    <stop offset="0%" stop-color="red" />
+                    <stop offset="100%" stop-color="blue" />
+                </linearGradient>
+            </defs>
+            <polygon points="110,10 210,90 10,90" fill="url(#poly-grad)" />
+        </svg>
+        <div class="expected">Expected: Triangle filled with red→blue horizontal gradient.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>21. Polygon with pattern fill</h2>
+
+    <div class="test">
+        <div class="note">Hexagon filled with checkerboard pattern</div>
+        <svg width="220" height="100">
+            <defs>
+                <pattern id="poly-pattern" width="20" height="20" patternUnits="userSpaceOnUse">
+                    <rect width="10" height="10" fill="red" />
+                    <rect x="10" y="10" width="10" height="10" fill="red" />
+                    <rect x="10" width="10" height="10" fill="white" />
+                    <rect y="10" width="10" height="10" fill="white" />
+                </pattern>
+            </defs>
+            <polygon points="110,10 190,40 190,80 110,100 30,80 30,40" fill="url(#poly-pattern)" />
+        </svg>
+        <div class="expected">Expected: Hexagon filled with repeating checkerboard pattern.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>22. Polyline with gradient fill</h2>
+
+    <div class="test">
+        <div class="note">Irregular polyline filled with vertical gradient</div>
+        <svg width="220" height="100">
+            <defs>
+                <linearGradient id="polyline-grad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stop-color="green" />
+                    <stop offset="100%" stop-color="yellow" />
+                </linearGradient>
+            </defs>
+            <polyline points="20,80 60,20 100,60 140,10 180,80 200,30" fill="url(#polyline-grad)" />
+        </svg>
+        <div class="expected">Expected: Irregular shape filled with green→yellow vertical gradient.</div>
+    </div>
+    <!-- ========================================================== -->
+    <h2>23. Mask with circle</h2>
+
+    <div class="test">
+        <div class="note">Rect masked by a circle - only content inside the circle should show</div>
+        <svg width="220" height="100">
+            <defs>
+                <mask id="circle-mask">
+                    <circle cx="60" cy="45" r="40" fill="white" />
+                </mask>
+            </defs>
+            <rect x="0" y="0" width="120" height="90" fill="red" mask="url(#circle-mask)" />
+        </svg>
+        <div class="expected">Expected: Red circle visible. Corners of the rect clipped away outside the circle mask.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>24. Mask with rounded rect</h2>
+
+    <div class="test">
+        <div class="note">Rect masked by a rounded rectangle mask</div>
+        <svg width="220" height="100">
+            <defs>
+                <mask id="rounded-mask">
+                    <rect x="10" y="10" width="180" height="70" rx="20" ry="20" fill="white" />
+                </mask>
+            </defs>
+            <rect x="0" y="0" width="200" height="80" fill="blue" mask="url(#rounded-mask)" />
+        </svg>
+        <div class="expected">Expected: Blue rect visible only through the rounded rectangle.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>25. Multiple shapes in mask</h2>
+
+    <div class="test">
+        <div class="note">Two circles in a mask - both clipping regions apply</div>
+        <svg width="220" height="100">
+            <defs>
+                <mask id="multi-mask">
+                    <circle cx="50" cy="45" r="35" fill="white" />
+                    <circle cx="130" cy="45" r="35" fill="white" />
+                </mask>
+            </defs>
+            <rect x="0" y="0" width="200" height="90" fill="green" mask="url(#multi-mask)" />
+        </svg>
+        <div class="expected">Expected: Two green circles visible.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>26. Filter: Gaussian blur</h2>
+
+    <div class="test">
+        <div class="note">Red rect with Gaussian blur (stdDeviation=3)</div>
+        <svg width="220" height="100">
+            <defs>
+                <filter id="blur">
+                    <feGaussianBlur stdDeviation="3"/>
+                </filter>
+            </defs>
+            <rect x="20" y="20" width="100" height="60" fill="red" filter="url(#blur)"/>
+        </svg>
+        <div class="expected">Expected: Red rectangle with blurred (soft) edges. The blur should be visible at the corners.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>27. Filter: Drop shadow</h2>
+
+    <div class="test">
+        <div class="note">Blue circle with drop shadow (dx=4, dy=4, blur=3)</div>
+        <svg width="220" height="100">
+            <defs>
+                <filter id="shadow">
+                    <feDropShadow dx="4" dy="4" stdDeviation="3" flood-color="gray"/>
+                </filter>
+            </defs>
+            <circle cx="60" cy="50" r="30" fill="blue" filter="url(#shadow)"/>
+        </svg>
+        <div class="expected">Expected: Blue circle with a soft gray shadow offset 4px right and 4px down.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>28. Viewport overflow clip (default hidden)</h2>
+
+    <div class="test">
+        <div class="note">Default: content outside SVG viewport is clipped. Circle at x=10,y=10 should be cut off on left/top.</div>
+        <svg width="100" height="100">
+            <circle cx="10" cy="10" r="30" fill="red" />
+        </svg>
+        <div class="expected">Expected: Only bottom-right quarter of the circle visible (clipped to viewport).</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Overflow visible: content outside SVG viewport should show. Circle at x=10,y=10 visible in full.</div>
+        <svg width="100" height="100" style="overflow: visible;">
+            <circle cx="10" cy="10" r="30" fill="red" />
+        </svg>
+        <div class="expected">Expected: Full circle visible extending beyond the left/top edge of the SVG viewport.</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Overflow visible on right/bottom: rect starting at x=80,y=80 in a 100x100 viewport.</div>
+        <svg width="100" height="100" style="overflow: visible; outline: 1px dashed gray;">
+            <rect x="80" y="80" width="40" height="40" fill="blue" />
+        </svg>
+        <div class="expected">Expected: Blue rect extends beyond bottom and right edges of the SVG viewport.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>29. visibility attribute in pattern shapes (pattern attr path)</h2>
+
+    <div class="test">
+        <div class="note">Pattern with visibility:hidden on a child shape — hidden circle should not render</div>
+        <svg width="120" height="120">
+            <defs>
+                <pattern id="vis-pattern-a" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <rect width="40" height="40" fill="#333"/>
+                    <circle cx="20" cy="20" r="10" fill="lime" visibility="hidden"/>
+                </pattern>
+            </defs>
+            <rect x="10" y="10" width="100" height="100" fill="url(#vis-pattern-a)" stroke="white" stroke-width="1"/>
+        </svg>
+        <div class="expected">Expected: Dark gray rect with NO circles (they are hidden). Empty pattern tile.</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Pattern with visibility:visible on a child — circle shows normally</div>
+        <svg width="120" height="120">
+            <defs>
+                <pattern id="vis-pattern-b" width="40" height="40" patternUnits="userSpaceOnUse">
+                    <rect width="40" height="40" fill="#333"/>
+                    <circle cx="20" cy="20" r="10" fill="lime" visibility="visible"/>
+                </pattern>
+            </defs>
+            <rect x="10" y="10" width="100" height="100" fill="url(#vis-pattern-b)" stroke="white" stroke-width="1"/>
+        </svg>
+        <div class="expected">Expected: Dark gray rect with lime green circles every 40px.</div>
+    </div>
+
+</body>
+</html>
+
+    <!-- ========================================================== -->
+    <h2>30. clip-path with polygon</h2>
+
+    <div class="test">
+        <div class="note">Red rect clipped by a triangle polygon. Only content inside the triangular region should show.</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="poly-clip">
+                    <polygon points="60,5 5,95 115,95"/>
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="120" height="100" fill="red" clip-path="url(#poly-clip)" />
+        </svg>
+        <div class="expected">Expected: Red triangle (isosceles) with clipped corners. Only area inside the polygon visible.</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Blue rect clipped by a path (heart/curve shape via bounding box approximation)</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="path-clip">
+                    <path d="M 10,50 C 10,20 50,10 60,40 C 70,10 110,20 110,50 C 110,80 60,95 60,95 C 60,95 10,80 10,50 Z"/>
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="120" height="100" fill="blue" clip-path="url(#path-clip)" />
+        </svg>
+        <div class="expected">Expected: Blue rect clipped by the path's bounding box (approximate).</div>
+    </div>
+
+    <div class="test">
+        <div class="note">Green rect clipped by a polyline (line strips — bounding box clip)</div>
+        <svg width="220" height="100">
+            <defs>
+                <clipPath id="line-clip">
+                    <polyline points="10,90 60,10 110,90"/>
+                </clipPath>
+            </defs>
+            <rect x="0" y="0" width="120" height="100" fill="green" clip-path="url(#line-clip)" />
+        </svg>
+        <div class="expected">Expected: Green rect clipped by the polyline's bounding box.</div>
+    </div>
+
+    <!-- ========================================================== -->
+    <h2>31. preserveAspectRatio test</h2>
+
+    <div class="test">
+        <div class="note">viewBox 0 0 100 200 in 200x200 viewport with xMidYMid meet (default)</div>
+        <svg width="200" height="200" viewBox="0 0 100 200">
+            <rect x="0" y="0" width="100" height="100" fill="red"/>
+            <rect x="0" y="100" width="100" height="100" fill="blue"/>
+        </svg>
+        <div class="expected">Expected: Red/blue split rect vertically centered in the viewport (meet scaling).</div>
+    </div>
+
+    <div class="test">
+        <div class="note">viewBox 0 0 200 100 in 200x200 viewport with xMidYMid meet (default) — should be centered horizontally</div>
+        <svg width="200" height="200" viewBox="0 0 200 100">
+            <rect x="0" y="0" width="100" height="100" fill="purple"/>
+            <rect x="100" y="0" width="100" height="100" fill="orange"/>
+        </svg>
+        <div class="expected">Expected: Purple/orange split rect horizontally centered in viewport.</div>
+    </div>
+
+    <div class="test">
+        <div class="note">preserveAspectRatio="none" — stretch to fill (viewBox 0 0 100 200 in 200x200)</div>
+        <svg width="200" height="200" viewBox="0 0 100 200" preserveAspectRatio="none">
+            <circle cx="50" cy="100" r="50" fill="teal"/>
+        </svg>
+        <div class="expected">Expected: Ellipse (stretched circle) fills the entire 200x200 viewport.</div>
+    </div>
+</body>
+</html>

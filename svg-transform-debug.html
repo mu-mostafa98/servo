@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: sans-serif; margin: 20px; }
+  .section { margin-bottom: 30px; }
+  svg { border: 1px solid #ccc; margin-right: 20px; background: #fff; }
+  h2 { font-size: 16px; }
+  .note { color: #666; font-size: 12px; margin: 4px 0; }
+</style>
+</head>
+<body>
+  <h1>SVG Transform &amp; Length Unit Test</h1>
+
+  <div class="section">
+    <h2>1. SVG transform attribute — basics</h2>
+    <svg width="300" height="120">
+      <rect x="10" y="10" width="40" height="40" fill="red"/>
+      <rect x="10" y="60" width="40" height="40" fill="green" transform="translate(50)"/>
+    </svg>
+  </div>
+
+  <div class="section">
+    <h2>2. CSS transform via class (stylesheet)</h2>
+    <style>
+      .css-rotated { transform: rotate(15deg); }
+      .css-translated { transform: translateX(80px); }
+    </style>
+    <svg width="300" height="120">
+      <rect x="10" y="10" width="40" height="40" fill="red" class="css-rotated"/>
+      <text x="10" y="85" font-size="10" fill="#666">rotate(15deg) via CSS class</text>
+    </svg>
+    <svg width="300" height="120">
+      <rect x="10" y="10" width="40" height="40" fill="blue" class="css-translated"/>
+      <text x="10" y="85" font-size="10" fill="#666">translateX(80px) via CSS class</text>
+    </svg>
+  </div>
+
+  <div class="section">
+    <h2>3. CSS transform via inline style attribute</h2>
+    <svg width="300" height="120">
+      <rect x="10" y="10" width="40" height="40" fill="purple" style="transform: scale(1.5)"/>
+      <text x="10" y="85" font-size="10" fill="#666">scale(1.5) via inline style</text>
+    </svg>
+    <svg width="300" height="120">
+      <rect x="10" y="10" width="40" height="40" fill="orange" style="transform: skewX(20deg)"/>
+      <text x="10" y="85" font-size="10" fill="#666">skewX(20deg) via inline style</text>
+    </svg>
+  </div>
+
+  <div class="section">
+    <h2>4. Both CSS and SVG attribute transform</h2>
+    <svg width="300" height="120">
+      <rect x="10" y="10" width="40" height="40" fill="teal" class="css-translated" transform="rotate(15, 100, 30)"/>
+      <text x="10" y="85" font-size="10" fill="#666">CSS translate + attr rotate (merged)</text>
+    </svg>
+  </div>
+
+  <div class="section">
+    <h2>5. em/ex length units (font-size: 16px default)</h2>
+    <style>
+      .em-test { fill: #E74C3C; stroke: #333; stroke-width: 1px; }
+    </style>
+    <div class="note">2em = 32px wide. 1ex = 8px tall (at 16px font-size).</div>
+    <svg width="200" height="100">
+      <rect class="em-test" x="10" y="20" width="2em" height="1em"/>
+      <text x="10" y="70" font-size="10" fill="#666">width="2em" height="1em"</text>
+    </svg>
+    <svg width="200" height="100">
+      <circle class="em-test" cx="3em" cy="3ex" r="1em"/>
+      <text x="10" y="70" font-size="10" fill="#666">cx="3em" cy="3ex" r="1em"</text>
+    </svg>
+  </div>
+
+  <div class="section">
+    <h2>6. Absolute unit conversion</h2>
+    <div class="note">1in = 96px, 12pt = 16px</div>
+    <svg width="400" height="60">
+      <rect x="10" y="10" width="1in" height="12pt" fill="#2ECC71" stroke="#333" stroke-width="1"/>
+      <text x="10" y="50" font-size="10" fill="#666">1in × 12pt rect</text>
+    </svg>
+  </div>
+</body>
+</html>
