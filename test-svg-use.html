@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SVG &lt;use&gt; Element Tests</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; background: #fff; color: #333; }
+    h2 { margin: 24px 0 4px; font-size: 15px; border-bottom: 1px solid #ddd; padding-bottom: 3px; }
+    svg { border: 1px solid #bbb; margin-bottom: 12px; display: block; }
+    .desc { font-size: 12px; color: #666; margin: 0 0 6px; }
+    .group-title { font-weight: bold; font-size: 14px; margin: 20px 0 6px; padding: 4px 8px; background: #f5f5f5; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>&lt;use&gt; Element Test Suite</h1>
+
+  <!-- =========================================================== -->
+  <div class="group-title">1. Basic element references</div>
+
+  <h2>1a. &lt;use&gt; referencing a rect</h2>
+  <p class="desc">&lt;rect id="r1"&gt; → &lt;use href="#r1"&gt; should render a copy</p>
+  <svg width="220" height="60">
+    <rect id="r1" x="10" y="10" width="50" height="40" fill="coral"/>
+    <use href="#r1" x="80"/>
+    <use href="#r1" x="150"/>
+  </svg>
+
+  <h2>1b. &lt;use&gt; referencing a circle</h2>
+  <p class="desc">&lt;circle id="c1"&gt; → &lt;use href="#c1"&gt; at two positions</p>
+  <svg width="220" height="70">
+    <circle id="c1" cx="30" cy="30" r="20" fill="steelblue"/>
+    <use href="#c1" x="80"/>
+    <use href="#c1" x="160"/>
+  </svg>
+
+  <h2>1c. &lt;use&gt; referencing an ellipse</h2>
+  <svg width="220" height="60">
+    <ellipse id="e1" cx="30" cy="30" rx="25" ry="15" fill="seagreen"/>
+    <use href="#e1" x="80"/>
+    <use href="#e1" x="150"/>
+  </svg>
+
+  <h2>1d. &lt;use&gt; referencing a polygon</h2>
+  <svg width="220" height="70">
+    <polygon id="p1" points="30,15 50,55 10,55" fill="goldenrod"/>
+    <use href="#p1" x="70"/>
+    <use href="#p1" x="140"/>
+  </svg>
+
+  <h2>1e. &lt;use&gt; referencing a path</h2>
+  <svg width="220" height="60">
+    <path id="pth1" d="M 10,40 C 20,10 40,10 50,40 S 80,10 100,40" fill="none" stroke="crimson" stroke-width="3"/>
+    <use href="#pth1" x="10"/>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">2. &lt;g&gt; container references</div>
+
+  <h2>2a. &lt;use&gt; referencing a &lt;g&gt; with multiple shapes</h2>
+  <p class="desc">&lt;g id="g1" fill="crimson"&gt; → &lt;use href="#g1"&gt; renders the whole group</p>
+  <svg width="300" height="60">
+    <g id="g1" fill="crimson">
+      <rect x="0" y="5" width="40" height="30"/>
+      <circle cx="60" cy="20" r="15"/>
+    </g>
+    <use href="#g1" x="120"/>
+    <use href="#g1" x="240"/>
+  </svg>
+
+  <h2>2b. &lt;use&gt; referencing a &lt;g&gt; with different fill per child</h2>
+  <svg width="300" height="60">
+    <g id="g2">
+      <rect x="0" y="5" width="30" height="25" fill="coral"/>
+      <circle cx="45" cy="17" r="12" fill="steelblue"/>
+      <rect x="65" y="5" width="30" height="25" fill="gold"/>
+    </g>
+    <use href="#g2" x="120"/>
+    <use href="#g2" x="250"/>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">3. &lt;defs&gt; references</div>
+
+  <h2>3a. &lt;use&gt; referencing a rect inside &lt;defs&gt;</h2>
+  <p class="desc">&lt;defs&gt;→&lt;rect id="dr"&gt; → &lt;use href="#dr"&gt; three copies</p>
+  <svg width="220" height="60">
+    <defs>
+      <rect id="dr" x="0" y="5" width="55" height="40" fill="seagreen" rx="5"/>
+    </defs>
+    <use href="#dr" x="10"/>
+    <use href="#dr" x="75"/>
+    <use href="#dr" x="140"/>
+  </svg>
+
+  <h2>3b. &lt;use&gt; referencing a &lt;g&gt; inside &lt;defs&gt;</h2>
+  <p class="desc">Icon pattern defined in &lt;defs&gt;, reused three times</p>
+  <svg width="300" height="70">
+    <defs>
+      <g id="icon" fill="purple">
+        <rect x="0" y="5" width="30" height="25" rx="4"/>
+        <circle cx="45" cy="17" r="12" fill="gold"/>
+      </g>
+    </defs>
+    <use href="#icon" x="10" y="5"/>
+    <use href="#icon" x="110" y="5"/>
+    <use href="#icon" x="210" y="5"/>
+  </svg>
+
+  <h2>3c. &lt;defs&gt; with multiple elements referenced individually</h2>
+  <svg width="300" height="70">
+    <defs>
+      <rect id="a" x="0" y="0" width="30" height="30" fill="crimson"/>
+      <circle id="b" cx="15" cy="15" r="15" fill="steelblue"/>
+    </defs>
+    <use href="#a" x="10" y="10"/>
+    <use href="#b" x="80" y="10"/>
+    <use href="#a" x="150" y="10" fill="seagreen"/>
+    <use href="#b" x="220" y="10" fill="gold"/>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">4. x/y offset positioning</div>
+
+  <h2>4a. &lt;use&gt; with x offset only</h2>
+  <svg width="220" height="60">
+    <rect id="xo1" x="0" y="10" width="50" height="40" fill="coral"/>
+    <use href="#xo1" x="60"/>
+    <use href="#xo1" x="130"/>
+  </svg>
+
+  <h2>4b. &lt;use&gt; with both x and y offset</h2>
+  <svg width="220" height="80">
+    <rect id="xy1" x="0" y="0" width="50" height="40" fill="darkorange"/>
+    <use href="#xy1" x="10" y="10"/>
+    <use href="#xy1" x="80" y="10"/>
+    <use href="#xy1" x="150" y="10"/>
+  </svg>
+
+  <h2>4c. &lt;use&gt; with y offset only</h2>
+  <svg width="220" height="80">
+    <circle id="yo1" cx="25" cy="25" r="22" fill="teal"/>
+    <use href="#yo1" x="80" y="15"/>
+    <use href="#yo1" x="150" y="15"/>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">5. Inheritance</div>
+
+  <h2>5a. &lt;use&gt; inherits fill from parent &lt;g&gt;</h2>
+  <p class="desc">&lt;g fill="crimson"&gt; → &lt;use href="#r"&gt; rect inherits crimson</p>
+  <svg width="220" height="60">
+    <rect id="inh1" x="0" y="10" width="50" height="40"/>
+    <g fill="crimson">
+      <use href="#inh1" x="60"/>
+      <use href="#inh1" x="130"/>
+    </g>
+  </svg>
+
+  <h2>5b. &lt;use&gt; inherits from parent &lt;g&gt; with multiple children</h2>
+  <svg width="300" height="60">
+    <rect id="inh2" x="0" y="10" width="40" height="30"/>
+    <circle id="inh3" cx="25" cy="25" r="18"/>
+    <g fill="steelblue">
+      <use href="#inh2" x="70"/>
+      <use href="#inh3" x="140"/>
+      <use href="#inh2" x="210"/>
+    </g>
+  </svg>
+
+  <h2>5c. &lt;use&gt; element overrides its own fill</h2>
+  <p class="desc">&lt;use href="#r" fill="gold"&gt; — overrides the referenced element's fill</p>
+  <svg width="220" height="60">
+    <rect id="ov1" x="0" y="10" width="50" height="40" fill="coral"/>
+    <use href="#ov1" x="60"/>
+    <use href="#ov1" x="130" fill="gold"/>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">6. Edge cases</div>
+
+  <h2>6a. &lt;use&gt; referencing a &lt;use&gt; (chained)</h2>
+  <p class="desc">&lt;rect id="chain1"&gt; → &lt;use id="u1" href="#chain1"&gt; → &lt;use href="#u1"&gt;</p>
+  <svg width="220" height="60">
+    <rect id="chain1" x="10" y="10" width="50" height="40" fill="coral"/>
+    <use id="u1" href="#chain1" x="80"/>
+    <use href="#u1" x="150"/>
+  </svg>
+
+  <h2>6b. &lt;use&gt; with missing target (should not crash)</h2>
+  <p class="desc">href="#nonexistent" — gracefully renders nothing</p>
+  <svg width="200" height="40">
+    <rect x="10" y="5" width="80" height="30" fill="gray"/>
+    <use href="#no-such-id" x="100"/>
+  </svg>
+
+  <h2>6c. &lt;use&gt; without href attribute (should not crash)</h2>
+  <svg width="200" height="40">
+    <rect x="10" y="5" width="80" height="30" fill="gray"/>
+    <use x="100"/>
+  </svg>
+
+  <h2>6d. &lt;use&gt; with transform on the use element</h2>
+  <p class="desc">&lt;use href="#r" transform="rotate(10, 30, 25)"&gt;</p>
+  <svg width="220" height="70">
+    <rect id="tr1" x="10" y="10" width="40" height="30" fill="teal"/>
+    <use href="#tr1" x="80" transform="rotate(15, 105, 25)"/>
+    <use href="#tr1" x="160"/>
+  </svg>
+
+</body>
+</html>

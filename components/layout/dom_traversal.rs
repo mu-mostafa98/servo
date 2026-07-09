@@ -139,6 +139,19 @@ fn traverse_element<'dom>(
     let style = element.style(&context.style_context);
     let info = NodeAndStyleInfo::new(element, style);
 
+    // SVG child elements (rect, circle, g, etc.) MUST NOT create HTML
+    // layout boxes — they are rendered entirely by the SVG engine via
+    // the render tree built in svg_builder.rs. The root <svg> element
+    // IS allowed through — it generates the replaced element box that
+    // triggers the SVG engine.
+    if let Some(el) = element.as_element() {
+        if el.is_svg_element() &&
+            !matches!(element.type_id(), Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement)))
+        {
+            return;
+        }
+    }
+
     match Display::from(info.style.get_box().display) {
         Display::None => {},
         Display::Contents => {

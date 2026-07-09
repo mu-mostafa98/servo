@@ -30,6 +30,8 @@ mod query;
 mod quotes;
 mod replaced;
 mod sizing;
+#[cfg(feature = "svg-engine")]
+pub mod svg;
 mod style_ext;
 pub mod table;
 mod traversal;

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SVG &lt;g&gt; Inheritance Tests</title>
+  <style>
+    body { font-family: sans-serif; margin: 20px; background: #fff; color: #333; }
+    h2 { margin: 24px 0 4px; font-size: 15px; border-bottom: 1px solid #ddd; padding-bottom: 3px; }
+    h3 { margin: 18px 0 3px; font-size: 13px; color: #555; }
+    svg { border: 1px solid #bbb; margin-bottom: 12px; display: block; }
+    .pass { background: #e8f5e9; color: #2e7d32; }
+    .fail { background: #fce4ec; color: #c62828; }
+    .desc { font-size: 12px; color: #666; margin: 0 0 6px; }
+    .group { margin-bottom: 28px; }
+    .group-title { font-weight: bold; font-size: 14px; margin: 20px 0 6px; padding: 4px 8px; background: #f5f5f5; border-radius: 3px; }
+  </style>
+</head>
+<body>
+  <h1>&lt;g&gt; Inheritance Test Suite</h1>
+
+  <!-- =========================================================== -->
+  <div class="group-title">1. Basic inheritance — fill set on &lt;g&gt;</div>
+
+  <h2>1a. Inherit fill from parent &lt;g&gt;</h2>
+  <p class="desc">&lt;g fill="red"&gt; → &lt;rect&gt; should be red</p>
+  <svg width="220" height="60">
+    <g fill="red">
+      <rect x="10" y="10" width="60" height="40"/>
+      <circle cx="120" cy="30" r="25"/>
+      <ellipse cx="190" cy="30" rx="20" ry="15"/>
+    </g>
+  </svg>
+
+  <h2>1b. Inherit fill from &lt;g&gt; with different shape types</h2>
+  <p class="desc">&lt;g fill="steelblue"&gt; → all children steelblue</p>
+  <svg width="400" height="70">
+    <g fill="steelblue">
+      <rect x="10" y="10" width="50" height="40" rx="5"/>
+      <circle cx="100" cy="30" r="22"/>
+      <polygon points="160,10 190,55 130,55"/>
+      <ellipse cx="230" cy="30" rx="28" ry="18"/>
+      <rect x="280" y="15" width="40" height="30"/>
+      <polygon points="370,10 390,55 350,55"/>
+    </g>
+  </svg>
+
+  <h2>1c. Inherit stroke from &lt;g&gt;</h2>
+  <p class="desc">&lt;g stroke="purple" stroke-width="3" fill="none"&gt;</p>
+  <svg width="220" height="70">
+    <g stroke="purple" stroke-width="3" fill="none">
+      <rect x="10" y="10" width="50" height="40"/>
+      <circle cx="110" cy="30" r="22"/>
+      <ellipse cx="185" cy="30" rx="25" ry="16"/>
+    </g>
+  </svg>
+
+  <h2>1d. Inherit both fill &amp; stroke from &lt;g&gt;</h2>
+  <p class="desc">&lt;g fill="coral" stroke="navy" stroke-width="2"&gt;</p>
+  <svg width="220" height="70">
+    <g fill="coral" stroke="navy" stroke-width="2">
+      <rect x="10" y="10" width="50" height="40"/>
+      <circle cx="110" cy="30" r="22"/>
+      <ellipse cx="185" cy="30" rx="25" ry="16"/>
+    </g>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">2. Explicit override — child overrides inherited values</div>
+
+  <h2>2a. Child overrides inherited fill</h2>
+  <p class="desc">&lt;g fill="red"&gt; → &lt;rect fill="blue"&gt; should be blue</p>
+  <svg width="220" height="60">
+    <g fill="red">
+      <rect x="10" y="10" width="60" height="40" fill="blue"/>
+      <circle cx="120" cy="30" r="22" fill="green"/>
+      <ellipse cx="190" cy="30" rx="18" ry="14" fill="orange"/>
+    </g>
+  </svg>
+
+  <h2>2b. Child overrides inherited stroke</h2>
+  <p class="desc">&lt;g stroke="red" stroke-width="3" fill="none"&gt; → child with own stroke</p>
+  <svg width="220" height="60">
+    <g stroke="red" stroke-width="3" fill="none">
+      <rect x="10" y="10" width="50" height="40" stroke="green"/>
+      <circle cx="110" cy="30" r="22" stroke="blue"/>
+    </g>
+  </svg>
+
+  <h2>2c. Partial override — child overrides only fill-opacity</h2>
+  <p class="desc">&lt;g fill="red"&gt; → &lt;rect fill-opacity="0.3"&gt; red at 30% opacity</p>
+  <svg width="220" height="60">
+    <g fill="red">
+      <rect x="10" y="10" width="60" height="40" fill-opacity="0.3"/>
+      <rect x="100" y="10" width="60" height="40" fill-opacity="0.7"/>
+      <rect x="190" y="10" width="20" height="40" fill-opacity="1.0"/>
+    </g>
+  </svg>
+
+  <h2>2d. Partial override — child overrides only fill-rule for &lt;polygon&gt;</h2>
+  <p class="desc">&lt;g fill="teal"&gt; → polygon with fill-rule="evenodd" (star with hole)</p>
+  <svg width="220" height="70">
+    <g fill="teal">
+      <polygon points="30,10 60,65 10,35 60,35 10,65" fill-rule="evenodd"/>
+      <polygon points="130,10 160,65 110,35 160,35 110,65"/>
+    </g>
+  </svg>
+
+  <h2>2e. Child fill="none" inside &lt;g fill="red"&gt;</h2>
+  <p class="desc">&lt;rect fill="none"&gt; should be invisible (no inherited red)</p>
+  <svg width="220" height="60">
+    <g fill="red" stroke="gray" stroke-width="1">
+      <rect x="10" y="10" width="50" height="40" fill="none"/>
+      <rect x="80" y="10" width="50" height="40"/>
+      <rect x="150" y="10" width="50" height="40" fill="none"/>
+    </g>
+  </svg>
+
+  <h2>2f. Child stroke="none" inside &lt;g stroke="red" stroke-width="3"&gt;</h2>
+  <p class="desc">&lt;rect stroke="none"&gt; should have no stroke</p>
+  <svg width="220" height="60">
+    <g fill="white" stroke="red" stroke-width="3">
+      <rect x="10" y="10" width="50" height="40" stroke="none"/>
+      <rect x="80" y="10" width="50" height="40"/>
+      <rect x="150" y="10" width="50" height="40" stroke="none"/>
+    </g>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">3. Inline style attribute</div>
+
+  <h2>3a. Inline style overrides inherited fill</h2>
+  <p class="desc">&lt;g fill="red"&gt; → &lt;rect style="fill:green"&gt;</p>
+  <svg width="220" height="60">
+    <g fill="red">
+      <rect x="10" y="10" width="50" height="40" style="fill:green"/>
+      <rect x="80" y="10" width="50" height="40"/>
+      <rect x="150" y="10" width="50" height="40" style="fill:blue"/>
+    </g>
+  </svg>
+
+  <h2>3b. Inline style with opacity preserves inherited fill</h2>
+  <p class="desc">&lt;g fill="red"&gt; → &lt;rect style="opacity:0.4"&gt; (should preserve inherited red)</p>
+  <svg width="220" height="60">
+    <g fill="red">
+      <rect x="10" y="10" width="50" height="40" style="opacity:0.4"/>
+      <rect x="80" y="10" width="50" height="40"/>
+      <rect x="150" y="10" width="50" height="40" style="opacity:0.7"/>
+    </g>
+  </svg>
+
+  <h2>3c. Inline style with both fill and opacity</h2>
+  <p class="desc">&lt;g fill="red"&gt; → &lt;rect style="fill:purple;opacity:0.6"&gt;</p>
+  <svg width="220" height="60">
+    <g fill="red">
+      <rect x="10" y="10" width="50" height="40" style="fill:purple;opacity:0.6"/>
+      <rect x="80" y="10" width="50" height="40"/>
+      <rect x="150" y="10" width="50" height="40" style="fill:darkorange"/>
+    </g>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">4. Nested &lt;g&gt; — deep inheritance</div>
+
+  <h2>4a. Two levels of &lt;g&gt; inheritance</h2>
+  <p class="desc">&lt;g fill="coral"&gt; → &lt;g stroke="teal"&gt; → rect inherits both</p>
+  <svg width="220" height="60">
+    <g fill="coral">
+      <g stroke="teal" stroke-width="2">
+        <rect x="10" y="10" width="50" height="40"/>
+        <circle cx="110" cy="30" r="22"/>
+      </g>
+      <rect x="160" y="10" width="50" height="40"/>
+    </g>
+  </svg>
+
+  <h2>4b. Three levels — outer fill, middle stroke, inner override</h2>
+  <p class="desc">&lt;g fill="gold"&gt; → &lt;g stroke="purple" stroke-width="2"&gt; → rect overrides fill</p>
+  <svg width="220" height="60">
+    <g fill="gold">
+      <g stroke="darkmagenta" stroke-width="2">
+        <rect x="10" y="10" width="50" height="40"/>
+        <circle cx="110" cy="30" r="22" fill="pink"/>
+        <ellipse cx="190" cy="30" rx="20" ry="14" fill="none"/>
+      </g>
+    </g>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">5. Transform + inheritance</div>
+
+  <h2>5a. &lt;g&gt; with transform and inherited fill</h2>
+  <p class="desc">&lt;g fill="seagreen" transform="translate(10,10)"&gt;</p>
+  <svg width="300" height="100">
+    <g fill="seagreen" transform="translate(10, 15)">
+      <rect x="0" y="0" width="50" height="40"/>
+      <circle cx="80" cy="20" r="20"/>
+    </g>
+    <g fill="crimson" transform="translate(10, 55)">
+      <rect x="0" y="0" width="50" height="40"/>
+      <circle cx="80" cy="20" r="20"/>
+    </g>
+  </svg>
+
+  <h2>5b. Transform + override</h2>
+  <p class="desc">&lt;g fill="teal" transform="..."&gt; → rect overrides to "tomato"</p>
+  <svg width="300" height="70">
+    <g fill="teal" transform="translate(10, 10)">
+      <rect x="0" y="0" width="60" height="45" fill="tomato"/>
+      <circle cx="100" cy="22" r="22"/>
+      <rect x="150" y="5" width="50" height="35" fill="gold"/>
+    </g>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">6. Mixed &lt;g&gt; + &lt;defs&gt; (gradients)</div>
+
+  <h2>6a. Gradient reference inside &lt;g&gt;</h2>
+  <p class="desc">&lt;g fill="url(#g1)"&gt; → children use gradient</p>
+  <svg width="220" height="60">
+    <defs>
+      <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="red"/>
+        <stop offset="100%" stop-color="blue"/>
+      </linearGradient>
+      <linearGradient id="g2" x1="0%" y1="0%" x2="0%" y2="100%">
+        <stop offset="0%" stop-color="green"/>
+        <stop offset="100%" stop-color="yellow"/>
+      </linearGradient>
+    </defs>
+    <g fill="url(#g1)">
+      <rect x="10" y="10" width="80" height="40"/>
+      <circle cx="140" cy="30" r="22"/>
+    </g>
+    <rect x="180" y="10" width="30" height="40" fill="url(#g2)"/>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">7. Reference — shapes without &lt;g&gt; (should still work)</div>
+
+  <h2>7a. Standalone rect with explicit fill</h2>
+  <svg width="150" height="40">
+    <rect x="10" y="5" width="50" height="30" fill="darkcyan"/>
+  </svg>
+
+  <h2>7b. Standalone rect without fill (default black)</h2>
+  <svg width="150" height="40">
+    <rect x="10" y="5" width="50" height="30"/>
+  </svg>
+
+  <!-- =========================================================== -->
+  <div class="group-title">8. Edge cases</div>
+
+  <h2>8a. Empty &lt;g&gt; (no children)</h2>
+  <svg width="100" height="30">
+    <g fill="red"></g>
+    <rect x="10" y="5" width="80" height="20" fill="gray"/>
+  </svg>
+
+  <h2>8b. &lt;g&gt; with only text (not rendered — expected, text is future work)</h2>
+  <p class="desc">SVG &lt;text&gt; rendering is not yet implemented. This test verifies it doesn't crash.</p>
+  <svg width="200" height="40">
+    <g fill="steelblue">
+      <text x="10" y="25" font-size="14">Hello SVG</text>
+    </g>
+  </svg>
+
+  <h2>8c. &lt;g&gt; with transform but no fill</h2>
+  <p class="desc">Children should still get default black fill</p>
+  <svg width="220" height="60">
+    <g transform="translate(10, 5)">
+      <rect x="0" y="0" width="50" height="40"/>
+      <circle cx="85" cy="20" r="20"/>
+    </g>
+  </svg>
+
+</body>
+</html>

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  /* These CSS rules are in the HTML document.
+     Old approach: lost during SVG serialization → rasterizer never sees them.
+     New engine: stylo processes them correctly. */
+  .fill-red   { fill: #E74C3C; }
+  .fill-blue  { fill: #3498DB; }
+  .fill-green { fill: #2ECC71; }
+</style>
+</head>
+<body>
+
+<h2>1. CSS from HTML stylesheet — works in new engine, lost in old approach</h2>
+<p>Red and blue rects use CSS classes from HTML &lt;style&gt; block.</p>
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="150">
+  <rect class="fill-red"   x="20"  y="20"  width="120" height="60" />
+  <rect class="fill-blue"  x="160" y="20"  width="120" height="60" />
+  <rect class="fill-green" x="20"  y="100" width="100" height="40" />
+</svg>
+
+<h2>2. Inheritance from parent &lt;svg&gt; via CSS class</h2>
+<p>
+  <code>fill</code> is inherited. The &lt;svg&gt; has <code>class="fill-red"</code>.
+  The child &lt;rect&gt; inherits it — only in the new engine.
+</p>
+<svg class="fill-red" xmlns="http://www.w3.org/2000/svg" width="200" height="80">
+  <rect x="10" y="10" width="100" height="50" />
+</svg>
+
+<svg class="fill-blue" xmlns="http://www.w3.org/2000/svg" width="200" height="80">
+  <rect x="10" y="10" width="100" height="50" />
+</svg>
+
+<h2>3. Multiple inheritance from &lt;svg&gt; via inline style</h2>
+<p>Each &lt;svg&gt; sets <code>style="fill: ..."</code>, child rect inherits.</p>
+<svg style="fill: #E74C3C;" xmlns="http://www.w3.org/2000/svg" width="180" height="80">
+  <rect x="10" y="10" width="100" height="50" />
+</svg>
+<svg style="fill: #3498DB;" xmlns="http://www.w3.org/2000/svg" width="180" height="80">
+  <rect x="10" y="10" width="100" height="50" />
+</svg>
+
+<h2>4. Inline styles — works in both approaches</h2>
+<svg xmlns="http://www.w3.org/2000/svg" width="300" height="80">
+  <rect style="fill: #E74C3C;" x="10" y="10" width="120" height="50" />
+</svg>
+
+</body>
+</html>

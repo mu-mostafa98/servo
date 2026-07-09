@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head><style>
+  body { background: #fff; display: flex; flex-wrap: wrap; gap: 12px; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  .card { background: #f5f5f5; border-radius: 10px; padding: 12px; text-align: center; width: 210px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  svg { background: #fafafa; border-radius: 6px; display: block; margin: 0 auto; border: 1px solid #e0e0e0; }
+  h3 { margin: 6px 0 3px; font-size: 12px; color: #333; font-weight: 600; }
+  p { margin: 0; font-size: 10px; color: #666; }
+</style></head>
+<body>
+
+  <!-- 1-2: Basic linear → and ↓ -->
+  <div class="card">
+    <h3>1. Linear →</h3>
+    <svg width="150" height="150">
+      <defs><linearGradient id="g1"><stop offset="0" stop-color="#1976d2"/><stop offset="1" stop-color="#d32f2f"/></linearGradient></defs>
+      <rect x="10" y="10" width="130" height="130" fill="url(#g1)"/>
+    </svg>
+    <p>blue left → red right</p>
+  </div>
+
+  <div class="card">
+    <h3>2. Linear ↓</h3>
+    <svg width="150" height="150">
+      <rect x="10" y="10" width="130" height="130" fill="url(#g3)"/>
+    </svg>
+    <p>red top → blue bottom</p>
+  </div>
+
+  <!-- 3: Radial (g2) -->
+  <div class="card">
+    <h3>3. Radial</h3>
+    <svg width="150" height="150">
+      <rect x="10" y="10" width="130" height="130" fill="url(#g2)"/>
+    </svg>
+    <p>green center → dark blue</p>
+  </div>
+
+  <!-- 4: Radial circle (g4) -->
+  <div class="card">
+    <h3>4. Radial circle</h3>
+    <svg width="150" height="150">
+      <circle cx="75" cy="75" r="65" fill="url(#g4)"/>
+    </svg>
+    <p>orange circle</p>
+  </div>
+
+  <!-- 5: Gradient stroke (g5) -->
+  <div class="card">
+    <h3>5. Gradient stroke</h3>
+    <svg width="150" height="150">
+      <rect x="15" y="15" width="120" height="120" fill="none" stroke="url(#g5)" stroke-width="12"/>
+    </svg>
+    <p>diagonal stroke</p>
+  </div>
+
+  <!-- 6: 3-stop linear (fallback) -->
+  <div class="card">
+    <h3>6. 3-stop linear</h3>
+    <svg width="150" height="150">
+      <defs><linearGradient id="t6" x1="0" y1="0" x2="100" y2="0"><stop offset="0" stop-color="red"/><stop offset=".5" stop-color="yellow"/><stop offset="1" stop-color="blue"/></linearGradient></defs>
+      <rect x="10" y="10" width="130" height="130" fill="url(#t6)"/>
+    </svg>
+    <p>fallback red→blue</p>
+  </div>
+
+  <!-- 7: ellipse radial -->
+  <div class="card">
+    <h3>7. Radial ellipse</h3>
+    <svg width="150" height="150">
+      <ellipse cx="75" cy="75" rx="60" ry="40" fill="url(#g2)"/>
+    </svg>
+    <p>green→blue ellipse</p>
+  </div>
+
+  <!-- 8: rect with sharp gradient -->
+  <div class="card">
+    <h3>8. Rect + radial</h3>
+    <svg width="150" height="150">
+      <rect x="10" y="10" width="60" height="60" fill="#d32f2f"/>
+      <circle cx="110" cy="40" r="30" fill="url(#g4)"/>
+      <rect x="30" y="90" width="100" height="50" rx="10" fill="url(#g2)"/>
+    </svg>
+    <p>solid + gradient mix</p>
+  </div>
+
+  <!-- 9: sharp stop transition -->
+  <div class="card">
+    <h3>9. Sharp stops</h3>
+    <svg width="150" height="150">
+      <defs><linearGradient id="t9" x1="0" y1="0" x2="100" y2="0"><stop offset="0" stop-color="red"/><stop offset=".45" stop-color="red"/><stop offset=".55" stop-color="blue"/><stop offset="1" stop-color="blue"/></linearGradient></defs>
+      <rect x="10" y="10" width="130" height="130" fill="url(#t9)"/>
+    </svg>
+    <p>fallback (ignores stops)</p>
+  </div>
+
+  <!-- 10: different viewport -->
+  <div class="card">
+    <h3>10. scale(2) + radial</h3>
+    <svg width="150" height="150">
+      <g transform="translate(75,75) scale(1.5)">
+        <circle cx="0" cy="0" r="40" fill="url(#g2)"/>
+      </g>
+    </svg>
+    <p>radial + translate</p>
+  </div>
+
+  <!-- 11: overlapping gradients -->
+  <div class="card">
+    <h3>11. Overlap radials</h3>
+    <svg width="150" height="150">
+      <circle cx="55" cy="55" r="60" fill="url(#g2)"/>
+      <circle cx="95" cy="95" r="60" fill="url(#g4)"/>
+    </svg>
+    <p>two circles overlap</p>
+  </div>
+
+  <!-- 12: combined -->
+  <div class="card">
+    <h3>12. Gradient + solid</h3>
+    <svg width="150" height="150">
+      <rect x="10" y="10" width="130" height="65" fill="url(#g1)"/>
+      <rect x="10" y="75" width="130" height="65" fill="#1976d2"/>
+    </svg>
+    <p>gradient + solid</p>
+  </div>
+
+</body></html>

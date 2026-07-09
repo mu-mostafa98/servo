@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: sans-serif; background: #1a1a2e; color: #eee; padding: 20px; }
+  h1 { color: #ff6b6b; }
+  h2 { color: #ffd93d; border-bottom: 1px solid #444; padding-bottom: 4px; }
+  .bug-section { background: #16213e; border-radius: 8px; padding: 16px; margin-bottom: 24px; }
+  .bug-title { color: #ff6b6b; font-weight: bold; }
+  .expected { color: #6bff6b; font-size: 0.85em; }
+  .actual { color: #ff6b6b; font-size: 0.85em; }
+  svg { border: 1px dashed #555; margin: 8px; display: block; }
+</style>
+</head>
+<body>
+
+<h1>🐛 SVG Engine — Bug Demonstration Page</h1>
+<p>Each section shows a known issue. Expected vs actual behavior noted.</p>
+
+<!-- ============================================================ -->
+<!-- BUG #1: Gradient strokes silently dropped -->
+<!-- ============================================================ -->
+<div class="bug-section">
+  <h2>Bug #1: Gradient strokes silently dropped</h2>
+  <div class="bug-title">Gradient stroke renders invisible on polylines/paths</div>
+  <div class="actual">ACTUAL: The right stroked elements are invisible (no stroke rendered)</div>
+  <div class="expected">EXPECTED: All shapes should show a visible gradient stroke</div>
+
+  <svg width="400" height="150" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="strokeGrad1" x1="0%" y1="0%" x2="100%" y2="0%">
+        <stop offset="0%" stop-color="red"/>
+        <stop offset="100%" stop-color="blue"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Solid stroke — should work (baseline) -->
+    <text x="10" y="20" fill="#aaa" font-size="11">solid stroke (works):</text>
+    <polyline points="10,40 80,40 80,100 10,100" fill="none" stroke="white" stroke-width="4"/>
+
+    <!-- Gradient stroke — currently renders INVISIBLE -->
+    <text x="130" y="20" fill="#ff6b6b" font-size="11">gradient stroke (BUG — invisible):</text>
+    <polyline points="130,40 210,40 210,100 130,100" fill="none" stroke="url(#strokeGrad1)" stroke-width="4"/>
+
+    <!-- Path with gradient stroke — also invisible -->
+    <text x="260" y="20" fill="#ff6b6b" font-size="11">path + grad stroke (BUG):</text>
+    <path d="M 260,40 L 340,40 L 340,100 L 260,100 Z" fill="none" stroke="url(#strokeGrad1)" stroke-width="4"/>
+  </svg>
+</div>
+
+<!-- ============================================================ -->
+<!-- BUG #2: Radial gradient on polygon fills bounding rect -->
+<!-- ============================================================ -->
+<div class="bug-section">
+  <h2>Bug #2: Radial gradient on polygon fills bounding rectangle</h2>
+  <div class="bug-title">Polygon with radial gradient overflows outside the shape</div>
+  <div class="actual">ACTUAL: The gradient fill spills outside the triangle into the bounding rectangle area</div>
+  <div class="expected">EXPECTED: Gradient should be confined to the triangle shape</div>
+
+  <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <radialGradient id="radialGrad1" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="cyan"/>
+        <stop offset="50%" stop-color="magenta"/>
+        <stop offset="100%" stop-color="yellow"/>
+      </radialGradient>
+    </defs>
+
+    <!-- Solid fill triangle — correct (baseline) -->
+    <text x="10" y="20" fill="#aaa" font-size="11">solid fill (correct):</text>
+    <polygon points="80,40 10,180 150,180" fill="purple" stroke="white" stroke-width="1"/>
+
+    <!-- Radial gradient fill triangle — BUG: fills the bounding RECT -->
+    <text x="200" y="20" fill="#ff6b6b" font-size="11">radial gradient fill (BUG — overflows):</text>
+    <polygon points="280,40 210,180 350,180" fill="url(#radialGrad1)" stroke="white" stroke-width="1"/>
+  </svg>
+</div>
+
+<!-- ============================================================ -->
+<!-- BUG #3: Pattern fill on polygon fills bounding rect -->
+<!-- ============================================================ -->
+<div class="bug-section">
+  <h2>Bug #3: Pattern fill on polygon fills bounding rectangle</h2>
+  <div class="bug-title">Polygon with pattern fills the bounding rect, not the shape</div>
+  <div class="actual">ACTUAL: The pattern fills the outer bounding rectangle, overflowing outside the triangle</div>
+  <div class="expected">EXPECTED: Pattern should be clipped to the triangle shape</div>
+
+  <svg width="400" height="200" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <pattern id="pattern1" width="20" height="20" patternUnits="userSpaceOnUse">
+        <rect width="20" height="20" fill="#333"/>
+        <circle cx="10" cy="10" r="5" fill="lime"/>
+      </pattern>
+    </defs>
+
+    <!-- Pattern fill on triangle — BUG: fills bounding rect -->
+    <text x="10" y="20" fill="#ff6b6b" font-size="11">pattern fill (BUG — overflows):</text>
+    <polygon points="80,40 10,180 150,180" fill="url(#pattern1)" stroke="white" stroke-width="1"/>
+
+    <!-- Pattern fill rect — correct (baseline) -->
+    <text x="200" y="20" fill="#aaa" font-size="11">pattern fill rect (correct baseline):</text>
+    <rect x="200" y="40" width="140" height="140" fill="url(#pattern1)" stroke="white" stroke-width="1"/>
+  </svg>
+</div>
+
+<!-- ============================================================ -->
+<!-- BUG #4: userSpaceOnUse gradient has wrong origin on polygon -->
+<!-- ============================================================ -->
+<div class="bug-section">
+  <h2>Bug #4: userSpaceOnUse gradient has wrong origin on polygon</h2>
+  <div class="bug-title">Gradient coordinates use bbox origin instead of viewport origin</div>
+  <div class="actual">ACTUAL: The same gradient on two different triangles shows the gradient band at DIFFERENT relative positions (shifted by the triangle's bbox offset)</div>
+  <div class="expected">EXPECTED: userSpaceOnUse should use absolute (viewport) coordinates, so both triangles should show the same gradient bands at the same absolute positions</div>
+
+  <svg width="420" height="220" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- userSpaceOnUse gradient with known absolute coordinates -->
+      <linearGradient id="userSpaceGrad" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="200" y2="0">
+        <stop offset="0%" stop-color="red"/>
+        <stop offset="25%" stop-color="yellow"/>
+        <stop offset="50%" stop-color="green"/>
+        <stop offset="75%" stop-color="blue"/>
+        <stop offset="100%" stop-color="purple"/>
+      </linearGradient>
+
+      <!-- objectBoundingBox (default) — for comparison -->
+      <linearGradient id="bboxGrad" gradientUnits="objectBoundingBox" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="red"/>
+        <stop offset="25%" stop-color="yellow"/>
+        <stop offset="50%" stop-color="green"/>
+        <stop offset="75%" stop-color="blue"/>
+        <stop offset="100%" stop-color="purple"/>
+      </linearGradient>
+    </defs>
+
+    <!-- Reference line — shows where the color transitions SHOULD fall -->
+    <text x="10" y="20" fill="#aaa" font-size="11">reference: userSpaceOnUse rect (correct — transitions at x=50,100,150):</text>
+    <rect x="10" y="30" width="200" height="30" fill="url(#userSpaceGrad)" stroke="white" stroke-width="0.5"/>
+    <!-- tick marks at expected transition points -->
+    <line x1="50" y1="25" x2="50" y2="65" stroke="#888" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <line x1="100" y1="25" x2="100" y2="65" stroke="#888" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <line x1="150" y1="25" x2="150" y2="65" stroke="#888" stroke-width="0.5" stroke-dasharray="2,2"/>
+
+    <!-- Triangle #1 with userSpaceOnUse — BUG: gradient bands shift -->
+    <text x="10" y="80" fill="#ff6b6b" font-size="11">triangle#1 userSpaceOnUse (BUG — bands shifted):</text>
+    <polygon points="10,90 50,170 170,170" fill="url(#userSpaceGrad)" stroke="white" stroke-width="1"/>
+
+    <!-- Triangle #2 with userSpaceOnUse — different bbox, so different shift -->
+    <text x="220" y="80" fill="#ff6b6b" font-size="11">triangle#2 (shifted differently):</text>
+    <polygon points="220,90 280,170 400,170" fill="url(#userSpaceGrad)" stroke="white" stroke-width="1"/>
+
+    <!-- objectBoundingBox comparison — should be consistent per-shape -->
+    <text x="10" y="195" fill="#aaa" font-size="11">bbox mode (correct baseline — each triangle gets own gradient):</text>
+  </svg>
+</div>
+
+</body>
+</html>

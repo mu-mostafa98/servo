@@ -271,6 +271,7 @@ impl ImageResolver {
         result
     }
 
+    #[cfg(not(feature = "svg-engine"))]
     pub(crate) fn queue_svg_element_for_serialization(&self, element: ServoLayoutNode<'_>) {
         self.pending_svg_elements_for_serialization
             .lock()

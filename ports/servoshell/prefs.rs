@@ -578,6 +578,11 @@ struct CmdArgs {
     /// The url we should load.
     #[bpaf(positional("URL"), fallback(String::from("https://www.servo.org")))]
     url: String,
+
+    ///  Enable the SVG rendering engine (now compile-time via `svg-engine` feature).
+    #[bpaf(long)]
+    #[allow(dead_code)]
+    svg_engine: bool,
 }
 
 fn update_preferences_from_command_line_arguments(
@@ -594,6 +599,8 @@ fn update_preferences_from_command_line_arguments(
             preferences.set_value(pref, PrefValue::Bool(true));
         }
     }
+
+
 
     for pref in &cmd_args.pref {
         let split: Vec<&str> = pref.splitn(2, '=').collect();
