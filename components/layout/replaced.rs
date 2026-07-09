@@ -4,7 +4,7 @@
 
 use std::sync::Arc;
 
-use app_units::{Au, MAX_AU};
+use app_units::Au;
 use data_url::DataUrl;
 use embedder_traits::ViewportDetails;
 use euclid::{Scale, Size2D};
@@ -17,23 +17,41 @@ use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
 use servo_url::ServoUrl;
 use style::Zero;
-use style::attr::AttrValue;
 use style::computed_values::object_fit::T as ObjectFit;
 use style::logical_geometry::{Direction, WritingMode};
-use style::properties::{ComputedValues, StyleBuilder};
-use style::rule_cache::RuleCacheConditions;
-use style::rule_tree::RuleCascadeFlags;
-use style::stylesheets::container_rule::ContainerSizeQuery;
+use style::properties::ComputedValues;
 use style::url::ComputedUrl;
 use style::values::CSSFloat;
 use style::values::computed::image::Image as ComputedImage;
-use style::values::computed::{Content, Context, ToComputedValue};
+use style::values::computed::Content;
 use style::values::generics::counters::{GenericContentItem, GenericContentItems};
 use url::Url;
 use web_atoms::local_name;
 use webrender_api::ImageKey;
 
+// Legacy SVG path imports (only needed without the new engine).
+#[cfg(not(feature = "svg-engine"))]
+use app_units::MAX_AU;
+#[cfg(not(feature = "svg-engine"))]
+use style::attr::AttrValue;
+#[cfg(not(feature = "svg-engine"))]
+use style::properties::StyleBuilder;
+#[cfg(not(feature = "svg-engine"))]
+use style::rule_cache::RuleCacheConditions;
+#[cfg(not(feature = "svg-engine"))]
+use style::rule_tree::RuleCascadeFlags;
+#[cfg(not(feature = "svg-engine"))]
+use style::stylesheets::container_rule::ContainerSizeQuery;
+#[cfg(not(feature = "svg-engine"))]
+use style::values::computed::{Context, ToComputedValue};
+
+#[cfg(feature = "svg-engine")]
 use svg_engine::render_tree::SvgRenderTree;
+/// Placeholder type when the SVG engine is disabled.
+/// Never constructed at runtime — exists only to keep the
+/// `ReplacedContentKind::SVGElement` variant well-typed.
+#[cfg(not(feature = "svg-engine"))]
+pub(crate) struct SvgRenderTree;
 
 use crate::context::{LayoutContext, LayoutImageCacheResult};
 use crate::dom::NodeExt;
@@ -228,7 +246,8 @@ impl ReplacedContents {
         context: &LayoutContext,
         node: ServoLayoutNode<'_>,
     ) -> (ReplacedContentKind, NaturalSizes) {
-        if servo_config::pref!(layout_svg_engine_enabled) {
+        #[cfg(feature = "svg-engine")]
+        {
             let render_tree = Self::build_svg_render_tree(node, context);
             return (
                 ReplacedContentKind::SVGElement {
@@ -244,7 +263,9 @@ impl ReplacedContents {
             );
         }
 
-        let rule_cache_conditions = &mut RuleCacheConditions::default();
+        #[cfg(not(feature = "svg-engine"))]
+        {
+            let rule_cache_conditions = &mut RuleCacheConditions::default();
 
         let parent_style = node.style(&context.style_context);
         let style_builder = StyleBuilder::new(
@@ -331,8 +352,10 @@ impl ReplacedContents {
             },
             natural_size,
         )
+        }
     }
 
+    #[cfg(feature = "svg-engine")]
     fn build_svg_render_tree(
         node: ServoLayoutNode<'_>,
         context: &LayoutContext,
@@ -603,12 +626,9 @@ impl ReplacedContents {
                     svg_render_tree: None,
                 }))]
             },
-            ReplacedContentKind::SVGElement {
-                vector_image,
-                has_viewbox,
-                ..
-            } => {
-                if servo_config::pref!(layout_svg_engine_enabled) {
+            ReplacedContentKind::SVGElement { .. } => {
+                #[cfg(feature = "svg-engine")]
+                {
                     if let ReplacedContentKind::SVGElement { render_tree: Some(tree), .. } = &self.kind {
                         return vec![Fragment::Image(Arc::new(ImageFragment {
                             base,
@@ -622,6 +642,9 @@ impl ReplacedContents {
                     return vec![];
                 }
 
+                #[cfg(not(feature = "svg-engine"))]
+                {
+                let ReplacedContentKind::SVGElement { vector_image, has_viewbox, .. } = &self.kind;
                 let Some(vector_image) = vector_image else {
                     return vec![];
                 };
@@ -673,6 +696,7 @@ impl ReplacedContents {
                     })
                     .into_iter()
                     .collect()
+                }
             },
             ReplacedContentKind::Audio => vec![],
         }

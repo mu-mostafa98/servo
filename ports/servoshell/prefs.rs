@@ -50,7 +50,6 @@ pub(crate) static EXPERIMENTAL_PREFS: &[&str] = &[
     "layout_container_queries_enabled",
     "layout_grid_enabled",
     "layout_variable_fonts_enabled",
-    "layout_svg_engine_enabled",
 ];
 
 #[cfg_attr(any(target_os = "android", target_env = "ohos"), expect(dead_code))]
@@ -580,8 +579,9 @@ struct CmdArgs {
     #[bpaf(positional("URL"), fallback(String::from("https://www.servo.org")))]
     url: String,
 
-    ///  Enable the SVG rendering engine.
+    ///  Enable the SVG rendering engine (now compile-time via `svg-engine` feature).
     #[bpaf(long)]
+    #[allow(dead_code)]
     svg_engine: bool,
 }
 
@@ -600,9 +600,7 @@ fn update_preferences_from_command_line_arguments(
         }
     }
 
-    if cmd_args.svg_engine {
-        preferences.layout_svg_engine_enabled = true;
-    }
+
 
     for pref in &cmd_args.pref {
         let split: Vec<&str> = pref.splitn(2, '=').collect();
