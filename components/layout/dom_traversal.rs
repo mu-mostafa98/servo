@@ -141,9 +141,11 @@ fn traverse_element<'dom>(
 
     // SVG child elements (rect, circle, g, etc.) MUST NOT create HTML
     // layout boxes — they are rendered entirely by the SVG engine via
-    // the render tree built in svg_builder.rs. The root <svg> element
+    // the render tree built in the svg module. The root <svg> element
     // IS allowed through — it generates the replaced element box that
     // triggers the SVG engine.
+    // Only applies when the SVG engine feature is enabled.
+    #[cfg(feature = "svg-engine")]
     if let Some(el) = element.as_element() {
         if el.is_svg_element() &&
             !matches!(element.type_id(), Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement)))
