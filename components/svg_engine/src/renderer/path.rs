@@ -4,8 +4,8 @@
 
 use kurbo::{BezPath, PathEl, Point as KurboPoint};
 
-use crate::shapes::{Path, Polyline};
 use crate::renderer::{Render, RenderContext};
+use crate::shapes::{Path, Polyline};
 
 /// Tolerance for flattening bezier curves into line segments.
 /// Lower values = smoother curves, more segments.
@@ -38,24 +38,26 @@ fn flatten_path(path: &BezPath) -> Vec<KurboPoint> {
     let mut points: Vec<KurboPoint> = Vec::new();
     let mut subpath_start: Option<KurboPoint> = None;
 
-    kurbo::flatten(path.elements().iter().copied(), FLATTEN_TOLERANCE, |el| {
-        match el {
+    kurbo::flatten(
+        path.elements().iter().copied(),
+        FLATTEN_TOLERANCE,
+        |el| match el {
             PathEl::MoveTo(p) => {
                 points.push(p);
                 subpath_start = Some(p);
-            }
+            },
             PathEl::LineTo(p) => {
                 points.push(p);
-            }
+            },
             PathEl::ClosePath => {
                 if let Some(start) = subpath_start {
                     points.push(start);
                 }
                 subpath_start = None;
-            }
-            _ => {}
-        }
-    });
+            },
+            _ => {},
+        },
+    );
 
     points
 }

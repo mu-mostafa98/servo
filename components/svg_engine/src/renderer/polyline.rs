@@ -3,16 +3,11 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use lyon::math::Point as LyonPoint;
+use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
+use crate::renderer::{Render, RenderContext, fill, stroke};
 use crate::shapes::Polyline;
 use crate::style::FillRule;
-use crate::renderer::{Render, RenderContext};
-use crate::renderer::fill;
-use crate::renderer::stroke;
-
-use webrender_api::{
-    units::{LayoutPoint, LayoutRect, LayoutSize},
-};
 
 /// Renders an SVG `<polyline>`.
 ///
@@ -36,11 +31,11 @@ impl Render for Polyline {
         // ── FILL ──────────────────────────────────────────────────────────
         if shifted_pts.len() >= 3 {
             let (bx, by, bw, bh) = fill::points_bounds(&shifted_pts);
-            let bounds = LayoutRect::from_origin_and_size(
-                LayoutPoint::new(bx, by),
-                LayoutSize::new(bw, bh),
-            );
-            let fill_rule = ctx.style.fill
+            let bounds =
+                LayoutRect::from_origin_and_size(LayoutPoint::new(bx, by), LayoutSize::new(bw, bh));
+            let fill_rule = ctx
+                .style
+                .fill
                 .as_ref()
                 .map(|f| f.fill_rule)
                 .unwrap_or(FillRule::NonZero);

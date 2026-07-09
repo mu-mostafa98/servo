@@ -9,30 +9,30 @@
 //! The [`crate::traversal`] module calls [`Render::render`] during SVG tree
 //! traversal — there is no central dispatch match to maintain.
 
-pub(crate) mod rect;
-pub(crate) mod ellipse;
 pub(crate) mod circle;
-pub(crate) mod line;
-pub(crate) mod polyline;
-pub(crate) mod polygon;
-pub(crate) mod path;
-pub(crate) mod transform;
-pub(crate) mod gradient;
+pub(crate) mod ellipse;
 pub(crate) mod fill;
-pub(crate) mod stroke;
+pub(crate) mod gradient;
+pub(crate) mod line;
+pub(crate) mod path;
 pub(crate) mod pattern;
+pub(crate) mod polygon;
+pub(crate) mod polyline;
+pub(crate) mod rect;
+pub(crate) mod stroke;
+pub(crate) mod transform;
 
 use svgtypes::Color as SvgColor;
+use webrender_api::units::{LayoutPoint, LayoutRect};
 use webrender_api::{
     ClipChainId, ColorF, CommonItemProperties, DisplayListBuilder, SpaceAndClipInfo, SpatialId,
-    units::LayoutPoint, units::LayoutRect,
 };
 
+use crate::render_tree::{ClipPathDef, MaskDef, PatternDef};
 use crate::shapes::*;
 use crate::style::NodeStyle;
-use crate::style::hints::{VectorEffect, ShapeRendering};
-use crate::render_tree::{ClipPathDef, MaskDef, PatternDef};
 use crate::style::gradient::GradientDef;
+use crate::style::hints::{ShapeRendering, VectorEffect};
 
 // ======================= Resource Provider Traits =======================
 
@@ -150,7 +150,13 @@ pub(crate) fn make_common_props(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
 ) -> CommonItemProperties {
-    CommonItemProperties::new(bounds, SpaceAndClipInfo { spatial_id, clip_chain_id })
+    CommonItemProperties::new(
+        bounds,
+        SpaceAndClipInfo {
+            spatial_id,
+            clip_chain_id,
+        },
+    )
 }
 
 /// Return the effective stroke width, adjusted for `vector-effect: non-scaling-stroke`.
@@ -159,11 +165,12 @@ pub(crate) fn make_common_props(
 /// transform scale so that the stroke appears the same visual width regardless
 /// of any ancestor or element-level scale transforms.
 pub(crate) fn effective_stroke_width(ctx: &RenderContext, width: f32) -> f32 {
-    if let Some(hints) = &ctx.style.render_hints
-        && let Some(VectorEffect::NonScalingStroke) = hints.vector_effect {
-            let scale = ctx.accumulated_scale.max(0.01);
-            return width / scale;
-        }
+    if let Some(hints) = &ctx.style.render_hints &&
+        let Some(VectorEffect::NonScalingStroke) = hints.vector_effect
+    {
+        let scale = ctx.accumulated_scale.max(0.01);
+        return width / scale;
+    }
     width
 }
 
@@ -193,7 +200,11 @@ pub(crate) const ZERO_LENGTH_EPSILON: f32 = 0.001;
 /// `if id == ClipChainId::INVALID { None } else { Some(id) }`
 /// that appears throughout the crate.
 pub(crate) fn clip_chain_option(id: ClipChainId) -> Option<ClipChainId> {
-    if id == ClipChainId::INVALID { None } else { Some(id) }
+    if id == ClipChainId::INVALID {
+        None
+    } else {
+        Some(id)
+    }
 }
 
 /// Map the shape-rendering hint to a numeric parameter.
@@ -207,7 +218,10 @@ pub(crate) fn shape_rendering_value(
     speed: f32,
     default: f32,
 ) -> f32 {
-    match ctx.style.render_hints.as_ref()
+    match ctx
+        .style
+        .render_hints
+        .as_ref()
         .and_then(|h| h.shape_rendering)
     {
         Some(ShapeRendering::GeometricPrecision) => precision,

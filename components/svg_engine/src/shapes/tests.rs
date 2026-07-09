@@ -7,7 +7,11 @@
 #[cfg(test)]
 mod tests {
     use std::collections::HashMap;
-    use crate::shapes::{AttrAccessor, BuildFromElement, Rectangle, Circle, Ellipse, Line, Polyline, Polygon, Path, Shape};
+
+    use crate::shapes::{
+        AttrAccessor, BuildFromElement, Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle,
+        Shape,
+    };
 
     struct TestElement {
         attrs: HashMap<String, String>,
@@ -16,7 +20,10 @@ mod tests {
     impl TestElement {
         fn new(attrs: &[(&str, &str)]) -> Self {
             TestElement {
-                attrs: attrs.iter().map(|(k, v)| (k.to_string(), v.to_string())).collect(),
+                attrs: attrs
+                    .iter()
+                    .map(|(k, v)| (k.to_string(), v.to_string()))
+                    .collect(),
             }
         }
     }
@@ -42,8 +49,12 @@ mod tests {
     #[test]
     fn rectangle_from_attrs_with_position_and_radii() {
         let el = TestElement::new(&[
-            ("x", "10"), ("y", "20"), ("width", "200"), ("height", "100"),
-            ("rx", "5"), ("ry", "3"),
+            ("x", "10"),
+            ("y", "20"),
+            ("width", "200"),
+            ("height", "100"),
+            ("rx", "5"),
+            ("ry", "3"),
         ]);
         let r = Rectangle::from_attrs(16.0, &el).unwrap();
         assert_eq!(r.x, 10.0);

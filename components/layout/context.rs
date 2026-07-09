@@ -9,8 +9,8 @@ use embedder_traits::UntrustedNodeAddress;
 use euclid::Size2D;
 use fonts::FontContext;
 use layout_api::{
-    AnimatingImages, IFrameSizes, LayoutImageDestination, PendingImage,
-    PendingImageState, PendingRasterizationImage,
+    AnimatingImages, IFrameSizes, LayoutImageDestination, PendingImage, PendingImageState,
+    PendingRasterizationImage,
 };
 use net_traits::image_cache::{
     Image as CachedImage, ImageCache, ImageCacheResult, ImageOrMetadataAvailable, PendingImageId,

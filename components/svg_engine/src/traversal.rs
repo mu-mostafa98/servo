@@ -5,19 +5,19 @@
 //! SVG render tree traversal.
 
 use euclid::Transform2D;
+use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{
-    ClipChainId, DisplayListBuilder,
-    MixBlendMode, PrimitiveFlags, PropertyBinding,
-    RasterSpace, ReferenceFrameKind, SpatialId, StackingContextFlags,
-    TransformStyle, units::{LayoutPoint, LayoutRect, LayoutSize},
+    ClipChainId, DisplayListBuilder, MixBlendMode, PrimitiveFlags, PropertyBinding, RasterSpace,
+    ReferenceFrameKind, SpatialId, StackingContextFlags, TransformStyle,
 };
 
-use crate::effects::clip::{resolve_node_clip_path, build_mask_clips};
+use crate::effects::clip::{build_mask_clips, resolve_node_clip_path};
 use crate::effects::filter::get_filter_ops;
 use crate::render_tree::*;
-use crate::renderer::transform;
-use crate::renderer::{Render, RenderContext, clip_chain_option};
-use crate::renderer::{PaintResourceProvider, ClipMaskProvider, FilterProvider};
+use crate::renderer::{
+    ClipMaskProvider, FilterProvider, PaintResourceProvider, Render, RenderContext,
+    clip_chain_option, transform,
+};
 
 pub fn render_svg_tree(
     tree: &SvgRenderTree,
@@ -35,37 +35,48 @@ pub fn render_svg_tree(
         clip_chain_id
     };
 
-    let (root_origin, root_spatial_id, pop_frame) =
-        if let Some(ref vb) = tree.viewport.view_box {
-            let (sx, sy, ox, oy) = viewbox_transform(
-                vb.width, vb.height,
-                svg_size.width, svg_size.height,
-                tree.viewport.aspect_ratio.as_ref(),
-            );
-            let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x, -vb.min_y);
-            let s = Transform2D::<f32, (), ()>::scale(sx, sy);
-            let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
-            let combined = t1.then(&s).then(&t2);
-            let lt = transform::to_layout_transform(&combined);
-            let fid = wr.push_reference_frame(
-                *svg_origin, spatial_id,
-                TransformStyle::Flat,
-                PropertyBinding::Value(lt),
-                ReferenceFrameKind::Transform {
-                    is_2d_scale_translation: false,
-                    should_snap: false,
-                    paired_with_perspective: false,
-                },
-            );
-            (LayoutPoint::new(0.0, 0.0), fid, true)
-        } else {
-            (*svg_origin, spatial_id, false)
-        };
+    let (root_origin, root_spatial_id, pop_frame) = if let Some(ref vb) = tree.viewport.view_box {
+        let (sx, sy, ox, oy) = viewbox_transform(
+            vb.width,
+            vb.height,
+            svg_size.width,
+            svg_size.height,
+            tree.viewport.aspect_ratio.as_ref(),
+        );
+        let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x, -vb.min_y);
+        let s = Transform2D::<f32, (), ()>::scale(sx, sy);
+        let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
+        let combined = t1.then(&s).then(&t2);
+        let lt = transform::to_layout_transform(&combined);
+        let fid = wr.push_reference_frame(
+            *svg_origin,
+            spatial_id,
+            TransformStyle::Flat,
+            PropertyBinding::Value(lt),
+            ReferenceFrameKind::Transform {
+                is_2d_scale_translation: false,
+                should_snap: false,
+                paired_with_perspective: false,
+            },
+        );
+        (LayoutPoint::new(0.0, 0.0), fid, true)
+    } else {
+        (*svg_origin, spatial_id, false)
+    };
 
-    let providers = RenderProviders { paints: tree, clips: tree, filters: tree };
+    let providers = RenderProviders {
+        paints: tree,
+        clips: tree,
+        filters: tree,
+    };
     render_node(
-        &tree.root, &root_origin, root_spatial_id, svg_clip_chain, wr,
-        &providers, 1.0,
+        &tree.root,
+        &root_origin,
+        root_spatial_id,
+        svg_clip_chain,
+        wr,
+        &providers,
+        1.0,
     );
 
     if pop_frame {
@@ -91,14 +102,26 @@ fn render_node(
     providers: &RenderProviders,
     parent_scale: f32,
 ) {
-    if !node.style.is_displayed() { return; }
+    if !node.style.is_displayed() {
+        return;
+    }
     let (cur_origin, cur_spatial_id, pushed_count, accumulated_scale) =
         apply_node_transforms(node, svg_origin, spatial_id, parent_scale, wr);
     let node_clip_chain = resolve_node_clip_path(
-        node, providers.clips, &cur_origin, cur_spatial_id, clip_chain_id, wr,
+        node,
+        providers.clips,
+        &cur_origin,
+        cur_spatial_id,
+        clip_chain_id,
+        wr,
     );
     let mask_clips = build_mask_clips(
-        node, providers.clips, &cur_origin, cur_spatial_id, node_clip_chain, wr,
+        node,
+        providers.clips,
+        &cur_origin,
+        cur_spatial_id,
+        node_clip_chain,
+        wr,
     );
     let filter_ops = get_filter_ops(node, providers.filters);
     let shape_params = ShapeRenderParams {
@@ -107,15 +130,31 @@ fn render_node(
         paints: providers.paints,
     };
     render_shape(
-        node, &cur_origin, cur_spatial_id, node_clip_chain,
-        accumulated_scale, wr, &shape_params,
+        node,
+        &cur_origin,
+        cur_spatial_id,
+        node_clip_chain,
+        accumulated_scale,
+        wr,
+        &shape_params,
     );
-    let child_clip_chain = if node_clip_chain != clip_chain_id { node_clip_chain } else { clip_chain_id };
+    let child_clip_chain = if node_clip_chain != clip_chain_id {
+        node_clip_chain
+    } else {
+        clip_chain_id
+    };
     recurse_children(
-        node, &cur_origin, cur_spatial_id, child_clip_chain,
-        providers, accumulated_scale, wr,
+        node,
+        &cur_origin,
+        cur_spatial_id,
+        child_clip_chain,
+        providers,
+        accumulated_scale,
+        wr,
     );
-    for _ in 0..pushed_count { wr.pop_reference_frame(); }
+    for _ in 0..pushed_count {
+        wr.pop_reference_frame();
+    }
 }
 
 fn apply_node_transforms(
@@ -134,7 +173,9 @@ fn apply_node_transforms(
         let result = transform::apply_transform_op(op, cur_origin, cur_spatial_id, wr);
         cur_origin = result.child_origin;
         cur_spatial_id = result.child_spatial_id;
-        if result.pushed_frame { pushed_count += 1; }
+        if result.pushed_frame {
+            pushed_count += 1;
+        }
     }
     (cur_origin, cur_spatial_id, pushed_count, accumulated_scale)
 }
@@ -156,38 +197,62 @@ fn render_shape(
     wr: &mut DisplayListBuilder,
     params: &ShapeRenderParams,
 ) {
-    let SvgTag::Shape(shape) = &node.tag else { return };
-    if !node.style.is_visible() { return; }
+    let SvgTag::Shape(shape) = &node.tag else {
+        return;
+    };
+    if !node.style.is_visible() {
+        return;
+    }
     let pushed_filter = if let Some(ops) = params.filter_ops {
         wr.push_stacking_context(
-            cur_spatial_id, PrimitiveFlags::default(),
+            cur_spatial_id,
+            PrimitiveFlags::default(),
             clip_chain_option(node_clip_chain),
-            TransformStyle::Flat, MixBlendMode::Normal, ops, &[],
-            RasterSpace::Screen, StackingContextFlags::empty(), None,
+            TransformStyle::Flat,
+            MixBlendMode::Normal,
+            ops,
+            &[],
+            RasterSpace::Screen,
+            StackingContextFlags::empty(),
+            None,
         );
         true
-    } else { false };
+    } else {
+        false
+    };
     let effective_clip = if let Some(clips) = params.mask_clips {
         clips.first().copied().unwrap_or(node_clip_chain)
-    } else { node_clip_chain };
+    } else {
+        node_clip_chain
+    };
     if let Some(clips) = params.mask_clips {
         for &mask_chain in clips {
             let mut ctx = RenderContext {
-                style: &node.style, svg_origin: *cur_origin,
-                spatial_id: cur_spatial_id, clip_chain_id: mask_chain,
-                wr: &mut *wr, paints: params.paints, accumulated_scale,
+                style: &node.style,
+                svg_origin: *cur_origin,
+                spatial_id: cur_spatial_id,
+                clip_chain_id: mask_chain,
+                wr: &mut *wr,
+                paints: params.paints,
+                accumulated_scale,
             };
             shape.render(&mut ctx);
         }
     } else {
         let mut ctx = RenderContext {
-            style: &node.style, svg_origin: *cur_origin,
-            spatial_id: cur_spatial_id, clip_chain_id: effective_clip,
-            wr: &mut *wr, paints: params.paints, accumulated_scale,
+            style: &node.style,
+            svg_origin: *cur_origin,
+            spatial_id: cur_spatial_id,
+            clip_chain_id: effective_clip,
+            wr: &mut *wr,
+            paints: params.paints,
+            accumulated_scale,
         };
         shape.render(&mut ctx);
     }
-    if pushed_filter { wr.pop_stacking_context(); }
+    if pushed_filter {
+        wr.pop_stacking_context();
+    }
 }
 
 fn recurse_children(
@@ -199,21 +264,36 @@ fn recurse_children(
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
 ) {
-    if let SvgTag::Container(Container::Defs) = &node.tag { return; }
+    if let SvgTag::Container(Container::Defs) = &node.tag {
+        return;
+    }
     for child in &node.children {
-        render_node(child, cur_origin, cur_spatial_id, clip_chain, wr,
-            providers, accumulated_scale);
+        render_node(
+            child,
+            cur_origin,
+            cur_spatial_id,
+            clip_chain,
+            wr,
+            providers,
+            accumulated_scale,
+        );
     }
 }
 
 /// viewBox → viewport transform. None = non-uniform stretch (backward compat).
 fn viewbox_transform(
-    vb_w: f32, vb_h: f32,
-    vp_w: f32, vp_h: f32,
+    vb_w: f32,
+    vb_h: f32,
+    vp_w: f32,
+    vp_h: f32,
     ar: Option<&crate::render_tree::AspectRatio>,
 ) -> (f32, f32, f32, f32) {
-    if vb_w <= 0.0 || vb_h <= 0.0 { return (1.0, 1.0, 0.0, 0.0); }
-    let Some(ar) = ar else { return (vp_w / vb_w, vp_h / vb_h, 0.0, 0.0); };
+    if vb_w <= 0.0 || vb_h <= 0.0 {
+        return (1.0, 1.0, 0.0, 0.0);
+    }
+    let Some(ar) = ar else {
+        return (vp_w / vb_w, vp_h / vb_h, 0.0, 0.0);
+    };
     use crate::render_tree::{AspectAlign, MeetOrSlice};
     match ar.align {
         AspectAlign::None => (vp_w / vb_w, vp_h / vb_h, 0.0, 0.0),

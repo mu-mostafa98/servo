@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 use svgtypes::ViewBox as SvgViewBox;
 
-use crate::renderer::{PaintResourceProvider, ClipMaskProvider, FilterProvider};
+use crate::renderer::{ClipMaskProvider, FilterProvider, PaintResourceProvider};
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
 use crate::style::gradient::GradientDef;
@@ -17,9 +17,15 @@ use crate::style::gradient::GradientDef;
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum AspectAlign {
     None,
-    XMinYMin, XMidYMin, XMaxYMin,
-    XMinYMid, XMidYMid, XMaxYMid,
-    XMinYMax, XMidYMax, XMaxYMax,
+    XMinYMin,
+    XMidYMin,
+    XMaxYMin,
+    XMinYMid,
+    XMidYMid,
+    XMaxYMid,
+    XMinYMax,
+    XMidYMax,
+    XMaxYMax,
 }
 
 /// SVG `preserveAspectRatio` meet-or-slice.
@@ -39,7 +45,10 @@ pub struct AspectRatio {
 impl Default for AspectRatio {
     fn default() -> Self {
         // SVG spec: viewBox alone implies preserveAspectRatio="xMidYMid meet".
-        AspectRatio { align: AspectAlign::XMidYMid, meet_or_slice: MeetOrSlice::Meet }
+        AspectRatio {
+            align: AspectAlign::XMidYMid,
+            meet_or_slice: MeetOrSlice::Meet,
+        }
     }
 }
 
@@ -226,7 +235,10 @@ pub struct PatternDef {
 pub fn parse_aspect_ratio(value: &str) -> AspectRatio {
     let value = value.trim();
     if value.is_empty() || value.eq_ignore_ascii_case("none") {
-        return AspectRatio { align: AspectAlign::None, meet_or_slice: MeetOrSlice::Meet };
+        return AspectRatio {
+            align: AspectAlign::None,
+            meet_or_slice: MeetOrSlice::Meet,
+        };
     }
 
     let parts: Vec<&str> = value.split_whitespace().collect();
@@ -243,12 +255,22 @@ pub fn parse_aspect_ratio(value: &str) -> AspectRatio {
         "xMaxYMax" => AspectAlign::XMaxYMax,
         _ => AspectAlign::XMidYMid,
     };
-    let meet_or_slice = parts.get(1).copied().and_then(|s| {
-        if s.eq_ignore_ascii_case("slice") { Some(MeetOrSlice::Slice) }
-        else { None }
-    }).unwrap_or(MeetOrSlice::Meet);
+    let meet_or_slice = parts
+        .get(1)
+        .copied()
+        .and_then(|s| {
+            if s.eq_ignore_ascii_case("slice") {
+                Some(MeetOrSlice::Slice)
+            } else {
+                None
+            }
+        })
+        .unwrap_or(MeetOrSlice::Meet);
 
-    AspectRatio { align, meet_or_slice }
+    AspectRatio {
+        align,
+        meet_or_slice,
+    }
 }
 
 // ======================= ViewBox Parsing =======================

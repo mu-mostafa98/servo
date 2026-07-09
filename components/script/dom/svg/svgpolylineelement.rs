@@ -10,8 +10,8 @@ use crate::dom::bindings::inheritance::Castable;
 use crate::dom::bindings::root::DomRoot;
 use crate::dom::document::Document;
 use crate::dom::node::Node;
-use crate::dom::svg::svggeometryelement::SVGGeometryElement;
 use crate::dom::node::virtualmethods::VirtualMethods;
+use crate::dom::svg::svggeometryelement::SVGGeometryElement;
 
 // https://svgwg.org/svg2-draft/shapes.html#InterfaceSVGPolylineElement
 #[dom_struct]
@@ -39,7 +39,9 @@ impl SVGPolylineElement {
     ) -> DomRoot<SVGPolylineElement> {
         Node::reflect_node_with_proto(
             cx,
-            Box::new(SVGPolylineElement::new_inherited(local_name, prefix, document)),
+            Box::new(SVGPolylineElement::new_inherited(
+                local_name, prefix, document,
+            )),
             document,
             proto,
         )

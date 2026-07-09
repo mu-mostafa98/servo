@@ -10,18 +10,13 @@
 //! its fill work here, eliminating the duplicated match-on-`PaintServer`
 //! pattern that previously lived in each shape's `Render` impl.
 
-use webrender_api::{
-    ClipChainId, CommonItemProperties, SpaceAndClipInfo,
-    units::LayoutRect,
-};
-
 use lyon::math::Point as LyonPoint;
+use webrender_api::units::LayoutRect;
+use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 
-use crate::renderer::{RenderContext, to_colorf};
-use crate::renderer::gradient;
-use crate::renderer::pattern;
-use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
 use crate::render_tree::PatternUnits;
+use crate::renderer::{RenderContext, gradient, pattern, to_colorf};
+use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
 use crate::tessellator;
 use crate::tessellator::FillStyle;
 
@@ -61,7 +56,10 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
                 color.a *= opacity;
                 let common = CommonItemProperties::new(
                     bounds,
-                    SpaceAndClipInfo { spatial_id: ctx.spatial_id, clip_chain_id: clip },
+                    SpaceAndClipInfo {
+                        spatial_id: ctx.spatial_id,
+                        clip_chain_id: clip,
+                    },
                 );
                 ctx.wr.push_rect(&common, bounds, color);
             }
@@ -122,7 +120,10 @@ pub(crate) fn fill_polygon(
                         };
                         let fill_style = FillStyle::LinearGradient {
                             stops: &lg.stops,
-                            gx1, gy1, gx2, gy2,
+                            gx1,
+                            gy1,
+                            gx2,
+                            gy2,
                             opacity,
                         };
                         tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
@@ -132,21 +133,27 @@ pub(crate) fn fill_polygon(
                         let (fx, fy, r2) = match rg.units {
                             GradientUnits::ObjectBoundingBox => {
                                 let scale = bw.max(bh);
-                                (bx + rg.fx.to_object_bbox() * bw,
-                                 by + rg.fy.to_object_bbox() * bh,
-                                 (rg.r.to_object_bbox() * scale).max(1.0))
+                                (
+                                    bx + rg.fx.to_object_bbox() * bw,
+                                    by + rg.fy.to_object_bbox() * bh,
+                                    (rg.r.to_object_bbox() * scale).max(1.0),
+                                )
                             },
                             GradientUnits::UserSpaceOnUse => {
                                 let scale = bw.max(bh);
-                                (ctx.svg_origin.x + rg.fx.to_user_space(bw),
-                                 ctx.svg_origin.y + rg.fy.to_user_space(bh),
-                                 rg.r.to_user_space(scale).max(1.0))
+                                (
+                                    ctx.svg_origin.x + rg.fx.to_user_space(bw),
+                                    ctx.svg_origin.y + rg.fy.to_user_space(bh),
+                                    rg.r.to_user_space(scale).max(1.0),
+                                )
                             },
                         };
                         let r2 = r2 * r2;
                         let fill_style = FillStyle::RadialGradient {
                             stops: &rg.stops,
-                            fx, fy, r2,
+                            fx,
+                            fy,
+                            r2,
                             opacity,
                         };
                         tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
@@ -196,12 +203,8 @@ fn handle_pattern_fill(
     let by = bounds.min.y;
 
     let (tile_w, tile_h) = match def.pattern_units {
-        PatternUnits::ObjectBoundingBox => {
-            (def.width * bw, def.height * bh)
-        },
-        PatternUnits::UserSpaceOnUse => {
-            (def.width, def.height)
-        },
+        PatternUnits::ObjectBoundingBox => (def.width * bw, def.height * bh),
+        PatternUnits::UserSpaceOnUse => (def.width, def.height),
     };
 
     if tile_w <= 0.0 || tile_h <= 0.0 {
@@ -209,9 +212,7 @@ fn handle_pattern_fill(
     }
 
     let (ox, oy) = match def.pattern_units {
-        PatternUnits::ObjectBoundingBox => {
-            (bx + def.x * bw, by + def.y * bh)
-        },
+        PatternUnits::ObjectBoundingBox => (bx + def.x * bw, by + def.y * bh),
         PatternUnits::UserSpaceOnUse => {
             // Per SVG spec, pattern x/y are in user space (the SVG viewport
             // coordinate system), not relative to the element being filled.
@@ -223,8 +224,10 @@ fn handle_pattern_fill(
 
     let fill_style = FillStyle::Pattern {
         shapes: &def.shapes,
-        tile_w, tile_h,
-        ox, oy,
+        tile_w,
+        tile_h,
+        ox,
+        oy,
         opacity,
     };
     tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
@@ -241,10 +244,18 @@ pub(crate) fn points_bounds(pts: &[LyonPoint]) -> (f32, f32, f32, f32) {
     let mut max_x = f32::MIN;
     let mut max_y = f32::MIN;
     for p in pts {
-        if p.x < min_x { min_x = p.x; }
-        if p.y < min_y { min_y = p.y; }
-        if p.x > max_x { max_x = p.x; }
-        if p.y > max_y { max_y = p.y; }
+        if p.x < min_x {
+            min_x = p.x;
+        }
+        if p.y < min_y {
+            min_y = p.y;
+        }
+        if p.x > max_x {
+            max_x = p.x;
+        }
+        if p.y > max_y {
+            max_y = p.y;
+        }
     }
     (min_x, min_y, max_x - min_x, max_y - min_y)
 }

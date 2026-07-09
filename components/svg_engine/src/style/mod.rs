@@ -13,24 +13,24 @@
 //! Style construction (FromComputedValues, FromCssAttrs) lives in
 //! [`crate::layout::svg_builder`].
 
+pub mod color;
 pub(crate) mod fill;
-pub(crate) mod stroke;
 pub mod gradient;
 pub(crate) mod hints;
 pub(crate) mod node_effects;
-pub(crate) mod visibility;
-pub mod color;
+pub(crate) mod stroke;
 pub mod transform_ops;
+pub(crate) mod visibility;
 
 pub use self::fill::{FillParams, FillRule};
-pub use self::stroke::{StrokeParams, LineCap, LineJoin};
 pub use self::hints::{
-    RenderHints, VectorEffect, ColorRendering, ColorInterpolation,
-    ShapeRendering, TextRendering, ImageRendering, PaintOrder,
+    ColorInterpolation, ColorRendering, ImageRendering, PaintOrder, RenderHints, ShapeRendering,
+    TextRendering, VectorEffect,
 };
-pub use self::visibility::{Visibility, Display};
 pub use self::node_effects::NodeEffects;
+pub use self::stroke::{LineCap, LineJoin, StrokeParams};
 use self::transform_ops::TransformOp;
+pub use self::visibility::{Display, Visibility};
 
 /// Combined fill + stroke styling for an SVG render node.
 #[derive(Debug, Clone)]

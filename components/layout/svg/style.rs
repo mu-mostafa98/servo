@@ -15,19 +15,17 @@ use std::collections::HashMap;
 
 use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode, LayoutNodeType};
+use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
+use style::color::ColorSpace;
 use style::values::computed::basic_shape::ClipPath;
-use style::values::computed::svg::{SVGOpacity, SVGStrokeDashArray, SVGPaint, SVGPaintKind};
-use style::values::computed::svg::VectorEffect as StyloVectorEffect;
+use style::values::computed::svg::{
+    SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray, VectorEffect as StyloVectorEffect,
+};
 use style::values::generics::svg::SVGLength;
 use style::values::specified::box_ as stylo_box;
-use style::color::ColorSpace;
-
-use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-
-use svg_engine::style::*;
 use svg_engine::style::gradient::PaintServer;
-use svg_engine::style::transform_ops::{parse_transform_str, TransformOp};
-
+use svg_engine::style::transform_ops::{TransformOp, parse_transform_str};
+use svg_engine::style::*;
 use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
@@ -48,7 +46,10 @@ enum ResolvedPaint {
     None,
 }
 
-fn resolve_svg_paint(svg_paint: &SVGPaint, computed_values: &style::properties::ComputedValues) -> ResolvedPaint {
+fn resolve_svg_paint(
+    svg_paint: &SVGPaint,
+    computed_values: &style::properties::ComputedValues,
+) -> ResolvedPaint {
     match &svg_paint.kind {
         SVGPaintKind::Color(color) => {
             let current_color = computed_values.clone_color();
@@ -91,15 +92,26 @@ impl FromComputedValues for FillParams {
         let inherited_svg = values.get_inherited_svg();
         let paint = resolve_svg_paint(&inherited_svg.fill, values);
         let opacity = match inherited_svg.fill_opacity {
-            SVGOpacity::Opacity(opacity) => opacity, _ => 1.0,
+            SVGOpacity::Opacity(opacity) => opacity,
+            _ => 1.0,
         };
         let fill_rule = match inherited_svg.fill_rule {
             style::computed_values::fill_rule::T::Nonzero => FillRule::NonZero,
             style::computed_values::fill_rule::T::Evenodd => FillRule::EvenOdd,
         };
         match paint {
-            ResolvedPaint::Color(color) => Some(FillParams { color: Some(color), paint_server: None, opacity, fill_rule }),
-            ResolvedPaint::PaintServer(id) => Some(FillParams { color: None, paint_server: Some(PaintServer::Gradient(id)), opacity, fill_rule }),
+            ResolvedPaint::Color(color) => Some(FillParams {
+                color: Some(color),
+                paint_server: None,
+                opacity,
+                fill_rule,
+            }),
+            ResolvedPaint::PaintServer(id) => Some(FillParams {
+                color: None,
+                paint_server: Some(PaintServer::Gradient(id)),
+                opacity,
+                fill_rule,
+            }),
             ResolvedPaint::None => {
                 if matches!(inherited_svg.fill.kind, SVGPaintKind::None) {
                     None
@@ -130,10 +142,13 @@ impl FromComputedValues for StrokeParams {
         let inherited_svg = values.get_inherited_svg();
         let paint = resolve_svg_paint(&inherited_svg.stroke, values);
         let opacity = match inherited_svg.stroke_opacity {
-            SVGOpacity::Opacity(opacity) => opacity, _ => 1.0,
+            SVGOpacity::Opacity(opacity) => opacity,
+            _ => 1.0,
         };
         let width = match &inherited_svg.stroke_width {
-            SVGLength::LengthPercentage(nn_lp) => nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0),
+            SVGLength::LengthPercentage(nn_lp) => {
+                nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0)
+            },
             _ => 1.0,
         };
         let line_cap = match inherited_svg.stroke_linecap {
@@ -149,7 +164,15 @@ impl FromComputedValues for StrokeParams {
         let miter_limit = inherited_svg.stroke_miterlimit.0;
         let dash_array = match &inherited_svg.stroke_dasharray {
             SVGStrokeDashArray::Values(vs) => {
-                if vs.is_empty() { None } else { Some(vs.iter().map(|v| v.0.to_length().map(|l| l.px()).unwrap_or(0.0)).collect()) }
+                if vs.is_empty() {
+                    None
+                } else {
+                    Some(
+                        vs.iter()
+                            .map(|v| v.0.to_length().map(|l| l.px()).unwrap_or(0.0))
+                            .collect(),
+                    )
+                }
             },
             _ => None,
         };
@@ -157,10 +180,32 @@ impl FromComputedValues for StrokeParams {
             SVGLength::LengthPercentage(lp) => lp.to_length().map(|l| l.px()).unwrap_or(0.0),
             _ => 0.0,
         };
-        if width <= 0.0 { return None; }
+        if width <= 0.0 {
+            return None;
+        }
         match paint {
-            ResolvedPaint::Color(color) => Some(StrokeParams { color: Some(color), paint_server: None, opacity, width, line_cap, line_join, miter_limit, dash_array, dash_offset }),
-            ResolvedPaint::PaintServer(id) => Some(StrokeParams { color: None, paint_server: Some(PaintServer::Gradient(id)), opacity, width, line_cap, line_join, miter_limit, dash_array, dash_offset }),
+            ResolvedPaint::Color(color) => Some(StrokeParams {
+                color: Some(color),
+                paint_server: None,
+                opacity,
+                width,
+                line_cap,
+                line_join,
+                miter_limit,
+                dash_array,
+                dash_offset,
+            }),
+            ResolvedPaint::PaintServer(id) => Some(StrokeParams {
+                color: None,
+                paint_server: Some(PaintServer::Gradient(id)),
+                opacity,
+                width,
+                line_cap,
+                line_join,
+                miter_limit,
+                dash_array,
+                dash_offset,
+            }),
             ResolvedPaint::None => None,
         }
     }
@@ -178,7 +223,7 @@ impl FromComputedValues for NodeStyle {
 
         let display = values.get_box().display;
         let svg_display = if display.outside() == stylo_box::DisplayOutside::None ||
-                            display.inside() == stylo_box::DisplayInside::None
+            display.inside() == stylo_box::DisplayInside::None
         {
             Display::None
         } else {
@@ -196,7 +241,11 @@ impl FromComputedValues for NodeStyle {
             ClipPath::Url(style::url::ComputedUrl::Valid(u)) => u.fragment().map(|s| s.to_owned()),
             ClipPath::Url(style::url::ComputedUrl::Invalid(s)) => {
                 let trimmed = s.trim_start_matches('#');
-                if !trimmed.is_empty() { Some(trimmed.to_owned()) } else { None }
+                if !trimmed.is_empty() {
+                    Some(trimmed.to_owned())
+                } else {
+                    None
+                }
             },
             _ => None,
         };
@@ -244,7 +293,9 @@ impl FromComputedValues for NodeStyle {
 // ======================= Element helpers =======================
 
 pub(crate) fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<String> {
-    element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
+    element
+        .attribute_as_str(&ns!(), &LocalName::from(attr))
+        .map(|s| s.to_string())
 }
 
 /// Extract the fragment from a `url(#fragment)` CSS/SVG URL value.
@@ -294,21 +345,33 @@ fn extract_style_text_content<'dom>(node: ServoLayoutNode<'dom>) -> Option<Strin
         }
     }
     let trimmed = text.trim().to_string();
-    if trimmed.is_empty() { None } else { Some(trimmed) }
+    if trimmed.is_empty() {
+        None
+    } else {
+        Some(trimmed)
+    }
 }
 
 fn parse_svg_class_rules(css_text: &str) -> CssClassRules {
     let mut rules: CssClassRules = HashMap::new();
     for block in css_text.split('}') {
         let block = block.trim();
-        if block.is_empty() { continue; }
+        if block.is_empty() {
+            continue;
+        }
         let mut parts = block.splitn(2, '{');
         let selector = parts.next().unwrap_or("").trim();
         let declarations = parts.next().unwrap_or("").trim();
-        if selector.is_empty() || declarations.is_empty() { continue; }
-        if !selector.starts_with('.') { continue; }
+        if selector.is_empty() || declarations.is_empty() {
+            continue;
+        }
+        if !selector.starts_with('.') {
+            continue;
+        }
         let class_name = selector[1..].trim();
-        if class_name.is_empty() || class_name.contains(' ') { continue; }
+        if class_name.is_empty() || class_name.contains(' ') {
+            continue;
+        }
         let props = parse_svg_declarations(declarations);
         rules.insert(class_name.to_owned(), props);
     }
@@ -319,11 +382,15 @@ fn parse_svg_declarations(block: &str) -> HashMap<String, String> {
     let mut props = HashMap::new();
     for decl in block.split(';') {
         let decl = decl.trim();
-        if decl.is_empty() { continue; }
+        if decl.is_empty() {
+            continue;
+        }
         let mut parts = decl.splitn(2, ':');
         let name = parts.next().unwrap_or("").trim().to_lowercase();
         let value = parts.next().unwrap_or("").trim();
-        if name.is_empty() || value.is_empty() { continue; }
+        if name.is_empty() || value.is_empty() {
+            continue;
+        }
         props.insert(name, value.to_owned());
     }
     props
@@ -334,9 +401,13 @@ pub(crate) fn apply_css_class_rules(
     css_rules: &CssClassRules,
     style: &mut NodeStyle,
 ) {
-    let Some(class_attr) = get_attr(element, "class") else { return };
+    let Some(class_attr) = get_attr(element, "class") else {
+        return;
+    };
     for class_name in class_attr.split_whitespace() {
-        let Some(props) = css_rules.get(class_name) else { continue };
+        let Some(props) = css_rules.get(class_name) else {
+            continue;
+        };
         for (prop, value) in props {
             apply_css_property(style, prop, value);
         }
@@ -353,7 +424,11 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                             color: Some(c),
                             paint_server: None,
                             opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(1.0),
-                            fill_rule: style.fill.as_ref().map(|f| f.fill_rule).unwrap_or(FillRule::NonZero),
+                            fill_rule: style
+                                .fill
+                                .as_ref()
+                                .map(|f| f.fill_rule)
+                                .unwrap_or(FillRule::NonZero),
                         });
                     },
                     PaintServer::Gradient(id) => {
@@ -361,7 +436,11 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                             color: None,
                             paint_server: Some(PaintServer::Gradient(id)),
                             opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(1.0),
-                            fill_rule: style.fill.as_ref().map(|f| f.fill_rule).unwrap_or(FillRule::NonZero),
+                            fill_rule: style
+                                .fill
+                                .as_ref()
+                                .map(|f| f.fill_rule)
+                                .unwrap_or(FillRule::NonZero),
                         });
                     },
                     PaintServer::Pattern(_) => {},
@@ -386,11 +465,27 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                             paint_server: None,
                             opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(1.0),
                             width: style.stroke.as_ref().map(|s| s.width).unwrap_or(1.0),
-                            line_cap: style.stroke.as_ref().map(|s| s.line_cap).unwrap_or(LineCap::Butt),
-                            line_join: style.stroke.as_ref().map(|s| s.line_join).unwrap_or(LineJoin::Miter),
-                            miter_limit: style.stroke.as_ref().map(|s| s.miter_limit).unwrap_or(4.0),
+                            line_cap: style
+                                .stroke
+                                .as_ref()
+                                .map(|s| s.line_cap)
+                                .unwrap_or(LineCap::Butt),
+                            line_join: style
+                                .stroke
+                                .as_ref()
+                                .map(|s| s.line_join)
+                                .unwrap_or(LineJoin::Miter),
+                            miter_limit: style
+                                .stroke
+                                .as_ref()
+                                .map(|s| s.miter_limit)
+                                .unwrap_or(4.0),
                             dash_array: style.stroke.as_ref().and_then(|s| s.dash_array.clone()),
-                            dash_offset: style.stroke.as_ref().map(|s| s.dash_offset).unwrap_or(0.0),
+                            dash_offset: style
+                                .stroke
+                                .as_ref()
+                                .map(|s| s.dash_offset)
+                                .unwrap_or(0.0),
                         });
                     },
                     PaintServer::Gradient(id) => {
@@ -399,11 +494,27 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                             paint_server: Some(PaintServer::Gradient(id)),
                             opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(1.0),
                             width: style.stroke.as_ref().map(|s| s.width).unwrap_or(1.0),
-                            line_cap: style.stroke.as_ref().map(|s| s.line_cap).unwrap_or(LineCap::Butt),
-                            line_join: style.stroke.as_ref().map(|s| s.line_join).unwrap_or(LineJoin::Miter),
-                            miter_limit: style.stroke.as_ref().map(|s| s.miter_limit).unwrap_or(4.0),
+                            line_cap: style
+                                .stroke
+                                .as_ref()
+                                .map(|s| s.line_cap)
+                                .unwrap_or(LineCap::Butt),
+                            line_join: style
+                                .stroke
+                                .as_ref()
+                                .map(|s| s.line_join)
+                                .unwrap_or(LineJoin::Miter),
+                            miter_limit: style
+                                .stroke
+                                .as_ref()
+                                .map(|s| s.miter_limit)
+                                .unwrap_or(4.0),
                             dash_array: style.stroke.as_ref().and_then(|s| s.dash_array.clone()),
-                            dash_offset: style.stroke.as_ref().map(|s| s.dash_offset).unwrap_or(0.0),
+                            dash_offset: style
+                                .stroke
+                                .as_ref()
+                                .map(|s| s.dash_offset)
+                                .unwrap_or(0.0),
                         });
                     },
                     PaintServer::Pattern(_) => {},
@@ -414,12 +525,16 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
         },
         "stroke-width" => {
             if let Ok(w) = value.trim_end_matches("px").parse::<f32>() {
-                if let Some(ref mut s) = style.stroke { s.width = w.max(0.0); }
+                if let Some(ref mut s) = style.stroke {
+                    s.width = w.max(0.0);
+                }
             }
         },
         "stroke-opacity" => {
             if let Ok(op) = value.parse::<f32>() {
-                if let Some(ref mut s) = style.stroke { s.opacity = op.clamp(0.0, 1.0); }
+                if let Some(ref mut s) = style.stroke {
+                    s.opacity = op.clamp(0.0, 1.0);
+                }
             }
         },
         "stroke-linecap" => {
@@ -428,7 +543,9 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                 "square" => LineCap::Square,
                 _ => LineCap::Butt,
             };
-            if let Some(ref mut s) = style.stroke { s.line_cap = lc; }
+            if let Some(ref mut s) = style.stroke {
+                s.line_cap = lc;
+            }
         },
         "stroke-linejoin" => {
             let lj = match value {
@@ -436,23 +553,32 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                 "bevel" => LineJoin::Bevel,
                 _ => LineJoin::Miter,
             };
-            if let Some(ref mut s) = style.stroke { s.line_join = lj; }
+            if let Some(ref mut s) = style.stroke {
+                s.line_join = lj;
+            }
         },
         "stroke-dasharray" => {
             if value != "none" {
-                let dashes: Vec<f32> = value.split(',')
+                let dashes: Vec<f32> = value
+                    .split(',')
                     .filter_map(|v| v.trim().parse::<f32>().ok())
                     .collect();
                 if !dashes.is_empty() {
-                    if let Some(ref mut s) = style.stroke { s.dash_array = Some(dashes); }
+                    if let Some(ref mut s) = style.stroke {
+                        s.dash_array = Some(dashes);
+                    }
                 }
             } else {
-                if let Some(ref mut s) = style.stroke { s.dash_array = None; }
+                if let Some(ref mut s) = style.stroke {
+                    s.dash_array = None;
+                }
             }
         },
         "stroke-dashoffset" => {
             if let Ok(off) = value.parse::<f32>() {
-                if let Some(ref mut s) = style.stroke { s.dash_offset = off; }
+                if let Some(ref mut s) = style.stroke {
+                    s.dash_offset = off;
+                }
             }
         },
         "opacity" => {
@@ -475,15 +601,14 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
 /// Apply stroke-related SVG presentation attributes to an existing style,
 /// field by field.  Only overrides fields where the corresponding attribute
 /// exists on the element — computed values for absent attributes are preserved.
-fn apply_stroke_presentation_attrs(
-    element: &ServoLayoutElement,
-    style: &mut NodeStyle,
-) {
+fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle) {
     let style_attr = get_attr(element, "style");
 
     let read_attr = |name: &str| -> Option<String> {
         get_attr(element, name).or_else(|| {
-            style_attr.as_ref().and_then(|s| parse_inline_style_prop(s, name))
+            style_attr
+                .as_ref()
+                .and_then(|s| parse_inline_style_prop(s, name))
         })
     };
 
@@ -535,7 +660,11 @@ fn apply_stroke_presentation_attrs(
 
     // stroke-width
     if let Some(v) = read_attr("stroke-width") {
-        stroke.width = v.trim_end_matches("px").parse::<f32>().unwrap_or(1.0).max(0.0);
+        stroke.width = v
+            .trim_end_matches("px")
+            .parse::<f32>()
+            .unwrap_or(1.0)
+            .max(0.0);
     }
 
     // stroke-opacity
@@ -573,10 +702,22 @@ fn apply_stroke_presentation_attrs(
         if v.eq_ignore_ascii_case("none") {
             stroke.dash_array = None;
         } else {
-            let dashes: Vec<f32> = v.split(|c| c == ',' || c == ' ')
-                .filter_map(|s| { let t = s.trim(); if t.is_empty() { None } else { t.parse::<f32>().ok() } })
+            let dashes: Vec<f32> = v
+                .split(|c| c == ',' || c == ' ')
+                .filter_map(|s| {
+                    let t = s.trim();
+                    if t.is_empty() {
+                        None
+                    } else {
+                        t.parse::<f32>().ok()
+                    }
+                })
                 .collect();
-            stroke.dash_array = if dashes.is_empty() { None } else { Some(dashes) };
+            stroke.dash_array = if dashes.is_empty() {
+                None
+            } else {
+                Some(dashes)
+            };
         }
     }
 
@@ -588,15 +729,14 @@ fn apply_stroke_presentation_attrs(
 
 /// Apply fill-related SVG presentation attributes to an existing style,
 /// field by field.
-fn apply_fill_presentation_attrs(
-    element: &ServoLayoutElement,
-    style: &mut NodeStyle,
-) {
+fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle) {
     let style_attr = get_attr(element, "style");
 
     let read_attr = |name: &str| -> Option<String> {
         get_attr(element, name).or_else(|| {
-            style_attr.as_ref().and_then(|s| parse_inline_style_prop(s, name))
+            style_attr
+                .as_ref()
+                .and_then(|s| parse_inline_style_prop(s, name))
         })
     };
 
@@ -666,9 +806,7 @@ pub(crate) fn build_style(
         (NodeStyle::default(), Vec::new())
     };
 
-    let attr_ops = parse_transform_str(
-        &get_attr(&element, "transform").unwrap_or_default(),
-    );
+    let attr_ops = parse_transform_str(&get_attr(&element, "transform").unwrap_or_default());
     style.transform = [css_transform, attr_ops].concat();
 
     // Apply SVG presentation attributes field-by-field into the style.
@@ -680,16 +818,18 @@ pub(crate) fn build_style(
 
     // Read `display` presentation attribute (SVG display="none" maps to
     // CSS display: none, hiding the element and all its children).
-    let display_attr = get_attr(&element, "display")
-        .or_else(|| get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "display")));
+    let display_attr = get_attr(&element, "display").or_else(|| {
+        get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "display"))
+    });
     if let Some(v) = display_attr {
         if v.trim().eq_ignore_ascii_case("none") {
             style.display = Display::None;
         }
     }
 
-    let vis_attr = get_attr(&element, "visibility")
-        .or_else(|| get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility")));
+    let vis_attr = get_attr(&element, "visibility").or_else(|| {
+        get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility"))
+    });
     if let Some(v) = vis_attr {
         match v.trim() {
             "hidden" | "collapse" => style.visibility = Visibility::Hidden,
@@ -697,8 +837,9 @@ pub(crate) fn build_style(
         }
     }
 
-    let opacity_attr = get_attr(&element, "opacity")
-        .or_else(|| get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "opacity")));
+    let opacity_attr = get_attr(&element, "opacity").or_else(|| {
+        get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "opacity"))
+    });
     if let Some(v) = opacity_attr {
         if let Ok(op) = v.parse::<f32>() {
             style.opacity = op.clamp(0.0, 1.0);
@@ -716,7 +857,9 @@ pub(crate) fn build_style(
 
     if mask_ref.is_some() || filter_ref.is_some() {
         let existing = style.effects.take().unwrap_or(NodeEffects {
-            clip_path: None, mask: None, filter: None,
+            clip_path: None,
+            mask: None,
+            filter: None,
         });
         style.effects = Some(NodeEffects {
             clip_path: existing.clip_path,
@@ -728,9 +871,7 @@ pub(crate) fn build_style(
     style
 }
 
-fn css_transform_from_computed(
-    values: &style::properties::ComputedValues,
-) -> Vec<TransformOp> {
+fn css_transform_from_computed(values: &style::properties::ComputedValues) -> Vec<TransformOp> {
     let list = &values.get_box().transform;
     if list.0.is_empty() {
         return Vec::new();
@@ -806,8 +947,9 @@ fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Option<String>
 pub(crate) fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle {
     let mut style = NodeStyle::default();
 
-    let vis_attr = get_attr(element, "visibility")
-        .or_else(|| get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility")));
+    let vis_attr = get_attr(element, "visibility").or_else(|| {
+        get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility"))
+    });
     if let Some(v) = vis_attr {
         match v.trim() {
             "hidden" | "collapse" => style.visibility = Visibility::Hidden,
@@ -815,8 +957,9 @@ pub(crate) fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle 
         }
     }
 
-    let opacity_attr = get_attr(element, "opacity")
-        .or_else(|| get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "opacity")));
+    let opacity_attr = get_attr(element, "opacity").or_else(|| {
+        get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "opacity"))
+    });
     if let Some(v) = opacity_attr {
         if let Ok(op) = v.parse::<f32>() {
             style.opacity = op.clamp(0.0, 1.0);
@@ -827,8 +970,9 @@ pub(crate) fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle 
     apply_fill_presentation_attrs(element, &mut style);
 
     // Read `display` presentation attribute.
-    let display_attr = get_attr(element, "display")
-        .or_else(|| get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "display")));
+    let display_attr = get_attr(element, "display").or_else(|| {
+        get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "display"))
+    });
     if let Some(v) = display_attr {
         if v.trim().eq_ignore_ascii_case("none") {
             style.display = Display::None;

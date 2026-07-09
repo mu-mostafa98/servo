@@ -19,7 +19,8 @@ impl crate::shapes::BuildFromElement for Ellipse {
         Some(Ellipse {
             cx: parse_length("cx", &|a| attrs.get_attr(a), font_size).unwrap_or(0.0),
             cy: parse_length("cy", &|a| attrs.get_attr(a), font_size).unwrap_or(0.0),
-            rx, ry,
+            rx,
+            ry,
         })
     }
 }

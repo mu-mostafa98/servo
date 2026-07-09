@@ -9,10 +9,9 @@
 //! pushing reference frames.
 
 use euclid::Transform2D;
+use webrender_api::units::{LayoutPoint, LayoutTransform};
 use webrender_api::{
-    DisplayListBuilder, PropertyBinding, ReferenceFrameKind,
-    SpatialId, TransformStyle,
-    units::{LayoutPoint, LayoutTransform},
+    DisplayListBuilder, PropertyBinding, ReferenceFrameKind, SpatialId, TransformStyle,
 };
 
 use crate::style::transform_ops::TransformOp;
@@ -156,7 +155,7 @@ pub(crate) fn compute_transform_scale(ops: &[TransformOp]) -> f32 {
                 scale_x *= s;
                 scale_y *= s;
             },
-            _ => {} // Translate, Rotate, Skew → no scale contribution
+            _ => {}, // Translate, Rotate, Skew → no scale contribution
         }
     }
     scale_x.max(scale_y)
@@ -177,9 +176,7 @@ pub(crate) fn to_layout_transform(xform: &Transform2D<f32, (), ()>) -> LayoutTra
     //   m11=m11_T, m12=m21_T, m13=0, m14=m31_T
     //   m21=m12_T, m22=m22_T, m23=0, m24=m32_T
     LayoutTransform::new(
-        xform.m11, xform.m21, 0.0, xform.m31,
-        xform.m12, xform.m22, 0.0, xform.m32,
-        0.0, 0.0, 1.0, 0.0,
-        0.0, 0.0, 0.0, 1.0,
+        xform.m11, xform.m21, 0.0, xform.m31, xform.m12, xform.m22, 0.0, xform.m32, 0.0, 0.0, 1.0,
+        0.0, 0.0, 0.0, 0.0, 1.0,
     )
 }

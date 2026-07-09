@@ -10,8 +10,8 @@ use crate::dom::bindings::inheritance::Castable;
 use crate::dom::bindings::root::DomRoot;
 use crate::dom::document::Document;
 use crate::dom::node::Node;
-use crate::dom::svg::svggradientelement::SVGGradientElement;
 use crate::dom::node::virtualmethods::VirtualMethods;
+use crate::dom::svg::svggradientelement::SVGGradientElement;
 
 // https://svgwg.org/svg2-draft/pservers.html#InterfaceSVGRadialGradientElement
 #[dom_struct]
@@ -39,7 +39,9 @@ impl SVGRadialGradientElement {
     ) -> DomRoot<SVGRadialGradientElement> {
         Node::reflect_node_with_proto(
             cx,
-            Box::new(SVGRadialGradientElement::new_inherited(local_name, prefix, document)),
+            Box::new(SVGRadialGradientElement::new_inherited(
+                local_name, prefix, document,
+            )),
             document,
             proto,
         )

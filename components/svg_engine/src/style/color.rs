@@ -26,25 +26,44 @@ pub fn parse_css_color(val: &str) -> Option<SvgColor> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use svgtypes::Color as SvgColor;
 
+    use super::*;
+
     #[test]
-    fn parse_color_none() { assert!(parse_css_color("none").is_none()); }
-    #[test]
-    fn parse_color_transparent() { assert!(parse_css_color("transparent").is_none()); }
-    #[test]
-    fn parse_color_hex_6() { let c = parse_css_color("#ff0000").unwrap(); assert_eq!(c.red, 255); }
-    #[test]
-    fn parse_color_hex_3() { let c = parse_css_color("#0f0").unwrap(); assert_eq!(c.red, 0); }
-    #[test]
-    fn parse_color_named_red() { let c = parse_css_color("red").unwrap(); assert_eq!(c, SvgColor::red()); }
-    #[test]
-    fn parse_color_gray_grey_equivalent() {
-        assert_eq!(parse_css_color("gray").unwrap(), parse_css_color("grey").unwrap());
+    fn parse_color_none() {
+        assert!(parse_css_color("none").is_none());
     }
     #[test]
-    fn parse_color_navy() { assert!(parse_css_color("navy").is_some()); }
+    fn parse_color_transparent() {
+        assert!(parse_css_color("transparent").is_none());
+    }
+    #[test]
+    fn parse_color_hex_6() {
+        let c = parse_css_color("#ff0000").unwrap();
+        assert_eq!(c.red, 255);
+    }
+    #[test]
+    fn parse_color_hex_3() {
+        let c = parse_css_color("#0f0").unwrap();
+        assert_eq!(c.red, 0);
+    }
+    #[test]
+    fn parse_color_named_red() {
+        let c = parse_css_color("red").unwrap();
+        assert_eq!(c, SvgColor::red());
+    }
+    #[test]
+    fn parse_color_gray_grey_equivalent() {
+        assert_eq!(
+            parse_css_color("gray").unwrap(),
+            parse_css_color("grey").unwrap()
+        );
+    }
+    #[test]
+    fn parse_color_navy() {
+        assert!(parse_css_color("navy").is_some());
+    }
     #[test]
     fn parse_color_rgb_function() {
         let c = parse_css_color("rgb(255, 0, 0)").unwrap();
@@ -68,9 +87,13 @@ mod tests {
         assert_eq!(c.alpha, 128);
     }
     #[test]
-    fn parse_color_invalid() { assert!(parse_css_color("notacolor").is_none()); }
+    fn parse_color_invalid() {
+        assert!(parse_css_color("notacolor").is_none());
+    }
     #[test]
-    fn parse_color_number_prefix() { assert!(parse_css_color("123").is_none()); }
+    fn parse_color_number_prefix() {
+        assert!(parse_css_color("123").is_none());
+    }
     #[test]
     fn parse_color_uppercase_named() {
         assert!(parse_css_color("RED").is_some());

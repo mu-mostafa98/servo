@@ -11,18 +11,21 @@
 //! delegates its stroke work here.
 
 use euclid::Angle;
+use lyon::math::Point as LyonPoint;
+use webrender_api::units::{
+    LayoutPoint, LayoutRect, LayoutSideOffsets, LayoutSize, LayoutTransform,
+};
 use webrender_api::{
-    BorderSide, BorderStyle, BorderDetails, NormalBorder, BorderRadius,
-    ClipMode, ComplexClipRegion, ColorF, PropertyBinding, ReferenceFrameKind, TransformStyle,
-    units::{LayoutPoint, LayoutRect, LayoutSize, LayoutSideOffsets, LayoutTransform},
+    BorderDetails, BorderRadius, BorderSide, BorderStyle, ClipMode, ColorF, ComplexClipRegion,
+    NormalBorder, PropertyBinding, ReferenceFrameKind, TransformStyle,
 };
 
-use lyon::math::Point as LyonPoint;
-
-use crate::renderer::{RenderContext, make_common_props, to_colorf, effective_stroke_width, clip_chain_option, ZERO_LENGTH_EPSILON};
-use crate::renderer::gradient;
-use crate::style::{NodeStyle, Visibility, Display, StrokeParams, LineCap};
+use crate::renderer::{
+    RenderContext, ZERO_LENGTH_EPSILON, clip_chain_option, effective_stroke_width, gradient,
+    make_common_props, to_colorf,
+};
 use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
+use crate::style::{Display, LineCap, NodeStyle, StrokeParams, Visibility};
 
 // ======================= Dash Interval Decomposition =======================
 
@@ -52,10 +55,10 @@ pub(crate) fn dash_intervals(
     let offset = ((dash_offset % pattern_len) + pattern_len) % pattern_len;
 
     let mut intervals = Vec::new();
-    let mut pos = 0.0;                 // distance consumed along the segment
-    let mut pi: usize = 0;            // index into dash_array
-    let mut seg_rem = dash_array[0];  // remaining length in current array entry
-    let mut is_dash = true;           // index 0 is a dash (even = dash, odd = gap)
+    let mut pos = 0.0; // distance consumed along the segment
+    let mut pi: usize = 0; // index into dash_array
+    let mut seg_rem = dash_array[0]; // remaining length in current array entry
+    let mut is_dash = true; // index 0 is a dash (even = dash, odd = gap)
 
     // Advance past the offset so we start at the right pattern position.
     let mut o = offset;
@@ -101,18 +104,21 @@ pub(crate) fn dash_intervals(
 /// or gradient. Handles both solid-color and gradient paint servers.
 ///
 /// Coordinates are in absolute layout space (svg_origin already added).
-pub(crate) fn stroke_line_segment(
-    x1: f32, y1: f32, x2: f32, y2: f32,
-    ctx: &mut RenderContext,
-) {
-    let Some(stroke) = &ctx.style.stroke else { return };
+pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut RenderContext) {
+    let Some(stroke) = &ctx.style.stroke else {
+        return;
+    };
     let stroke_width = effective_stroke_width(ctx, stroke.width);
-    if stroke_width <= 0.0 { return; }
+    if stroke_width <= 0.0 {
+        return;
+    }
 
     let dx = x2 - x1;
     let dy = y2 - y1;
     let len = (dx * dx + dy * dy).sqrt();
-    if len < ZERO_LENGTH_EPSILON { return; }
+    if len < ZERO_LENGTH_EPSILON {
+        return;
+    }
 
     let mx = (x1 + x2) / 2.0;
     let my = (y1 + y2) / 2.0;
@@ -139,64 +145,73 @@ pub(crate) fn stroke_line_segment(
         color.a *= stroke.opacity * ctx.style.opacity;
         emit_rotated_rects_for_segment(len, half_w, color, stroke, line_spatial_id, ctx);
     } else if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
-        if let Some(dash_array) = &stroke.dash_array
-            && !dash_array.is_empty() {
-                let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
-                for (t0, t1) in intervals {
-                    if t1 <= t0 { continue; }
-                    let dash_start = -len / 2.0 + t0 * len;
-                    let dash_len = (t1 - t0) * len;
-                    let mut grad_bounds = LayoutRect::from_origin_and_size(
-                        LayoutPoint::new(dash_start, -half_w),
-                        LayoutSize::new(dash_len, stroke_width),
-                    );
-                    // Apply cap extension for square/round caps.
-                    if stroke.line_cap != LineCap::Butt {
-                        let ext = half_w;
-                        grad_bounds = LayoutRect::from_origin_and_size(
-                            LayoutPoint::new(dash_start - ext, -half_w),
-                            LayoutSize::new(dash_len + 2.0 * ext, stroke_width),
-                        );
-                    }
-
-                    // Build clip chain for round caps BEFORE creating grad_ctx
-                    // (which borrows ctx.wr mutably).
-                    let round_chain = if stroke.line_cap == LineCap::Round {
-                        let radii = BorderRadius {
-                            top_left: LayoutSize::new(half_w, half_w),
-                            top_right: LayoutSize::new(half_w, half_w),
-                            bottom_left: LayoutSize::new(half_w, half_w),
-                            bottom_right: LayoutSize::new(half_w, half_w),
-                        };
-                        let clip_id = ctx.wr.define_clip_rounded_rect(
-                            line_spatial_id,
-                            ComplexClipRegion { rect: grad_bounds, radii, mode: ClipMode::Clip },
-                        );
-                        Some(ctx.wr.define_clip_chain(
-                            clip_chain_option(ctx.clip_chain_id),
-                            [clip_id],
-                        ))
-                    } else {
-                        None
-                    };
-
-                    let mut grad_ctx = RenderContext {
-                        style: ctx.style,
-                        svg_origin: LayoutPoint::new(0.0, 0.0),
-                        spatial_id: line_spatial_id,
-                        clip_chain_id: round_chain.unwrap_or(ctx.clip_chain_id),
-                        wr: &mut *ctx.wr,
-                        paints: ctx.paints,
-                        accumulated_scale: ctx.accumulated_scale,
-                    };
-                    gradient::fill_rect_with_gradient_by_id(
-                        id, grad_bounds, &mut grad_ctx,
-                        stroke.opacity * ctx.style.opacity,
+        if let Some(dash_array) = &stroke.dash_array &&
+            !dash_array.is_empty()
+        {
+            let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
+            for (t0, t1) in intervals {
+                if t1 <= t0 {
+                    continue;
+                }
+                let dash_start = -len / 2.0 + t0 * len;
+                let dash_len = (t1 - t0) * len;
+                let mut grad_bounds = LayoutRect::from_origin_and_size(
+                    LayoutPoint::new(dash_start, -half_w),
+                    LayoutSize::new(dash_len, stroke_width),
+                );
+                // Apply cap extension for square/round caps.
+                if stroke.line_cap != LineCap::Butt {
+                    let ext = half_w;
+                    grad_bounds = LayoutRect::from_origin_and_size(
+                        LayoutPoint::new(dash_start - ext, -half_w),
+                        LayoutSize::new(dash_len + 2.0 * ext, stroke_width),
                     );
                 }
-                ctx.wr.pop_reference_frame();
-                return;
+
+                // Build clip chain for round caps BEFORE creating grad_ctx
+                // (which borrows ctx.wr mutably).
+                let round_chain = if stroke.line_cap == LineCap::Round {
+                    let radii = BorderRadius {
+                        top_left: LayoutSize::new(half_w, half_w),
+                        top_right: LayoutSize::new(half_w, half_w),
+                        bottom_left: LayoutSize::new(half_w, half_w),
+                        bottom_right: LayoutSize::new(half_w, half_w),
+                    };
+                    let clip_id = ctx.wr.define_clip_rounded_rect(
+                        line_spatial_id,
+                        ComplexClipRegion {
+                            rect: grad_bounds,
+                            radii,
+                            mode: ClipMode::Clip,
+                        },
+                    );
+                    Some(
+                        ctx.wr
+                            .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id]),
+                    )
+                } else {
+                    None
+                };
+
+                let mut grad_ctx = RenderContext {
+                    style: ctx.style,
+                    svg_origin: LayoutPoint::new(0.0, 0.0),
+                    spatial_id: line_spatial_id,
+                    clip_chain_id: round_chain.unwrap_or(ctx.clip_chain_id),
+                    wr: &mut *ctx.wr,
+                    paints: ctx.paints,
+                    accumulated_scale: ctx.accumulated_scale,
+                };
+                gradient::fill_rect_with_gradient_by_id(
+                    id,
+                    grad_bounds,
+                    &mut grad_ctx,
+                    stroke.opacity * ctx.style.opacity,
+                );
             }
+            ctx.wr.pop_reference_frame();
+            return;
+        }
         // Gradient stroke (no dashes) — fill full rotated rect with gradient.
         let mut grad_bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(-len / 2.0, -half_w),
@@ -220,12 +235,16 @@ pub(crate) fn stroke_line_segment(
             };
             let clip_id = ctx.wr.define_clip_rounded_rect(
                 line_spatial_id,
-                ComplexClipRegion { rect: grad_bounds, radii, mode: ClipMode::Clip },
+                ComplexClipRegion {
+                    rect: grad_bounds,
+                    radii,
+                    mode: ClipMode::Clip,
+                },
             );
-            Some(ctx.wr.define_clip_chain(
-                clip_chain_option(ctx.clip_chain_id),
-                [clip_id],
-            ))
+            Some(
+                ctx.wr
+                    .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id]),
+            )
         } else {
             None
         };
@@ -240,7 +259,9 @@ pub(crate) fn stroke_line_segment(
             accumulated_scale: ctx.accumulated_scale,
         };
         gradient::fill_rect_with_gradient_by_id(
-            id, grad_bounds, &mut grad_ctx,
+            id,
+            grad_bounds,
+            &mut grad_ctx,
             stroke.opacity * ctx.style.opacity,
         );
     }
@@ -264,27 +285,37 @@ fn emit_rotated_rects_for_segment(
 ) {
     let stroke_width = half_w * 2.0;
 
-    if let Some(dash_array) = &stroke.dash_array
-        && !dash_array.is_empty() {
-            let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
-            for (t0, t1) in intervals {
-                if t1 <= t0 { continue; }
-                let dash_start = -len / 2.0 + t0 * len;
-                let dash_len = (t1 - t0) * len;
-                let bounds = LayoutRect::from_origin_and_size(
-                    LayoutPoint::new(dash_start, -half_w),
-                    LayoutSize::new(dash_len, stroke_width),
-                );
-                draw_capped_rect(bounds, half_w, color, stroke.line_cap, line_spatial_id, ctx);
+    if let Some(dash_array) = &stroke.dash_array &&
+        !dash_array.is_empty()
+    {
+        let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
+        for (t0, t1) in intervals {
+            if t1 <= t0 {
+                continue;
             }
-            return;
+            let dash_start = -len / 2.0 + t0 * len;
+            let dash_len = (t1 - t0) * len;
+            let bounds = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(dash_start, -half_w),
+                LayoutSize::new(dash_len, stroke_width),
+            );
+            draw_capped_rect(bounds, half_w, color, stroke.line_cap, line_spatial_id, ctx);
         }
+        return;
+    }
     // No dashes or empty array — full segment.
     let full_bounds = LayoutRect::from_origin_and_size(
         LayoutPoint::new(-len / 2.0, -half_w),
         LayoutSize::new(len, stroke_width),
     );
-    draw_capped_rect(full_bounds, half_w, color, stroke.line_cap, line_spatial_id, ctx);
+    draw_capped_rect(
+        full_bounds,
+        half_w,
+        color,
+        stroke.line_cap,
+        line_spatial_id,
+        ctx,
+    );
 }
 
 /// Draw a single rotated-rect with the given line cap style.
@@ -327,12 +358,15 @@ fn draw_capped_rect(
             };
             let clip_id = ctx.wr.define_clip_rounded_rect(
                 spatial_id,
-                ComplexClipRegion { rect: extended, radii, mode: ClipMode::Clip },
+                ComplexClipRegion {
+                    rect: extended,
+                    radii,
+                    mode: ClipMode::Clip,
+                },
             );
-            let chain = ctx.wr.define_clip_chain(
-                clip_chain_option(ctx.clip_chain_id),
-                [clip_id],
-            );
+            let chain = ctx
+                .wr
+                .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id]);
             let common = make_common_props(extended, spatial_id, chain);
             ctx.wr.push_rect(&common, extended, color);
         },
@@ -345,8 +379,14 @@ fn draw_capped_rect(
 ///
 /// Handles both solid-colour borders (via [`push_border`]) and gradient
 /// borders (via full-rect gradient + interior white clip).
-pub(crate) fn stroke_rect(bounds: LayoutRect, radii: Option<BorderRadius>, ctx: &mut RenderContext) {
-    let Some(stroke) = &ctx.style.stroke else { return };
+pub(crate) fn stroke_rect(
+    bounds: LayoutRect,
+    radii: Option<BorderRadius>,
+    ctx: &mut RenderContext,
+) {
+    let Some(stroke) = &ctx.style.stroke else {
+        return;
+    };
 
     if let Some(svg_color) = stroke.color {
         let mut color = to_colorf(&svg_color);
@@ -354,13 +394,27 @@ pub(crate) fn stroke_rect(bounds: LayoutRect, radii: Option<BorderRadius>, ctx: 
         let stroke_width = effective_stroke_width(ctx, stroke.width);
         let widths = LayoutSideOffsets::new_all_same(stroke_width);
         let details = BorderDetails::Normal(NormalBorder {
-            left: BorderSide { color, style: BorderStyle::Solid },
-            right: BorderSide { color, style: BorderStyle::Solid },
-            top: BorderSide { color, style: BorderStyle::Solid },
-            bottom: BorderSide { color, style: BorderStyle::Solid },
+            left: BorderSide {
+                color,
+                style: BorderStyle::Solid,
+            },
+            right: BorderSide {
+                color,
+                style: BorderStyle::Solid,
+            },
+            top: BorderSide {
+                color,
+                style: BorderStyle::Solid,
+            },
+            bottom: BorderSide {
+                color,
+                style: BorderStyle::Solid,
+            },
             radius: radii.unwrap_or(BorderRadius {
-                top_left: LayoutSize::zero(), top_right: LayoutSize::zero(),
-                bottom_left: LayoutSize::zero(), bottom_right: LayoutSize::zero(),
+                top_left: LayoutSize::zero(),
+                top_right: LayoutSize::zero(),
+                bottom_left: LayoutSize::zero(),
+                bottom_right: LayoutSize::zero(),
             }),
             do_aa: true,
         });
@@ -403,9 +457,14 @@ pub(crate) fn stroke_rect(bounds: LayoutRect, radii: Option<BorderRadius>, ctx: 
         let outer_clip = if let Some(r) = radii {
             let clip_id = ctx.wr.define_clip_rounded_rect(
                 ctx.spatial_id,
-                ComplexClipRegion { rect: bounds, radii: r, mode: ClipMode::Clip },
+                ComplexClipRegion {
+                    rect: bounds,
+                    radii: r,
+                    mode: ClipMode::Clip,
+                },
             );
-            ctx.wr.define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id])
+            ctx.wr
+                .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id])
         } else {
             ctx.clip_chain_id
         };
@@ -418,15 +477,18 @@ pub(crate) fn stroke_rect(bounds: LayoutRect, radii: Option<BorderRadius>, ctx: 
             let inner_clip_id = if let Some(ir) = inner_radii {
                 ctx.wr.define_clip_rounded_rect(
                     ctx.spatial_id,
-                    ComplexClipRegion { rect: inner_bounds, radii: ir, mode: ClipMode::Clip },
+                    ComplexClipRegion {
+                        rect: inner_bounds,
+                        radii: ir,
+                        mode: ClipMode::Clip,
+                    },
                 )
             } else {
                 ctx.wr.define_clip_rect(ctx.spatial_id, inner_bounds)
             };
-            let inner_chain = ctx.wr.define_clip_chain(
-                clip_chain_option(ctx.clip_chain_id),
-                [inner_clip_id],
-            );
+            let inner_chain = ctx
+                .wr
+                .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [inner_clip_id]);
             ctx.clip_chain_id = inner_chain;
             let white = ColorF::new(1.0, 1.0, 1.0, 1.0);
             let common = make_common_props(bounds, ctx.spatial_id, inner_chain);
@@ -449,7 +511,9 @@ pub(crate) fn stroke_rect(bounds: LayoutRect, radii: Option<BorderRadius>, ctx: 
 /// evaluates the gradient at each segment's midpoint so the gradient spans
 /// the **entire shape** as one continuous unit, not per-segment independently.
 pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
-    let Some(stroke) = &ctx.style.stroke else { return };
+    let Some(stroke) = &ctx.style.stroke else {
+        return;
+    };
     let adjusted_width = effective_stroke_width(ctx, stroke.width);
     if (stroke.color.is_none() && stroke.paint_server.is_none()) || adjusted_width <= 0.0 {
         return;
@@ -457,7 +521,9 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
 
     // Gradient stroke: evaluate at each segment's midpoint so the gradient
     // spans the whole shape, not each segment independently.
-    if stroke.color.is_none() && let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
+    if stroke.color.is_none() &&
+        let Some(PaintServer::Gradient(id)) = &stroke.paint_server
+    {
         return stroke_polyline_gradient(pts, ctx, adjusted_width, id);
     }
 
@@ -521,20 +587,32 @@ fn stroke_polyline_gradient(
     adjusted_width: f32,
     grad_id: &str,
 ) {
-    let Some(stroke) = &ctx.style.stroke else { return };
+    let Some(stroke) = &ctx.style.stroke else {
+        return;
+    };
     let Some(grad_def) = ctx.paints.gradient(grad_id) else {
         log::warn!("SVG gradient \"{}\" not found for stroke", grad_id);
         return;
     };
 
     // Compute overall bounding box of the polyline.
-    let mut min_x = f32::MAX; let mut min_y = f32::MAX;
-    let mut max_x = f32::MIN; let mut max_y = f32::MIN;
+    let mut min_x = f32::MAX;
+    let mut min_y = f32::MAX;
+    let mut max_x = f32::MIN;
+    let mut max_y = f32::MIN;
     for p in pts {
-        if p.x < min_x { min_x = p.x; }
-        if p.y < min_y { min_y = p.y; }
-        if p.x > max_x { max_x = p.x; }
-        if p.y > max_y { max_y = p.y; }
+        if p.x < min_x {
+            min_x = p.x;
+        }
+        if p.y < min_y {
+            min_y = p.y;
+        }
+        if p.x > max_x {
+            max_x = p.x;
+        }
+        if p.y > max_y {
+            max_y = p.y;
+        }
     }
     let bbox_w = (max_x - min_x).max(1.0);
     let bbox_h = (max_y - min_y).max(1.0);
@@ -559,12 +637,14 @@ fn stroke_polyline_gradient(
             GradientUnits::ObjectBoundingBox => (
                 ctx.svg_origin.x + min_x + rg.cx.to_object_bbox() * bbox_w,
                 ctx.svg_origin.y + min_y + rg.cy.to_object_bbox() * bbox_h,
-                0.0, 0.0, // unused for radial
+                0.0,
+                0.0, // unused for radial
             ),
             GradientUnits::UserSpaceOnUse => (
                 ctx.svg_origin.x + rg.cx.to_user_space(bbox_w),
                 ctx.svg_origin.y + rg.cy.to_user_space(bbox_h),
-                0.0, 0.0, // unused for radial
+                0.0,
+                0.0, // unused for radial
             ),
         },
     };
@@ -575,15 +655,19 @@ fn stroke_polyline_gradient(
             let (fx, fy, r2) = match rg.units {
                 GradientUnits::ObjectBoundingBox => {
                     let scale = bbox_w.max(bbox_h);
-                    (ctx.svg_origin.x + min_x + rg.fx.to_object_bbox() * bbox_w,
-                     ctx.svg_origin.y + min_y + rg.fy.to_object_bbox() * bbox_h,
-                     (rg.r.to_object_bbox() * scale).max(1.0))
+                    (
+                        ctx.svg_origin.x + min_x + rg.fx.to_object_bbox() * bbox_w,
+                        ctx.svg_origin.y + min_y + rg.fy.to_object_bbox() * bbox_h,
+                        (rg.r.to_object_bbox() * scale).max(1.0),
+                    )
                 },
                 GradientUnits::UserSpaceOnUse => {
                     let scale = bbox_w.max(bbox_h);
-                    (ctx.svg_origin.x + rg.fx.to_user_space(bbox_w),
-                     ctx.svg_origin.y + rg.fy.to_user_space(bbox_h),
-                     rg.r.to_user_space(scale).max(1.0))
+                    (
+                        ctx.svg_origin.x + rg.fx.to_user_space(bbox_w),
+                        ctx.svg_origin.y + rg.fy.to_user_space(bbox_h),
+                        rg.r.to_user_space(scale).max(1.0),
+                    )
                 },
             };
             Some((fx, fy, r2))
@@ -604,7 +688,9 @@ fn stroke_polyline_gradient(
         let seg_dx = bx - ax;
         let seg_dy = by - ay;
         let seg_len = (seg_dx * seg_dx + seg_dy * seg_dy).sqrt();
-        if seg_len < ZERO_LENGTH_EPSILON { continue; }
+        if seg_len < ZERO_LENGTH_EPSILON {
+            continue;
+        }
 
         let num_pieces = (seg_len / subdiv).ceil() as u32;
         let num_pieces = num_pieces.max(1);
@@ -642,7 +728,11 @@ fn stroke_polyline_gradient(
             // Draw this sub-segment as a solid-colored rotated rect.
             // The color was evaluated in global (parent) coordinates so the
             // gradient spans the entire polyline uniformly.
-            let seg_stroke = SegmentStrokeParams { color: piece_color, width: adjusted_width, line_cap: stroke.line_cap };
+            let seg_stroke = SegmentStrokeParams {
+                color: piece_color,
+                width: adjusted_width,
+                line_cap: stroke.line_cap,
+            };
             draw_rotated_stroke_segment(p0x, p0y, p1x, p1y, &seg_stroke, ctx);
         }
     }
@@ -660,14 +750,19 @@ struct SegmentStrokeParams {
 /// This is the inner rendering step extracted from [`stroke_line_segment`]
 /// so we can call it per-sub-segment without creating a full [`NodeStyle`].
 fn draw_rotated_stroke_segment(
-    x1: f32, y1: f32, x2: f32, y2: f32,
+    x1: f32,
+    y1: f32,
+    x2: f32,
+    y2: f32,
     stroke: &SegmentStrokeParams,
     ctx: &mut RenderContext,
 ) {
     let dx = x2 - x1;
     let dy = y2 - y1;
     let len = (dx * dx + dy * dy).sqrt();
-    if len < ZERO_LENGTH_EPSILON { return; }
+    if len < ZERO_LENGTH_EPSILON {
+        return;
+    }
 
     let mx = (x1 + x2) / 2.0;
     let my = (y1 + y2) / 2.0;
@@ -692,7 +787,14 @@ fn draw_rotated_stroke_segment(
         LayoutSize::new(len, stroke.width),
     );
 
-    draw_capped_rect(line_bounds, half_w, stroke.color, stroke.line_cap, line_spatial_id, ctx);
+    draw_capped_rect(
+        line_bounds,
+        half_w,
+        stroke.color,
+        stroke.line_cap,
+        line_spatial_id,
+        ctx,
+    );
     ctx.wr.pop_reference_frame();
 }
 
@@ -744,7 +846,11 @@ mod tests {
         // Wait, let me re-check: offset=5 means we start 5 units into the pattern.
         // pattern [6,4] at offset 5: we've consumed 5 of the first 6 → 1 of dash left
         // 0-1 dash, 1-5 gap (4 units), 5-11 dash (6 units), 11-15 gap (4 units), 15-20 dash (5 units)
-        assert!(approx(&r, &[(0.0, 0.05), (0.25, 0.55), (0.75, 1.0)]), "got {:?}", r);
+        assert!(
+            approx(&r, &[(0.0, 0.05), (0.25, 0.55), (0.75, 1.0)]),
+            "got {:?}",
+            r
+        );
     }
 
     #[test]
@@ -782,7 +888,14 @@ mod tests {
         let r = dash_intervals(30.0, &[5.0], 0.0);
         // [5] means 5-on, 5-off, 5-on, 5-off, ...
         // 0-5 dash, 5-10 gap, 10-15 dash, 15-20 gap, 20-25 dash, 25-30 gap
-        assert!(approx(&r, &[(0.0, 1.0/6.0), (1.0/3.0, 0.5), (2.0/3.0, 5.0/6.0)]), "got {:?}", r);
+        assert!(
+            approx(
+                &r,
+                &[(0.0, 1.0 / 6.0), (1.0 / 3.0, 0.5), (2.0 / 3.0, 5.0 / 6.0)]
+            ),
+            "got {:?}",
+            r
+        );
     }
 
     #[test]
@@ -802,7 +915,11 @@ mod tests {
     fn large_offset_wraps_pattern() {
         let r = dash_intervals(20.0, &[6.0, 4.0], 25.0);
         // offset=25: 25 % 10 = 5, same as offset=5 test
-        assert!(approx(&r, &[(0.0, 0.05), (0.25, 0.55), (0.75, 1.0)]), "got {:?}", r);
+        assert!(
+            approx(&r, &[(0.0, 0.05), (0.25, 0.55), (0.75, 1.0)]),
+            "got {:?}",
+            r
+        );
     }
 
     #[test]

@@ -9,14 +9,11 @@
 //! definitions, produce the clip chains needed for rendering.  No
 //! tree walking, no display list management beyond clip definition.
 
-use webrender_api::{
-    ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId,
-    units::LayoutPoint,
-};
+use webrender_api::units::LayoutPoint;
+use webrender_api::{ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId};
 
 use crate::render_tree::{ClipPathUnits, SvgRenderNode};
-use crate::renderer::ClipMaskProvider;
-use crate::renderer::clip_chain_option;
+use crate::renderer::{ClipMaskProvider, clip_chain_option};
 use crate::shapes::ClipGeometry;
 
 // ======================= Clip Path Resolution =======================
@@ -50,12 +47,14 @@ pub(crate) fn resolve_node_clip_path(
         };
 
         let clip_id = match geometry {
-            ClipGeometry::RoundedRect { bounds, radii } => {
-                wr.define_clip_rounded_rect(
-                    spatial_id,
-                    ComplexClipRegion { rect: bounds, radii, mode: ClipMode::Clip },
-                )
-            },
+            ClipGeometry::RoundedRect { bounds, radii } => wr.define_clip_rounded_rect(
+                spatial_id,
+                ComplexClipRegion {
+                    rect: bounds,
+                    radii,
+                    mode: ClipMode::Clip,
+                },
+            ),
             ClipGeometry::Polygon { bounds } => {
                 // WebRender 0.69 does not support arbitrary polygon clip paths
                 // natively.  Fall back to bounding-rect clip, which is safe and
@@ -105,22 +104,21 @@ pub(crate) fn build_mask_clips(
         };
 
         let clip_id = match geometry {
-            ClipGeometry::RoundedRect { bounds, radii } => {
-                wr.define_clip_rounded_rect(
-                    spatial_id,
-                    ComplexClipRegion { rect: bounds, radii, mode: ClipMode::Clip },
-                )
-            },
+            ClipGeometry::RoundedRect { bounds, radii } => wr.define_clip_rounded_rect(
+                spatial_id,
+                ComplexClipRegion {
+                    rect: bounds,
+                    radii,
+                    mode: ClipMode::Clip,
+                },
+            ),
             ClipGeometry::Polygon { bounds } => {
                 // Same bounding-rect fallback as clip-path above.
                 wr.define_clip_rect(spatial_id, bounds)
             },
         };
 
-        let chain = wr.define_clip_chain(
-            clip_chain_option(parent_clip_chain),
-            [clip_id],
-        );
+        let chain = wr.define_clip_chain(clip_chain_option(parent_clip_chain), [clip_id]);
         clips.push(chain);
     }
 

@@ -8,8 +8,8 @@ use stylo_dom::ElementState;
 
 use crate::dom::bindings::inheritance::Castable;
 use crate::dom::document::Document;
-use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::node::virtualmethods::VirtualMethods;
+use crate::dom::svg::svgelement::SVGElement;
 
 // https://svgwg.org/svg2-draft/pservers.html#InterfaceSVGGradientElement
 #[dom_struct]
@@ -25,7 +25,10 @@ impl SVGGradientElement {
     ) -> SVGGradientElement {
         SVGGradientElement {
             svgelement: SVGElement::new_inherited_with_state(
-                ElementState::empty(), local_name, prefix, document,
+                ElementState::empty(),
+                local_name,
+                prefix,
+                document,
             ),
         }
     }

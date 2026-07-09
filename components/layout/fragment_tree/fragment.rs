@@ -15,9 +15,9 @@ use servo_base::print_tree::PrintTree;
 use servo_url::ServoUrl;
 use style::Zero;
 use style_traits::CSSPixel;
-use webrender_api::{FontInstanceKey, ImageKey};
 #[cfg(feature = "svg-engine")]
 use svg_engine::render_tree::SvgRenderTree;
+use webrender_api::{FontInstanceKey, ImageKey};
 /// Placeholder type when the SVG engine is disabled.
 /// The `svg_render_tree` field on `ImageFragment` is never read without
 /// the feature — this dummy keeps the struct definition well-typed.

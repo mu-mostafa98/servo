@@ -10,8 +10,8 @@ use crate::dom::bindings::inheritance::Castable;
 use crate::dom::bindings::root::DomRoot;
 use crate::dom::document::Document;
 use crate::dom::node::Node;
-use crate::dom::svg::svggraphicselement::SVGGraphicsElement;
 use crate::dom::node::virtualmethods::VirtualMethods;
+use crate::dom::svg::svggraphicselement::SVGGraphicsElement;
 
 // https://svgwg.org/svg2-draft/struct.html#InterfaceSVGSymbolElement
 #[dom_struct]
@@ -39,7 +39,9 @@ impl SVGSymbolElement {
     ) -> DomRoot<SVGSymbolElement> {
         Node::reflect_node_with_proto(
             cx,
-            Box::new(SVGSymbolElement::new_inherited(local_name, prefix, document)),
+            Box::new(SVGSymbolElement::new_inherited(
+                local_name, prefix, document,
+            )),
             document,
             proto,
         )

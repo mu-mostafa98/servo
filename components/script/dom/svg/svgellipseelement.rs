@@ -10,8 +10,8 @@ use crate::dom::bindings::inheritance::Castable;
 use crate::dom::bindings::root::DomRoot;
 use crate::dom::document::Document;
 use crate::dom::node::Node;
-use crate::dom::svg::svggeometryelement::SVGGeometryElement;
 use crate::dom::node::virtualmethods::VirtualMethods;
+use crate::dom::svg::svggeometryelement::SVGGeometryElement;
 
 #[dom_struct]
 pub(crate) struct SVGEllipseElement {

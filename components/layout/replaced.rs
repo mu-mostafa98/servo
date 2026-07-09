@@ -5,6 +5,9 @@
 use std::sync::Arc;
 
 use app_units::Au;
+// Legacy SVG path imports (only needed without the new engine).
+#[cfg(not(feature = "svg-engine"))]
+use app_units::MAX_AU;
 use data_url::DataUrl;
 use embedder_traits::ViewportDetails;
 use euclid::{Scale, Size2D};
@@ -17,23 +20,11 @@ use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
 use servo_url::ServoUrl;
 use style::Zero;
+#[cfg(not(feature = "svg-engine"))]
+use style::attr::AttrValue;
 use style::computed_values::object_fit::T as ObjectFit;
 use style::logical_geometry::{Direction, WritingMode};
 use style::properties::ComputedValues;
-use style::url::ComputedUrl;
-use style::values::CSSFloat;
-use style::values::computed::image::Image as ComputedImage;
-use style::values::computed::Content;
-use style::values::generics::counters::{GenericContentItem, GenericContentItems};
-use url::Url;
-use web_atoms::local_name;
-use webrender_api::ImageKey;
-
-// Legacy SVG path imports (only needed without the new engine).
-#[cfg(not(feature = "svg-engine"))]
-use app_units::MAX_AU;
-#[cfg(not(feature = "svg-engine"))]
-use style::attr::AttrValue;
 #[cfg(not(feature = "svg-engine"))]
 use style::properties::StyleBuilder;
 #[cfg(not(feature = "svg-engine"))]
@@ -42,11 +33,18 @@ use style::rule_cache::RuleCacheConditions;
 use style::rule_tree::RuleCascadeFlags;
 #[cfg(not(feature = "svg-engine"))]
 use style::stylesheets::container_rule::ContainerSizeQuery;
+use style::url::ComputedUrl;
+use style::values::CSSFloat;
+use style::values::computed::Content;
+use style::values::computed::image::Image as ComputedImage;
 #[cfg(not(feature = "svg-engine"))]
 use style::values::computed::{Context, ToComputedValue};
-
+use style::values::generics::counters::{GenericContentItem, GenericContentItems};
 #[cfg(feature = "svg-engine")]
 use svg_engine::render_tree::SvgRenderTree;
+use url::Url;
+use web_atoms::local_name;
+use webrender_api::ImageKey;
 /// Placeholder type when the SVG engine is disabled.
 /// Never constructed at runtime — exists only to keep the
 /// `ReplacedContentKind::SVGElement` variant well-typed.
@@ -267,91 +265,91 @@ impl ReplacedContents {
         {
             let rule_cache_conditions = &mut RuleCacheConditions::default();
 
-        let parent_style = node.style(&context.style_context);
-        let style_builder = StyleBuilder::new(
-            context.style_context.stylist.device(),
-            Some(context.style_context.stylist),
-            Some(&parent_style),
-            None,
-            None,
-            false,
-        );
+            let parent_style = node.style(&context.style_context);
+            let style_builder = StyleBuilder::new(
+                context.style_context.stylist.device(),
+                Some(context.style_context.stylist),
+                Some(&parent_style),
+                None,
+                None,
+                false,
+            );
 
-        let to_computed_context = Context::new(
-            style_builder,
-            context.style_context.quirks_mode(),
-            rule_cache_conditions,
-            ContainerSizeQuery::none(),
-            RuleCascadeFlags::empty(),
-        );
+            let to_computed_context = Context::new(
+                style_builder,
+                context.style_context.quirks_mode(),
+                rule_cache_conditions,
+                ContainerSizeQuery::none(),
+                RuleCascadeFlags::empty(),
+            );
 
-        let attr_to_computed = |attr_val: &AttrValue| {
-            if let AttrValue::LengthPercentage(_, length_percentage) = attr_val {
-                length_percentage
-                    .to_computed_value(&to_computed_context)?
-                    .to_length()
-            } else {
-                None
-            }
-        };
-        let width = svg_data.width.and_then(attr_to_computed);
-        let height = svg_data.height.and_then(attr_to_computed);
+            let attr_to_computed = |attr_val: &AttrValue| {
+                if let AttrValue::LengthPercentage(_, length_percentage) = attr_val {
+                    length_percentage
+                        .to_computed_value(&to_computed_context)?
+                        .to_length()
+                } else {
+                    None
+                }
+            };
+            let width = svg_data.width.and_then(attr_to_computed);
+            let height = svg_data.height.and_then(attr_to_computed);
 
-        let ratio = match (width, height) {
-            (Some(width), Some(height)) if !width.is_zero() && !height.is_zero() => {
-                Some(width.px() / height.px())
-            },
-            _ => svg_data.ratio_from_view_box(),
-        };
+            let ratio = match (width, height) {
+                (Some(width), Some(height)) if !width.is_zero() && !height.is_zero() => {
+                    Some(width.px() / height.px())
+                },
+                _ => svg_data.ratio_from_view_box(),
+            };
 
-        let natural_size = NaturalSizes {
-            width: width.map(|w| Au::from_f32_px(w.px())),
-            height: height.map(|h| Au::from_f32_px(h.px())),
-            ratio,
-        };
+            let natural_size = NaturalSizes {
+                width: width.map(|w| Au::from_f32_px(w.px())),
+                height: height.map(|h| Au::from_f32_px(h.px())),
+                ratio,
+            };
 
-        let svg_source = match svg_data.source {
-            None => {
-                // The SVGSVGElement is not yet serialized, so we add it to a list
-                // and hand it over to script to peform the serialization.
+            let svg_source = match svg_data.source {
+                None => {
+                    // The SVGSVGElement is not yet serialized, so we add it to a list
+                    // and hand it over to script to peform the serialization.
+                    context
+                        .image_resolver
+                        .queue_svg_element_for_serialization(node);
+                    None
+                },
+                // If `svg_source_result` is `Err()`, it means that the previous attempt
+                // had errored, then don't attempt to serialize again.
+                Some(svg_source_result) => svg_source_result.ok(),
+            };
+
+            let cached_image = svg_source.and_then(|svg_source| {
                 context
                     .image_resolver
-                    .queue_svg_element_for_serialization(node);
-                None
-            },
-            // If `svg_source_result` is `Err()`, it means that the previous attempt
-            // had errored, then don't attempt to serialize again.
-            Some(svg_source_result) => svg_source_result.ok(),
-        };
+                    .get_cached_image_for_url(
+                        node.opaque(),
+                        svg_source,
+                        LayoutImageDestination::BoxTreeConstruction,
+                        InternalRequest::Yes,
+                    )
+                    .ok()
+            });
 
-        let cached_image = svg_source.and_then(|svg_source| {
-            context
-                .image_resolver
-                .get_cached_image_for_url(
-                    node.opaque(),
-                    svg_source,
-                    LayoutImageDestination::BoxTreeConstruction,
-                    InternalRequest::Yes,
-                )
-                .ok()
-        });
+            let vector_image = cached_image.map(|image| match image {
+                Image::Vector(mut vector_image) => {
+                    vector_image.svg_id = Some(svg_data.svg_id);
+                    vector_image
+                },
+                _ => unreachable!("SVG element can't contain a raster image."),
+            });
 
-        let vector_image = cached_image.map(|image| match image {
-            Image::Vector(mut vector_image) => {
-                vector_image.svg_id = Some(svg_data.svg_id);
-                vector_image
-            },
-            _ => unreachable!("SVG element can't contain a raster image."),
-        });
-
-        (
-            ReplacedContentKind::SVGElement {
-                vector_image,
-                has_viewbox: svg_data.view_box.is_some(),
-                render_tree: None,
-            },
-            natural_size,
-        )
+            (
+                ReplacedContentKind::SVGElement {
+                    vector_image,
+                    has_viewbox: svg_data.view_box.is_some(),
+                    render_tree: None,
+                },
+                natural_size,
+            )
         }
     }
 
@@ -629,7 +627,11 @@ impl ReplacedContents {
             ReplacedContentKind::SVGElement { .. } => {
                 #[cfg(feature = "svg-engine")]
                 {
-                    if let ReplacedContentKind::SVGElement { render_tree: Some(tree), .. } = &self.kind {
+                    if let ReplacedContentKind::SVGElement {
+                        render_tree: Some(tree),
+                        ..
+                    } = &self.kind
+                    {
                         return vec![Fragment::Image(Arc::new(ImageFragment {
                             base,
                             clip,
@@ -644,58 +646,62 @@ impl ReplacedContents {
 
                 #[cfg(not(feature = "svg-engine"))]
                 {
-                let ReplacedContentKind::SVGElement { vector_image, has_viewbox, .. } = &self.kind;
-                let Some(vector_image) = vector_image else {
-                    return vec![];
-                };
+                    let ReplacedContentKind::SVGElement {
+                        vector_image,
+                        has_viewbox,
+                        ..
+                    } = &self.kind;
+                    let Some(vector_image) = vector_image else {
+                        return vec![];
+                    };
 
-                if !has_viewbox {
-                    base.set_rect(
-                        PhysicalSize::new(
-                            vector_image
-                                .metadata
-                                .width
-                                .try_into()
-                                .map_or(MAX_AU, Au::from_px),
-                            vector_image
-                                .metadata
-                                .height
-                                .try_into()
-                                .map_or(MAX_AU, Au::from_px),
-                        )
-                        .into(),
+                    if !has_viewbox {
+                        base.set_rect(
+                            PhysicalSize::new(
+                                vector_image
+                                    .metadata
+                                    .width
+                                    .try_into()
+                                    .map_or(MAX_AU, Au::from_px),
+                                vector_image
+                                    .metadata
+                                    .height
+                                    .try_into()
+                                    .map_or(MAX_AU, Au::from_px),
+                            )
+                            .into(),
+                        );
+                    }
+
+                    let scale = layout_context.style_context.device_pixel_ratio();
+                    let content_size = base.rect().size;
+                    let raster_size = Size2D::new(
+                        content_size.width.scale_by(scale.0).to_px(),
+                        content_size.height.scale_by(scale.0).to_px(),
                     );
-                }
 
-                let scale = layout_context.style_context.device_pixel_ratio();
-                let content_size = base.rect().size;
-                let raster_size = Size2D::new(
-                    content_size.width.scale_by(scale.0).to_px(),
-                    content_size.height.scale_by(scale.0).to_px(),
-                );
-
-                let tag = self.base_fragment_info.tag.unwrap();
-                layout_context
-                    .image_resolver
-                    .rasterize_vector_image(
-                        vector_image.id,
-                        raster_size,
-                        tag.node,
-                        vector_image.svg_id.clone(),
-                    )
-                    .and_then(|image| image.id)
-                    .map(|image_key| {
-                        Fragment::Image(Arc::new(ImageFragment {
-                            base,
-                            clip,
-                            image_key: Some(image_key),
-                            showing_broken_image_icon: false,
-                            url: None,
-                            svg_render_tree: None,
-                        }))
-                    })
-                    .into_iter()
-                    .collect()
+                    let tag = self.base_fragment_info.tag.unwrap();
+                    layout_context
+                        .image_resolver
+                        .rasterize_vector_image(
+                            vector_image.id,
+                            raster_size,
+                            tag.node,
+                            vector_image.svg_id.clone(),
+                        )
+                        .and_then(|image| image.id)
+                        .map(|image_key| {
+                            Fragment::Image(Arc::new(ImageFragment {
+                                base,
+                                clip,
+                                image_key: Some(image_key),
+                                showing_broken_image_icon: false,
+                                url: None,
+                                svg_render_tree: None,
+                            }))
+                        })
+                        .into_iter()
+                        .collect()
                 }
             },
             ReplacedContentKind::Audio => vec![],

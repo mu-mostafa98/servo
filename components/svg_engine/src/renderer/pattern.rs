@@ -4,9 +4,7 @@
 
 //! SVG pattern fill rendering.
 
-use webrender_api::{
-    units::{LayoutPoint, LayoutRect},
-};
+use webrender_api::units::{LayoutPoint, LayoutRect};
 
 use crate::render_tree::PatternUnits;
 use crate::renderer::{Render, RenderContext, clip_chain_option};
@@ -31,12 +29,11 @@ pub(crate) fn fill_rect_with_pattern_by_id(
     }
 
     let (tile_w, tile_h) = match def.pattern_units {
-        PatternUnits::ObjectBoundingBox => {
-            (def.width * bounds.size().width, def.height * bounds.size().height)
-        },
-        PatternUnits::UserSpaceOnUse => {
-            (def.width, def.height)
-        },
+        PatternUnits::ObjectBoundingBox => (
+            def.width * bounds.size().width,
+            def.height * bounds.size().height,
+        ),
+        PatternUnits::UserSpaceOnUse => (def.width, def.height),
     };
 
     if tile_w <= 0.0 || tile_h <= 0.0 {
@@ -44,9 +41,10 @@ pub(crate) fn fill_rect_with_pattern_by_id(
     }
 
     let (ox, oy) = match def.pattern_units {
-        PatternUnits::ObjectBoundingBox => {
-            (bounds.min.x + def.x * bounds.size().width, bounds.min.y + def.y * bounds.size().height)
-        },
+        PatternUnits::ObjectBoundingBox => (
+            bounds.min.x + def.x * bounds.size().width,
+            bounds.min.y + def.y * bounds.size().height,
+        ),
         PatternUnits::UserSpaceOnUse => {
             // Per SVG spec, pattern x/y are in user space (the SVG viewport
             // coordinate system), not relative to the element being filled.
@@ -63,17 +61,13 @@ pub(crate) fn fill_rect_with_pattern_by_id(
 
     // Clip the entire pattern fill to the shape bounds once.
     let bounds_clip_id = ctx.wr.define_clip_rect(ctx.spatial_id, bounds);
-    let bounds_clip = ctx.wr.define_clip_chain(
-        clip_chain_option(ctx.clip_chain_id),
-        [bounds_clip_id],
-    );
+    let bounds_clip = ctx
+        .wr
+        .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [bounds_clip_id]);
 
     for row in start_row..end_row {
         for col in start_col..end_col {
-            let tile_origin = LayoutPoint::new(
-                ox + col as f32 * tile_w,
-                oy + row as f32 * tile_h,
-            );
+            let tile_origin = LayoutPoint::new(ox + col as f32 * tile_w, oy + row as f32 * tile_h);
 
             for (shape, shape_style) in &def.shapes {
                 if !shape_style.is_visible() {

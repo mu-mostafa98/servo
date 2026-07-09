@@ -24,16 +24,16 @@
 //! `layout::display_list::mod.rs`.  Shape construction happens in
 //! `layout::svg_builder.rs`.
 
+pub mod domelement;
+pub mod error;
+pub mod render_tree;
 pub mod shapes;
 pub mod style;
-pub mod render_tree;
-pub mod error;
 pub mod visitor;
-pub mod domelement;
 
-mod traversal;
+mod effects;
 mod renderer;
 mod tessellator;
-mod effects;
+mod traversal;
 
 pub use traversal::render_svg_tree;

@@ -2,9 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+use crate::renderer::{Render, RenderContext, stroke};
 use crate::shapes::Line;
-use crate::renderer::{Render, RenderContext};
-use crate::renderer::stroke;
 
 /// Renders an SVG `<line>`.
 ///
@@ -18,7 +17,9 @@ use crate::renderer::stroke;
 ///   to omit fill when the SVG spec requires it.
 impl Render for Line {
     fn render(&self, ctx: &mut RenderContext) {
-        let Some(stroke) = &ctx.style.stroke else { return };
+        let Some(stroke) = &ctx.style.stroke else {
+            return;
+        };
         if (stroke.color.is_none() && stroke.paint_server.is_none()) || stroke.width <= 0.0 {
             return;
         }

@@ -9,7 +9,8 @@ use style::attr::AttrValue;
 
 use crate::dom::bindings::inheritance::{
     Castable, DocumentFragmentTypeId, ElementTypeId, HTMLElementTypeId, HTMLMediaElementTypeId,
-    NodeTypeId, SVGElementTypeId, SVGGradientElementTypeId, SVGGeometryElementTypeId, SVGGraphicsElementTypeId,
+    NodeTypeId, SVGElementTypeId, SVGGeometryElementTypeId, SVGGradientElementTypeId,
+    SVGGraphicsElementTypeId,
 };
 use crate::dom::bindings::str::DOMString;
 use crate::dom::document::Document;

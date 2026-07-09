@@ -11,10 +11,8 @@
 //! Length parsing is backed by [`svgtypes::Length`] for spec‑compliant handling
 //! of all SVG length units (`px`, `em`, `ex`, `in`, `cm`, `mm`, `pt`, `pc`, `%`).
 
-use svgtypes::Length as SvgLength;
-use svgtypes::PointsParser;
-
 use kurbo::Point;
+use svgtypes::{Length as SvgLength, PointsParser};
 
 use crate::error::{SvgEngineError, SvgResult};
 
@@ -31,9 +29,9 @@ pub fn parse_length(
     get_attr: &dyn Fn(&str) -> Option<String>,
     font_size: f32,
 ) -> SvgResult<f32> {
-    let value =
-        get_attr(attr).ok_or_else(|| SvgEngineError::MissingAttribute(attr.to_owned()))?;
-    let len: SvgLength = value.parse()
+    let value = get_attr(attr).ok_or_else(|| SvgEngineError::MissingAttribute(attr.to_owned()))?;
+    let len: SvgLength = value
+        .parse()
         .map_err(|e| SvgEngineError::ParseError(format!("{attr}: {e}")))?;
     Ok(to_px(len, font_size))
 }
@@ -61,9 +59,7 @@ fn to_px(len: SvgLength, font_size: f32) -> f32 {
 ///
 /// Used by both `<polyline>` and `<polygon>`.  Delegates to
 /// [`svgtypes::PointsParser`] for SVG-spec-compliant parsing.
-pub fn parse_points(
-    get_attr: &dyn Fn(&str) -> Option<String>,
-) -> SvgResult<Vec<Point>> {
+pub fn parse_points(get_attr: &dyn Fn(&str) -> Option<String>) -> SvgResult<Vec<Point>> {
     let value =
         get_attr("points").ok_or_else(|| SvgEngineError::MissingAttribute("points".to_owned()))?;
     let points: Vec<Point> = PointsParser::from(value.as_str())
@@ -90,7 +86,12 @@ mod tests {
     fn parse_length_missing_attr() {
         let result = parse_length("width", &|_| None, FS);
         assert!(result.is_err());
-        assert!(result.unwrap_err().to_string().contains("missing SVG attribute: width"));
+        assert!(
+            result
+                .unwrap_err()
+                .to_string()
+                .contains("missing SVG attribute: width")
+        );
     }
 
     #[test]

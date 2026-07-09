@@ -148,7 +148,10 @@ fn traverse_element<'dom>(
     #[cfg(feature = "svg-engine")]
     if let Some(el) = element.as_element() {
         if el.is_svg_element() &&
-            !matches!(element.type_id(), Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement)))
+            !matches!(
+                element.type_id(),
+                Some(LayoutNodeType::Element(LayoutElementType::SVGSVGElement))
+            )
         {
             return;
         }

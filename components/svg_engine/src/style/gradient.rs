@@ -10,11 +10,10 @@
 //!
 //! **No WebRender dependency** — pure SVG data types via `svgtypes::Color`.
 
-use svgtypes::Color as SvgColor;
-use svgtypes::Length as SvgLength;
+use svgtypes::{Color as SvgColor, Length as SvgLength};
 
 use crate::error::{SvgEngineError, SvgResult};
-use crate::style::transform_ops::{parse_transform_str, TransformOp};
+use crate::style::transform_ops::{TransformOp, parse_transform_str};
 
 /// A paint server reference — either a solid color, gradient ID, or pattern ID.
 #[derive(Debug, Clone)]
@@ -126,19 +125,24 @@ pub fn parse_gradient_element(
 ) -> SvgResult<GradientDef> {
     let id = get_attr("id").unwrap_or_default();
     if id.is_empty() {
-        return Err(SvgEngineError::MissingAttribute("id on gradient".to_owned()));
+        return Err(SvgEngineError::MissingAttribute(
+            "id on gradient".to_owned(),
+        ));
     }
 
     let mut stops: Vec<GradientStop> = Vec::new();
     for attrs in stop_attrs {
-        let offset = attrs.iter()
+        let offset = attrs
+            .iter()
             .find(|(k, _)| k == "offset")
             .and_then(|(_, v)| parse_offset(v));
-        let mut color = attrs.iter()
+        let mut color = attrs
+            .iter()
             .find(|(k, _)| k == "stop-color")
             .and_then(|(_, v)| crate::style::color::parse_css_color(v))
             .unwrap_or(SvgColor::new_rgb(0, 0, 0));
-        if let Some(stop_opacity) = attrs.iter()
+        if let Some(stop_opacity) = attrs
+            .iter()
             .find(|(k, _)| k == "stop-opacity")
             .and_then(|(_, v)| parse_offset(v))
         {
@@ -150,11 +154,21 @@ pub fn parse_gradient_element(
     }
 
     if stops.is_empty() {
-        stops.push(GradientStop { offset: 0.0, color: SvgColor::new_rgb(0, 0, 0) });
-        stops.push(GradientStop { offset: 1.0, color: SvgColor::new_rgb(0, 0, 0) });
+        stops.push(GradientStop {
+            offset: 0.0,
+            color: SvgColor::new_rgb(0, 0, 0),
+        });
+        stops.push(GradientStop {
+            offset: 1.0,
+            color: SvgColor::new_rgb(0, 0, 0),
+        });
     }
 
-    stops.sort_by(|a, b| a.offset.partial_cmp(&b.offset).unwrap_or(std::cmp::Ordering::Equal));
+    stops.sort_by(|a, b| {
+        a.offset
+            .partial_cmp(&b.offset)
+            .unwrap_or(std::cmp::Ordering::Equal)
+    });
 
     let gradient_units = get_attr("gradientUnits")
         .and_then(|val| parse_gradient_units(&val))
@@ -173,7 +187,13 @@ pub fn parse_gradient_element(
                 GradientUnits::UserSpaceOnUse => GradientLength::Number(0.0),
             });
             Ok(GradientDef::Linear(LinearGradient {
-                id, x1, y1, x2, y2, units: gradient_units, stops,
+                id,
+                x1,
+                y1,
+                x2,
+                y2,
+                units: gradient_units,
+                stops,
                 transform: parse_transform_str(&get_attr("gradientTransform").unwrap_or_default()),
             }))
         },
@@ -184,11 +204,20 @@ pub fn parse_gradient_element(
             let fx = parse_length_attr("fx", get_attr).unwrap_or(cx);
             let fy = parse_length_attr("fy", get_attr).unwrap_or(cy);
             Ok(GradientDef::Radial(RadialGradient {
-                id, cx, cy, r, fx, fy, units: gradient_units, stops,
+                id,
+                cx,
+                cy,
+                r,
+                fx,
+                fy,
+                units: gradient_units,
+                stops,
                 transform: parse_transform_str(&get_attr("gradientTransform").unwrap_or_default()),
             }))
         },
-        _ => Err(SvgEngineError::UnsupportedFeature(format!("unknown gradient: {element_name}"))),
+        _ => Err(SvgEngineError::UnsupportedFeature(format!(
+            "unknown gradient: {element_name}"
+        ))),
     }
 }
 
@@ -198,7 +227,10 @@ pub fn parse_gradient_element(
 /// that handles all units (`px`, `em`, `ex`, `cm`, `mm`, `in`, `pt`, `pc`, `%`).
 /// Percent values are kept explicit so they can be interpreted correctly
 /// in objectBoundingBox coordinates.
-fn parse_length_attr(attr: &str, get_attr: &dyn Fn(&str) -> Option<String>) -> Option<GradientLength> {
+fn parse_length_attr(
+    attr: &str,
+    get_attr: &dyn Fn(&str) -> Option<String>,
+) -> Option<GradientLength> {
     let v = get_attr(attr)?;
     let len: SvgLength = v.parse().ok()?;
     if len.unit == svgtypes::LengthUnit::Percent {

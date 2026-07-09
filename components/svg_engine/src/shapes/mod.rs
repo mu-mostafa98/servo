@@ -18,29 +18,28 @@
 //! ```
 
 use kurbo::ParamCurve;
-pub(crate) mod rectangle;
+pub mod attr_parsers;
 pub(crate) mod circle;
 pub(crate) mod ellipse;
 pub(crate) mod line;
-pub(crate) mod polyline;
-pub(crate) mod polygon;
 pub(crate) mod path;
-pub mod attr_parsers;
+pub(crate) mod polygon;
+pub(crate) mod polyline;
+pub(crate) mod rectangle;
 
-pub use self::rectangle::Rectangle;
-pub use self::circle::Circle;
-pub use self::ellipse::Ellipse;
-pub use self::line::Line;
-pub use self::polyline::Polyline;
-pub use self::polygon::Polygon;
-pub use self::path::Path;
 // AttrAccessor and BuildFromElement are defined in this module below.
-
 use webrender_api::{
     BorderRadius,
     units::{LayoutPoint, LayoutRect, LayoutSize},
 };
 
+pub use self::circle::Circle;
+pub use self::ellipse::Ellipse;
+pub use self::line::Line;
+pub use self::path::Path;
+pub use self::polygon::Polygon;
+pub use self::polyline::Polyline;
+pub use self::rectangle::Rectangle;
 use crate::render_tree::ClipPathUnits;
 
 /// Scale factor for objectBoundingBox clip-path coordinates (0..1 → 0..100).
@@ -150,11 +149,17 @@ impl Shape {
 // ======================= Clip geometry helpers =======================
 
 fn clip_info_rect(
-    r: &Rectangle, svg_origin: &LayoutPoint, units: ClipPathUnits,
+    r: &Rectangle,
+    svg_origin: &LayoutPoint,
+    units: ClipPathUnits,
 ) -> Option<ClipGeometry> {
     let (x, y, w, h) = if units == ClipPathUnits::ObjectBoundingBox {
-        (r.x * OBJECT_BBOX_REF_SIZE, r.y * OBJECT_BBOX_REF_SIZE,
-         r.width * OBJECT_BBOX_REF_SIZE, r.height * OBJECT_BBOX_REF_SIZE)
+        (
+            r.x * OBJECT_BBOX_REF_SIZE,
+            r.y * OBJECT_BBOX_REF_SIZE,
+            r.width * OBJECT_BBOX_REF_SIZE,
+            r.height * OBJECT_BBOX_REF_SIZE,
+        )
     } else {
         (r.x, r.y, r.width, r.height)
     };
@@ -165,11 +170,15 @@ fn clip_info_rect(
     let radii = match (r.rx, r.ry) {
         (Some(rx), _) if rx > 0.0 => {
             let ry = r.ry.unwrap_or(rx);
-            Some(all_equal_radius(rx.clamp(0.0, w / 2.0), ry.clamp(0.0, h / 2.0)))
+            Some(all_equal_radius(
+                rx.clamp(0.0, w / 2.0),
+                ry.clamp(0.0, h / 2.0),
+            ))
         },
-        (_, Some(ry)) if ry > 0.0 => {
-            Some(all_equal_radius(ry.clamp(0.0, h / 2.0), ry.clamp(0.0, h / 2.0)))
-        },
+        (_, Some(ry)) if ry > 0.0 => Some(all_equal_radius(
+            ry.clamp(0.0, h / 2.0),
+            ry.clamp(0.0, h / 2.0),
+        )),
         _ => None,
     };
     Some(match radii {
@@ -182,10 +191,16 @@ fn clip_info_rect(
 }
 
 fn clip_info_circle(
-    c: &Circle, svg_origin: &LayoutPoint, units: ClipPathUnits,
+    c: &Circle,
+    svg_origin: &LayoutPoint,
+    units: ClipPathUnits,
 ) -> Option<ClipGeometry> {
     let (cx, cy, r) = if units == ClipPathUnits::ObjectBoundingBox {
-        (c.cx * OBJECT_BBOX_REF_SIZE, c.cy * OBJECT_BBOX_REF_SIZE, c.r * OBJECT_BBOX_REF_SIZE)
+        (
+            c.cx * OBJECT_BBOX_REF_SIZE,
+            c.cy * OBJECT_BBOX_REF_SIZE,
+            c.r * OBJECT_BBOX_REF_SIZE,
+        )
     } else {
         (c.cx, c.cy, c.r)
     };
@@ -193,15 +208,24 @@ fn clip_info_circle(
         LayoutPoint::new(svg_origin.x + cx - r, svg_origin.y + cy - r),
         LayoutSize::new(r * 2.0, r * 2.0),
     );
-    Some(ClipGeometry::RoundedRect { bounds, radii: all_equal_radius(r, r) })
+    Some(ClipGeometry::RoundedRect {
+        bounds,
+        radii: all_equal_radius(r, r),
+    })
 }
 
 fn clip_info_ellipse(
-    e: &Ellipse, svg_origin: &LayoutPoint, units: ClipPathUnits,
+    e: &Ellipse,
+    svg_origin: &LayoutPoint,
+    units: ClipPathUnits,
 ) -> Option<ClipGeometry> {
     let (cx, cy, rx, ry) = if units == ClipPathUnits::ObjectBoundingBox {
-        (e.cx * OBJECT_BBOX_REF_SIZE, e.cy * OBJECT_BBOX_REF_SIZE,
-         e.rx * OBJECT_BBOX_REF_SIZE, e.ry * OBJECT_BBOX_REF_SIZE)
+        (
+            e.cx * OBJECT_BBOX_REF_SIZE,
+            e.cy * OBJECT_BBOX_REF_SIZE,
+            e.rx * OBJECT_BBOX_REF_SIZE,
+            e.ry * OBJECT_BBOX_REF_SIZE,
+        )
     } else {
         (e.cx, e.cy, e.rx, e.ry)
     };
@@ -209,14 +233,19 @@ fn clip_info_ellipse(
         LayoutPoint::new(svg_origin.x + cx - rx, svg_origin.y + cy - ry),
         LayoutSize::new(rx * 2.0, ry * 2.0),
     );
-    Some(ClipGeometry::RoundedRect { bounds, radii: all_equal_radius(rx, ry) })
+    Some(ClipGeometry::RoundedRect {
+        bounds,
+        radii: all_equal_radius(rx, ry),
+    })
 }
 
 /// Build a BorderRadius with the same (rx, ry) on all four corners.
 fn all_equal_radius(rx: f32, ry: f32) -> BorderRadius {
     BorderRadius {
-        top_left: LayoutSize::new(rx, ry), top_right: LayoutSize::new(rx, ry),
-        bottom_left: LayoutSize::new(rx, ry), bottom_right: LayoutSize::new(rx, ry),
+        top_left: LayoutSize::new(rx, ry),
+        top_right: LayoutSize::new(rx, ry),
+        bottom_left: LayoutSize::new(rx, ry),
+        bottom_right: LayoutSize::new(rx, ry),
     }
 }
 
@@ -237,14 +266,25 @@ fn clip_info_polygon(
 
     for p in pts {
         let (x, y) = if units == ClipPathUnits::ObjectBoundingBox {
-            (p.x as f32 * OBJECT_BBOX_REF_SIZE, p.y as f32 * OBJECT_BBOX_REF_SIZE)
+            (
+                p.x as f32 * OBJECT_BBOX_REF_SIZE,
+                p.y as f32 * OBJECT_BBOX_REF_SIZE,
+            )
         } else {
             (p.x as f32, p.y as f32)
         };
-        if x < min_x { min_x = x; }
-        if y < min_y { min_y = y; }
-        if x > max_x { max_x = x; }
-        if y > max_y { max_y = y; }
+        if x < min_x {
+            min_x = x;
+        }
+        if y < min_y {
+            min_y = y;
+        }
+        if x > max_x {
+            max_x = x;
+        }
+        if y > max_y {
+            max_y = y;
+        }
     }
 
     let bounds = LayoutRect::from_origin_and_size(
@@ -270,14 +310,25 @@ fn clip_info_path(
     for seg in path.segments() {
         let p = seg.end();
         let (x, y) = if units == ClipPathUnits::ObjectBoundingBox {
-            (p.x as f32 * OBJECT_BBOX_REF_SIZE, p.y as f32 * OBJECT_BBOX_REF_SIZE)
+            (
+                p.x as f32 * OBJECT_BBOX_REF_SIZE,
+                p.y as f32 * OBJECT_BBOX_REF_SIZE,
+            )
         } else {
             (p.x as f32, p.y as f32)
         };
-        if x < min_x { min_x = x; }
-        if y < min_y { min_y = y; }
-        if x > max_x { max_x = x; }
-        if y > max_y { max_y = y; }
+        if x < min_x {
+            min_x = x;
+        }
+        if y < min_y {
+            min_y = y;
+        }
+        if x > max_x {
+            max_x = x;
+        }
+        if y > max_y {
+            max_y = y;
+        }
         has_points = true;
     }
 

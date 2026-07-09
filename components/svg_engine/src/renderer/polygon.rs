@@ -2,8 +2,8 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use crate::shapes::{Polygon, Polyline};
 use crate::renderer::{Render, RenderContext};
+use crate::shapes::{Polygon, Polyline};
 
 /// Renders an SVG `<polygon>`.
 ///

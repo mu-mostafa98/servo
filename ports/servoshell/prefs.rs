@@ -595,7 +595,6 @@ fn update_preferences_from_command_line_arguments(
         }
     }
 
-
     for pref in &cmd_args.pref {
         let split: Vec<&str> = pref.splitn(2, '=').collect();
         let pref_name = split[0];

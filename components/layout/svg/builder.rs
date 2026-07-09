@@ -14,24 +14,16 @@ use std::sync::Arc;
 use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-
 use svg_engine::render_tree::*;
 use svg_engine::visitor::PaintServerFixupVisitor;
-
 use web_atoms::ns;
 
-use crate::context::LayoutContext;
-
-use super::style::{
-    collect_svg_css_rules,
-    build_style,
-};
 use super::collects::{
-    DefinitionCollector,
-    GradientParser, ClipPathParser, PatternParser, MaskParser, FilterParser,
-    build_shape_core,
-    extract_viewport_info,
+    ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MaskParser, PatternParser,
+    build_shape_core, extract_viewport_info,
 };
+use super::style::{build_style, collect_svg_css_rules};
+use crate::context::LayoutContext;
 
 // ======================= Builder =======================
 
@@ -53,7 +45,11 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
     pub(crate) fn new(node: ServoLayoutNode<'dom>, context: &'a LayoutContext<'a>) -> Self {
         // Phase 1: Collect CSS rules from <style> elements (needed by build_style).
         let css_rules = collect_svg_css_rules(node);
-        SvgRenderTreeBuilder { root_node: node, context, css_rules }
+        SvgRenderTreeBuilder {
+            root_node: node,
+            context,
+            css_rules,
+        }
     }
 
     /// Build the complete [`SvgRenderTree`].
@@ -62,19 +58,31 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
         let viewport = extract_viewport_info(self.root_node, self.context);
 
         // Collect definitions using the Strategy pattern.
-        let gradients = DefinitionCollector::collect::<GradientParser>(self.root_node, self.context);
-        let clip_paths = DefinitionCollector::collect::<ClipPathParser>(self.root_node, self.context);
+        let gradients =
+            DefinitionCollector::collect::<GradientParser>(self.root_node, self.context);
+        let clip_paths =
+            DefinitionCollector::collect::<ClipPathParser>(self.root_node, self.context);
         let patterns = DefinitionCollector::collect::<PatternParser>(self.root_node, self.context);
         let masks = DefinitionCollector::collect::<MaskParser>(self.root_node, self.context);
         let filters = DefinitionCollector::collect::<FilterParser>(self.root_node, self.context);
 
-        let mut tree = SvgRenderTree { root, viewport, gradients, clip_paths, patterns, masks, filters };
+        let mut tree = SvgRenderTree {
+            root,
+            viewport,
+            gradients,
+            clip_paths,
+            patterns,
+            masks,
+            filters,
+        };
 
         // Post-process: convert PaintServer::Gradient → PaintServer::Pattern
         // when the referenced ID is actually a pattern definition.
         {
             let patterns = tree.patterns.clone();
-            let mut visitor = PaintServerFixupVisitor { pattern_ids: &patterns };
+            let mut visitor = PaintServerFixupVisitor {
+                pattern_ids: &patterns,
+            };
             tree.visit_mut(&mut visitor);
         }
 
@@ -91,16 +99,23 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
         let element = node.as_element()?;
         let tag = build_tag(&element)?;
         let style = build_style(node, self.context, &self.css_rules);
-        let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string());
+        let id = element
+            .attribute_as_str(&ns!(), &local_name!("id"))
+            .map(|s| s.to_string());
 
         // Resolve children, handling <use> element references.
         let children = match &tag {
             SvgTag::Container(Container::Use) => {
-                let ref_id = element.attribute_as_str(&ns!(), &local_name!("href"))
+                let ref_id = element
+                    .attribute_as_str(&ns!(), &local_name!("href"))
                     .or_else(|| element.attribute_as_str(&ns!(), &local_name!("xlink:href")))
                     .and_then(|href| {
                         let trimmed = href.trim_start_matches('#');
-                        if trimmed.is_empty() { None } else { Some(trimmed.to_owned()) }
+                        if trimmed.is_empty() {
+                            None
+                        } else {
+                            Some(trimmed.to_owned())
+                        }
                     });
                 match ref_id {
                     Some(ref_id) if !resolving.contains(&ref_id) => {
@@ -115,14 +130,18 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
                     _ => vec![],
                 }
             },
-            _ => {
-                node.dom_children()
-                    .filter_map(|child| self.build_render_node(child, root_node, resolving))
-                    .collect()
-            },
+            _ => node
+                .dom_children()
+                .filter_map(|child| self.build_render_node(child, root_node, resolving))
+                .collect(),
         };
 
-        Some(SvgRenderNode { id, tag, style, children })
+        Some(SvgRenderNode {
+            id,
+            tag,
+            style,
+            children,
+        })
     }
 }
 
@@ -143,7 +162,10 @@ fn build_tag<'dom>(element: &ServoLayoutElement<'dom>) -> Option<SvgTag> {
 // ======================= Element Lookup =======================
 
 /// Recursively search the SVG DOM subtree for an element by its `id`.
-fn find_element_by_id<'dom>(node: ServoLayoutNode<'dom>, target_id: &str) -> Option<ServoLayoutNode<'dom>> {
+fn find_element_by_id<'dom>(
+    node: ServoLayoutNode<'dom>,
+    target_id: &str,
+) -> Option<ServoLayoutNode<'dom>> {
     if let Some(element) = node.as_element() {
         if let Some(id) = element.attribute_as_str(&ns!(), &local_name!("id")) {
             if id == target_id {

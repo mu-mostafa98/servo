@@ -16,14 +16,13 @@
 //! The main entry point is [`build_svg_render_tree`], called from
 //! [`crate::replaced`].
 
-pub(crate) mod style;
-pub(crate) mod collects;
 pub(crate) mod builder;
+pub(crate) mod collects;
+pub(crate) mod style;
 
 use std::sync::Arc;
 
 use script::layout_dom::ServoLayoutNode;
-
 use svg_engine::render_tree::SvgRenderTree;
 
 use crate::context::LayoutContext;

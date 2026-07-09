@@ -5,6 +5,7 @@
 //! SVG fill properties — pure data types, no WebRender dependency.
 
 use svgtypes::Color as SvgColor;
+
 use super::gradient::PaintServer;
 
 /// SVG fill properties.

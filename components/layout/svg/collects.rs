@@ -14,17 +14,13 @@ use std::collections::HashMap;
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-
 use svg_engine::render_tree::*;
-use svg_engine::shapes::*;
-use svg_engine::shapes::BuildFromElement;
+use svg_engine::shapes::{BuildFromElement, *};
 use svg_engine::style::gradient::{GradientDef, parse_gradient_element};
-
 use web_atoms::ns;
 
+use super::style::{build_style_from_attrs, get_attr};
 use crate::context::LayoutContext;
-
-use super::style::{get_attr, build_style_from_attrs};
 
 // ======================= Strategy Pattern =======================
 
@@ -100,9 +96,14 @@ pub(crate) struct GradientParser;
 
 impl DefinitionParser for GradientParser {
     type Definition = GradientDef;
-    fn tag_names() -> &'static [&'static str] { &["linearGradient", "radialGradient"] }
+    fn tag_names() -> &'static [&'static str] {
+        &["linearGradient", "radialGradient"]
+    }
 
-    fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse(
+        node: ServoLayoutNode,
+        _context: &LayoutContext,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let grad_name = element.local_name().as_ref().to_owned();
         if grad_name != "linearGradient" && grad_name != "radialGradient" {
@@ -114,26 +115,39 @@ impl DefinitionParser for GradientParser {
             if let Some(stop_elem) = stop_node.as_element() {
                 if stop_elem.local_name() == &local_name!("stop") {
                     let mut attrs: Vec<(String, String)> = Vec::new();
-                    if let Some(offset) = stop_elem.attribute_as_str(&ns!(), &local_name!("offset")) {
+                    if let Some(offset) = stop_elem.attribute_as_str(&ns!(), &local_name!("offset"))
+                    {
                         attrs.push(("offset".to_owned(), offset.to_string()));
                     }
-                    if let Some(color) = stop_elem.attribute_as_str(&ns!(), &local_name!("stop-color")) {
+                    if let Some(color) =
+                        stop_elem.attribute_as_str(&ns!(), &local_name!("stop-color"))
+                    {
                         attrs.push(("stop-color".to_owned(), color.to_string()));
                     }
-                    if let Some(op) = stop_elem.attribute_as_str(&ns!(), &local_name!("stop-opacity")) {
+                    if let Some(op) =
+                        stop_elem.attribute_as_str(&ns!(), &local_name!("stop-opacity"))
+                    {
                         attrs.push(("stop-opacity".to_owned(), op.to_string()));
                     }
-                    if !attrs.is_empty() { stop_attrs.push(attrs); }
+                    if !attrs.is_empty() {
+                        stop_attrs.push(attrs);
+                    }
                 }
             }
         }
         let grad_get = |attr: &str| {
-            element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
+            element
+                .attribute_as_str(&ns!(), &LocalName::from(attr))
+                .map(|s| s.to_string())
         };
         if let Ok(def) = parse_gradient_element(&grad_name, &grad_get, &stop_attrs) {
             match &def {
-                GradientDef::Linear(lg) => { return Some((lg.id.clone(), def)); },
-                GradientDef::Radial(rg) => { return Some((rg.id.clone(), def)); },
+                GradientDef::Linear(lg) => {
+                    return Some((lg.id.clone(), def));
+                },
+                GradientDef::Radial(rg) => {
+                    return Some((rg.id.clone(), def));
+                },
             }
         }
         None
@@ -146,12 +160,20 @@ pub(crate) struct ClipPathParser;
 
 impl DefinitionParser for ClipPathParser {
     type Definition = ClipPathDef;
-    fn tag_names() -> &'static [&'static str] { &["clipPath"] }
+    fn tag_names() -> &'static [&'static str] {
+        &["clipPath"]
+    }
 
-    fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse(
+        node: ServoLayoutNode,
+        _context: &LayoutContext,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string())?;
-        let units = element.attribute_as_str(&ns!(), &local_name!("clipPathUnits"))
+        let id = element
+            .attribute_as_str(&ns!(), &local_name!("id"))
+            .map(|s| s.to_string())?;
+        let units = element
+            .attribute_as_str(&ns!(), &local_name!("clipPathUnits"))
             .and_then(|s| match s.trim() {
                 "objectBoundingBox" => Some(ClipPathUnits::ObjectBoundingBox),
                 _ => None,
@@ -167,7 +189,13 @@ impl DefinitionParser for ClipPathParser {
             }
         }
         if !shapes.is_empty() {
-            Some((id, ClipPathDef { shapes, clip_path_units: units }))
+            Some((
+                id,
+                ClipPathDef {
+                    shapes,
+                    clip_path_units: units,
+                },
+            ))
         } else {
             None
         }
@@ -180,28 +208,40 @@ pub(crate) struct PatternParser;
 
 impl DefinitionParser for PatternParser {
     type Definition = PatternDef;
-    fn tag_names() -> &'static [&'static str] { &["pattern"] }
+    fn tag_names() -> &'static [&'static str] {
+        &["pattern"]
+    }
 
-    fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse(
+        node: ServoLayoutNode,
+        _context: &LayoutContext,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string())?;
+        let id = element
+            .attribute_as_str(&ns!(), &local_name!("id"))
+            .map(|s| s.to_string())?;
         let parse_attr = |attr: &str, default: f32| -> f32 {
-            element.attribute_as_str(&ns!(), &LocalName::from(attr))
+            element
+                .attribute_as_str(&ns!(), &LocalName::from(attr))
                 .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
                 .unwrap_or(default)
         };
         let width = parse_attr("width", 0.0);
         let height = parse_attr("height", 0.0);
-        if width <= 0.0 || height <= 0.0 { return None; }
+        if width <= 0.0 || height <= 0.0 {
+            return None;
+        }
         let x = parse_attr("x", 0.0);
         let y = parse_attr("y", 0.0);
-        let pattern_units = element.attribute_as_str(&ns!(), &local_name!("patternUnits"))
+        let pattern_units = element
+            .attribute_as_str(&ns!(), &local_name!("patternUnits"))
             .and_then(|s| match s.trim() {
                 "objectBoundingBox" => Some(PatternUnits::ObjectBoundingBox),
                 _ => None,
             })
             .unwrap_or(PatternUnits::UserSpaceOnUse);
-        let pattern_content_units = element.attribute_as_str(&ns!(), &local_name!("patternContentUnits"))
+        let pattern_content_units = element
+            .attribute_as_str(&ns!(), &local_name!("patternContentUnits"))
             .and_then(|s| match s.trim() {
                 "objectBoundingBox" => Some(PatternContentUnits::ObjectBoundingBox),
                 _ => None,
@@ -218,11 +258,18 @@ impl DefinitionParser for PatternParser {
             }
         }
         if !shapes.is_empty() {
-            Some((id, PatternDef {
-                width, height, x, y,
-                pattern_units, pattern_content_units,
-                shapes,
-            }))
+            Some((
+                id,
+                PatternDef {
+                    width,
+                    height,
+                    x,
+                    y,
+                    pattern_units,
+                    pattern_content_units,
+                    shapes,
+                },
+            ))
         } else {
             None
         }
@@ -235,11 +282,18 @@ pub(crate) struct MaskParser;
 
 impl DefinitionParser for MaskParser {
     type Definition = MaskDef;
-    fn tag_names() -> &'static [&'static str] { &["mask"] }
+    fn tag_names() -> &'static [&'static str] {
+        &["mask"]
+    }
 
-    fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse(
+        node: ServoLayoutNode,
+        _context: &LayoutContext,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string())?;
+        let id = element
+            .attribute_as_str(&ns!(), &local_name!("id"))
+            .map(|s| s.to_string())?;
         let mut shapes = Vec::new();
         for child_node in node.dom_children() {
             if let Some(child_elem) = child_node.as_element() {
@@ -264,14 +318,27 @@ pub(crate) struct FilterParser;
 
 impl DefinitionParser for FilterParser {
     type Definition = FilterDef;
-    fn tag_names() -> &'static [&'static str] { &["filter"] }
+    fn tag_names() -> &'static [&'static str] {
+        &["filter"]
+    }
 
-    fn parse(node: ServoLayoutNode, _context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse(
+        node: ServoLayoutNode,
+        _context: &LayoutContext,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
-        let id = element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string())?;
-        let get = |attr: &str| element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string());
+        let id = element
+            .attribute_as_str(&ns!(), &local_name!("id"))
+            .map(|s| s.to_string())?;
+        let get = |attr: &str| {
+            element
+                .attribute_as_str(&ns!(), &LocalName::from(attr))
+                .map(|s| s.to_string())
+        };
         let get_float = |attr: &str, default: f32| -> f32 {
-            get(attr).and_then(|v| v.parse::<f32>().ok()).unwrap_or(default)
+            get(attr)
+                .and_then(|v| v.parse::<f32>().ok())
+                .unwrap_or(default)
         };
         let x = get_float("x", -0.1);
         let y = get_float("y", -0.1);
@@ -283,9 +350,15 @@ impl DefinitionParser for FilterParser {
             if let Some(prim_elem) = prim_child.as_element() {
                 let pname = prim_elem.local_name().as_ref().to_owned();
                 // Read primitive-specific attributes from the child element, not the <filter> parent.
-                let prim_get = |attr: &str| prim_elem.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string());
+                let prim_get = |attr: &str| {
+                    prim_elem
+                        .attribute_as_str(&ns!(), &LocalName::from(attr))
+                        .map(|s| s.to_string())
+                };
                 let prim_get_float = |attr: &str, default: f32| -> f32 {
-                    prim_get(attr).and_then(|v| v.parse::<f32>().ok()).unwrap_or(default)
+                    prim_get(attr)
+                        .and_then(|v| v.parse::<f32>().ok())
+                        .unwrap_or(default)
                 };
                 match pname.as_str() {
                     "feGaussianBlur" => {
@@ -296,15 +369,15 @@ impl DefinitionParser for FilterParser {
                         let dx = prim_get_float("dx", 2.0);
                         let dy = prim_get_float("dy", 2.0);
                         let std_dev = prim_get_float("stdDeviation", 2.0);
-                        primitives.push(FilterPrimitive::DropShadow(dx, dy, std_dev, 0.0, 0.0, 0.0, 0.5));
+                        primitives.push(FilterPrimitive::DropShadow(
+                            dx, dy, std_dev, 0.0, 0.0, 0.0, 0.5,
+                        ));
                     },
                     "feColorMatrix" => {
                         let v = 1.0 / 3.0;
                         primitives.push(FilterPrimitive::ColorMatrix([
-                            v, v, v, 0.0, 0.0,
-                            v, v, v, 0.0, 0.0,
-                            v, v, v, 0.0, 0.0,
-                            0.0, 0.0, 0.0, 1.0, 0.0,
+                            v, v, v, 0.0, 0.0, v, v, v, 0.0, 0.0, v, v, v, 0.0, 0.0, 0.0, 0.0, 0.0,
+                            1.0, 0.0,
                         ]));
                     },
                     _ => {},
@@ -312,7 +385,16 @@ impl DefinitionParser for FilterParser {
             }
         }
         if !primitives.is_empty() {
-            Some((id, FilterDef { primitives, x, y, width, height }))
+            Some((
+                id,
+                FilterDef {
+                    primitives,
+                    x,
+                    y,
+                    width,
+                    height,
+                },
+            ))
         } else {
             None
         }
@@ -322,11 +404,22 @@ impl DefinitionParser for FilterParser {
 // ======================= Viewport Extraction =======================
 
 /// Extract viewport info from the `<svg>` element.
-pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>, _context: &LayoutContext) -> ViewportInfo {
+pub(crate) fn extract_viewport_info<'dom>(
+    node: ServoLayoutNode<'dom>,
+    _context: &LayoutContext,
+) -> ViewportInfo {
     let element = node.as_element().unwrap();
-    let get = |attr: &str| element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string());
-    let svg_width = get("width").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(300.0);
-    let svg_height = get("height").and_then(|v| v.trim_end_matches("px").parse::<f32>().ok()).unwrap_or(150.0);
+    let get = |attr: &str| {
+        element
+            .attribute_as_str(&ns!(), &LocalName::from(attr))
+            .map(|s| s.to_string())
+    };
+    let svg_width = get("width")
+        .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
+        .unwrap_or(300.0);
+    let svg_height = get("height")
+        .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
+        .unwrap_or(150.0);
     let view_box = get("viewBox").as_deref().and_then(extract_viewbox);
 
     let overflow_visible = get("overflow")
@@ -345,10 +438,15 @@ pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>, _context:
         })
         .map_or(false, |v| v.trim().eq_ignore_ascii_case("visible"));
 
-    let aspect_ratio = get("preserveAspectRatio")
-        .map(|v| parse_aspect_ratio(&v));
+    let aspect_ratio = get("preserveAspectRatio").map(|v| parse_aspect_ratio(&v));
 
-    ViewportInfo { width: svg_width, height: svg_height, view_box, overflow_visible, aspect_ratio }
+    ViewportInfo {
+        width: svg_width,
+        height: svg_height,
+        view_box,
+        overflow_visible,
+        aspect_ratio,
+    }
 }
 
 // ======================= Shared Shape Construction =======================
