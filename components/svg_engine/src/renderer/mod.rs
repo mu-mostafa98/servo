@@ -159,12 +159,11 @@ pub(crate) fn make_common_props(
 /// transform scale so that the stroke appears the same visual width regardless
 /// of any ancestor or element-level scale transforms.
 pub(crate) fn effective_stroke_width(ctx: &RenderContext, width: f32) -> f32 {
-    if let Some(hints) = &ctx.style.render_hints {
-        if let Some(VectorEffect::NonScalingStroke) = hints.vector_effect {
+    if let Some(hints) = &ctx.style.render_hints
+        && let Some(VectorEffect::NonScalingStroke) = hints.vector_effect {
             let scale = ctx.accumulated_scale.max(0.01);
             return width / scale;
         }
-    }
     width
 }
 

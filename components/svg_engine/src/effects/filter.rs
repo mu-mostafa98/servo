@@ -21,7 +21,7 @@ use crate::renderer::FilterProvider;
 /// to an empty op list.
 pub(crate) fn get_filter_ops(
     node: &SvgRenderNode,
-    filters: &impl FilterProvider,
+    filters: &dyn FilterProvider,
 ) -> Option<Vec<FilterOp>> {
     let effects = node.style.effects.as_ref()?;
     let filter_id = effects.filter.as_ref()?;

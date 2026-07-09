@@ -42,20 +42,17 @@ pub fn parse_transform_str(attr: &str) -> Vec<TransformOp> {
     while i < tokens.len() {
         // Collapse svgtypes's 3‑token expand for rotate(a, cx, cy):
         //   Translate(cx, cy) + Rotate(a) + Translate(-cx, -cy) → Rotate(a, cx, cy)
-        if i + 2 < tokens.len() {
-            if let (
+        if i + 2 < tokens.len()
+            && let (
                 TransformListToken::Translate { tx: cx, ty: cy },
                 TransformListToken::Rotate { angle },
                 TransformListToken::Translate { tx: nx, ty: ny },
             ) = (&tokens[i], &tokens[i + 1], &tokens[i + 2])
-            {
-                if (nx + cx).abs() < f64::EPSILON && (ny + cy).abs() < f64::EPSILON {
+                && (nx + cx).abs() < f64::EPSILON && (ny + cy).abs() < f64::EPSILON {
                     ops.push(TransformOp::Rotate(*angle as f32, *cx as f32, *cy as f32));
                     i += 3;
                     continue;
                 }
-            }
-        }
         match tokens[i] {
             TransformListToken::Translate { tx, ty } => {
                 ops.push(TransformOp::Translate(tx as f32, ty as f32));

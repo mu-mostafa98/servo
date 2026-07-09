@@ -32,22 +32,18 @@ impl<'a> SvgRenderTreeVisitorMut for PaintServerFixupVisitor<'a> {
     fn visit_node_mut(&mut self, node: &mut SvgRenderNode) -> VisitDecision {
         // Check fill paint server: if it references a gradient ID that
         // is actually a pattern, convert it to PaintServer::Pattern.
-        if let Some(ref mut fill) = node.style.fill {
-            if let Some(PaintServer::Gradient(ref id)) = fill.paint_server {
-                if self.pattern_ids.contains_key(id) {
+        if let Some(ref mut fill) = node.style.fill
+            && let Some(PaintServer::Gradient(ref id)) = fill.paint_server
+                && self.pattern_ids.contains_key(id) {
                     fill.paint_server = Some(PaintServer::Pattern(id.clone()));
                 }
-            }
-        }
 
         // Check stroke paint server: same conversion.
-        if let Some(ref mut stroke) = node.style.stroke {
-            if let Some(PaintServer::Gradient(ref id)) = stroke.paint_server {
-                if self.pattern_ids.contains_key(id) {
+        if let Some(ref mut stroke) = node.style.stroke
+            && let Some(PaintServer::Gradient(ref id)) = stroke.paint_server
+                && self.pattern_ids.contains_key(id) {
                     stroke.paint_server = Some(PaintServer::Pattern(id.clone()));
                 }
-            }
-        }
 
         VisitDecision::Continue
     }

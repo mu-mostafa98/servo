@@ -62,14 +62,24 @@ pub fn render_svg_tree(
             (*svg_origin, spatial_id, false)
         };
 
+    let providers = RenderProviders { paints: tree, clips: tree, filters: tree };
     render_node(
         &tree.root, &root_origin, root_spatial_id, svg_clip_chain, wr,
-        tree, tree, tree, 1.0,
+        &providers, 1.0,
     );
 
     if pop_frame {
         wr.pop_reference_frame();
     }
+}
+
+/// Bundled resource providers for the rendering traversal.
+/// Reduces [`render_node`] and [`recurse_children`] argument counts
+/// from 9/10 to 7/8 (clippy: too_many_arguments).
+struct RenderProviders<'a> {
+    paints: &'a dyn PaintResourceProvider,
+    clips: &'a dyn ClipMaskProvider,
+    filters: &'a dyn FilterProvider,
 }
 
 fn render_node(
@@ -78,28 +88,32 @@ fn render_node(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
-    paints: &impl PaintResourceProvider,
-    clips: &impl ClipMaskProvider,
-    filters: &impl FilterProvider,
+    providers: &RenderProviders,
     parent_scale: f32,
 ) {
     if !node.style.is_displayed() { return; }
     let (cur_origin, cur_spatial_id, pushed_count, accumulated_scale) =
         apply_node_transforms(node, svg_origin, spatial_id, parent_scale, wr);
     let node_clip_chain = resolve_node_clip_path(
-        node, clips, &cur_origin, cur_spatial_id, clip_chain_id, wr,
+        node, providers.clips, &cur_origin, cur_spatial_id, clip_chain_id, wr,
     );
     let mask_clips = build_mask_clips(
-        node, clips, &cur_origin, cur_spatial_id, node_clip_chain, wr,
+        node, providers.clips, &cur_origin, cur_spatial_id, node_clip_chain, wr,
     );
-    let filter_ops = get_filter_ops(node, filters);
+    let filter_ops = get_filter_ops(node, providers.filters);
+    let shape_params = ShapeRenderParams {
+        mask_clips: &mask_clips,
+        filter_ops: &filter_ops,
+        paints: providers.paints,
+    };
     render_shape(
         node, &cur_origin, cur_spatial_id, node_clip_chain,
-        &mask_clips, &filter_ops, accumulated_scale, paints, wr,
+        accumulated_scale, wr, &shape_params,
     );
+    let child_clip_chain = if node_clip_chain != clip_chain_id { node_clip_chain } else { clip_chain_id };
     recurse_children(
-        node, &cur_origin, cur_spatial_id, node_clip_chain,
-        clip_chain_id, paints, clips, filters, accumulated_scale, wr,
+        node, &cur_origin, cur_spatial_id, child_clip_chain,
+        providers, accumulated_scale, wr,
     );
     for _ in 0..pushed_count { wr.pop_reference_frame(); }
 }
@@ -125,20 +139,26 @@ fn apply_node_transforms(
     (cur_origin, cur_spatial_id, pushed_count, accumulated_scale)
 }
 
+/// Bundled parameters for shape rendering.
+/// Reduces [`render_shape`] argument count from 9 to 6 (clippy: too_many_arguments).
+struct ShapeRenderParams<'a> {
+    mask_clips: &'a Option<Vec<ClipChainId>>,
+    filter_ops: &'a Option<Vec<webrender_api::FilterOp>>,
+    paints: &'a dyn PaintResourceProvider,
+}
+
 fn render_shape(
     node: &SvgRenderNode,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     node_clip_chain: ClipChainId,
-    mask_clips: &Option<Vec<ClipChainId>>,
-    filter_ops: &Option<Vec<webrender_api::FilterOp>>,
     accumulated_scale: f32,
-    paints: &dyn PaintResourceProvider,
     wr: &mut DisplayListBuilder,
+    params: &ShapeRenderParams,
 ) {
     let SvgTag::Shape(shape) = &node.tag else { return };
     if !node.style.is_visible() { return; }
-    let pushed_filter = if let Some(ops) = filter_ops {
+    let pushed_filter = if let Some(ops) = params.filter_ops {
         wr.push_stacking_context(
             cur_spatial_id, PrimitiveFlags::default(),
             clip_chain_option(node_clip_chain),
@@ -147,15 +167,15 @@ fn render_shape(
         );
         true
     } else { false };
-    let effective_clip = if let Some(clips) = mask_clips {
+    let effective_clip = if let Some(clips) = params.mask_clips {
         clips.first().copied().unwrap_or(node_clip_chain)
     } else { node_clip_chain };
-    if let Some(clips) = mask_clips {
+    if let Some(clips) = params.mask_clips {
         for &mask_chain in clips {
             let mut ctx = RenderContext {
                 style: &node.style, svg_origin: *cur_origin,
                 spatial_id: cur_spatial_id, clip_chain_id: mask_chain,
-                wr: &mut *wr, paints, accumulated_scale,
+                wr: &mut *wr, paints: params.paints, accumulated_scale,
             };
             shape.render(&mut ctx);
         }
@@ -163,7 +183,7 @@ fn render_shape(
         let mut ctx = RenderContext {
             style: &node.style, svg_origin: *cur_origin,
             spatial_id: cur_spatial_id, clip_chain_id: effective_clip,
-            wr: &mut *wr, paints, accumulated_scale,
+            wr: &mut *wr, paints: params.paints, accumulated_scale,
         };
         shape.render(&mut ctx);
     }
@@ -174,19 +194,15 @@ fn recurse_children(
     node: &SvgRenderNode,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
-    node_clip_chain: ClipChainId,
-    parent_clip_chain: ClipChainId,
-    paints: &impl PaintResourceProvider,
-    clips: &impl ClipMaskProvider,
-    filters: &impl FilterProvider,
+    clip_chain: ClipChainId,
+    providers: &RenderProviders,
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
 ) {
     if let SvgTag::Container(Container::Defs) = &node.tag { return; }
-    let rc = if node_clip_chain != parent_clip_chain { node_clip_chain } else { parent_clip_chain };
     for child in &node.children {
-        render_node(child, cur_origin, cur_spatial_id, rc, wr,
-            paints, clips, filters, accumulated_scale);
+        render_node(child, cur_origin, cur_spatial_id, clip_chain, wr,
+            providers, accumulated_scale);
     }
 }
 

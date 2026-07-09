@@ -19,7 +19,7 @@ use crate::renderer::stroke;
 impl Render for Line {
     fn render(&self, ctx: &mut RenderContext) {
         let Some(stroke) = &ctx.style.stroke else { return };
-        if (!stroke.color.is_some() && stroke.paint_server.is_none()) || stroke.width <= 0.0 {
+        if (stroke.color.is_none() && stroke.paint_server.is_none()) || stroke.width <= 0.0 {
             return;
         }
 

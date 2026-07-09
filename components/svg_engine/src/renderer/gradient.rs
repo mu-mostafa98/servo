@@ -241,8 +241,8 @@ fn render_linear(
             let mut x2 = lg.x2.to_object_bbox();
             let mut y2 = lg.y2.to_object_bbox();
             for op in &lg.transform {
-                apply_grad_transform(&mut x1, &mut y1, &[op.clone()]);
-                apply_grad_transform(&mut x2, &mut y2, &[op.clone()]);
+                apply_grad_transform(&mut x1, &mut y1, std::slice::from_ref(op));
+                apply_grad_transform(&mut x2, &mut y2, std::slice::from_ref(op));
             }
             (bx + x1 * bw, by + y1 * bh, bx + x2 * bw, by + y2 * bh)
         },
@@ -252,8 +252,8 @@ fn render_linear(
             let mut x2 = lg.x2.to_user_space(bw);
             let mut y2 = lg.y2.to_user_space(bh);
             for op in &lg.transform {
-                apply_grad_transform(&mut x1, &mut y1, &[op.clone()]);
-                apply_grad_transform(&mut x2, &mut y2, &[op.clone()]);
+                apply_grad_transform(&mut x1, &mut y1, std::slice::from_ref(op));
+                apply_grad_transform(&mut x2, &mut y2, std::slice::from_ref(op));
             }
             (ctx.svg_origin.x + x1, ctx.svg_origin.y + y1,
              ctx.svg_origin.x + x2, ctx.svg_origin.y + y2)

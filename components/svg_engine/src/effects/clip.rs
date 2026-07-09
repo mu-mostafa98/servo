@@ -26,7 +26,7 @@ use crate::shapes::ClipGeometry;
 /// unchanged.
 pub(crate) fn resolve_node_clip_path(
     node: &SvgRenderNode,
-    clips: &impl ClipMaskProvider,
+    clips: &dyn ClipMaskProvider,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
@@ -82,7 +82,7 @@ pub(crate) fn resolve_node_clip_path(
 /// behavior.
 pub(crate) fn build_mask_clips(
     node: &SvgRenderNode,
-    clips: &impl ClipMaskProvider,
+    clips: &dyn ClipMaskProvider,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,

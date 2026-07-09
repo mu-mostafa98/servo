@@ -139,8 +139,8 @@ pub(crate) fn stroke_line_segment(
         color.a *= stroke.opacity * ctx.style.opacity;
         emit_rotated_rects_for_segment(len, half_w, color, stroke, line_spatial_id, ctx);
     } else if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
-        if let Some(dash_array) = &stroke.dash_array {
-            if !dash_array.is_empty() {
+        if let Some(dash_array) = &stroke.dash_array
+            && !dash_array.is_empty() {
                 let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
                 for (t0, t1) in intervals {
                     if t1 <= t0 { continue; }
@@ -197,7 +197,6 @@ pub(crate) fn stroke_line_segment(
                 ctx.wr.pop_reference_frame();
                 return;
             }
-        }
         // Gradient stroke (no dashes) — fill full rotated rect with gradient.
         let mut grad_bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(-len / 2.0, -half_w),
@@ -265,8 +264,8 @@ fn emit_rotated_rects_for_segment(
 ) {
     let stroke_width = half_w * 2.0;
 
-    if let Some(dash_array) = &stroke.dash_array {
-        if !dash_array.is_empty() {
+    if let Some(dash_array) = &stroke.dash_array
+        && !dash_array.is_empty() {
             let intervals = dash_intervals(len, dash_array, stroke.dash_offset);
             for (t0, t1) in intervals {
                 if t1 <= t0 { continue; }
@@ -280,7 +279,6 @@ fn emit_rotated_rects_for_segment(
             }
             return;
         }
-    }
     // No dashes or empty array — full segment.
     let full_bounds = LayoutRect::from_origin_and_size(
         LayoutPoint::new(-len / 2.0, -half_w),
@@ -453,7 +451,7 @@ pub(crate) fn stroke_rect(bounds: LayoutRect, radii: Option<BorderRadius>, ctx: 
 pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
     let Some(stroke) = &ctx.style.stroke else { return };
     let adjusted_width = effective_stroke_width(ctx, stroke.width);
-    if (!stroke.color.is_some() && stroke.paint_server.is_none()) || adjusted_width <= 0.0 {
+    if (stroke.color.is_none() && stroke.paint_server.is_none()) || adjusted_width <= 0.0 {
         return;
     }
 
@@ -473,7 +471,7 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         effects: None,
         opacity: ctx.style.opacity,
         stroke: Some(StrokeParams {
-            color: stroke.color.clone(),
+            color: stroke.color,
             paint_server: None,
             opacity: stroke.opacity,
             width: adjusted_width,
@@ -497,10 +495,10 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
 
     for pair in pts.windows(2) {
         stroke_line_segment(
-            line_ctx.svg_origin.x + pair[0].x as f32,
-            line_ctx.svg_origin.y + pair[0].y as f32,
-            line_ctx.svg_origin.x + pair[1].x as f32,
-            line_ctx.svg_origin.y + pair[1].y as f32,
+            line_ctx.svg_origin.x + pair[0].x,
+            line_ctx.svg_origin.y + pair[0].y,
+            line_ctx.svg_origin.x + pair[1].x,
+            line_ctx.svg_origin.y + pair[1].y,
             &mut line_ctx,
         );
     }
@@ -598,10 +596,10 @@ fn stroke_polyline_gradient(
     let subdiv = STROKE_GRADIENT_SUBDIVISION_PX.max(adjusted_width * 0.25);
 
     for pair in pts.windows(2) {
-        let ax = ctx.svg_origin.x + pair[0].x as f32;
-        let ay = ctx.svg_origin.y + pair[0].y as f32;
-        let bx = ctx.svg_origin.x + pair[1].x as f32;
-        let by = ctx.svg_origin.y + pair[1].y as f32;
+        let ax = ctx.svg_origin.x + pair[0].x;
+        let ay = ctx.svg_origin.y + pair[0].y;
+        let bx = ctx.svg_origin.x + pair[1].x;
+        let by = ctx.svg_origin.y + pair[1].y;
 
         let seg_dx = bx - ax;
         let seg_dy = by - ay;
@@ -644,9 +642,18 @@ fn stroke_polyline_gradient(
             // Draw this sub-segment as a solid-colored rotated rect.
             // The color was evaluated in global (parent) coordinates so the
             // gradient spans the entire polyline uniformly.
-            draw_rotated_stroke_segment(p0x, p0y, p1x, p1y, piece_color, adjusted_width, stroke.line_cap, ctx);
+            let seg_stroke = SegmentStrokeParams { color: piece_color, width: adjusted_width, line_cap: stroke.line_cap };
+            draw_rotated_stroke_segment(p0x, p0y, p1x, p1y, &seg_stroke, ctx);
         }
     }
+}
+
+/// Bundled stroke parameters for [`draw_rotated_stroke_segment`].
+/// Reduces argument count from 8 to 6 (clippy: too_many_arguments).
+struct SegmentStrokeParams {
+    color: ColorF,
+    width: f32,
+    line_cap: LineCap,
 }
 
 /// Draw a single rotated-rect line segment with a solid color.
@@ -654,9 +661,7 @@ fn stroke_polyline_gradient(
 /// so we can call it per-sub-segment without creating a full [`NodeStyle`].
 fn draw_rotated_stroke_segment(
     x1: f32, y1: f32, x2: f32, y2: f32,
-    color: ColorF,
-    stroke_width: f32,
-    line_cap: LineCap,
+    stroke: &SegmentStrokeParams,
     ctx: &mut RenderContext,
 ) {
     let dx = x2 - x1;
@@ -667,7 +672,7 @@ fn draw_rotated_stroke_segment(
     let mx = (x1 + x2) / 2.0;
     let my = (y1 + y2) / 2.0;
     let angle = dy.atan2(dx);
-    let half_w = stroke_width / 2.0;
+    let half_w = stroke.width / 2.0;
 
     let transform = LayoutTransform::rotation(0.0, 0.0, 1.0, Angle::radians(angle));
     let line_spatial_id = ctx.wr.push_reference_frame(
@@ -684,10 +689,10 @@ fn draw_rotated_stroke_segment(
 
     let line_bounds = LayoutRect::from_origin_and_size(
         LayoutPoint::new(-len / 2.0, -half_w),
-        LayoutSize::new(len, stroke_width),
+        LayoutSize::new(len, stroke.width),
     );
 
-    draw_capped_rect(line_bounds, half_w, color, line_cap, line_spatial_id, ctx);
+    draw_capped_rect(line_bounds, half_w, stroke.color, stroke.line_cap, line_spatial_id, ctx);
     ctx.wr.pop_reference_frame();
 }
 

@@ -195,8 +195,8 @@ fn scanline_fill_triangle(
 
         let width = x_right - x_left;
         // NaN guard: skip scanlines where the span is NaN or non-positive.
-        // NaN comparisons always return false, so `!(width > 0.0)` catches both.
-        if !(width > 0.0) { continue; }
+        // f32 does not implement Ord (NaN), so use partial_cmp + matches!.
+        if !matches!(width.partial_cmp(&0.0), Some(std::cmp::Ordering::Greater)) { continue; }
 
         match fill {
             FillStyle::Solid(c) => {

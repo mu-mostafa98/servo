@@ -302,7 +302,7 @@ impl SvgRenderNode {
                 }
             },
             VisitDecision::SkipChildren => {},
-            VisitDecision::Stop => return,
+            VisitDecision::Stop => (),
         }
     }
 
@@ -316,7 +316,7 @@ impl SvgRenderNode {
                 }
             },
             VisitDecision::SkipChildren => {},
-            VisitDecision::Stop => return,
+            VisitDecision::Stop => (),
         }
     }
 }
