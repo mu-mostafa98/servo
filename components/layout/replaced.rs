@@ -23,7 +23,9 @@ use style::Zero;
 #[cfg(not(feature = "svg-engine"))]
 use style::attr::AttrValue;
 use style::computed_values::object_fit::T as ObjectFit;
+#[cfg(not(feature = "svg-engine"))]
 use style::context::TreeCountingCaches;
+#[cfg(not(feature = "svg-engine"))]
 use style::dom::DummyElementContext;
 use style::logical_geometry::{Direction, WritingMode};
 use style::properties::ComputedValues;
