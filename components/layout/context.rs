@@ -9,7 +9,7 @@ use embedder_traits::UntrustedNodeAddress;
 use euclid::Size2D;
 use fonts::FontContext;
 use layout_api::{
-    AnimatingImages, IFrameSizes, LayoutImageDestination, LayoutNode, PendingImage,
+    AnimatingImages, IFrameSizes, LayoutImageDestination, PendingImage,
     PendingImageState, PendingRasterizationImage,
 };
 use net_traits::image_cache::{
@@ -18,6 +18,7 @@ use net_traits::image_cache::{
 use net_traits::request::InternalRequest;
 use parking_lot::{Mutex, RwLock};
 use pixels::RasterImage;
+#[cfg(not(feature = "svg-engine"))]
 use script::layout_dom::ServoLayoutNode;
 use servo_base::id::PainterId;
 use servo_url::{ImmutableOrigin, ServoUrl};
