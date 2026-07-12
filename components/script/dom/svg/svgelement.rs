@@ -390,27 +390,27 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
 
         // Parse geometry attributes based on element type
         // <circle>: https://svgwg.org/svg2-draft/shapes.html#CircleElement
-        if element.downcast::<SVGCircleElement>().is_some() {
+        if element.is::<SVGCircleElement>() {
             self.parse_svg_attribute(&parser_context, "cx", longhands::cx::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "cy", longhands::cy::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "r", longhands::r::parse_declared, push);
         }
         // <ellipse>: https://svgwg.org/svg2-draft/shapes.html#EllipseElement
-        if element.downcast::<SVGEllipseElement>().is_some() {
+        if element.is::<SVGEllipseElement>() {
             self.parse_svg_attribute(&parser_context, "cx", longhands::cx::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "cy", longhands::cy::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
         }
         // <rect>: https://svgwg.org/svg2-draft/shapes.html#RectElement
-        if element.downcast::<SVGRectElement>().is_some() {
+        if element.is::<SVGRectElement>() {
             self.parse_svg_attribute(&parser_context, "x", longhands::x::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "y", longhands::y::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
         }
         // <path>: https://svgwg.org/svg2-draft/paths.html#PathElement
-        if element.downcast::<SVGPathElement>().is_some() {
+        if element.is::<SVGPathElement>() {
             self.parse_svg_attribute(&parser_context, "d", longhands::d::parse_declared, push);
         }
     }
