@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { font-family: sans-serif; margin: 20px; background: #f5f5f5; }
+  h1 { color: #333; }
+  h2 { font-size: 18px; color: #555; margin: 25px 0 5px; border-bottom: 1px solid #ddd; padding-bottom: 5px; }
+  .row { display: flex; flex-wrap: wrap; gap: 25px; margin-bottom: 20px; }
+  .item { display: flex; flex-direction: column; align-items: center; }
+  .caption { font-size: 12px; color: #888; margin-top: 5px; text-align: center; }
+  svg { border: 1px solid #999; background: white; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+  .fail svg { border-color: red; }
+</style>
+</head>
+<body>
+
+<h1>SVG Transforms — Full Test</h1>
+
+<!-- ─────────────────────────── TRANSLATE ─────────────────────────── -->
+<h2>Translate</h2>
+<div class="row">
+  <div class="item">
+    <div class="caption">translate(20, 20) — rect at (0,0) → (20,20)</div>
+    <svg width="200" height="80">
+      <rect x="10" y="10" width="50" height="50" style="fill: #e74c3c"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">translate(20, 20) — inside bounds ✓</div>
+    <svg width="200" height="80">
+      <rect x="0" y="0" width="50" height="50" style="fill: #3498db" transform="translate(20, 20)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">translate(180, 20) — partially clipped (w=50→ out at 230)</div>
+    <svg width="200" height="80">
+      <rect x="0" y="0" width="50" height="50" style="fill: #2ecc71" transform="translate(180, 20)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">translate(300, 20) — fully clipped (outside SVG)</div>
+    <svg width="200" height="80">
+      <rect x="0" y="0" width="50" height="50" style="fill: #9b59b6" transform="translate(300, 20)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ───────────────────────────── SCALE ───────────────────────────── -->
+<h2>Scale</h2>
+<div class="row">
+  <div class="item">
+    <div class="caption">scale(1.5) — 50×50 → 75×75 (inside bounds)</div>
+    <svg width="200" height="100">
+      <rect x="10" y="10" width="50" height="50" style="fill: #e74c3c"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">scale(1.5) — 50×50 → 75×75 ✓</div>
+    <svg width="200" height="100">
+      <rect x="10" y="10" width="50" height="50" style="fill: #3498db" transform="scale(1.5)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">scale(0.5) — 50×50 → 25×25 ✓</div>
+    <svg width="200" height="80">
+      <rect x="10" y="10" width="50" height="50" style="fill: #2ecc71" transform="scale(0.5)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">scale(3) — 50×50 → 150×150 (clipped)</div>
+    <svg width="200" height="120">
+      <rect x="10" y="10" width="50" height="50" style="fill: #e67e22" transform="scale(3)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ───────────────────────────── ROTATE ───────────────────────────── -->
+<h2>Rotate</h2>
+<div class="row">
+  <div class="item">
+    <div class="caption">rotate(45) around (0,0) — clipped at edges</div>
+    <svg width="200" height="150">
+      <rect x="30" y="20" width="60" height="40" style="fill: #e74c3c"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">rotate(45) — part goes outside, clipped ✓</div>
+    <svg width="200" height="150">
+      <rect x="30" y="20" width="60" height="40" style="fill: #3498db" transform="rotate(45)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">rotate(45, 60, 40) — around center, in-place ✓</div>
+    <svg width="200" height="150">
+      <rect x="30" y="20" width="60" height="40" style="fill: #2ecc71" transform="rotate(45, 60, 40)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">rotate(30) — less rotation, less clipping</div>
+    <svg width="200" height="150">
+      <rect x="30" y="20" width="60" height="40" style="fill: #9b59b6" transform="rotate(30)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ───────────────────── COMBINED ───────────────────── -->
+<h2>Combined</h2>
+<div class="row">
+  <div class="item">
+    <div class="caption">translate + rotate — moved then rotated</div>
+    <svg width="300" height="120">
+      <rect x="0" y="0" width="50" height="40" style="fill: #e74c3c" transform="translate(30, 20) rotate(30)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">translate + scale — moved then scaled</div>
+    <svg width="300" height="120">
+      <rect x="0" y="0" width="40" height="40" style="fill: #3498db" transform="translate(80, 30) scale(1.5)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">translate + rotate + scale — all combined</div>
+    <svg width="300" height="150">
+      <rect x="0" y="0" width="40" height="30" style="fill: #2ecc71" transform="translate(140, 40) rotate(45) scale(1.2)"/>
+    </svg>
+  </div>
+</div>
+
+<!-- ───────────────────── OUT OF BOUNDS ───────────────────── -->
+<h2>Out of bounds clipping verification</h2>
+<div class="row">
+  <div class="item">
+    <div class="caption">translate(180, 10) — rect partially outside right edge</div>
+    <svg width="200" height="80">
+      <rect x="0" y="10" width="50" height="50" style="fill: #e74c3c" transform="translate(180, 10)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">translate(-30, 10) — rect partially outside left edge</div>
+    <svg width="200" height="80">
+      <rect x="0" y="10" width="50" height="50" style="fill: #3498db" transform="translate(-30, 10)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">scale(3) — large shape clipped at SVG boundary</div>
+    <svg width="150" height="150">
+      <circle cx="50" cy="50" r="30" style="fill: #e67e22" transform="scale(3)"/>
+    </svg>
+  </div>
+  <div class="item">
+    <div class="caption">rotate(60) from top-left — out of bounds clipped</div>
+    <svg width="200" height="200">
+      <rect x="100" y="0" width="120" height="30" style="fill: #2ecc71" transform="rotate(60, 160, 15)"/>
+    </svg>
+  </div>
+</div>
+
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head><style>
+  body { background: #fff; display: flex; flex-wrap: wrap; gap: 16px; padding: 20px; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+  .card { background: #f5f5f5; border-radius: 10px; padding: 14px; text-align: center; width: 220px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  svg { background: #fafafa; border-radius: 6px; display: block; margin: 0 auto; border: 1px solid #e0e0e0; }
+  h3 { margin: 8px 0 4px; font-size: 13px; color: #333; font-weight: 600; }
+  .pass { color: #2e7d32; font-size: 11px; margin: 2px 0; }
+  .fail { color: #c62828; font-size: 11px; margin: 2px 0; }
+  .info { color: #1565c0; font-size: 11px; margin: 2px 0; }
+  .warn { color: #e65100; font-size: 11px; margin: 2px 0; }
+  p { margin: 0; font-size: 11px; color: #666; }
+</style></head>
+<body>
+
+  <!-- 1. <g> group — FAILS: child shapes invisible (no style_data for <g> children) -->
+  <div class="card">
+    <h3>1. &lt;g&gt; Group</h3>
+    <svg width="200" height="200">
+      <g fill="#1976d2" stroke="#333" stroke-width="2">
+        <circle cx="60" cy="100" r="50"/>
+        <rect x="120" y="50" width="60" height="100" rx="10"/>
+      </g>
+    </svg>
+    <p class="fail">Children invisible — Servo: no style_data for &lt;g&gt; children ❌</p>
+  </div>
+
+  <!-- 2. <g> with transform — FAILS (same issue) -->
+  <div class="card">
+    <h3>2. &lt;g&gt; Transform</h3>
+    <svg width="200" height="200">
+      <g transform="translate(100,100) rotate(45)">
+        <rect x="-50" y="-50" width="100" height="100" fill="#388e3c" stroke="#333" stroke-width="2"/>
+      </g>
+    </svg>
+    <p class="fail">Child rect invisible — same Servo limitation ❌</p>
+  </div>
+
+  <!-- 3. <defs> — WORKS: rect is direct <svg> child, defs children skipped -->
+  <div class="card">
+    <h3>3. &lt;defs&gt;</h3>
+    <svg width="200" height="200">
+      <defs>
+        <circle id="h" cx="100" cy="100" r="80" fill="#d32f2f"/>
+      </defs>
+      <rect x="20" y="20" width="160" height="160" fill="#1976d2" stroke="#333" stroke-width="3"/>
+    </svg>
+    <p class="pass">Blue rect renders, defs circle hidden ✅</p>
+  </div>
+
+  <!-- 4. <use> — renders as empty container (use resolution not implemented) -->
+  <div class="card">
+    <h3>4. &lt;use&gt;</h3>
+    <svg width="200" height="200">
+      <defs>
+        <circle id="c" cx="100" cy="100" r="60" fill="#d32f2f"/>
+      </defs>
+      <use href="#c"/>
+    </svg>
+    <p class="warn">Empty container — use resolution not yet implemented ⚠️</p>
+  </div>
+
+  <!-- 5. <symbol> — WORKS: rect is direct <svg> child, symbol children skipped -->
+  <div class="card">
+    <h3>5. &lt;symbol&gt;</h3>
+    <svg width="200" height="200">
+      <symbol id="s" viewBox="0 0 100 100">
+        <circle cx="50" cy="50" r="40" fill="#388e3c"/>
+      </symbol>
+      <rect x="10" y="10" width="180" height="180" fill="#1976d2" stroke="#333" stroke-width="3"/>
+    </svg>
+    <p class="pass">Rect renders, symbol circle hidden ✅</p>
+  </div>
+
+  <!-- 6. Combined g + defs — FAILS: shapes inside <g> invisible -->
+  <div class="card">
+    <h3>6. Combined</h3>
+    <svg width="200" height="200">
+      <defs>
+        <circle id="c1" cx="50" cy="50" r="40" fill="#d32f2f"/>
+      </defs>
+      <g fill="#388e3c" stroke="#333" stroke-width="2">
+        <circle cx="100" cy="80" r="50"/>
+        <rect x="60" y="140" width="80" height="40" rx="8"/>
+      </g>
+    </svg>
+    <p class="fail">g children invisible (Servo limitation) ❌</p>
+  </div>
+
+  <!-- 7. Nested <g> — FAILS: all shapes invisible -->
+  <div class="card">
+    <h3>7. Nested &lt;g&gt;</h3>
+    <svg width="200" height="200">
+      <g fill="#1976d2" transform="translate(10,10)">
+        <g fill="#388e3c" transform="translate(80,50)">
+          <circle cx="0" cy="0" r="40"/>
+          <g transform="translate(0,60)" fill="#d32f2f">
+            <rect x="-30" y="-15" width="60" height="30" rx="5"/>
+          </g>
+        </g>
+      </g>
+    </svg>
+    <p class="fail">All shapes invisible (Servo limitation) ❌</p>
+  </div>
+
+  <!-- 8. Empty <defs> — WORKS: circle is direct <svg> child -->
+  <div class="card">
+    <h3>8. Empty &lt;defs&gt;</h3>
+    <svg width="200" height="200">
+      <defs></defs>
+      <circle cx="100" cy="100" r="80" fill="#1976d2"/>
+    </svg>
+    <p class="pass">Circle renders, empty defs no impact ✅</p>
+  </div>
+
+</body></html>

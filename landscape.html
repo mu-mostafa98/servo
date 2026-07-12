@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Morning Landscape</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e8f0f8;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        svg {
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
+            border-radius: 4px;
+            background-color: #87CEEB;
+        }
+    </style>
+</head>
+<body>
+
+    <svg width="1200" height="800" style="max-width: 1200px; max-height: 800px;">
+
+        <!-- ===== SKY ===== -->
+        <rect width="1200" height="800" style="fill: #87CEEB" />
+
+        <!-- Sun glow -->
+        <circle cx="950" cy="250" r="300" style="fill: #FFD700; opacity: 0.08" />
+        <circle cx="950" cy="250" r="180" style="fill: #FFE4B5; opacity: 0.15" />
+        <circle cx="950" cy="250" r="80" style="fill: #FFF8DC; opacity: 0.4" />
+        <circle cx="950" cy="250" r="40" style="fill: #FFF8DC" />
+
+        <!-- Clouds -->
+        <!-- Cloud 1 -->
+        <ellipse cx="250" cy="150" rx="90" ry="25" style="fill: #fff; opacity: 0.6" />
+        <ellipse cx="200" cy="145" rx="60" ry="20" style="fill: #fff; opacity: 0.5" />
+        <ellipse cx="300" cy="155" rx="50" ry="18" style="fill: #fff; opacity: 0.5" />
+        <ellipse cx="250" cy="135" rx="45" ry="16" style="fill: #fff; opacity: 0.7" />
+
+        <!-- Cloud 2 -->
+        <ellipse cx="650" cy="130" rx="70" ry="20" style="fill: #fff; opacity: 0.4" />
+        <ellipse cx="610" cy="125" rx="50" ry="16" style="fill: #fff; opacity: 0.35" />
+        <ellipse cx="690" cy="135" rx="40" ry="14" style="fill: #fff; opacity: 0.35" />
+        <ellipse cx="650" cy="118" rx="35" ry="12" style="fill: #fff; opacity: 0.5" />
+
+        <!-- Cloud 3 (small) -->
+        <ellipse cx="100" cy="220" rx="50" ry="15" style="fill: #fff; opacity: 0.3" />
+        <ellipse cx="80" cy="215" rx="35" ry="12" style="fill: #fff; opacity: 0.25" />
+        <ellipse cx="120" cy="225" rx="30" ry="10" style="fill: #fff; opacity: 0.25" />
+
+        <!-- ===== FAR BACKGROUND MOUNTAINS ===== -->
+        <path d="M 0,480 Q 60,400 120,430 T 240,380 T 350,420 T 480,350 T 600,390 Q 700,330 800,370 T 950,340 T 1100,380 T 1200,360 L 1200,550 L 0,550 Z" style="fill: #A9C4D9; opacity: 0.6"/>
+
+        <!-- ===== BACK MOUNTAINS ===== -->
+        <path d="M 0,520 Q 80,440 160,470 T 300,420 T 450,460 T 580,410 T 720,450 T 860,400 T 1000,440 T 1120,420 L 1200,450 L 1200,600 L 0,600 Z" style="fill: #8FBC8F; opacity: 0.7"/>
+
+        <!-- ===== MID MOUNTAINS ===== -->
+        <polygon points="-50,600 100,440 250,490 400,420 550,480 700,400 850,470 1000,430 1150,490 1250,460 1250,680 -50,680" style="fill: #6B8E6B" />
+
+        <!-- Light overlay on mid mountains -->
+        <polygon points="-50,600 100,440 250,490 400,420 550,480 700,400 850,470 1000,430 1150,490 1250,460 1250,520 -50,520" style="fill: #7BAE7B; opacity: 0.3" />
+
+        <!-- ===== FOREGROUND HILLS ===== -->
+        <path d="M -50,620 Q 120,520 300,560 T 600,530 T 900,560 T 1250,540 L 1250,800 L -50,800 Z" style="fill: #4A7A4A" />
+
+        <!-- ===== RIVER ===== -->
+        <path d="M 600,530 Q 580,560 590,590 Q 610,640 560,680 Q 490,730 400,800 L 520,800 Q 620,730 640,680 Q 660,640 630,590 Q 620,560 620,530 Z" style="fill: #5B9BD5" />
+
+        <!-- River shine -->
+        <path d="M 600,530 Q 590,560 600,590 Q 615,640 575,680 Q 520,730 450,800 L 480,800 Q 570,730 595,680 Q 620,640 610,590 Q 605,560 610,530 Z" style="fill: #87CEEB; opacity: 0.3" />
+
+        <!-- ===== SMALL PATH/ROAD ===== -->
+        <path d="M 300,800 Q 350,720 420,680 Q 470,650 490,620 Q 510,590 510,570" style="fill: none; stroke: #C4A882; stroke-width: 12; opacity: 0.7" />
+        <path d="M 300,800 Q 350,720 420,680 Q 470,650 490,620 Q 510,590 510,570" style="fill: none; stroke: #D4B892; stroke-width: 6; opacity: 0.5" />
+
+        <!-- ===== HOUSE ===== -->
+        <!-- House body -->
+        <rect x="410" y="655" width="90" height="65" style="fill: #D4A76A" />
+        <!-- House roof -->
+        <polygon points="395,655 455,610 515,655" style="fill: #8B4513" />
+        <!-- House door -->
+        <rect x="452" y="685" width="22" height="35" style="fill: #5C4033" />
+        <!-- House left window -->
+        <rect x="425" y="675" width="14" height="14" style="fill: #87CEEB; stroke: #5C4033; stroke-width: 1" />
+        <!-- House right window -->
+        <rect x="478" y="675" width="14" height="14" style="fill: #87CEEB; stroke: #5C4033; stroke-width: 1" />
+        <!-- Chimney -->
+        <rect x="475" y="625" width="12" height="25" style="fill: #8B4513" />
+        <!-- Smoke -->
+        <circle cx="481" cy="618" r="5" style="fill: #fff; opacity: 0.3" />
+        <circle cx="486" cy="608" r="6" style="fill: #fff; opacity: 0.2" />
+        <circle cx="482" cy="596" r="8" style="fill: #fff; opacity: 0.15" />
+        <circle cx="478" cy="582" r="10" style="fill: #fff; opacity: 0.1" />
+
+        <!-- ===== FENCE ===== -->
+        <line x1="490" y1="710" x2="590" y2="690" style="stroke: #8B7355; stroke-width: 3" />
+        <line x1="490" y1="720" x2="590" y2="700" style="stroke: #8B7355; stroke-width: 3" />
+        <line x1="510" y1="707" x2="510" y2="722" style="stroke: #8B7355; stroke-width: 3" />
+        <line x1="540" y1="701" x2="540" y2="716" style="stroke: #8B7355; stroke-width: 3" />
+        <line x1="570" y1="695" x2="570" y2="710" style="stroke: #8B7355; stroke-width: 3" />
+
+        <!-- ===== BIG TREE (LEFT) ===== -->
+        <!-- Trunk -->
+        <rect x="140" y="560" width="24" height="200" style="fill: #5C4033" />
+        <!-- Roots -->
+        <line x1="140" y1="760" x2="115" y2="780" style="stroke: #5C4033; stroke-width: 6; stroke-linecap: round" />
+        <line x1="164" y1="760" x2="185" y2="780" style="stroke: #5C4033; stroke-width: 6; stroke-linecap: round" />
+        <!-- Branches -->
+        <line x1="152" y1="640" x2="100" y2="600" style="stroke: #5C4033; stroke-width: 7; stroke-linecap: round" />
+        <line x1="162" y1="610" x2="230" y2="570" style="stroke: #5C4033; stroke-width: 6; stroke-linecap: round" />
+        <line x1="148" y1="580" x2="90" y2="530" style="stroke: #5C4033; stroke-width: 5; stroke-linecap: round" />
+        <line x1="165" y1="570" x2="200" y2="520" style="stroke: #5C4033; stroke-width: 4; stroke-linecap: round" />
+        <!-- Canopy -->
+        <circle cx="120" cy="550" r="65" style="fill: #4CAF50" />
+        <circle cx="200" cy="530" r="55" style="fill: #4CAF50" />
+        <circle cx="160" cy="490" r="50" style="fill: #4CAF50" />
+        <circle cx="110" cy="500" r="45" style="fill: #66BB6A" />
+        <circle cx="220" cy="560" r="40" style="fill: #43A047" />
+        <circle cx="150" cy="520" r="55" style="fill: #66BB6A; opacity: 0.5" />
+
+        <!-- ===== SMALL TREE (LEFT-TOP) ===== -->
+        <rect x="280" y="600" width="12" height="120" style="fill: #5C4033" />
+        <circle cx="286" cy="570" r="35" style="fill: #4CAF50" />
+        <circle cx="268" cy="545" r="25" style="fill: #66BB6A" />
+        <circle cx="305" cy="550" r="28" style="fill: #43A047" />
+        <circle cx="286" cy="535" r="30" style="fill: #4CAF50" />
+
+        <!-- ===== PINE TREE CLUSTER (RIGHT) ===== -->
+        <!-- Pine 1 -->
+        <rect x="850" y="590" width="14" height="180" style="fill: #3E2723" />
+        <polygon points="857,510 820,565 895,565" style="fill: #2E7D32" />
+        <polygon points="857,480 830,530 885,530" style="fill: #2E7D32" />
+        <polygon points="857,450 840,498 875,498" style="fill: #388E3C" />
+        <polygon points="857,425 845,468 870,468" style="fill: #43A047" />
+
+        <!-- Pine 2 -->
+        <rect x="910" y="610" width="12" height="160" style="fill: #3E2723" />
+        <polygon points="916,540 885,590 948,590" style="fill: #2E7D32" />
+        <polygon points="916,515 892,560 941,560" style="fill: #388E3C" />
+        <polygon points="916,490 900,533 933,533" style="fill: #43A047" />
+        <polygon points="916,470 905,508 928,508" style="fill: #4CAF50" />
+
+        <!-- Pine 3 (small) -->
+        <rect x="1030" y="620" width="10" height="130" style="fill: #3E2723" />
+        <polygon points="1035,565 1010,610 1060,610" style="fill: #2E7D32" />
+        <polygon points="1035,540 1015,580 1055,580" style="fill: #388E3C" />
+        <polygon points="1035,520 1022,555 1048,555" style="fill: #43A047" />
+
+        <!-- Pine 4 -->
+        <rect x="1080" y="635" width="8" height="100" style="fill: #3E2723" />
+        <polygon points="1084,585 1065,625 1103,625" style="fill: #2E7D32" />
+        <polygon points="1084,565 1070,600 1098,600" style="fill: #388E3C" />
+        <polygon points="1084,548 1075,578 1093,578" style="fill: #43A047" />
+
+        <!-- ===== FLOWERS / GRASS DETAILS ===== -->
+        <!-- Yellow flowers -->
+        <circle cx="350" cy="750" r="3" style="fill: #FFD700" />
+        <line x1="350" y1="753" x2="350" y2="765" style="stroke: #4CAF50; stroke-width: 1" />
+        <circle cx="360" cy="760" r="3" style="fill: #FFD700" />
+        <line x1="360" y1="763" x2="360" y2="775" style="stroke: #4CAF50; stroke-width: 1" />
+        <circle cx="340" cy="765" r="2.5" style="fill: #FFD700" />
+        <line x1="340" y1="767" x2="340" y2="778" style="stroke: #4CAF50; stroke-width: 1" />
+
+        <!-- Red flowers -->
+        <circle cx="380" cy="740" r="3" style="fill: #E53935" />
+        <line x1="380" y1="743" x2="380" y2="755" style="stroke: #4CAF50; stroke-width: 1" />
+        <circle cx="395" cy="755" r="2.5" style="fill: #E53935" />
+        <line x1="395" y1="757" x2="395" y2="768" style="stroke: #4CAF50; stroke-width: 1" />
+
+        <!-- White flowers -->
+        <circle cx="700" cy="720" r="3" style="fill: #fff" />
+        <line x1="700" y1="723" x2="700" y2="735" style="stroke: #4CAF50; stroke-width: 1" />
+        <circle cx="710" cy="730" r="2.5" style="fill: #fff" />
+        <line x1="710" y1="732" x2="710" y2="744" style="stroke: #4CAF50; stroke-width: 1" />
+
+        <!-- ===== BIRDS ===== -->
+        <polyline points="200,300 210,290 220,300 230,290 240,300" style="fill: none; stroke: #2C1810; stroke-width: 2; stroke-linecap: round" />
+        <polyline points="250,280 258,272 266,280 274,272 282,280" style="fill: none; stroke: #2C1810; stroke-width: 1.5; stroke-linecap: round" />
+        <polyline points="180,310 186,303 192,310 198,303 204,310" style="fill: none; stroke: #2C1810; stroke-width: 1.5; stroke-linecap: round" />
+
+        <!-- Flying birds far -->
+        <polyline points="550,260 556,254 562,260 568,254 574,260" style="fill: none; stroke: #555; stroke-width: 1.5; stroke-linecap: round" />
+        <polyline points="570,250 574,246 578,250 582,246 586,250" style="fill: none; stroke: #555; stroke-width: 1; stroke-linecap: round" />
+
+        <!-- ===== SUN RAYS ===== -->
+        <line x1="950" y1="250" x2="300" y2="500" style="stroke: #FFD700; stroke-width: 3; opacity: 0.08" />
+        <line x1="950" y1="250" x2="150" y2="400" style="stroke: #FFD700; stroke-width: 5; opacity: 0.06" />
+        <line x1="950" y1="250" x2="500" y2="750" style="stroke: #FFD700; stroke-width: 4; opacity: 0.1" />
+        <line x1="950" y1="250" x2="800" y2="750" style="stroke: #FFD700; stroke-width: 3; opacity: 0.08" />
+        <line x1="950" y1="250" x2="50" y2="600" style="stroke: #FFD700; stroke-width: 6; opacity: 0.04" />
+
+        <!-- ===== WATER REFLECTIONS ===== -->
+        <line x1="580" y1="620" x2="620" y2="620" style="stroke: #87CEEB; stroke-width: 2; opacity: 0.4; stroke-linecap: round" />
+        <line x1="570" y1="640" x2="610" y2="640" style="stroke: #87CEEB; stroke-width: 2; opacity: 0.3; stroke-linecap: round" />
+        <line x1="560" y1="660" x2="595" y2="660" style="stroke: #87CEEB; stroke-width: 2; opacity: 0.35; stroke-linecap: round" />
+        <line x1="550" y1="680" x2="580" y2="680" style="stroke: #87CEEB; stroke-width: 2; opacity: 0.3; stroke-linecap: round" />
+        <line x1="530" y1="700" x2="560" y2="700" style="stroke: #FFD700; stroke-width: 2; opacity: 0.2; stroke-linecap: round" />
+        <line x1="510" y1="720" x2="540" y2="720" style="stroke: #FFE4B5; stroke-width: 2; opacity: 0.25; stroke-linecap: round" />
+        <line x1="490" y1="740" x2="520" y2="740" style="stroke: #87CEEB; stroke-width: 2; opacity: 0.2; stroke-linecap: round" />
+        <line x1="470" y1="760" x2="500" y2="760" style="stroke: #FFD700; stroke-width: 2; opacity: 0.15; stroke-linecap: round" />
+
+        <!-- ===== GRASS TEXTURE (front) ===== -->
+        <line x1="100" y1="790" x2="105" y2="770" style="stroke: #388E3C; stroke-width: 1.5; opacity: 0.5" />
+        <line x1="110" y1="790" x2="113" y2="775" style="stroke: #4CAF50; stroke-width: 1; opacity: 0.4" />
+        <line x1="200" y1="790" x2="204" y2="772" style="stroke: #388E3C; stroke-width: 1.5; opacity: 0.5" />
+        <line x1="650" y1="790" x2="653" y2="776" style="stroke: #4CAF50; stroke-width: 1; opacity: 0.4" />
+        <line x1="750" y1="790" x2="754" y2="770" style="stroke: #388E3C; stroke-width: 1.5; opacity: 0.5" />
+        <line x1="800" y1="790" x2="803" y2="774" style="stroke: #4CAF50; stroke-width: 1; opacity: 0.4" />
+        <line x1="900" y1="790" x2="904" y2="772" style="stroke: #388E3C; stroke-width: 1.5; opacity: 0.5" />
+        <line x1="1100" y1="790" x2="1103" y2="775" style="stroke: #4CAF50; stroke-width: 1; opacity: 0.4" />
+
+    </svg>
+
+</body>
+</html>

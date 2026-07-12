@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Servo SVG Rendering Pipeline Test Suite</title>
+    <style>
+        body {
+            background-color: #ffffff;
+            color: #000000;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 20px;
+        }
+        h1, h2, h3 {
+            color: #111111;
+        }
+        section {
+            margin-bottom: 40px;
+            border-bottom: 2px solid #eeeeee;
+            padding-bottom: 20px;
+        }
+        .test-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .test-case {
+            border: 1px solid #cccccc;
+            padding: 10px;
+            background: #ffffff;
+            text-align: center;
+        }
+        .test-case p {
+            margin: 10px 0 0 0;
+            font-size: 14px;
+            font-weight: bold;
+        }
+        svg {
+            border: 1px dashed #aaaaaa;
+            background-color: #ffffff;
+        }
+        /* Phase 1 Stylo CSS integration test */
+        .stylo-rect {
+            fill: #3498db;
+            stroke: #2c3e50;
+            stroke-width: 5;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Servo SVG Rendering Pipeline Test Suite</h1>
+    <p>This test suite evaluates the SVG features implemented across Phases 1 to 6. All tests are rendered on a white background.</p>
+
+    <section id="phase1">
+        <h2>Phase 1 — Stylo PR, Presentation Attributes &amp; Core Shapes</h2>
+        <div class="test-group">
+            
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <rect class="stylo-rect" x="25" y="25" width="100" height="100" rx="15" />
+                </svg>
+                <p>Rect (Stylo CSS + rx/ry)</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <circle cx="75" cy="75" r="50" fill="crimson" stroke="black" stroke-width="3" />
+                </svg>
+                <p>Circle (Presentation Attr)</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <ellipse cx="75" cy="75" rx="60" ry="30" fill="gold" stroke="darkgoldenrod" stroke-width="4" />
+                </svg>
+                <p>Ellipse</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <line x1="20" y1="20" x2="130" y2="130" stroke="darkgreen" stroke-width="8" stroke-linecap="round" />
+                </svg>
+                <p>Line (Stroke Caps)</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="phase2">
+        <h2>Phase 2 — Path, Polygon &amp; Polyline</h2>
+        <div class="test-group">
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <path d="M 20 20 L 130 20 L 75 130 Z" fill="orange" stroke="black" stroke-width="3" />
+                </svg>
+                <p>Path (Lines &amp; Close)</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <path d="M 20 80 C 20 20, 130 20, 130 80 S 20 140, 20 80" fill="none" stroke="purple" stroke-width="4" />
+                </svg>
+                <p>Path (Cubic Curves)</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <polygon points="75,20 120,60 100,120 50,120 30,60" fill="teal" stroke="darkslategray" stroke-width="3" />
+                </svg>
+                <p>Polygon</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <polyline points="20,20 40,40 60,20 80,80 100,40 120,120" fill="none" stroke="orangered" stroke-width="4" stroke-linejoin="round" />
+                </svg>
+                <p>Polyline</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="phase3">
+        <h2>Phase 3 — Groups, Transforms &amp; viewBox</h2>
+        <div class="test-group">
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <g fill="navy" stroke="deepskyblue" stroke-width="2">
+                        <rect x="20" y="20" width="40" height="40" />
+                        <circle cx="110" cy="40" r="20" />
+                        <g fill="coral">
+                            <rect x="20" y="90" width="110" height="30" />
+                        </g>
+                    </g>
+                </svg>
+                <p>Nested Groups &amp; Inheritance</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <g transform="translate(75,75) rotate(45) scale(0.8) translate(-75,-75)">
+                        <rect x="37.5" y="37.5" width="75" height="75" fill="mediumpurple" />
+                        <line x1="37.5" y1="37.5" x2="112.5" y2="112.5" stroke="white" stroke-width="3" />
+                    </g>
+                </svg>
+                <p>Transforms (Matrix/Chain)</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150" viewBox="0 0 300 300" preserveAspectRatio="xMidYMid meet">
+                    <rect x="10" y="10" width="280" height="280" fill="none" stroke="red" stroke-width="4" />
+                    <circle cx="150" cy="150" r="100" fill="lightgreen" />
+                </svg>
+                <p>viewBox Scaling (Uniform)</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="phase4">
+        <h2>Phase 4 — SVG Text</h2>
+        <div class="test-group">
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <text x="10" y="50" font-family="sans-serif" font-size="20" fill="darkred">Hello Servo</text>
+                    <text x="10" y="100" font-family="serif" font-size="16" font-style="italic" font-weight="bold" fill="black">SVG Text</text>
+                </svg>
+                <p>Basic Text &amp; Styling</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <text x="75" y="80" font-family="sans-serif" font-size="18" text-anchor="middle" fill="blue">
+                        Centered
+                        <tspan x="75" dy="25" fill="red" font-weight="bold">TSPAN</tspan>
+                    </text>
+                    <line x1="75" y1="10" x2="75" y2="140" stroke="pink" stroke-width="1" stroke-dasharray="4" />
+                </svg>
+                <p>Text Anchor &amp; tspan</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="phase5">
+        <h2>Phase 5 — ClipPath &amp; Mask</h2>
+        <div class="test-group">
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <defs>
+                        <clipPath id="circle-clip">
+                            <circle cx="75" cy="75" r="50" />
+                        </clipPath>
+                    </defs>
+                    <g clip-path="url(#circle-clip)">
+                        <rect x="0" y="0" width="150" height="150" fill="lightgray" />
+                        <rect x="20" y="20" width="50" height="50" fill="black" />
+                        <rect x="80" y="20" width="50" height="50" fill="black" />
+                        <rect x="20" y="80" width="50" height="50" fill="black" />
+                        <rect x="80" y="80" width="50" height="50" fill="black" />
+                    </g>
+                </svg>
+                <p>ClipPath (Vector Clip)</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <defs>
+                        <linearGradient id="mask-grad" x1="0" y1="0" x2="0" y2="1">
+                            <stop offset="0%" stop-color="white" />
+                            <stop offset="100%" stop-color="black" />
+                        </linearGradient>
+                        <mask id="fade-mask">
+                            <rect x="0" y="0" width="150" height="150" fill="url(#mask-grad)" />
+                        </mask>
+                    </defs>
+                    <rect x="20" y="20" width="110" height="110" fill="magenta" mask="url(#fade-mask)" />
+                </svg>
+                <p>Luminance Mask</p>
+            </div>
+
+        </div>
+    </section>
+
+    <section id="phase6">
+        <h2>Phase 6 — Gradients &amp; Filters</h2>
+        <div class="test-group">
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <defs>
+                        <linearGradient id="linear-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="red" />
+                            <stop offset="50%" stop-color="yellow" />
+                            <stop offset="100%" stop-color="blue" />
+                        </linearGradient>
+                    </defs>
+                    <rect x="15" y="15" width="120" height="120" fill="url(#linear-grad)" />
+                </svg>
+                <p>Linear Gradient</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <defs>
+                        <radialGradient id="radial-grad" cx="50%" cy="50%" r="50%" fx="30%" fy="30%">
+                            <stop offset="0%" stop-color="white" />
+                            <stop offset="70%" stop-color="emerald" fill="#50c878" /> <stop offset="100%" stop-color="darkgreen" />
+                        </radialGradient>
+                    </defs>
+                    <circle cx="75" cy="75" r="60" fill="url(#radial-grad)" />
+                </svg>
+                <p>Radial Gradient (Focal Pt)</p>
+            </div>
+
+            <div class="test-case">
+                <svg width="150" height="150">
+                    <defs>
+                        <filter id="blur-filter">
+                            <feGaussianBlur stdDeviation="5" />
+                        </filter>
+                    </defs>
+                    <circle cx="75" cy="75" r="40" fill="crimson" filter="url(#blur-filter)" />
+                </svg>
+                <p>Filter (feGaussianBlur)</p>
+            </div>
+
+        </div>
+    </section>
+
+</body>
+</html>

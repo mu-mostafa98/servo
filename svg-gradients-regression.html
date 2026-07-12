@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>SVG Gradient Regression Test</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: sans-serif;
+      background: #222;
+      color: #eee;
+    }
+    .panel {
+      display: inline-block;
+      vertical-align: top;
+      width: 45%;
+      margin: 1.5%;
+      background: #111;
+      border: 1px solid #444;
+      box-sizing: border-box;
+    }
+    .panel svg {
+      display: block;
+      width: 100%;
+      height: auto;
+    }
+    .panel h2 {
+      margin: 0;
+      padding: 0.75rem 1rem;
+      font-size: 1rem;
+      background: #171717;
+      border-bottom: 1px solid #444;
+    }
+    .panel p {
+      margin: 0.75rem 1rem 1rem;
+      font-size: 0.95rem;
+      line-height: 1.4;
+    }
+  </style>
+</head>
+<body>
+  <div class="panel">
+    <h2>Linear Gradient: objectBoundingBox</h2>
+    <p>Gradient coordinates use percentages relative to the shape bounds. The vector runs from right to left so the blue stop appears on the left edge.</p>
+    <svg viewBox="0 0 320 180" width="100%" height="180">
+      <defs>
+        <linearGradient id="linear-objbb" x1="100%" y1="0%" x2="0%" y2="0%" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stop-color="#0000ff" />
+          <stop offset="50%" stop-color="#ffff00" />
+          <stop offset="100%" stop-color="#ff0000" />
+        </linearGradient>
+      </defs>
+      <rect x="10" y="10" width="300" height="160" fill="url(#linear-objbb)" stroke="#888" stroke-width="2" />
+    </svg>
+  </div>
+
+  <div class="panel">
+    <h2>Linear Gradient: userSpaceOnUse</h2>
+    <p>Gradient coordinates use absolute user space lengths.</p>
+    <svg viewBox="0 0 320 180" width="100%" height="180">
+      <defs>
+        <linearGradient id="linear-uspace" x1="0" y1="0" x2="300" y2="0" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#00ff00" />
+          <stop offset="100%" stop-color="#0000ff" />
+        </linearGradient>
+      </defs>
+      <rect x="10" y="10" width="300" height="160" fill="url(#linear-uspace)" stroke="#888" stroke-width="2" />
+    </svg>
+  </div>
+
+  <div class="panel">
+    <h2>Radial Gradient: objectBoundingBox</h2>
+    <p>Radial gradient with percent-based center, radius, and focus point.</p>
+    <svg viewBox="0 0 320 180" width="100%" height="180">
+      <defs>
+        <radialGradient id="radial-objbb" cx="50%" cy="50%" r="50%" fx="25%" fy="25%" gradientUnits="objectBoundingBox">
+          <stop offset="0%" stop-color="#ffffff" />
+          <stop offset="100%" stop-color="#ff00ff" />
+        </radialGradient>
+      </defs>
+      <rect x="10" y="10" width="300" height="160" fill="url(#radial-objbb)" stroke="#888" stroke-width="2" />
+    </svg>
+  </div>
+
+  <div class="panel">
+    <h2>Radial Gradient: userSpaceOnUse</h2>
+    <p>Radial gradient with absolute user space coordinates and explicit focus.</p>
+    <svg viewBox="0 0 320 180" width="100%" height="180">
+      <defs>
+        <radialGradient id="radial-uspace" cx="150" cy="90" r="80" fx="110" fy="70" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#00ffff" />
+          <stop offset="100%" stop-color="#000000" />
+        </radialGradient>
+      </defs>
+      <rect x="10" y="10" width="300" height="160" fill="url(#radial-uspace)" stroke="#888" stroke-width="2" />
+    </svg>
+  </div>
+</body>
+</html>
