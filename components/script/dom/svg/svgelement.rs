@@ -32,6 +32,10 @@ use crate::dom::element::{AttributeMutation, Element};
 use crate::dom::node::virtualmethods::VirtualMethods;
 use crate::dom::node::{Node, NodeTraits};
 use crate::dom::scrolling_box::{ScrollAxisState, ScrollRequirement};
+use crate::dom::svg::svgcircleelement::SVGCircleElement;
+use crate::dom::svg::svgellipseelement::SVGEllipseElement;
+use crate::dom::svg::svgpathelement::SVGPathElement;
+use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 
 #[dom_struct]
@@ -122,7 +126,21 @@ impl VirtualMethods for SVGElement {
                 &local_name!("stroke-dasharray") |
                 &local_name!("stroke-dashoffset") |
                 &local_name!("stroke-miterlimit") |
-                &local_name!("stroke-opacity")
+                &local_name!("stroke-opacity") |
+                &local_name!("vector-effect") |
+                &local_name!("visibility") |
+                &local_name!("opacity") |
+                &local_name!("clip-path") |
+                &local_name!("mask") |
+                &local_name!("filter") |
+                &local_name!("cx") |
+                &local_name!("cy") |
+                &local_name!("r") |
+                &local_name!("rx") |
+                &local_name!("ry") |
+                &local_name!("x") |
+                &local_name!("y") |
+                &local_name!("d")
         ) || self
             .super_type()
             .unwrap()
@@ -339,6 +357,62 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             longhands::stroke_opacity::parse_declared,
             push,
         );
+        self.parse_svg_attribute(
+            &parser_context,
+            "vector-effect",
+            longhands::vector_effect::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "clip-path",
+            longhands::clip_path::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "visibility",
+            longhands::visibility::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "opacity",
+            longhands::opacity::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "mask",
+            longhands::mask_image::parse_declared,
+            push,
+        );
+
+        // Parse geometry attributes based on element type
+        // <circle>: https://svgwg.org/svg2-draft/shapes.html#CircleElement
+        if element.is::<SVGCircleElement>() {
+            self.parse_svg_attribute(&parser_context, "cx", longhands::cx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "cy", longhands::cy::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "r", longhands::r::parse_declared, push);
+        }
+        // <ellipse>: https://svgwg.org/svg2-draft/shapes.html#EllipseElement
+        if element.is::<SVGEllipseElement>() {
+            self.parse_svg_attribute(&parser_context, "cx", longhands::cx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "cy", longhands::cy::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
+        }
+        // <rect>: https://svgwg.org/svg2-draft/shapes.html#RectElement
+        if element.is::<SVGRectElement>() {
+            self.parse_svg_attribute(&parser_context, "x", longhands::x::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "y", longhands::y::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
+        }
+        // <path>: https://svgwg.org/svg2-draft/paths.html#PathElement
+        if element.is::<SVGPathElement>() {
+            self.parse_svg_attribute(&parser_context, "d", longhands::d::parse_declared, push);
+        }
     }
 
     fn parse_svg_attribute<F>(
