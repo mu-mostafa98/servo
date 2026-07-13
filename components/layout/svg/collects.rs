@@ -19,7 +19,8 @@ use svg_engine::shapes::{BuildFromElement, *};
 use svg_engine::style::gradient::{GradientDef, parse_gradient_element};
 use web_atoms::ns;
 
-use super::style::{build_style_from_attrs, get_attr};
+use super::style::build_style_from_attrs;
+use super::style::{get_attr, parse_inline_style_prop};
 use crate::context::LayoutContext;
 
 // ======================= Strategy Pattern =======================
@@ -214,7 +215,7 @@ impl DefinitionParser for PatternParser {
 
     fn parse(
         node: ServoLayoutNode,
-        _context: &LayoutContext,
+        context: &LayoutContext,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
@@ -252,7 +253,7 @@ impl DefinitionParser for PatternParser {
             if let Some(child_elem) = child_node.as_element() {
                 let tag_name = child_elem.local_name().as_ref().to_owned();
                 if let Some(shape) = build_shape_core(&child_elem, &tag_name) {
-                    let style = build_style_from_attrs(&child_elem);
+                    let style = build_style_from_attrs(child_node, context);
                     shapes.push((shape, style));
                 }
             }
@@ -288,7 +289,7 @@ impl DefinitionParser for MaskParser {
 
     fn parse(
         node: ServoLayoutNode,
-        _context: &LayoutContext,
+        context: &LayoutContext,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
@@ -299,7 +300,7 @@ impl DefinitionParser for MaskParser {
             if let Some(child_elem) = child_node.as_element() {
                 let tag_name = child_elem.local_name().as_ref().to_owned();
                 if let Some(shape) = build_shape_core(&child_elem, &tag_name) {
-                    let style = build_style_from_attrs(&child_elem);
+                    let style = build_style_from_attrs(child_node, context);
                     shapes.push((shape, style));
                 }
             }
@@ -424,17 +425,7 @@ pub(crate) fn extract_viewport_info<'dom>(
 
     let overflow_visible = get("overflow")
         .or_else(|| {
-            get("style").and_then(|s| {
-                for part in s.split(';') {
-                    let mut kv = part.splitn(2, ':');
-                    let key = kv.next()?.trim();
-                    let val = kv.next()?.trim();
-                    if key.eq_ignore_ascii_case("overflow") {
-                        return Some(val.to_owned());
-                    }
-                }
-                None
-            })
+            get("style").and_then(|s| parse_inline_style_prop(&s, "overflow"))
         })
         .map_or(false, |v| v.trim().eq_ignore_ascii_case("visible"));
 

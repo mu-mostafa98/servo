@@ -18,6 +18,7 @@ use layout_api::{LayoutElement, LayoutNode, LayoutNodeType};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::color::ColorSpace;
 use style::values::computed::basic_shape::ClipPath;
+use style::values::computed::Image as ComputedImage;
 use style::values::computed::svg::{
     SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray, VectorEffect as StyloVectorEffect,
 };
@@ -237,6 +238,7 @@ impl FromComputedValues for NodeStyle {
             None
         };
 
+        // Extract clip-path from computed values (via `synthesize_presentational_hints`).
         let clip_path_ref = match &values.get_svg().clip_path {
             ClipPath::Url(style::url::ComputedUrl::Valid(u)) => u.fragment().map(|s| s.to_owned()),
             ClipPath::Url(style::url::ComputedUrl::Invalid(s)) => {
@@ -249,11 +251,32 @@ impl FromComputedValues for NodeStyle {
             },
             _ => None,
         };
-        let effects = clip_path_ref.map(|ref_id| NodeEffects {
-            clip_path: Some(ref_id.clone()),
-            mask: None,
-            filter: None,
+
+        // Extract mask-image from computed values (via `synthesize_presentational_hints`).
+        let mask_ref = values.get_svg().mask_image.0.first().and_then(|img| match img {
+            ComputedImage::Url(style::url::ComputedUrl::Valid(u)) => {
+                u.fragment().map(|s| s.to_owned())
+            },
+            ComputedImage::Url(style::url::ComputedUrl::Invalid(s)) => {
+                let trimmed = s.trim_start_matches('#');
+                if !trimmed.is_empty() {
+                    Some(trimmed.to_owned())
+                } else {
+                    None
+                }
+            },
+            _ => None,
         });
+
+        // Only allocate effects when at least one effect is set.
+        let effects = match (clip_path_ref, mask_ref) {
+            (None, None) => None,
+            (clip, mask) => Some(NodeEffects {
+                clip_path: clip,
+                mask,
+                filter: None,
+            }),
+        };
 
         let sr = values.get_inherited_svg().shape_rendering;
         let shape_rendering_hint = match sr {
@@ -809,53 +832,17 @@ pub(crate) fn build_style(
     let attr_ops = parse_transform_str(&get_attr(&element, "transform").unwrap_or_default());
     style.transform = [css_transform, attr_ops].concat();
 
-    // Apply SVG presentation attributes field-by-field into the style.
-    // This merges into whatever the computed style resolved, rather than
-    // replacing entire sub-structs — so computed values for attributes that
-    // aren't explicitly set as DOM attributes are preserved.
-    apply_stroke_presentation_attrs(&element, &mut style);
-    apply_fill_presentation_attrs(&element, &mut style);
-
-    // Read `display` presentation attribute (SVG display="none" maps to
-    // CSS display: none, hiding the element and all its children).
-    let display_attr = get_attr(&element, "display").or_else(|| {
-        get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "display"))
-    });
-    if let Some(v) = display_attr {
-        if v.trim().eq_ignore_ascii_case("none") {
-            style.display = Display::None;
-        }
-    }
-
-    let vis_attr = get_attr(&element, "visibility").or_else(|| {
-        get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility"))
-    });
-    if let Some(v) = vis_attr {
-        match v.trim() {
-            "hidden" | "collapse" => style.visibility = Visibility::Hidden,
-            _ => {},
-        }
-    }
-
-    let opacity_attr = get_attr(&element, "opacity").or_else(|| {
-        get_attr(&element, "style").and_then(|s| parse_inline_style_prop(&s, "opacity"))
-    });
-    if let Some(v) = opacity_attr {
-        if let Ok(op) = v.parse::<f32>() {
-            style.opacity = op.clamp(0.0, 1.0);
-        }
-    }
-
+    // Apply CSS class rules from inline `<style>` elements.
     apply_css_class_rules(&element, css_rules, &mut style);
 
-    let mask_ref = get_attr(&element, "mask")
-        .as_deref()
-        .and_then(extract_url_fragment);
+    // `filter` is not available via Stylo computed values in Servo builds
+    // (the Filter type uses `Impossible` for the URL type parameter), so
+    // read it directly from the DOM attribute.
     let filter_ref = get_attr(&element, "filter")
         .as_deref()
         .and_then(extract_url_fragment);
 
-    if mask_ref.is_some() || filter_ref.is_some() {
+    if let Some(filter_id) = filter_ref {
         let existing = style.effects.take().unwrap_or(NodeEffects {
             clip_path: None,
             mask: None,
@@ -863,8 +850,8 @@ pub(crate) fn build_style(
         });
         style.effects = Some(NodeEffects {
             clip_path: existing.clip_path,
-            mask: mask_ref.or(existing.mask),
-            filter: filter_ref.or(existing.filter),
+            mask: existing.mask,
+            filter: Some(filter_id),
         });
     }
 
@@ -928,7 +915,7 @@ fn convert_transform_operations(
     result
 }
 
-fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Option<String> {
+pub(crate) fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Option<String> {
     for part in style_value.split(';') {
         let mut parts = part.splitn(2, ':');
         let key = parts.next()?.trim();
@@ -940,44 +927,57 @@ fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Option<String>
     None
 }
 
-/// Build a NodeStyle by parsing SVG presentation attributes directly from the DOM.
-/// Used for elements inside `<pattern>` and `<mask>` where the computed style may
-/// not be available. Delegates to the field-level merge functions so all attributes
-/// (including stroke-dasharray, stroke-linecap, etc.) are handled consistently.
-pub(crate) fn build_style_from_attrs(element: &ServoLayoutElement) -> NodeStyle {
-    let mut style = NodeStyle::default();
+/// Build a NodeStyle for elements inside `<pattern>` and `<mask>` definitions.
+///
+/// These elements are in the DOM tree and have resolved [`ComputedValues`] via
+/// the CSS cascade (including presentation attributes from
+/// [`SVGElement::synthesize_presentational_hints`]), so this function uses the
+/// same cascade path as [`build_style`].
+///
+/// Falls back to reading DOM attributes directly only when the element has no
+/// style data (e.g. unstyled foreign elements).
+pub(crate) fn build_style_from_attrs(
+    node: ServoLayoutNode,
+    context: &LayoutContext,
+) -> NodeStyle {
+    let element = node.as_element().unwrap();
 
-    let vis_attr = get_attr(element, "visibility").or_else(|| {
-        get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "visibility"))
-    });
-    if let Some(v) = vis_attr {
-        match v.trim() {
-            "hidden" | "collapse" => style.visibility = Visibility::Hidden,
-            _ => {},
+    if element.style_data().is_some() {
+        // Use the cascade path — presentation attributes flow through
+        // synthesize_presentational_hints → ComputedValues → FromComputedValues.
+        let computed = node.style(&context.style_context);
+        NodeStyle::from_computed_values(&computed).unwrap_or_default()
+    } else {
+        // Fallback: no computed values available — read DOM attributes directly.
+        let mut style = NodeStyle::default();
+
+        apply_stroke_presentation_attrs(&element, &mut style);
+        apply_fill_presentation_attrs(&element, &mut style);
+
+        let read_attr_or_inline = |name: &str| -> Option<String> {
+            get_attr(&element, name).or_else(|| {
+                get_attr(&element, "style")
+                    .and_then(|s| parse_inline_style_prop(&s, name))
+            })
+        };
+
+        if let Some(v) = read_attr_or_inline("visibility") {
+            match v.trim() {
+                "hidden" | "collapse" => style.visibility = Visibility::Hidden,
+                _ => {},
+            }
         }
-    }
-
-    let opacity_attr = get_attr(element, "opacity").or_else(|| {
-        get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "opacity"))
-    });
-    if let Some(v) = opacity_attr {
-        if let Ok(op) = v.parse::<f32>() {
-            style.opacity = op.clamp(0.0, 1.0);
+        if let Some(v) = read_attr_or_inline("opacity") {
+            if let Ok(op) = v.parse::<f32>() {
+                style.opacity = op.clamp(0.0, 1.0);
+            }
         }
-    }
-
-    apply_stroke_presentation_attrs(element, &mut style);
-    apply_fill_presentation_attrs(element, &mut style);
-
-    // Read `display` presentation attribute.
-    let display_attr = get_attr(element, "display").or_else(|| {
-        get_attr(element, "style").and_then(|s| parse_inline_style_prop(&s, "display"))
-    });
-    if let Some(v) = display_attr {
-        if v.trim().eq_ignore_ascii_case("none") {
-            style.display = Display::None;
+        if let Some(v) = read_attr_or_inline("display") {
+            if v.trim().eq_ignore_ascii_case("none") {
+                style.display = Display::None;
+            }
         }
-    }
 
-    style
+        style
+    }
 }
