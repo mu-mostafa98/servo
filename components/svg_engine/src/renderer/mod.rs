@@ -2,6 +2,7 @@ pub(crate) mod circle;
 pub(crate) mod ellipse;
 pub(crate) mod fill;
 pub(crate) mod line;
+pub(crate) mod path;
 pub(crate) mod polygon;
 pub(crate) mod polyline;
 pub(crate) mod rect;
@@ -35,6 +36,7 @@ impl Render for Shape {
             Shape::Circle(c) => c.render(ctx),
             Shape::Ellipse(e) => e.render(ctx),
             Shape::Line(l) => l.render(ctx),
+            Shape::Path(p) => p.render(ctx),
             Shape::Polygon(p) => p.render(ctx),
             Shape::Polyline(p) => p.render(ctx),
         }

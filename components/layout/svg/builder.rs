@@ -109,6 +109,10 @@ fn build_tag(accessor: &ElementAccessor, _element: &ServoLayoutElement) -> Optio
             let polygon = Polygon::from_attrs(16.0, accessor)?;
             Some(SvgTag::Shape(Shape::Polygon(polygon)))
         },
+        "path" => {
+            let path = Path::from_attrs(16.0, accessor)?;
+            Some(SvgTag::Shape(Shape::Path(path)))
+        },
         _ => None,
     }
 }
