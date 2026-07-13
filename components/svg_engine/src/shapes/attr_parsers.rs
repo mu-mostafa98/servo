@@ -1,4 +1,6 @@
+use kurbo::Point;
 use svgtypes::Length as SvgLength;
+use svgtypes::PointsParser;
 
 use crate::error::{SvgEngineError, SvgResult};
 
@@ -27,4 +29,23 @@ fn to_px(len: SvgLength, font_size: f32) -> f32 {
         svgtypes::LengthUnit::Ex => n * font_size * 0.5,
         svgtypes::LengthUnit::Percent => n,
     }
+}
+
+pub fn parse_points(
+    get_attr: &dyn Fn(&str) -> Option<String>,
+    _font_size: f32,
+) -> SvgResult<Vec<Point>> {
+    use crate::error::SvgEngineError;
+    let value = get_attr("points")
+        .ok_or_else(|| SvgEngineError::MissingAttribute("points".to_owned()))?;
+    let points: Vec<Point> = PointsParser::from(value.as_str())
+        .map(|(x, y)| Point::new(x, y))
+        .collect();
+
+    if points.len() < 2 {
+        return Err(SvgEngineError::ParseError(
+            "points attribute requires at least 2 coordinate pairs".to_owned(),
+        ));
+    }
+    Ok(points)
 }

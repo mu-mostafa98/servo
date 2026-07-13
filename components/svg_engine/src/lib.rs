@@ -9,6 +9,7 @@ pub mod style;
 pub mod visitor;
 
 mod renderer;
+mod tessellator;
 mod traversal;
 
 pub use traversal::render_svg_tree;

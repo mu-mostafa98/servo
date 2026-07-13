@@ -2,11 +2,13 @@ pub mod attr_parsers;
 pub(crate) mod circle;
 pub(crate) mod ellipse;
 pub(crate) mod line;
+pub(crate) mod polyline;
 pub(crate) mod rectangle;
 
 pub use self::circle::Circle;
 pub use self::ellipse::Ellipse;
 pub use self::line::Line;
+pub use self::polyline::Polyline;
 pub use self::rectangle::Rectangle;
 
 pub trait AttrAccessor {
@@ -32,4 +34,5 @@ pub enum Shape {
     Circle(Circle),
     Ellipse(Ellipse),
     Line(Line),
+    Polyline(Polyline),
 }

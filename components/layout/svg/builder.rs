@@ -101,6 +101,10 @@ fn build_tag(accessor: &ElementAccessor, _element: &ServoLayoutElement) -> Optio
             let line = Line::from_attrs(16.0, accessor)?;
             Some(SvgTag::Shape(Shape::Line(line)))
         },
+        "polyline" => {
+            let polyline = Polyline::from_attrs(16.0, accessor)?;
+            Some(SvgTag::Shape(Shape::Polyline(polyline)))
+        },
         _ => None,
     }
 }
