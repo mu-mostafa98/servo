@@ -38,18 +38,22 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
     }
 
     pub(crate) fn build(self) -> Option<Arc<SvgRenderTree>> {
-        let root = self.build_render_node(self.root_node)?;
+        let root = self.build_render_node(self.root_node, None)?;
         let viewport = extract_viewport_info(self.root_node);
 
         Some(Arc::new(SvgRenderTree { root, viewport }))
     }
 
-    fn build_render_node(&self, node: ServoLayoutNode<'dom>) -> Option<SvgRenderNode> {
+    fn build_render_node(
+        &self,
+        node: ServoLayoutNode<'dom>,
+        parent_style: Option<&svg_engine::style::NodeStyle>,
+    ) -> Option<SvgRenderNode> {
         let element = node.as_element()?;
         let accessor = ElementAccessor { element: &element };
         let tag = build_tag(&accessor, &element)?;
 
-        let style = match element.style_data() {
+        let mut style = match element.style_data() {
             Some(_) => {
                 let computed = element.style(&self.context.style_context);
                 build_style(&computed)
@@ -58,9 +62,28 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
                 let style_str = element
                     .attribute_as_str(&ns!(), &LocalName::from("style"))
                     .unwrap_or("");
-                build_style_from_attr(style_str)
+                if style_str.is_empty() {
+                    // Inherit from parent if no own style
+                    if let Some(parent) = parent_style {
+                        parent.clone()
+                    } else {
+                        svg_engine::style::NodeStyle::default()
+                    }
+                } else {
+                    build_style_from_attr(style_str)
+                }
             },
         };
+
+        // Inherit from parent: if this node has no fill/stroke, use parent's
+        if let Some(parent) = parent_style {
+            if style.fill.is_none() {
+                style.fill = parent.fill.clone();
+            }
+            if style.stroke.is_none() {
+                style.stroke = parent.stroke.clone();
+            }
+        }
 
         let id = element
             .attribute_as_str(&ns!(), &html5ever::local_name!("id"))
@@ -68,7 +91,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
 
         let children = node
             .dom_children()
-            .filter_map(|child| self.build_render_node(child))
+            .filter_map(|child| self.build_render_node(child, Some(&style)))
             .collect();
 
         Some(SvgRenderNode {
