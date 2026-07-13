@@ -2,7 +2,7 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{BorderRadius, ClipMode, ComplexClipRegion};
 
 use crate::shapes::Rectangle;
-use crate::renderer::{Render, RenderContext, clip_chain_option, fill};
+use crate::renderer::{Render, RenderContext, clip_chain_option, fill, stroke};
 
 impl Render for Rectangle {
     fn render(&self, ctx: &mut RenderContext) {
@@ -45,5 +45,6 @@ impl Render for Rectangle {
         };
 
         fill::fill_rect(bounds, clip, ctx);
+        stroke::stroke_rect(bounds, radii, ctx);
     }
 }

@@ -1,5 +1,6 @@
 pub(crate) mod fill;
 pub(crate) mod rect;
+pub(crate) mod stroke;
 
 use svgtypes::Color as SvgColor;
 use webrender_api::units::{LayoutPoint, LayoutRect};

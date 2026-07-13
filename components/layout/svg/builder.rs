@@ -101,6 +101,10 @@ fn build_style_from_attr(style_str: &str) -> svg_engine::style::NodeStyle {
     let mut fill_color: Option<SvgColor> = None;
     let mut fill_opacity: f32 = 1.0;
     let mut fill_rule = FillRule::NonZero;
+    let mut stroke_color: Option<SvgColor> = None;
+    let mut stroke_opacity: f32 = 1.0;
+    let mut stroke_width: f32 = 1.0;
+    let mut has_stroke_width = false;
 
     for decl in style_str.split(';') {
         let decl = decl.trim();
@@ -130,9 +134,25 @@ fn build_style_from_attr(style_str: &str) -> svg_engine::style::NodeStyle {
                     FillRule::NonZero
                 };
             },
+            "stroke" => {
+                stroke_color = parse_css_color(val);
+            },
+            "stroke-width" => {
+                let v = val.trim_end_matches("px").trim();
+                if let Ok(w) = v.parse::<f32>() {
+                    stroke_width = w.max(0.0);
+                    has_stroke_width = true;
+                }
+            },
+            "stroke-opacity" => {
+                if let Ok(v) = val.parse::<f32>() {
+                    stroke_opacity = v.clamp(0.0, 1.0);
+                }
+            },
             "opacity" => {
                 if let Ok(v) = val.parse::<f32>() {
                     fill_opacity *= v;
+                    stroke_opacity *= v;
                 }
             },
             _ => {},
@@ -145,6 +165,16 @@ fn build_style_from_attr(style_str: &str) -> svg_engine::style::NodeStyle {
             opacity: fill_opacity,
             fill_rule,
         }),
+        stroke: stroke_color.map(|c| StrokeParams {
+            color: Some(c),
+            opacity: stroke_opacity,
+            width: if has_stroke_width { stroke_width } else { 1.0 },
+            line_cap: LineCap::Butt,
+            line_join: LineJoin::Miter,
+            miter_limit: 4.0,
+            dash_array: None,
+            dash_offset: 0.0,
+        }),
         ..Default::default()
     }
 }
@@ -156,7 +186,6 @@ fn extract_viewport_info(node: ServoLayoutNode<'_>) -> ViewportInfo {
             return ViewportInfo {
                 width: 300.0,
                 height: 150.0,
-                view_box: None,
             };
         },
     };

@@ -2,6 +2,7 @@ pub mod color;
 pub(crate) mod fill;
 pub(crate) mod hints;
 pub(crate) mod node_effects;
+pub(crate) mod stroke;
 pub(crate) mod visibility;
 
 pub use self::fill::{FillParams, FillRule};
@@ -10,6 +11,7 @@ pub use self::hints::{
     TextRendering, VectorEffect,
 };
 pub use self::node_effects::NodeEffects;
+pub use self::stroke::{LineCap, LineJoin, StrokeParams};
 pub use self::visibility::{Display, Visibility};
 
 #[derive(Debug, Clone)]
@@ -17,6 +19,7 @@ pub struct NodeStyle {
     pub visibility: Visibility,
     pub display: Display,
     pub fill: Option<FillParams>,
+    pub stroke: Option<StrokeParams>,
     pub render_hints: Option<RenderHints>,
     pub effects: Option<NodeEffects>,
     pub opacity: f32,
@@ -28,6 +31,7 @@ impl Default for NodeStyle {
             visibility: Visibility::Visible,
             display: Display::Inline,
             fill: None,
+            stroke: None,
             render_hints: None,
             effects: None,
             opacity: 1.0,
