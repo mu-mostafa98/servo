@@ -416,7 +416,6 @@ impl DefinitionParser for FilterParser {
 /// Extract viewport info from the `<svg>` element.
 pub(crate) fn extract_viewport_info<'dom>(
     node: ServoLayoutNode<'dom>,
-    _context: &LayoutContext,
 ) -> ViewportInfo {
     let element = node.as_element().unwrap();
     let get = |attr: &str| {
@@ -604,10 +603,3 @@ mod tests {
         assert!(tags.contains(&"radialGradient"));
     }
 }
-
-// The `from_element_for_layout` constructor on ServoLayoutNode is needed
-// by the definition parsers. We declare it as an unsafe extension here
-// since the parsers have access to a &ServoLayoutElement and need to
-// reconstruct the parent node for child iteration.
-//
-// Safety: The returned node is valid only during the current layout pass.

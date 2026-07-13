@@ -34,9 +34,9 @@ use crate::context::LayoutContext;
 
 // ======================= FromComputedValues Trait =======================
 
+/// Bridge from Servo's [`ComputedValues`] to SVG engine types.
 pub trait FromComputedValues: Sized {
-    type Input;
-    fn from_computed_values(values: &Self::Input) -> Option<Self>;
+    fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self>;
 }
 
 // ======================= ResolvedPaint =======================
@@ -87,8 +87,6 @@ fn resolve_svg_paint(
 // ======================= FromComputedValues impls =======================
 
 impl FromComputedValues for FillParams {
-    type Input = style::properties::ComputedValues;
-
     fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self> {
         let inherited_svg = values.get_inherited_svg();
         let paint = resolve_svg_paint(&inherited_svg.fill, values);
@@ -137,8 +135,6 @@ impl FromComputedValues for FillParams {
 }
 
 impl FromComputedValues for StrokeParams {
-    type Input = style::properties::ComputedValues;
-
     fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self> {
         let inherited_svg = values.get_inherited_svg();
         let paint = resolve_svg_paint(&inherited_svg.stroke, values);
@@ -213,8 +209,6 @@ impl FromComputedValues for StrokeParams {
 }
 
 impl FromComputedValues for NodeStyle {
-    type Input = style::properties::ComputedValues;
-
     fn from_computed_values(values: &style::properties::ComputedValues) -> Option<Self> {
         let svg_visibility = match values.get_inherited_box().visibility {
             style::computed_values::visibility::T::Visible => Visibility::Visible,
@@ -671,6 +665,8 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
             stroke.paint_server = Some(PaintServer::Gradient(id));
         },
         Some(PaintServer::Pattern(_)) => {
+            // Pattern stroke paint servers are valid per SVG spec but not
+            // yet supported by the rendering pipeline.
             stroke.color = None;
             stroke.paint_server = None;
         },

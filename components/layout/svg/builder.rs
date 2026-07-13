@@ -55,7 +55,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
     /// Build the complete [`SvgRenderTree`].
     pub(crate) fn build(self) -> Option<Arc<SvgRenderTree>> {
         let root = self.build_render_node(self.root_node, self.root_node, &mut HashSet::new())?;
-        let viewport = extract_viewport_info(self.root_node, self.context);
+        let viewport = extract_viewport_info(self.root_node);
 
         // Collect definitions using the Strategy pattern.
         let gradients =
