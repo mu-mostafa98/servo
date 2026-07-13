@@ -1,6 +1,10 @@
 pub mod attr_parsers;
+pub(crate) mod circle;
+pub(crate) mod ellipse;
 pub(crate) mod rectangle;
 
+pub use self::circle::Circle;
+pub use self::ellipse::Ellipse;
 pub use self::rectangle::Rectangle;
 
 pub trait AttrAccessor {
@@ -23,4 +27,6 @@ pub trait BuildFromElement: Sized {
 #[derive(Debug, Clone)]
 pub enum Shape {
     Rect(Rectangle),
+    Circle(Circle),
+    Ellipse(Ellipse),
 }

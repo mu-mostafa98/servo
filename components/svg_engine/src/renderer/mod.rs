@@ -1,3 +1,5 @@
+pub(crate) mod circle;
+pub(crate) mod ellipse;
 pub(crate) mod fill;
 pub(crate) mod rect;
 pub(crate) mod stroke;
@@ -27,6 +29,8 @@ impl Render for Shape {
     fn render(&self, ctx: &mut RenderContext) {
         match self {
             Shape::Rect(r) => r.render(ctx),
+            Shape::Circle(c) => c.render(ctx),
+            Shape::Ellipse(e) => e.render(ctx),
         }
     }
 }

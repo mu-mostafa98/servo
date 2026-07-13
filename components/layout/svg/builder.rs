@@ -89,6 +89,14 @@ fn build_tag(accessor: &ElementAccessor, _element: &ServoLayoutElement) -> Optio
             let rect = Rectangle::from_attrs(16.0, accessor)?;
             Some(SvgTag::Shape(Shape::Rect(rect)))
         },
+        "circle" => {
+            let circle = Circle::from_attrs(16.0, accessor)?;
+            Some(SvgTag::Shape(Shape::Circle(circle)))
+        },
+        "ellipse" => {
+            let ellipse = Ellipse::from_attrs(16.0, accessor)?;
+            Some(SvgTag::Shape(Shape::Ellipse(ellipse)))
+        },
         _ => None,
     }
 }
