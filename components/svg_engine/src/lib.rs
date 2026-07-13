@@ -24,7 +24,6 @@
 //! `layout::display_list::mod.rs`.  Shape construction happens in
 //! `layout::svg_builder.rs`.
 
-pub mod domelement;
 pub mod error;
 pub mod render_tree;
 pub mod shapes;
