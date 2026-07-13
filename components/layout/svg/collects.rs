@@ -15,9 +15,12 @@ use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::render_tree::*;
-use svg_engine::shapes::{BuildFromElement, *};
+use svg_engine::shapes::*;
 use svg_engine::style::gradient::{GradientDef, parse_gradient_element};
 use web_atoms::ns;
+
+use style::values::computed::LengthPercentage;
+use style::values::generics::length::GenericLengthPercentageOrAuto;
 
 use super::style::build_style_from_attrs;
 use super::style::{get_attr, parse_inline_style_prop};
@@ -167,7 +170,7 @@ impl DefinitionParser for ClipPathParser {
 
     fn parse(
         node: ServoLayoutNode,
-        _context: &LayoutContext,
+        context: &LayoutContext,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
@@ -184,7 +187,9 @@ impl DefinitionParser for ClipPathParser {
         for child_node in node.dom_children() {
             if let Some(child_elem) = child_node.as_element() {
                 let tag_name = child_elem.local_name().as_ref().to_owned();
-                if let Some(shape) = build_shape_core(&child_elem, &tag_name) {
+                let computed = child_elem.style_data().is_some()
+                    .then(|| child_node.style(&context.style_context));
+                if let Some(shape) = build_shape_core(&child_elem, &tag_name, computed.as_ref().map(|v| &**v)) {
                     shapes.push(shape);
                 }
             }
@@ -252,7 +257,9 @@ impl DefinitionParser for PatternParser {
         for child_node in node.dom_children() {
             if let Some(child_elem) = child_node.as_element() {
                 let tag_name = child_elem.local_name().as_ref().to_owned();
-                if let Some(shape) = build_shape_core(&child_elem, &tag_name) {
+                let computed = child_elem.style_data().is_some()
+                    .then(|| child_node.style(&context.style_context));
+                if let Some(shape) = build_shape_core(&child_elem, &tag_name, computed.as_ref().map(|v| &**v)) {
                     let style = build_style_from_attrs(child_node, context);
                     shapes.push((shape, style));
                 }
@@ -299,7 +306,9 @@ impl DefinitionParser for MaskParser {
         for child_node in node.dom_children() {
             if let Some(child_elem) = child_node.as_element() {
                 let tag_name = child_elem.local_name().as_ref().to_owned();
-                if let Some(shape) = build_shape_core(&child_elem, &tag_name) {
+                let computed = child_elem.style_data().is_some()
+                    .then(|| child_node.style(&context.style_context));
+                if let Some(shape) = build_shape_core(&child_elem, &tag_name, computed.as_ref().map(|v| &**v)) {
                     let style = build_style_from_attrs(child_node, context);
                     shapes.push((shape, style));
                 }
@@ -444,19 +453,142 @@ pub(crate) fn extract_viewport_info<'dom>(
 
 const SVG_DEFAULT_FONT_SIZE: f32 = 16.0;
 
-/// Build a [`Shape`] from a DOM element using the [`BuildFromElement`] factory trait.
-/// Used both by definition parsers and the main render tree builder.
-pub(crate) fn build_shape_core(element: &ServoLayoutElement, tag_name: &str) -> Option<Shape> {
+/// Helper: convert a [`LengthPercentage`] to a pixel value.
+fn lp_to_f32(lp: &LengthPercentage) -> f32 {
+    lp.to_length().map(|l| l.px()).unwrap_or(0.0)
+}
+
+/// Helper: parse a DOM length attribute as a fallback (for attributes not
+/// available through the CSS cascade, like `width`, `height`, `x1`, `y1`).
+fn dom_length(name: &str, get: &dyn Fn(&str) -> Option<String>) -> f32 {
+    use svg_engine::shapes::attr_parsers::parse_length;
+    parse_length(name, get, SVG_DEFAULT_FONT_SIZE).unwrap_or(0.0)
+}
+
+/// Build a [`Shape`] from a DOM element using computed values when available.
+///
+/// Geometry attributes that are CSS properties (`x`, `y`, `cx`, `cy`, `r`,
+/// `rx`, `ry`) are read from the cascade via `computed.get_svg()`.
+/// Attributes without CSS properties (`width`, `height`, `x1`, `y1`, `x2`,
+/// `y2`, `points`, `d`) fall back to DOM attribute parsing.
+pub(crate) fn build_shape_core(
+    element: &ServoLayoutElement,
+    tag_name: &str,
+    computed: Option<&style::properties::ComputedValues>,
+) -> Option<Shape> {
     let fs = SVG_DEFAULT_FONT_SIZE;
-    let attrs = |name: &str| get_attr(element, name);
+    let get = |name: &str| get_attr(element, name);
+
     match tag_name {
-        "rect" => Rectangle::from_attrs(fs, &attrs).map(Shape::Rect),
-        "circle" => Circle::from_attrs(fs, &attrs).map(Shape::Circle),
-        "ellipse" => Ellipse::from_attrs(fs, &attrs).map(Shape::Ellipse),
-        "line" => Line::from_attrs(fs, &attrs).map(Shape::Line),
-        "polyline" => Polyline::from_attrs(fs, &attrs).map(Shape::Polyline),
-        "polygon" => Polygon::from_attrs(fs, &attrs).map(Shape::Polygon),
-        "path" => Path::from_attrs(fs, &attrs).map(Shape::Path),
+        "rect" => {
+            let (x, y, rx, ry) = match computed {
+                Some(cv) => {
+                    let svg = cv.get_svg();
+                    (
+                        lp_to_f32(&svg.clone_x()),
+                        lp_to_f32(&svg.clone_y()),
+                        match svg.clone_rx() {
+                            GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
+                                Some(nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0))
+                            },
+                            _ => None,
+                        },
+                        match svg.clone_ry() {
+                            GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
+                                Some(nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0))
+                            },
+                            _ => None,
+                        },
+                    )
+                },
+                None => {
+                    use svg_engine::shapes::attr_parsers::parse_length;
+                    (
+                        parse_length("x", &get, fs).unwrap_or(0.0),
+                        parse_length("y", &get, fs).unwrap_or(0.0),
+                        parse_length("rx", &get, fs).ok(),
+                        parse_length("ry", &get, fs).ok(),
+                    )
+                },
+            };
+            let w = dom_length("width", &get);
+            let h = dom_length("height", &get);
+            if w < 0.0 || h < 0.0 {
+                return None;
+            }
+            Some(Shape::Rect(Rectangle { x, y, width: w, height: h, rx, ry }))
+        },
+        "circle" => {
+            let r = match computed {
+                Some(cv) => cv.get_svg().clone_r().0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0),
+                None => dom_length("r", &get).max(0.0),
+            };
+            if r <= 0.0 {
+                return None;
+            }
+            let (cx, cy) = match computed {
+                Some(cv) => {
+                    let svg = cv.get_svg();
+                    (lp_to_f32(&svg.clone_cx()), lp_to_f32(&svg.clone_cy()))
+                },
+                None => (dom_length("cx", &get), dom_length("cy", &get)),
+            };
+            Some(Shape::Circle(Circle { cx, cy, r }))
+        },
+        "ellipse" => {
+            // Compute rx and ry: try cascade (CSS property) first, fall back to DOM.
+            let rx = if let Some(cv) = computed {
+                match cv.get_svg().clone_rx() {
+                    GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
+                        Some(nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0))
+                    },
+                    _ => None,
+                }
+            } else {
+                Some(dom_length("rx", &get))
+            }?;
+            let ry = if let Some(cv) = computed {
+                match cv.get_svg().clone_ry() {
+                    GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
+                        Some(nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0))
+                    },
+                    _ => None,
+                }
+            } else {
+                Some(dom_length("ry", &get))
+            }?;
+            if rx <= 0.0 || ry <= 0.0 { return None; }
+            let (cx, cy) = match computed {
+                Some(cv) => {
+                    let svg = cv.get_svg();
+                    (lp_to_f32(&svg.clone_cx()), lp_to_f32(&svg.clone_cy()))
+                },
+                None => (dom_length("cx", &get), dom_length("cy", &get)),
+            };
+            Some(Shape::Ellipse(Ellipse { cx, cy, rx, ry }))
+        },
+        "line" => {
+            // x1, y1, x2, y2 have no CSS properties yet — always DOM fallback.
+            use svg_engine::shapes::attr_parsers::parse_length;
+            Some(Shape::Line(Line {
+                x1: parse_length("x1", &get, fs).unwrap_or(0.0),
+                y1: parse_length("y1", &get, fs).unwrap_or(0.0),
+                x2: parse_length("x2", &get, fs).unwrap_or(0.0),
+                y2: parse_length("y2", &get, fs).unwrap_or(0.0),
+            }))
+        },
+        "polyline" => {
+            use svg_engine::shapes::attr_parsers::parse_points;
+            parse_points(&get).ok().map(|pts| Shape::Polyline(Polyline { points: pts }))
+        },
+        "polygon" => {
+            use svg_engine::shapes::attr_parsers::parse_points;
+            parse_points(&get).ok().map(|pts| Shape::Polygon(Polygon { points: pts }))
+        },
+        "path" => {
+            let d = get("d")?;
+            kurbo::BezPath::from_svg(&d).ok().map(|path| Shape::Path(Path { path }))
+        },
         _ => None,
     }
 }

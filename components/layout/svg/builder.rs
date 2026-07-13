@@ -97,7 +97,9 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
         resolving: &mut HashSet<String>,
     ) -> Option<SvgRenderNode> {
         let element = node.as_element()?;
-        let tag = build_tag(&element)?;
+        let computed = element.style_data().is_some()
+            .then(|| node.style(&self.context.style_context));
+        let tag = build_tag(&element, computed.as_ref().map(|v| &**v))?;
         let style = build_style(node, self.context, &self.css_rules);
         let id = element
             .attribute_as_str(&ns!(), &local_name!("id"))
@@ -147,7 +149,10 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
 
 // ======================= Tag Dispatch =======================
 
-fn build_tag<'dom>(element: &ServoLayoutElement<'dom>) -> Option<SvgTag> {
+fn build_tag<'dom>(
+    element: &ServoLayoutElement<'dom>,
+    computed: Option<&style::properties::ComputedValues>,
+) -> Option<SvgTag> {
     let tag = element.local_name().as_ref();
     match tag {
         "svg" => Some(SvgTag::Container(Container::Svg)),
@@ -155,7 +160,7 @@ fn build_tag<'dom>(element: &ServoLayoutElement<'dom>) -> Option<SvgTag> {
         "defs" => Some(SvgTag::Container(Container::Defs)),
         "use" => Some(SvgTag::Container(Container::Use)),
         "symbol" => Some(SvgTag::Container(Container::Symbol)),
-        _ => build_shape_core(element, tag).map(SvgTag::Shape),
+        _ => build_shape_core(element, tag, computed).map(SvgTag::Shape),
     }
 }
 
