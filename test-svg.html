@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SVG Engine — Phase Tests</title>
+<style>
+  body { background: #222; color: #ccc; font-family: sans-serif; margin: 20px; }
+  h2 { color: #fff; border-bottom: 2px solid #555; padding-bottom: 5px; margin-top: 30px; }
+  h3 { color: #aaa; margin: 15px 0 5px; }
+  svg { background: #333; margin: 5px; border: 1px solid #555; display: block; }
+  .row { display: flex; flex-wrap: wrap; gap: 10px; }
+  .caption { color: #aaa; font-size: 12px; margin: 2px 0 10px; }
+</style>
+</head>
+<body>
+
+<h2>Phase 1a — Rect + Fill</h2>
+
+<h3>Solid fill</h3>
+<svg width="200" height="50">
+  <rect x="10" y="10" width="180" height="30" fill="red"/>
+</svg>
+
+<h3>Rounded corners</h3>
+<svg width="200" height="60">
+  <rect x="10" y="10" width="180" height="40" rx="10" ry="10" fill="blue"/>
+</svg>
+
+<h3>Multiple rects</h3>
+<svg width="200" height="100">
+  <rect x="10" y="10" width="50" height="30" fill="#ff0000"/>
+  <rect x="70" y="30" width="50" height="30" fill="#00ff00"/>
+  <rect x="130" y="50" width="50" height="30" fill="#0000ff"/>
+</svg>
+
+<h3>With opacity</h3>
+<svg width="200" height="60">
+  <rect x="10" y="10" width="180" height="40" fill="rgba(255,0,0,0.5)"/>
+  <rect x="40" y="10" width="180" height="40" fill="rgba(0,0,255,0.5)"/>
+</svg>
+
+<h3>CSS style attributes</h3>
+<svg width="200" height="60">
+  <rect x="10" y="10" width="80" height="40" style="fill: orange;"/>
+  <rect x="110" y="10" width="80" height="40" style="fill: purple; fill-opacity: 0.7;"/>
+</svg>
+
+<!-- ========== Phase 2 — Stroke (will be added next) ========== -->
+
+<!-- ========== Phase 3 — Circle + Ellipse (will be added next) ========== -->
+
+</body>
+</html>
