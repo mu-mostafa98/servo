@@ -127,12 +127,10 @@ impl VirtualMethods for SVGElement {
                 &local_name!("display") |
                 &local_name!("visibility") |
                 &local_name!("opacity") |
-                &local_name!("height") |
-                &local_name!("width") |
-                &local_name!("cx") |
-                &local_name!("cy") |
                 &local_name!("x") |
-                &local_name!("y")
+                &local_name!("y") |
+                &local_name!("rx") |
+                &local_name!("ry")
         ) || self
             .super_type()
             .unwrap()
@@ -373,18 +371,6 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
         if element.is::<SVGRectElement>() {
             self.parse_svg_attribute(&parser_context, "x", longhands::x::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "y", longhands::y::parse_declared, push);
-            self.parse_svg_attribute(
-                &parser_context,
-                "width",
-                longhands::width::parse_declared,
-                push,
-            );
-            self.parse_svg_attribute(
-                &parser_context,
-                "height",
-                longhands::height::parse_declared,
-                push,
-            );
             self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
             self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
         }
