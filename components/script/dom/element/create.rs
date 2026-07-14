@@ -88,6 +88,7 @@ use crate::dom::html::input_element::HTMLInputElement;
 use crate::dom::htmlmarqueeelement::HTMLMarqueeElement;
 use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
+use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 use crate::realms::enter_auto_realm;
 use crate::script_thread::ScriptThread;
@@ -110,6 +111,7 @@ fn create_svg_element(
 
     match name.local {
         local_name!("image") => make!(SVGImageElement),
+        local_name!("rect") => make!(SVGRectElement),
         local_name!("svg") => make!(SVGSVGElement),
         _ => make!(SVGElement),
     }

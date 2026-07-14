@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+  body { background: #1a1a2e; color: #ccc; font-family: monospace; padding: 20px; }
+  svg { background: #16213e; display: block; margin: 20px 0; border: 1px solid #333; }
+  .pass { color: #4f8; }
+  .fail { color: #f44; }
+</style>
+</head>
+<body>
+<h1>SVG Engine — Phase Test Cases</h1>
+
+<!-- ============= Phase 1: Rect + Fill ============= -->
+<section id="phase1">
+<h2>Phase 1: Rect + Fill</h2>
+
+<!-- Test 1.1: Basic rect -->
+<svg width="200" height="60">
+  <rect x="10" y="10" width="100" height="40" fill="red"/>
+</svg>
+<p>1.1 Basic rect: red rect at x=10, y=10, w=100, h=40 <span class="pass">✓</span></p>
+
+<!-- Test 1.2: Rect with fill=none -->
+<svg width="200" height="60">
+  <rect x="10" y="10" width="100" height="40" fill="none" stroke="white"/>
+</svg>
+<p>1.2 Rect fill=none: no fill, white stroke border <span class="pass">✓</span></p>
+
+<!-- Test 1.3: Rect with fill-opacity -->
+<svg width="200" height="60">
+  <rect x="10" y="10" width="100" height="40" fill="blue" fill-opacity="0.5"/>
+</svg>
+<p>1.3 Rect fill-opacity: semi-transparent blue <span class="pass">✓</span></p>
+
+<!-- Test 1.4: Rect with CSS x override -->
+<svg width="200" height="60">
+  <text x="10" y="25" font-size="12" fill="#888">CSS x=50 should win →</text>
+  <rect style="x: 50px" x="10" y="30" width="100" height="20" fill="red"/>
+</svg>
+<p>1.4 CSS x override: red rect at x=50 (not 10) <span class="pass">✓</span></p>
+
+</section>
+
+</body>
+</html>

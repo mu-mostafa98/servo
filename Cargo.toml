@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "components/media/examples",
     "components/xpath",
+    "components/svg_engine",
     "ffi/capi",
     "ports/servoshell",
     "tests/capi",
@@ -239,6 +240,7 @@ stylo_dom = { git = "https://github.com/servo/stylo", rev = "a64923b5d5c67313c81
 stylo_malloc_size_of = { git = "https://github.com/servo/stylo", rev = "a64923b5d5c67313c81c5056f5e30ec0babb04d6" }
 stylo_static_prefs = { git = "https://github.com/servo/stylo", rev = "a64923b5d5c67313c81c5056f5e30ec0babb04d6" }
 stylo_traits = { git = "https://github.com/servo/stylo", rev = "a64923b5d5c67313c81c5056f5e30ec0babb04d6" }
+svgtypes = "0.16"
 surfman = { version = "0.13.0", features = ["chains"] }
 swapper = "0.1"
 syn = { version = "2", default-features = false, features = ["clone-impls", "derive", "parsing"] }
@@ -355,6 +357,7 @@ servo-media-webrtc = { version = "=0.4.0", path = "components/media/webrtc" }
 servo-tracing = { version = "=0.4.0", path = "components/servo_tracing" }
 servo-url = { version = "=0.4.0", path = "components/url" }
 servo-wakelock = { version = "=0.4.0", path = "components/wakelock" }
+svg_engine = { version = "=0.4.0", path = "components/svg_engine" }
 storage = { package = "servo-storage", version = "=0.4.0", path = "components/storage" }
 storage_traits = { package = "servo-storage-traits", version = "=0.4.0", path = "components/shared/storage" }
 timers = { package = "servo-timers", version = "=0.4.0", path = "components/timers" }
@@ -451,15 +454,15 @@ codegen-units = 1
 #
 # Or for Stylo:
 #
-# [patch."https://github.com/servo/stylo"]
-# selectors = { path = "../stylo/selectors" }
-# servo_arc = { path = "../stylo/servo_arc" }
-# stylo = { path = "../stylo/style" }
-# stylo_atoms = { path = "../stylo/stylo_atoms" }
-# stylo_dom = { path = "../stylo/stylo_dom" }
-# stylo_malloc_size_of = { path = "../stylo/malloc_size_of" }
-# stylo_static_prefs = { path = "../stylo/stylo_static_prefs" }
-# stylo_traits = { path = "../stylo/style_traits" }
+[patch."https://github.com/servo/stylo"]
+selectors = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+servo_arc = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_atoms = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_dom = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_malloc_size_of = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_static_prefs = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_traits = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
 #
 # Or for another Git dependency:
 #

@@ -32,6 +32,7 @@ use crate::dom::element::{AttributeMutation, Element};
 use crate::dom::node::virtualmethods::VirtualMethods;
 use crate::dom::node::{Node, NodeTraits};
 use crate::dom::scrolling_box::{ScrollAxisState, ScrollRequirement};
+use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 
 #[dom_struct]
@@ -122,7 +123,16 @@ impl VirtualMethods for SVGElement {
                 &local_name!("stroke-dasharray") |
                 &local_name!("stroke-dashoffset") |
                 &local_name!("stroke-miterlimit") |
-                &local_name!("stroke-opacity")
+                &local_name!("stroke-opacity") |
+                &local_name!("display") |
+                &local_name!("visibility") |
+                &local_name!("opacity") |
+                &local_name!("height") |
+                &local_name!("width") |
+                &local_name!("cx") |
+                &local_name!("cy") |
+                &local_name!("x") |
+                &local_name!("y")
         ) || self
             .super_type()
             .unwrap()
@@ -339,6 +349,45 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             longhands::stroke_opacity::parse_declared,
             push,
         );
+        self.parse_svg_attribute(
+            &parser_context,
+            "visibility",
+            longhands::visibility::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "opacity",
+            longhands::opacity::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "display",
+            longhands::display::parse_declared,
+            push,
+        );
+
+        // Parse geometry attributes based on element type
+        // <rect>: https://svgwg.org/svg2-draft/shapes.html#RectElement
+        if element.is::<SVGRectElement>() {
+            self.parse_svg_attribute(&parser_context, "x", longhands::x::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "y", longhands::y::parse_declared, push);
+            self.parse_svg_attribute(
+                &parser_context,
+                "width",
+                longhands::width::parse_declared,
+                push,
+            );
+            self.parse_svg_attribute(
+                &parser_context,
+                "height",
+                longhands::height::parse_declared,
+                push,
+            );
+            self.parse_svg_attribute(&parser_context, "rx", longhands::rx::parse_declared, push);
+            self.parse_svg_attribute(&parser_context, "ry", longhands::ry::parse_declared, push);
+        }
     }
 
     fn parse_svg_attribute<F>(

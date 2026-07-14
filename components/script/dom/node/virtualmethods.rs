@@ -9,7 +9,7 @@ use style::attr::AttrValue;
 
 use crate::dom::bindings::inheritance::{
     Castable, DocumentFragmentTypeId, ElementTypeId, HTMLElementTypeId, HTMLMediaElementTypeId,
-    NodeTypeId, SVGElementTypeId, SVGGraphicsElementTypeId,
+    NodeTypeId, SVGElementTypeId, SVGGeometryElementTypeId, SVGGraphicsElementTypeId,
 };
 use crate::dom::bindings::str::DOMString;
 use crate::dom::document::Document;
@@ -68,6 +68,7 @@ use crate::dom::node::{
 use crate::dom::shadowroot::ShadowRoot;
 use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
+use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 
 /// Trait to allow DOM nodes to opt-in to overriding (or adding to) common
@@ -338,6 +339,9 @@ pub(crate) fn vtable_for(node: &Node) -> &dyn VirtualMethods {
         NodeTypeId::Element(ElementTypeId::HTMLElement(HTMLElementTypeId::HTMLTrackElement)) => {
             node.downcast::<HTMLTrackElement>().unwrap() as &dyn VirtualMethods
         },
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGRectElement),
+        ))) => node.downcast::<SVGRectElement>().unwrap() as &dyn VirtualMethods,
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
             SVGGraphicsElementTypeId::SVGImageElement,
         ))) => node.downcast::<SVGImageElement>().unwrap() as &dyn VirtualMethods,
