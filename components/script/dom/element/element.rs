@@ -2739,11 +2739,23 @@ impl Element {
     }
 
     pub(crate) fn explicitly_set_tab_index(&self) -> Option<i32> {
-        if self.has_attribute(&local_name!("tabindex")) {
-            Some(self.get_int_attribute(&local_name!("tabindex"), 0))
-        } else {
+        // Only return Some if the tabindex attribute has a valid integer value.
+        // from_i32 falls back to -1 for non-numeric values like "invalid",
+        // but we must distinguish valid integers from parsing failures.
+        // https://html.spec.whatwg.org/multipage/#the-tabindex-attribute
+        use style::attr::AttrValue;
+        self.with_attribute(&ns!(), &local_name!("tabindex"), |attr| {
+            if let AttrValue::Int(ref original, value) = *attr.value() {
+                // Verify the original string was actually a valid integer.
+                if let Some(raw) = original.get() {
+                    if raw.trim().parse::<i32>().is_ok() {
+                        return Some(value);
+                    }
+                }
+            }
             None
-        }
+        })
+        .flatten()
     }
 
     /// <https://html.spec.whatwg.org/multipage/#dom-tabindex>

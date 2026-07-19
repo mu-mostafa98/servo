@@ -10,6 +10,7 @@ use std::sync::Arc;
 use app_units::Au;
 use embedder_traits::UntrustedNodeAddress;
 use euclid::{Point2D, Rect, Size2D};
+use html5ever::local_name;
 use itertools::Itertools;
 use layout_api::{
     AxesOverflow, BoxAreaType, CSSPixelRectVec, DangerousStyleElementOf, LayoutElement,
@@ -1331,6 +1332,18 @@ fn rendered_text_collection_steps(
                     state.may_start_with_whitespace = false;
                 },
                 _ => {
+                    // SVG elements that are not text content elements
+                    // (<text>, <tspan>, <svg>) do not contribute to innerText.
+                    // This includes <stop>, <defs>, <filter>, <clipPath>, etc.
+                    if element.is_svg_element() {
+                        let name = element.local_name();
+                        if *name != local_name!("text") &&
+                           *name != local_name!("tspan") &&
+                           *name != local_name!("svg")
+                        {
+                            return items;
+                        }
+                    }
                     // Now we can finally iterate over all children, appending whatever
                     // they produce to items.
                     for child in node.dom_children() {
