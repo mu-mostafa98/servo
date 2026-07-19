@@ -21,4 +21,8 @@ pub(crate) mod svgrectelement;
 pub(crate) mod svgstopelement;
 pub(crate) mod svgsvgelement;
 pub(crate) mod svgsymbolelement;
+pub(crate) mod svgtspanelement;
+pub(crate) mod svgtextcontentelement;
+pub(crate) mod svgtextelement;
+pub(crate) mod svgtextpositioningelement;
 pub(crate) mod svguseelement;
