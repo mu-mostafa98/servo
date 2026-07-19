@@ -235,24 +235,6 @@ impl ReplacedContents {
         context: &LayoutContext,
         node: ServoLayoutNode<'_>,
     ) -> (ReplacedContentKind, NaturalSizes) {
-        #[cfg(feature = "svg-engine")]
-        {
-            let render_tree = crate::svg::build_svg_render_tree(node, context);
-            return (
-                ReplacedContentKind::SVGElement {
-                    vector_image: None,
-                    has_viewbox: svg_data.view_box.is_some(),
-                    render_tree,
-                },
-                NaturalSizes {
-                    width: None,
-                    height: None,
-                    ratio: svg_data.ratio_from_view_box(),
-                },
-            );
-        }
-
-        #[allow(unreachable_code)]
         let rule_cache_conditions = &mut RuleCacheConditions::default();
         let mut tree_counting_caches = TreeCountingCaches::default();
 
@@ -306,6 +288,20 @@ impl ReplacedContents {
             ratio,
         };
 
+        #[cfg(feature = "svg-engine")]
+        {
+            let render_tree = crate::svg::build_svg_render_tree(node, context);
+            return (
+                ReplacedContentKind::SVGElement {
+                    vector_image: None,
+                    has_viewbox: svg_data.view_box.is_some(),
+                    render_tree,
+                },
+                natural_size,
+            );
+        }
+
+        #[allow(unreachable_code)]
         let svg_source = match svg_data.source {
             None => {
                 // The SVGSVGElement is not yet serialized, so we add it to a list

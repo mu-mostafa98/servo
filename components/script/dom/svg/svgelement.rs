@@ -133,6 +133,7 @@ impl VirtualMethods for SVGElement {
                 &local_name!("visibility") |
                 &local_name!("opacity") |
                 &local_name!("vector-effect") |
+                &local_name!("shape-rendering") |
                 &local_name!("clip-path") |
                 &local_name!("mask") |
                 &local_name!("filter") |
@@ -384,6 +385,12 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             &parser_context,
             "vector-effect",
             longhands::vector_effect::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "shape-rendering",
+            longhands::shape_rendering::parse_declared,
             push,
         );
         self.parse_svg_attribute(
