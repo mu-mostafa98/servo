@@ -267,10 +267,10 @@ fn emit_element(
             node_clip_chain, accumulated_scale, wr, params,
         ),
         SvgTag::Text(text) => emit_leaf(
-            text, node, cur_origin, cur_spatial_id, node_clip_chain, wr,
+            text, node, cur_origin, cur_spatial_id, node_clip_chain, wr, params,
         ),
         SvgTag::Image(img) => emit_leaf(
-            img, node, cur_origin, cur_spatial_id, node_clip_chain, wr,
+            img, node, cur_origin, cur_spatial_id, node_clip_chain, wr, params,
         ),
         SvgTag::Container(_) => {},
     }
@@ -350,16 +350,7 @@ fn push_filter_context(
 
 // ======================= Non-Geometric Rendering =======================
 
-/// A no-op paint resource provider for non-geometric elements (text, image)
-/// that don't reference gradients or patterns.
-struct NoPaintResources;
-
-impl PaintResourceProvider for NoPaintResources {
-    fn gradient(&self, _id: &str) -> Option<&crate::style::gradient::GradientDef> { None }
-    fn pattern(&self, _id: &str) -> Option<&crate::render_tree::PatternDef> { None }
-}
-
-/// Emit a leaf element (text, image) — no effects pipeline, no children.
+/// Emit a leaf element (text, image) with filter and mask support.
 fn emit_leaf<T: crate::renderer::Render>(
     item: &T,
     node: &SvgRenderNode,
@@ -367,14 +358,27 @@ fn emit_leaf<T: crate::renderer::Render>(
     cur_spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
+    params: &EffectParams,
 ) {
     if !node.style.is_visible() { return; }
+
+    // Apply filter stacking context if filter ops are present.
+    let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, clip_chain_id, wr);
+
+    let effective_clip = params.mask_clips.as_ref()
+        .and_then(|c| c.first().copied())
+        .unwrap_or(clip_chain_id);
+
     let mut ctx = RenderContext {
         style: &node.style, svg_origin: *cur_origin,
-        spatial_id: cur_spatial_id, clip_chain_id,
-        wr: &mut *wr, paints: &NoPaintResources, accumulated_scale: 1.0,
+        spatial_id: cur_spatial_id, clip_chain_id: effective_clip,
+        wr: &mut *wr, paints: params.paints, accumulated_scale: 1.0,
     };
     item.render(&mut ctx);
+
+    if pushed_filter {
+        wr.pop_stacking_context();
+    }
 }
 
 // ======================= Child Traversal =======================

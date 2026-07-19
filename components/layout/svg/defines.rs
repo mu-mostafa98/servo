@@ -355,6 +355,55 @@ impl DefinitionParser for FilterParser {
                             },
                         }
                     },
+                    "feOffset" => {
+                        let dx = prim_get_float("dx", 0.0);
+                        let dy = prim_get_float("dy", 0.0);
+                        primitives.push(FilterPrimitive::Offset(dx, dy));
+                    },
+                    "feFlood" => {
+                        let flood_color_str = prim_get("flood-color").unwrap_or_else(|| "black".to_owned());
+                        let (r, g, b, a) = parse_color(&flood_color_str);
+                        let flood_opacity = prim_get_float("flood-opacity", 1.0);
+                        primitives.push(FilterPrimitive::Flood(r, g, b, a * flood_opacity));
+                    },
+                    "feComposite" => {
+                        let operator = prim_get("operator").unwrap_or_else(|| "over".to_owned());
+                        let composite = match operator.trim() {
+                            "arithmetic" => {
+                                let k1 = prim_get_float("k1", 0.0);
+                                let k2 = prim_get_float("k2", 0.0);
+                                let k3 = prim_get_float("k3", 0.0);
+                                let k4 = prim_get_float("k4", 0.0);
+                                FeCompositeKind::Arithmetic { k1, k2, k3, k4 }
+                            },
+                            "in" => FeCompositeKind::In,
+                            "out" => FeCompositeKind::Out,
+                            "atop" => FeCompositeKind::Atop,
+                            "xor" => FeCompositeKind::Xor,
+                            "lighter" => FeCompositeKind::Lighter,
+                            _ => FeCompositeKind::Over,
+                        };
+                        primitives.push(FilterPrimitive::Composite(composite));
+                    },
+                    "feTile" => {
+                        primitives.push(FilterPrimitive::Tile);
+                    },
+                    "feImage" => {
+                        // feImage can reference an element via fragment or load an external URL.
+                        let href = prim_get("href")
+                            .or_else(|| prim_get("xlink:href"))
+                            .unwrap_or_default();
+                        let img_kind = if let Some(frag) = href.strip_prefix('#') {
+                            FeImageKind::FragmentRef(frag.to_owned())
+                        } else if !href.is_empty() {
+                            FeImageKind::ExternalUrl(href)
+                        } else {
+                            // No valid source, but still include the primitive
+                            // so the filter isn't discarded.
+                            FeImageKind::FragmentRef(String::new())
+                        };
+                        primitives.push(FilterPrimitive::Image(img_kind));
+                    },
                     _ => {},
                 }
             }
@@ -364,6 +413,84 @@ impl DefinitionParser for FilterParser {
         } else {
             None
         }
+    }
+}
+
+// ======================= Color Parsing Helper =======================
+
+/// Parse a CSS color string (named, hex, or rgb/rgba) into (r, g, b, a) float components.
+fn parse_color(input: &str) -> (f32, f32, f32, f32) {
+    let s = input.trim().to_lowercase();
+    // Named colors (SVG/CSS basic set)
+    if let Some((r, g, b)) = parse_named_color(&s) {
+        return (r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 1.0);
+    }
+    // #rrggbb or #rgb
+    if let Some(hex) = s.strip_prefix('#') {
+        return parse_hex_color(hex);
+    }
+    // rgb(r, g, b) or rgba(r, g, b, a)
+    if s.starts_with("rgb") {
+        return parse_rgb_color(&s);
+    }
+    // Default: black
+    (0.0, 0.0, 0.0, 1.0)
+}
+
+fn parse_hex_color(hex: &str) -> (f32, f32, f32, f32) {
+    let hex: String = hex.chars().filter(|c| c.is_ascii_hexdigit()).collect();
+    if hex.len() == 6 {
+        let r = u8::from_str_radix(&hex[0..2], 16).unwrap_or(0);
+        let g = u8::from_str_radix(&hex[2..4], 16).unwrap_or(0);
+        let b = u8::from_str_radix(&hex[4..6], 16).unwrap_or(0);
+        (r as f32 / 255.0, g as f32 / 255.0, b as f32 / 255.0, 1.0)
+    } else if hex.len() == 3 {
+        let r = u8::from_str_radix(&hex[0..1], 16).unwrap_or(0);
+        let g = u8::from_str_radix(&hex[1..2], 16).unwrap_or(0);
+        let b = u8::from_str_radix(&hex[2..3], 16).unwrap_or(0);
+        (r as f32 / 15.0, g as f32 / 15.0, b as f32 / 15.0, 1.0)
+    } else {
+        (0.0, 0.0, 0.0, 1.0)
+    }
+}
+
+fn parse_rgb_color(input: &str) -> (f32, f32, f32, f32) {
+    let start = input.find('(').unwrap_or(0);
+    let end = input.find(')').unwrap_or(input.len());
+    let inner = &input[start + 1..end];
+    let parts: Vec<f32> = inner
+        .split(|c: char| c == ',' || c == '/' || c.is_ascii_whitespace())
+        .filter_map(|s| { let t = s.trim(); if t.is_empty() { None } else { t.parse::<f32>().ok() } })
+        .collect();
+    let r = *parts.first().unwrap_or(&0.0) / if input.starts_with("rgba") { 255.0 } else { 1.0 };
+    let g = *parts.get(1).unwrap_or(&0.0) / if input.starts_with("rgba") { 255.0 } else { 1.0 };
+    let b = *parts.get(2).unwrap_or(&0.0) / if input.starts_with("rgba") { 255.0 } else { 1.0 };
+    let a = *parts.get(3).unwrap_or(&1.0);
+    let max_rgb = if input.starts_with("rgba") { 255.0 } else { 1.0 };
+    (r / max_rgb, g / max_rgb, b / max_rgb, a.clamp(0.0, 1.0))
+}
+
+fn parse_named_color(name: &str) -> Option<(u8, u8, u8)> {
+    match name {
+        "black" => Some((0, 0, 0)),
+        "white" => Some((255, 255, 255)),
+        "red" => Some((255, 0, 0)),
+        "green" => Some((0, 128, 0)),
+        "blue" => Some((0, 0, 255)),
+        "yellow" => Some((255, 255, 0)),
+        "cyan" | "aqua" => Some((0, 255, 255)),
+        "magenta" | "fuchsia" => Some((255, 0, 255)),
+        "gray" | "grey" => Some((128, 128, 128)),
+        "silver" => Some((192, 192, 192)),
+        "maroon" => Some((128, 0, 0)),
+        "purple" => Some((128, 0, 128)),
+        "teal" => Some((0, 128, 128)),
+        "navy" => Some((0, 0, 128)),
+        "lime" => Some((0, 255, 0)),
+        "orange" => Some((255, 165, 0)),
+        "pink" => Some((255, 192, 203)),
+        "transparent" => Some((0, 0, 0)), // alpha handled by caller
+        _ => None,
     }
 }
 

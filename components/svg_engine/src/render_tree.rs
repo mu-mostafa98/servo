@@ -204,6 +204,45 @@ pub enum FilterPrimitive {
     Saturate(f32),
     /// Luminance-to-alpha: converts luminance to alpha channel.
     LuminanceToAlpha,
+    /// Offset: shifts the input by (dx, dy).
+    Offset(f32, f32),
+    /// Flood: fills the filter subregion with a solid color (RGBA).
+    Flood(f32, f32, f32, f32),
+    /// Composite: combines two inputs with an arithmetic composite (k1-k4)
+    /// or a Porter-Duff operator.
+    Composite(FeCompositeKind),
+    /// Tile: repeats the input to fill the filter subregion.
+    Tile,
+    /// Image: renders an external image or referenced element as a filter input.
+    Image(FeImageKind),
+}
+
+/// The kind of composite operation for `feComposite`.
+#[derive(Debug)]
+pub enum FeCompositeKind {
+    /// Arithmetic composite: result = k1*i1*i2 + k2*i1 + k3*i2 + k4.
+    Arithmetic { k1: f32, k2: f32, k3: f32, k4: f32 },
+    /// Porter-Duff `over` operator.
+    Over,
+    /// Porter-Duff `in` operator.
+    In,
+    /// Porter-Duff `out` operator.
+    Out,
+    /// Porter-Duff `atop` operator.
+    Atop,
+    /// Porter-Duff `xor` operator.
+    Xor,
+    /// Lighter (additive) composite.
+    Lighter,
+}
+
+/// The kind of image source for `feImage`.
+#[derive(Debug)]
+pub enum FeImageKind {
+    /// Reference to another element via URL fragment (e.g., `#myElement`).
+    FragmentRef(String),
+    /// External image URL.
+    ExternalUrl(String),
 }
 
 /// A filter definition collected from `<filter>`.

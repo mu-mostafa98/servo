@@ -69,6 +69,47 @@ pub(crate) fn get_filter_ops(
                     0.213, 0.715, 0.072, 0.0, 0.0,
                 ]));
             },
+            FilterPrimitive::Offset(dx, dy) => {
+                // feOffset shifts the input. Without the full SVG filter graph,
+                // we approximate by translating the content via a drop-shadow
+                // with zero blur and transparent color (which shifts the content).
+                // Reference: https://www.w3.org/TR/filter-effects-1/#feOffsetElement
+                ops.push(FilterOp::DropShadow(webrender_api::Shadow {
+                    blur_radius: 0.0,
+                    offset: webrender_api::units::LayoutVector2D::new(*dx, *dy),
+                    color: webrender_api::ColorF::new(0.0, 0.0, 0.0, 0.0),
+                }));
+            },
+            FilterPrimitive::Flood(r, g, b, a) => {
+                ops.push(FilterOp::Flood(webrender_api::ColorF::new(*r, *g, *b, *a)));
+            },
+            FilterPrimitive::Composite(composite_kind) => {
+                // Note: feComposite without the full SVG filter graph is
+                // represented as an identity op. The proper implementation
+                // requires building a FilterOpGraphNode with multiple inputs.
+                // For now, we keep the filter recognized and push a
+                // placeholder.
+                ops.push(FilterOp::Identity);
+                // Log the unsupported composite kind for debugging.
+                log::debug!("feComposite ({:?}) not yet fully supported in SVG engine", composite_kind);
+            },
+            FilterPrimitive::Tile => {
+                // feTile repeats the input to fill the filter region.
+                // Proper support requires the SVG filter graph.
+                ops.push(FilterOp::Identity);
+                log::debug!("feTile not yet fully supported in SVG engine");
+            },
+            FilterPrimitive::Image(img_kind) => {
+                // feImage loads an external image or renders a referenced element.
+                // Proper support requires the SVG filter graph and image loading.
+                // For now, keep the filter recognized with a placeholder.
+                let img_id = match img_kind {
+                    crate::render_tree::FeImageKind::FragmentRef(id) => format!("#{}", id),
+                    crate::render_tree::FeImageKind::ExternalUrl(url) => url.clone(),
+                };
+                log::debug!("feImage ({}) not yet fully supported in SVG engine", img_id);
+                ops.push(FilterOp::Identity);
+            },
         }
     }
     if ops.is_empty() { None } else { Some(ops) }
