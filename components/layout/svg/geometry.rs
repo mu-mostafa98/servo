@@ -111,17 +111,13 @@ fn parse_length_simple(val: &str, _fs: f32) -> Option<f32> {
 /// Extract concatenated text content from a DOM node and its descendants.
 fn extract_text_content(node: ServoLayoutNode) -> String {
     let mut text = String::new();
-    let mut stack = vec![node];
-    while let Some(n) = stack.pop() {
-        for child in n.dom_children() {
-            if let Some(elem) = child.as_element() {
-                // Recurse into tspan elements
-                if elem.local_name().as_ref() == "tspan" {
-                    stack.push(child);
-                }
-            } else {
-                text.push_str(&child.text_content());
+    for child in node.dom_children() {
+        if let Some(elem) = child.as_element() {
+            if elem.local_name().as_ref() == "tspan" {
+                text.push_str(&extract_text_content(child));
             }
+        } else {
+            text.push_str(&child.text_content());
         }
     }
     text
