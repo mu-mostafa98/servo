@@ -480,7 +480,9 @@ fn recurse_children(
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
 ) {
-    if let SvgTag::Container(Container::Defs) = &node.tag {
+    // <defs> and <symbol> children are only rendered when referenced
+    // via <use>, never directly during tree traversal.
+    if matches!(&node.tag, SvgTag::Container(Container::Defs | Container::Symbol)) {
         return;
     }
     for child in &node.children {

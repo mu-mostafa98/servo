@@ -270,17 +270,31 @@ fn resolve_use_children<'dom>(
     let result = find_element_by_id(root_node, &ref_id)
         .and_then(|target| builder.build_render_node(target, root_node, resolving))
         .map(|target_node| {
-            if let (Some(dx), Some(dy)) = offset {
-                if dx != 0.0 || dy != 0.0 {
-                    let mut cloned = target_node;
-                    cloned.transforms.insert(
-                        0,
-                        svg_engine::style::transform_ops::TransformOp::Translate(dx, dy),
-                    );
-                    return vec![cloned];
+            // Shared helper: apply <use> x/y offset as a translate transform.
+            let apply_offset = |node: &mut SvgRenderNode| {
+                if let (Some(dx), Some(dy)) = offset {
+                    if dx != 0.0 || dy != 0.0 {
+                        node.transforms.insert(
+                            0,
+                            svg_engine::style::transform_ops::TransformOp::Translate(dx, dy),
+                        );
+                    }
                 }
+            };
+
+            // <symbol> is never rendered directly — unwrap its children
+            // so they render when referenced via <use>.
+            if let SvgTag::Container(Container::Symbol) = &target_node.tag {
+                let mut children = target_node.children;
+                for child in &mut children {
+                    apply_offset(child);
+                }
+                return children;
             }
-            vec![target_node]
+
+            let mut cloned = target_node;
+            apply_offset(&mut cloned);
+            vec![cloned]
         })
         .unwrap_or_default();
 
