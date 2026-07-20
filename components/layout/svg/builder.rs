@@ -5,26 +5,19 @@
 //! SVG render tree construction — assembles an [`SvgRenderTree`] from DOM nodes.
 //!
 //! Uses the **Builder pattern**: [`SvgRenderTreeBuilder`] accumulates state
-//! (CSS rules, definition maps) through chained methods, then produces the
-//! final tree via [`build`](SvgRenderTreeBuilder::build).
+//! through chained methods, then produces the final tree via
+//! [`build`](SvgRenderTreeBuilder::build).
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashSet;
 use std::sync::Arc;
 
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::render_tree::*;
-use svg_engine::style::gradient::GradientDef;
-use svg_engine::visitor::PaintServerFixupVisitor;
 use web_atoms::ns;
 
-use super::css::collect_svg_css_rules;
-use super::defines::{
-    ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MaskParser, PatternParser,
-};
-use super::geometry::{build_shape, build_text};
-use super::style::build_style;
+use super::geometry::{build_shape, build_text, get_attr};
 use super::viewport::extract_viewport_info;
 use crate::context::LayoutContext;
 
@@ -34,48 +27,34 @@ use crate::context::LayoutContext;
 pub(crate) struct SvgRenderTreeBuilder<'dom, 'a> {
     root_node: ServoLayoutNode<'dom>,
     context: &'a LayoutContext<'a>,
-    css_rules: HashMap<String, HashMap<String, String>>,
+    // TODO: css_rules
 }
 
 impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
-    /// Start building from an SVG DOM element node.
     pub(crate) fn new(node: ServoLayoutNode<'dom>, context: &'a LayoutContext<'a>) -> Self {
-        let css_rules = collect_svg_css_rules(node);
+        // TODO: collect inline <style> CSS rules
         SvgRenderTreeBuilder {
             root_node: node,
             context,
-            css_rules,
         }
     }
 
-    /// Build the complete [`SvgRenderTree`].
     pub(crate) fn build(self) -> Option<Arc<SvgRenderTree>> {
         let root = self.build_render_node(self.root_node, self.root_node, &mut HashSet::new())?;
         let viewport = extract_viewport_info(self.root_node);
-        let definitions = collect_definitions(self.root_node, self.context);
 
-        let mut tree = SvgRenderTree {
+        // TODO: collect definition maps (gradients, clip-paths, patterns, masks, filters)
+        // and run PaintServerFixupVisitor
+
+        let tree = SvgRenderTree {
             root,
             viewport,
-            gradients: definitions.gradients,
-            clip_paths: definitions.clip_paths,
-            patterns: definitions.patterns,
-            masks: definitions.masks,
-            filters: definitions.filters,
+            // TODO: gradients, clip_paths, patterns, masks, filters
         };
-
-        // Post-process: convert PaintServer::Gradient → PaintServer::Pattern
-        // when the referenced ID is actually a pattern definition.
-        let patterns = tree.patterns.clone();
-        let mut visitor = PaintServerFixupVisitor {
-            pattern_ids: &patterns,
-        };
-        tree.visit_mut(&mut visitor);
 
         Some(Arc::new(tree))
     }
 
-    /// Recursively build a render node from a DOM node.
     fn build_render_node(
         &self,
         node: ServoLayoutNode<'dom>,
@@ -87,23 +66,26 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
 
         // Text / tspan — extract text content from DOM children.
         if tag_name == "text" || tag_name == "tspan" {
-            return build_text_node(node, self.context, &self.css_rules);
+            return build_text_node(node, self.context);
         }
 
+        // Resolve computed values for CSS-cascaded geometry properties
+        // (x, y, cx, cy, r, rx, ry). Style and transforms are not built yet.
         let computed = element
             .style_data()
             .is_some()
             .then(|| node.style(&self.context.style_context));
+
         let tag = build_tag(&element, computed.as_ref().map(|v| &**v))?;
-        let (style, transforms) = build_style(node, self.context, &self.css_rules);
         let id = extract_id(&element);
         let children = resolve_children(node, &tag, root_node, self, resolving);
+
+        // TODO: build style from computed values + presentation attributes
 
         Some(SvgRenderNode {
             id,
             tag,
-            style,
-            transforms,
+            // TODO: style, transforms
             children,
         })
     }
@@ -111,106 +93,33 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
 
 // ======================= Text / Tspan Node =======================
 
-/// Build a [`SvgRenderNode`] for `<text>` or `<tspan>` by extracting
-/// text content from the DOM node and its `<tspan>` descendants, then
-/// shaping the text using the font subsystem for glyph positioning.
+/// Build a [`SvgRenderNode`] for `<text>` or `<tspan>`.
+///
+/// TODO: implement text shaping via font subsystem for accurate glyph positioning
 fn build_text_node(
     node: ServoLayoutNode,
-    context: &LayoutContext,
-    css_rules: &HashMap<String, HashMap<String, String>>,
+    _context: &LayoutContext,
 ) -> Option<SvgRenderNode> {
     let element = node.as_element()?;
     let fs: f32 = 16.0;
-    let get = |name: &str| super::style::get_attr(&element, name);
-    let mut span = build_text(node, &get, fs)?;
-    // Shape text with the font subsystem for accurate glyph positions.
-    shape_text_span(&mut span, node, context);
+    let get = |name: &str| get_attr(&element, name);
+    let span = build_text(node, &get, fs)?;
+
+    // TODO: Shape text with the font subsystem (shape_text_span)
+
     let tag = SvgTag::Text(span);
-    let (style, transforms) = build_style(node, context, css_rules);
     let id = extract_id(&element);
+
     Some(SvgRenderNode {
         id,
         tag,
-        style,
-        transforms,
+        // TODO: style, transforms
         children: vec![],
     })
 }
 
-/// Shape a [`TextSpan`]'s text using the font subsystem.
-/// Falls back gracefully to estimated widths if any step fails.
-fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutContext) {
-    use layout_api::LayoutNode;
-    use svg_engine::text::ShapedGlyph;
-
-    if span.text.is_empty() {
-        return;
-    }
-
-    // Build a font group from the element's computed style.
-    let Some(font_group) = (|| {
-        let element = node.as_element()?;
-        if !element.style_data().is_some() {
-            return None;
-        }
-        let computed = node.style(&context.style_context);
-        let font_style = computed.clone_font();
-        let font_size = font_style.font_size.computed_size().px();
-        if font_size <= 0.0 {
-            return None;
-        }
-        Some(context.font_context.font_group(font_style))
-    })() else {
-        return;
-    };
-
-    let language: icu_locid::subtags::Language = "und".parse().unwrap();
-    let mut glyphs = Vec::with_capacity(span.text.len());
-    let mut x = 0.0f32;
-    let chars: Vec<char> = span.text.chars().collect();
-    let mut font_instance_key = None;
-
-    for (i, &ch) in chars.iter().enumerate() {
-        let next_ch = chars.get(i + 1).copied();
-        if let Some(font) =
-            font_group.find_by_codepoint(&*context.font_context, ch, next_ch, language)
-        {
-            if font_instance_key.is_none() {
-                font_instance_key = Some(font.key(context.painter_id, &*context.font_context));
-            }
-            if let Some(glyph_id) = font.glyph_index(ch) {
-                let advance = font.glyph_h_advance(glyph_id) as f32;
-                glyphs.push(ShapedGlyph {
-                    x,
-                    y: 0.0,
-                    advance,
-                    glyph_id: glyph_id as u32,
-                    character: ch,
-                });
-                x += advance + span.dx.get(i).copied().unwrap_or(0.0);
-                continue;
-            }
-        }
-        // Fallback: 8px per character.
-        let advance = 8.0f32;
-        glyphs.push(ShapedGlyph {
-            x,
-            y: 0.0,
-            advance,
-            glyph_id: 0,
-            character: ch,
-        });
-        x += advance + span.dx.get(i).copied().unwrap_or(0.0);
-    }
-    span.glyphs = glyphs;
-    span.font_instance_key = font_instance_key;
-}
-
 // ======================= Children Resolution =======================
 
-/// Resolve children for a render node.
-/// For `<use>`, clones the referenced element with x/y translation.
-/// For all others, recursively builds children from DOM.
 fn resolve_children<'dom>(
     node: ServoLayoutNode<'dom>,
     tag: &SvgTag,
@@ -228,9 +137,6 @@ fn resolve_children<'dom>(
 }
 
 /// Resolve children for a `<use>` element.
-///
-/// Looks up the referenced element by its `#id`, builds its render node,
-/// clones it as a child, and applies x/y translation if specified.
 fn resolve_use_children<'dom>(
     node: ServoLayoutNode<'dom>,
     root_node: ServoLayoutNode<'dom>,
@@ -264,37 +170,22 @@ fn resolve_use_children<'dom>(
             .attribute_as_str(&ns!(), &LocalName::from(attr))
             .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
     };
-    let offset = (parse_coord("x"), parse_coord("y"));
+    let _offset = (parse_coord("x"), parse_coord("y"));
 
-    // Build target and clone with optional translation.
+    // Build target and clone.
     let result = find_element_by_id(root_node, &ref_id)
         .and_then(|target| builder.build_render_node(target, root_node, resolving))
         .map(|target_node| {
-            // Shared helper: apply <use> x/y offset as a translate transform.
-            let apply_offset = |node: &mut SvgRenderNode| {
-                if let (Some(dx), Some(dy)) = offset {
-                    if dx != 0.0 || dy != 0.0 {
-                        node.transforms.insert(
-                            0,
-                            svg_engine::style::transform_ops::TransformOp::Translate(dx, dy),
-                        );
-                    }
-                }
-            };
+            // TODO: implement <use> x/y offset as translate transform
+            // (requires transforms + TransformOp)
 
             // <symbol> is never rendered directly — unwrap its children
             // so they render when referenced via <use>.
             if let SvgTag::Container(Container::Symbol) = &target_node.tag {
-                let mut children = target_node.children;
-                for child in &mut children {
-                    apply_offset(child);
-                }
-                return children;
+                // TODO: apply x/y translation offset to symbol children
+                return target_node.children;
             }
-
-            let mut cloned = target_node;
-            apply_offset(&mut cloned);
-            vec![cloned]
+            vec![target_node]
         })
         .unwrap_or_default();
 
@@ -302,35 +193,10 @@ fn resolve_use_children<'dom>(
     result
 }
 
-// ======================= Definitions =======================
-
-/// Collected definition maps from `<defs>`.
-struct DefinitionMaps {
-    gradients: HashMap<String, GradientDef>,
-    clip_paths: HashMap<String, ClipPathDef>,
-    patterns: HashMap<String, PatternDef>,
-    masks: HashMap<String, MaskDef>,
-    filters: HashMap<String, FilterDef>,
-}
-
-/// Collect all definition types (gradients, clip-paths, patterns, masks,
-/// filters) from `<defs>` containers in the SVG subtree.
-fn collect_definitions<'dom>(
-    node: ServoLayoutNode<'dom>,
-    context: &LayoutContext,
-) -> DefinitionMaps {
-    DefinitionMaps {
-        gradients: DefinitionCollector::collect::<GradientParser>(node, context),
-        clip_paths: DefinitionCollector::collect::<ClipPathParser>(node, context),
-        patterns: DefinitionCollector::collect::<PatternParser>(node, context),
-        masks: DefinitionCollector::collect::<MaskParser>(node, context),
-        filters: DefinitionCollector::collect::<FilterParser>(node, context),
-    }
-}
+// TODO: DefinitionMaps, collect_definitions, shape_text_span
 
 // ======================= Tag Dispatch =======================
 
-/// Map a DOM element's tag name to an [`SvgTag`].
 fn build_tag<'dom>(
     element: &ServoLayoutElement<'dom>,
     computed: Option<&style::properties::ComputedValues>,
@@ -347,11 +213,10 @@ fn build_tag<'dom>(
     }
 }
 
-/// Build an [`SvgImage`] from element attributes.
 fn build_image_tag(element: &ServoLayoutElement) -> Option<SvgImage> {
     use svg_engine::attr_parsers::parse_length;
     let fs = 16.0;
-    let get = |name: &str| super::style::get_attr(element, name);
+    let get = |name: &str| get_attr(element, name);
     let x = parse_length("x", &get, fs).unwrap_or(0.0);
     let y = parse_length("y", &get, fs).unwrap_or(0.0);
     let w = parse_length("width", &get, fs).unwrap_or(0.0).max(0.0);
@@ -374,7 +239,6 @@ fn build_image_tag(element: &ServoLayoutElement) -> Option<SvgImage> {
 
 // ======================= Helpers =======================
 
-/// Extract the `id` attribute from an SVG DOM element.
 fn extract_id(element: &ServoLayoutElement) -> Option<String> {
     element
         .attribute_as_str(&ns!(), &local_name!("id"))

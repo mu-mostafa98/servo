@@ -7,10 +7,8 @@
 use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::render_tree::{ViewportInfo, extract_viewbox, parse_aspect_ratio};
+use svg_engine::render_tree::{ViewportInfo, extract_viewbox};
 use web_atoms::ns;
-
-use super::style::parse_inline_style_prop;
 
 /// Extract viewport info from the root `<svg>` element.
 pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>) -> ViewportInfo {
@@ -29,22 +27,20 @@ pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>) -> Viewpo
     let view_box = get("viewBox").as_deref().and_then(extract_viewbox);
 
     let overflow_visible = get("overflow")
-        .or_else(|| {
-            get("style")
-                .as_deref()
-                .and_then(|s| parse_inline_style_prop(s, "overflow"))
-        })
+        // TODO: also check inline style for overflow property
+        // .or_else(|| {
+        //     get("style")
+        //         .as_deref()
+        //         .and_then(|s| parse_inline_style_prop(s, "overflow"))
+        // })
         .map_or(false, |v| v.trim().eq_ignore_ascii_case("visible"));
 
-    let aspect_ratio = get("preserveAspectRatio")
-        .as_deref()
-        .map(parse_aspect_ratio);
+    // TODO: parse preserveAspectRatio attribute (aspect_ratio field)
 
     ViewportInfo {
         width: svg_width,
         height: svg_height,
         view_box,
         overflow_visible,
-        aspect_ratio,
     }
 }

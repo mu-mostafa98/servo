@@ -5,42 +5,31 @@
 //! Software SVG render engine for Servo.
 //!
 //! Converts an [`SvgRenderTree`] (built from DOM in `layout::svg_builder`) into
-//! WebRender display list commands via [`render_svg_tree`].
+//! rendered output via [`render_svg_tree`].
 //!
-//! # Architecture
+//! # Architecture (PR #1)
 //!
 //! | Module | Role |
 //! |--------|------|
-//! | [`shapes`] | Pure data structs for SVG geometric shapes (rect, circle, etc.) |
-//! | [`style`] | SVG property data types (fill, stroke, gradient, transform, …) |
-//! | [`render_tree`] | [`SvgRenderTree`] node tree and definition types |
+//! | [`render_tree`] | [`SvgRenderTree`] node tree and structural types |
 //! | [`error`] | Error types for SVG parsing failures |
-//! | [`traversal`] | Recursive tree walk that produces the display list |
-//! | [`renderer`] | Per-shape [`Render`] trait impls + fill/stroke/gradient pipelines |
-//! | [`tessellator`] | Polygon triangulation + scanline rasterization |
-//! | [`effects`] | Clip-path, mask, and filter resolution |
+//! | [`traversal`] | Recursive tree walk with enter/exit logging |
 //!
-//! The entry point is [`render_svg_tree`], called from
-//! `layout::display_list::mod.rs`.  Shape construction happens in
-//! `layout::svg_builder.rs`.
+//! TODO: implement shapes, text, image, attr_parsers, style, renderer,
+//! effects, tessellator, visitor modules
 
 pub mod attr_parsers;
 pub mod error;
 pub mod image;
 pub mod render_tree;
 pub mod shapes;
-pub mod style;
 pub mod text;
-pub mod visitor;
 
-mod effects;
 mod renderer;
-mod tessellator;
 mod traversal;
 
 pub use render_tree::SvgTag;
-pub use renderer::gradient::color_at_t_with_space;
 pub use traversal::render_svg_tree;
 
 pub use self::image::SvgImage;
-pub use self::text::{ShapedGlyph, TextAnchor, TextSpan};
+pub use self::text::{TextAnchor, TextSpan};

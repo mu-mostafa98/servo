@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SVG Engine PR #1 — Geometry & Render Dispatch Test</title>
+<style>
+  /* CSS cascade for geometry properties — these should override
+     presentation attributes where CSS properties exist */
+  .cascade-rect-x  { x: 15px; }
+  .cascade-rect-y  { y: 25px; }
+  .cascade-circle-cx { cx: 80px; }
+  .cascade-circle-cy { cy: 80px; }
+  .cascade-circle-r   { r: 45px; }
+  .cascade-ellipse-cx { cx: 120px; }
+  .cascade-ellipse-cy { cy: 80px; }
+  .cascade-ellipse-rx { rx: 70px; }
+  .cascade-ellipse-ry { ry: 35px; }
+</style>
+</head>
+<body>
+
+<h2>SVG Engine PR #1 — Geometry Parsing & Render Dispatch</h2>
+<p>Each shape below should produce an <code>eprintln!</code> message with its geometry values.</p>
+
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="800" height="900" viewBox="0 0 800 900"
+     id="test-svg-root">
+
+  <!-- ============================================================
+       1. RECT — basic geometry attributes (x, y, width, height)
+       ============================================================ -->
+  <rect id="rect-basic"
+        x="10" y="10" width="100" height="60" />
+
+  <!-- rect with rounded corners (rx, ry) -->
+  <rect id="rect-rounded"
+        x="120" y="10" width="100" height="60"
+        rx="10" ry="10" />
+
+  <!-- rect with only rx (ry defaults to rx) -->
+  <rect id="rect-rx-only"
+        x="230" y="10" width="100" height="60"
+        rx="15" />
+
+  <!-- rect with CSS-cascaded x/y overriding presentation attrs -->
+  <rect id="rect-cascade"
+        class="cascade-rect-x cascade-rect-y"
+        x="999" y="999" width="100" height="60"
+        rx="5" ry="5" />
+
+  <!-- ============================================================
+       2. CIRCLE — basic geometry (cx, cy, r)
+       ============================================================ -->
+  <circle id="circle-basic"
+          cx="50" cy="150" r="30" />
+
+  <!-- circle with CSS-cascaded cx/cy/r -->
+  <circle id="circle-cascade"
+          class="cascade-circle-cx cascade-circle-cy cascade-circle-r"
+          cx="999" cy="999" r="1" />
+
+  <!-- ============================================================
+       3. ELLIPSE — basic geometry (cx, cy, rx, ry)
+       ============================================================ -->
+  <ellipse id="ellipse-basic"
+           cx="50" cy="240" rx="40" ry="25" />
+
+  <!-- ellipse with CSS-cascaded cx/cy/rx/ry -->
+  <ellipse id="ellipse-cascade"
+           class="cascade-ellipse-cx cascade-ellipse-cy
+                  cascade-ellipse-rx cascade-ellipse-ry"
+           cx="999" cy="999" rx="1" ry="1" />
+
+  <!-- ============================================================
+       4. LINE — basic geometry (x1, y1, x2, y2)
+       ============================================================ -->
+  <line id="line-basic"
+        x1="10" y1="280" x2="150" y2="320" />
+
+  <line id="line-diagonal"
+        x1="160" y1="280" x2="300" y2="320" />
+
+  <!-- ============================================================
+       5. POLYLINE — open sequence of points
+       ============================================================ -->
+  <polyline id="polyline-basic"
+            points="10,350 60,340 110,360 160,350" />
+
+  <polyline id="polyline-triangle-open"
+            points="200,350 250,370 300,340" />
+
+  <!-- ============================================================
+       6. POLYGON — closed shape of points
+       ============================================================ -->
+  <polygon id="polygon-triangle"
+           points="50,420 100,380 150,420" />
+
+  <polygon id="polygon-pentagon"
+           points="200,400 230,380 260,400 245,430 215,430" />
+
+  <!-- ============================================================
+       7. PATH — d attribute with various commands
+       ============================================================ -->
+  <!-- Simple move + line -->
+  <path id="path-moveto-lineto"
+        d="M 10 470 L 100 470 L 100 520 L 10 520 Z" />
+
+  <!-- Path with curves (cubic bezier) -->
+  <path id="path-bezier"
+        d="M 150 500 C 150 470, 200 470, 200 500 C 200 530, 250 530, 250 500" />
+
+  <!-- ============================================================
+       8. TEXT — text content with positioning
+       ============================================================ -->
+  <text id="text-basic"
+        x="10" y="580">Hello SVG</text>
+
+  <text id="text-anchor-middle"
+        x="400" y="580"
+        text-anchor="middle">Centered Text</text>
+
+  <text id="text-anchor-end"
+        x="790" y="580"
+        text-anchor="end">Right-Aligned</text>
+
+  <!-- text with dx/dy offsets -->
+  <text id="text-with-offsets"
+        x="10" y="620"
+        dx="0 5 10 15 20 25 30 35 40 45">Staggered</text>
+
+  <!-- ============================================================
+       9. IMAGE — external image reference
+       ============================================================ -->
+  <image id="image-basic"
+         x="10" y="650" width="80" height="60"
+         href="test-image.png" />
+
+  <!-- ============================================================
+       10. STRUCTURAL — Container elements
+       ============================================================ -->
+
+  <!-- <g> group containing multiple shapes -->
+  <g id="group-example">
+    <rect id="g-rect"
+          x="10" y="740" width="50" height="40" />
+    <circle id="g-circle"
+            cx="90" cy="760" r="20" />
+  </g>
+
+  <!-- <svg> nested SVG element -->
+  <svg id="nested-svg"
+       x="150" y="730" width="120" height="60"
+       viewBox="0 0 120 60">
+    <rect id="nested-rect"
+          x="5" y="5" width="50" height="40" />
+  </svg>
+
+  <!-- <defs> — should NOT be rendered (skipped in traversal) -->
+  <defs id="defs-container">
+    <rect id="defs-rect" x="0" y="0" width="50" height="50" />
+    <circle id="defs-circle" cx="25" cy="25" r="20" />
+  </defs>
+
+  <!-- <use> — referencing a defined element by #id -->
+  <!-- (references the hidden defs-rect above) -->
+  <use id="use-example"
+       href="#defs-rect"
+       x="300" y="740" />
+
+  <!-- <symbol> — reusable viewBox'd container -->
+  <symbol id="my-symbol" viewBox="0 0 40 40">
+    <circle id="symbol-circle" cx="20" cy="20" r="18" />
+  </symbol>
+
+  <use id="use-symbol" href="#my-symbol" x="380" y="740" />
+
+</svg>
+
+<!-- ============================================================
+     EXPECTED OUTPUT (eprintln! from each renderer):
+     ============================================================
+
+     rect: x=10, y=10, width=100, height=60, rx=None, ry=None
+     rect: x=120, y=10, width=100, height=60, rx=Some(10.0), ry=Some(10.0)
+     rect: x=230, y=10, width=100, height=60, rx=Some(15.0), ry=Some(15.0)
+     rect: x=15, y=25, width=100, height=60, rx=Some(5.0), ry=Some(5.0)
+     circle: cx=50, cy=150, r=30
+     circle: cx=80, cy=80, r=45
+     ellipse: cx=50, cy=240, rx=40, ry=25
+     ellipse: cx=120, cy=80, rx=70, ry=35
+     line: x1=10, y1=280, x2=150, y2=320
+     line: x1=160, y1=280, x2=300, y2=320
+     polyline: points=[...]
+     polyline: points=[...]
+     polygon: points=[...]
+     polygon: points=[...]
+     path: segments=...
+     path: segments=...
+     text: "Hello SVG" x=10, y=580, text_anchor=Start, glyphs=0
+     text: "Centered Text" x=400, y=580, text_anchor=Middle, glyphs=0
+     text: "Right-Aligned" x=790, y=580, text_anchor=End, glyphs=0
+     text: "Staggered" x=10, y=620, text_anchor=Start, glyphs=0
+     image: href=Some("test-image.png"), x=10, y=650, width=80, height=60
+     rect: x=10, y=740, width=50, height=40, rx=None, ry=None  [g-rect]
+     circle: cx=90, cy=760, r=20  [g-circle]
+     rect: x=5, y=5, width=50, height=40, rx=None, ry=None  [nested-rect]
+     rect: x=300, y=740, width=50, height=50, rx=None, ry=None  [use-example]
+     circle: cx=20, cy=20, r=18  [use-symbol]
+
+     ▼ node enter: id=Some("defs-container")   ← defs (children skipped)
+     ▲ node exit:  id=Some("defs-container")
+     NOTE: <defs> children should NOT appear (skipped in traversal).
+
+     CSS CASCADE VERIFICATION:
+     - rect-cascade: x=15, y=25 (from CSS class), NOT x=999 y=999 (from attrs)
+     - circle-cascade: cx=80, cy=80, r=45 (from CSS), NOT cx=999 cy=999 r=1
+     - ellipse-cascade: cx=120, cy=80, rx=70, ry=35 (from CSS), NOT cx=999...
+
+     ============================================================ -->
+
+</body>
+</html>

@@ -38,9 +38,8 @@ pub struct TextSpan {
     pub glyphs: Vec<ShapedGlyph>,
     /// Text alignment anchor.
     pub text_anchor: TextAnchor,
-    /// WebRender font instance key for glyph rendering.
-    /// When `Some`, the renderer uses `push_text` for real glyph shapes.
-    pub font_instance_key: Option<webrender_api::FontInstanceKey>,
+    // TODO: font_instance_key for glyph rendering
+    // pub font_instance_key: Option<webrender_api::FontInstanceKey>,
 }
 
 /// Text alignment anchor point.

@@ -14,14 +14,21 @@
 //! the DOM element and construct the corresponding shape struct.  There is
 //! no shared mutable state and no side effects.
 
+use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::values::computed::LengthPercentage;
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use svg_engine::shapes::*;
 use svg_engine::text::{TextAnchor, TextSpan};
+use web_atoms::ns;
 
-use super::style::get_attr;
+/// Extract an attribute value from a DOM element.
+pub(crate) fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<String> {
+    element
+        .attribute_as_str(&ns!(), &LocalName::from(attr))
+        .map(|s| s.to_string())
+}
 
 const SVG_DEFAULT_FONT_SIZE: f32 = 16.0;
 
@@ -83,7 +90,8 @@ pub(crate) fn build_text(
         dy,
         text_anchor,
         glyphs: vec![],
-        font_instance_key: None,
+        // TODO: will be restored in future PRs
+        // font_instance_key: None,
     })
 }
 
