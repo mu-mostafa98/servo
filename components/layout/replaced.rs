@@ -31,6 +31,8 @@ use style::values::CSSFloat;
 use style::values::computed::image::Image as ComputedImage;
 use style::values::computed::{Content, Context, ToComputedValue};
 use style::values::generics::counters::{GenericContentItem, GenericContentItems};
+#[cfg(feature = "svg-engine")]
+use svg_engine::render_tree::SvgRenderTree;
 use url::Url;
 use web_atoms::local_name;
 use webrender_api::ImageKey;
@@ -152,6 +154,9 @@ pub(crate) enum ReplacedContentKind {
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
+        #[cfg(feature = "svg-engine")]
+        #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
+        render_tree: Option<Arc<SvgRenderTree>>,
     },
     Audio,
 }
@@ -284,6 +289,20 @@ impl ReplacedContents {
             ratio,
         };
 
+        #[cfg(feature = "svg-engine")]
+        {
+            let render_tree = crate::svg::build_svg_render_tree(node, context);
+            return (
+                ReplacedContentKind::SVGElement {
+                    vector_image: None,
+                    has_viewbox: svg_data.view_box.is_some(),
+                    render_tree,
+                },
+                natural_size,
+            );
+        }
+
+        #[allow(unreachable_code)]
         let svg_source = match svg_data.source {
             None => {
                 // The SVGSVGElement is not yet serialized, so we add it to a list
@@ -322,6 +341,8 @@ impl ReplacedContents {
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox: svg_data.view_box.is_some(),
+                #[cfg(feature = "svg-engine")]
+                render_tree: None,
             },
             natural_size,
         )
@@ -541,6 +562,8 @@ impl ReplacedContents {
                         url: image_info.url.clone(),
                         natural_width: self.natural_size.width,
                         natural_height: self.natural_size.height,
+                        #[cfg(feature = "svg-engine")]
+                        svg_render_tree: None,
                     }))
                 })
                 .into_iter()
@@ -555,6 +578,8 @@ impl ReplacedContents {
                     url: video_info.poster_url.clone(),
                     natural_width: self.natural_size.width,
                     natural_height: self.natural_size.height,
+                    #[cfg(feature = "svg-engine")]
+                    svg_render_tree: None,
                 }))]
             },
             ReplacedContentKind::IFrame(iframe) => {
@@ -599,12 +624,36 @@ impl ReplacedContents {
                     url: None,
                     natural_width: self.natural_size.width,
                     natural_height: self.natural_size.height,
+                    #[cfg(feature = "svg-engine")]
+                    svg_render_tree: None,
                 }))]
             },
+            #[allow(unused_variables)]
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
+                ..
             } => {
+                #[cfg(feature = "svg-engine")]
+                {
+                    if let ReplacedContentKind::SVGElement {
+                        render_tree: Some(tree),
+                        ..
+                    } = &self.kind
+                    {
+                        return vec![Fragment::Image(Arc::new(ImageFragment {
+                            base,
+                            clip,
+                            image_key: None,
+                            showing_broken_image_icon: false,
+                            url: None,
+                            svg_render_tree: Some(tree.clone()),
+                        }))];
+                    }
+                    return vec![];
+                }
+
+                #[allow(unreachable_code)]
                 let Some(vector_image) = vector_image else {
                     return vec![];
                 };
@@ -654,6 +703,8 @@ impl ReplacedContents {
                             url: None,
                             natural_width: self.natural_size.width,
                             natural_height: self.natural_size.height,
+                            #[cfg(feature = "svg-engine")]
+                            svg_render_tree: None,
                         }))
                     })
                     .into_iter()

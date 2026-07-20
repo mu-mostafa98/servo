@@ -19,6 +19,8 @@ use servo_url::ServoUrl;
 use style::Zero;
 use style::properties::ComputedValues;
 use style_traits::CSSPixel;
+#[cfg(feature = "svg-engine")]
+use svg_engine::render_tree::SvgRenderTree;
 use webrender_api::{FontInstanceKey, ImageKey};
 
 use super::{
@@ -123,6 +125,9 @@ pub(crate) struct ImageFragment {
     pub natural_width: Option<Au>,
     /// The intrinsic (natural) height of the image, if known.
     pub natural_height: Option<Au>,
+    #[cfg(feature = "svg-engine")]
+    #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
+    pub svg_render_tree: Option<Arc<SvgRenderTree>>,
 }
 
 #[derive(MallocSizeOf)]
