@@ -359,7 +359,10 @@ fn build_image_tag(element: &ServoLayoutElement) -> Option<SvgImage> {
     if w <= 0.0 || h <= 0.0 {
         return None;
     }
-    let href = get("href").or_else(|| get("xlink:href"));
+    let get_xlink = |name: &str| {
+        element.attribute_as_str(&ns!(xlink), &LocalName::from(name)).map(|s| s.to_string())
+    };
+    let href = get("href").or_else(|| get_xlink("href"));
     Some(SvgImage {
         x,
         y,
