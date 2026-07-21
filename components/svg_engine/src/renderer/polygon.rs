@@ -2,13 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! Renders an SVG `<polygon>`.
-
 use crate::renderer::Render;
 use crate::shapes::Polygon;
 
 impl Render for Polygon {
     fn render(&self) {
-        eprintln!("  polygon: points={:?}", self.points);
+        eprintln!("  polygon");
     }
 }

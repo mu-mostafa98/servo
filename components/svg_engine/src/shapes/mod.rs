@@ -23,10 +23,6 @@ pub use self::polygon::Polygon;
 pub use self::polyline::Polyline;
 pub use self::rectangle::Rectangle;
 
-// TODO: ClipGeometry, OBJECT_BBOX_REF_SIZE, all_equal_radius,
-// and Shape::clip_info()
-
-// ======================= An SVG geometric shape =======================
 #[derive(Debug, Clone)]
 pub enum Shape {
     Rect(Rectangle),

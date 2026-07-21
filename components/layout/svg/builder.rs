@@ -2,11 +2,6 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! SVG render tree construction — assembles an [`SvgRenderTree`] from DOM nodes.
-//!
-//! Uses the **Builder pattern**: [`SvgRenderTreeBuilder`] accumulates state
-//! through chained methods, then produces the final tree via
-//! [`build`](SvgRenderTreeBuilder::build).
 
 use std::collections::HashSet;
 use std::sync::Arc;
@@ -15,41 +10,34 @@ use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::render_tree::*;
+use svg_engine::shapes::Shape;
 use web_atoms::ns;
 
-use super::geometry::{build_shape, build_text, get_attr};
-use super::viewport::extract_viewport_info;
 use crate::context::LayoutContext;
 
 // ======================= Builder =======================
 
-/// Builds an [`SvgRenderTree`] from a DOM SVG element.
 pub(crate) struct SvgRenderTreeBuilder<'dom, 'a> {
     root_node: ServoLayoutNode<'dom>,
-    context: &'a LayoutContext<'a>,
-    // TODO: css_rules
+    // TODO: context, css_rules
+    _context: &'a LayoutContext<'a>,
 }
 
 impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
     pub(crate) fn new(node: ServoLayoutNode<'dom>, context: &'a LayoutContext<'a>) -> Self {
-        // TODO: collect inline <style> CSS rules
         SvgRenderTreeBuilder {
             root_node: node,
-            context,
+            _context: context,
         }
     }
 
     pub(crate) fn build(self) -> Option<Arc<SvgRenderTree>> {
         let root = self.build_render_node(self.root_node, self.root_node, &mut HashSet::new())?;
-        let viewport = extract_viewport_info(self.root_node);
-
-        // TODO: collect definition maps (gradients, clip-paths, patterns, masks, filters)
-        // and run PaintServerFixupVisitor
+        // TODO: extract viewport info, gradients, clip_paths, patterns, masks, filters
 
         let tree = SvgRenderTree {
             root,
-            viewport,
-            // TODO: gradients, clip_paths, patterns, masks, filters
+            // TODO: viewport, gradients, clip_paths, patterns, masks, filters
         };
 
         Some(Arc::new(tree))
@@ -66,21 +54,16 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
 
         // Text / tspan — extract text content from DOM children.
         if tag_name == "text" || tag_name == "tspan" {
-            return build_text_node(node, self.context);
+            return build_text_node(node);
         }
 
-        // Resolve computed values for CSS-cascaded geometry properties
-        // (x, y, cx, cy, r, rx, ry). Style and transforms are not built yet.
-        let computed = element
-            .style_data()
-            .is_some()
-            .then(|| node.style(&self.context.style_context));
+        // TODO: resolve computed values for CSS-cascaded geometry properties
 
-        let tag = build_tag(&element, computed.as_ref().map(|v| &**v))?;
+        let tag = build_tag(node)?;
         let id = extract_id(&element);
         let children = resolve_children(node, &tag, root_node, self, resolving);
 
-        // TODO: build style from computed values + presentation attributes
+        // TODO: implement style from computed values + presentation attributes
 
         Some(SvgRenderNode {
             id,
@@ -91,31 +74,34 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
     }
 }
 
-// ======================= Text / Tspan Node =======================
-
-/// Build a [`SvgRenderNode`] for `<text>` or `<tspan>`.
-///
-/// TODO: implement text shaping via font subsystem for accurate glyph positioning
-fn build_text_node(
-    node: ServoLayoutNode,
-    _context: &LayoutContext,
-) -> Option<SvgRenderNode> {
+fn build_text_node(node: ServoLayoutNode) -> Option<SvgRenderNode> {
+    use svg_engine::TextSpan;
     let element = node.as_element()?;
-    let fs: f32 = 16.0;
-    let get = |name: &str| get_attr(&element, name);
-    let span = build_text(node, &get, fs)?;
-
-    // TODO: Shape text with the font subsystem (shape_text_span)
-
-    let tag = SvgTag::Text(span);
+    let text = extract_text_content(node);
+    if text.is_empty() {
+        return None;
+    }
+    let tag = SvgTag::Text(TextSpan { text });
     let id = extract_id(&element);
-
     Some(SvgRenderNode {
         id,
         tag,
-        // TODO: style, transforms
         children: vec![],
     })
+}
+
+fn extract_text_content(node: ServoLayoutNode) -> String {
+    let mut text = String::new();
+    for child in node.dom_children() {
+        if let Some(elem) = child.as_element() {
+            if elem.local_name().as_ref() == "tspan" {
+                text.push_str(&extract_text_content(child));
+            }
+        } else {
+            text.push_str(&child.text_content());
+        }
+    }
+    text
 }
 
 // ======================= Children Resolution =======================
@@ -136,7 +122,6 @@ fn resolve_children<'dom>(
     }
 }
 
-/// Resolve children for a `<use>` element.
 fn resolve_use_children<'dom>(
     node: ServoLayoutNode<'dom>,
     root_node: ServoLayoutNode<'dom>,
@@ -145,17 +130,12 @@ fn resolve_use_children<'dom>(
 ) -> Vec<SvgRenderNode> {
     let element = node.as_element().unwrap();
 
-    // Extract href reference.
     let ref_id = element
         .attribute_as_str(&ns!(), &local_name!("href"))
         .or_else(|| element.attribute_as_str(&ns!(), &local_name!("xlink:href")))
         .and_then(|h| {
             let t = h.trim_start_matches('#');
-            if t.is_empty() {
-                None
-            } else {
-                Some(t.to_owned())
-            }
+            if t.is_empty() { None } else { Some(t.to_owned()) }
         });
 
     let Some(ref_id) = ref_id else { return vec![] };
@@ -164,23 +144,11 @@ fn resolve_use_children<'dom>(
     }
     resolving.insert(ref_id.clone());
 
-    // Parse x/y offset.
-    let parse_coord = |attr: &str| -> Option<f32> {
-        element
-            .attribute_as_str(&ns!(), &LocalName::from(attr))
-            .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
-    };
-    let _offset = (parse_coord("x"), parse_coord("y"));
+    // TODO: parse x/y offset, apply translate transform
 
-    // Build target and clone.
     let result = find_element_by_id(root_node, &ref_id)
         .and_then(|target| builder.build_render_node(target, root_node, resolving))
         .map(|target_node| {
-            // TODO: implement <use> x/y offset as translate transform
-            // (requires transforms + TransformOp)
-
-            // <symbol> is never rendered directly — unwrap its children
-            // so they render when referenced via <use>.
             if let SvgTag::Container(Container::Symbol) = &target_node.tag {
                 // TODO: apply x/y translation offset to symbol children
                 return target_node.children;
@@ -193,14 +161,10 @@ fn resolve_use_children<'dom>(
     result
 }
 
-// TODO: DefinitionMaps, collect_definitions, shape_text_span
-
 // ======================= Tag Dispatch =======================
 
-fn build_tag<'dom>(
-    element: &ServoLayoutElement<'dom>,
-    computed: Option<&style::properties::ComputedValues>,
-) -> Option<SvgTag> {
+fn build_tag(node: ServoLayoutNode) -> Option<SvgTag> {
+    let element = node.as_element()?;
     let tag = element.local_name().as_ref();
     match tag {
         "svg" => Some(SvgTag::Container(Container::Svg)),
@@ -208,44 +172,47 @@ fn build_tag<'dom>(
         "defs" => Some(SvgTag::Container(Container::Defs)),
         "use" => Some(SvgTag::Container(Container::Use)),
         "symbol" => Some(SvgTag::Container(Container::Symbol)),
-        "image" => build_image_tag(element).map(SvgTag::Image),
-        _ => build_shape(element, tag, computed).map(SvgTag::Shape),
+        "image" => build_image_tag(&element).map(SvgTag::Image),
+        _ => build_shape(tag).map(SvgTag::Shape),
     }
 }
 
 fn build_image_tag(element: &ServoLayoutElement) -> Option<SvgImage> {
-    use svg_engine::attr_parsers::parse_length;
-    let fs = 16.0;
-    let get = |name: &str| get_attr(element, name);
-    let x = parse_length("x", &get, fs).unwrap_or(0.0);
-    let y = parse_length("y", &get, fs).unwrap_or(0.0);
-    let w = parse_length("width", &get, fs).unwrap_or(0.0).max(0.0);
-    let h = parse_length("height", &get, fs).unwrap_or(0.0).max(0.0);
-    if w <= 0.0 || h <= 0.0 {
-        return None;
-    }
-    let get_xlink = |name: &str| {
-        element.attribute_as_str(&ns!(xlink), &LocalName::from(name)).map(|s| s.to_string())
+    use svg_engine::SvgImage;
+    let get = |attr: &str| {
+        element.attribute_as_str(&ns!(), &LocalName::from(attr)).map(|s| s.to_string())
     };
-    let href = get("href").or_else(|| get_xlink("href"));
+    let get_xlink = |attr: &str| {
+        element.attribute_as_str(&ns!(xlink), &LocalName::from(attr)).map(|s| s.to_string())
+    };
+
+    // TODO: Parse x, y, width, height attributes\
+
     Some(SvgImage {
-        x,
-        y,
-        width: w,
-        height: h,
-        href,
+        href: get("href").or_else(|| get_xlink("href")),
     })
+}
+
+fn build_shape(tag_name: &str) -> Option<Shape> {
+    use svg_engine::shapes::*;
+    match tag_name {
+        "rect" => Some(Shape::Rect(Rectangle {})),
+        "circle" => Some(Shape::Circle(Circle {})),
+        "ellipse" => Some(Shape::Ellipse(Ellipse {})),
+        "line" => Some(Shape::Line(Line {})),
+        "polyline" => Some(Shape::Polyline(Polyline {})),
+        "polygon" => Some(Shape::Polygon(Polygon {})),
+        "path" => Some(Shape::Path(Path {})),
+        _ => None,
+    }
 }
 
 // ======================= Helpers =======================
 
 fn extract_id(element: &ServoLayoutElement) -> Option<String> {
-    element
-        .attribute_as_str(&ns!(), &local_name!("id"))
-        .map(|s| s.to_string())
+    element.attribute_as_str(&ns!(), &local_name!("id")).map(|s| s.to_string())
 }
 
-/// Recursively search the SVG DOM subtree for an element by its `id`.
 fn find_element_by_id<'dom>(
     node: ServoLayoutNode<'dom>,
     target_id: &str,

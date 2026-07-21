@@ -2,13 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! Renders an SVG `<polyline>`.
-
 use crate::renderer::Render;
 use crate::shapes::Polyline;
 
 impl Render for Polyline {
     fn render(&self) {
-        eprintln!("  polyline: points={:?}", self.points);
+        eprintln!("  polyline");
     }
 }
