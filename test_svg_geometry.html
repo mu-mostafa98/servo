@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SVG Engine PR #1 — Tree Structure & Traversal Test</title>
+</head>
+<body>
+
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="300" id="root">
+  <circle id="shape-circle" />
+  <ellipse id="shape-ellipse" />
+
+  <g id="group-shapes">
+       <polyline id="group-polyline" />
+     </g>
+
+  <svg id="nested-svg">
+     <polygon id="nested-polygon" />
+  </svg>
+
+  <defs id="defs-container">
+    <line id="defs-line" />
+  </defs>
+
+  <use id="use-defs-line" href="#defs-line" />
+
+  <symbol id="my-symbol">
+    <path id="symbol-path" />
+    <rect id="symbol-rect" />
+  </symbol>
+
+  <use id="use-symbol" href="#my-symbol" />
+
+  <text id="text-basic">Hello SVG</text>
+  <text id="text-tspan"><tspan>Nested</tspan> tail</text>
+
+  <image id="img-href" href="test.png" />
+  <image id="img-xlink" xlink:href="test2.png" />
+
+</svg>
+
+</body>
+</html>
