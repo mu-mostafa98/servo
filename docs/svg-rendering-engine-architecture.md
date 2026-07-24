@@ -159,12 +159,7 @@ the build phase.
 
 **Entry point:** `layout::svg::build_svg_render_tree(node, context)`
 
-The build is a single pass over the DOM subtree. It resolves computed styles
-(CSS cascade + presentation attributes), builds shape geometry from element
-attributes, collects `<defs>` definitions (gradients, clip-paths, masks,
-filters, patterns), extracts viewport parameters, and runs post-processing
-passes (e.g., fixing paint-server references that were misclassified as
-gradients but actually point to patterns).
+A single pass over the DOM subtree (see Integration Layer in Section 2).
 
 **Output:** `Arc<SvgRenderTree>` — stored in the layout fragment. No DOM
 references remain; the tree is pure data.
@@ -179,23 +174,9 @@ the `Arc<SvgRenderTree>` from the fragment and calls `render_svg_tree()`.
 **Entry point:** `svg_engine::render_svg_tree(tree, origin, size, spatial_id,
 clip_chain_id, wr)`
 
-**Traversal** walks the tree depth-first. At each node it:
-1. Pushes a transform reference frame (CSS transform + `transform` attribute)
-2. Resolves clip-path, mask, and filter from the definition maps
-3. Pushes an opacity stacking context
-4. Calls the render layer based on the node's tag:
-   - `Shape` → calls the shape renderer
-   - `Text` / `Image` → calls the text or image renderer
-   - `Container` → handled by traversal (stacking context push/pop); children
-     visited recursively
-
-**Render** receives the call and dispatches to the correct per-shape renderer,
-then emits display list commands:
-- `Shape` → dispatched by shape variant (Rect, Circle, Path, etc.) to the
-  matching renderer, which calls fill/stroke helpers, tessellates filled
-  polygons, and emits `push_rect` / `push_line` commands
-- `Text` → shaped glyph positioning and emission
-- `Image` → raster image emission
+Traversal walks the tree and calls the render layer (see SVG Engine sub-layers
+in Section 2). Shapes are dispatched to per-shape renderers; fill, stroke, and
+tessellation produce WebRender display list commands.
 
 **Output:** WebRender `DisplayListBuilder` commands.
 
