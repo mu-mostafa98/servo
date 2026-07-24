@@ -58,11 +58,13 @@
     "serde",
     "tokio",
     "warp",
-    "tracing",
+    "egui",
+    "wgpu",
+    "winit",
+    "hyper",
     "tower",
     "Docker",
-    "GitHub Actions",
-    "Flask"
+    "GitHub Actions"
   ],
   "files": [
     {
@@ -336,6 +338,42 @@
       "fileCategory": "code"
     },
     {
+      "path": ".understand-anything/fingerprints.json",
+      "language": "json",
+      "sizeLines": 450204,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/intermediate/batches.json",
+      "language": "json",
+      "sizeLines": 16170,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/intermediate/scan-result.json",
+      "language": "json",
+      "sizeLines": 19172,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/knowledge-graph.json",
+      "language": "json",
+      "sizeLines": 0,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/meta.json",
+      "language": "json",
+      "sizeLines": 5,
+      "fileCategory": "config"
+    },
+    {
+      "path": ".understand-anything/tmp/changed-files.txt",
+      "language": "txt",
+      "sizeLines": 4,
+      "fileCategory": "docs"
+    },
+    {
       "path": "about.toml",
       "language": "toml",
       "sizeLines": 18,
@@ -344,7 +382,7 @@
     {
       "path": "Cargo.toml",
       "language": "toml",
-      "sizeLines": 467,
+      "sizeLines": 470,
       "fileCategory": "config"
     },
     {
@@ -1226,13 +1264,13 @@
     {
       "path": "components/layout/accessibility_tree.rs",
       "language": "rust",
-      "sizeLines": 1007,
+      "sizeLines": 1027,
       "fileCategory": "code"
     },
     {
       "path": "components/layout/Cargo.toml",
       "language": "toml",
-      "sizeLines": 76,
+      "sizeLines": 80,
       "fileCategory": "config"
     },
     {
@@ -1286,7 +1324,7 @@
     {
       "path": "components/layout/display_list/mod.rs",
       "language": "rust",
-      "sizeLines": 2516,
+      "sizeLines": 2534,
       "fileCategory": "code"
     },
     {
@@ -1310,7 +1348,7 @@
     {
       "path": "components/layout/dom_traversal.rs",
       "language": "rust",
-      "sizeLines": 400,
+      "sizeLines": 418,
       "fileCategory": "code"
     },
     {
@@ -1328,7 +1366,7 @@
     {
       "path": "components/layout/flexbox/layout.rs",
       "language": "rust",
-      "sizeLines": 2660,
+      "sizeLines": 2656,
       "fileCategory": "code"
     },
     {
@@ -1436,7 +1474,7 @@
     {
       "path": "components/layout/fragment_tree/fragment.rs",
       "language": "rust",
-      "sizeLines": 600,
+      "sizeLines": 605,
       "fileCategory": "code"
     },
     {
@@ -1472,7 +1510,7 @@
     {
       "path": "components/layout/layout_impl.rs",
       "language": "rust",
-      "sizeLines": 1917,
+      "sizeLines": 1931,
       "fileCategory": "code"
     },
     {
@@ -1484,7 +1522,7 @@
     {
       "path": "components/layout/lib.rs",
       "language": "rust",
-      "sizeLines": 174,
+      "sizeLines": 176,
       "fileCategory": "code"
     },
     {
@@ -1514,7 +1552,7 @@
     {
       "path": "components/layout/replaced.rs",
       "language": "rust",
-      "sizeLines": 796,
+      "sizeLines": 847,
       "fileCategory": "code"
     },
     {
@@ -1550,7 +1588,7 @@
     {
       "path": "components/layout/stylesheets/servo.css",
       "language": "css",
-      "sizeLines": 550,
+      "sizeLines": 541,
       "fileCategory": "markup"
     },
     {
@@ -1558,6 +1596,54 @@
       "language": "css",
       "sizeLines": 423,
       "fileCategory": "markup"
+    },
+    {
+      "path": "components/layout/svg/builder.rs",
+      "language": "rust",
+      "sizeLines": 402,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/layout/svg/css.rs",
+      "language": "rust",
+      "sizeLines": 306,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/layout/svg/defines.rs",
+      "language": "rust",
+      "sizeLines": 604,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/layout/svg/geometry.rs",
+      "language": "rust",
+      "sizeLines": 294,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/layout/svg/mod.rs",
+      "language": "rust",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/layout/svg/style.rs",
+      "language": "rust",
+      "sizeLines": 649,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/layout/svg/transforms.rs",
+      "language": "rust",
+      "sizeLines": 70,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/layout/svg/viewport.rs",
+      "language": "rust",
+      "sizeLines": 50,
+      "fileCategory": "code"
     },
     {
       "path": "components/layout/table/construct.rs",
@@ -2726,7 +2812,7 @@
     {
       "path": "components/script_bindings/codegen/Bindings.conf",
       "language": "conf",
-      "sizeLines": 1697,
+      "sizeLines": 1688,
       "fileCategory": "code"
     },
     {
@@ -5672,7 +5758,7 @@
     {
       "path": "components/script_bindings/webidls/ServoTestUtils.webidl",
       "language": "webidl",
-      "sizeLines": 33,
+      "sizeLines": 44,
       "fileCategory": "code"
     },
     {
@@ -5754,9 +5840,45 @@
       "fileCategory": "code"
     },
     {
+      "path": "components/script_bindings/webidls/SVGCircleElement.webidl",
+      "language": "webidl",
+      "sizeLines": 11,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGDefsElement.webidl",
+      "language": "webidl",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
       "path": "components/script_bindings/webidls/SVGElement.webidl",
       "language": "webidl",
       "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGEllipseElement.webidl",
+      "language": "webidl",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGGElement.webidl",
+      "language": "webidl",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGGeometryElement.webidl",
+      "language": "webidl",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGGradientElement.webidl",
+      "language": "webidl",
+      "sizeLines": 20,
       "fileCategory": "code"
     },
     {
@@ -5772,9 +5894,93 @@
       "fileCategory": "code"
     },
     {
+      "path": "components/script_bindings/webidls/SVGLinearGradientElement.webidl",
+      "language": "webidl",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGLineElement.webidl",
+      "language": "webidl",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGPathElement.webidl",
+      "language": "webidl",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGPolygonElement.webidl",
+      "language": "webidl",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGPolylineElement.webidl",
+      "language": "webidl",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGRadialGradientElement.webidl",
+      "language": "webidl",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGRectElement.webidl",
+      "language": "webidl",
+      "sizeLines": 14,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGStopElement.webidl",
+      "language": "webidl",
+      "sizeLines": 9,
+      "fileCategory": "code"
+    },
+    {
       "path": "components/script_bindings/webidls/SVGSVGElement.webidl",
       "language": "webidl",
       "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGSymbolElement.webidl",
+      "language": "webidl",
+      "sizeLines": 10,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGTextContentElement.webidl",
+      "language": "webidl",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGTextElement.webidl",
+      "language": "webidl",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGTextPositioningElement.webidl",
+      "language": "webidl",
+      "sizeLines": 13,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGTSpanElement.webidl",
+      "language": "webidl",
+      "sizeLines": 8,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script_bindings/webidls/SVGUseElement.webidl",
+      "language": "webidl",
+      "sizeLines": 16,
       "fileCategory": "code"
     },
     {
@@ -7490,7 +7696,7 @@
     {
       "path": "components/script/dom/css/stylesheetlist.rs",
       "language": "rust",
-      "sizeLines": 148,
+      "sizeLines": 137,
       "fileCategory": "code"
     },
     {
@@ -7634,7 +7840,7 @@
     {
       "path": "components/script/dom/document/document.rs",
       "language": "rust",
-      "sizeLines": 6908,
+      "sizeLines": 6887,
       "fileCategory": "code"
     },
     {
@@ -7646,7 +7852,7 @@
     {
       "path": "components/script/dom/document/documentorshadowroot.rs",
       "language": "rust",
-      "sizeLines": 468,
+      "sizeLines": 466,
       "fileCategory": "code"
     },
     {
@@ -7742,7 +7948,7 @@
     {
       "path": "components/script/dom/element/create.rs",
       "language": "rust",
-      "sizeLines": 456,
+      "sizeLines": 488,
       "fileCategory": "code"
     },
     {
@@ -7994,7 +8200,7 @@
     {
       "path": "components/script/dom/execcommand/basecommand.rs",
       "language": "rust",
-      "sizeLines": 789,
+      "sizeLines": 793,
       "fileCategory": "code"
     },
     {
@@ -8052,6 +8258,12 @@
       "fileCategory": "code"
     },
     {
+      "path": "components/script/dom/execcommand/commands/insertimage.rs",
+      "language": "rust",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
       "path": "components/script/dom/execcommand/commands/insertparagraph.rs",
       "language": "rust",
       "sizeLines": 426,
@@ -8066,7 +8278,7 @@
     {
       "path": "components/script/dom/execcommand/commands/mod.rs",
       "language": "rust",
-      "sizeLines": 22,
+      "sizeLines": 23,
       "fileCategory": "code"
     },
     {
@@ -8138,7 +8350,7 @@
     {
       "path": "components/script/dom/execcommand/contenteditable/node.rs",
       "language": "rust",
-      "sizeLines": 2354,
+      "sizeLines": 2351,
       "fileCategory": "code"
     },
     {
@@ -8162,7 +8374,7 @@
     {
       "path": "components/script/dom/execcommand/execcommands.rs",
       "language": "rust",
-      "sizeLines": 324,
+      "sizeLines": 325,
       "fileCategory": "code"
     },
     {
@@ -8450,7 +8662,7 @@
     {
       "path": "components/script/dom/html/documentmetadata/htmllinkelement.rs",
       "language": "rust",
-      "sizeLines": 1329,
+      "sizeLines": 1325,
       "fileCategory": "code"
     },
     {
@@ -8462,7 +8674,7 @@
     {
       "path": "components/script/dom/html/documentmetadata/htmlstyleelement.rs",
       "language": "rust",
-      "sizeLines": 498,
+      "sizeLines": 497,
       "fileCategory": "code"
     },
     {
@@ -9356,7 +9568,7 @@
     {
       "path": "components/script/dom/node/node.rs",
       "language": "rust",
-      "sizeLines": 4419,
+      "sizeLines": 4421,
       "fileCategory": "code"
     },
     {
@@ -9380,7 +9592,7 @@
     {
       "path": "components/script/dom/node/virtualmethods.rs",
       "language": "rust",
-      "sizeLines": 362,
+      "sizeLines": 443,
       "fileCategory": "code"
     },
     {
@@ -9512,7 +9724,7 @@
     {
       "path": "components/script/dom/range/abstractrange.rs",
       "language": "rust",
-      "sizeLines": 167,
+      "sizeLines": 172,
       "fileCategory": "code"
     },
     {
@@ -9524,7 +9736,7 @@
     {
       "path": "components/script/dom/range/range.rs",
       "language": "rust",
-      "sizeLines": 1544,
+      "sizeLines": 1555,
       "fileCategory": "code"
     },
     {
@@ -9638,7 +9850,7 @@
     {
       "path": "components/script/dom/selection.rs",
       "language": "rust",
-      "sizeLines": 703,
+      "sizeLines": 719,
       "fileCategory": "code"
     },
     {
@@ -9908,13 +10120,49 @@
     {
       "path": "components/script/dom/svg/mod.rs",
       "language": "rust",
-      "sizeLines": 8,
+      "sizeLines": 28,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgcircleelement.rs",
+      "language": "rust",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgdefselement.rs",
+      "language": "rust",
+      "sizeLines": 52,
       "fileCategory": "code"
     },
     {
       "path": "components/script/dom/svg/svgelement.rs",
       "language": "rust",
-      "sizeLines": 367,
+      "sizeLines": 516,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgellipseelement.rs",
+      "language": "rust",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svggelement.rs",
+      "language": "rust",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svggeometryelement.rs",
+      "language": "rust",
+      "sizeLines": 51,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svggradientelement.rs",
+      "language": "rust",
+      "sizeLines": 49,
       "fileCategory": "code"
     },
     {
@@ -9930,9 +10178,99 @@
       "fileCategory": "code"
     },
     {
+      "path": "components/script/dom/svg/svglineargradientelement.rs",
+      "language": "rust",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svglineelement.rs",
+      "language": "rust",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgpathelement.rs",
+      "language": "rust",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgpolygonelement.rs",
+      "language": "rust",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgpolylineelement.rs",
+      "language": "rust",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgradialgradientelement.rs",
+      "language": "rust",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgrectelement.rs",
+      "language": "rust",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgstopelement.rs",
+      "language": "rust",
+      "sizeLines": 58,
+      "fileCategory": "code"
+    },
+    {
       "path": "components/script/dom/svg/svgsvgelement.rs",
       "language": "rust",
       "sizeLines": 284,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgsymbolelement.rs",
+      "language": "rust",
+      "sizeLines": 54,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgtextcontentelement.rs",
+      "language": "rust",
+      "sizeLines": 53,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgtextelement.rs",
+      "language": "rust",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgtextpositioningelement.rs",
+      "language": "rust",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svgtspanelement.rs",
+      "language": "rust",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/svg/svguseelement.rs",
+      "language": "rust",
+      "sizeLines": 52,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/script/dom/testing/accessibilityupdateresult.rs",
+      "language": "rust",
+      "sizeLines": 65,
       "fileCategory": "code"
     },
     {
@@ -9944,13 +10282,13 @@
     {
       "path": "components/script/dom/testing/mod.rs",
       "language": "rust",
-      "sizeLines": 18,
+      "sizeLines": 19,
       "fileCategory": "code"
     },
     {
       "path": "components/script/dom/testing/servotestutils.rs",
       "language": "rust",
-      "sizeLines": 83,
+      "sizeLines": 103,
       "fileCategory": "code"
     },
     {
@@ -11540,7 +11878,7 @@
     {
       "path": "components/script/layout_dom/servo_layout_element.rs",
       "language": "rust",
-      "sizeLines": 256,
+      "sizeLines": 261,
       "fileCategory": "code"
     },
     {
@@ -12212,7 +12550,7 @@
     {
       "path": "components/shared/layout/lib.rs",
       "language": "rust",
-      "sizeLines": 1082,
+      "sizeLines": 1091,
       "fileCategory": "code"
     },
     {
@@ -12675,6 +13013,294 @@
       "path": "components/storage/webstorage/mod.rs",
       "language": "rust",
       "sizeLines": 682,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/Cargo.toml",
+      "language": "toml",
+      "sizeLines": 18,
+      "fileCategory": "config"
+    },
+    {
+      "path": "components/svg_engine/src/attr_parsers.rs",
+      "language": "rust",
+      "sizeLines": 204,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/effects/clip.rs",
+      "language": "rust",
+      "sizeLines": 126,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/effects/filter.rs",
+      "language": "rust",
+      "sizeLines": 133,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/effects/mod.rs",
+      "language": "rust",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/error.rs",
+      "language": "rust",
+      "sizeLines": 79,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/image.rs",
+      "language": "rust",
+      "sizeLines": 21,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/lib.rs",
+      "language": "rust",
+      "sizeLines": 46,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/render_tree.rs",
+      "language": "rust",
+      "sizeLines": 471,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/circle.rs",
+      "language": "rust",
+      "sizeLines": 24,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/ellipse.rs",
+      "language": "rust",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/fill.rs",
+      "language": "rust",
+      "sizeLines": 317,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/gradient.rs",
+      "language": "rust",
+      "sizeLines": 478,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/helpers.rs",
+      "language": "rust",
+      "sizeLines": 93,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/image.rs",
+      "language": "rust",
+      "sizeLines": 56,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/line.rs",
+      "language": "rust",
+      "sizeLines": 36,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/mod.rs",
+      "language": "rust",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/path.rs",
+      "language": "rust",
+      "sizeLines": 63,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/pattern.rs",
+      "language": "rust",
+      "sizeLines": 120,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/polygon.rs",
+      "language": "rust",
+      "sizeLines": 30,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/polyline.rs",
+      "language": "rust",
+      "sizeLines": 74,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/providers.rs",
+      "language": "rust",
+      "sizeLines": 32,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/rect.rs",
+      "language": "rust",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/render_trait.rs",
+      "language": "rust",
+      "sizeLines": 55,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/stroke.rs",
+      "language": "rust",
+      "sizeLines": 915,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/text.rs",
+      "language": "rust",
+      "sizeLines": 157,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/renderer/transform.rs",
+      "language": "rust",
+      "sizeLines": 182,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/shapes/circle.rs",
+      "language": "rust",
+      "sizeLines": 43,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/shapes/ellipse.rs",
+      "language": "rust",
+      "sizeLines": 45,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/shapes/line.rs",
+      "language": "rust",
+      "sizeLines": 12,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/shapes/mod.rs",
+      "language": "rust",
+      "sizeLines": 94,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/shapes/path.rs",
+      "language": "rust",
+      "sizeLines": 65,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/shapes/polygon.rs",
+      "language": "rust",
+      "sizeLines": 27,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/shapes/polyline.rs",
+      "language": "rust",
+      "sizeLines": 72,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/shapes/rectangle.rs",
+      "language": "rust",
+      "sizeLines": 61,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/color.rs",
+      "language": "rust",
+      "sizeLines": 102,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/fill.rs",
+      "language": "rust",
+      "sizeLines": 26,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/gradient.rs",
+      "language": "rust",
+      "sizeLines": 290,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/hints.rs",
+      "language": "rust",
+      "sizeLines": 92,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/mod.rs",
+      "language": "rust",
+      "sizeLines": 77,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/node_effects.rs",
+      "language": "rust",
+      "sizeLines": 18,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/stroke.rs",
+      "language": "rust",
+      "sizeLines": 40,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/transform_ops.rs",
+      "language": "rust",
+      "sizeLines": 274,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/style/visibility.rs",
+      "language": "rust",
+      "sizeLines": 25,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/tessellator.rs",
+      "language": "rust",
+      "sizeLines": 521,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/text.rs",
+      "language": "rust",
+      "sizeLines": 69,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/traversal.rs",
+      "language": "rust",
+      "sizeLines": 538,
+      "fileCategory": "code"
+    },
+    {
+      "path": "components/svg_engine/src/visitor.rs",
+      "language": "rust",
+      "sizeLines": 127,
       "fileCategory": "code"
     },
     {
@@ -13764,6 +14390,12 @@
       "fileCategory": "code"
     },
     {
+      "path": "Projectsservo/.understand-anything/fingerprints.json",
+      "language": "json",
+      "sizeLines": 5,
+      "fileCategory": "config"
+    },
+    {
       "path": "PULL_REQUEST_TEMPLATE.md",
       "language": "markdown",
       "sizeLines": 5,
@@ -14624,7 +15256,7 @@
     {
       "path": "support/android/apk/servoapp/src/main/java/org/servo/servoshell/MainActivity.kt",
       "language": "kotlin",
-      "sizeLines": 391,
+      "sizeLines": 411,
       "fileCategory": "code"
     },
     {
@@ -14708,13 +15340,13 @@
     {
       "path": "support/android/apk/servoapp/src/main/res/layout-w600dp/activity_main.xml",
       "language": "xml",
-      "sizeLines": 67,
+      "sizeLines": 59,
       "fileCategory": "config"
     },
     {
       "path": "support/android/apk/servoapp/src/main/res/layout/activity_main.xml",
       "language": "xml",
-      "sizeLines": 55,
+      "sizeLines": 47,
       "fileCategory": "config"
     },
     {
@@ -15012,6 +15644,18 @@
       "fileCategory": "config"
     },
     {
+      "path": "test_rect_geometry.html",
+      "language": "html",
+      "sizeLines": 51,
+      "fileCategory": "markup"
+    },
+    {
+      "path": "test_svg_engine.html",
+      "language": "html",
+      "sizeLines": 568,
+      "fileCategory": "markup"
+    },
+    {
       "path": "third_party/mozdebug/mozdebug/__init__.py",
       "language": "python",
       "sizeLines": 32,
@@ -15030,8 +15674,8 @@
       "fileCategory": "code"
     }
   ],
-  "totalFiles": 2494,
-  "filteredByIgnore": 184589,
+  "totalFiles": 2601,
+  "filteredByIgnore": 184586,
   "estimatedComplexity": "very-large",
   "importMap": {
     ".cargo/config.toml": [],
@@ -15079,6 +15723,12 @@
     ".mailmap": [],
     ".python-version": [],
     ".understand-anything/.understandignore": [],
+    ".understand-anything/fingerprints.json": [],
+    ".understand-anything/intermediate/batches.json": [],
+    ".understand-anything/intermediate/scan-result.json": [],
+    ".understand-anything/knowledge-graph.json": [],
+    ".understand-anything/meta.json": [],
+    ".understand-anything/tmp/changed-files.txt": [],
     "about.toml": [],
     "Cargo.toml": [],
     "CODE_OF_CONDUCT.md": [],
@@ -15390,6 +16040,7 @@
       "components/layout/replaced.rs",
       "components/layout/sizing.rs",
       "components/layout/style_ext.rs",
+      "components/layout/svg/mod.rs",
       "components/layout/table/mod.rs",
       "components/layout/taffy/mod.rs",
       "components/layout/traversal.rs"
@@ -15406,6 +16057,22 @@
     "components/layout/stylesheets/quirks-mode.css": [],
     "components/layout/stylesheets/servo.css": [],
     "components/layout/stylesheets/user-agent.css": [],
+    "components/layout/svg/builder.rs": [],
+    "components/layout/svg/css.rs": [],
+    "components/layout/svg/defines.rs": [],
+    "components/layout/svg/geometry.rs": [],
+    "components/layout/svg/mod.rs": [
+      "components/layout/svg/builder.rs",
+      "components/layout/svg/css.rs",
+      "components/layout/svg/defines.rs",
+      "components/layout/svg/geometry.rs",
+      "components/layout/svg/style.rs",
+      "components/layout/svg/transforms.rs",
+      "components/layout/svg/viewport.rs"
+    ],
+    "components/layout/svg/style.rs": [],
+    "components/layout/svg/transforms.rs": [],
+    "components/layout/svg/viewport.rs": [],
     "components/layout/table/construct.rs": [],
     "components/layout/table/layout.rs": [],
     "components/layout/table/mod.rs": [
@@ -16318,10 +16985,30 @@
     "components/script_bindings/webidls/StyleSheetList.webidl": [],
     "components/script_bindings/webidls/SubmitEvent.webidl": [],
     "components/script_bindings/webidls/SubtleCrypto.webidl": [],
+    "components/script_bindings/webidls/SVGCircleElement.webidl": [],
+    "components/script_bindings/webidls/SVGDefsElement.webidl": [],
     "components/script_bindings/webidls/SVGElement.webidl": [],
+    "components/script_bindings/webidls/SVGEllipseElement.webidl": [],
+    "components/script_bindings/webidls/SVGGElement.webidl": [],
+    "components/script_bindings/webidls/SVGGeometryElement.webidl": [],
+    "components/script_bindings/webidls/SVGGradientElement.webidl": [],
     "components/script_bindings/webidls/SVGGraphicsElement.webidl": [],
     "components/script_bindings/webidls/SVGImageElement.webidl": [],
+    "components/script_bindings/webidls/SVGLinearGradientElement.webidl": [],
+    "components/script_bindings/webidls/SVGLineElement.webidl": [],
+    "components/script_bindings/webidls/SVGPathElement.webidl": [],
+    "components/script_bindings/webidls/SVGPolygonElement.webidl": [],
+    "components/script_bindings/webidls/SVGPolylineElement.webidl": [],
+    "components/script_bindings/webidls/SVGRadialGradientElement.webidl": [],
+    "components/script_bindings/webidls/SVGRectElement.webidl": [],
+    "components/script_bindings/webidls/SVGStopElement.webidl": [],
     "components/script_bindings/webidls/SVGSVGElement.webidl": [],
+    "components/script_bindings/webidls/SVGSymbolElement.webidl": [],
+    "components/script_bindings/webidls/SVGTextContentElement.webidl": [],
+    "components/script_bindings/webidls/SVGTextElement.webidl": [],
+    "components/script_bindings/webidls/SVGTextPositioningElement.webidl": [],
+    "components/script_bindings/webidls/SVGTSpanElement.webidl": [],
+    "components/script_bindings/webidls/SVGUseElement.webidl": [],
     "components/script_bindings/webidls/TestBinding.webidl": [],
     "components/script_bindings/webidls/TestBindingIterable.webidl": [],
     "components/script_bindings/webidls/TestBindingMaplikeWithInterface.webidl": [],
@@ -16904,6 +17591,7 @@
     "components/script/dom/execcommand/commands/fontsize.rs": [],
     "components/script/dom/execcommand/commands/forecolor.rs": [],
     "components/script/dom/execcommand/commands/hilitecolor.rs": [],
+    "components/script/dom/execcommand/commands/insertimage.rs": [],
     "components/script/dom/execcommand/commands/insertparagraph.rs": [],
     "components/script/dom/execcommand/commands/italic.rs": [],
     "components/script/dom/execcommand/commands/mod.rs": [
@@ -16916,6 +17604,7 @@
       "components/script/dom/execcommand/commands/fontsize.rs",
       "components/script/dom/execcommand/commands/forecolor.rs",
       "components/script/dom/execcommand/commands/hilitecolor.rs",
+      "components/script/dom/execcommand/commands/insertimage.rs",
       "components/script/dom/execcommand/commands/insertparagraph.rs",
       "components/script/dom/execcommand/commands/italic.rs",
       "components/script/dom/execcommand/commands/removeformat.rs",
@@ -17628,17 +18317,59 @@
     "components/script/dom/stream/writablestreamdefaultcontroller.rs": [],
     "components/script/dom/stream/writablestreamdefaultwriter.rs": [],
     "components/script/dom/svg/mod.rs": [
+      "components/script/dom/svg/svgcircleelement.rs",
+      "components/script/dom/svg/svgdefselement.rs",
       "components/script/dom/svg/svgelement.rs",
+      "components/script/dom/svg/svgellipseelement.rs",
+      "components/script/dom/svg/svggelement.rs",
+      "components/script/dom/svg/svggeometryelement.rs",
+      "components/script/dom/svg/svggradientelement.rs",
       "components/script/dom/svg/svggraphicselement.rs",
       "components/script/dom/svg/svgimageelement.rs",
-      "components/script/dom/svg/svgsvgelement.rs"
+      "components/script/dom/svg/svglineargradientelement.rs",
+      "components/script/dom/svg/svglineelement.rs",
+      "components/script/dom/svg/svgpathelement.rs",
+      "components/script/dom/svg/svgpolygonelement.rs",
+      "components/script/dom/svg/svgpolylineelement.rs",
+      "components/script/dom/svg/svgradialgradientelement.rs",
+      "components/script/dom/svg/svgrectelement.rs",
+      "components/script/dom/svg/svgstopelement.rs",
+      "components/script/dom/svg/svgsvgelement.rs",
+      "components/script/dom/svg/svgsymbolelement.rs",
+      "components/script/dom/svg/svgtextcontentelement.rs",
+      "components/script/dom/svg/svgtextelement.rs",
+      "components/script/dom/svg/svgtextpositioningelement.rs",
+      "components/script/dom/svg/svgtspanelement.rs",
+      "components/script/dom/svg/svguseelement.rs"
     ],
+    "components/script/dom/svg/svgcircleelement.rs": [],
+    "components/script/dom/svg/svgdefselement.rs": [],
     "components/script/dom/svg/svgelement.rs": [],
+    "components/script/dom/svg/svgellipseelement.rs": [],
+    "components/script/dom/svg/svggelement.rs": [],
+    "components/script/dom/svg/svggeometryelement.rs": [],
+    "components/script/dom/svg/svggradientelement.rs": [],
     "components/script/dom/svg/svggraphicselement.rs": [],
     "components/script/dom/svg/svgimageelement.rs": [],
+    "components/script/dom/svg/svglineargradientelement.rs": [],
+    "components/script/dom/svg/svglineelement.rs": [],
+    "components/script/dom/svg/svgpathelement.rs": [],
+    "components/script/dom/svg/svgpolygonelement.rs": [],
+    "components/script/dom/svg/svgpolylineelement.rs": [],
+    "components/script/dom/svg/svgradialgradientelement.rs": [],
+    "components/script/dom/svg/svgrectelement.rs": [],
+    "components/script/dom/svg/svgstopelement.rs": [],
     "components/script/dom/svg/svgsvgelement.rs": [],
+    "components/script/dom/svg/svgsymbolelement.rs": [],
+    "components/script/dom/svg/svgtextcontentelement.rs": [],
+    "components/script/dom/svg/svgtextelement.rs": [],
+    "components/script/dom/svg/svgtextpositioningelement.rs": [],
+    "components/script/dom/svg/svgtspanelement.rs": [],
+    "components/script/dom/svg/svguseelement.rs": [],
+    "components/script/dom/testing/accessibilityupdateresult.rs": [],
     "components/script/dom/testing/layoutresult.rs": [],
     "components/script/dom/testing/mod.rs": [
+      "components/script/dom/testing/accessibilityupdateresult.rs",
       "components/script/dom/testing/layoutresult.rs",
       "components/script/dom/testing/servotestutils.rs",
       "components/script/dom/testing/testbinding.rs",
@@ -18495,6 +19226,218 @@
     "components/storage/webstorage/mod.rs": [
       "components/storage/webstorage/engines/mod.rs"
     ],
+    "components/svg_engine/Cargo.toml": [],
+    "components/svg_engine/src/attr_parsers.rs": [
+      "components/svg_engine/src/error.rs"
+    ],
+    "components/svg_engine/src/effects/clip.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/effects/filter.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/renderer/mod.rs"
+    ],
+    "components/svg_engine/src/effects/mod.rs": [
+      "components/svg_engine/src/effects/clip.rs",
+      "components/svg_engine/src/effects/filter.rs"
+    ],
+    "components/svg_engine/src/error.rs": [],
+    "components/svg_engine/src/image.rs": [],
+    "components/svg_engine/src/lib.rs": [
+      "components/svg_engine/src/attr_parsers.rs",
+      "components/svg_engine/src/effects/mod.rs",
+      "components/svg_engine/src/error.rs",
+      "components/svg_engine/src/image.rs",
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs",
+      "components/svg_engine/src/style/mod.rs",
+      "components/svg_engine/src/tessellator.rs",
+      "components/svg_engine/src/text.rs",
+      "components/svg_engine/src/traversal.rs",
+      "components/svg_engine/src/visitor.rs"
+    ],
+    "components/svg_engine/src/render_tree.rs": [
+      "components/svg_engine/src/image.rs",
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs",
+      "components/svg_engine/src/style/gradient.rs",
+      "components/svg_engine/src/style/mod.rs",
+      "components/svg_engine/src/style/transform_ops.rs",
+      "components/svg_engine/src/text.rs"
+    ],
+    "components/svg_engine/src/renderer/circle.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/ellipse.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/fill.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/style/gradient.rs",
+      "components/svg_engine/src/style/hints.rs",
+      "components/svg_engine/src/tessellator.rs"
+    ],
+    "components/svg_engine/src/renderer/gradient.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/style/gradient.rs",
+      "components/svg_engine/src/style/hints.rs",
+      "components/svg_engine/src/style/transform_ops.rs"
+    ],
+    "components/svg_engine/src/renderer/helpers.rs": [
+      "components/svg_engine/src/renderer/render_trait.rs",
+      "components/svg_engine/src/style/hints.rs"
+    ],
+    "components/svg_engine/src/renderer/image.rs": [
+      "components/svg_engine/src/image.rs",
+      "components/svg_engine/src/renderer/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/line.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/mod.rs": [
+      "components/svg_engine/src/renderer/circle.rs",
+      "components/svg_engine/src/renderer/ellipse.rs",
+      "components/svg_engine/src/renderer/fill.rs",
+      "components/svg_engine/src/renderer/gradient.rs",
+      "components/svg_engine/src/renderer/helpers.rs",
+      "components/svg_engine/src/renderer/image.rs",
+      "components/svg_engine/src/renderer/line.rs",
+      "components/svg_engine/src/renderer/path.rs",
+      "components/svg_engine/src/renderer/pattern.rs",
+      "components/svg_engine/src/renderer/polygon.rs",
+      "components/svg_engine/src/renderer/polyline.rs",
+      "components/svg_engine/src/renderer/providers.rs",
+      "components/svg_engine/src/renderer/rect.rs",
+      "components/svg_engine/src/renderer/render_trait.rs",
+      "components/svg_engine/src/renderer/stroke.rs",
+      "components/svg_engine/src/renderer/text.rs",
+      "components/svg_engine/src/renderer/transform.rs"
+    ],
+    "components/svg_engine/src/renderer/path.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/pattern.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/renderer/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/polygon.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/polyline.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs",
+      "components/svg_engine/src/style/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/providers.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/style/gradient.rs"
+    ],
+    "components/svg_engine/src/renderer/rect.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/render_trait.rs": [
+      "components/svg_engine/src/renderer/providers.rs",
+      "components/svg_engine/src/shapes/mod.rs",
+      "components/svg_engine/src/style/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/stroke.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/style/gradient.rs",
+      "components/svg_engine/src/style/mod.rs"
+    ],
+    "components/svg_engine/src/renderer/text.rs": [
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/text.rs"
+    ],
+    "components/svg_engine/src/renderer/transform.rs": [
+      "components/svg_engine/src/style/transform_ops.rs"
+    ],
+    "components/svg_engine/src/shapes/circle.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/shapes/ellipse.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/shapes/line.rs": [],
+    "components/svg_engine/src/shapes/mod.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/shapes/circle.rs",
+      "components/svg_engine/src/shapes/ellipse.rs",
+      "components/svg_engine/src/shapes/line.rs",
+      "components/svg_engine/src/shapes/path.rs",
+      "components/svg_engine/src/shapes/polygon.rs",
+      "components/svg_engine/src/shapes/polyline.rs",
+      "components/svg_engine/src/shapes/rectangle.rs"
+    ],
+    "components/svg_engine/src/shapes/path.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/shapes/polygon.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/shapes/mod.rs",
+      "components/svg_engine/src/shapes/polyline.rs"
+    ],
+    "components/svg_engine/src/shapes/polyline.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/shapes/rectangle.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/shapes/mod.rs"
+    ],
+    "components/svg_engine/src/style/color.rs": [],
+    "components/svg_engine/src/style/fill.rs": [],
+    "components/svg_engine/src/style/gradient.rs": [
+      "components/svg_engine/src/error.rs",
+      "components/svg_engine/src/style/transform_ops.rs"
+    ],
+    "components/svg_engine/src/style/hints.rs": [],
+    "components/svg_engine/src/style/mod.rs": [
+      "components/svg_engine/src/style/color.rs",
+      "components/svg_engine/src/style/fill.rs",
+      "components/svg_engine/src/style/gradient.rs",
+      "components/svg_engine/src/style/hints.rs",
+      "components/svg_engine/src/style/node_effects.rs",
+      "components/svg_engine/src/style/stroke.rs",
+      "components/svg_engine/src/style/transform_ops.rs",
+      "components/svg_engine/src/style/visibility.rs"
+    ],
+    "components/svg_engine/src/style/node_effects.rs": [],
+    "components/svg_engine/src/style/stroke.rs": [],
+    "components/svg_engine/src/style/transform_ops.rs": [],
+    "components/svg_engine/src/style/visibility.rs": [],
+    "components/svg_engine/src/tessellator.rs": [
+      "components/svg_engine/src/renderer/gradient.rs",
+      "components/svg_engine/src/renderer/mod.rs",
+      "components/svg_engine/src/shapes/mod.rs",
+      "components/svg_engine/src/style/gradient.rs",
+      "components/svg_engine/src/style/hints.rs",
+      "components/svg_engine/src/style/mod.rs"
+    ],
+    "components/svg_engine/src/text.rs": [],
+    "components/svg_engine/src/traversal.rs": [
+      "components/svg_engine/src/effects/clip.rs",
+      "components/svg_engine/src/effects/filter.rs",
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/renderer/mod.rs"
+    ],
+    "components/svg_engine/src/visitor.rs": [
+      "components/svg_engine/src/render_tree.rs",
+      "components/svg_engine/src/style/gradient.rs"
+    ],
     "components/timers/Cargo.toml": [],
     "components/timers/lib.rs": [],
     "components/url/Cargo.toml": [],
@@ -18818,6 +19761,7 @@
     "ports/servoshell/test.rs": [],
     "ports/servoshell/webdriver.rs": [],
     "ports/servoshell/window.rs": [],
+    "Projectsservo/.understand-anything/fingerprints.json": [],
     "PULL_REQUEST_TEMPLATE.md": [],
     "pyproject.toml": [],
     "python/mach_bootstrap.py": [],
@@ -19164,6 +20108,8 @@
     "support/windows/servoshell.wxs": [],
     "support/windows/servoshell.wxs.mako": [],
     "taplo.toml": [],
+    "test_rect_geometry.html": [],
+    "test_svg_engine.html": [],
     "third_party/mozdebug/mozdebug/__init__.py": [
       "third_party/mozdebug/mozdebug/mozdebug.py"
     ],
