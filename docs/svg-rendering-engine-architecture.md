@@ -126,89 +126,89 @@ SVG-specific awareness.
 
 ## 3. Data Flow
 
-Two-phase pipeline: **Build** (Integration Layer) → **Render** (SVG Engine).
+Rendering an SVG element happens in two phases, triggered at different points
+in the layout pipeline. The structure of each layer is described in
+[Section 2](#2-proposed-architecture-high-level); this section covers sequence.
 
 ```
-DOM <svg> element
-  │
-  ▼
-┌──────────────────────────────┐
-│  Phase 1: Build              │
-│  Integration Layer           │
-│  DOM → SvgRenderTree         │
-│  (single pass, pure data)    │
-└──────────────┬───────────────┘
-               │ Arc<SvgRenderTree>
-               ▼
-┌──────────────────────────────┐
-│  Phase 2: Render             │
-│  SVG Engine                  │
-│  ┌────────────────────────┐  │
-│  │ Traversal              │  │
-│  │ walk, transform, clip, │  │
-│  │ mask, filter, opacity  │  │
-│  └───────────┬────────────┘  │
-│              │ dispatch      │
-│  ┌───────────▼────────────┐  │
-│  │ Render                 │  │
-│  │ per-shape trait impls  │  │
-│  │ → push_rect, push_line │  │
-│  └────────────────────────┘  │
-└──────────────┬───────────────┘
-               │ WebRender commands
-               ▼
-         WebRender
+1. Layout encounters <svg> element
+   │
+   ▼
+2. Build (Integration Layer)
+   build_svg_render_tree()
+   DOM → SvgRenderTree (pure data)
+   tree stored in fragment as Arc<SvgRenderTree>
+   │
+   ▼
+3. Display list construction
+   display_list/mod.rs calls render_svg_tree()
+   │
+   ▼
+4. Render (SVG Engine)
+   ├─ Traversal: walk tree, push transform/clip/filter/opacity
+   └─ Render: dispatch to per-shape impls → push_rect, push_line, …
+   │
+   ▼
+5. WebRender composites & draws
 ```
 
-### Phase 1: Build (Integration Layer)
+### Step 1 — Trigger: layout encounters `<svg>`
 
-Entry point: `layout::svg::build_svg_render_tree(node, context)` — called from
-`components/layout/replaced.rs` when the layout system encounters an SVG element.
+When the layout system processes a replaced element that is an SVG, it calls
+`build_svg_render_tree()` from `components/layout/replaced.rs`. This triggers
+the build phase.
 
-1. **CSS resolution** — collect inline `<style>` rules from the SVG subtree
-2. **DOM walk** — recursively traverse DOM children:
-   - `geometry::build_shape()` — DOM element attributes → `Shape` enum variant
-   - `style::build_style()` — Servo `ComputedValues` → `NodeStyle` struct
-   - Recurse into child elements
-3. **Definition collection** — single pass over `<defs>` containers:
-   - `linearGradient` / `radialGradient` → `GradientDef`
-   - `clipPath` → `ClipPathDef`, `mask` → `MaskDef`
-   - `filter` → `FilterDef`, `pattern` → `PatternDef`
-4. **Viewport extraction** — `viewBox`, `preserveAspectRatio`, width/height
-5. **Post-processing** — `PaintServerFixupVisitor` corrects misclassified
-   paint-server references (e.g., gradient refs that actually point to patterns)
+### Step 2 — Build: DOM → SvgRenderTree
 
-**Output:** `Arc<SvgRenderTree>` — a pure-data tree with no DOM references,
-stored in the layout fragment for use during display list construction.
+**Entry point:** `layout::svg::build_svg_render_tree(node, context)`
 
-### Phase 2: Render (SVG Engine)
+The build is a single pass over the DOM subtree. Execution order:
 
-Entry point: `svg_engine::render_svg_tree(tree, origin, size, …)` — called from
-`components/layout/display_list/mod.rs` during display list building.
+1. Collect inline `<style>` CSS rules
+2. Walk DOM depth-first — for each element, call `geometry::build_shape()`
+   and `style::build_style()`, then recurse into children
+3. Scan `<defs>` containers and collect definition maps (gradients, clip-paths,
+   masks, filters, patterns)
+4. Extract viewport parameters (`viewBox`, `preserveAspectRatio`, width/height)
+5. Run post-processing visitors (e.g., fix paint-server references that
+   were misclassified as gradients but actually point to patterns)
 
-**Traversal sub-layer:**
-1. Push **viewport clip** (unless `overflow: visible`)
-2. Push **viewBox reference frame** (scale + translate to map viewBox → viewport)
-3. For each `SvgRenderNode`:
-   - Push **transform** reference frame (CSS transform + `transform` attribute)
-   - Resolve **clip-path**, **mask**, and **filter** from definition maps
-   - Push **opacity** stacking context
-   - **Dispatch** to Render sub-layer based on `SvgTag` variant
+**Output:** `Arc<SvgRenderTree>` — stored in the layout fragment. No DOM
+references remain; the tree is pure data.
 
-**Render sub-layer:**
-1. `SvgTag::Shape(s)` → `s.render(ctx)` — trait dispatch to the correct
-   shape renderer (rect, circle, path, etc.)
-2. Each renderer calls fill/stroke helpers which:
-   - Resolve paint servers (solid color → `ColorF`, gradient → stop evaluation,
-     pattern → tile rendering)
-   - For filled polygons: tessellate via **lyon**, scanline rasterize via `push_rect`
-   - For stroked paths: compute dash pattern, emit `push_line` segments
-3. `SvgTag::Text(t)` → `text.render(ctx)` — shaped glyph positioning
-4. `SvgTag::Image(i)` → `image.render(ctx)` — raster image emission
+### Step 3 — Trigger: display list construction
 
-**Output:** WebRender `DisplayListBuilder` commands — standard primitives
-(`push_rect`, `push_line`, clips, stacking contexts) that WebRender composites
-and renders on the GPU.
+During display list building, `components/layout/display_list/mod.rs` retrieves
+the `Arc<SvgRenderTree>` from the fragment and calls `render_svg_tree()`.
+
+### Step 4 — Render: SvgRenderTree → WebRender commands
+
+**Entry point:** `svg_engine::render_svg_tree(tree, origin, size, spatial_id,
+clip_chain_id, wr)`
+
+This is where the SVG Engine's two sub-layers run:
+
+**Traversal** walks the tree depth-first. At each node it:
+1. Pushes a transform reference frame (CSS transform + `transform` attribute)
+2. Resolves clip-path, mask, and filter from the definition maps
+3. Pushes an opacity stacking context
+4. Dispatches to **Render** based on the node's `SvgTag` variant
+
+**Render** receives the dispatch and emits display list commands:
+- `Shape` → `shape.render(ctx)` — trait dispatch to the correct renderer,
+  which calls fill/stroke helpers, tessellates polygons via lyon, and emits
+  `push_rect` / `push_line` commands
+- `Text` → shaped glyph positioning and emission
+- `Image` → raster image emission
+- `Container` → handled by Traversal (stacking context push/pop); children
+  are visited recursively
+
+**Output:** WebRender `DisplayListBuilder` commands.
+
+### Step 5 — WebRender composites
+
+WebRender receives standard display list primitives (rects, clips, stacking
+contexts) with no SVG-specific awareness and renders them on the GPU.
 
 ---
 
