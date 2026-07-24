@@ -189,8 +189,48 @@ contexts) with no SVG-specific awareness and renders them on the GPU.
 
 ## 4. Key Data Models
 
-All types described below live in `components/svg_engine/` with no dependencies
-on Servo's DOM, layout, or style crates.
+All types live in `components/svg_engine/` with no dependencies on Servo's DOM,
+layout, or style crates.
+
+```
+SvgRenderTree
+├── viewport: ViewportInfo
+│   └── width, height, viewBox?, preserveAspectRatio, overflow_visible
+├── root: SvgRenderNode
+│   ├── id
+│   ├── tag: SvgTag
+│   │   ├── Shape → Rect | Circle | Ellipse | Line | Polyline | Polygon | Path
+│   │   ├── Text → TextSpan { text, x, y, dx, dy, glyphs, text_anchor, font }
+│   │   ├── Image → SvgImage { x, y, width, height, href }
+│   │   └── Container → Group | Svg | Defs | Use | Symbol
+│   ├── style: NodeStyle
+│   │   ├── visibility: Visible | Hidden
+│   │   ├── display: Inline | Block | None
+│   │   ├── fill: FillParams? { color, paint_server: Solid | Gradient(id) | Pattern(id), opacity, fill_rule: NonZero | EvenOdd }
+│   │   ├── stroke: StrokeParams? { color, paint_server: Solid | Gradient(id) | Pattern(id), width, dasharray, linecap, linejoin, miterlimit, … }
+│   │   ├── render_hints: RenderHints? { shape_rendering, color_interpolation, paint_order, vector_effect }
+│   │   ├── effects: NodeEffects? { clip_path, mask, filter }
+│   │   └── opacity
+│   ├── transforms: [TransformOp]
+│   │   └── Translate | Scale | Rotate | SkewX | SkewY | Matrix
+│   └── children: [SvgRenderNode]
+├── gradients: Map<id, GradientDef>
+│   └── Linear { x1, y1, x2, y2 } | Radial { cx, cy, r, fx?, fy? }
+│       └── units: ObjectBoundingBox | UserSpaceOnUse
+│       └── spread_method: Pad | Reflect | Repeat
+│       └── stops: [(color, offset)]
+│       └── gradient_transform
+├── clip_paths: Map<id, ClipPathDef>
+│   └── shapes: [Shape], units: ObjectBoundingBox | UserSpaceOnUse
+├── patterns: Map<id, PatternDef>
+│   └── tile (x, y, w, h), units, content_units, shapes: [(Shape, NodeStyle)]
+├── masks: Map<id, MaskDef>
+│   └── shapes: [(Shape, NodeStyle)]
+├── filters: Map<id, FilterDef>
+│   └── primitives: [GaussianBlur | DropShadow | ColorMatrix | Saturate | LuminanceToAlpha | Offset | Flood | Composite | Tile | Image]
+│       bounds (x, y, w, h)
+```
+
 
 ### 4.1 SvgRenderTree — the top-level render tree
 
