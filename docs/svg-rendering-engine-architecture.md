@@ -85,50 +85,47 @@ into two sub-layers: **Script** → **Integration Layer** → **SVG Engine** (Tr
 
 **Integration Layer** (`components/layout/svg/`) — translates Servo DOM/style into
 the engine's pure-data model. Feature-gated behind `svg-engine`.
-- `builder.rs` — orchestrates tree construction (Builder pattern)
-- `geometry.rs` — DOM element → `Shape` struct
-- `style.rs` — Servo `ComputedValues` → SVG `NodeStyle`
-- `defines.rs` — collect `<defs>` elements (Strategy pattern for each definition type)
-- `css.rs` — inline `<style>` CSS rule parsing
-- `viewport.rs` — `viewBox` / `preserveAspectRatio` extraction
-- `transforms.rs` — CSS/SVG transform conversion
+- Walks the DOM subtree and resolves computed styles, geometry, transforms, and
+  `<defs>` into a flat `SvgRenderTree`.
+- No DOM references remain in the output — the tree is pure data.
 
 **SVG Engine** (`components/svg_engine/`) — pure rendering; zero dependencies on
 Servo's DOM, layout, or style crates. Internally split into two sub-layers:
 
-*Traversal sub-layer* — walks the render tree, manages coordinate system state,
-then dispatches each node to the render layer.
-- `traversal/` — recursive tree walk: viewport clip → viewBox frame → per-node transform/clip/mask/filter/opacity → dispatch to `Render`
-- `effects/` — clip-path, mask, and filter resolution
-- `visitor.rs` — Visitor pattern for tree post-processing (e.g., paint-server fixups)
+- **Traversal**: walk the render tree, manage coordinate system state, then call the
+    render layer.
+  - Steps:
+    1. Skip nodes with `display: none`
+    2. Apply per-node transforms (translate, scale, rotate, skew, matrix) by
+       pushing WebRender reference frames
+    3. Resolve clip-path, mask, and filter from the definition maps and push
+       corresponding WebRender clips and stacking contexts
+    4. Call the render layer for the current node
+    5. Recurse into children (skipping `<defs>` and `<symbol>` — rendered only
+       via `<use>`)
+    6. Pop transform reference frames
 
-*Render sub-layer* — receives dispatch calls for specific shapes/text/images,
-emits WebRender display list commands via `push_rect`, `push_line`, etc.
-- `renderer/` — `Render` trait + per-shape implementations (circle, rect, path, text, image)
-- `renderer/fill.rs` — solid color, gradient, and pattern fill pipelines
-- `renderer/stroke.rs` — stroking pipeline (width, dasharray, linecap, linejoin, gradient strokes)
-- `renderer/gradient.rs` — linear/radial gradient stop evaluation
-- `renderer/pattern.rs` — pattern tile rendering
-- `tessellator/` — polygon triangulation (lyon) + scanline rasterization via `push_rect`
-
-*Shared types* (used by both sub-layers):
-- `render_tree/` — `SvgRenderTree`, `SvgRenderNode`, `SvgTag` enum, and definition types (ClipPathDef, MaskDef, FilterDef, PatternDef, GradientDef)
-- `shapes/` — pure geometric data structs (Rect, Circle, Ellipse, Line, Polyline, Polygon, Path)
-- `style/` — SVG property types (Fill, Stroke, Gradient, hints, visibility, transform_ops)
-- `attr_parsers.rs` — SVG attribute value parsing utilities
-- `error.rs` — error types for malformed SVG
+- **Render**: called by traversal; dispatch to the correct per-shape renderer and
+    emit WebRender display list commands.
+  - Steps:
+    1. Dispatch by shape variant (Rect, Circle, Ellipse, Line, Polyline, Polygon,
+       Path) to the matching renderer
+    2. Apply fill (solid color, gradient, or pattern)
+    3. Apply stroke (width, dasharray, linecap, linejoin, miterlimit) respecting
+       paint-order
+    4. Tessellate filled polygons (triangulation + scanline rasterization) for
+       non-zero/even-odd fill-rule
+    5. Emit WebRender commands (`push_rect`, `push_line`, etc.)
 
 **WebRender** — existing GPU rendering pipeline. Receives standard
-`DisplayListBuilder` commands (rects, clips, stacking contexts, etc.) with no
-SVG-specific awareness.
+`DisplayListBuilder` commands with no SVG-specific awareness.
 
 ---
 
 ## 3. Data Flow
 
 Rendering an SVG element happens in two phases, triggered at different points
-in the layout pipeline. The structure of each layer is described in
-[Section 2](#2-proposed-architecture-high-level); this section covers sequence.
+in the layout pipeline.
 
 ```
 1. Layout encounters <svg> element
@@ -162,16 +159,12 @@ the build phase.
 
 **Entry point:** `layout::svg::build_svg_render_tree(node, context)`
 
-The build is a single pass over the DOM subtree. Execution order:
-
-1. Collect inline `<style>` CSS rules
-2. Walk DOM depth-first — for each element, call `geometry::build_shape()`
-   and `style::build_style()`, then recurse into children
-3. Scan `<defs>` containers and collect definition maps (gradients, clip-paths,
-   masks, filters, patterns)
-4. Extract viewport parameters (`viewBox`, `preserveAspectRatio`, width/height)
-5. Run post-processing visitors (e.g., fix paint-server references that
-   were misclassified as gradients but actually point to patterns)
+The build is a single pass over the DOM subtree. It resolves computed styles
+(CSS cascade + presentation attributes), builds shape geometry from element
+attributes, collects `<defs>` definitions (gradients, clip-paths, masks,
+filters, patterns), extracts viewport parameters, and runs post-processing
+passes (e.g., fixing paint-server references that were misclassified as
+gradients but actually point to patterns).
 
 **Output:** `Arc<SvgRenderTree>` — stored in the layout fragment. No DOM
 references remain; the tree is pure data.
@@ -186,22 +179,23 @@ the `Arc<SvgRenderTree>` from the fragment and calls `render_svg_tree()`.
 **Entry point:** `svg_engine::render_svg_tree(tree, origin, size, spatial_id,
 clip_chain_id, wr)`
 
-This is where the SVG Engine's two sub-layers run:
-
 **Traversal** walks the tree depth-first. At each node it:
 1. Pushes a transform reference frame (CSS transform + `transform` attribute)
 2. Resolves clip-path, mask, and filter from the definition maps
 3. Pushes an opacity stacking context
-4. Dispatches to **Render** based on the node's `SvgTag` variant
+4. Calls the render layer based on the node's tag:
+   - `Shape` → calls the shape renderer
+   - `Text` / `Image` → calls the text or image renderer
+   - `Container` → handled by traversal (stacking context push/pop); children
+     visited recursively
 
-**Render** receives the dispatch and emits display list commands:
-- `Shape` → `shape.render(ctx)` — trait dispatch to the correct renderer,
-  which calls fill/stroke helpers, tessellates polygons via lyon, and emits
-  `push_rect` / `push_line` commands
+**Render** receives the call and dispatches to the correct per-shape renderer,
+then emits display list commands:
+- `Shape` → dispatched by shape variant (Rect, Circle, Path, etc.) to the
+  matching renderer, which calls fill/stroke helpers, tessellates filled
+  polygons, and emits `push_rect` / `push_line` commands
 - `Text` → shaped glyph positioning and emission
 - `Image` → raster image emission
-- `Container` → handled by Traversal (stacking context push/pop); children
-  are visited recursively
 
 **Output:** WebRender `DisplayListBuilder` commands.
 
@@ -212,301 +206,160 @@ contexts) with no SVG-specific awareness and renders them on the GPU.
 
 ---
 
-## 4. Key Design Decisions
+## 4. Key Data Models
 
-### 4.1 Separate `svg_engine` crate
+All types described below live in `components/svg_engine/` with no dependencies
+on Servo's DOM, layout, or style crates.
 
-The engine is a standalone crate (`components/svg_engine/`) with zero
-dependencies on Servo's DOM, layout, or style crates. Its only external
-dependencies are:
+### 4.1 SvgRenderTree — the top-level render tree
 
-| Crate | Purpose |
-|-------|---------|
-| `webrender_api` | Emit display list commands |
-| `euclid` | Geometry primitives (Rect, Point, etc.) |
-| `kurbo` | Bezier curve / path operations |
-| `lyon` | Polygon tessellation |
-| `svgtypes` | SVG type parsing (viewBox, etc.) |
+The `SvgRenderTree` is what the Integration Layer produces and the SVG Engine
+consumes. It contains:
 
-**Rationale:** Clean API boundary, testable in isolation, feature-gatable.
+- **root** — the root `SvgRenderNode` of the tree.
+- **viewport** — viewport information: width, height, optional `viewBox`,
+  `preserveAspectRatio`, and `overflow: visible` flag.
+- **gradients** — map of gradient definitions (linear/radial) keyed by ID,
+  collected from `<linearGradient>` and `<radialGradient>` in `<defs>`.
+- **clip_paths** — map of clip-path definitions keyed by ID, collected from
+  `<clipPath>`. Each entry holds the clipping shapes and the coordinate system
+  (`objectBoundingBox` or `userSpaceOnUse`).
+- **patterns** — map of pattern definitions keyed by ID, collected from
+  `<pattern>`. Each entry holds the tile dimensions, coordinate systems, and
+  the tile's content shapes with their styles.
+- **masks** — map of mask definitions keyed by ID, collected from `<mask>`.
+  Each entry holds the mask content as styled shapes.
+- **filters** — map of filter definitions keyed by ID, collected from
+  `<filter>`. Each entry holds an ordered list of filter primitives and the
+  filter bounds.
 
-### 4.2 Intermediate Render Tree (`SvgRenderTree`)
+The tree itself serves as the provider for all paint/clip/filter resources
+during rendering — lookup is a flat hash-map lookup, no DOM walks.
 
-The layout bridge produces a pure-data `SvgRenderTree` — no DOM references, no
-style system references, just geometry and resolved property values:
+### 4.2 SvgRenderNode — a single node in the tree
 
-```rust
-struct SvgRenderTree {
-    root: SvgRenderNode,
-    viewport: ViewportInfo,
-    gradients: HashMap<String, GradientDef>,
-    clip_paths: HashMap<String, ClipPathDef>,
-    patterns: HashMap<String, PatternDef>,
-    masks: HashMap<String, MaskDef>,
-    filters: HashMap<String, FilterDef>,
-}
+Each node represents one SVG element in the render tree:
 
-struct SvgRenderNode {
-    id: Option<String>,
-    tag: SvgTag,
-    style: NodeStyle,
-    transforms: Vec<TransformOp>,
-    children: Vec<SvgRenderNode>,
-}
+- **id** — the element's `id` attribute, used for `url(#id)` references from
+  other elements (e.g., `<use href="#myShape">`).
+- **tag** — what kind of node this is: a `Shape`, `Text` span, `Image`, or
+  `Container`.
+- **style** — resolved paint-level styling (`NodeStyle`, see below).
+- **transforms** — ordered list of SVG transform operations (translate, scale,
+  rotate, skewX, skewY, matrix). These are structural — they affect the
+  coordinate system, not just paint — so they live on the node rather than
+  inside `NodeStyle`.
+- **children** — child nodes, forming the tree structure.
 
-enum SvgTag {
-    Shape(Shape),          // rect, circle, ellipse, line, polyline, polygon, path
-    Text(TextSpan),
-    Image(SvgImage),
-    Container(Container),  // Group, Svg, Defs, Use, Symbol
-}
-```
+### 4.3 SvgTag — what kind of element a node is
 
-**Rationale:** Decouples DOM resolution from rendering. The tree can be unit-tested
-without a full browser. Render-time lookups are flat hash-map lookups (no DOM
-walks).
+Four variants:
 
-### 4.3 Shape-as-Data Enum
+- **Shape(Shape)** — a geometric primitive (rect, circle, ellipse, line,
+  polyline, polygon, path).
+- **Text(TextSpan)** — a `<text>` or `<tspan>` span with shaped glyphs,
+  positioning, and text-anchor.
+- **Image(SvgImage)** — an `<image>` element with position, size, and href.
+- **Container(Container)** — a grouping element: `Group` (`<g>`), `Svg`
+  (nested `<svg>`), `Defs` (`<defs>` — children not rendered directly),
+  `Use` (`<use>` — references another element by ID), or `Symbol`
+  (`<symbol>` — reusable viewBox'd container).
 
-Shapes are plain data — no behavior, no rendering logic:
+### 4.4 Shape — geometric primitives (pure data)
 
-```rust
-enum Shape {
-    Rect(Rectangle),
-    Circle(Circle),
-    Ellipse(Ellipse),
-    Line(Line),
-    Polyline(Polyline),
-    Polygon(Polygon),
-    Path(Path),
-}
-```
+Seven geometry variants, each as a simple data struct:
 
-Each variant is a simple struct (e.g., `Circle { cx, cy, r }`).
+| Shape | Fields |
+|-------|--------|
+| `Rectangle` | x, y, width, height, rx, ry (corner radii) |
+| `Circle` | cx, cy, r |
+| `Ellipse` | cx, cy, rx, ry |
+| `Line` | x1, y1, x2, y2 |
+| `Polyline` | points (list of (x,y)) |
+| `Polygon` | points (list of (x,y)) |
+| `Path` | BezPath (Bezier path data from the `d` attribute) |
 
-### 4.4 Render Trait (per-shape dispatch)
+Shapes carry no rendering logic — they are pure geometric data constructed by
+the Integration Layer from DOM element attributes.
 
-Each shape implements the `Render` trait, which emits WebRender display list
-commands:
+### 4.5 NodeStyle — paint-level styling
 
-```rust
-trait Render {
-    fn render(&self, ctx: &mut RenderContext);
-}
+Resolved per-node style produced by the Integration Layer from CSS computed
+values and SVG presentation attributes:
 
-// One blanket impl on Shape does the match ONCE:
-impl Render for Shape {
-    fn render(&self, ctx: &mut RenderContext) {
-        match self {
-            Shape::Rect(r) => r.render(ctx),
-            Shape::Circle(c) => c.render(ctx),
-            // …
-        }
-    }
-}
-```
+- **visibility** — `visible` or `hidden`.
+- **display** — `inline`, `block`, or `none`.
+- **fill** — optional fill parameters: base color, paint server reference
+  (solid color / gradient ID / pattern ID), opacity, and fill-rule
+  (`nonzero` or `evenodd`).
+- **stroke** — optional stroke parameters: base color, paint server reference,
+  opacity, width, linecap (`butt` / `round` / `square`), linejoin
+  (`miter` / `round` / `bevel`), miter limit, dash array, and dash offset.
+- **render_hints** — quality/behavior hints: `shape-rendering`,
+  `color-interpolation` (`sRGB` / `linearRGB`), `paint-order`
+  (`normal` / `stroke-then-fill`), and `vector-effect`
+  (`non-scaling-stroke`).
+- **effects** — references to clip-path, mask, and filter definitions
+  (each is an ID string like `"url(#myFilter)"`).
+- **opacity** — element-level opacity (CSS `opacity` property), applied as a
+  multiplier on top of fill/stroke opacity.
 
-**Rationale:** Single match point — traversal code calls `shape.render(ctx)`
-without knowing the concrete shape type. Adding a new shape means adding one
-variant + one `Render` impl. No giant central match to update across the
-codebase.
+Transform-related properties are NOT in `NodeStyle` — they live directly on
+`SvgRenderNode` because they affect the coordinate system structurally.
 
-### 4.5 Software Tessellation for Fills
+### 4.6 Definition types — paint servers, clip, mask, and filter
 
-For filled polygons (especially with non-zero/even-odd fill-rule), use **lyon**
-for triangulation, then scanline rasterize each triangle with `push_rect`:
+**GradientDef** — either a `LinearGradient` or `RadialGradient`:
+- Gradient units (`objectBoundingBox` or `userSpaceOnUse`), spread method
+  (`pad` / `reflect` / `repeat`), gradient transform, and an ordered list of
+  color stops (color + offset).
+- Linear gradients have x1, y1, x2, y2 endpoints.
+- Radial gradients have cx, cy, r (and optional fx, fy focal point).
 
-```
-Polygon vertices → lyon tessellation → triangles → scanline per triangle →
-WebRender push_rect per scanline span
-```
+**PatternDef** — tile-based paint server:
+- Tile dimensions (width, height, x, y), separate coordinate systems for tile
+  sizing (`patternUnits`) and content (`patternContentUnits`), and the list of
+  styled shapes that form the tile content.
 
-**Rationale:** WebRender's `define_clip_image_mask` requires a valid `ImageKey`,
-which isn't always available. `push_rect` is known to work reliably. Alternative
-would be to add proper polygon clipping support to WebRender — open to feedback.
+**ClipPathDef** — clipping region:
+- A list of Shapes defining the clip area, plus the coordinate system
+  (`objectBoundingBox` or `userSpaceOnUse`).
 
-### 4.6 Definition Collection via Strategy Pattern
+**MaskDef** — alpha mask:
+- A list of styled shapes whose luminance defines the mask alpha channel.
 
-`<defs>` elements are collected using a trait-based Strategy pattern:
+**FilterDef** — ordered list of filter primitives applied in sequence:
+- `GaussianBlur` (std deviation x/y), `DropShadow` (dx, dy, blur, color),
+  `ColorMatrix` (20-value matrix or saturate), `LuminanceToAlpha`, `Offset`
+  (dx, dy), `Flood` (solid RGBA), `Composite` (arithmetic or
+  Porter-Duff operators), `Tile`, and `Image` (external URL or fragment
+  reference).
+- Plus filter bounds (x, y, width, height) that may extend beyond the
+  element's bounding box (e.g., for drop-shadow).
 
-```rust
-trait DefinitionParser {
-    type Definition;
-    fn tag_names() -> &'static [&'static str];
-    fn parse(node: ServoLayoutNode, ctx: &LayoutContext) -> Option<(String, Self::Definition)>;
-}
-```
+### 4.7 TransformOp — SVG transform operations
 
-Each definition type (gradient, clip-path, mask, filter, pattern) implements
-`DefinitionParser`. A generic `DefinitionCollector` handles the common
-recursion and deduplication logic.
+Ordered list of transform operations applied to a node. Matches the SVG
+`transform` attribute model:
 
-**Rationale:** No per-type duplicated traversal code. Adding a new definition
-type means implementing one trait.
+- `Translate(tx, ty)` — 2D translation.
+- `Scale(sx, sy)` — 2D scale.
+- `Rotate(angle, cx, cy)` — rotation around an optional center point.
+- `SkewX(angle)` / `SkewY(angle)` — skew transforms.
+- `Matrix(a, b, c, d, e, f)` — arbitrary 2D affine matrix.
 
-### 4.7 Visitor Pattern for Tree Post-Processing
+These are structural transforms that affect the coordinate system. CSS
+transforms (from Stylo computed values) are also converted into this same
+representation by the Integration Layer.
 
-The render tree supports the Visitor pattern for post-processing passes:
+### 4.8 Text and Image types
 
-```rust
-trait SvgRenderTreeVisitor {
-    fn visit_node(&mut self, node: &SvgRenderNode) -> VisitDecision;
-}
-```
+**TextSpan** — a single `<text>` or `<tspan>` element:
+- Text content, x/y positioning, per-character dx/dy offsets, pre-shaped
+  glyphs (from the font subsystem), text-anchor (`start` / `middle` / `end`),
+  and a WebRender `FontInstanceKey` for glyph rendering.
 
-Example use: `PaintServerFixupVisitor` — after tree construction, converts
-`PaintServer::Gradient` to `PaintServer::Pattern` when the referenced ID is
-actually a pattern definition (not a gradient).
-
----
-
-## 5. Component Map
-
-```
-svg_engine/
-├── shapes/           Pure geometry, no rendering logic
-│   ├── circle.rs, ellipse.rs, line.rs
-│   ├── path.rs, polygon.rs, polyline.rs
-│   └── rectangle.rs
-│
-├── style/            SVG-specific property types
-│   ├── fill.rs, stroke.rs, gradient.rs
-│   ├── color.rs, hints.rs
-│   ├── visibility.rs, node_effects.rs
-│   └── transform_ops.rs
-│
-├── render_tree/      Tree structure + definition types
-│   └── (SvgRenderTree, SvgRenderNode, SvgTag,
-│        ClipPathDef, MaskDef, FilterDef, PatternDef)
-│
-├── renderer/         Per-shape rendering + paint pipelines
-│   ├── render_trait.rs   ← Render trait + Shape dispatch
-│   ├── providers.rs      ← Paint/Clip/Filter resource traits
-│   ├── fill.rs, stroke.rs, gradient.rs, pattern.rs
-│   ├── circle.rs, rect.rs, path.rs, text.rs, …
-│   └── helpers.rs
-│
-├── traversal/        Tree walk → DisplayListBuilder
-├── tessellator/      lyon triangulation + scanline raster
-├── effects/          clip-path, mask, filter resolution
-│
-├── attr_parsers.rs   SVG attribute value parsing
-├── error.rs          Error types
-├── text.rs           Text types (TextSpan, TextAnchor)
-└── visitor.rs        Visitor pattern traits
-
-layout/svg/           (integration bridge — feature-gated)
-├── builder.rs        SvgRenderTreeBuilder (Builder pattern)
-├── geometry.rs       DOM → Shape construction
-├── style.rs          ComputedValues → NodeStyle
-├── defines.rs        <defs> collection (Strategy pattern)
-├── css.rs            Inline <style> CSS parsing
-├── viewport.rs       viewBox / preserveAspectRatio
-└── transforms.rs     CSS/SVG transform conversion
-```
+**SvgImage** — an `<image>` element:
+- x, y, width, height, and the image href (URL or data URI).
 
 ---
-
-## 6. Integration Points
-
-| Point | Location | What happens |
-|-------|----------|-------------|
-| **DOM element creation** | `components/script/dom/element/create.rs` | SVG elements created (already done: #46558) |
-| **Render tree construction** | `components/layout/replaced.rs` | Calls `layout::svg::build_svg_render_tree()` |
-| **Fragment storage** | `components/layout/fragment_tree/fragment.rs` | Fragment holds `Arc<SvgRenderTree>` |
-| **Display list emission** | `components/layout/display_list/mod.rs` | Calls `svg_engine::render_svg_tree()` |
-| **Feature gate** | `components/layout/Cargo.toml` | `svg-engine` feature flag |
-
----
-
-## 7. SVG Features — Scope
-
-### In scope (initial implementation)
-
-| Category | Features |
-|----------|----------|
-| **Shapes** | `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polyline>`, `<polygon>`, `<path>` |
-| **Fill** | Solid color, linear/radial gradients, patterns |
-| **Stroke** | Width, dasharray, linecap, linejoin, miterlimit, gradient strokes |
-| **Containers** | `<g>`, `<svg>`, `<defs>`, `<use>`, `<symbol>` |
-| **Text** | `<text>`, `<tspan>` with text-anchor |
-| **Viewport** | viewBox, preserveAspectRatio, overflow:visible |
-| **Transforms** | translate, scale, rotate, skewX, skewY, matrix |
-| **Clip/Mask** | clip-path (objectBoundingBox + userSpaceOnUse), mask |
-| **Filters** | GaussianBlur, DropShadow, ColorMatrix, Saturate, LuminanceToAlpha, Offset, Flood, Composite, Tile, feImage |
-| **Rendering hints** | shape-rendering, color-interpolation, paint-order, vector-effect:non-scaling-stroke |
-| **Opacity/visibility** | CSS opacity, SVG visibility, display:none |
-
-### Out of scope (future work)
-
-- Animation (SMIL / CSS animations on SVG attributes)
-- Markers (`<marker>`, arrowheads)
-- `<foreignObject>`
-- `textPath`
-- Full SVG font support
-- `getBBox` / `getCTM` / SVG DOM measurement API
-- Hit testing / `pointer-events`
-- `mix-blend-mode` / `isolation` on SVG elements
-
----
-
-## 8. Open Questions for Reviewers
-
-1. **Crate placement:** Should `svg_engine` be a top-level `components/` crate,
-   or live inside `components/layout/`?
-
-2. **Shape model:** Is the enum-based `Shape` the right fit, or would a
-   trait-object approach scale better?
-
-3. **Software tessellation:** Is lyon + scanline `push_rect` acceptable, or
-   should we invest in proper polygon clipping support in WebRender?
-
-4. **Text integration:** Should SVG `<text>` go through the engine entirely, or
-   should it integrate with Servo's existing text layout pipeline for font
-   selection, shaping, and bidirectional support?
-
-5. **Feature gate:** Should this be behind a compile-time feature flag
-   (`svg-engine`), a runtime preference, or just always-on?
-
-6. **Incremental landing strategy:** What's the smallest mergeable unit?
-   Proposal:
-   - Phase 1: Shapes-only (no fill/stroke, just bounding boxes)
-   - Phase 2: Solid fills + strokes
-   - Phase 3: Gradients + patterns
-   - Phase 4: Clip-paths, masks, filters
-   - Phase 5: Text
-
-7. **Hit testing:** SVG `pointer-events` requires geometry-based hit testing —
-   should this live in the engine or in layout?
-
-8. **Testing strategy:** What's the expectation? WPT reftests only, or also
-   engine-internal unit tests?
-
----
-
-## 9. Alternatives Considered
-
-### A. Extend existing layout path
-- Add SVG awareness to fragment construction, flow layout, display list building
-- **Rejected:** Fundamentally different coordinate models; would add SVG-specific
-  branches throughout layout code rather than isolating SVG concerns.
-
-### B. Render SVG entirely in WebRender
-- Pass raw SVG data to WebRender, let it handle rendering
-- **Rejected:** WebRender has no SVG awareness; would require significant
-  WebRender changes and break the abstraction layer.
-
-### C. Single crate (no separate svg_engine)
-- Put everything in `layout/svg/`
-- **Rejected:** Harder to test in isolation, no clear API boundary, can't
-  feature-gate cleanly.
-
----
-
-## 10. References
-
-- [SVG 2 Specification](https://www.w3.org/TR/SVG2/)
-- [WebRender Documentation](https://github.com/servo/webrender)
-- [lyon tessellation library](https://docs.rs/lyon/)
-- [kurbo curve library](https://docs.rs/kurbo/)
-- Prior PR: [Create DOM element types for SVG shapes (#46558)](https://github.com/servo/servo/pull/46558)
