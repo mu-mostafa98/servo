@@ -1,7 +1,6 @@
-# SVG Rendering Engine — Architecture Discussion
+# SVG Rendering Engine Architecture
 
-Proposal for a new SVG rendering engine for Servo. Feedback welcome on the architecture
-and data model.
+I am developing a new SVG rendering engine for Servo and welcome community feedback on the architecture proposed below.
 
 Two main areas:
 
@@ -22,8 +21,6 @@ Converts `ServoLayoutNode` → `SvgRenderTree` (pure data, no DOM references):
 - Parse geometry attributes into shape structs
 - Extract viewport / viewBox / preserveAspectRatio
 - Convert transforms into `TransformOp`s
-- Shape text via the font subsystem
-- Resolve `<use>` references (clone the referenced subtree)
 
 ### SVG Engine
 Consumes `SvgRenderTree` → WebRender display list. Two sub-layers:
@@ -43,9 +40,9 @@ Already exists in Servo. Takes the display list, handles GPU compositing.
 [INSERT DATA MODEL DIAGRAM IMAGE]
 
 `SvgRenderTree` — pure, owned tree, no DOM back-references.
+- built in the integration layer, consumed by the engine
 - Definition maps (`HashMap<String, …>`) — gradients, clip-paths, patterns, masks, filters,
   keyed by element `id`, used by `<use>` and `url(#…)` references
-- Owned by `Arc<SvgRenderTree>` — built in the integration layer, consumed by the engine
 
 ---
 
@@ -57,3 +54,66 @@ Two stages:
 
 1. **Tree construction** — `build_svg_render_tree()` (`components/layout/svg/mod.rs`), called from `ReplacedContents::svg_kind_size()` in `components/layout/replaced.rs`
 2. **Rendering** — `render_svg_tree()` (`components/svg_engine/src/traversal.rs`), called from `DisplayListBuilder::visit_image()` in `components/layout/display_list/mod.rs`
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+WebRender doesn't natively support arbitrary paths or curved polygons. The approach uses two render terminals — every shape delegates to one of them:
+
+### Rectangle — the GPU-clip terminal
+
+Define a WebRender rounded-rect clip, draw a plain rectangle inside it. The GPU cuts the shape per-pixel. Gradient and pattern fills go through the same clip.
+
+Line strokes use this same mechanism: a rotated reference frame + a rectangle whose length matches the segment and height matches the stroke width. Dashes are individual rectangles. No native line API — just `push_rect`.
+
+### Polyline — the CPU-tessellation terminal
+
+Lyon triangulates the polygon into triangles. A scanline rasterizer walks each triangle row-by-row, interpolates solid/gradient/pattern color per pixel, emits one `push_rect` per horizontal span. WebRender only sees rectangles.
+
+### Delegation
+
+| Shape | Delegates to | Cost |
+|---|---|---|
+| `Circle` | `Ellipse` → `Rectangle` | data conversion |
+| `Ellipse` | `Rectangle` | data conversion |
+| `Path` | `Polyline` | bezier flattening (sub-pixel tolerance) |
+| `Polygon` | `Polyline` | loop closure |
+
+Circle and ellipse are zero-cost — just different numbers flowing into Rectangle. Line is a rotated rect — same `push_rect` path. Path and polygon are cheap — flattening/closure, then Polyline does the real work.
+
+
+
+
+WebRender doesn't natively support arbitrary paths or curved polygons. The approach uses two render terminals — every shape delegates to one of them:
+
+### Rectangle — the GPU-clip terminal
+
+Define a WebRender rounded-rect clip, draw a plain rectangle inside it. 
+
+`Line` - strokes use this same mechanism: a rotated reference frame + a rectangle whose length matches the segment and height matches the stroke width. 
+
+### Polyline — the CPU-tessellation terminal
+
+Lyon triangulates the polygon into triangles. The engine walks each triangle row-by-row and emits one `push_rect` per row.
+
+
+### Delegation
+
+| Shape | Delegates to | Cost |
+|---|---|---|
+| `Ellipse` | `Rectangle` | (100% corner radii = visually an ellipse) |
+| `Circle` | `Ellipse` |  (rx = ry = r) |
+| `Path` | `Polyline` | flatten beziers to line segments (sub-pixel tolerance) |
+| `Polygon` | `Polyline` | close the loop (append points[0]) |
