@@ -102,6 +102,8 @@ use crate::dom::svg::svgrectelement::SVGRectElement;
 use crate::dom::svg::svgstopelement::SVGStopElement;
 use crate::dom::svg::svgsvgelement::SVGSVGElement;
 use crate::dom::svg::svgsymbolelement::SVGSymbolElement;
+use crate::dom::svg::svgtextelement::SVGTextElement;
+use crate::dom::svg::svgtspanelement::SVGTSpanElement;
 use crate::dom::svg::svguseelement::SVGUseElement;
 use crate::realms::enter_auto_realm;
 use crate::script_thread::ScriptThread;
@@ -138,6 +140,8 @@ fn create_svg_element(
         local_name!("rect") => make!(SVGRectElement),
         local_name!("svg") => make!(SVGSVGElement),
         local_name!("symbol") => make!(SVGSymbolElement),
+        local_name!("text") => make!(SVGTextElement),
+        local_name!("tspan") => make!(SVGTSpanElement),
         local_name!("use") => make!(SVGUseElement),
         _ => make!(SVGElement),
     }
