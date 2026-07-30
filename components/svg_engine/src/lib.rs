@@ -11,13 +11,12 @@
 //!
 //! | Module | Role |
 //! |--------|------|
-//! | [`renderer`] | Per-shape rendering via a `Render` trait + fill/stroke pipelines |
-//! | [`traversal`] | Recursive tree walk that produces the display list |
-//!
-//! The entry point is [`render_svg_tree`], called from
-//! `layout::display_list::mod.rs`.
+//! | [`emitter`] | Shape emitters — convert usvg types into backend-agnostic [`PaintCommand`]s |
+//! | [`renderer`] | Renderer + Backend trait — dispatch commands to WebRender / Krilla / etc. |
+//! | [`traversal`] | Recursive tree walk — visits usvg nodes, calls emitters, feeds renderer |
 
-mod renderer;
+pub mod emitter;
+pub mod renderer;
 mod traversal;
 
 pub use traversal::render_svg_tree;

@@ -4,16 +4,14 @@
 
 //! SVG render tree traversal.
 //!
-//! Walks a [`usvg::Tree`] recursively, applying transforms at each group,
-//! and dispatching simple shapes to the renderer.
+//! Walks a [`usvg::Tree`] recursively, dispatching shapes to emitters
+//! and feeding paint commands to the renderer.
 
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
-use webrender_api::{
-    ClipChainId, DisplayListBuilder, PropertyBinding,
-    ReferenceFrameKind, SpatialId, TransformStyle,
-};
+use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 
-use crate::renderer::Render;
+use crate::emitter::{Emit, EmitContext, PaintCommand};
+use crate::renderer::{Renderer, webrender::WebRenderBackend};
 
 // ======================= Public Entry Point =======================
 
@@ -32,93 +30,42 @@ pub fn render_svg_tree(
     let parent = (clip_chain_id != ClipChainId::INVALID).then_some(clip_chain_id);
     let svg_clip_chain = wr.define_clip_chain(parent, [svg_clip_id]);
 
-    render_group(
-        tree.root(),
-        svg_origin,
-        spatial_id,
-        svg_clip_chain,
-        wr,
-    );
+    // Collect paint commands from emitters.
+    let mut commands: Vec<PaintCommand> = Vec::new();
+    let emit_ctx = EmitContext { svg_origin: *svg_origin };
+    emit_group(tree.root(), &emit_ctx, &mut commands);
+
+    // Render via WebRender backend.
+    let mut backend = WebRenderBackend { wr };
+    let renderer = Renderer { commands };
+    renderer.render(&mut backend, spatial_id, svg_clip_chain);
 }
 
 // ======================= Group Traversal =======================
 
-fn render_group(
-    group: &usvg::Group,
-    svg_origin: &LayoutPoint,
-    spatial_id: SpatialId,
-    clip_chain_id: ClipChainId,
-    wr: &mut DisplayListBuilder,
-) {
-    let (cur_origin, cur_spatial_id, pushed) =
-        push_transform(group.transform(), svg_origin, spatial_id, wr);
+fn emit_group(group: &usvg::Group, ctx: &EmitContext, commands: &mut Vec<PaintCommand>) {
+    // Apply group's transform.
+    let sub_ctx = if group.transform().is_identity() {
+        EmitContext { svg_origin: ctx.svg_origin }
+    } else {
+        EmitContext {
+            svg_origin: LayoutPoint::new(
+                ctx.svg_origin.x + group.transform().tx,
+                ctx.svg_origin.y + group.transform().ty,
+            ),
+        }
+    };
 
     for child in group.children() {
-        render_node(child, &cur_origin, cur_spatial_id, clip_chain_id, wr);
-    }
-
-    if pushed {
-        wr.pop_reference_frame();
+        emit_node(child, &sub_ctx, commands);
     }
 }
 
-fn push_transform(
-    transform: usvg::Transform,
-    svg_origin: &LayoutPoint,
-    spatial_id: SpatialId,
-    wr: &mut DisplayListBuilder,
-) -> (LayoutPoint, SpatialId, bool) {
-    if transform.is_identity() {
-        return (*svg_origin, spatial_id, false);
-    }
-
-    let lt = webrender_api::units::LayoutTransform::new(
-        transform.sx, transform.ky, 0.0, 0.0,
-        transform.kx, transform.sy, 0.0, 0.0,
-        0.0, 0.0, 1.0, 0.0,
-        transform.tx + svg_origin.x, transform.ty + svg_origin.y, 0.0, 1.0,
-    );
-
-    let child_spatial_id = wr.push_reference_frame(
-        LayoutPoint::zero(),
-        spatial_id,
-        TransformStyle::Flat,
-        PropertyBinding::Value(lt),
-        ReferenceFrameKind::Transform {
-            is_2d_scale_translation: false,
-            should_snap: false,
-            paired_with_perspective: false,
-        },
-    );
-
-    (LayoutPoint::zero(), child_spatial_id, true)
-}
-
-// ======================= Node Dispatch =======================
-
-fn render_node(
-    node: &usvg::Node,
-    svg_origin: &LayoutPoint,
-    spatial_id: SpatialId,
-    clip_chain_id: ClipChainId,
-    wr: &mut DisplayListBuilder,
-) {
+fn emit_node(node: &usvg::Node, ctx: &EmitContext, commands: &mut Vec<PaintCommand>) {
     match node {
-        usvg::Node::Group(group) => {
-            render_group(group, svg_origin, spatial_id, clip_chain_id, wr);
-        }
-        usvg::Node::SimpleShape(shape) => {
-            let mut ctx = crate::renderer::RenderContext {
-                svg_origin: *svg_origin,
-                spatial_id,
-                clip_chain_id,
-                wr,
-                accumulated_scale: 1.0,
-            };
-            shape.render(&mut ctx);
-        }
-        usvg::Node::Path(_) => {}
-        usvg::Node::Image(_) => {}
-        usvg::Node::Text(_) => {}
+        usvg::Node::Group(g) => emit_group(g, ctx, commands),
+        usvg::Node::SimpleShape(shape) => shape.emit(ctx, commands),
+        // Path, Image, Text — future (Vello CPU terminal)
+        _ => {}
     }
 }
