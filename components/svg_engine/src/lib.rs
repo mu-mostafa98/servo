@@ -15,8 +15,8 @@
 //! | [`renderer`] | Renderer + Backend trait — dispatch commands to WebRender / Krilla / etc. |
 //! | [`traversal`] | Recursive tree walk — visits usvg nodes, calls emitters, feeds renderer |
 
-pub mod emitter;
+pub(crate) mod emitter;
 pub mod renderer;
 mod traversal;
 
-pub use traversal::render_svg_tree;
+pub use traversal::{render_svg_tree, render_svg_tree_to};

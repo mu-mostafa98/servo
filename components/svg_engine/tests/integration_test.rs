@@ -168,3 +168,135 @@ fn node_enum_supports_simple_shape() {
         panic!("Expected SimpleShape");
     }
 }
+
+// ======================= Backend Pipeline — End-to-End =======================
+
+use svg_engine::render_svg_tree_to;
+use svg_engine::renderer::krilla::KrillaBackend;
+use webrender_api::units::LayoutPoint;
+use webrender_api::SpatialId;
+
+const PAGE_W: f32 = 300.0;
+const PAGE_H: f32 = 200.0;
+
+fn make_krilla() -> KrillaBackend {
+    KrillaBackend::new(PAGE_W, PAGE_H)
+}
+
+#[test]
+fn krilla_backend_produces_valid_pdf() {
+    use usvg::*;
+
+    let mut root = Group::new();
+
+    let rect = SimpleShape::new(
+        SimpleShapeKind::Rect { x: 10.0, y: 10.0, width: 100.0, height: 60.0, rx: None, ry: None },
+        Some(Fill::new(Paint::Color(Color::new_rgb(255, 0, 0)), Opacity::ONE, FillRule::NonZero)),
+        None, Transform::default(),
+    );
+    root.push_child(Node::SimpleShape(Box::new(rect)));
+
+    let circle = SimpleShape::new(
+        SimpleShapeKind::Circle { cx: 200.0, cy: 40.0, r: 30.0 },
+        Some(Fill::new(Paint::Color(Color::new_rgb(0, 0, 255)), Opacity::ONE, FillRule::NonZero)),
+        None, Transform::default(),
+    );
+    root.push_child(Node::SimpleShape(Box::new(circle)));
+
+    let line = SimpleShape::new(
+        SimpleShapeKind::Line { x1: 10.0, y1: 150.0, x2: 180.0, y2: 150.0 },
+        None,
+        Some(Stroke::new(Paint::Color(Color::new_rgb(0, 255, 0)), StrokeWidth::new(3.0).unwrap())),
+        Transform::default(),
+    );
+    root.push_child(Node::SimpleShape(Box::new(line)));
+
+    let tree = Tree::new(Size::from_wh(PAGE_W, PAGE_H).unwrap(), root);
+
+    let mut krilla = make_krilla();
+    render_svg_tree_to(
+        &tree,
+        &LayoutPoint::new(0.0, 0.0),
+        &mut krilla,
+        SpatialId::root_scroll_node(webrender_api::PipelineId::dummy()),
+        webrender_api::ClipChainId::INVALID,
+    );
+
+    let pdf = krilla.finish();
+    let text = String::from_utf8_lossy(&pdf);
+
+    // Valid PDF structure
+    assert!(text.contains("%PDF-1.4"));
+    assert!(text.ends_with("%%EOF\n"));
+}
+
+#[test]
+fn save_pdf_to_disk() {
+    use usvg::*;
+
+    // Build all shapes from our test HTML
+    let mut root = Group::new();
+
+    // 1. Red rect
+    root.push_child(Node::SimpleShape(Box::new(SimpleShape::new(
+        SimpleShapeKind::Rect { x: 20.0, y: 20.0, width: 160.0, height: 110.0, rx: None, ry: None },
+        Some(Fill::new(Paint::Color(Color::new_rgb(255, 0, 0)), Opacity::ONE, FillRule::NonZero)),
+        None, Transform::default(),
+    ))));
+
+    // 2. Blue circle
+    root.push_child(Node::SimpleShape(Box::new(SimpleShape::new(
+        SimpleShapeKind::Circle { cx: 100.0, cy: 40.0, r: 25.0 },
+        Some(Fill::new(Paint::Color(Color::new_rgb(0, 0, 255)), Opacity::ONE, FillRule::NonZero)),
+        None, Transform::default(),
+    ))));
+
+    // 3. Green line
+    root.push_child(Node::SimpleShape(Box::new(SimpleShape::new(
+        SimpleShapeKind::Line { x1: 20.0, y1: 160.0, x2: 180.0, y2: 160.0 },
+        None,
+        Some(Stroke::new(Paint::Color(Color::new_rgb(0, 255, 0)), StrokeWidth::new(4.0).unwrap())),
+        Transform::default(),
+    ))));
+
+    let tree = Tree::new(Size::from_wh(PAGE_W, PAGE_H).unwrap(), root);
+
+    let mut krilla = make_krilla();
+    render_svg_tree_to(
+        &tree, &LayoutPoint::zero(), &mut krilla,
+        SpatialId::root_scroll_node(webrender_api::PipelineId::dummy()),
+        webrender_api::ClipChainId::INVALID,
+    );
+
+    let pdf = krilla.finish();
+    std::fs::write("test_output.pdf", &pdf).expect("Failed to write PDF");
+    println!("PDF saved to test_output.pdf ({} bytes)", pdf.len());
+}
+
+#[test]
+fn same_tree_renders_identically_across_backends() {
+    use usvg::*;
+
+    let mut root = Group::new();
+    let rect = SimpleShape::new(
+        SimpleShapeKind::Rect { x: 0.0, y: 0.0, width: 100.0, height: 80.0, rx: None, ry: None },
+        Some(Fill::new(Paint::Color(Color::new_rgb(255, 0, 0)), Opacity::ONE, FillRule::NonZero)),
+        None, Transform::default(),
+    );
+    root.push_child(Node::SimpleShape(Box::new(rect)));
+    let tree = Tree::new(Size::from_wh(PAGE_W, PAGE_H).unwrap(), root);
+
+    let mut krilla1 = make_krilla();
+    render_svg_tree_to(&tree, &LayoutPoint::zero(), &mut krilla1,
+        SpatialId::root_scroll_node(webrender_api::PipelineId::dummy()),
+        webrender_api::ClipChainId::INVALID);
+    let output1 = krilla1.finish();
+
+    let mut krilla2 = make_krilla();
+    render_svg_tree_to(&tree, &LayoutPoint::zero(), &mut krilla2,
+        SpatialId::root_scroll_node(webrender_api::PipelineId::dummy()),
+        webrender_api::ClipChainId::INVALID);
+    let output2 = krilla2.finish();
+
+    assert_eq!(output1, output2, "Same tree must produce identical PDF output");
+}

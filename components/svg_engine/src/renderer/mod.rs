@@ -7,6 +7,7 @@
 //! The [`Renderer`] holds a list of [`PaintCommand`]s and dispatches them
 //! to a [`Backend`] implementation (WebRender, Krilla, etc.).
 
+pub mod krilla;
 pub mod webrender;
 
 use webrender_api::{ClipChainId, SpatialId};
@@ -14,7 +15,7 @@ use webrender_api::{ClipChainId, SpatialId};
 use crate::emitter::PaintCommand;
 
 /// Backend trait — renders paint commands to a specific output target.
-pub(crate) trait Backend {
+pub trait Backend {
     fn fill_rect(
         &mut self, bounds: FillRectDesc, color: PaintColorDesc, clip: Option<ClipDesc>,
         spatial_id: SpatialId, clip_chain_id: ClipChainId,
@@ -29,14 +30,14 @@ pub(crate) trait Backend {
     );
 }
 
-pub(crate) struct FillRectDesc { pub x: f32, pub y: f32, pub w: f32, pub h: f32 }
-pub(crate) struct PaintColorDesc { pub r: f32, pub g: f32, pub b: f32, pub a: f32 }
-pub(crate) struct ClipDesc { pub rx: f32, pub ry: f32 }
-pub(crate) struct RadiiDesc { pub rx: f32, pub ry: f32 }
+pub struct FillRectDesc { pub x: f32, pub y: f32, pub w: f32, pub h: f32 }
+pub struct PaintColorDesc { pub r: f32, pub g: f32, pub b: f32, pub a: f32 }
+pub struct ClipDesc { pub rx: f32, pub ry: f32 }
+pub struct RadiiDesc { pub rx: f32, pub ry: f32 }
 
 /// Collects paint commands and dispatches them to a backend.
-pub(crate) struct Renderer {
-    pub commands: Vec<PaintCommand>,
+pub struct Renderer {
+    pub(crate) commands: Vec<PaintCommand>,
 }
 
 impl Renderer {

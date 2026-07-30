@@ -11,11 +11,12 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 
 use crate::emitter::{Emit, EmitContext, PaintCommand};
-use crate::renderer::{Renderer, webrender::WebRenderBackend};
+use crate::renderer::{Backend, Renderer, webrender::WebRenderBackend};
 
-// ======================= Public Entry Point =======================
+// ======================= Public Entry Points =======================
 
-/// Render an SVG tree into a WebRender display list.
+/// Render an SVG tree into a WebRender display list (screen output).
+/// Convenience wrapper around [`render_svg_tree_to`] that sets up the viewport clip.
 pub fn render_svg_tree(
     tree: &usvg::Tree,
     svg_origin: &LayoutPoint,
@@ -24,21 +25,33 @@ pub fn render_svg_tree(
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
 ) {
-    // Clip to viewport bounds.
+    // Clip to viewport bounds (WebRender-specific).
     let svg_bounds = LayoutRect::from_origin_and_size(*svg_origin, svg_size);
     let svg_clip_id = wr.define_clip_rect(spatial_id, svg_bounds);
     let parent = (clip_chain_id != ClipChainId::INVALID).then_some(clip_chain_id);
     let svg_clip_chain = wr.define_clip_chain(parent, [svg_clip_id]);
 
-    // Collect paint commands from emitters.
+    let mut backend = WebRenderBackend { wr };
+    render_svg_tree_to(tree, svg_origin, &mut backend, spatial_id, svg_clip_chain);
+}
+
+/// Render an SVG tree to any backend (WebRender, Krilla, etc.).
+///
+/// Collects paint commands from emitters and dispatches them to the given backend.
+/// The backend determines the output target — GPU screen, PDF file, etc.
+pub fn render_svg_tree_to<B: Backend>(
+    tree: &usvg::Tree,
+    svg_origin: &LayoutPoint,
+    backend: &mut B,
+    spatial_id: SpatialId,
+    clip_chain_id: ClipChainId,
+) {
     let mut commands: Vec<PaintCommand> = Vec::new();
     let emit_ctx = EmitContext { svg_origin: *svg_origin };
     emit_group(tree.root(), &emit_ctx, &mut commands);
 
-    // Render via WebRender backend.
-    let mut backend = WebRenderBackend { wr };
     let renderer = Renderer { commands };
-    renderer.render(&mut backend, spatial_id, svg_clip_chain);
+    renderer.render(backend, spatial_id, clip_chain_id);
 }
 
 // ======================= Group Traversal =======================
