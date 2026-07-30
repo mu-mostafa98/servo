@@ -16,7 +16,7 @@ use servo_url::ServoUrl;
 use style::Zero;
 use style_traits::CSSPixel;
 #[cfg(feature = "svg-engine")]
-use svg_engine::render_tree::SvgRenderTree;
+use usvg::Tree as SvgRenderTree;
 use webrender_api::{FontInstanceKey, ImageKey};
 
 use super::{

@@ -2,22 +2,7 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! SVG render tree construction — public API surface.
-//!
-//! This module bridges Servo's DOM and style system with the SVG engine's
-//! render tree types.
-//!
-//! # Module Map
-//!
-//! | Module | Role |
-//! |--------|------|
-//! | [`builder`] | Orchestrator — assembles the render tree (Builder pattern) |
-//! | [`geometry`] | Shape construction — DOM elements → [`Shape`] |
-//! | [`style`] | Style construction — [`ComputedValues`] → [`NodeStyle`] |
-//! | [`css`] | Inline `<style>` CSS rule parsing |
-//! | [`defines`] | Definition collection — gradients, clip-paths, etc. (Strategy pattern) |
-//! | [`viewport`] | Viewport/viewBox/aspectRatio extraction |
-//! | [`transforms`] | CSS/SVG transform conversion |
+//! SVG render tree construction — bridges Servo DOM with usvg types.
 //!
 //! The main entry point is [`build_svg_render_tree`], called from
 //! [`crate::replaced`].
@@ -32,15 +17,209 @@ pub(crate) mod viewport;
 
 use std::sync::Arc;
 
-use script::layout_dom::ServoLayoutNode;
-use svg_engine::render_tree::SvgRenderTree;
+use html5ever::LocalName;
+use layout_api::{LayoutElement, LayoutNode};
+use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
+use usvg::*;
+use web_atoms::ns;
 
 use crate::context::LayoutContext;
 
-/// Main entry point — builds a complete `SvgRenderTree` from an SVG DOM element.
+/// Main entry point — builds a complete usvg::Tree from an SVG DOM element.
 pub(crate) fn build_svg_render_tree<'dom>(
-    node: ServoLayoutNode<'dom>,
-    context: &LayoutContext,
-) -> Option<Arc<SvgRenderTree>> {
-    builder::SvgRenderTreeBuilder::new(node, context).build()
+    root_node: ServoLayoutNode<'dom>,
+    _context: &LayoutContext,
+) -> Option<Arc<usvg::Tree>> {
+    let size = Size::from_wh(300.0, 150.0)?;
+    let mut root = Group::new();
+
+    for child in root_node.dom_children() {
+        if let Some(node) = build_node(child) {
+            root.push_child(node);
+        }
+    }
+
+    Some(Arc::new(Tree::new(size, root)))
+}
+
+fn build_node<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
+    let element = node.as_element()?;
+    let tag = element.local_name().as_ref().to_owned();
+
+    let mut group = Group::new();
+
+    match tag.as_str() {
+        "svg" | "g" => {
+            for child in node.dom_children() {
+                if let Some(n) = build_node(child) {
+                    group.push_child(n);
+                }
+            }
+            Some(Node::Group(Box::new(group)))
+        }
+        "rect" => build_rect(&element).map(|s| Node::SimpleShape(Box::new(s))),
+        "circle" => build_circle(&element).map(|s| Node::SimpleShape(Box::new(s))),
+        "ellipse" => build_ellipse(&element).map(|s| Node::SimpleShape(Box::new(s))),
+        "line" => build_line(&element).map(|s| Node::SimpleShape(Box::new(s))),
+        _ => None,
+    }
+}
+
+// ======================= Helpers =======================
+
+fn get_attr(element: &ServoLayoutElement, name: &str) -> Option<String> {
+    element
+        .attribute_as_str(&ns!(), &LocalName::from(name))
+        .map(|s| s.to_string())
+}
+
+fn parse_f32(val: &str) -> Option<f32> {
+    val.trim_end_matches("px").parse::<f32>().ok()
+}
+
+fn attr_f32(element: &ServoLayoutElement, name: &str, default: f32) -> f32 {
+    get_attr(element, name)
+        .as_deref()
+        .and_then(parse_f32)
+        .unwrap_or(default)
+}
+
+fn attr_opt_f32(element: &ServoLayoutElement, name: &str) -> Option<f32> {
+    get_attr(element, name).as_deref().and_then(parse_f32)
+}
+
+fn parse_color(val: &str) -> Option<Color> {
+    // Minimal named colors
+    let val = val.trim().to_lowercase();
+    match val.as_str() {
+        "red" => Some(Color::new_rgb(255, 0, 0)),
+        "green" => Some(Color::new_rgb(0, 128, 0)),
+        "blue" => Some(Color::new_rgb(0, 0, 255)),
+        "black" => Some(Color::new_rgb(0, 0, 0)),
+        "white" => Some(Color::new_rgb(255, 255, 255)),
+        "yellow" => Some(Color::new_rgb(255, 255, 0)),
+        "orange" => Some(Color::new_rgb(255, 165, 0)),
+        "purple" => Some(Color::new_rgb(128, 0, 128)),
+        "cyan" | "aqua" => Some(Color::new_rgb(0, 255, 255)),
+        "lime" => Some(Color::new_rgb(0, 255, 0)),
+        "pink" => Some(Color::new_rgb(255, 192, 203)),
+        "teal" => Some(Color::new_rgb(0, 128, 128)),
+        "coral" => Some(Color::new_rgb(255, 127, 80)),
+        "gold" => Some(Color::new_rgb(255, 215, 0)),
+        "dodgerblue" => Some(Color::new_rgb(30, 144, 255)),
+        "hotpink" => Some(Color::new_rgb(255, 105, 180)),
+        "gray" | "grey" => Some(Color::new_rgb(128, 128, 128)),
+        _ if val.starts_with('#') => {
+            let hex = &val[1..];
+            if hex.len() == 6 {
+                let r = u8::from_str_radix(&hex[0..2], 16).ok()?;
+                let g = u8::from_str_radix(&hex[2..4], 16).ok()?;
+                let b = u8::from_str_radix(&hex[4..6], 16).ok()?;
+                Some(Color::new_rgb(r, g, b))
+            } else {
+                None
+            }
+        }
+        _ => None,
+    }
+}
+
+fn build_fill(element: &ServoLayoutElement) -> Option<Fill> {
+    let fill_str = get_attr(element, "fill")?;
+    if fill_str == "none" {
+        return None;
+    }
+    let color = parse_color(&fill_str)?;
+    let opacity = get_attr(element, "fill-opacity")
+        .as_deref()
+        .and_then(parse_f32)
+        .and_then(Opacity::new)
+        .unwrap_or(Opacity::ONE);
+    Some(Fill::new(Paint::Color(color), opacity, FillRule::NonZero))
+}
+
+fn build_stroke(element: &ServoLayoutElement) -> Option<Stroke> {
+    let stroke_str = get_attr(element, "stroke")?;
+    if stroke_str == "none" {
+        return None;
+    }
+    let color = parse_color(&stroke_str)?;
+    let width = attr_f32(element, "stroke-width", 1.0);
+    let sw = StrokeWidth::new(width.max(0.01))?;
+    let opacity = get_attr(element, "stroke-opacity")
+        .as_deref()
+        .and_then(parse_f32)
+        .and_then(Opacity::new)
+        .unwrap_or(Opacity::ONE);
+    Some(Stroke::new(Paint::Color(color), sw))
+}
+
+// ======================= Shape Builders =======================
+
+fn build_rect(element: &ServoLayoutElement) -> Option<SimpleShape> {
+    use SimpleShapeKind::Rect;
+    let x = attr_f32(element, "x", 0.0);
+    let y = attr_f32(element, "y", 0.0);
+    let w = attr_f32(element, "width", 0.0);
+    let h = attr_f32(element, "height", 0.0);
+    if w <= 0.0 || h <= 0.0 {
+        return None;
+    }
+    let rx = attr_opt_f32(element, "rx");
+    let ry = attr_opt_f32(element, "ry");
+    let fill = build_fill(element);
+    let stroke = build_stroke(element);
+    if fill.is_none() && stroke.is_none() {
+        return None;
+    }
+    Some(SimpleShape::new(
+        Rect { x, y, width: w, height: h, rx, ry },
+        fill, stroke, Transform::default(),
+    ))
+}
+
+fn build_circle(element: &ServoLayoutElement) -> Option<SimpleShape> {
+    use SimpleShapeKind::Circle;
+    let cx = attr_f32(element, "cx", 0.0);
+    let cy = attr_f32(element, "cy", 0.0);
+    let r = attr_f32(element, "r", 0.0);
+    if r <= 0.0 {
+        return None;
+    }
+    let fill = build_fill(element);
+    let stroke = build_stroke(element);
+    Some(SimpleShape::new(
+        Circle { cx, cy, r },
+        fill, stroke, Transform::default(),
+    ))
+}
+
+fn build_ellipse(element: &ServoLayoutElement) -> Option<SimpleShape> {
+    use SimpleShapeKind::Ellipse;
+    let cx = attr_f32(element, "cx", 0.0);
+    let cy = attr_f32(element, "cy", 0.0);
+    let rx = attr_f32(element, "rx", 0.0);
+    let ry = attr_f32(element, "ry", 0.0);
+    if rx <= 0.0 || ry <= 0.0 {
+        return None;
+    }
+    let fill = build_fill(element);
+    let stroke = build_stroke(element);
+    Some(SimpleShape::new(
+        Ellipse { cx, cy, rx, ry },
+        fill, stroke, Transform::default(),
+    ))
+}
+
+fn build_line(element: &ServoLayoutElement) -> Option<SimpleShape> {
+    use SimpleShapeKind::Line;
+    let x1 = attr_f32(element, "x1", 0.0);
+    let y1 = attr_f32(element, "y1", 0.0);
+    let x2 = attr_f32(element, "x2", 0.0);
+    let y2 = attr_f32(element, "y2", 0.0);
+    let stroke = build_stroke(element)?; // line requires stroke
+    Some(SimpleShape::new(
+        Line { x1, y1, x2, y2 },
+        None, Some(stroke), Transform::default(),
+    ))
 }

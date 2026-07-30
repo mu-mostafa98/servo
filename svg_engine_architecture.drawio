@@ -1,0 +1,180 @@
+<mxGraphModel dx="1542" dy="815" grid="0" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="0" pageScale="1" pageWidth="1000" pageHeight="1200" math="0" shadow="0">
+  <root>
+    <mxCell id="0" />
+    <mxCell id="1" parent="0" />
+
+    <!-- Layer 1: Script Layer -->
+    <mxCell id="script_layer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#6c8ebf;strokeWidth=2;arcSize=8;verticalAlign=middle;align=center;" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Script Layer&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 12px; color: #555555;&quot;&gt;DOM SVG Elements&lt;/span&gt;" vertex="1">
+      <mxGeometry height="50" width="360" x="190" y="30" as="geometry" />
+    </mxCell>
+
+    <mxCell id="conn1" edge="1" parent="1" source="script_layer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#444444;labelBackgroundColor=#ffffff;fontStyle=0;fontSize=11;" target="integration_layer" value="ServoLayoutNode">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Layer 2: Integration Layer -->
+    <mxCell id="integration_layer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#d79b00;strokeWidth=2;arcSize=8;verticalAlign=middle;align=center;" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;Integration Layer&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 12px; color: #555555;&quot;&gt;components/layout/svg/&lt;/span&gt;" vertex="1">
+      <mxGeometry height="50" width="360" x="190" y="110" as="geometry" />
+    </mxCell>
+
+    <mxCell id="conn2" edge="1" parent="1" source="integration_layer" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#444444;labelBackgroundColor=#ffffff;fontStyle=0;fontSize=11;" target="svg_engine_container" value="pure data (SvgRenderTree or usvg::Tree)">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Layer 3: SVG Engine Container (Height expanded to 540) -->
+    <mxCell id="svg_engine_container" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;strokeWidth=2;arcSize=6;verticalAlign=top;spacingTop=8;align=center;" value="&lt;b style=&quot;font-size: 14px;&quot;&gt;SVG Engine&lt;/b&gt; (&lt;i style=&quot;font-size: 12px; color: #555555;&quot;&gt;components/svg_engine/&lt;/i&gt;)" vertex="1">
+      <mxGeometry height="540" width="700" x="20" y="200" as="geometry" />
+    </mxCell>
+
+    <!-- Traversal -->
+    <mxCell id="traversal_node" parent="svg_engine_container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;strokeWidth=1;arcSize=8;verticalAlign=middle;align=center;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Traversal&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 11px; color: #555555;&quot;&gt;Tree Walk &amp;amp; State Management (Transforms, Clips, Masks)&lt;/span&gt;" vertex="1">
+      <mxGeometry height="45" width="650" x="25" y="35" as="geometry" />
+    </mxCell>
+
+    <!-- Outer Emitters Container (Shifted down to y=140 for longer traversal arrow) -->
+    <mxCell id="emitter_container" parent="svg_engine_container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fafafa;strokeColor=#82b366;strokeWidth=1;dashed=1;arcSize=8;verticalAlign=top;spacingTop=6;align=center;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Emitters&lt;/b&gt;" vertex="1">
+      <mxGeometry height="160" width="650" x="25" y="140" as="geometry" />
+    </mxCell>
+
+    <!-- Simple Shape Emitters -->
+    <mxCell id="webrender_group" parent="emitter_container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f4fafd;strokeColor=#0288d1;strokeWidth=1;dashed=1;arcSize=8;verticalAlign=top;spacingTop=4;align=center;" value="&lt;b style=&quot;font-size: 11px; color:#0288d1;&quot;&gt;Simple Shape Emitters&lt;/b&gt;" vertex="1">
+      <mxGeometry height="110" width="260" x="15" y="35" as="geometry" />
+    </mxCell>
+
+    <mxCell id="rect_renderer" parent="webrender_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0288d1;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;rect&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="115" x="10" y="25" as="geometry" />
+    </mxCell>
+
+    <mxCell id="line_renderer" parent="webrender_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0288d1;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;line&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="115" x="135" y="25" as="geometry" />
+    </mxCell>
+
+    <mxCell id="ellipse_renderer" parent="webrender_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0288d1;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;ellipse&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 8px; color:#999999;&quot;&gt;→ rect&lt;/span&gt;" vertex="1">
+      <mxGeometry height="28" width="115" x="10" y="62" as="geometry" />
+    </mxCell>
+
+    <mxCell id="circle_renderer" parent="webrender_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0288d1;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;circle&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 8px; color:#999999;&quot;&gt;→ ellipse&lt;/span&gt;" vertex="1">
+      <mxGeometry height="28" width="115" x="135" y="62" as="geometry" />
+    </mxCell>
+
+    <!-- Complex Shape Emitters -->
+    <mxCell id="vello_group" parent="emitter_container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fdf4f7;strokeColor=#c2185b;strokeWidth=1;dashed=1;arcSize=8;verticalAlign=top;spacingTop=4;align=center;" value="&lt;b style=&quot;font-size: 11px; color:#c2185b;&quot;&gt;Complex Shape Emitters&lt;/b&gt;" vertex="1">
+      <mxGeometry height="110" width="280" x="355" y="35" as="geometry" />
+    </mxCell>
+
+    <mxCell id="polyline_renderer" parent="vello_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c2185b;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;polyline&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="75" x="12" y="25" as="geometry" />
+    </mxCell>
+
+    <mxCell id="polygon_renderer" parent="vello_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c2185b;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;polygon&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="75" x="102" y="25" as="geometry" />
+    </mxCell>
+
+    <mxCell id="path_renderer" parent="vello_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c2185b;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;path&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="75" x="192" y="25" as="geometry" />
+    </mxCell>
+
+    <mxCell id="text_renderer" parent="vello_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c2185b;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;text / tspan&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="120" x="12" y="62" as="geometry" />
+    </mxCell>
+
+    <mxCell id="image_renderer" parent="vello_group" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c2185b;strokeWidth=1;" value="&lt;b style=&quot;font-size: 10px;&quot;&gt;image&lt;/b&gt;" vertex="1">
+      <mxGeometry height="28" width="120" x="147" y="62" as="geometry" />
+    </mxCell>
+
+    <!-- Traversal -> Emitters Dispatch Arrow -->
+    <mxCell id="conn_dispatch" edge="1" parent="svg_engine_container" source="traversal_node" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#82b366;labelBackgroundColor=#ffffff;fontSize=10;" target="emitter_container" value="dispatch">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Bitmap Cache (Shifted down to y=340 for longer cache arrows) -->
+    <mxCell id="bitmap_cache" parent="svg_engine_container" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=8;fillColor=#ffffff;strokeColor=#c2185b;strokeWidth=1.5;" value="&lt;b style=&quot;font-size: 11px;&quot;&gt;Bitmap Cache&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 9px; color: #555555;&quot;&gt;Stores rasterized image buffers&lt;/span&gt;" vertex="1">
+      <mxGeometry height="45" width="200" x="460" y="340" as="geometry" />
+    </mxCell>
+
+    <!-- Display List Block (Shifted down to y=455) -->
+    <mxCell id="display_list_block" parent="svg_engine_container" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#82b366;strokeWidth=2;arcSize=8;verticalAlign=middle;align=center;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Renderer&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 11px; color: #555555;&quot;&gt;Backend-Agnostic Paint Commands&lt;/span&gt;" vertex="1">
+      <mxGeometry height="50" width="480" x="100" y="455" as="geometry" />
+    </mxCell>
+
+    <!-- Direct Output Arrows into Renderer -->
+    <mxCell id="conn_simple_dl" edge="1" parent="svg_engine_container" source="webrender_group" style="edgeStyle=straightEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#0288d1;fontSize=10;labelBackgroundColor=#ffffff;" target="display_list_block" value="render_rect, render_line">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <mxCell id="conn_complex_dl" edge="1" parent="svg_engine_container" source="vello_group" style="edgeStyle=straightEdgeStyle;rounded=0;html=1;strokeWidth=1.5;strokeColor=#c2185b;fontSize=10;labelBackgroundColor=#ffffff;" target="display_list_block" value="render_image">
+      <mxGeometry relative="1" as="geometry" />
+    </mxCell>
+
+    <!-- Cache Check/Save and Return Connections (Extended gap) -->
+    <mxCell id="conn_cache_store" edge="1" parent="svg_engine_container" source="vello_group" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#c2185b;fontSize=9;labelBackgroundColor=#ffffff;" target="bitmap_cache" value="Check / Save">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="500" y="310" />
+          <mxPoint x="500" y="310" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="conn_cache_fetch" edge="1" parent="svg_engine_container" source="bitmap_cache" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#c2185b;fontSize=9;labelBackgroundColor=#ffffff;" target="vello_group" value="Return Bitmap">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="600" y="310" />
+          <mxPoint x="600" y="310" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- External Vello CPU Component (Shifted down to align) -->
+    <mxCell id="vello_cpu_block" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#c2185b;strokeWidth=2;arcSize=8;verticalAlign=middle;align=center;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Vello CPU&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 11px; color: #555555;&quot;&gt;External CPU Path Rasterizer&lt;/span&gt;" vertex="1">
+      <mxGeometry height="70" width="200" x="860" y="390" as="geometry" />
+    </mxCell>
+
+    <mxCell id="conn_to_vello" edge="1" parent="1" source="vello_group" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#c2185b;fontSize=9;labelBackgroundColor=#ffffff;" target="vello_cpu_block" value="Scene data">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="410" />
+          <mxPoint x="780" y="410" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="conn_from_vello" edge="1" parent="1" source="vello_cpu_block" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=1.5;strokeColor=#c2185b;fontSize=9;labelBackgroundColor=#ffffff;" target="vello_group" value="Rasterized bitmap">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="780" y="440" />
+          <mxPoint x="780" y="440" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <!-- Layer 4: Final Output Backends (Shifted down to y=780) -->
+    <mxCell id="webrender_layer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#0288d1;strokeWidth=2;arcSize=8;verticalAlign=middle;align=center;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;WebRender Backend&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: #555555;&quot;&gt;GPU DisplayList Rendering&lt;/span&gt;" vertex="1">
+      <mxGeometry height="50" width="220" x="120" y="780" as="geometry" />
+    </mxCell>
+
+    <mxCell id="krilla_layer" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#f57c00;strokeWidth=2;arcSize=8;verticalAlign=middle;align=center;" value="&lt;b style=&quot;font-size: 13px;&quot;&gt;Krilla Backend&lt;/b&gt;&lt;br&gt;&lt;span style=&quot;font-size: 10px; color: #555555;&quot;&gt;PDF Stream Generator&lt;/span&gt;" vertex="1">
+      <mxGeometry height="50" width="220" x="400" y="780" as="geometry" />
+    </mxCell>
+
+    <!-- Backend Output Connectors -->
+    <mxCell id="conn_dl_webrender" edge="1" parent="1" source="display_list_block" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#0288d1;fontSize=10;labelBackgroundColor=#ffffff;" target="webrender_layer" value="Render to GPU">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="230" y="750" />
+          <mxPoint x="230" y="750" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+    <mxCell id="conn_dl_krilla" edge="1" parent="1" source="display_list_block" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeWidth=2;strokeColor=#f57c00;dashed=0;fontSize=10;labelBackgroundColor=#ffffff;" target="krilla_layer" value="Render to PDF">
+      <mxGeometry relative="1" as="geometry">
+        <Array as="points">
+          <mxPoint x="510" y="750" />
+          <mxPoint x="510" y="750" />
+        </Array>
+      </mxGeometry>
+    </mxCell>
+
+  </root>
+</mxGraphModel>
