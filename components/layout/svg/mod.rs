@@ -254,32 +254,20 @@ fn build_polyline_element(element: &ServoLayoutElement) -> Option<Path> {
 
 fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
     let element = node.as_element()?;
-    let x = attr_f32(&element, "x", 0.0);
-    let y = attr_f32(&element, "y", 0.0);
-    let fs = attr_f32(&element, "font-size", 16.0);
-    // Extract text content from DOM children
-    let text = extract_text_content(node);
-    if text.is_empty() {
+    // Serialize the text subtree including <tspan> children
+    let inner = serialize_text_subtree(node);
+    if inner.is_empty() {
         return None;
     }
-    // Build SVG markup for just this text element → parse via usvg text pipeline
-    let fill_str = get_attr(&element, "fill").unwrap_or_else(|| "black".to_string());
-    let mut extra = String::new();
-    for attr in &["stroke", "stroke-width", "font-weight", "font-family", "font-style", "text-anchor"] {
-        if let Some(v) = get_attr(&element, attr) {
-            extra.push_str(&format!(" {}=\"{}\"", attr, v));
-        }
-    }
     let svg = format!(
-        r#"<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><text x="{}" y="{}" fill="{}" font-size="{}"{}>{}</text></svg>"#,
-        x, y, fill_str, fs, extra, escape_xml(&text)
+        r#"<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">{}</svg>"#,
+        inner
     );
     let mut opt = usvg::Options::default();
     let mut db = fontdb::Database::new();
     db.load_system_fonts();
     opt.fontdb = Arc::new(db);
     let tree = usvg::Tree::from_str(&svg, &opt).ok()?;
-    // Extract flattened paths from the parsed Text node
     let mut group = Group::new();
     for child in tree.root().children() {
         extract_flattened(child, &mut group);
@@ -291,16 +279,26 @@ fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
     }
 }
 
-fn extract_text_content(node: ServoLayoutNode) -> String {
-    let mut s = String::new();
-    for child in node.dom_children() {
-        if child.as_element().is_some() {
-            s.push_str(&extract_text_content(child));
-        } else {
-            s.push_str(&child.text_content());
+fn serialize_text_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {
+    let Some(element) = node.as_element() else {
+        return escape_xml(&node.text_content());
+    };
+    let tag = element.local_name().as_ref().to_owned();
+    if tag != "text" && tag != "tspan" {
+        return String::new();
+    }
+    let mut attrs = String::new();
+    for attr in &["x", "y", "dx", "dy", "fill", "stroke", "stroke-width",
+                  "font-size", "font-weight", "font-family", "font-style", "text-anchor"] {
+        if let Some(v) = get_attr(&element, attr) {
+            attrs.push_str(&format!(" {}=\"{}\"", attr, v));
         }
     }
-    s
+    let mut children = String::new();
+    for child in node.dom_children() {
+        children.push_str(&serialize_text_subtree(child));
+    }
+    format!("<{} {}>{}</{}>", tag, attrs.trim(), children, tag)
 }
 
 fn escape_xml(s: &str) -> String {
