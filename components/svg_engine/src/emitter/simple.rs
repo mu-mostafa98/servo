@@ -14,8 +14,10 @@ impl Emit for usvg::SimpleShape {
             return;
         }
         match self.kind() {
-            SimpleShapeKind::Rect { x, y, width, height, rx, ry } =>
-                emit_rect(self, *x, *y, *width, *height, rx.unwrap_or(0.0), ry.unwrap_or(0.0), ctx, commands),
+            SimpleShapeKind::Rect { x, y, width, height, rx, ry } => {
+                let r = rx.or(*ry).unwrap_or(0.0);
+                emit_rect(self, *x, *y, *width, *height, r, ry.or(*rx).unwrap_or(r), ctx, commands);
+            }
             SimpleShapeKind::Circle { cx, cy, r } =>
                 emit_ellipse(self, cx - r, cy - r, r * 2.0, r * 2.0, *r, *r, ctx, commands),
             SimpleShapeKind::Ellipse { cx, cy, rx, ry } =>

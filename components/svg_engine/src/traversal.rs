@@ -10,8 +10,13 @@
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 
+use std::sync::Mutex;
+
 use crate::emitter::{Emit, EmitContext, PaintCommand};
-use crate::renderer::{Backend, Renderer, webrender::WebRenderBackend};
+use crate::renderer::{Backend, Renderer, krilla::KrillaBackend, webrender::WebRenderBackend};
+
+static PDF_BACKEND: Mutex<Option<KrillaBackend>> = Mutex::new(None);
+static PDF_Y: Mutex<f32> = Mutex::new(0.0);
 
 // ======================= Public Entry Points =======================
 
@@ -33,6 +38,26 @@ pub fn render_svg_tree(
 
     let mut backend = WebRenderBackend { wr };
     render_svg_tree_to(tree, svg_origin, &mut backend, spatial_id, svg_clip_chain);
+
+    // Also render to PDF — stack SVGs vertically.
+    if let Ok(mut opt) = PDF_BACKEND.lock() {
+        if opt.is_none() {
+            *opt = Some(KrillaBackend::new(800.0, 2000.0));
+        }
+        if let Some(ref mut pdf) = *opt {
+            let y = {
+                let guard = PDF_Y.lock().unwrap();
+                let y = *guard;
+                drop(guard);
+                y
+            };
+            render_svg_tree_to(tree, &LayoutPoint::new(svg_origin.x, y), pdf, spatial_id, clip_chain_id);
+            if let Ok(mut gy) = PDF_Y.lock() {
+                *gy = y + svg_size.height.max(tree.size().height()) + 20.0;
+            }
+            let _ = std::fs::write("svg.pdf", pdf.finish());
+        }
+    }
 }
 
 /// Render an SVG tree to any backend (WebRender, Krilla, etc.).
@@ -78,7 +103,39 @@ fn emit_node(node: &usvg::Node, ctx: &EmitContext, commands: &mut Vec<PaintComma
     match node {
         usvg::Node::Group(g) => emit_group(g, ctx, commands),
         usvg::Node::SimpleShape(shape) => shape.emit(ctx, commands),
-        // Path, Image, Text — future (Vello CPU terminal)
+        usvg::Node::Path(path) => {
+            // Approximate: emit path's bounding box as filled rect.
+            // Vello CPU will replace this with proper path rasterization.
+            let ox = ctx.svg_origin.x;
+            let oy = ctx.svg_origin.y;
+            if let Some(fill) = path.fill() {
+                if let usvg::Paint::Color(c) = fill.paint() {
+                    let b = path.abs_bounding_box();
+                    let color = crate::emitter::color_from_usvg(c, fill.opacity().get());
+                    commands.push(PaintCommand::FillRect {
+                        bounds: crate::emitter::FillRectBounds {
+                            x: ox + b.x(), y: oy + b.y(), w: b.width(), h: b.height(),
+                        },
+                        color,
+                        clip: None,
+                    });
+                }
+            }
+            if let Some(stroke) = path.stroke() {
+                if let usvg::Paint::Color(c) = stroke.paint() {
+                    let b = path.abs_bounding_box();
+                    let color = crate::emitter::color_from_usvg(c, stroke.opacity().get());
+                    commands.push(PaintCommand::StrokeRect {
+                        bounds: crate::emitter::FillRectBounds {
+                            x: ox + b.x(), y: oy + b.y(), w: b.width(), h: b.height(),
+                        },
+                        color,
+                        width: stroke.width().get(),
+                        radii: None,
+                    });
+                }
+            }
+        }
         _ => {}
     }
 }
