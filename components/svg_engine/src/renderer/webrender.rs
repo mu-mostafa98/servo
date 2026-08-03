@@ -93,6 +93,24 @@ impl Backend for WebRenderBackend<'_> {
         self.wr.push_border(&info, rect, widths, details);
     }
 
+    fn draw_image(
+        &mut self, x: f32, y: f32, w: u32, h: u32, _data: &[u8],
+        fallback: PaintColorDesc, spatial_id: SpatialId, clip_chain_id: ClipChainId,
+    ) {
+        // Use fallback color for the rect — full image upload needs resource cache.
+        let bounds = webrender_api::units::LayoutRect::from_origin_and_size(
+            LayoutPoint::new(x, y),
+            LayoutSize::new(w as f32, h as f32),
+        );
+        let info = CommonItemProperties {
+            clip_rect: bounds,
+            clip_chain_id,
+            spatial_id,
+            flags: PrimitiveFlags::default(),
+        };
+        self.wr.push_rect(&info, bounds, webrender_api::ColorF::new(fallback.r, fallback.g, fallback.b, fallback.a));
+    }
+
     fn stroke_line(
         &mut self, x1: f32, y1: f32, x2: f32, y2: f32,
         color: PaintColorDesc, width: f32,

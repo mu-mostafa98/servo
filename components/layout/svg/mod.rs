@@ -61,6 +61,9 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
         "circle" => build_circle(&element).map(|s| Node::SimpleShape(Box::new(s))),
         "ellipse" => build_ellipse(&element).map(|s| Node::SimpleShape(Box::new(s))),
         "line" => build_line(&element).map(|s| Node::SimpleShape(Box::new(s))),
+        "path" => build_path_element(&element).map(|p| Node::Path(Box::new(p))),
+        "polygon" => build_polygon_element(&element).map(|p| Node::Path(Box::new(p))),
+        "polyline" => build_polyline_element(&element).map(|p| Node::Path(Box::new(p))),
         _ => None,
     }
 }
@@ -217,9 +220,32 @@ fn build_line(element: &ServoLayoutElement) -> Option<SimpleShape> {
     let y1 = attr_f32(element, "y1", 0.0);
     let x2 = attr_f32(element, "x2", 0.0);
     let y2 = attr_f32(element, "y2", 0.0);
-    let stroke = build_stroke(element)?; // line requires stroke
+    let stroke = build_stroke(element)?;
     Some(SimpleShape::new(
         Line { x1, y1, x2, y2 },
         None, Some(stroke), Transform::default(),
     ))
+}
+
+// ======================= Complex Shape Builders =======================
+
+fn build_path_element(element: &ServoLayoutElement) -> Option<Path> {
+    let d = get_attr(element, "d")?;
+    let fill = build_fill(element);
+    let stroke = build_stroke(element);
+    Path::from_d(&d, fill, stroke, Transform::default())
+}
+
+fn build_polygon_element(element: &ServoLayoutElement) -> Option<Path> {
+    let points = get_attr(element, "points")?;
+    let fill = build_fill(element);
+    let stroke = build_stroke(element);
+    Path::from_points(&points, true, fill, stroke, Transform::default())
+}
+
+fn build_polyline_element(element: &ServoLayoutElement) -> Option<Path> {
+    let points = get_attr(element, "points")?;
+    let fill = build_fill(element);
+    let stroke = build_stroke(element);
+    Path::from_points(&points, false, fill, stroke, Transform::default())
 }

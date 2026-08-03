@@ -28,6 +28,10 @@ pub trait Backend {
         &mut self, x1: f32, y1: f32, x2: f32, y2: f32, color: PaintColorDesc, width: f32,
         spatial_id: SpatialId, clip_chain_id: ClipChainId,
     );
+    fn draw_image(
+        &mut self, x: f32, y: f32, w: u32, h: u32, data: &[u8],
+        fallback: PaintColorDesc, spatial_id: SpatialId, clip_chain_id: ClipChainId,
+    );
 }
 
 pub struct FillRectDesc { pub x: f32, pub y: f32, pub w: f32, pub h: f32 }
@@ -70,6 +74,11 @@ impl Renderer {
                         radii.map(|r| RadiiDesc { rx: r.rx, ry: r.ry }),
                         spatial_id, clip_chain_id,
                     );
+                }
+                PaintCommand::DrawImage { x, y, w, h, data, fallback_color } => {
+                    backend.draw_image(*x, *y, *w, *h, data,
+                        PaintColorDesc { r: fallback_color.r, g: fallback_color.g, b: fallback_color.b, a: fallback_color.a },
+                        spatial_id, clip_chain_id);
                 }
                 PaintCommand::StrokeLine { x1, y1, x2, y2, color, width } => {
                     backend.stroke_line(

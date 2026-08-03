@@ -103,39 +103,7 @@ fn emit_node(node: &usvg::Node, ctx: &EmitContext, commands: &mut Vec<PaintComma
     match node {
         usvg::Node::Group(g) => emit_group(g, ctx, commands),
         usvg::Node::SimpleShape(shape) => shape.emit(ctx, commands),
-        usvg::Node::Path(path) => {
-            // Approximate: emit path's bounding box as filled rect.
-            // Vello CPU will replace this with proper path rasterization.
-            let ox = ctx.svg_origin.x;
-            let oy = ctx.svg_origin.y;
-            if let Some(fill) = path.fill() {
-                if let usvg::Paint::Color(c) = fill.paint() {
-                    let b = path.abs_bounding_box();
-                    let color = crate::emitter::color_from_usvg(c, fill.opacity().get());
-                    commands.push(PaintCommand::FillRect {
-                        bounds: crate::emitter::FillRectBounds {
-                            x: ox + b.x(), y: oy + b.y(), w: b.width(), h: b.height(),
-                        },
-                        color,
-                        clip: None,
-                    });
-                }
-            }
-            if let Some(stroke) = path.stroke() {
-                if let usvg::Paint::Color(c) = stroke.paint() {
-                    let b = path.abs_bounding_box();
-                    let color = crate::emitter::color_from_usvg(c, stroke.opacity().get());
-                    commands.push(PaintCommand::StrokeRect {
-                        bounds: crate::emitter::FillRectBounds {
-                            x: ox + b.x(), y: oy + b.y(), w: b.width(), h: b.height(),
-                        },
-                        color,
-                        width: stroke.width().get(),
-                        radii: None,
-                    });
-                }
-            }
-        }
+        usvg::Node::Path(path) => path.emit(ctx, commands),
         _ => {}
     }
 }

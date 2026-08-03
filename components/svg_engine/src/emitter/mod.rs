@@ -7,6 +7,7 @@
 //! Each shape implements the [`Emit`] trait, producing [`PaintCommand`]s
 //! that are later consumed by a [`crate::renderer::Renderer`].
 
+pub mod path;
 pub mod simple;
 
 use webrender_api::units::LayoutPoint;
@@ -24,6 +25,14 @@ pub(crate) enum PaintCommand {
         color: PaintColor,
         width: f32,
         radii: Option<RoundedRadii>,
+    },
+    DrawImage {
+        x: f32,
+        y: f32,
+        w: u32,
+        h: u32,
+        data: Vec<u8>,
+        fallback_color: PaintColor,
     },
     StrokeLine {
         x1: f32,

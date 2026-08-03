@@ -188,6 +188,27 @@ impl Backend for KrillaBackend {
         ));
     }
 
+    fn draw_image(
+        &mut self, x: f32, y: f32, w: u32, h: u32, data: &[u8],
+        _fallback: PaintColorDesc, _spatial_id: SpatialId, _clip_chain_id: ClipChainId,
+    ) {
+        let pdf_x = x;
+        let pdf_y = self.height - y - h as f32;
+        // Build RGB data from RGBA (strip alpha)
+        let mut rgb = Vec::with_capacity((w * h * 3) as usize);
+        for chunk in data.chunks(4) {
+            rgb.push(chunk[0]); rgb.push(chunk[1]); rgb.push(chunk[2]);
+        }
+        // Hex-encode
+        let mut hex = String::with_capacity(rgb.len() * 2);
+        for b in &rgb { hex.push_str(&format!("{:02x}", b)); }
+
+        self.stream.push_str(&format!(
+            "q\n{} 0 0 {} {} {} cm\nBI\n/W {}\n/H {}\n/CS /RGB\n/BPC 8\nID\n<{}>\nEI\nQ\n",
+            w, h, pdf_x, pdf_y, w, h, hex
+        ));
+    }
+
     fn stroke_line(
         &mut self, x1: f32, y1: f32, x2: f32, y2: f32,
         color: PaintColorDesc, width: f32,
