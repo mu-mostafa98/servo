@@ -64,7 +64,7 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
         "path" => build_path_element(&element).map(|p| Node::Path(Box::new(p))),
         "polygon" => build_polygon_element(&element).map(|p| Node::Path(Box::new(p))),
         "polyline" => build_polyline_element(&element).map(|p| Node::Path(Box::new(p))),
-        "text" => build_text_element(&element).map(|t| Node::Text(Box::new(t))),
+        "text" => build_text_element(node),
         "image" => build_image_element(&element).map(|i| Node::Image(Box::new(i))),
         _ => None,
     }
@@ -252,9 +252,78 @@ fn build_polyline_element(element: &ServoLayoutElement) -> Option<Path> {
     Path::from_points(&points, false, fill, stroke, Transform::default())
 }
 
-fn build_text_element(element: &ServoLayoutElement) -> Option<Text> {
-    let id = get_attr(element, "id").unwrap_or_default();
-    Some(Text::new(id, TextRendering::default(), Transform::default()))
+fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
+    let element = node.as_element()?;
+    let x = attr_f32(&element, "x", 0.0);
+    let y = attr_f32(&element, "y", 0.0);
+    let fs = attr_f32(&element, "font-size", 16.0);
+    // Extract text content from DOM children
+    let text = extract_text_content(node);
+    if text.is_empty() {
+        return None;
+    }
+    // Build SVG markup for just this text element → parse via usvg text pipeline
+    let fill_str = get_attr(&element, "fill").unwrap_or_else(|| "black".to_string());
+    let mut extra = String::new();
+    for attr in &["stroke", "stroke-width", "font-weight", "font-family", "font-style", "text-anchor"] {
+        if let Some(v) = get_attr(&element, attr) {
+            extra.push_str(&format!(" {}=\"{}\"", attr, v));
+        }
+    }
+    let svg = format!(
+        r#"<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600"><text x="{}" y="{}" fill="{}" font-size="{}"{}>{}</text></svg>"#,
+        x, y, fill_str, fs, extra, escape_xml(&text)
+    );
+    let mut opt = usvg::Options::default();
+    let mut db = fontdb::Database::new();
+    db.load_system_fonts();
+    opt.fontdb = Arc::new(db);
+    let tree = usvg::Tree::from_str(&svg, &opt).ok()?;
+    // Extract flattened paths from the parsed Text node
+    let mut group = Group::new();
+    for child in tree.root().children() {
+        extract_flattened(child, &mut group);
+    }
+    if group.has_children() {
+        Some(Node::Group(Box::new(group)))
+    } else {
+        None
+    }
+}
+
+fn extract_text_content(node: ServoLayoutNode) -> String {
+    let mut s = String::new();
+    for child in node.dom_children() {
+        if child.as_element().is_some() {
+            s.push_str(&extract_text_content(child));
+        } else {
+            s.push_str(&child.text_content());
+        }
+    }
+    s
+}
+
+fn escape_xml(s: &str) -> String {
+    s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
+}
+
+fn extract_flattened(node: &usvg::Node, group: &mut Group) {
+    match node {
+        usvg::Node::Group(g) => {
+            for child in g.children() {
+                extract_flattened(child, group);
+            }
+        }
+        usvg::Node::Path(path) => {
+            group.push_child(usvg::Node::Path(path.clone()));
+        }
+        usvg::Node::Text(text) => {
+            for child in text.flattened().children() {
+                extract_flattened(child, group);
+            }
+        }
+        _ => {}
+    }
 }
 
 fn build_image_element(element: &ServoLayoutElement) -> Option<Image> {

@@ -123,7 +123,7 @@ fn emit_node(node: &usvg::Node, ctx: &EmitContext, commands: &mut Vec<PaintComma
         usvg::Node::Group(g) => emit_group(g, ctx, commands),
         usvg::Node::SimpleShape(shape) => shape.emit(ctx, commands),
         usvg::Node::Path(path) => path.emit(ctx, commands),
-        usvg::Node::Text(text) => text.emit(ctx, commands),
         usvg::Node::Image(img) => img.emit(ctx, commands),
+        usvg::Node::Text(_) => {} // Text converted to Group(Path) by integration layer
     }
 }

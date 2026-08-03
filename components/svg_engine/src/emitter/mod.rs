@@ -10,7 +10,6 @@
 pub mod image;
 pub mod path;
 pub mod simple;
-pub mod text;
 
 use webrender_api::units::LayoutPoint;
 
