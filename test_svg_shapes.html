@@ -134,7 +134,39 @@
   </text>
 </svg>
 
-<h2>25. Image — placeholder</h2>
+<h2>25. Text — text-anchor middle</h2>
+<p><code>text-anchor="middle" x="100"</code></p>
+<svg width="200" height="150">
+  <text x="100" y="40" fill="black" font-size="16" text-anchor="middle">Centered Text</text>
+  <text x="100" y="70" fill="blue" font-size="16" text-anchor="middle">Also Centered</text>
+</svg>
+
+<h2>26. Text — dx/dy offsets</h2>
+<p><code>dx and dy shift characters</code></p>
+<svg width="200" height="150">
+  <text x="10" y="40" fill="black" font-size="16" dx="0,5,10,15,20,25">WAVY</text>
+  <text x="10" y="80" fill="purple" font-size="16" dy="0,5,0,-5,0">BUMPY</text>
+</svg>
+
+<h2>27. Text — rotate</h2>
+<p><code>rotate characters at angles</code></p>
+<svg width="200" height="150">
+  <text x="30" y="100" fill="darkgreen" font-size="22" rotate="0,15,30,45,60">ROTATE</text>
+</svg>
+
+<h2>28. Text — textPath (curve)</h2>
+<p><code>&lt;textPath&gt; along a curved path</code></p>
+<svg width="200" height="150">
+  <defs>
+    <path id="curve" d="M20,80 Q100,20 180,80" fill="none" stroke="#ccc"/>
+  </defs>
+  <text font-size="14" fill="crimson">
+    <textPath href="#curve" startOffset="10%">Text along a curved path</textPath>
+  </text>
+  <use href="#curve"/>
+</svg>
+
+<h2>29. Image — placeholder</h2>
 <p><code>&lt;image href="test.png" x="20" y="20" width="160" height="110"/&gt;</code></p>
 <svg width="200" height="150"><image href="test.png" x="20" y="20" width="160" height="110"/></svg>
 

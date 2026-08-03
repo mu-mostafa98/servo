@@ -33,8 +33,18 @@ pub(crate) fn build_svg_render_tree<'dom>(
     let size = Size::from_wh(300.0, 150.0)?;
     let mut root = Group::new();
 
+    // Collect <defs> markup once for href="#id" references in textPath
+    let mut defs_xml = String::new();
     for child in root_node.dom_children() {
-        if let Some(node) = build_node(child) {
+        if let Some(elem) = child.as_element() {
+            if elem.local_name().as_ref() == "defs" {
+                defs_xml.push_str(&serialize_defs_subtree(child));
+            }
+        }
+    }
+
+    for child in root_node.dom_children() {
+        if let Some(node) = build_node(child, &defs_xml) {
             root.push_child(node);
         }
     }
@@ -42,7 +52,7 @@ pub(crate) fn build_svg_render_tree<'dom>(
     Some(Arc::new(Tree::new(size, root)))
 }
 
-fn build_node<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
+fn build_node<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str) -> Option<Node> {
     let element = node.as_element()?;
     let tag = element.local_name().as_ref().to_owned();
 
@@ -51,7 +61,7 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
     match tag.as_str() {
         "svg" | "g" => {
             for child in node.dom_children() {
-                if let Some(n) = build_node(child) {
+                if let Some(n) = build_node(child, defs_xml) {
                     group.push_child(n);
                 }
             }
@@ -64,7 +74,7 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
         "path" => build_path_element(&element).map(|p| Node::Path(Box::new(p))),
         "polygon" => build_polygon_element(&element).map(|p| Node::Path(Box::new(p))),
         "polyline" => build_polyline_element(&element).map(|p| Node::Path(Box::new(p))),
-        "text" => build_text_element(node),
+        "text" => build_text_element(node, defs_xml),
         "image" => build_image_element(&element).map(|i| Node::Image(Box::new(i))),
         _ => None,
     }
@@ -252,16 +262,15 @@ fn build_polyline_element(element: &ServoLayoutElement) -> Option<Path> {
     Path::from_points(&points, false, fill, stroke, Transform::default())
 }
 
-fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
+fn build_text_element<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str) -> Option<Node> {
     let element = node.as_element()?;
-    // Serialize the text subtree including <tspan> children
     let inner = serialize_text_subtree(node);
     if inner.is_empty() {
         return None;
     }
     let svg = format!(
-        r#"<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">{}</svg>"#,
-        inner
+        r#"<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">{}{}</svg>"#,
+        defs_xml, inner
     );
     let mut opt = usvg::Options::default();
     let mut db = fontdb::Database::new();
@@ -284,12 +293,14 @@ fn serialize_text_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {
         return escape_xml(&node.text_content());
     };
     let tag = element.local_name().as_ref().to_owned();
-    if tag != "text" && tag != "tspan" {
+    if tag != "text" && tag != "tspan" && tag != "textPath" {
         return String::new();
     }
     let mut attrs = String::new();
     for attr in &["x", "y", "dx", "dy", "fill", "stroke", "stroke-width",
-                  "font-size", "font-weight", "font-family", "font-style", "text-anchor"] {
+                  "font-size", "font-weight", "font-family", "font-style",
+                  "text-anchor", "rotate", "writing-mode",
+                  "startOffset", "href", "xlink:href"] {
         if let Some(v) = get_attr(&element, attr) {
             attrs.push_str(&format!(" {}=\"{}\"", attr, v));
         }
@@ -303,6 +314,24 @@ fn serialize_text_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {
 
 fn escape_xml(s: &str) -> String {
     s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
+}
+
+fn serialize_defs_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {
+    let Some(element) = node.as_element() else {
+        return node.text_content().to_string();
+    };
+    let tag = element.local_name().as_ref().to_owned();
+    let mut attrs = String::new();
+    for attr in &["id", "d", "fill", "stroke", "stroke-width"] {
+        if let Some(v) = get_attr(&element, attr) {
+            attrs.push_str(&format!(" {}=\"{}\"", attr, v));
+        }
+    }
+    let mut children = String::new();
+    for child in node.dom_children() {
+        children.push_str(&serialize_defs_subtree(child));
+    }
+    format!("<{} {}>{}</{}>", tag, attrs.trim(), children, tag)
 }
 
 fn extract_flattened(node: &usvg::Node, group: &mut Group) {
