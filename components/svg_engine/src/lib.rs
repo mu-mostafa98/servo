@@ -19,4 +19,14 @@ pub(crate) mod emitter;
 pub mod renderer;
 mod traversal;
 
+/// Rasterized image produced by the path emitter (Vello CPU output).
+/// Carries raw RGBA pixel data for upload to the compositor.
+pub struct RasterizedImage {
+    pub x: f32,
+    pub y: f32,
+    pub width: u32,
+    pub height: u32,
+    pub data: Vec<u8>,
+}
+
 pub use traversal::{render_svg_tree, render_svg_tree_to};

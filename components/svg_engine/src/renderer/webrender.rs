@@ -97,7 +97,6 @@ impl Backend for WebRenderBackend<'_> {
         &mut self, x: f32, y: f32, w: u32, h: u32, _data: &[u8],
         fallback: PaintColorDesc, spatial_id: SpatialId, clip_chain_id: ClipChainId,
     ) {
-        // Use fallback color for the rect — full image upload needs resource cache.
         let bounds = webrender_api::units::LayoutRect::from_origin_and_size(
             LayoutPoint::new(x, y),
             LayoutSize::new(w as f32, h as f32),
@@ -108,7 +107,20 @@ impl Backend for WebRenderBackend<'_> {
             spatial_id,
             flags: PrimitiveFlags::default(),
         };
+        // Fill with fallback color
         self.wr.push_rect(&info, bounds, webrender_api::ColorF::new(fallback.r, fallback.g, fallback.b, fallback.a));
+        // Dark border to visually indicate complex/rasterized shape
+        let border = webrender_api::BorderSide {
+            color: webrender_api::ColorF::new(0.0, 0.0, 0.0, 0.4),
+            style: webrender_api::BorderStyle::Solid,
+        };
+        let widths = webrender_api::units::LayoutSideOffsets::new_all_same(1.0);
+        let details = webrender_api::BorderDetails::Normal(webrender_api::NormalBorder {
+            top: border, right: border, bottom: border, left: border,
+            radius: BorderRadius::default(),
+            do_aa: true,
+        });
+        self.wr.push_border(&info, bounds, widths, details);
     }
 
     fn stroke_line(

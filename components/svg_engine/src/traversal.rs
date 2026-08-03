@@ -14,6 +14,7 @@ use std::sync::Mutex;
 
 use crate::emitter::{Emit, EmitContext, PaintCommand};
 use crate::renderer::{Backend, Renderer, krilla::KrillaBackend, webrender::WebRenderBackend};
+use crate::RasterizedImage;
 
 static PDF_BACKEND: Mutex<Option<KrillaBackend>> = Mutex::new(None);
 static PDF_Y: Mutex<f32> = Mutex::new(0.0);
@@ -22,6 +23,7 @@ static PDF_Y: Mutex<f32> = Mutex::new(0.0);
 
 /// Render an SVG tree into a WebRender display list (screen output).
 /// Convenience wrapper around [`render_svg_tree_to`] that sets up the viewport clip.
+/// Returns rasterized images from the path emitter for compositor upload.
 pub fn render_svg_tree(
     tree: &usvg::Tree,
     svg_origin: &LayoutPoint,
@@ -29,7 +31,7 @@ pub fn render_svg_tree(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
-) {
+) -> Vec<RasterizedImage> {
     // Clip to viewport bounds (WebRender-specific).
     let svg_bounds = LayoutRect::from_origin_and_size(*svg_origin, svg_size);
     let svg_clip_id = wr.define_clip_rect(spatial_id, svg_bounds);
@@ -37,7 +39,7 @@ pub fn render_svg_tree(
     let svg_clip_chain = wr.define_clip_chain(parent, [svg_clip_id]);
 
     let mut backend = WebRenderBackend { wr };
-    render_svg_tree_to(tree, svg_origin, &mut backend, spatial_id, svg_clip_chain);
+    let images = render_svg_tree_to(tree, svg_origin, &mut backend, spatial_id, svg_clip_chain);
 
     // Also render to PDF — stack SVGs vertically.
     if let Ok(mut opt) = PDF_BACKEND.lock() {
@@ -58,25 +60,38 @@ pub fn render_svg_tree(
             let _ = std::fs::write("svg.pdf", pdf.finish());
         }
     }
+
+    images
 }
 
 /// Render an SVG tree to any backend (WebRender, Krilla, etc.).
 ///
 /// Collects paint commands from emitters and dispatches them to the given backend.
 /// The backend determines the output target — GPU screen, PDF file, etc.
+/// Returns extracted rasterized images (from path emitter) for compositor upload.
 pub fn render_svg_tree_to<B: Backend>(
     tree: &usvg::Tree,
     svg_origin: &LayoutPoint,
     backend: &mut B,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
-) {
+) -> Vec<RasterizedImage> {
     let mut commands: Vec<PaintCommand> = Vec::new();
     let emit_ctx = EmitContext { svg_origin: *svg_origin };
     emit_group(tree.root(), &emit_ctx, &mut commands);
 
+    // Extract rasterized images before consuming commands
+    let images: Vec<RasterizedImage> = commands.iter().filter_map(|cmd| {
+        if let PaintCommand::DrawImage { x, y, w, h, data, .. } = cmd {
+            Some(RasterizedImage { x: *x, y: *y, width: *w, height: *h, data: data.clone() })
+        } else {
+            None
+        }
+    }).collect();
+
     let renderer = Renderer { commands };
     renderer.render(backend, spatial_id, clip_chain_id);
+    images
 }
 
 // ======================= Group Traversal =======================
@@ -104,6 +119,7 @@ fn emit_node(node: &usvg::Node, ctx: &EmitContext, commands: &mut Vec<PaintComma
         usvg::Node::Group(g) => emit_group(g, ctx, commands),
         usvg::Node::SimpleShape(shape) => shape.emit(ctx, commands),
         usvg::Node::Path(path) => path.emit(ctx, commands),
-        _ => {}
+        usvg::Node::Text(text) => text.emit(ctx, commands),
+        usvg::Node::Image(img) => img.emit(ctx, commands),
     }
 }

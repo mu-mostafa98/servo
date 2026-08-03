@@ -64,6 +64,8 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
         "path" => build_path_element(&element).map(|p| Node::Path(Box::new(p))),
         "polygon" => build_polygon_element(&element).map(|p| Node::Path(Box::new(p))),
         "polyline" => build_polyline_element(&element).map(|p| Node::Path(Box::new(p))),
+        "text" => build_text_element(&element).map(|t| Node::Text(Box::new(t))),
+        "image" => build_image_element(&element).map(|i| Node::Image(Box::new(i))),
         _ => None,
     }
 }
@@ -248,4 +250,25 @@ fn build_polyline_element(element: &ServoLayoutElement) -> Option<Path> {
     let fill = build_fill(element);
     let stroke = build_stroke(element);
     Path::from_points(&points, false, fill, stroke, Transform::default())
+}
+
+fn build_text_element(element: &ServoLayoutElement) -> Option<Text> {
+    let id = get_attr(element, "id").unwrap_or_default();
+    Some(Text::new(id, TextRendering::default(), Transform::default()))
+}
+
+fn build_image_element(element: &ServoLayoutElement) -> Option<Image> {
+    let href = get_attr(element, "href")
+        .or_else(|| get_attr(element, "xlink:href"))?;
+    let w = attr_f32(element, "width", 0.0);
+    let h = attr_f32(element, "height", 0.0);
+    if w <= 0.0 || h <= 0.0 { return None; }
+    let size = Size::from_wh(w, h)?;
+    // Use SVG kind as placeholder — real image loading would decode the href
+    Image::new(
+        String::new(), true, size,
+        ImageRendering::default(),
+        ImageKind::SVG(Tree::new(Size::from_wh(1.0, 1.0)?, Group::new())),
+        Transform::default(),
+    )
 }

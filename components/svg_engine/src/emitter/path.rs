@@ -63,6 +63,7 @@ fn to_bezpath(data: &usvg::tiny_skia_path::Path) -> BezPath {
     bez
 }
 
+
 // ======================= Emit impl =======================
 
 impl Emit for usvg::Path {
@@ -72,6 +73,7 @@ impl Emit for usvg::Path {
         }
 
         let b = self.abs_bounding_box();
+
         let w = (b.width().ceil() as u16).max(1);
         let h = (b.height().ceil() as u16).max(1);
 

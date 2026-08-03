@@ -7,8 +7,10 @@
 //! Each shape implements the [`Emit`] trait, producing [`PaintCommand`]s
 //! that are later consumed by a [`crate::renderer::Renderer`].
 
+pub mod image;
 pub mod path;
 pub mod simple;
+pub mod text;
 
 use webrender_api::units::LayoutPoint;
 

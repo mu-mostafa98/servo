@@ -194,10 +194,17 @@ impl Backend for KrillaBackend {
     ) {
         let pdf_x = x;
         let pdf_y = self.height - y - h as f32;
-        // Build RGB data from RGBA (strip alpha)
+        // Convert premultiplied RGBA → straight RGB for PDF inline image
         let mut rgb = Vec::with_capacity((w * h * 3) as usize);
         for chunk in data.chunks(4) {
-            rgb.push(chunk[0]); rgb.push(chunk[1]); rgb.push(chunk[2]);
+            let a = chunk[3] as f32 / 255.0;
+            if a > 0.0 {
+                rgb.push((chunk[0] as f32 / a).min(255.0) as u8);
+                rgb.push((chunk[1] as f32 / a).min(255.0) as u8);
+                rgb.push((chunk[2] as f32 / a).min(255.0) as u8);
+            } else {
+                rgb.push(255); rgb.push(255); rgb.push(255); // transparent → white
+            }
         }
         // Hex-encode
         let mut hex = String::with_capacity(rgb.len() * 2);

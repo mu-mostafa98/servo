@@ -792,7 +792,7 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
             let clip_chain_id = self.clip_chain_id(state.clip_id);
             let origin = rect.min;
             let size = rect.size();
-            render_svg_tree(
+            let _rasters = render_svg_tree(
                 svg_tree,
                 &origin,
                 size,
@@ -800,6 +800,7 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
                 clip_chain_id,
                 self.wr(),
             );
+            // TODO: Upload _rasters to WebRender via compositor ImageKey channel
             return;
         }
 
