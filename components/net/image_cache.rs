@@ -537,6 +537,8 @@ struct ImageCacheStore {
     /// Main struct to handle the cache of `WebRenderImageKey` and
     /// images that do not have a key yet.
     key_cache: KeyCache,
+    /// Maps content hashes to WebRender image keys for CPU-rasterized SVG paths.
+    raw_pixel_keys: FxHashMap<u64, WebRenderImageKey>,
 }
 
 impl ImageCacheStore {
@@ -849,6 +851,7 @@ impl ImageCacheFactory for ImageCacheFactoryImpl {
                 pipeline_id,
                 webview_id,
                 key_cache: KeyCache::new(),
+                raw_pixel_keys: FxHashMap::default(),
                 svg_rasterization_task_store: SvgRasterizationTaskStore::default(),
             })),
             svg_id_image_id_map: Arc::new(Mutex::new(FxHashMap::default())),
@@ -878,6 +881,38 @@ pub struct ImageCacheImpl {
 }
 
 impl ImageCache for ImageCacheImpl {
+    fn upload_raw_pixels(&self, hash: u64, data: Vec<u8>, width: u32, height: u32) {
+        let mut store = self.store.lock();
+        if store.raw_pixel_keys.contains_key(&hash) {
+            return;
+        }
+        // Build a minimal RasterImage and use the existing upload path
+        let frame = pixels::ImageFrame {
+            delay: None,
+            byte_range: 0..data.len(),
+            width,
+            height,
+        };
+        let mut image = pixels::RasterImage {
+            metadata: pixels::ImageMetadata { width, height },
+            format: pixels::PixelFormat::RGBA8,
+            frames: vec![frame],
+            bytes: Arc::new(data),
+            id: None,
+            cors_status: pixels::CorsStatus::Unsafe,
+            is_opaque: false,
+            loop_count: None,
+        };
+        if let Some(key) = store.paint_api.generate_image_key_blocking(store.webview_id) {
+            set_webrender_image_key(&store.paint_api, &mut image, key);
+            store.raw_pixel_keys.insert(hash, key);
+        }
+    }
+
+    fn raw_pixel_image_key(&self, hash: u64) -> Option<webrender_api::ImageKey> {
+        self.store.lock().raw_pixel_keys.get(&hash).copied()
+    }
+
     fn memory_reports(&self, prefix: &str, ops: &mut MallocSizeOfOps) -> Vec<Report> {
         let store_size = self.store.lock().size_of(ops);
         let fontdb_size = self.fontdb.conditional_size_of(ops);

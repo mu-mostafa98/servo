@@ -258,6 +258,14 @@ pub trait ImageCache: Sync + Send {
     /// Fills the image cache with a batch of keys.
     fn dispatch_fill_key_cache_with_batch_of_keys(&self, image_keys: Vec<ImageKey>);
 
+    /// Upload raw RGBA pixel data for CPU-rasterized SVG paths.
+    /// The `hash` identifies the path content; subsequent frames can retrieve
+    /// the `ImageKey` via [`raw_pixel_image_key`].
+    fn upload_raw_pixels(&self, hash: u64, data: Vec<u8>, width: u32, height: u32);
+
+    /// Returns the `ImageKey` for a previously uploaded raw pixel buffer.
+    fn raw_pixel_image_key(&self, hash: u64) -> Option<ImageKey>;
+
     /// Clear the image cache.
     fn clear(&self);
 }

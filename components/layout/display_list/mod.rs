@@ -792,7 +792,7 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
             let clip_chain_id = self.clip_chain_id(state.clip_id);
             let origin = rect.min;
             let size = rect.size();
-            let _rasters = render_svg_tree(
+            let rasters = render_svg_tree(
                 svg_tree,
                 &origin,
                 size,
@@ -800,7 +800,30 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
                 clip_chain_id,
                 self.wr(),
             );
-            // TODO: Upload _rasters to WebRender via compositor ImageKey channel
+            // Upload rasterized images and push them to WebRender same-frame.
+            for raster in &rasters {
+                let hash = raster.content_hash;
+                let image_cache = &self.image_resolver.image_cache;
+                // Upload if not cached (synchronous — generates key + adds image)
+                image_cache.upload_raw_pixels(
+                    hash, raster.data.clone(), raster.width, raster.height,
+                );
+                // Now retrieve the key and push the actual image
+                if let Some(key) = image_cache.raw_pixel_image_key(hash) {
+                    let img_rect = webrender_api::units::LayoutRect::from_origin_and_size(
+                        webrender_api::units::LayoutPoint::new(raster.x, raster.y),
+                        webrender_api::units::LayoutSize::new(raster.width as f32, raster.height as f32),
+                    );
+                    let img_info = self.common_properties(state, clip, &style);
+                    self.wr().push_image(
+                        &img_info, img_rect,
+                        webrender_api::ImageRendering::Auto,
+                        webrender_api::AlphaType::PremultipliedAlpha,
+                        key,
+                        webrender_api::ColorF::WHITE,
+                    );
+                }
+            }
             return;
         }
 

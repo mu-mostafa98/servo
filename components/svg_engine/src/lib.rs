@@ -27,6 +27,8 @@ pub struct RasterizedImage {
     pub width: u32,
     pub height: u32,
     pub data: Vec<u8>,
+    /// Content hash for caching — same path data = same hash.
+    pub content_hash: u64,
 }
 
 pub use traversal::{render_svg_tree, render_svg_tree_to};
