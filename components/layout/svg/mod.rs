@@ -75,7 +75,7 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str) -> Option<Node>
         "polygon" => build_polygon_element(&element).map(|p| Node::Path(Box::new(p))),
         "polyline" => build_polyline_element(&element).map(|p| Node::Path(Box::new(p))),
         "text" => build_text_element(node, defs_xml),
-        "image" => build_image_element(&element).map(|i| Node::Image(Box::new(i))),
+        "image" | "img" => build_image_element(node),
         _ => None,
     }
 }
@@ -83,8 +83,10 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str) -> Option<Node>
 // ======================= Helpers =======================
 
 fn get_attr(element: &ServoLayoutElement, name: &str) -> Option<String> {
+    // SVG namespace
     element
-        .attribute_as_str(&ns!(), &LocalName::from(name))
+        .attribute_as_str(&ns!(svg), &LocalName::from(name))
+        .or_else(|| element.attribute_as_str(&ns!(), &LocalName::from(name)))
         .map(|s| s.to_string())
 }
 
@@ -349,22 +351,92 @@ fn extract_flattened(node: &usvg::Node, group: &mut Group) {
                 extract_flattened(child, group);
             }
         }
+        usvg::Node::Image(img) => {
+            if let usvg::ImageKind::SVG(tree) = img.kind() {
+                extract_flattened(&usvg::Node::Group(Box::new(tree.root().clone())), group);
+            }
+            // Raster images (PNG etc.) — stored as Image node
+        }
         _ => {}
     }
 }
 
-fn build_image_element(element: &ServoLayoutElement) -> Option<Image> {
-    let href = get_attr(element, "href")
-        .or_else(|| get_attr(element, "xlink:href"))?;
-    let w = attr_f32(element, "width", 0.0);
-    let h = attr_f32(element, "height", 0.0);
-    if w <= 0.0 || h <= 0.0 { return None; }
-    let size = Size::from_wh(w, h)?;
-    // Use SVG kind as placeholder — real image loading would decode the href
-    Image::new(
-        String::new(), true, size,
-        ImageRendering::default(),
-        ImageKind::SVG(Tree::new(Size::from_wh(1.0, 1.0)?, Group::new())),
-        Transform::default(),
-    )
+fn build_image_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
+    let element = node.as_element()?;
+    let w = attr_f32(&element, "width", 100.0).max(1.0);
+    let h = attr_f32(&element, "height", 100.0).max(1.0);
+
+    // SVG image via data URI — parse + extract nested shapes
+    if let Some(href) = get_attr(&element, "href").or_else(|| get_attr(&element, "xlink:href")) {
+        if href.starts_with("data:") {
+            if let Some(node) = load_svg_data_uri(&href, w, h) {
+                return Some(node);
+            }
+        } else {
+            if let Some(kind) = load_external_image(&href) {
+                let size = Size::from_wh(w, h).unwrap_or(Size::from_wh(100.0, 100.0).unwrap());
+            if let Some(img) = build_image_success(kind, size) {
+                    return Some(img);
+                }
+            }
+        }
+    }
+
+    // Fallback placeholder — colored rect
+    let fill = Fill::new(Paint::Color(Color::new_rgb(100, 150, 200)), Opacity::ONE, FillRule::NonZero);
+    let shape = SimpleShape::new(
+        SimpleShapeKind::Rect { x: 0.0, y: 0.0, width: w, height: h, rx: None, ry: None },
+        Some(fill), None, Transform::default(),
+    );
+    Some(Node::SimpleShape(Box::new(shape)))
+}
+
+fn load_svg_data_uri(href: &str, w: f32, h: f32) -> Option<Node> {
+    let svg = format!(
+        r#"<svg xmlns="http://www.w3.org/2000/svg" width="{}" height="{}"><image href="{}" x="0" y="0" width="{}" height="{}"/></svg>"#,
+        w, h, escape_xml(href), w, h
+    );
+    let opt = usvg::Options::default();
+    let tree = usvg::Tree::from_str(&svg, &opt).ok()?;
+    let mut group = Group::new();
+    for child in tree.root().children() {
+        extract_flattened(child, &mut group);
+    }
+    if group.has_children() {
+        Some(Node::Group(Box::new(group)))
+    } else {
+        None
+    }
+}
+
+fn build_image_success(kind: ImageKind, size: Size) -> Option<Node> {
+    Image::new(String::new(), true, size, ImageRendering::default(), kind, Transform::default())
+        .map(|img| Node::Image(Box::new(img)))
+}
+
+fn load_external_image(href: &str) -> Option<ImageKind> {
+    // Try multiple locations for the file
+    let candidates: Vec<std::path::PathBuf> = vec![
+        std::env::current_dir().ok()?.join(href),
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).join(href),
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).parent()?.join(href),
+        std::path::Path::new(env!("CARGO_MANIFEST_DIR")).parent()?.parent()?.join(href),
+    ];
+    for path in &candidates {
+        if let Ok(data) = std::fs::read(path) {
+            return detect_image_kind(data);
+        }
+    }
+    None
+}
+
+fn detect_image_kind(data: Vec<u8>) -> Option<ImageKind> {
+    if data.len() < 8 { return None; }
+    match &data[0..4] {
+        b"\x89PNG" => Some(ImageKind::PNG(Arc::new(data))),
+        b"\xff\xd8\xff" => Some(ImageKind::JPEG(Arc::new(data))),
+        b"GIF8" => Some(ImageKind::GIF(Arc::new(data))),
+        b"RIFF" if data.len() > 8 && &data[8..12] == b"WEBP" => Some(ImageKind::WEBP(Arc::new(data))),
+        _ => None,
+    }
 }

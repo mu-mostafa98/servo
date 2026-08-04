@@ -81,7 +81,7 @@ pub fn render_svg_tree_to<B: Backend>(
     emit_group(tree.root(), &emit_ctx, &mut commands);
 
     // Extract rasterized images before consuming commands
-    let images: Vec<RasterizedImage> = commands.iter().enumerate().filter_map(|(i, cmd)| {
+    let images: Vec<RasterizedImage> = commands.iter().enumerate().filter_map(|(_i, cmd)| {
         if let PaintCommand::DrawImage { x, y, w, h, data, .. } = cmd {
             use std::hash::{Hash, Hasher};
             let mut hasher = std::collections::hash_map::DefaultHasher::new();
