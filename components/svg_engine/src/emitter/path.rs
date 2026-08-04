@@ -10,7 +10,10 @@ use std::hash::{Hash, Hasher};
 use vello_cpu::kurbo::BezPath;
 use vello_cpu::{Pixmap, RenderContext, Resources};
 
-use super::{Emit, EmitContext, PaintCommand};
+use super::{
+    color_from_usvg, convert_linear_gradient, convert_radial_gradient,
+    gradient_fallback_color, Emit, EmitContext, PaintCommand,
+};
 
 // ======================= Cache =======================
 
@@ -63,6 +66,30 @@ fn to_bezpath(data: &usvg::tiny_skia_path::Path) -> BezPath {
     bez
 }
 
+/// Set the paint on the RenderContext: solid color or gradient.
+fn set_path_paint(
+    context: &mut RenderContext,
+    paint: &usvg::Paint,
+    bbox: usvg::Rect,
+) {
+    match paint {
+        usvg::Paint::Color(c) => {
+            context.set_paint(vello_color(c));
+        }
+        usvg::Paint::LinearGradient(lg) => {
+            let g = convert_linear_gradient(lg, bbox);
+            context.set_paint(g);
+        }
+        usvg::Paint::RadialGradient(rg) => {
+            let g = convert_radial_gradient(rg, bbox);
+            context.set_paint(g);
+        }
+        _ => {
+            // Pattern — fall back to gray.
+            context.set_paint(vello_cpu::color::AlphaColor::<vello_cpu::color::Srgb>::from_rgba8(128, 128, 128, 255));
+        }
+    }
+}
 
 // ======================= Emit impl =======================
 
@@ -89,21 +116,17 @@ impl Emit for usvg::Path {
 
         // Fill
         if let Some(fill) = self.fill() {
-            if let usvg::Paint::Color(c) = fill.paint() {
-                context.set_paint(vello_color(c));
-                context.fill_path(&bez);
-            }
+            set_path_paint(&mut context, fill.paint(), b);
+            context.fill_path(&bez);
         }
 
         // Stroke
         if let Some(stroke) = self.stroke() {
-            if let usvg::Paint::Color(c) = stroke.paint() {
-                let sw = stroke.width().get() as f64;
-                let vello_stroke = vello_cpu::kurbo::Stroke::new(sw);
-                context.set_stroke(vello_stroke);
-                context.set_paint(vello_color(c));
-                context.stroke_path(&bez);
-            }
+            set_path_paint(&mut context, stroke.paint(), b);
+            let sw = stroke.width().get() as f64;
+            let vello_stroke = vello_cpu::kurbo::Stroke::new(sw);
+            context.set_stroke(vello_stroke);
+            context.stroke_path(&bez);
         }
 
         context.flush();
@@ -111,11 +134,18 @@ impl Emit for usvg::Path {
 
         let rgba: Vec<u8> = target.data().iter().flat_map(|p| [p.r, p.g, p.b, p.a]).collect();
 
-        // Fallback color from first fill or stroke
+        // Fallback color from first fill or stroke.
         let fallback = self.fill().and_then(|f| match f.paint() {
-            usvg::Paint::Color(c) => Some(super::color_from_usvg(c, f.opacity().get())),
+            usvg::Paint::Color(c) => Some(color_from_usvg(c, f.opacity().get())),
+            usvg::Paint::LinearGradient(lg) => Some(gradient_fallback_color(lg.stops())),
+            usvg::Paint::RadialGradient(rg) => Some(gradient_fallback_color(rg.stops())),
             _ => None,
-        }).unwrap_or_else(|| super::PaintColor { r: 0.5, g: 0.5, b: 0.5, a: 1.0 });
+        }).or_else(|| self.stroke().and_then(|s| match s.paint() {
+            usvg::Paint::Color(c) => Some(color_from_usvg(c, s.opacity().get())),
+            usvg::Paint::LinearGradient(lg) => Some(gradient_fallback_color(lg.stops())),
+            usvg::Paint::RadialGradient(rg) => Some(gradient_fallback_color(rg.stops())),
+            _ => None,
+        })).unwrap_or_else(|| super::PaintColor { r: 0.5, g: 0.5, b: 0.5, a: 1.0 });
 
         commands.push(PaintCommand::DrawImage {
             x: ctx.svg_origin.x + b.x(),

@@ -94,3 +94,153 @@ pub(crate) fn color_from_usvg(c: &usvg::Color, opacity: f32) -> PaintColor {
         a: opacity,
     }
 }
+
+// ======================= Gradient Conversion =======================
+
+use vello_cpu::color::{AlphaColor, DynamicColor, Srgb};
+use vello_cpu::kurbo::Point;
+use vello_cpu::peniko::{ColorStop, ColorStops, Extend, Gradient};
+
+/// Convert a usvg linear gradient to a peniko [`Gradient`] with coordinates
+/// relative to the shape's pixmap (top-left origin at 0,0).
+pub(crate) fn convert_linear_gradient(
+    gradient: &usvg::LinearGradient,
+    bbox: usvg::Rect,
+) -> Gradient {
+    let (x1, y1) = (gradient.x1() as f64, gradient.y1() as f64);
+    let (x2, y2) = (gradient.x2() as f64, gradient.y2() as f64);
+
+    // Compute user-space coordinates.
+    let (start, end) = resolve_user_space_coords(
+        gradient.units(), gradient.transform(),
+        x1, y1, x2, y2, bbox,
+    );
+
+    // Convert to pixmap-local space (subtract bbox origin).
+    let bx = bbox.x() as f64;
+    let by = bbox.y() as f64;
+    let local_start = Point::new(start.x as f64 - bx, start.y as f64 - by);
+    let local_end = Point::new(end.x as f64 - bx, end.y as f64 - by);
+
+    let stops = convert_stops(gradient.stops());
+    let mut g = Gradient::new_linear(local_start, local_end);
+    g.extend = convert_spread(gradient.spread_method());
+    g.stops = stops;
+    g
+}
+
+/// Convert a usvg radial gradient to a peniko [`Gradient`] with coordinates
+/// relative to the shape's pixmap (top-left origin at 0,0).
+pub(crate) fn convert_radial_gradient(
+    gradient: &usvg::RadialGradient,
+    bbox: usvg::Rect,
+) -> Gradient {
+    let fx = gradient.fx() as f64;
+    let fy = gradient.fy() as f64;
+    let fr = gradient.fr().get() as f64;
+    let cx = gradient.cx() as f64;
+    let cy = gradient.cy() as f64;
+    let r = gradient.r().get() as f64;
+
+    // Compute user-space coordinates for focal point and circle center.
+    let (focal, center) = resolve_user_space_coords(
+        gradient.units(), gradient.transform(),
+        fx, fy, cx, cy, bbox,
+    );
+
+    // Convert to pixmap-local space.
+    let bx = bbox.x() as f64;
+    let by = bbox.y() as f64;
+    let local_focal = Point::new(focal.x as f64 - bx, focal.y as f64 - by);
+    let local_center = Point::new(center.x as f64 - bx, center.y as f64 - by);
+
+    // Scale radii: for ObjectBoundingBox, multiply by bbox diagonal factor.
+    // For UserSpaceOnUse, radii are in user units (no scaling needed).
+    let (fr_local, r_local) = if gradient.units() == usvg::Units::ObjectBoundingBox {
+        // Radii in ObjectBoundingBox are relative to the bbox diagonal (sqrt(w²+h²)/√2).
+        let factor = ((bbox.width() as f64).powi(2) + (bbox.height() as f64).powi(2)).sqrt() / 1.41421356;
+        (fr * factor, r * factor)
+    } else {
+        (fr, r)
+    };
+
+    let stops = convert_stops(gradient.stops());
+    let mut g = Gradient::new_two_point_radial(
+        local_focal, fr_local as f32,
+        local_center, r_local as f32,
+    );
+    g.extend = convert_spread(gradient.spread_method());
+    g.stops = stops;
+    g
+}
+
+/// Compute user-space coordinates for two points, handling
+/// ObjectBoundingBox → UserSpaceOnUse resolution and gradient transform.
+fn resolve_user_space_coords(
+    units: usvg::Units,
+    transform: usvg::Transform,
+    px1: f64, py1: f64,
+    px2: f64, py2: f64,
+    bbox: usvg::Rect,
+) -> (usvg::tiny_skia_path::Point, usvg::tiny_skia_path::Point) {
+    let (ux1, uy1, ux2, uy2) = if units == usvg::Units::ObjectBoundingBox {
+        // Map from normalized (0..1) coords to user space via bounding box.
+        let bx = bbox.x() as f64;
+        let by = bbox.y() as f64;
+        let bw = bbox.width() as f64;
+        let bh = bbox.height() as f64;
+        (bx + px1 * bw, by + py1 * bh, bx + px2 * bw, by + py2 * bh)
+    } else {
+        (px1, py1, px2, py2)
+    };
+
+    // Apply the gradient's own transform.
+    let mut p1 = usvg::tiny_skia_path::Point { x: ux1 as f32, y: uy1 as f32 };
+    let mut p2 = usvg::tiny_skia_path::Point { x: ux2 as f32, y: uy2 as f32 };
+    transform.map_point(&mut p1);
+    transform.map_point(&mut p2);
+
+    (p1, p2)
+}
+
+/// Convert usvg stops to peniko [`ColorStops`].
+fn convert_stops(stops: &[usvg::Stop]) -> ColorStops {
+    let items: Vec<ColorStop> = stops.iter().map(|stop| {
+        let c = stop.color();
+        let a = stop.opacity().get();
+        ColorStop {
+            offset: stop.offset().get(),
+            color: DynamicColor::from_alpha_color(
+                AlphaColor::<Srgb>::from_rgba8(c.red, c.green, c.blue, (a * 255.0) as u8),
+            ),
+        }
+    }).collect();
+    ColorStops(items.into())
+}
+
+/// Convert usvg spread method to peniko [`Extend`].
+fn convert_spread(method: usvg::SpreadMethod) -> Extend {
+    match method {
+        usvg::SpreadMethod::Pad => Extend::Pad,
+        usvg::SpreadMethod::Reflect => Extend::Reflect,
+        usvg::SpreadMethod::Repeat => Extend::Repeat,
+    }
+}
+
+/// Returns the first color from a gradient's stops as a fallback [`PaintColor`].
+pub(crate) fn gradient_fallback_color(stops: &[usvg::Stop]) -> PaintColor {
+    stops.first().map(|s| {
+        let c = s.color();
+        PaintColor {
+            r: c.red as f32 / 255.0,
+            g: c.green as f32 / 255.0,
+            b: c.blue as f32 / 255.0,
+            a: s.opacity().get(),
+        }
+    }).unwrap_or(PaintColor { r: 0.5, g: 0.5, b: 0.5, a: 1.0 })
+}
+
+/// Check if a [`usvg::Paint`] is any gradient variant.
+pub(crate) fn is_gradient_paint(paint: &usvg::Paint) -> bool {
+    matches!(paint, usvg::Paint::LinearGradient(_) | usvg::Paint::RadialGradient(_))
+}
