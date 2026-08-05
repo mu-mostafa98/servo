@@ -14,7 +14,7 @@
 //! the DOM element and construct the corresponding shape struct.  There is
 //! no shared mutable state and no side effects.
 
-use layout_api::{LayoutElement, LayoutNode};
+use layout_api::LayoutNode;
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::values::computed::LengthPercentage;
 use style::values::generics::length::GenericLengthPercentageOrAuto;
@@ -54,6 +54,11 @@ pub(crate) fn build_shape(
 }
 
 /// Build a text span from a `<text>` or `<tspan>` DOM element.
+///
+/// Only the element's **own direct text** is collected — `<tspan>` children
+/// are *not* recursed into. The builder assembles `<text>` as an ordered list
+/// of runs (one per bare text node / `<tspan>`), so that each run keeps its
+/// own style and font. This preserves per-tspan `fill` and `font-size`.
 pub(crate) fn build_text(
     node: ServoLayoutNode,
     get: &dyn Fn(&str) -> Option<String>,
@@ -71,7 +76,7 @@ pub(crate) fn build_text(
             _ => TextAnchor::Start,
         })
         .unwrap_or(TextAnchor::Start);
-    let text = extract_text_content(node);
+    let text = extract_direct_text(node);
     if text.is_empty() {
         return None;
     }
@@ -84,6 +89,38 @@ pub(crate) fn build_text(
         text_anchor,
         glyphs: vec![],
         font_instance_key: None,
+        advance_offset: 0.0,
+    })
+}
+
+/// Build a text span from a raw string, for bare text-node runs inside a
+/// `<text>` that have no attributes of their own (they inherit the parent's
+/// x/y/anchor). The run's style is applied by the caller via the parent node.
+pub(crate) fn build_text_run(
+    text: String,
+    get: &dyn Fn(&str) -> Option<String>,
+    fs: f32,
+) -> Option<TextSpan> {
+    if text.is_empty() {
+        return None;
+    }
+    Some(TextSpan {
+        text,
+        x: parse_length("x", get, fs).unwrap_or(0.0),
+        y: parse_length("y", get, fs).unwrap_or(0.0),
+        dx: parse_length_list("dx", get, fs),
+        dy: parse_length_list("dy", get, fs),
+        text_anchor: get("text-anchor")
+            .as_deref()
+            .map(|v| match v.trim() {
+                "middle" => TextAnchor::Middle,
+                "end" => TextAnchor::End,
+                _ => TextAnchor::Start,
+            })
+            .unwrap_or(TextAnchor::Start),
+        glyphs: vec![],
+        font_instance_key: None,
+        advance_offset: 0.0,
     })
 }
 
@@ -108,15 +145,16 @@ fn parse_length_simple(val: &str, _fs: f32) -> Option<f32> {
     val.trim_end_matches("px").parse::<f32>().ok()
 }
 
-/// Extract concatenated text content from a DOM node and its descendants.
-fn extract_text_content(node: ServoLayoutNode) -> String {
+/// Extract the **direct** text content of a DOM node — the concatenated
+/// text of its non-element children only. `<tspan>` (and other element)
+/// children are intentionally excluded: the builder treats each `<tspan>` as
+/// its own run with its own style. This prevents flattening tspans into a
+/// single string, which would lose per-tspan `fill`/`font-size` and would
+/// insert whitespace/newlines that render as missing-glyph boxes.
+fn extract_direct_text(node: ServoLayoutNode) -> String {
     let mut text = String::new();
     for child in node.dom_children() {
-        if let Some(elem) = child.as_element() {
-            if elem.local_name().as_ref() == "tspan" {
-                text.push_str(&extract_text_content(child));
-            }
-        } else {
+        if child.as_element().is_none() {
             text.push_str(&child.text_content());
         }
     }

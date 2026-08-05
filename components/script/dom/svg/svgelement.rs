@@ -146,7 +146,11 @@ impl VirtualMethods for SVGElement {
                 &local_name!("y") |
                 &local_name!("width") |
                 &local_name!("height") |
-                &local_name!("d")
+                &local_name!("d") |
+                &local_name!("font-size") |
+                &local_name!("font-family") |
+                &local_name!("font-style") |
+                &local_name!("font-weight")
         ) || self
             .super_type()
             .unwrap()
@@ -312,6 +316,35 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             &parser_context,
             "fill-rule",
             longhands::fill_rule::parse_declared,
+            push,
+        );
+
+        // Font presentation attributes (SVG spec §10.10). These are required so
+        // that `<text>` and `<tspan>` `font-size`/`font-family`/`font-style`/
+        // `font-weight` attributes reach the computed `font` used by the SVG
+        // engine's text shaper. Without this, every span uses the default font.
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-size",
+            longhands::font_size::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-family",
+            longhands::font_family::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-style",
+            longhands::font_style::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-weight",
+            longhands::font_weight::parse_declared,
             push,
         );
 
