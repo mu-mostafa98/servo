@@ -32,6 +32,19 @@ pub trait Backend {
         &mut self, x: f32, y: f32, w: u32, h: u32, data: &[u8],
         fallback: PaintColorDesc, spatial_id: SpatialId, clip_chain_id: ClipChainId,
     );
+    fn draw_text(
+        &mut self, x: f32, y: f32, glyphs: &[TextGlyphDesc],
+        font_size: f32, color: PaintColorDesc,
+        spatial_id: SpatialId, clip_chain_id: ClipChainId,
+    );
+}
+
+#[derive(Debug, Clone, Copy)]
+pub struct TextGlyphDesc {
+    pub glyph_id: u32,
+    pub x: f32,
+    pub y: f32,
+    pub advance: f32,
 }
 
 pub struct FillRectDesc { pub x: f32, pub y: f32, pub w: f32, pub h: f32 }
@@ -85,6 +98,16 @@ impl Renderer {
                         *x1, *y1, *x2, *y2,
                         PaintColorDesc { r: color.r, g: color.g, b: color.b, a: color.a },
                         *width,
+                        spatial_id, clip_chain_id,
+                    );
+                }
+                PaintCommand::Text { x, y, glyphs, color, font_size, .. } => {
+                    let glyph_descs: Vec<TextGlyphDesc> = glyphs.iter().map(|g| {
+                        TextGlyphDesc { glyph_id: g.glyph_id, x: g.x, y: g.y, advance: g.advance }
+                    }).collect();
+                    backend.draw_text(
+                        *x, *y, &glyph_descs, *font_size,
+                        PaintColorDesc { r: color.r, g: color.g, b: color.b, a: color.a },
                         spatial_id, clip_chain_id,
                     );
                 }

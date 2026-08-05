@@ -11,7 +11,7 @@ use webrender_api::{
     SpatialId, TransformStyle,
 };
 
-use super::{Backend, ClipDesc, FillRectDesc, PaintColorDesc, RadiiDesc};
+use super::{Backend, ClipDesc, FillRectDesc, PaintColorDesc, RadiiDesc, TextGlyphDesc};
 
 pub(crate) struct WebRenderBackend<'a> {
     pub wr: &'a mut DisplayListBuilder,
@@ -101,6 +101,44 @@ impl Backend for WebRenderBackend<'_> {
         // via push_image(key). This fallback path is only used when the image
         // cache upload fails (no key available).
         let _ = (x, y, w, h);
+    }
+
+    fn draw_text(
+        &mut self, x: f32, y: f32, glyphs: &[TextGlyphDesc],
+        font_size: f32, color: PaintColorDesc,
+        spatial_id: SpatialId, clip_chain_id: ClipChainId,
+    ) {
+        if glyphs.is_empty() {
+            return;
+        }
+        // Compute total advance for clip bounds.
+        let max_x = glyphs.last().map(|g| g.x + g.advance).unwrap_or(0.0);
+        let bounds = LayoutRect::from_origin_and_size(
+            LayoutPoint::new(x, y - font_size),
+            LayoutSize::new(max_x.max(1.0), font_size * 1.5),
+        );
+        // Render each glyph as a filled rectangle.
+        for g in glyphs {
+            let gx = x + g.x;
+            let gy = y + g.y;
+            let gw = g.advance.max(1.0);
+            let gh = font_size;
+            let glyph_rect = LayoutRect::from_origin_and_size(
+                LayoutPoint::new(gx, gy - font_size),
+                LayoutSize::new(gw, gh),
+            );
+            let glyph_info = CommonItemProperties {
+                clip_rect: bounds,
+                clip_chain_id,
+                spatial_id,
+                flags: PrimitiveFlags::default(),
+            };
+            self.wr.push_rect(
+                &glyph_info,
+                glyph_rect,
+                webrender_api::ColorF::new(color.r, color.g, color.b, color.a),
+            );
+        }
     }
 
     fn stroke_line(

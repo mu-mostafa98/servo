@@ -77,7 +77,11 @@ pub fn render_svg_tree_to<B: Backend>(
     clip_chain_id: ClipChainId,
 ) -> Vec<RasterizedImage> {
     let mut commands: Vec<PaintCommand> = Vec::new();
-    let emit_ctx = EmitContext { svg_origin: *svg_origin };
+    let emit_ctx = EmitContext {
+        svg_origin: *svg_origin,
+        fontdb: Some(tree.fontdb().clone()),
+        font_indices: None,
+    };
     emit_group(tree.root(), &emit_ctx, &mut commands);
 
     // Extract rasterized images before consuming commands
@@ -103,13 +107,19 @@ pub fn render_svg_tree_to<B: Backend>(
 fn emit_group(group: &usvg::Group, ctx: &EmitContext, commands: &mut Vec<PaintCommand>) {
     // Apply group's transform.
     let sub_ctx = if group.transform().is_identity() {
-        EmitContext { svg_origin: ctx.svg_origin }
+        EmitContext {
+            svg_origin: ctx.svg_origin,
+            fontdb: ctx.fontdb.clone(),
+            font_indices: ctx.font_indices.clone(),
+        }
     } else {
         EmitContext {
             svg_origin: LayoutPoint::new(
                 ctx.svg_origin.x + group.transform().tx,
                 ctx.svg_origin.y + group.transform().ty,
             ),
+            fontdb: ctx.fontdb.clone(),
+            font_indices: ctx.font_indices.clone(),
         }
     };
 
@@ -124,6 +134,6 @@ fn emit_node(node: &usvg::Node, ctx: &EmitContext, commands: &mut Vec<PaintComma
         usvg::Node::SimpleShape(shape) => shape.emit(ctx, commands),
         usvg::Node::Path(path) => path.emit(ctx, commands),
         usvg::Node::Image(img) => img.emit(ctx, commands),
-        usvg::Node::Text(_) => {} // Text converted to Group(Path) by integration layer
+        usvg::Node::Text(text) => text.emit(ctx, commands),
     }
 }

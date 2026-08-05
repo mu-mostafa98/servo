@@ -569,15 +569,43 @@ fn build_text_element<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str) -> Opti
     db.load_system_fonts();
     opt.fontdb = Arc::new(db);
     let tree = usvg::Tree::from_str(&svg, &opt).ok()?;
+
+    // Pass through Text nodes for simple text (solid fill, no textPath/rotate/dx/dy).
+    // The text emitter will render them natively. Complex text is flattened to paths.
     let mut group = Group::new();
+    let mut has_nodes = false;
     for child in tree.root().children() {
-        extract_flattened(child, &mut group);
+        match child {
+            usvg::Node::Text(text) if is_simple_text(text) => {
+                group.push_child(usvg::Node::Text(text.clone()));
+                has_nodes = true;
+            }
+            other => {
+                extract_flattened(other, &mut group);
+                has_nodes = true;
+            }
+        }
     }
-    if group.has_children() {
+    if has_nodes {
         Some(Node::Group(Box::new(group)))
     } else {
         None
     }
+}
+
+/// Check if a usvg::Text is suitable for native glyph rendering.
+fn is_simple_text(text: &usvg::Text) -> bool {
+    // Must not have per-glyph transforms.
+    if !text.dx().is_empty() || !text.dy().is_empty() || !text.rotate().is_empty() {
+        return false;
+    }
+    // Must not use textPath.
+    for chunk in text.chunks() {
+        if !matches!(chunk.text_flow(), usvg::TextFlow::Linear) {
+            return false;
+        }
+    }
+    true
 }
 
 fn serialize_text_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {

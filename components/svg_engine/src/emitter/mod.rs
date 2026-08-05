@@ -10,6 +10,10 @@
 pub mod image;
 pub mod path;
 pub mod simple;
+pub mod text;
+
+use std::collections::HashMap;
+use std::sync::Arc;
 
 use webrender_api::units::LayoutPoint;
 
@@ -43,6 +47,29 @@ pub(crate) enum PaintCommand {
         color: PaintColor,
         width: f32,
     },
+    /// Render text glyphs directly via the backend's native text API.
+    /// Used for simple text (solid fill, no textPath/rotate/dx/dy).
+    Text {
+        x: f32,
+        y: f32,
+        glyphs: Vec<TextGlyph>,
+        font_index: usize,
+        font_size: f32,
+        color: PaintColor,
+    },
+}
+
+/// A positioned glyph for [`PaintCommand::Text`].
+#[derive(Debug, Clone, Copy)]
+pub(crate) struct TextGlyph {
+    /// Glyph ID within the font.
+    pub glyph_id: u32,
+    /// X position relative to the text origin.
+    pub x: f32,
+    /// Y position relative to the text origin.
+    pub y: f32,
+    /// Horizontal advance width to the next glyph.
+    pub advance: f32,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -76,6 +103,10 @@ pub(crate) struct RoundedRadii {
 /// Bundled context passed to every [`Emit::emit`] call.
 pub(crate) struct EmitContext {
     pub svg_origin: LayoutPoint,
+    /// Optional font database for text glyph shaping.
+    pub fontdb: Option<Arc<fontdb::Database>>,
+    /// Map from usvg::Font to font index (for backend font lookup).
+    pub font_indices: Option<HashMap<usvg::Font, usize>>,
 }
 
 /// Convert an SVG shape into backend-agnostic paint commands.

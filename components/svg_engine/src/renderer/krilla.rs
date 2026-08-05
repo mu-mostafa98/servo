@@ -9,7 +9,7 @@
 
 use webrender_api::{ClipChainId, SpatialId};
 
-use super::{Backend, ClipDesc, FillRectDesc, PaintColorDesc, RadiiDesc};
+use super::{Backend, ClipDesc, FillRectDesc, PaintColorDesc, RadiiDesc, TextGlyphDesc};
 
 /// Minimal PDF backend. Produces valid PDF output suitable for viewing.
 pub struct KrillaBackend {
@@ -222,5 +222,23 @@ impl Backend for KrillaBackend {
         _spatial_id: SpatialId, _clip_chain_id: ClipChainId,
     ) {
         self.stream.push_str(&self.pdf_line(x1, y1, x2, y2, color.r, color.g, color.b, width));
+    }
+
+    fn draw_text(
+        &mut self, x: f32, y: f32, glyphs: &[TextGlyphDesc],
+        font_size: f32, color: PaintColorDesc,
+        _spatial_id: SpatialId, _clip_chain_id: ClipChainId,
+    ) {
+        // Render text glyphs as filled rectangles in the PDF.
+        for g in glyphs {
+            let gx = x + g.x;
+            let gy = self.height - (y + g.y) - font_size;
+            let gw = g.advance.max(1.0);
+            let gh = font_size;
+            self.stream.push_str(&format!(
+                "{} {} {} {} re\n{} {} {} rg\nf\n",
+                gx, gy, gw, gh, color.r, color.g, color.b,
+            ));
+        }
     }
 }
