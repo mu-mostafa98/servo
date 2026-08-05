@@ -57,14 +57,14 @@ fn build_gradients_from_dom<'dom>(root_node: ServoLayoutNode<'dom>) -> GradientS
         // Found a <defs> — iterate its children for gradient elements.
         for defs_child in child.dom_children() {
             let Some(grad_elem) = defs_child.as_element() else { continue };
-            let tag = grad_elem.local_name().as_ref();
-            match tag {
-                "lineargradient" | "linearGradient" => {
+            let tag = grad_elem.local_name().as_ref().to_lowercase();
+            match tag.as_str() {
+                "lineargradient" => {
                     if let Some(g) = build_linear_gradient_from_dom(&grad_elem, defs_child) {
                         linear.push(Arc::new(g));
                     }
                 }
-                "radialgradient" | "radialGradient" => {
+                "radialgradient" => {
                     if let Some(g) = build_radial_gradient_from_dom(&grad_elem, defs_child) {
                         radial.push(Arc::new(g));
                     }
@@ -585,8 +585,10 @@ fn serialize_text_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {
         return escape_xml(&node.text_content());
     };
     let html_tag = element.local_name().as_ref().to_owned();
-    // Compare against lowercased names (HTML parsing lowercases all tag names).
-    if html_tag != "text" && html_tag != "tspan" && html_tag != "textpath" {
+    // Accept both lowercase (HTML parser) and SVG-cased names.
+    if html_tag != "text" && html_tag != "tspan"
+        && html_tag != "textpath" && html_tag != "textPath"
+    {
         return String::new();
     }
     let tag = svg_tag_name(&html_tag);

@@ -100,6 +100,7 @@ pub(crate) fn color_from_usvg(c: &usvg::Color, opacity: f32) -> PaintColor {
 use vello_cpu::color::{AlphaColor, DynamicColor, Srgb};
 use vello_cpu::kurbo::Point;
 use vello_cpu::peniko::{ColorStop, ColorStops, Extend, Gradient};
+use vello_cpu::RenderContext;
 
 /// Convert a usvg linear gradient to a peniko [`Gradient`] with coordinates
 /// relative to the shape's pixmap (top-left origin at 0,0).
@@ -131,10 +132,15 @@ pub(crate) fn convert_linear_gradient(
 
 /// Convert a usvg radial gradient to a peniko [`Gradient`] with coordinates
 /// relative to the shape's pixmap (top-left origin at 0,0).
+///
+/// SVG radial gradients on non-square bounding boxes are elliptical.
+/// Since peniko only supports circular radial gradients, the caller must
+/// apply a [`PaintTransform`] (via `RenderContext::set_paint_transform`) to
+/// stretch the circular gradient into an ellipse matching the bbox aspect ratio.
 pub(crate) fn convert_radial_gradient(
     gradient: &usvg::RadialGradient,
     bbox: usvg::Rect,
-) -> Gradient {
+) -> (Gradient, Option<PaintTransform>) {
     let fx = gradient.fx() as f64;
     let fy = gradient.fy() as f64;
     let fr = gradient.fr().get() as f64;
@@ -142,36 +148,90 @@ pub(crate) fn convert_radial_gradient(
     let cy = gradient.cy() as f64;
     let r = gradient.r().get() as f64;
 
-    // Compute user-space coordinates for focal point and circle center.
-    let (focal, center) = resolve_user_space_coords(
+    let bw = bbox.width() as f64;
+    let bh = bbox.height() as f64;
+    let bx = bbox.x() as f64;
+    let by = bbox.y() as f64;
+
+    // Compute pixmap-local center and focal (using actual bbox dimensions).
+    let (pixmap_focal, pixmap_center) = resolve_user_space_coords(
         gradient.units(), gradient.transform(),
         fx, fy, cx, cy, bbox,
     );
+    let pixmap_center_x = pixmap_center.x as f64 - bx;
+    let pixmap_center_y = pixmap_center.y as f64 - by;
 
-    // Convert to pixmap-local space.
-    let bx = bbox.x() as f64;
-    let by = bbox.y() as f64;
-    let local_focal = Point::new(focal.x as f64 - bx, focal.y as f64 - by);
-    let local_center = Point::new(center.x as f64 - bx, center.y as f64 - by);
+    // Determine whether we need aspect-ratio correction.
+    let needs_aspect = gradient.units() == usvg::Units::ObjectBoundingBox
+        && (bw - bh).abs() > 0.01 && bw > 0.0 && bh > 0.0;
 
-    // Scale radii: for ObjectBoundingBox, multiply by bbox diagonal factor.
-    // For UserSpaceOnUse, radii are in user units (no scaling needed).
-    let (fr_local, r_local) = if gradient.units() == usvg::Units::ObjectBoundingBox {
-        // Radii in ObjectBoundingBox are relative to the bbox diagonal (sqrt(w²+h²)/√2).
-        let factor = ((bbox.width() as f64).powi(2) + (bbox.height() as f64).powi(2)).sqrt() / 1.41421356;
-        (fr * factor, r * factor)
+    // Build the paint transform that stretches the circular gradient into an
+    // ellipse matching the bbox aspect ratio. The transform scales Y around the
+    // gradient center so the gradient touches all four edges of the bbox.
+    let paint_transform = if needs_aspect {
+        let scale_y = bw / bh;
+        Some(PaintTransform {
+            center_x: pixmap_center_x,
+            center_y: pixmap_center_y,
+            scale_y,
+        })
+    } else {
+        None
+    };
+
+    // The peniko gradient's center and focal must be in GRADIENT space
+    // (after the paint transform is applied). The paint transform T maps:
+    //   geometry_point → gradient_point = T(geometry_point)
+    // For the center: T(pixmap_center) = pixmap_center (center maps to itself).
+    // For the focal: we must apply T to get the gradient-space position.
+    let gradient_focal_x = pixmap_focal.x as f64 - bx;
+    let gradient_focal_y = if let Some(ref pt) = paint_transform {
+        pt.center_y + (pixmap_focal.y as f64 - by - pt.center_y) * pt.scale_y
+    } else {
+        pixmap_focal.y as f64 - by
+    };
+
+    // Radii: for ObjectBoundingBox, use the larger dimension as reference
+    // so the circular gradient extends to the farthest edge. The paint
+    // transform will stretch it to hit the nearer edge.
+    let (fr_gradient, r_gradient) = if gradient.units() == usvg::Units::ObjectBoundingBox {
+        let ref_dim = bw.max(bh);
+        (fr * ref_dim, r * ref_dim)
     } else {
         (fr, r)
     };
 
     let stops = convert_stops(gradient.stops());
     let mut g = Gradient::new_two_point_radial(
-        local_focal, fr_local as f32,
-        local_center, r_local as f32,
+        Point::new(gradient_focal_x, gradient_focal_y),
+        fr_gradient as f32,
+        Point::new(pixmap_center_x, pixmap_center_y),
+        r_gradient as f32,
     );
     g.extend = convert_spread(gradient.spread_method());
     g.stops = stops;
-    g
+
+    (g, paint_transform)
+}
+
+/// Paint transform for radial gradients on non-square bounding boxes.
+/// Apply via `RenderContext::set_paint_transform` before filling.
+pub(crate) struct PaintTransform {
+    pub center_x: f64,
+    pub center_y: f64,
+    pub scale_y: f64,
+}
+
+impl PaintTransform {
+    /// Apply this paint transform to a [`RenderContext`].
+    pub fn apply(&self, context: &mut RenderContext) {
+        use vello_cpu::kurbo::Affine;
+        let t = Affine::translate((self.center_x, self.center_y))
+            * Affine::scale_non_uniform(1.0, self.scale_y)
+            * Affine::translate((-self.center_x, -self.center_y));
+        context.set_paint_transform(t);
+        // Note: caller must call reset_paint_transform() after rendering.
+    }
 }
 
 /// Compute user-space coordinates for two points, handling
@@ -243,4 +303,26 @@ pub(crate) fn gradient_fallback_color(stops: &[usvg::Stop]) -> PaintColor {
 /// Check if a [`usvg::Paint`] is any gradient variant.
 pub(crate) fn is_gradient_paint(paint: &usvg::Paint) -> bool {
     matches!(paint, usvg::Paint::LinearGradient(_) | usvg::Paint::RadialGradient(_))
+}
+
+/// Scale RGBA image data in the Y dimension (non-uniform scale).
+/// Used for radial gradients on non-square bounding boxes where the
+/// circular peniko gradient needs to become elliptical.
+pub(crate) fn scale_rgba_y(
+    rgba: &[u8], src_w: u32, src_h: u32, target_h: u32,
+) -> Vec<u8> {
+    if target_h == src_h {
+        return rgba.to_vec();
+    }
+    let src_h = src_h as usize;
+    let target_h = target_h as usize;
+    let src_w = src_w as usize;
+    let mut scaled = Vec::with_capacity(src_w * target_h * 4);
+    for y in 0..target_h {
+        // Map target Y back to source Y (linear interpolation).
+        let src_y = (y as f64 * (src_h - 1) as f64 / (target_h.max(1) - 1) as f64) as usize;
+        let src_row_start = (src_y.min(src_h - 1)) * src_w * 4;
+        scaled.extend_from_slice(&rgba[src_row_start..src_row_start + src_w * 4]);
+    }
+    scaled
 }
