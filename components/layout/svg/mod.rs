@@ -585,8 +585,10 @@ fn serialize_text_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {
         return escape_xml(&node.text_content());
     };
     let html_tag = element.local_name().as_ref().to_owned();
-    // Compare against lowercased names (HTML parsing lowercases all tag names).
-    if html_tag != "text" && html_tag != "tspan" && html_tag != "textpath" {
+    // Accept both lowercase (HTML parser) and SVG-cased names.
+    if html_tag != "text" && html_tag != "tspan"
+        && html_tag != "textpath" && html_tag != "textPath"
+    {
         return String::new();
     }
     let tag = svg_tag_name(&html_tag);
