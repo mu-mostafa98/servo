@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>SVG Shapes — Minimal Test</title>
+<style>
+  body { font-family: sans-serif; padding: 20px; background: #fff; color: #333; }
+  h2 { font-size: 15px; color: #555; margin: 20px 0 5px 0; }
+  p { margin: 2px 0; font-size: 12px; color: #999; }
+  svg { border: 1px solid #eee; display: block; margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<h2>1. Rect — fill only</h2>
+<p><code>&lt;rect x="20" y="20" width="160" height="110" fill="red"/&gt;</code></p>
+<svg width="200" height="150"><rect x="20" y="20" width="160" height="110" fill="red"/></svg>
+
+<h2>2. Rect — stroke only</h2>
+<p><code>&lt;rect x="20" y="20" width="160" height="110" fill="none" stroke="blue" stroke-width="4"/&gt;</code></p>
+<svg width="200" height="150"><rect x="20" y="20" width="160" height="110" fill="none" stroke="blue" stroke-width="4"/></svg>
+
+<h2>3. Rect — fill + stroke + rx</h2>
+<p><code>&lt;rect x="20" y="20" width="160" height="110" rx="15" fill="lime" stroke="black" stroke-width="3"/&gt;</code></p>
+<svg width="200" height="150"><rect x="20" y="20" width="160" height="110" rx="15" fill="lime" stroke="black" stroke-width="3"/></svg>
+
+<h2>4. Circle — fill only</h2>
+<p><code>&lt;circle cx="100" cy="75" r="60" fill="orange"/&gt;</code></p>
+<svg width="200" height="150"><circle cx="100" cy="75" r="60" fill="orange"/></svg>
+
+<h2>5. Circle — stroke only</h2>
+<p><code>&lt;circle cx="100" cy="75" r="55" fill="none" stroke="purple" stroke-width="5"/&gt;</code></p>
+<svg width="200" height="150"><circle cx="100" cy="75" r="55" fill="none" stroke="purple" stroke-width="5"/></svg>
+
+<h2>6. Circle — fill + stroke</h2>
+<p><code>&lt;circle cx="100" cy="75" r="50" fill="cyan" stroke="black" stroke-width="4"/&gt;</code></p>
+<svg width="200" height="150"><circle cx="100" cy="75" r="50" fill="cyan" stroke="black" stroke-width="4"/></svg>
+
+<h2>7. Ellipse — fill only</h2>
+<p><code>&lt;ellipse cx="100" cy="75" rx="80" ry="50" fill="pink"/&gt;</code></p>
+<svg width="200" height="150"><ellipse cx="100" cy="75" rx="80" ry="50" fill="pink"/></svg>
+
+<h2>8. Ellipse — stroke only</h2>
+<p><code>&lt;ellipse cx="100" cy="75" rx="70" ry="55" fill="none" stroke="teal" stroke-width="4"/&gt;</code></p>
+<svg width="200" height="150"><ellipse cx="100" cy="75" rx="70" ry="55" fill="none" stroke="teal" stroke-width="4"/></svg>
+
+<h2>9. Line — stroke</h2>
+<p><code>&lt;line x1="20" y1="20" x2="180" y2="130" stroke="red" stroke-width="4"/&gt;</code></p>
+<svg width="200" height="150"><line x1="20" y1="20" x2="180" y2="130" stroke="red" stroke-width="4"/></svg>
+
+<h2>10. Line — horizontal + vertical</h2>
+<p><code>Two lines with stroke-width 6 and 2</code></p>
+<svg width="200" height="150">
+  <line x1="10" y1="75" x2="190" y2="75" stroke="green" stroke-width="6"/>
+  <line x1="100" y1="10" x2="100" y2="140" stroke="dodgerblue" stroke-width="2"/>
+</svg>
+
+
+<h2>11. Polygon — filled triangle</h2>
+<p><code>&lt;polygon points="100,10 190,130 10,130" fill="orange"/&gt;</code></p>
+<svg width="200" height="150"><polygon points="100,10 190,130 10,130" fill="orange"/></svg>
+
+<h2>12. Polyline — open stroke</h2>
+<p><code>&lt;polyline points="20,20 60,100 100,40 140,120 180,60" fill="none" stroke="purple" stroke-width="3"/&gt;</code></p>
+<svg width="200" height="150"><polyline points="20,20 60,100 100,40 140,120 180,60" fill="none" stroke="purple" stroke-width="3"/></svg>
+
+<h2>13. Path — triangle (d attr)</h2>
+<p><code>&lt;path d="M100,10 L190,130 L10,130 Z" fill="lime" stroke="black" stroke-width="2"/&gt;</code></p>
+<svg width="200" height="150"><path d="M100,10 L190,130 L10,130 Z" fill="lime" stroke="black" stroke-width="2"/></svg>
+
+<h2>14. Text — basic</h2>
+<p><code>&lt;text x="50" y="100" fill="black" font-size="20"&gt;Hello SVG&lt;/text&gt;</code></p>
+<svg width="200" height="150"><text x="50" y="100" fill="black" font-size="20">Hello SVG</text></svg>
+
+<h2>15. Text — different colors + sizes</h2>
+<p><code>Red large, blue small, green medium</code></p>
+<svg width="200" height="150">
+  <text x="10" y="30" fill="red" font-size="24">Large Red</text>
+  <text x="10" y="60" fill="blue" font-size="12">Small Blue</text>
+  <text x="10" y="90" fill="green" font-size="18">Medium Green</text>
+</svg>
+
+<h2>16. Text — filled + stroked</h2>
+<p><code>stroke="red" stroke-width="1" fill="white"</code></p>
+<svg width="200" height="150">
+  <text x="30" y="100" fill="white" stroke="red" stroke-width="1" font-size="30" font-weight="bold">STROKED</text>
+</svg>
+
+<h2>17. Text — multiple lines</h2>
+<p><code>Three text elements at different y positions</code></p>
+<svg width="200" height="150">
+  <text x="10" y="30" fill="purple" font-size="18">Line One</text>
+  <text x="10" y="60" fill="orange" font-size="18">Line Two</text>
+  <text x="10" y="90" fill="teal" font-size="18">Line Three</text>
+</svg>
+
+<h2>18. Text — serif</h2>
+<p><code>font-family="serif"</code></p>
+<svg width="200" height="150"><text x="10" y="80" fill="black" font-size="22" font-family="serif">Serif Text</text></svg>
+
+<h2>19. Text — monospace</h2>
+<p><code>font-family="monospace"</code></p>
+<svg width="200" height="150"><text x="10" y="80" fill="black" font-size="22" font-family="monospace">Monospace Text</text></svg>
+
+<h2>20. Text — cursive</h2>
+<p><code>font-family="cursive"</code></p>
+<svg width="200" height="150"><text x="10" y="80" fill="black" font-size="22" font-family="cursive">Cursive Text</text></svg>
+
+<h2>21. Text — fantasy</h2>
+<p><code>font-family="fantasy"</code></p>
+<svg width="200" height="150"><text x="10" y="80" fill="black" font-size="22" font-family="fantasy">Fantasy Text</text></svg>
+
+<h2>22. Text — italic + bold</h2>
+<p><code>font-style="italic" font-weight="bold"</code></p>
+<svg width="200" height="150"><text x="10" y="80" fill="darkred" font-size="24" font-style="italic" font-weight="bold">Italic Bold</text></svg>
+
+<h2>23. Text — tspan with different colors</h2>
+<p><code>&lt;tspan&gt; with red, blue, green fills</code></p>
+<svg width="200" height="150">
+  <text x="10" y="80" font-size="22">
+    <tspan fill="red">Red</tspan>
+    <tspan fill="blue"> Blue</tspan>
+    <tspan fill="green"> Green</tspan>
+  </text>
+</svg>
+
+<h2>24. Text — tspan with different sizes</h2>
+<p><code>&lt;tspan font-size="..."&gt;</code></p>
+<svg width="200" height="150">
+  <text x="10" y="80">
+    <tspan font-size="12" fill="gray">Small </tspan>
+    <tspan font-size="20" fill="black">Medium </tspan>
+    <tspan font-size="30" fill="darkred">Large</tspan>
+  </text>
+</svg>
+
+<h2>25. Text — text-anchor middle</h2>
+<p><code>text-anchor="middle" x="100"</code></p>
+<svg width="200" height="150">
+  <text x="100" y="40" fill="black" font-size="16" text-anchor="middle">Centered Text</text>
+  <text x="100" y="70" fill="blue" font-size="16" text-anchor="middle">Also Centered</text>
+</svg>
+
+<h2>26. Text — dx/dy offsets</h2>
+<p><code>dx and dy shift characters</code></p>
+<svg width="200" height="150">
+  <text x="10" y="40" fill="black" font-size="16" dx="0,5,10,15,20,25">WAVY</text>
+  <text x="10" y="80" fill="purple" font-size="16" dy="0,5,0,-5,0">BUMPY</text>
+</svg>
+
+<h2>27. Text — rotate</h2>
+<p><code>rotate characters at angles</code></p>
+<svg width="200" height="150">
+  <text x="30" y="100" fill="darkgreen" font-size="22" rotate="0,15,30,45,60">ROTATE</text>
+</svg>
+
+<h2>28. Text — textPath (curve)</h2>
+<p><code>&lt;textPath&gt; along a curved path</code></p>
+<svg width="200" height="150">
+  <defs>
+    <path id="curve" d="M20,80 Q100,20 180,80" fill="none" stroke="#ccc"/>
+  </defs>
+  <text font-size="14" fill="crimson">
+    <textPath href="#curve" startOffset="10%">Text along a curved path</textPath>
+  </text>
+  <use href="#curve"/>
+</svg>
+
+<h2>29. Image — placeholder</h2>
+<p><code>&lt;image href="test.png" x="20" y="20" width="160" height="110"/&gt;</code></p>
+<svg width="200" height="150"><image href="test.png" x="20" y="20" width="160" height="110"/></svg>
+
+</body>
+</html>

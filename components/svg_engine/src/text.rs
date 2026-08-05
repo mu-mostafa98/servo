@@ -41,6 +41,23 @@ pub struct TextSpan {
     /// WebRender font instance key for glyph rendering.
     /// When `Some`, the renderer uses `push_text` for real glyph shapes.
     pub font_instance_key: Option<webrender_api::FontInstanceKey>,
+    /// Horizontal pen offset accumulated from preceding sibling runs in the
+    /// same `<text>` inline flow. Set by the builder so that a run begins where
+    /// the previous run ended. For a standalone `<text>` (no tspans) this is
+    /// `0.0`; for the first run it carries the whole-line `text-anchor` shift.
+    pub advance_offset: f32,
+}
+
+impl TextSpan {
+    /// Total advance width of all glyphs in this span (or estimated text
+    /// width when no glyphs are shaped yet).
+    pub fn total_advance(&self) -> f32 {
+        if let Some(last) = self.glyphs.last() {
+            last.x + last.advance
+        } else {
+            self.text.chars().count() as f32 * 8.0
+        }
+    }
 }
 
 /// Text alignment anchor point.

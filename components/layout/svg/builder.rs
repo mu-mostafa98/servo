@@ -111,9 +111,16 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
 
 // ======================= Text / Tspan Node =======================
 
-/// Build a [`SvgRenderNode`] for `<text>` or `<tspan>` by extracting
-/// text content from the DOM node and its `<tspan>` descendants, then
-/// shaping the text using the font subsystem for glyph positioning.
+/// Build a [`SvgRenderNode`] for `<text>` or `<tspan>`.
+///
+/// For `<tspan>` (or a standalone `<text>` with no element children), the
+/// node is a single [`SvgTag::Text`] span shaped with the node's own font.
+///
+/// For `<text>` with mixed bare-text / `<tspan>` children, the node is a
+/// [`SvgTag::Container`](`Container::Text`) whose children are one
+/// [`SvgTag::Text`] run per bare text node / `<tspan>`. Each run keeps its
+/// own style (so per-tspan `fill` and `font-size` apply) and is positioned
+/// with a cumulative `advance_offset` so runs flow left-to-right on one line.
 fn build_text_node(
     node: ServoLayoutNode,
     context: &LayoutContext,
@@ -122,19 +129,149 @@ fn build_text_node(
     let element = node.as_element()?;
     let fs: f32 = 16.0;
     let get = |name: &str| super::style::get_attr(&element, name);
-    let mut span = build_text(node, &get, fs)?;
-    // Shape text with the font subsystem for accurate glyph positions.
-    shape_text_span(&mut span, node, context);
-    let tag = SvgTag::Text(span);
+
+    // Collect the ordered inline runs of this element.
+    let runs = collect_text_runs(node, fs);
+
+    // No runs → maybe a bare single-span (e.g. <tspan> with only text, or
+    // a <text> with no element children). Fall back to the legacy single-span
+    // path so existing simple <text> usage keeps working.
+    if runs.is_empty() {
+        let mut span = build_text(node, &get, fs)?;
+        shape_text_span(&mut span, node, context);
+        let (style, transforms) = build_style(node, context, css_rules);
+        let id = extract_id(&element);
+        return Some(SvgRenderNode {
+            id,
+            tag: SvgTag::Text(span),
+            style,
+            transforms,
+            children: vec![],
+        });
+    }
+
+    // Single run → emit as a direct Text node (no container needed).
+    if runs.len() == 1 {
+        let (mut span, run_node) = runs.into_iter().next().unwrap();
+        // Shape with the run's own node (the <tspan> for tspan runs, the
+        // <text> itself for bare-text runs) so the run's font-size applies.
+        shape_text_span(&mut span, run_node, context);
+        let (style, transforms) = build_style(node, context, css_rules);
+        let id = extract_id(&element);
+        return Some(SvgRenderNode {
+            id,
+            tag: SvgTag::Text(span),
+            style,
+            transforms,
+            children: vec![],
+        });
+    }
+
+    // Multiple runs → a Container::Text with one Text child per run.
+    // Shape each run first (so total_advance reflects real glyph widths),
+    // then compute cumulative advance_offset and apply the <text>'s
+    // text-anchor as a single shift on the first run.
+    let mut shaped = runs
+        .into_iter()
+        .map(|(mut span, run_node)| {
+            shape_text_span(&mut span, run_node, context);
+            (span, run_node)
+        })
+        .collect::<Vec<_>>();
+    let total_advance: f32 = shaped.iter().map(|(s, _)| s.total_advance()).sum();
+    let anchor_shift = get("text-anchor")
+        .as_deref()
+        .map(|v| match v.trim() {
+            "middle" => -0.5,
+            "end" => -1.0,
+            _ => 0.0,
+        })
+        .unwrap_or(0.0)
+        * total_advance;
+
+    let mut pen = anchor_shift;
+    let mut children = Vec::with_capacity(shaped.len());
+    for (mut span, run_node) in shaped {
+        span.advance_offset = pen;
+        pen += span.total_advance();
+        let (run_style, run_transforms) = build_style(run_node, context, css_rules);
+        let run_id = extract_id(&run_node.as_element()?);
+        children.push(SvgRenderNode {
+            id: run_id,
+            tag: SvgTag::Text(span),
+            style: run_style,
+            transforms: run_transforms,
+            children: vec![],
+        });
+    }
+
     let (style, transforms) = build_style(node, context, css_rules);
     let id = extract_id(&element);
     Some(SvgRenderNode {
         id,
-        tag,
+        tag: SvgTag::Container(Container::Text),
         style,
         transforms,
-        children: vec![],
+        children,
     })
+}
+
+/// An ordered inline run within a `<text>`: the span data plus the DOM node
+/// it inherits style/font from (the `<tspan>` for tspan runs, the `<text>`
+/// itself for bare-text runs). The `ServoLayoutNode` lifetime is elided to
+/// match the enclosing function signatures.
+type RunWithNode<'dom> = (TextSpan, ServoLayoutNode<'dom>);
+
+/// Collect the ordered inline runs of a `<text>` (or `<tspan>`) element.
+///
+/// Each bare text node becomes a run that inherits the parent element's
+/// attributes; each `<tspan>` child becomes a run carrying its own attributes
+/// (`fill`, `font-size`, `x`/`y`, `dx`/`dy`, `text-anchor`). Pure-whitespace
+/// text between tspans (indentation/newlines) is dropped so it does not render
+/// as missing-glyph boxes.
+fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithNode<'dom>> {
+    use super::geometry::build_text_run;
+    let parent_elem = node.as_element().unwrap();
+    // The <text>'s x/y is the line origin. Every run inherits it as the base
+    // position; a <tspan> may override x/y explicitly. Horizontal flow between
+    // runs is handled separately by advance_offset (cumulative advance +
+    // anchor shift), so all runs share the same x/y base.
+    let parent_x = super::style::get_attr(&parent_elem, "x")
+        .and_then(|s| s.trim_end_matches("px").parse::<f32>().ok())
+        .unwrap_or(0.0);
+    let parent_y = super::style::get_attr(&parent_elem, "y")
+        .and_then(|s| s.trim_end_matches("px").parse::<f32>().ok())
+        .unwrap_or(0.0);
+    let mut runs = Vec::new();
+    for child in node.dom_children() {
+        if let Some(child_elem) = child.as_element() {
+            if child_elem.local_name().as_ref() == "tspan" {
+                let get = |n: &str| super::style::get_attr(&child_elem, n);
+                if let Some(mut span) = build_text(child, &get, fs) {
+                    // Inherit the <text>'s baseline/origin for any axis the
+                    // <tspan> does not set explicitly.
+                    if super::style::get_attr(&child_elem, "x").is_none() {
+                        span.x = parent_x;
+                    }
+                    if super::style::get_attr(&child_elem, "y").is_none() {
+                        span.y = parent_y;
+                    }
+                    runs.push((span, child));
+                }
+            }
+        } else {
+            let t = child.text_content();
+            if t.trim().is_empty() {
+                continue;
+            }
+            // Bare-text runs always use the <text>'s x/y (no own attributes).
+            let get = |n: &str| super::style::get_attr(&parent_elem, n);
+            if let Some(span) = build_text_run(t.into_owned(), &get, fs) {
+                runs.push((span, node));
+            }
+        }
+    }
+    runs
 }
 
 /// Shape a [`TextSpan`]'s text using the font subsystem.

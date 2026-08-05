@@ -138,6 +138,11 @@ pub enum Container {
     Use,
     /// `<symbol>` — a re-usable viewBox'd container referenced by `<use>`.
     Symbol,
+    /// `<text>` — a logical text element whose children are the inline
+    /// `<tspan>`/bare-text runs of the line. Unlike `<g>`, the children are
+    /// ordered text runs laid out on a single baseline with cumulative
+    /// advance (each `TextSpan` carries its own `advance_offset`).
+    Text,
 }
 
 #[derive(Debug, Clone, Copy)]

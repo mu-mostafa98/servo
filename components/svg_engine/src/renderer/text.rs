@@ -41,15 +41,6 @@ impl Render for TextSpan {
 }
 
 impl TextSpan {
-    /// Total advance width of all glyphs (or estimated text width).
-    fn total_advance(&self) -> f32 {
-        if let Some(last) = self.glyphs.last() {
-            last.x + last.advance
-        } else {
-            self.text.chars().count() as f32 * FALLBACK_ADVANCE
-        }
-    }
-
     /// Horizontal offset for text-anchor alignment.
     fn anchor_offset(&self) -> f32 {
         self.text_anchor.alignment_offset()
@@ -81,7 +72,7 @@ impl TextSpan {
         if self.glyphs.is_empty() {
             return;
         }
-        let base_x = ctx.svg_origin.x + self.x + anchor_offset;
+        let base_x = ctx.svg_origin.x + self.x + self.advance_offset + anchor_offset;
         let base_y = ctx.svg_origin.y + self.y;
 
         let glyphs: Vec<GlyphInstance> = self
@@ -127,7 +118,7 @@ impl TextSpan {
         _stroke_color: Option<ColorF>,
         fill_color: Option<ColorF>,
     ) {
-        let x = ctx.svg_origin.x + self.x + anchor_offset;
+        let x = ctx.svg_origin.x + self.x + self.advance_offset + anchor_offset;
         let y = ctx.svg_origin.y + self.y;
         let gap = 1.0f32;
 

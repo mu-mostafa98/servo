@@ -183,6 +183,7 @@ fn shape_enum_all_variants_constructible() {
         text_anchor: TextAnchor::Start,
         glyphs: vec![],
         font_instance_key: None,
+        advance_offset: 0.0,
     });
     let _image_tag = SvgTag::Image(SvgImage {
         x: 0.0,
@@ -205,10 +206,12 @@ fn text_span_data() {
         text_anchor: TextAnchor::Start,
         glyphs: vec![],
         font_instance_key: None,
+        advance_offset: 0.0,
     };
     assert_eq!(t.text, "Hello SVG");
     assert_eq!(t.x, 10.0);
     assert_eq!(t.y, 30.0);
+    assert_eq!(t.advance_offset, 0.0);
 }
 
 #[test]
@@ -222,9 +225,41 @@ fn text_span_with_dx_dy() {
         text_anchor: TextAnchor::Start,
         glyphs: vec![],
         font_instance_key: None,
+        advance_offset: 0.0,
     };
     assert_eq!(t.dx.len(), 2);
     assert_eq!(t.dy.len(), 2);
+}
+
+#[test]
+fn text_span_advance_offset_positions_runs() {
+    // Two runs on one line: the second begins where the first ends.
+    // With no glyphs shaped, total_advance falls back to 8px/char.
+    let first = TextSpan {
+        text: "Red".into(), // 3 chars → 24px fallback advance
+        x: 10.0,
+        y: 80.0,
+        dx: vec![],
+        dy: vec![],
+        text_anchor: TextAnchor::Start,
+        glyphs: vec![],
+        font_instance_key: None,
+        advance_offset: 0.0,
+    };
+    let second = TextSpan {
+        text: " Blue".into(), // 5 chars
+        x: 10.0,
+        y: 80.0,
+        dx: vec![],
+        dy: vec![],
+        text_anchor: TextAnchor::Start,
+        glyphs: vec![],
+        font_instance_key: None,
+        advance_offset: first.total_advance(),
+    };
+    // The second run's pen position is the first run's x + its advance.
+    assert_eq!(first.total_advance(), 24.0);
+    assert_eq!(second.advance_offset, 24.0);
 }
 
 #[test]

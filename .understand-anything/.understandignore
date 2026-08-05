@@ -1,0 +1,82 @@
+# .understandignore — patterns for files/dirs to exclude from analysis
+# Syntax: same as .gitignore (globs, # comments, ! negation, trailing / for dirs)
+# Built-in defaults (always excluded unless negated):
+#   node_modules/, .git/, dist/, build/, obj/, *.lock, *.min.js, etc.
+
+# --- From .gitignore ---
+
+/.servo
+/.cargo/*
+!/.cargo/config.*
+/.rustup
+/.servobuild
+/.wpt
+/.vs
+/target
+/tests/wpt/reftests-report/report.html
+/python/_virtualenv*
+/python/_venv*
+/python/tidy/servo_tidy.egg-info
+/tests/wpt/sync
+/tests/wpt/**/**/.cache/
+/tests/dromaeo/dromaeo
+*.pkl
+*.pyc
+*.swp
+*.swo
+*.csv
+*.rej
+*.orig
+.coverage
+.DS_Store
+Servo.app
+servo.pftrace
+.config.mk.last
+/glfw
+webrender-captures/
+/screenshots
+/etc/notarization/
+/servo.egg-info
+!/tests/**/*.csv
+*.iws
+*.iml
+!/.vscode/extensions.json
+!/.vscode/settings.json
+*~
+.#*
+\#*
+\#*\#
+Session.vim
+Sessionx.vim
+/.zed
+.nvim.lua
+/unminified-js
+/unminified-css
+layout_trace*
+support/macos/Brewfile.lock.json
+.envrc
+justfile
+
+# --- Detected directories ---
+
+docs/
+tests/
+
+# --- Test file patterns ---
+
+# JS / TS
+*.test.*
+*.spec.*
+*.snap
+# C# / .NET
+**/*Tests.cs
+**/*Test.cs
+**/*Fixture.cs
+**/*.Tests.csproj
+# Java / Kotlin
+**/src/test/**
+**/*Test.java
+**/*IT.java
+**/*Spec.kt
+# Go
+**/*_test.go
