@@ -15,8 +15,8 @@ use vello_cpu::{Pixmap, RenderContext, Resources};
 
 use super::{
     color_from_usvg, convert_linear_gradient, convert_radial_gradient,
-    gradient_fallback_color, is_gradient_paint, PaintTransform, Emit, EmitContext,
-    PaintColor, PaintCommand, RoundedClip, RoundedRadii,
+    gradient_fallback_color, is_gradient_paint, Emit, EmitContext, PaintColor, PaintCommand,
+    RoundedClip, RoundedRadii,
 };
 
 // ======================= Emit impl =======================
@@ -122,34 +122,30 @@ fn rasterize_simple_shape_with_gradient(
 }
 
 /// Set the appropriate paint on the RenderContext: solid color or gradient.
-/// Returns an optional [`PaintTransform`] for radial gradients on non-square bboxes.
 fn set_shape_paint(
     context: &mut RenderContext,
     paint: &usvg::Paint,
     opacity: f32,
     bbox: usvg::Rect,
-) -> Option<PaintTransform> {
+) {
     match paint {
         usvg::Paint::Color(c) => {
             let vc = vello_cpu::color::AlphaColor::<vello_cpu::color::Srgb>::from_rgba8(
                 c.red, c.green, c.blue, (opacity * 255.0) as u8,
             );
             context.set_paint(vc);
-            None
         }
         usvg::Paint::LinearGradient(lg) => {
             let g = convert_linear_gradient(lg, bbox);
             context.set_paint(g);
-            None
         }
         usvg::Paint::RadialGradient(rg) => {
-            let (g, pt) = convert_radial_gradient(rg, bbox);
+            let g = convert_radial_gradient(rg, bbox);
             context.set_paint(g);
-            pt
         }
         _ => {
+            // Pattern — fall back to gray.
             context.set_paint(vello_cpu::color::AlphaColor::<vello_cpu::color::Srgb>::from_rgba8(128, 128, 128, 255));
-            None
         }
     }
 }
@@ -185,21 +181,17 @@ fn draw_rect_path(
 
     // Fill
     if let Some(fill) = shape.fill() {
-        let pt = set_shape_paint(context, fill.paint(), fill.opacity().get(), bbox);
-        if let Some(ref pt) = pt { pt.apply(context); }
+        set_shape_paint(context, fill.paint(), fill.opacity().get(), bbox);
         context.fill_path(&path);
-        if pt.is_some() { context.reset_paint_transform(); }
     }
 
     // Stroke
     if let Some(stroke) = shape.stroke() {
-        let pt = set_shape_paint(context, stroke.paint(), stroke.opacity().get(), bbox);
-        if let Some(ref pt) = pt { pt.apply(context); }
+        set_shape_paint(context, stroke.paint(), stroke.opacity().get(), bbox);
         let sw = stroke.width().get() as f64;
         let vello_stroke = vello_cpu::kurbo::Stroke::new(sw);
         context.set_stroke(vello_stroke);
         context.stroke_path(&path);
-        if pt.is_some() { context.reset_paint_transform(); }
     }
 }
 
@@ -235,21 +227,17 @@ fn draw_ellipse_path(
 
     // Fill
     if let Some(fill) = shape.fill() {
-        let pt = set_shape_paint(context, fill.paint(), fill.opacity().get(), bbox);
-        if let Some(ref pt) = pt { pt.apply(context); }
+        set_shape_paint(context, fill.paint(), fill.opacity().get(), bbox);
         context.fill_path(&bez);
-        if pt.is_some() { context.reset_paint_transform(); }
     }
 
     // Stroke
     if let Some(stroke) = shape.stroke() {
-        let pt = set_shape_paint(context, stroke.paint(), stroke.opacity().get(), bbox);
-        if let Some(ref pt) = pt { pt.apply(context); }
+        set_shape_paint(context, stroke.paint(), stroke.opacity().get(), bbox);
         let sw = stroke.width().get() as f64;
         let vello_stroke = vello_cpu::kurbo::Stroke::new(sw);
         context.set_stroke(vello_stroke);
         context.stroke_path(&bez);
-        if pt.is_some() { context.reset_paint_transform(); }
     }
 }
 
@@ -271,13 +259,11 @@ fn draw_line_path(
 
     // Lines only have stroke.
     if let Some(stroke) = shape.stroke() {
-        let pt = set_shape_paint(context, stroke.paint(), stroke.opacity().get(), bbox);
-        if let Some(ref pt) = pt { pt.apply(context); }
+        set_shape_paint(context, stroke.paint(), stroke.opacity().get(), bbox);
         let sw = stroke.width().get() as f64;
         let vello_stroke = vello_cpu::kurbo::Stroke::new(sw);
         context.set_stroke(vello_stroke);
         context.stroke_path(&bez);
-        if pt.is_some() { context.reset_paint_transform(); }
     }
 }
 

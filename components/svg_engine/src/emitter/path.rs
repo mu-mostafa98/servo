@@ -12,7 +12,7 @@ use vello_cpu::{Pixmap, RenderContext, Resources};
 
 use super::{
     color_from_usvg, convert_linear_gradient, convert_radial_gradient,
-    gradient_fallback_color, PaintTransform, Emit, EmitContext, PaintCommand,
+    gradient_fallback_color, Emit, EmitContext, PaintCommand,
 };
 
 // ======================= Cache =======================
@@ -67,30 +67,26 @@ fn to_bezpath(data: &usvg::tiny_skia_path::Path) -> BezPath {
 }
 
 /// Set the paint on the RenderContext: solid color or gradient.
-/// Returns an optional [`PaintTransform`] for radial gradients on non-square bboxes.
 fn set_path_paint(
     context: &mut RenderContext,
     paint: &usvg::Paint,
     bbox: usvg::Rect,
-) -> Option<PaintTransform> {
+) {
     match paint {
         usvg::Paint::Color(c) => {
             context.set_paint(vello_color(c));
-            None
         }
         usvg::Paint::LinearGradient(lg) => {
             let g = convert_linear_gradient(lg, bbox);
             context.set_paint(g);
-            None
         }
         usvg::Paint::RadialGradient(rg) => {
-            let (g, pt) = convert_radial_gradient(rg, bbox);
+            let g = convert_radial_gradient(rg, bbox);
             context.set_paint(g);
-            pt
         }
         _ => {
+            // Pattern — fall back to gray.
             context.set_paint(vello_cpu::color::AlphaColor::<vello_cpu::color::Srgb>::from_rgba8(128, 128, 128, 255));
-            None
         }
     }
 }
@@ -120,21 +116,17 @@ impl Emit for usvg::Path {
 
         // Fill
         if let Some(fill) = self.fill() {
-            let pt = set_path_paint(&mut context, fill.paint(), b);
-            if let Some(ref pt) = pt { pt.apply(&mut context); }
+            set_path_paint(&mut context, fill.paint(), b);
             context.fill_path(&bez);
-            if pt.is_some() { context.reset_paint_transform(); }
         }
 
         // Stroke
         if let Some(stroke) = self.stroke() {
-            let pt = set_path_paint(&mut context, stroke.paint(), b);
-            if let Some(ref pt) = pt { pt.apply(&mut context); }
+            set_path_paint(&mut context, stroke.paint(), b);
             let sw = stroke.width().get() as f64;
             let vello_stroke = vello_cpu::kurbo::Stroke::new(sw);
             context.set_stroke(vello_stroke);
             context.stroke_path(&bez);
-            if pt.is_some() { context.reset_paint_transform(); }
         }
 
         context.flush();
