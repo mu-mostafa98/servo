@@ -184,16 +184,16 @@ fn shape_text(
     text: &str,
 ) -> Option<(Vec<ShapedGlyph>, f32)> {
     let family = font.families().first()?;
-    let family_str = match family {
-        usvg::FontFamily::Named(s) => s.as_str(),
-        usvg::FontFamily::Serif => "serif",
-        usvg::FontFamily::SansSerif => "sans-serif",
-        usvg::FontFamily::Cursive => "cursive",
-        usvg::FontFamily::Fantasy => "fantasy",
-        usvg::FontFamily::Monospace => "monospace",
+    let db_family = match family {
+        usvg::FontFamily::Serif => fontdb::Family::Serif,
+        usvg::FontFamily::SansSerif => fontdb::Family::SansSerif,
+        usvg::FontFamily::Cursive => fontdb::Family::Cursive,
+        usvg::FontFamily::Fantasy => fontdb::Family::Fantasy,
+        usvg::FontFamily::Monospace => fontdb::Family::Monospace,
+        usvg::FontFamily::Named(s) => fontdb::Family::Name(s.as_str()),
     };
     let query = fontdb::Query {
-        families: &[fontdb::Family::Name(family_str)],
+        families: &[db_family],
         weight: fontdb::Weight(font.weight()),
         style: match font.style() {
             usvg::FontStyle::Normal => fontdb::Style::Normal,

@@ -276,19 +276,9 @@ pub(crate) fn build_svg_render_tree<'dom>(
     // usvg types using their public constructors.
     let gradients = build_gradients_from_dom(root_node);
 
-    // Serialize <defs> for text element parsing (text layout requires usvg).
-    let mut defs_xml = String::new();
-    for child in root_node.dom_children() {
-        if let Some(elem) = child.as_element() {
-            if elem.local_name().as_ref() == "defs" {
-                defs_xml.push_str(&serialize_defs_subtree(child));
-            }
-        }
-    }
-
     // Build the render tree (with gradient resolution available).
     for child in root_node.dom_children() {
-        if let Some(node) = build_node(child, &defs_xml, &gradients, context) {
+        if let Some(node) = build_node(child, &gradients, context) {
             root.push_child(node);
         }
     }
@@ -299,10 +289,17 @@ pub(crate) fn build_svg_render_tree<'dom>(
     for lg in &gradients.linear { tree.push_linear_gradient(lg.clone()); }
     for rg in &gradients.radial { tree.push_radial_gradient(rg.clone()); }
 
+    // Ensure the font database has system fonts loaded for text shaping in the emitter.
+    {
+        let mut db = fontdb::Database::new();
+        db.load_system_fonts();
+        tree.set_fontdb(Arc::new(db));
+    }
+
     Some(Arc::new(tree))
 }
 
-fn build_node<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str, gradients: &GradientStore, context: &LayoutContext) -> Option<Node> {
+fn build_node<'dom>(node: ServoLayoutNode<'dom>, gradients: &GradientStore, context: &LayoutContext) -> Option<Node> {
     let element = node.as_element()?;
     let tag = element.local_name().as_ref().to_owned();
 
@@ -316,7 +313,7 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str, gradients: &Gra
                         continue; // defs children not rendered
                     }
                 }
-                if let Some(n) = build_node(child, defs_xml, gradients, context) {
+                if let Some(n) = build_node(child, gradients, context) {
                     group.push_child(n);
                 }
             }
@@ -330,7 +327,7 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str, gradients: &Gra
         "path" => build_path_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
         "polygon" => build_polygon_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
         "polyline" => build_polyline_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
-        "text" => build_text_element(node, defs_xml),
+        "text" => build_text_element(node),
         "image" | "img" => build_image_element(node),
         _ => None,
     }
@@ -554,187 +551,147 @@ fn build_polyline_element(element: &ServoLayoutElement, gradients: &GradientStor
     Path::from_points(&points, false, fill, stroke, Transform::default())
 }
 
-fn build_text_element<'dom>(node: ServoLayoutNode<'dom>, defs_xml: &str) -> Option<Node> {
-    let element = node.as_element()?;
-    let inner = serialize_text_subtree(node);
-    if inner.is_empty() {
-        return None;
-    }
-    let svg = format!(
-        r#"<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600">{}{}</svg>"#,
-        defs_xml, inner
-    );
-    let mut opt = usvg::Options::default();
-    let mut db = fontdb::Database::new();
-    db.load_system_fonts();
-    opt.fontdb = Arc::new(db);
-    let tree = usvg::Tree::from_str(&svg, &opt).ok()?;
+/// Build spans from DOM children. Each <tspan> gets its own TextSpan with
+/// that element's fill. Direct text uses the parent element's fill.
+/// Returns normalized (collapsed whitespace) text content and spans.
+fn build_colored_spans<'dom>(
+    node: ServoLayoutNode<'dom>,
+    parent_elem: &ServoLayoutElement<'dom>,
+) -> Option<(String, Vec<TextSpan>)> {
+    let mut full_text = String::new();
+    let mut spans = Vec::new();
 
-    // Pass through Text nodes for simple text (solid fill, no textPath/rotate/dx/dy).
-    // The text emitter will render them natively. Complex text is flattened to paths.
-    let mut group = Group::new();
-    let mut has_nodes = false;
-    for child in tree.root().children() {
-        match child {
-            usvg::Node::Text(text) if is_simple_text(text) => {
-                group.push_child(usvg::Node::Text(text.clone()));
-                has_nodes = true;
+    for child in node.dom_children() {
+        if let Some(elem) = child.as_element() {
+            let tag = elem.local_name().as_ref();
+            if tag == "tspan" {
+                // Normalize this tspan's text and build a span with the tspan's style.
+                let tspan_text: String = extract_text_content(child)
+                    .split_whitespace().collect::<Vec<_>>().join(" ");
+                if !tspan_text.is_empty() {
+                    if !full_text.is_empty() { full_text.push(' '); }
+                    let start = full_text.len();
+                    full_text.push_str(&tspan_text);
+                    let end = full_text.len();
+                    if let Some(span) = make_span(&elem, start, end) {
+                        spans.push(span);
+                    }
+                }
             }
-            other => {
-                extract_flattened(other, &mut group);
-                has_nodes = true;
+        } else {
+            // Direct text content — use parent's style.
+            let text: String = child.text_content()
+                .split_whitespace().collect::<Vec<_>>().join(" ");
+            if !text.is_empty() {
+                if !full_text.is_empty() { full_text.push(' '); }
+                let start = full_text.len();
+                full_text.push_str(&text);
+                let end = full_text.len();
+                if let Some(span) = make_span(parent_elem, start, end) {
+                    spans.push(span);
+                }
             }
         }
     }
-    if has_nodes {
+
+    if spans.is_empty() { None } else { Some((full_text, spans)) }
+}
+
+/// Build a TextSpan for a DOM element using that element's style attributes.
+fn make_span(elem: &ServoLayoutElement, start: usize, end: usize) -> Option<TextSpan> {
+    let font_size = attr_f32(elem, "font-size", 16.0).max(1.0);
+    let font_family_str = get_attr(elem, "font-family").unwrap_or_else(|| "sans-serif".into());
+    let families = svgtypes::parse_font_families(&font_family_str)
+        .unwrap_or_else(|_| vec![FontFamily::SansSerif]);
+    let font_weight = attr_f32(elem, "font-weight", 400.0) as u16;
+    let font_style = match get_attr(elem, "font-style").as_deref() {
+        Some("italic") => FontStyle::Italic,
+        Some("oblique") => FontStyle::Oblique,
+        _ => FontStyle::Normal,
+    };
+    let font = Font::new(families, font_style, FontStretch::Normal, font_weight);
+    let fill = build_fill(elem, &GradientStore { linear: vec![], radial: vec![] })
+        .unwrap_or_else(|| Fill::new(
+            Paint::Color(Color::new_rgb(0, 0, 0)),
+            Opacity::ONE, FillRule::NonZero,
+        ));
+    TextSpan::new(start, end, Some(fill), None, font, font_size)
+}
+
+fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
+    let element = node.as_element()?;
+    let x = attr_f32(&element, "x", 0.0);
+    let y = attr_f32(&element, "y", 0.0);
+    let font_size = attr_f32(&element, "font-size", 16.0).max(1.0);
+    let font_family_str = get_attr(&element, "font-family")
+        .unwrap_or_else(|| "sans-serif".into());
+    let families = svgtypes::parse_font_families(&font_family_str)
+        .unwrap_or_else(|_| vec![FontFamily::SansSerif]);
+    let font_weight = attr_f32(&element, "font-weight", 400.0) as u16;
+    let font_style = match get_attr(&element, "font-style").as_deref() {
+        Some("italic") => FontStyle::Italic,
+        Some("oblique") => FontStyle::Oblique,
+        _ => FontStyle::Normal,
+    };
+    let text_anchor = match get_attr(&element, "text-anchor").as_deref() {
+        Some("middle") => TextAnchor::Middle,
+        Some("end") => TextAnchor::End,
+        _ => TextAnchor::Start,
+    };
+    let rendering_mode = match get_attr(&element, "text-rendering").as_deref() {
+        Some("optimizeSpeed") => TextRendering::OptimizeSpeed,
+        Some("geometricPrecision") => TextRendering::GeometricPrecision,
+        Some("optimizeLegibility") => TextRendering::OptimizeLegibility,
+        _ => TextRendering::default(),
+    };
+
+    // Build spans from DOM children — each <tspan> gets its own TextSpan
+    // with that tspan's fill color. Text not in a <tspan> uses parent fill.
+    let (content, spans) = build_colored_spans(node, &element)?;
+    if content.is_empty() {
+        return None;
+    }
+
+    let chunk = TextChunk::new(x, y, text_anchor, spans, content);
+    let mut text = Text::new(String::new(), rendering_mode, Transform::default());
+    text.push_chunk(chunk);
+
+    // Run usvg's layout and flattening (same as what Tree::from_str does internally).
+    let mut db = fontdb::Database::new();
+    db.load_system_fonts();
+    let fontdb = Arc::new(db);
+    let resolver = FontResolver::default();
+    let mut cache = usvg::Cache::new(fontdb.clone());
+    usvg::convert(&mut text, &resolver, &mut cache)?;
+
+    // Extract flattened paths into Group — same output type as XML path.
+    let mut group = Group::new();
+    extract_flattened(&usvg::Node::Text(Box::new(text)), &mut group);
+    if group.has_children() {
         Some(Node::Group(Box::new(group)))
     } else {
         None
     }
 }
 
-/// Check if a usvg::Text is suitable for native glyph rendering.
-fn is_simple_text(text: &usvg::Text) -> bool {
-    // Must not have per-glyph transforms.
-    if !text.dx().is_empty() || !text.dy().is_empty() || !text.rotate().is_empty() {
-        return false;
-    }
-    // Must not use textPath.
-    for chunk in text.chunks() {
-        if !matches!(chunk.text_flow(), usvg::TextFlow::Linear) {
-            return false;
-        }
-    }
-    true
-}
-
-fn serialize_text_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {
-    let Some(element) = node.as_element() else {
-        return escape_xml(&node.text_content());
-    };
-    let html_tag = element.local_name().as_ref().to_owned();
-    // Accept both lowercase (HTML parser) and SVG-cased names.
-    if html_tag != "text" && html_tag != "tspan"
-        && html_tag != "textpath" && html_tag != "textPath"
-    {
-        return String::new();
-    }
-    let tag = svg_tag_name(&html_tag);
-    let mut attrs = String::new();
-    for attr in &["x", "y", "dx", "dy", "fill", "stroke", "stroke-width",
-                  "font-size", "font-weight", "font-family", "font-style",
-                  "text-anchor", "rotate", "writing-mode",
-                  "startOffset", "href", "xlink:href"] {
-        if let Some(v) = get_attr(&element, attr) {
-            attrs.push_str(&format!(" {}=\"{}\"", attr, v));
-        }
-    }
-    let mut children = String::new();
+/// Extract all text content from a DOM node and its descendants.
+fn extract_text_content<'dom>(node: ServoLayoutNode<'dom>) -> String {
+    let mut text = String::new();
     for child in node.dom_children() {
-        children.push_str(&serialize_text_subtree(child));
+        if let Some(elem) = child.as_element() {
+            let tag = elem.local_name().as_ref();
+            if tag == "tspan" || tag == "textPath" || tag == "textpath" {
+                text.push_str(&extract_text_content(child));
+            }
+        } else {
+            text.push_str(&child.text_content());
+        }
     }
-    format!("<{} {}>{}</{}>", tag, attrs.trim(), children, tag)
+    text
 }
 
 fn escape_xml(s: &str) -> String {
     s.replace('&', "&amp;").replace('<', "&lt;").replace('>', "&gt;")
-}
-
-/// Map HTML-lowercased SVG tag names back to proper SVG camelCase.
-/// HTML parsing lowercases all element names (e.g. lineargradient instead of linearGradient),
-/// but usvg expects correct SVG casing when parsing the serialized XML.
-fn svg_tag_name(html_lower: &str) -> &str {
-    match html_lower {
-        "lineargradient" => "linearGradient",
-        "radialgradient" => "radialGradient",
-        "clippath" => "clipPath",
-        "textpath" => "textPath",
-        "fontface" => "fontFace",
-        "fontfacesrc" => "fontFaceSrc",
-        "fontfaceuri" => "fontFaceUri",
-        "fontfaceformat" => "fontFaceFormat",
-        "fontfacename" => "fontFaceName",
-        "missingglyph" => "missingGlyph",
-        "glyphref" => "glyphRef",
-        "altglyph" => "altGlyph",
-        "altglyphdef" => "altGlyphDef",
-        "altglyphitem" => "altGlyphItem",
-        "colorkey" => "colorKey",
-        "colorprofile" => "colorProfile",
-        "componenttransfer" => "componentTransfer",
-        "fedistantlight" => "feDistantLight",
-        "fepointlight" => "fePointLight",
-        "fespotlight" => "feSpotLight",
-        "fedropshadow" => "feDropShadow",
-        "fecolormatrix" => "feColorMatrix",
-        "fecomponenttransfer" => "feComponentTransfer",
-        "fecomposite" => "feComposite",
-        "feconvolvematrix" => "feConvolveMatrix",
-        "fediffuselighting" => "feDiffuseLighting",
-        "fedisplacementmap" => "feDisplacementMap",
-        "feflood" => "feFlood",
-        "fegaussianblur" => "feGaussianBlur",
-        "feimage" => "feImage",
-        "femerge" => "feMerge",
-        "femergenode" => "feMergeNode",
-        "femorphology" => "feMorphology",
-        "feoffset" => "feOffset",
-        "fespecularlighting" => "feSpecularLighting",
-        "fetile" => "feTile",
-        "feturbulence" => "feTurbulence",
-        "foreignobject" => "foreignObject",
-        "animate" | "animatetransform" | "animatemotion" | "animatecolor"
-            | "set" | "mpath" | "switch" | "view" => html_lower,
-        other => other,
-    }
-}
-
-fn serialize_defs_subtree<'dom>(node: ServoLayoutNode<'dom>) -> String {
-    let Some(element) = node.as_element() else {
-        return node.text_content().to_string();
-    };
-    let tag = svg_tag_name(element.local_name().as_ref()).to_owned();
-    let mut attrs = String::new();
-    // Collect all known SVG attributes — covers gradients, filters, masks,
-    // patterns, clip paths, stops, and general shape attributes.
-    for attr in &[
-        // Core
-        "id", "class", "style",
-        // Linear gradient
-        "x1", "y1", "x2", "y2",
-        // Radial gradient
-        "cx", "cy", "r", "fx", "fy", "fr",
-        // Gradient common
-        "gradientUnits", "gradientTransform", "spreadMethod",
-        // Stop
-        "offset", "stop-color", "stop-opacity",
-        // Pattern
-        "patternUnits", "patternContentUnits", "patternTransform",
-        "x", "y", "width", "height",
-        // Clip path & mask
-        "clipPathUnits", "maskUnits", "maskContentUnits",
-        // Filter
-        "filterUnits", "primitiveUnits",
-        // Path / shape
-        "d", "points",
-        // Paint
-        "fill", "stroke", "stroke-width", "stroke-linecap",
-        "stroke-linejoin", "stroke-dasharray", "stroke-dashoffset",
-        // Filter primitives
-        "in", "result", "stdDeviation", "dx", "dy", "tableValues",
-        "mode", "type", "scale", "bias", "operator",
-        // Generic
-        "transform", "opacity",
-    ] {
-        if let Some(v) = get_attr(&element, attr) {
-            attrs.push_str(&format!(" {}=\"{}\"", attr, v));
-        }
-    }
-    let mut children = String::new();
-    for child in node.dom_children() {
-        children.push_str(&serialize_defs_subtree(child));
-    }
-    format!("<{} {}>{}</{}>", tag, attrs.trim(), children, tag)
 }
 
 fn extract_flattened(node: &usvg::Node, group: &mut Group) {
