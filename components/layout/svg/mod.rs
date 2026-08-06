@@ -601,15 +601,13 @@ fn build_colored_spans<'dom>(
 fn make_span(elem: &ServoLayoutElement, start: usize, end: usize) -> Option<TextSpan> {
     let font_size = attr_f32(elem, "font-size", 16.0).max(1.0);
     let font_family_str = get_attr(elem, "font-family").unwrap_or_else(|| "sans-serif".into());
-    let families = svgtypes::parse_font_families(&font_family_str)
-        .unwrap_or_else(|_| vec![FontFamily::SansSerif]);
     let font_weight = attr_f32(elem, "font-weight", 400.0) as u16;
     let font_style = match get_attr(elem, "font-style").as_deref() {
         Some("italic") => FontStyle::Italic,
         Some("oblique") => FontStyle::Oblique,
         _ => FontStyle::Normal,
     };
-    let font = Font::new(families, font_style, FontStretch::Normal, font_weight);
+    let font = Font::from_attrs(&font_family_str, font_weight, font_style);
     let fill = build_fill(elem, &GradientStore { linear: vec![], radial: vec![] })
         .unwrap_or_else(|| Fill::new(
             Paint::Color(Color::new_rgb(0, 0, 0)),
@@ -622,17 +620,6 @@ fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
     let element = node.as_element()?;
     let x = attr_f32(&element, "x", 0.0);
     let y = attr_f32(&element, "y", 0.0);
-    let font_size = attr_f32(&element, "font-size", 16.0).max(1.0);
-    let font_family_str = get_attr(&element, "font-family")
-        .unwrap_or_else(|| "sans-serif".into());
-    let families = svgtypes::parse_font_families(&font_family_str)
-        .unwrap_or_else(|_| vec![FontFamily::SansSerif]);
-    let font_weight = attr_f32(&element, "font-weight", 400.0) as u16;
-    let font_style = match get_attr(&element, "font-style").as_deref() {
-        Some("italic") => FontStyle::Italic,
-        Some("oblique") => FontStyle::Oblique,
-        _ => FontStyle::Normal,
-    };
     let text_anchor = match get_attr(&element, "text-anchor").as_deref() {
         Some("middle") => TextAnchor::Middle,
         Some("end") => TextAnchor::End,
