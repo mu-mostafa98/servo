@@ -34,7 +34,7 @@ pub trait Backend {
     );
     fn draw_text(
         &mut self, x: f32, y: f32, glyphs: &[TextGlyphDesc],
-        font_size: f32, color: PaintColorDesc,
+        font_handle: usize, font_size: f32, color: PaintColorDesc,
         spatial_id: SpatialId, clip_chain_id: ClipChainId,
     );
 }
@@ -101,12 +101,12 @@ impl Renderer {
                         spatial_id, clip_chain_id,
                     );
                 }
-                PaintCommand::Text { x, y, glyphs, color, font_size, .. } => {
+                PaintCommand::Text { x, y, glyphs, color, font_handle, font_size } => {
                     let glyph_descs: Vec<TextGlyphDesc> = glyphs.iter().map(|g| {
                         TextGlyphDesc { glyph_id: g.glyph_id, x: g.x, y: g.y, advance: g.advance }
                     }).collect();
                     backend.draw_text(
-                        *x, *y, &glyph_descs, *font_size,
+                        *x, *y, &glyph_descs, *font_handle, *font_size,
                         PaintColorDesc { r: color.r, g: color.g, b: color.b, a: color.a },
                         spatial_id, clip_chain_id,
                     );

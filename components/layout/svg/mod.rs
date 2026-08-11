@@ -264,12 +264,23 @@ fn parse_single_transform(s: &str) -> Transform {
 }
 
 /// Main entry point — builds a complete usvg::Tree from an SVG DOM element.
+///
+/// Returns an [`svg_engine::SvgRenderData`] bundle: the usvg tree plus the
+/// font side-tables (a [`FontKeyRegistry`] mapping each text span's
+/// `font_handle` to a WebRender `FontInstanceKey`, and a [`GlyphStore`] of
+/// pre-shaped glyphs). usvg itself stays free of any WebRender dependency;
+/// the handles on its text spans are only resolved via these tables.
 pub(crate) fn build_svg_render_tree<'dom>(
     root_node: ServoLayoutNode<'dom>,
     context: &LayoutContext,
-) -> Option<Arc<usvg::Tree>> {
+) -> Option<Arc<svg_engine::SvgRenderData>> {
     let size = Size::from_wh(300.0, 150.0)?;
     let mut root = Group::new();
+
+    // Font side-tables — filled by build_text_element as it resolves native
+    // fonts via Servo's FontContext. Threads through build_node → text.
+    let mut font_keys = svg_engine::FontKeyRegistry::new();
+    let mut glyphs = svg_engine::GlyphStore::new();
 
     // Extract gradient definitions directly from <defs> DOM children.
     // No XML serialization — we read attributes from the DOM and construct
@@ -278,7 +289,7 @@ pub(crate) fn build_svg_render_tree<'dom>(
 
     // Build the render tree (with gradient resolution available).
     for child in root_node.dom_children() {
-        if let Some(node) = build_node(child, &gradients, context) {
+        if let Some(node) = build_node(child, &gradients, context, &mut font_keys, &mut glyphs) {
             root.push_child(node);
         }
     }
@@ -289,17 +300,29 @@ pub(crate) fn build_svg_render_tree<'dom>(
     for lg in &gradients.linear { tree.push_linear_gradient(lg.clone()); }
     for rg in &gradients.radial { tree.push_radial_gradient(rg.clone()); }
 
-    // Ensure the font database has system fonts loaded for text shaping in the emitter.
+    // Ensure the font database has system fonts loaded for usvg's own
+    // layout/flattening of complex text (textPath, gradient-filled text).
+    // Simple text is shaped with Servo's FontContext above, not this db.
     {
         let mut db = fontdb::Database::new();
         db.load_system_fonts();
         tree.set_fontdb(Arc::new(db));
     }
 
-    Some(Arc::new(tree))
+    Some(Arc::new(svg_engine::SvgRenderData {
+        tree: Arc::new(tree),
+        font_keys: Arc::new(font_keys),
+        glyphs: Arc::new(glyphs),
+    }))
 }
 
-fn build_node<'dom>(node: ServoLayoutNode<'dom>, gradients: &GradientStore, context: &LayoutContext) -> Option<Node> {
+fn build_node<'dom>(
+    node: ServoLayoutNode<'dom>,
+    gradients: &GradientStore,
+    context: &LayoutContext,
+    font_keys: &mut svg_engine::FontKeyRegistry,
+    glyphs: &mut svg_engine::GlyphStore,
+) -> Option<Node> {
     let element = node.as_element()?;
     let tag = element.local_name().as_ref().to_owned();
 
@@ -313,7 +336,7 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>, gradients: &GradientStore, cont
                         continue; // defs children not rendered
                     }
                 }
-                if let Some(n) = build_node(child, gradients, context) {
+                if let Some(n) = build_node(child, gradients, context, font_keys, glyphs) {
                     group.push_child(n);
                 }
             }
@@ -327,7 +350,7 @@ fn build_node<'dom>(node: ServoLayoutNode<'dom>, gradients: &GradientStore, cont
         "path" => build_path_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
         "polygon" => build_polygon_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
         "polyline" => build_polyline_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
-        "text" => build_text_element(node),
+        "text" => build_text_element(node, context, font_keys, glyphs),
         "image" | "img" => build_image_element(node),
         _ => None,
     }
@@ -553,10 +576,14 @@ fn build_polyline_element(element: &ServoLayoutElement, gradients: &GradientStor
 
 /// Build spans from DOM children. Each <tspan> gets its own TextSpan with
 /// that element's fill. Direct text uses the parent element's fill.
-/// Returns normalized (collapsed whitespace) text content and spans.
+/// Returns normalized (collapsed whitespace) text content and spans, with
+/// each span's `font_handle` set when a native font could be resolved.
 fn build_colored_spans<'dom>(
     node: ServoLayoutNode<'dom>,
     parent_elem: &ServoLayoutElement<'dom>,
+    context: &LayoutContext,
+    font_keys: &mut svg_engine::FontKeyRegistry,
+    glyphs: &mut svg_engine::GlyphStore,
 ) -> Option<(String, Vec<TextSpan>)> {
     let mut full_text = String::new();
     let mut spans = Vec::new();
@@ -573,7 +600,13 @@ fn build_colored_spans<'dom>(
                     let start = full_text.len();
                     full_text.push_str(&tspan_text);
                     let end = full_text.len();
-                    if let Some(span) = make_span(&elem, start, end) {
+                    if let Some(mut span) = make_span(&elem, start, end) {
+                        if let Some(h) = shape_span_with_servo_fonts(
+                            &elem, start, end, &full_text,
+                            span.font_size().get(), context, font_keys, glyphs,
+                        ) {
+                            span.set_font_handle(h);
+                        }
                         spans.push(span);
                     }
                 }
@@ -587,7 +620,13 @@ fn build_colored_spans<'dom>(
                 let start = full_text.len();
                 full_text.push_str(&text);
                 let end = full_text.len();
-                if let Some(span) = make_span(parent_elem, start, end) {
+                if let Some(mut span) = make_span(parent_elem, start, end) {
+                    if let Some(h) = shape_span_with_servo_fonts(
+                        parent_elem, start, end, &full_text,
+                        span.font_size().get(), context, font_keys, glyphs,
+                    ) {
+                        span.set_font_handle(h);
+                    }
                     spans.push(span);
                 }
             }
@@ -616,7 +655,12 @@ fn make_span(elem: &ServoLayoutElement, start: usize, end: usize) -> Option<Text
     TextSpan::new(start, end, Some(fill), None, font, font_size)
 }
 
-fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
+fn build_text_element<'dom>(
+    node: ServoLayoutNode<'dom>,
+    context: &LayoutContext,
+    font_keys: &mut svg_engine::FontKeyRegistry,
+    glyphs: &mut svg_engine::GlyphStore,
+) -> Option<Node> {
     let element = node.as_element()?;
     let x = attr_f32(&element, "x", 0.0);
     let y = attr_f32(&element, "y", 0.0);
@@ -634,7 +678,9 @@ fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
 
     // Build spans from DOM children — each <tspan> gets its own TextSpan
     // with that tspan's fill color. Text not in a <tspan> uses parent fill.
-    let (content, spans) = build_colored_spans(node, &element)?;
+    // Shaping + font resolution happens inside so each span has access to its
+    // DOM element (for computed font style) and its text.
+    let (content, spans) = build_colored_spans(node, &element, context, font_keys, glyphs)?;
     if content.is_empty() {
         return None;
     }
@@ -643,22 +689,114 @@ fn build_text_element<'dom>(node: ServoLayoutNode<'dom>) -> Option<Node> {
     let mut text = Text::new(String::new(), rendering_mode, Transform::default());
     text.push_chunk(chunk);
 
-    // Run usvg's layout and flattening (same as what Tree::from_str does internally).
+    // Run usvg's layout + flattening so that complex text (textPath, gradient
+    // fills, per-glyph transforms) has a flattened-path fallback that the
+    // emitter can use. Simple text with a resolved font_handle bypasses this
+    // and is rendered via native glyphs in the emitter.
     let mut db = fontdb::Database::new();
     db.load_system_fonts();
     let fontdb = Arc::new(db);
     let resolver = FontResolver::default();
     let mut cache = usvg::Cache::new(fontdb.clone());
-    usvg::convert(&mut text, &resolver, &mut cache)?;
+    // convert() is optional for simple text but required to populate
+    // `flattened` for the complex fallback. Failure is non-fatal — simple
+    // spans with a font_handle still render via native glyphs.
+    let _ = usvg::convert(&mut text, &resolver, &mut cache);
 
-    // Extract flattened paths into Group — same output type as XML path.
-    let mut group = Group::new();
-    extract_flattened(&usvg::Node::Text(Box::new(text)), &mut group);
-    if group.has_children() {
-        Some(Node::Group(Box::new(group)))
-    } else {
-        None
+    Some(Node::Text(Box::new(text)))
+}
+
+/// Resolve a native font for a text span via Servo's `FontContext` and shape
+/// its glyphs using `font.glyph_index` / `font.glyph_h_advance`.
+///
+/// Returns the opaque handle (stored on the usvg span) if a font was resolved
+/// and at least one glyph shaped. The `FontInstanceKey` and shaped glyphs are
+/// recorded in `font_keys` / `glyphs` respectively, keyed by that handle.
+///
+/// This mirrors the old `svg-text` branch's per-codepoint font fallback
+/// (`font_group.find_by_codepoint`), so mixed-script spans pick the correct
+/// font per character — something the previous fontdb/rustybuzz shaper could
+/// not do and which is required for correct multilingual rendering.
+fn shape_span_with_servo_fonts(
+    elem: &ServoLayoutElement,
+    span_start: usize,
+    span_end: usize,
+    full_text: &str,
+    font_size: f32,
+    context: &LayoutContext,
+    font_keys: &mut svg_engine::FontKeyRegistry,
+    glyphs: &mut svg_engine::GlyphStore,
+) -> Option<usize> {
+    use layout_api::LayoutElement;
+
+    let span_text = &full_text[span_start..span_end];
+    if span_text.is_empty() {
+        return None;
     }
+
+    // Build a font group from the element's computed font style. This goes
+    // through Servo's real font resolution (CSS font-family, weight, style,
+    // stretch, variation settings) and the system font fallback chain.
+    let element_style = elem.style(&context.style_context);
+    let font_group = context.font_context.font_group(element_style.clone_font());
+    let language: icu_locid::subtags::Language = "und".parse().ok()?;
+
+    // Shape per codepoint with font fallback. Track the first resolved font
+    // so the whole span shares one FontInstanceKey (WebRender push_text takes
+    // a single key per call); characters missing from that font fall back to
+    // the notdef glyph, which is the same behaviour as the old branch.
+    let mut first_key: Option<webrender_api::FontInstanceKey> = None;
+    let mut shaped: Vec<svg_engine::ShapedGlyph> = Vec::with_capacity(span_text.len());
+    let chars: Vec<char> = span_text.chars().collect();
+    let mut x_cursor = 0.0f32;
+    let mut total_advance = 0.0f32;
+
+    for (i, ch) in chars.iter().enumerate() {
+        let next_ch = chars.get(i + 1).copied();
+        let font_ref = font_group.find_by_codepoint(
+            &*context.font_context, *ch, next_ch, language,
+        );
+
+        let (glyph_id, advance) = match font_ref.as_ref().and_then(|fr| {
+            let gid = fr.glyph_index(*ch)?;
+            let adv = fr.glyph_h_advance(gid);
+            Some((gid, adv))
+        }) {
+            Some(v) => v,
+            // No glyph available — skip the character (matches old fallback).
+            None => continue,
+        };
+
+        // Resolve the FontInstanceKey lazily from the first font we shape.
+        if first_key.is_none() {
+            if let Some(fr) = font_ref.as_ref() {
+                first_key = Some(fr.key(context.painter_id, &*context.font_context));
+            }
+        }
+
+        let advance_f32 = advance as f32;
+        shaped.push(svg_engine::ShapedGlyph {
+            glyph_id,
+            x: x_cursor,
+            y: 0.0,
+            advance: advance_f32,
+        });
+        x_cursor += advance_f32;
+        total_advance += advance_f32;
+    }
+
+    let key = first_key?;
+    if shaped.is_empty() {
+        return None;
+    }
+
+    let handle = font_keys.register(key);
+    glyphs.insert(handle, svg_engine::ShapedSpan {
+        glyphs: shaped,
+        total_advance,
+        font_size,
+    });
+    Some(handle)
 }
 
 /// Extract all text content from a DOM node and its descendants.

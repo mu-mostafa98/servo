@@ -4,17 +4,24 @@
 
 //! WebRender backend — translates paint commands into WebRender display list calls.
 
+use std::sync::Arc;
+
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{
     BorderRadius, ClipChainId, ClipMode, CommonItemProperties, ComplexClipRegion,
-    DisplayListBuilder, PrimitiveFlags, PropertyBinding, ReferenceFrameKind,
+    DisplayListBuilder, GlyphInstance, PrimitiveFlags, PropertyBinding, ReferenceFrameKind,
     SpatialId, TransformStyle,
 };
 
 use super::{Backend, ClipDesc, FillRectDesc, PaintColorDesc, RadiiDesc, TextGlyphDesc};
+use crate::FontKeyRegistry;
 
 pub(crate) struct WebRenderBackend<'a> {
     pub wr: &'a mut DisplayListBuilder,
+    /// Resolves the opaque `font_handle` on each `PaintCommand::Text` to a
+    /// WebRender `FontInstanceKey` (registered with the resource cache by
+    /// the integration layer via Servo's `FontContext`).
+    pub font_keys: Arc<FontKeyRegistry>,
 }
 
 impl Backend for WebRenderBackend<'_> {
@@ -105,40 +112,49 @@ impl Backend for WebRenderBackend<'_> {
 
     fn draw_text(
         &mut self, x: f32, y: f32, glyphs: &[TextGlyphDesc],
-        font_size: f32, color: PaintColorDesc,
+        font_handle: usize, font_size: f32, color: PaintColorDesc,
         spatial_id: SpatialId, clip_chain_id: ClipChainId,
     ) {
+        // Resolve the opaque handle to a WebRender FontInstanceKey. The key
+        // was registered with WebRender's resource cache by the integration
+        // layer (via Servo's FontContext) when the SVG tree was built.
+        let Some(font_key) = self.font_keys.lookup(font_handle) else {
+            return;
+        };
         if glyphs.is_empty() {
             return;
         }
-        // Compute total advance for clip bounds.
+
+        // Build WebRender GlyphInstances from the pre-shaped glyph data.
+        let glyph_instances: Vec<GlyphInstance> = glyphs
+            .iter()
+            .map(|g| GlyphInstance {
+                index: g.glyph_id,
+                point: LayoutPoint::new(x + g.x, y + g.y),
+            })
+            .collect();
+
+        // Clip bounds: span the whole run for culling.
         let max_x = glyphs.last().map(|g| g.x + g.advance).unwrap_or(0.0);
         let bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(x, y - font_size),
             LayoutSize::new(max_x.max(1.0), font_size * 1.5),
         );
-        // Render each glyph as a filled rectangle.
-        for g in glyphs {
-            let gx = x + g.x;
-            let gy = y + g.y;
-            let gw = g.advance.max(1.0);
-            let gh = font_size;
-            let glyph_rect = LayoutRect::from_origin_and_size(
-                LayoutPoint::new(gx, gy - font_size),
-                LayoutSize::new(gw, gh),
-            );
-            let glyph_info = CommonItemProperties {
-                clip_rect: bounds,
-                clip_chain_id,
-                spatial_id,
-                flags: PrimitiveFlags::default(),
-            };
-            self.wr.push_rect(
-                &glyph_info,
-                glyph_rect,
-                webrender_api::ColorF::new(color.r, color.g, color.b, color.a),
-            );
-        }
+        let info = CommonItemProperties {
+            clip_rect: bounds,
+            clip_chain_id,
+            spatial_id,
+            flags: PrimitiveFlags::default(),
+        };
+
+        self.wr.push_text(
+            &info,
+            bounds,
+            &glyph_instances,
+            font_key,
+            webrender_api::ColorF::new(color.r, color.g, color.b, color.a),
+            None,
+        );
     }
 
     fn stroke_line(

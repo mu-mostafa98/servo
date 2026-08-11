@@ -14,7 +14,7 @@ use std::sync::Mutex;
 
 use crate::emitter::{Emit, EmitContext, PaintCommand};
 use crate::renderer::{Backend, Renderer, krilla::KrillaBackend, webrender::WebRenderBackend};
-use crate::RasterizedImage;
+use crate::{FontKeyRegistry, GlyphStore, RasterizedImage, SvgRenderData};
 
 static PDF_BACKEND: Mutex<Option<KrillaBackend>> = Mutex::new(None);
 static PDF_Y: Mutex<f32> = Mutex::new(0.0);
@@ -25,7 +25,7 @@ static PDF_Y: Mutex<f32> = Mutex::new(0.0);
 /// Convenience wrapper around [`render_svg_tree_to`] that sets up the viewport clip.
 /// Returns rasterized images from the path emitter for compositor upload.
 pub fn render_svg_tree(
-    tree: &usvg::Tree,
+    data: &SvgRenderData,
     svg_origin: &LayoutPoint,
     svg_size: LayoutSize,
     spatial_id: SpatialId,
@@ -38,10 +38,14 @@ pub fn render_svg_tree(
     let parent = (clip_chain_id != ClipChainId::INVALID).then_some(clip_chain_id);
     let svg_clip_chain = wr.define_clip_chain(parent, [svg_clip_id]);
 
-    let mut backend = WebRenderBackend { wr };
-    let images = render_svg_tree_to(tree, svg_origin, &mut backend, spatial_id, svg_clip_chain);
+    let mut backend = WebRenderBackend { wr, font_keys: data.font_keys.clone() };
+    let images = render_svg_tree_to(
+        &data.tree, svg_origin, &data.glyphs, &data.font_keys,
+        &mut backend, spatial_id, svg_clip_chain,
+    );
 
-    // Also render to PDF — stack SVGs vertically.
+    // Also render to PDF — stack SVGs vertically. PDF has no FontInstanceKey
+    // concept, so its text rendering stays path-based.
     if let Ok(mut opt) = PDF_BACKEND.lock() {
         if opt.is_none() {
             *opt = Some(KrillaBackend::new(800.0, 2000.0));
@@ -53,9 +57,13 @@ pub fn render_svg_tree(
                 drop(guard);
                 y
             };
-            render_svg_tree_to(tree, &LayoutPoint::new(svg_origin.x, y), pdf, spatial_id, clip_chain_id);
+            render_svg_tree_to(
+                &data.tree, &LayoutPoint::new(svg_origin.x, y),
+                &data.glyphs, &data.font_keys,
+                pdf, spatial_id, clip_chain_id,
+            );
             if let Ok(mut gy) = PDF_Y.lock() {
-                *gy = y + svg_size.height.max(tree.size().height()) + 20.0;
+                *gy = y + svg_size.height.max(data.tree.size().height()) + 20.0;
             }
             let _ = std::fs::write("svg.pdf", pdf.finish());
         }
@@ -72,6 +80,8 @@ pub fn render_svg_tree(
 pub fn render_svg_tree_to<B: Backend>(
     tree: &usvg::Tree,
     svg_origin: &LayoutPoint,
+    glyphs: &GlyphStore,
+    font_keys: &FontKeyRegistry,
     backend: &mut B,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
@@ -79,8 +89,8 @@ pub fn render_svg_tree_to<B: Backend>(
     let mut commands: Vec<PaintCommand> = Vec::new();
     let emit_ctx = EmitContext {
         svg_origin: *svg_origin,
-        fontdb: Some(tree.fontdb().clone()),
-        font_indices: None,
+        glyphs,
+        font_keys,
     };
     emit_group(tree.root(), &emit_ctx, &mut commands);
 
@@ -109,8 +119,8 @@ fn emit_group(group: &usvg::Group, ctx: &EmitContext, commands: &mut Vec<PaintCo
     let sub_ctx = if group.transform().is_identity() {
         EmitContext {
             svg_origin: ctx.svg_origin,
-            fontdb: ctx.fontdb.clone(),
-            font_indices: ctx.font_indices.clone(),
+            glyphs: ctx.glyphs,
+            font_keys: ctx.font_keys,
         }
     } else {
         EmitContext {
@@ -118,8 +128,8 @@ fn emit_group(group: &usvg::Group, ctx: &EmitContext, commands: &mut Vec<PaintCo
                 ctx.svg_origin.x + group.transform().tx,
                 ctx.svg_origin.y + group.transform().ty,
             ),
-            fontdb: ctx.fontdb.clone(),
-            font_indices: ctx.font_indices.clone(),
+            glyphs: ctx.glyphs,
+            font_keys: ctx.font_keys,
         }
     };
 

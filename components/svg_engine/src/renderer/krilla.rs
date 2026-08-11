@@ -226,7 +226,7 @@ impl Backend for KrillaBackend {
 
     fn draw_text(
         &mut self, x: f32, y: f32, glyphs: &[TextGlyphDesc],
-        font_size: f32, color: PaintColorDesc,
+        _font_handle: usize, font_size: f32, color: PaintColorDesc,
         _spatial_id: SpatialId, _clip_chain_id: ClipChainId,
     ) {
         // Render text glyphs as filled rectangles in the PDF.

@@ -12,9 +12,6 @@ pub mod path;
 pub mod simple;
 pub mod text;
 
-use std::collections::HashMap;
-use std::sync::Arc;
-
 use webrender_api::units::LayoutPoint;
 
 /// Backend-agnostic paint command produced by emitters.
@@ -53,7 +50,9 @@ pub(crate) enum PaintCommand {
         x: f32,
         y: f32,
         glyphs: Vec<TextGlyph>,
-        font_index: usize,
+        /// Opaque handle into the `FontKeyRegistry` — the WebRender backend
+        /// resolves this to a `FontInstanceKey` for `push_text`.
+        font_handle: usize,
         font_size: f32,
         color: PaintColor,
     },
@@ -101,12 +100,15 @@ pub(crate) struct RoundedRadii {
 }
 
 /// Bundled context passed to every [`Emit::emit`] call.
-pub(crate) struct EmitContext {
+pub(crate) struct EmitContext<'a> {
     pub svg_origin: LayoutPoint,
-    /// Optional font database for text glyph shaping.
-    pub fontdb: Option<Arc<fontdb::Database>>,
-    /// Map from usvg::Font to font index (for backend font lookup).
-    pub font_indices: Option<HashMap<usvg::Font, usize>>,
+    /// Pre-shaped glyphs keyed by the same handle stored on usvg text spans.
+    /// Read by the text emitter for simple text.
+    pub glyphs: &'a crate::GlyphStore,
+    /// Handle → WebRender `FontInstanceKey` map, read by the WebRender
+    /// backend's `draw_text`. Read here only to pass the handle through
+    /// `PaintCommand::Text`; the backend does the actual lookup.
+    pub font_keys: &'a crate::FontKeyRegistry,
 }
 
 /// Convert an SVG shape into backend-agnostic paint commands.

@@ -786,14 +786,14 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
         let common = self.common_properties(state, clip, &style);
 
         #[cfg(feature = "svg-engine")]
-        if let Some(ref svg_tree) = fragment.svg_render_tree {
+        if let Some(ref svg_data) = fragment.svg_render_data {
             use svg_engine::render_svg_tree;
             let spatial_id = self.spatial_id(state.spatial_id);
             let clip_chain_id = self.clip_chain_id(state.clip_id);
             let origin = rect.min;
             let size = rect.size();
             let rasters = render_svg_tree(
-                svg_tree,
+                svg_data,
                 &origin,
                 size,
                 spatial_id,

@@ -31,8 +31,6 @@ use style::values::CSSFloat;
 use style::values::computed::image::Image as ComputedImage;
 use style::values::computed::{Content, Context, ToComputedValue};
 use style::values::generics::counters::{GenericContentItem, GenericContentItems};
-#[cfg(feature = "svg-engine")]
-use usvg::Tree as SvgRenderTree;
 use url::Url;
 use web_atoms::local_name;
 use webrender_api::ImageKey;
@@ -155,7 +153,7 @@ pub(crate) enum ReplacedContentKind {
         has_viewbox: bool,
         #[cfg(feature = "svg-engine")]
         #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
-        render_tree: Option<Arc<SvgRenderTree>>,
+        render_data: Option<Arc<svg_engine::SvgRenderData>>,
     },
     Audio,
 }
@@ -290,12 +288,12 @@ impl ReplacedContents {
 
         #[cfg(feature = "svg-engine")]
         {
-            let render_tree = crate::svg::build_svg_render_tree(node, context);
+            let render_data = crate::svg::build_svg_render_tree(node, context);
             return (
                 ReplacedContentKind::SVGElement {
                     vector_image: None,
                     has_viewbox: svg_data.view_box.is_some(),
-                    render_tree,
+                    render_data,
                 },
                 natural_size,
             );
@@ -559,7 +557,7 @@ impl ReplacedContents {
                         showing_broken_image_icon: image_info.showing_broken_image_icon,
                         url: image_info.url.clone(),
                         #[cfg(feature = "svg-engine")]
-                        svg_render_tree: None,
+                        svg_render_data: None,
                     }))
                 })
                 .into_iter()
@@ -572,7 +570,7 @@ impl ReplacedContents {
                     showing_broken_image_icon: false,
                     url: None,
                     #[cfg(feature = "svg-engine")]
-                    svg_render_tree: None,
+                    svg_render_data: None,
                 }))]
             },
             ReplacedContentKind::IFrame(iframe) => {
@@ -614,7 +612,7 @@ impl ReplacedContents {
                     showing_broken_image_icon: false,
                     url: None,
                     #[cfg(feature = "svg-engine")]
-                    svg_render_tree: None,
+                    svg_render_data: None,
                 }))]
             },
             #[allow(unused_variables)]
@@ -626,7 +624,7 @@ impl ReplacedContents {
                 #[cfg(feature = "svg-engine")]
                 {
                     if let ReplacedContentKind::SVGElement {
-                        render_tree: Some(tree),
+                        render_data: Some(data),
                         ..
                     } = &self.kind
                     {
@@ -636,7 +634,7 @@ impl ReplacedContents {
                             image_key: None,
                             showing_broken_image_icon: false,
                             url: None,
-                            svg_render_tree: Some(tree.clone()),
+                            svg_render_data: Some(data.clone()),
                         }))];
                     }
                     return vec![];
@@ -690,7 +688,7 @@ impl ReplacedContents {
                             showing_broken_image_icon: false,
                             url: None,
                             #[cfg(feature = "svg-engine")]
-                            svg_render_tree: None,
+                            svg_render_data: None,
                         }))
                     })
                     .into_iter()

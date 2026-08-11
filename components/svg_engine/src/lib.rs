@@ -16,6 +16,7 @@
 //! | [`traversal`] | Recursive tree walk — visits usvg nodes, calls emitters, feeds renderer |
 
 pub(crate) mod emitter;
+pub mod font_stores;
 pub mod renderer;
 mod traversal;
 
@@ -31,4 +32,5 @@ pub struct RasterizedImage {
     pub content_hash: u64,
 }
 
+pub use font_stores::{FontKeyRegistry, GlyphStore, ShapedGlyph, ShapedSpan, SvgRenderData};
 pub use traversal::{render_svg_tree, render_svg_tree_to};

@@ -4,18 +4,24 @@
 
 //! Text emitter — renders usvg::Text nodes.
 //!
-//! Simple text (solid fill, no textPath, no per-glyph transforms) uses
-//! the backend's native text/glyph API for GPU-accelerated rendering.
-//! Complex text falls back to the usvg flattened-path approach.
+//! Simple text (solid fill, no textPath, no per-glyph transforms, and a
+//! resolved `font_handle` on the span) uses the backend's native glyph API
+//! for GPU-accelerated rendering via WebRender's `push_text`. The pre-shaped
+//! glyphs and `FontInstanceKey` are produced by the integration layer using
+//! Servo's `FontContext` (correct per-codepoint font fallback) and stored in
+//! [`crate::GlyphStore`] / [`crate::FontKeyRegistry`] keyed by that handle.
+//!
+//! Complex text — or text whose font could not be resolved — falls back to
+//! the usvg flattened-path approach (CPU rasterization via vello_cpu).
 
-use super::{Emit, EmitContext, PaintColor, PaintCommand, TextGlyph, color_from_usvg};
+use super::{Emit, EmitContext, PaintCommand, TextGlyph, color_from_usvg};
 
 impl Emit for usvg::Text {
     fn emit(&self, ctx: &EmitContext, commands: &mut Vec<PaintCommand>) {
         // Check if this text is suitable for native glyph rendering.
         // Complex features (textPath, dx/dy, rotate) require path rendering.
         if has_complex_features(self) {
-            // Complex text: use flattened paths (already in the tree as Path nodes).
+            // Complex text: use flattened paths (already in the tree).
             emit_group_flattened(self.flattened(), ctx, commands);
             return;
         }
@@ -26,14 +32,8 @@ impl Emit for usvg::Text {
             return;
         }
 
-        // Simple text: emit native glyph commands.
-        // We need a font database for shaping. If none is available, fall back.
-        let Some(fontdb) = ctx.fontdb.as_ref() else {
-            emit_group_flattened(self.flattened(), ctx, commands);
-            return;
-        };
-
-        emit_simple_text(self, ctx, fontdb, commands);
+        // Simple text: emit native glyph commands using pre-shaped glyphs.
+        emit_simple_text(self, ctx, commands);
     }
 }
 
@@ -71,7 +71,8 @@ fn has_gradient_paint(text: &usvg::Text) -> bool {
     false
 }
 
-/// Emit flattened paths from a Group (recursively). Used as fallback for complex text.
+/// Emit flattened paths from a Group (recursively). Used as fallback for
+/// complex or unresolvable text.
 fn emit_group_flattened(
     group: &usvg::Group,
     ctx: &EmitContext,
@@ -86,11 +87,15 @@ fn emit_group_flattened(
     }
 }
 
-/// Shape and emit simple text using native glyph rendering.
+/// Emit simple text using native glyph rendering.
+///
+/// For each span that has a resolved `font_handle`, looks up its pre-shaped
+/// glyphs in [`GlyphStore`](crate::GlyphStore) and emits a `PaintCommand::Text`
+/// carrying the handle (the WebRender backend resolves it to a
+/// `FontInstanceKey`). Spans without a handle fall back to flattened paths.
 fn emit_simple_text(
     text: &usvg::Text,
     ctx: &EmitContext,
-    fontdb: &fontdb::Database,
     commands: &mut Vec<PaintCommand>,
 ) {
     for chunk in text.chunks() {
@@ -104,16 +109,8 @@ fn emit_simple_text(
         }
 
         for span in chunk.spans() {
-            let span_text = &full_text[span.start()..span.end()];
-            if span_text.is_empty() {
-                continue;
-            }
-
-            // Get fill color (solid only — gradient was checked above).
-            let fill = match span.fill() {
-                Some(f) => f,
-                None => continue,
-            };
+            // Solid fill only — gradient was checked above.
+            let Some(fill) = span.fill() else { continue };
             let color = match fill.paint() {
                 usvg::Paint::Color(c) => c,
                 _ => continue,
@@ -121,27 +118,32 @@ fn emit_simple_text(
             let opacity = fill.opacity().get();
             let paint_color = color_from_usvg(color, opacity);
 
-            // Shape glyphs using fontdb.
-            let font_size = span.font_size().get();
-            let Some((glyphs, total_advance)) =
-                shape_text(fontdb, span.font(), font_size, span_text)
-            else {
-                continue;
+            // Look up the pre-shaped glyphs by handle. If no handle was set
+            // (font resolution failed at construction time), fall back to
+            // flattened paths for the whole text node.
+            let Some(handle) = span.font_handle() else {
+                emit_group_flattened(text.flattened(), ctx, commands);
+                return;
             };
-
-            if glyphs.is_empty() {
+            let Some(shaped) = ctx.glyphs.get(handle) else {
+                emit_group_flattened(text.flattened(), ctx, commands);
+                return;
+            };
+            if shaped.glyphs.is_empty() {
                 continue;
             }
+
+            let font_size = shaped.font_size;
 
             // Apply text-anchor offset.
             let anchor_offset = match anchor {
                 usvg::TextAnchor::Start => 0.0,
-                usvg::TextAnchor::Middle => -total_advance / 2.0,
-                usvg::TextAnchor::End => -total_advance,
+                usvg::TextAnchor::Middle => -shaped.total_advance / 2.0,
+                usvg::TextAnchor::End => -shaped.total_advance,
             };
 
             // Map to TextGlyph with cumulative X positions.
-            let text_glyphs: Vec<TextGlyph> = glyphs.into_iter().map(|g| {
+            let text_glyphs: Vec<TextGlyph> = shaped.glyphs.iter().map(|g| {
                 TextGlyph {
                     glyph_id: g.glyph_id,
                     x: g.x + anchor_offset,
@@ -150,110 +152,14 @@ fn emit_simple_text(
                 }
             }).collect();
 
-            // Find font index in the database (for backend lookups).
-            let font_index = ctx.font_indices.as_ref()
-                .and_then(|m| m.get(&span.font()))
-                .copied()
-                .unwrap_or(0);
-
             commands.push(PaintCommand::Text {
                 x: ctx.svg_origin.x + x + anchor_offset,
                 y: ctx.svg_origin.y + y,
                 glyphs: text_glyphs,
-                font_index,
+                font_handle: handle,
                 font_size,
                 color: paint_color,
             });
         }
     }
-}
-
-/// A shaped glyph with position data.
-struct ShapedGlyph {
-    glyph_id: u32,
-    x: f32,
-    y: f32,
-    advance: f32,
-}
-
-/// Shape a string of text using fontdb + rustybuzz.
-fn shape_text(
-    db: &fontdb::Database,
-    font: &usvg::Font,
-    font_size: f32,
-    text: &str,
-) -> Option<(Vec<ShapedGlyph>, f32)> {
-    let family = font.families().first()?;
-    let db_family = match family {
-        usvg::FontFamily::Serif => fontdb::Family::Serif,
-        usvg::FontFamily::SansSerif => fontdb::Family::SansSerif,
-        usvg::FontFamily::Cursive => fontdb::Family::Cursive,
-        usvg::FontFamily::Fantasy => fontdb::Family::Fantasy,
-        usvg::FontFamily::Monospace => fontdb::Family::Monospace,
-        usvg::FontFamily::Named(s) => fontdb::Family::Name(s.as_str()),
-    };
-    let query = fontdb::Query {
-        families: &[db_family],
-        weight: fontdb::Weight(font.weight()),
-        style: match font.style() {
-            usvg::FontStyle::Normal => fontdb::Style::Normal,
-            usvg::FontStyle::Italic => fontdb::Style::Italic,
-            usvg::FontStyle::Oblique => fontdb::Style::Oblique,
-        },
-        stretch: match font.stretch() {
-            usvg::FontStretch::UltraCondensed => fontdb::Stretch::UltraCondensed,
-            usvg::FontStretch::ExtraCondensed => fontdb::Stretch::ExtraCondensed,
-            usvg::FontStretch::Condensed => fontdb::Stretch::Condensed,
-            usvg::FontStretch::SemiCondensed => fontdb::Stretch::SemiCondensed,
-            usvg::FontStretch::Normal => fontdb::Stretch::Normal,
-            usvg::FontStretch::SemiExpanded => fontdb::Stretch::SemiExpanded,
-            usvg::FontStretch::Expanded => fontdb::Stretch::Expanded,
-            usvg::FontStretch::ExtraExpanded => fontdb::Stretch::ExtraExpanded,
-            usvg::FontStretch::UltraExpanded => fontdb::Stretch::UltraExpanded,
-        },
-    };
-    let font_id = db.query(&query)?;
-    // Load font data and parse the face.
-    let face_info = db.face(font_id)?;
-    let font_data: Vec<u8> = match &face_info.source {
-        fontdb::Source::Binary(data) => data.as_ref().as_ref().to_vec(),
-        fontdb::Source::File(path) => std::fs::read(path).ok()?,
-        _ => return None,
-    };
-    let ttf_face = ttf_parser::Face::parse(&font_data, face_info.index).ok()?;
-    let rb_face = rustybuzz::Face::from_face(ttf_face);
-
-    let units_per_em = rb_face.units_per_em() as f32;
-    let scale = font_size / units_per_em;
-
-    // Shape using rustybuzz.
-    let mut buffer = rustybuzz::UnicodeBuffer::new();
-    buffer.push_str(text);
-    let glyph_buffer = rustybuzz::shape(&rb_face, &[], buffer);
-
-    let glyph_infos = glyph_buffer.glyph_infos();
-    let glyph_positions = glyph_buffer.glyph_positions();
-
-    let mut glyphs = Vec::with_capacity(glyph_infos.len());
-    let mut x_cursor = 0.0f32;
-    let mut total_advance = 0.0f32;
-
-    for (i, info) in glyph_infos.iter().enumerate() {
-        let pos = glyph_positions.get(i);
-        let x_advance = pos.map(|p| p.x_advance as f32 * scale).unwrap_or(0.0);
-        let y_offset = pos.map(|p| p.y_offset as f32 * scale).unwrap_or(0.0);
-        let x_offset = pos.map(|p| p.x_offset as f32 * scale).unwrap_or(0.0);
-
-        glyphs.push(ShapedGlyph {
-            glyph_id: info.glyph_id,
-            x: x_cursor + x_offset,
-            y: y_offset,
-            advance: x_advance,
-        });
-
-        x_cursor += x_advance;
-        total_advance += x_advance;
-    }
-
-    Some((glyphs, total_advance))
 }
