@@ -20,7 +20,6 @@ use std::sync::Arc;
 use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-use crate::style_ext::ComputedValuesExt;
 use usvg::*;
 use web_atoms::ns;
 
@@ -386,7 +385,10 @@ fn parse_color(val: &str) -> Option<Color> {
     let val = val.trim().to_lowercase();
     match val.as_str() {
         "red" => Some(Color::new_rgb(255, 0, 0)),
+        "darkred" => Some(Color::new_rgb(139, 0, 0)),
+        "crimson" => Some(Color::new_rgb(220, 20, 60)),
         "green" => Some(Color::new_rgb(0, 128, 0)),
+        "darkgreen" => Some(Color::new_rgb(0, 100, 0)),
         "blue" => Some(Color::new_rgb(0, 0, 255)),
         "black" => Some(Color::new_rgb(0, 0, 0)),
         "white" => Some(Color::new_rgb(255, 255, 255)),
@@ -402,6 +404,7 @@ fn parse_color(val: &str) -> Option<Color> {
         "dodgerblue" => Some(Color::new_rgb(30, 144, 255)),
         "hotpink" => Some(Color::new_rgb(255, 105, 180)),
         "gray" | "grey" => Some(Color::new_rgb(128, 128, 128)),
+        "lightgray" | "lightgrey" => Some(Color::new_rgb(211, 211, 211)),
         _ if val.starts_with('#') => {
             let hex = &val[1..];
             if hex.len() == 6 {
@@ -415,6 +418,60 @@ fn parse_color(val: &str) -> Option<Color> {
         }
         _ => None,
     }
+}
+
+/// Parse an SVG `font-family` attribute value into a Stylo [`FontFamily`].
+///
+/// SVG font-family is a comma-separated list of family names or generic
+/// keywords (serif, sans-serif, monospace, cursive, fantasy). The CSS
+/// computed style may not reflect the SVG presentation attribute, so we
+/// must construct the family list explicitly for native font resolution.
+fn parse_svg_font_family(family_str: &str) -> ::style::values::computed::font::FontFamily {
+    use ::style::values::computed::font::{
+        FamilyName, FontFamilyList, FontFamilyNameSyntax,
+        GenericFontFamily, SingleFontFamily,
+    };
+    use ::style::ArcSlice;
+    use stylo_atoms::Atom;
+
+    let families: Vec<SingleFontFamily> = family_str
+        .split(',')
+        .map(|s| s.trim().trim_matches(|c| c == '"' || c == '\''))
+        .filter(|s| !s.is_empty())
+        .map(|name| match name.to_lowercase().as_str() {
+            "serif" => SingleFontFamily::Generic(GenericFontFamily::Serif),
+            "sans-serif" => SingleFontFamily::Generic(GenericFontFamily::SansSerif),
+            "monospace" => SingleFontFamily::Generic(GenericFontFamily::Monospace),
+            "cursive" => SingleFontFamily::Generic(GenericFontFamily::Cursive),
+            "fantasy" => SingleFontFamily::Generic(GenericFontFamily::Fantasy),
+            "system-ui" => SingleFontFamily::Generic(GenericFontFamily::SystemUi),
+            _ => SingleFontFamily::FamilyName(FamilyName {
+                name: Atom::from(name),
+                syntax: FontFamilyNameSyntax::Quoted,
+            }),
+        })
+        .collect();
+
+    ::style::values::computed::font::FontFamily {
+        families: FontFamilyList {
+            list: ArcSlice::from_iter(families.into_iter()),
+        },
+        is_system_font: false,
+        is_initial: false,
+    }
+}
+
+/// Look up an SVG attribute on `elem`, falling back to `parent` if not set.
+/// Used for SVG inheritance from `<text>` to `<tspan>` elements.
+fn attr_or_inherit(
+    elem: &ServoLayoutElement,
+    parent: &ServoLayoutElement,
+    name: &str,
+    default: &str,
+) -> String {
+    get_attr(elem, name)
+        .or_else(|| get_attr(parent, name))
+        .unwrap_or_else(|| default.to_string())
 }
 
 fn build_fill(element: &ServoLayoutElement, gradients: &GradientStore) -> Option<Fill> {
@@ -596,13 +653,19 @@ fn build_colored_spans<'dom>(
                 let tspan_text: String = extract_text_content(child)
                     .split_whitespace().collect::<Vec<_>>().join(" ");
                 if !tspan_text.is_empty() {
-                    if !full_text.is_empty() { full_text.push(' '); }
-                    let start = full_text.len();
+                    // Push an inter-word space before this span (except for the
+                    // first). Include the space in the span's text range so it
+                    // gets shaped as a glyph and produces visible spacing.
+                    let space_len = if full_text.is_empty() { 0 } else {
+                        full_text.push(' ');
+                        1
+                    };
+                    let start = full_text.len() - space_len;
                     full_text.push_str(&tspan_text);
                     let end = full_text.len();
-                    if let Some(mut span) = make_span(&elem, start, end) {
+                    if let Some(mut span) = make_span(&elem, parent_elem, start, end) {
                         if let Some(h) = shape_span_with_servo_fonts(
-                            &elem, start, end, &full_text,
+                            &elem, parent_elem, start, end, &full_text,
                             span.font_size().get(), context, font_keys, glyphs,
                         ) {
                             span.set_font_handle(h);
@@ -616,13 +679,16 @@ fn build_colored_spans<'dom>(
             let text: String = child.text_content()
                 .split_whitespace().collect::<Vec<_>>().join(" ");
             if !text.is_empty() {
-                if !full_text.is_empty() { full_text.push(' '); }
-                let start = full_text.len();
+                let space_len = if full_text.is_empty() { 0 } else {
+                    full_text.push(' ');
+                    1
+                };
+                let start = full_text.len() - space_len;
                 full_text.push_str(&text);
                 let end = full_text.len();
-                if let Some(mut span) = make_span(parent_elem, start, end) {
+                if let Some(mut span) = make_span(parent_elem, parent_elem, start, end) {
                     if let Some(h) = shape_span_with_servo_fonts(
-                        parent_elem, start, end, &full_text,
+                        parent_elem, parent_elem, start, end, &full_text,
                         span.font_size().get(), context, font_keys, glyphs,
                     ) {
                         span.set_font_handle(h);
@@ -637,13 +703,25 @@ fn build_colored_spans<'dom>(
 }
 
 /// Build a TextSpan for a DOM element using that element's style attributes.
-fn make_span(elem: &ServoLayoutElement, start: usize, end: usize) -> Option<TextSpan> {
-    let font_size = attr_f32(elem, "font-size", 16.0).max(1.0);
-    let font_family_str = get_attr(elem, "font-family").unwrap_or_else(|| "sans-serif".into());
-    let font_weight = attr_f32(elem, "font-weight", 400.0) as u16;
-    let font_style = match get_attr(elem, "font-style").as_deref() {
-        Some("italic") => FontStyle::Italic,
-        Some("oblique") => FontStyle::Oblique,
+/// Falls back to `parent_elem` for attributes that the element doesn't set
+/// (SVG inheritance from `<text>` to `<tspan>`).
+fn make_span(
+    elem: &ServoLayoutElement,
+    parent_elem: &ServoLayoutElement,
+    start: usize,
+    end: usize,
+) -> Option<TextSpan> {
+    let inherited_font_size = attr_f32(parent_elem, "font-size", 16.0);
+    let font_size = attr_opt_f32(elem, "font-size")
+        .unwrap_or(inherited_font_size)
+        .max(1.0);
+    let font_family_str = attr_or_inherit(elem, parent_elem, "font-family", "sans-serif");
+    let font_weight = attr_or_inherit(elem, parent_elem, "font-weight", "400")
+        .parse::<f32>().unwrap_or(400.0) as u16;
+    let font_style_str = attr_or_inherit(elem, parent_elem, "font-style", "normal");
+    let font_style = match font_style_str.as_str() {
+        "italic" => FontStyle::Italic,
+        "oblique" => FontStyle::Oblique,
         _ => FontStyle::Normal,
     };
     let font = Font::from_attrs(&font_family_str, font_weight, font_style);
@@ -652,7 +730,10 @@ fn make_span(elem: &ServoLayoutElement, start: usize, end: usize) -> Option<Text
             Paint::Color(Color::new_rgb(0, 0, 0)),
             Opacity::ONE, FillRule::NonZero,
         ));
-    TextSpan::new(start, end, Some(fill), None, font, font_size)
+    // Capture stroke so the emitter can route stroked text to the path
+    // fallback (WebRender's push_text can't produce outline glyphs).
+    let stroke = build_stroke(elem, &GradientStore { linear: vec![], radial: vec![] });
+    TextSpan::new(start, end, Some(fill), stroke, font, font_size)
 }
 
 fn build_text_element<'dom>(
@@ -719,6 +800,7 @@ fn build_text_element<'dom>(
 /// not do and which is required for correct multilingual rendering.
 fn shape_span_with_servo_fonts(
     elem: &ServoLayoutElement,
+    parent_elem: &ServoLayoutElement,
     span_start: usize,
     span_end: usize,
     full_text: &str,
@@ -734,11 +816,46 @@ fn shape_span_with_servo_fonts(
         return None;
     }
 
-    // Build a font group from the element's computed font style. This goes
-    // through Servo's real font resolution (CSS font-family, weight, style,
-    // stretch, variation settings) and the system font fallback chain.
+    // Build a font group from the element's computed font style, but override
+    // font properties with SVG presentation attributes (with inheritance from
+    // the parent element, e.g. `<text>` → `<tspan>`). SVG presentation
+    // attributes may not be mapped to CSS computed style for SVG text
+    // elements, so we must apply them explicitly.
     let element_style = elem.style(&context.style_context);
-    let font_group = context.font_context.font_group(element_style.clone_font());
+    let mut font_style = (*element_style.clone_font()).clone();
+
+    // Override font-family from the SVG attribute (with parent fallback).
+    let svg_font_family = attr_or_inherit(elem, parent_elem, "font-family", "sans-serif");
+    font_style.set_font_family(parse_svg_font_family(&svg_font_family));
+
+    // Override font-style from the SVG attribute (with parent fallback).
+    let svg_font_style = match attr_or_inherit(elem, parent_elem, "font-style", "normal").as_str() {
+        "italic" => ::style::values::computed::font::FontStyle::ITALIC,
+        "oblique" => ::style::values::computed::font::FontStyle::OBLIQUE,
+        _ => ::style::values::computed::font::FontStyle::NORMAL,
+    };
+    font_style.set_font_style(svg_font_style);
+
+    // Override font-weight from the SVG attribute (with parent fallback).
+    let svg_font_weight = match attr_or_inherit(elem, parent_elem, "font-weight", "normal").as_str() {
+        "bold" => ::style::values::computed::font::FontWeight::BOLD,
+        "normal" => ::style::values::computed::font::FontWeight::NORMAL,
+        val => {
+            val.parse::<f32>().ok()
+                .map(|w| ::style::values::computed::font::FontWeight::from_float(w))
+                .unwrap_or(::style::values::computed::font::FontWeight::NORMAL)
+        }
+    };
+    font_style.set_font_weight(svg_font_weight);
+
+    font_style.compute_font_hash();
+
+    // Override font-size from the SVG attribute (in app units).
+    let au_size = app_units::Au::from_f32_px(font_size);
+    let font_group = context.font_context.font_group_with_size(
+        servo_arc::Arc::new(font_style),
+        au_size,
+    );
     let language: icu_locid::subtags::Language = "und".parse().ok()?;
 
     // Shape per codepoint with font fallback. Track the first resolved font

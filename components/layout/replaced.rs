@@ -339,7 +339,7 @@ impl ReplacedContents {
                 vector_image,
                 has_viewbox: svg_data.view_box.is_some(),
                 #[cfg(feature = "svg-engine")]
-                render_tree: None,
+                render_data: None,
             },
             natural_size,
         )

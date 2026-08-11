@@ -32,6 +32,14 @@ impl Emit for usvg::Text {
             return;
         }
 
+        // Check for stroke on any span. WebRender's push_text only renders
+        // glyphs in a single solid color — it cannot produce outline strokes.
+        // Stroked text must go through the path fallback for correct rendering.
+        if has_stroke(self) {
+            emit_group_flattened(self.flattened(), ctx, commands);
+            return;
+        }
+
         // Simple text: emit native glyph commands using pre-shaped glyphs.
         emit_simple_text(self, ctx, commands);
     }
@@ -47,6 +55,19 @@ fn has_complex_features(text: &usvg::Text) -> bool {
     for chunk in text.chunks() {
         if !matches!(chunk.text_flow(), usvg::TextFlow::Linear) {
             return true;
+        }
+    }
+    false
+}
+
+/// Check if any span has a stroke. WebRender's `push_text` doesn't support
+/// outline glyphs, so stroked text must go through the path fallback.
+fn has_stroke(text: &usvg::Text) -> bool {
+    for chunk in text.chunks() {
+        for span in chunk.spans() {
+            if span.stroke().is_some() {
+                return true;
+            }
         }
     }
     false
@@ -89,10 +110,14 @@ fn emit_group_flattened(
 
 /// Emit simple text using native glyph rendering.
 ///
-/// For each span that has a resolved `font_handle`, looks up its pre-shaped
-/// glyphs in [`GlyphStore`](crate::GlyphStore) and emits a `PaintCommand::Text`
-/// carrying the handle (the WebRender backend resolves it to a
-/// `FontInstanceKey`). Spans without a handle fall back to flattened paths.
+/// Each span that has a resolved `font_handle` and pre-shaped glyphs in
+/// [`GlyphStore`](crate::GlyphStore) produces a `PaintCommand::Text`. Spans
+/// without a handle fall back to flattened paths for the whole text node.
+///
+/// Multiple spans in a chunk (e.g. `<tspan>` elements) are laid out
+/// sequentially: each span's glyphs are positioned after the previous spans'
+/// cumulative advance. Text-anchor alignment uses the combined advance of all
+/// spans so the entire text is centered or right-aligned as a unit.
 fn emit_simple_text(
     text: &usvg::Text,
     ctx: &EmitContext,
@@ -108,19 +133,17 @@ fn emit_simple_text(
             continue;
         }
 
-        for span in chunk.spans() {
-            // Solid fill only — gradient was checked above.
-            let Some(fill) = span.fill() else { continue };
-            let color = match fill.paint() {
-                usvg::Paint::Color(c) => c,
-                _ => continue,
-            };
-            let opacity = fill.opacity().get();
-            let paint_color = color_from_usvg(color, opacity);
+        // Collect spans — empty chunks were handled above.
+        let spans = chunk.spans();
+        if spans.is_empty() {
+            continue;
+        }
 
-            // Look up the pre-shaped glyphs by handle. If no handle was set
-            // (font resolution failed at construction time), fall back to
-            // flattened paths for the whole text node.
+        // First pass: validate every span has a font_handle + shaped glyphs,
+        // and compute the total advance across all spans for text-anchor
+        // alignment. If any span is unresolvable, fall back to flattened paths.
+        let mut total_advance: f32 = 0.0;
+        for span in spans {
             let Some(handle) = span.font_handle() else {
                 emit_group_flattened(text.flattened(), ctx, commands);
                 return;
@@ -129,37 +152,65 @@ fn emit_simple_text(
                 emit_group_flattened(text.flattened(), ctx, commands);
                 return;
             };
+            total_advance += shaped.total_advance;
+        }
+
+        let anchor_offset = match anchor {
+            usvg::TextAnchor::Start => 0.0,
+            usvg::TextAnchor::Middle => -total_advance / 2.0,
+            usvg::TextAnchor::End => -total_advance,
+        };
+
+        // Second pass: emit each span at its accumulated X position.
+        let mut x_cursor: f32 = 0.0;
+        for span in spans {
+            // Handles already validated in the first pass.
+            let handle = span.font_handle().unwrap();
+            let shaped = ctx.glyphs.get(handle).unwrap();
+
             if shaped.glyphs.is_empty() {
                 continue;
             }
 
-            let font_size = shaped.font_size;
-
-            // Apply text-anchor offset.
-            let anchor_offset = match anchor {
-                usvg::TextAnchor::Start => 0.0,
-                usvg::TextAnchor::Middle => -shaped.total_advance / 2.0,
-                usvg::TextAnchor::End => -shaped.total_advance,
+            // Solid fill only — gradient was checked before we reach here.
+            let paint_color = match span.fill() {
+                Some(fill) => match fill.paint() {
+                    usvg::Paint::Color(c) => {
+                        color_from_usvg(&c, fill.opacity().get())
+                    }
+                    _ => {
+                        // Non-color fill on this span — advance cursor and skip.
+                        x_cursor += shaped.total_advance;
+                        continue;
+                    }
+                },
+                None => {
+                    // No fill — advance cursor past invisible span.
+                    x_cursor += shaped.total_advance;
+                    continue;
+                }
             };
 
-            // Map to TextGlyph with cumulative X positions.
+            // Map glyph-local X positions (already relative to span start).
             let text_glyphs: Vec<TextGlyph> = shaped.glyphs.iter().map(|g| {
                 TextGlyph {
                     glyph_id: g.glyph_id,
-                    x: g.x + anchor_offset,
+                    x: g.x,
                     y: g.y,
                     advance: g.advance,
                 }
             }).collect();
 
             commands.push(PaintCommand::Text {
-                x: ctx.svg_origin.x + x + anchor_offset,
+                x: ctx.svg_origin.x + x + anchor_offset + x_cursor,
                 y: ctx.svg_origin.y + y,
                 glyphs: text_glyphs,
                 font_handle: handle,
-                font_size,
+                font_size: shaped.font_size,
                 color: paint_color,
             });
+
+            x_cursor += shaped.total_advance;
         }
     }
 }
