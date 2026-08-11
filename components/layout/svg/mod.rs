@@ -27,9 +27,21 @@ use crate::context::LayoutContext;
 
 /// Gradient store — holds gradient definitions parsed from <defs> for
 /// resolution of `url(#id)` references during node construction.
+/// A reusable path definition from `<defs>`.
+struct DefPath {
+    d: String,
+    fill: Option<String>,
+    stroke: Option<String>,
+    stroke_width: Option<String>,
+}
+
+/// Definitions collected from `<defs>` — gradients and paths used by
+/// `url(#id)` references.
 struct GradientStore {
     linear: Vec<Arc<LinearGradient>>,
     radial: Vec<Arc<RadialGradient>>,
+    /// Path definitions keyed by element `id`.
+    paths: std::collections::HashMap<String, DefPath>,
 }
 
 impl GradientStore {
@@ -40,6 +52,10 @@ impl GradientStore {
     fn lookup_radial(&self, id: &str) -> Option<&Arc<RadialGradient>> {
         self.radial.iter().find(|g| g.id() == id)
     }
+
+    fn lookup_path(&self, id: &str) -> Option<&DefPath> {
+        self.paths.get(id)
+    }
 }
 
 /// Build gradient definitions directly from the DOM — no XML serialization.
@@ -48,24 +64,37 @@ impl GradientStore {
 fn build_gradients_from_dom<'dom>(root_node: ServoLayoutNode<'dom>) -> GradientStore {
     let mut linear = Vec::new();
     let mut radial = Vec::new();
+    let mut paths = std::collections::HashMap::new();
 
     for child in root_node.dom_children() {
         let Some(elem) = child.as_element() else { continue };
         if elem.local_name().as_ref() != "defs" { continue }
 
-        // Found a <defs> — iterate its children for gradient elements.
+        // Found a <defs> — iterate its children for gradient and path elements.
         for defs_child in child.dom_children() {
-            let Some(grad_elem) = defs_child.as_element() else { continue };
-            let tag = grad_elem.local_name().as_ref();
+            let Some(defs_elem) = defs_child.as_element() else { continue };
+            let tag = defs_elem.local_name().as_ref();
             match tag {
                 "lineargradient" | "linearGradient" => {
-                    if let Some(g) = build_linear_gradient_from_dom(&grad_elem, defs_child) {
+                    if let Some(g) = build_linear_gradient_from_dom(&defs_elem, defs_child) {
                         linear.push(Arc::new(g));
                     }
                 }
                 "radialgradient" | "radialGradient" => {
-                    if let Some(g) = build_radial_gradient_from_dom(&grad_elem, defs_child) {
+                    if let Some(g) = build_radial_gradient_from_dom(&defs_elem, defs_child) {
                         radial.push(Arc::new(g));
+                    }
+                }
+                "path" => {
+                    if let Some(id) = get_attr(&defs_elem, "id") {
+                        if let Some(d) = get_attr(&defs_elem, "d") {
+                            paths.insert(id, DefPath {
+                                d,
+                                fill: get_attr(&defs_elem, "fill"),
+                                stroke: get_attr(&defs_elem, "stroke"),
+                                stroke_width: get_attr(&defs_elem, "stroke-width"),
+                            });
+                        }
                     }
                 }
                 _ => {}
@@ -73,7 +102,7 @@ fn build_gradients_from_dom<'dom>(root_node: ServoLayoutNode<'dom>) -> GradientS
         }
     }
 
-    GradientStore { linear, radial }
+    GradientStore { linear, radial, paths }
 }
 
 /// Read a `<linearGradient>` directly from the DOM.
@@ -349,7 +378,8 @@ fn build_node<'dom>(
         "path" => build_path_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
         "polygon" => build_polygon_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
         "polyline" => build_polyline_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
-        "text" => build_text_element(node, context, font_keys, glyphs),
+        "text" => build_text_element(node, gradients, context, font_keys, glyphs),
+        "use" => build_use_element(&element, gradients),
         "image" | "img" => build_image_element(node),
         _ => None,
     }
@@ -412,6 +442,12 @@ fn parse_color(val: &str) -> Option<Color> {
                 let g = u8::from_str_radix(&hex[2..4], 16).ok()?;
                 let b = u8::from_str_radix(&hex[4..6], 16).ok()?;
                 Some(Color::new_rgb(r, g, b))
+            } else if hex.len() == 3 {
+                // #abc → #aabbcc
+                let r = u8::from_str_radix(&hex[0..1], 16).ok()? * 17;
+                let g = u8::from_str_radix(&hex[1..2], 16).ok()? * 17;
+                let b = u8::from_str_radix(&hex[2..3], 16).ok()? * 17;
+                Some(Color::new_rgb(r, g, b))
             } else {
                 None
             }
@@ -472,6 +508,112 @@ fn attr_or_inherit(
     get_attr(elem, name)
         .or_else(|| get_attr(parent, name))
         .unwrap_or_else(|| default.to_string())
+}
+
+/// Parse a comma/space-separated list of floats (e.g. `dx="0,5,10"`).
+fn parse_f32_list(s: &str) -> Vec<f32> {
+    s.split(|c: char| c == ',' || c.is_ascii_whitespace())
+        .filter_map(|part| part.trim().parse::<f32>().ok())
+        .collect()
+}
+
+/// If the `<text>` element has a `<textPath>` child, resolve the referenced
+/// path and build a [`TextPath`]. Returns `None` if there's no textPath child
+/// or the referenced path can't be found/resolved.
+fn build_text_path(
+    _text_elem: &ServoLayoutElement,
+    text_node: ServoLayoutNode,
+    defs: &GradientStore,
+) -> Option<usvg::TextPath> {
+    for child in text_node.dom_children() {
+        let Some(elem) = child.as_element() else { continue };
+        if elem.local_name().as_ref() != "textPath" && elem.local_name().as_ref() != "textpath" {
+            continue;
+        }
+        // Read href — either `href` or `xlink:href`.
+        let href = get_attr(&elem, "href")
+            .or_else(|| get_attr(&elem, "xlink:href"))?;
+        let path_id = href.strip_prefix('#')?;
+
+        // Look up the path data in the defs store.
+        let def_path = defs.lookup_path(path_id)?;
+        let usvg_path = usvg::Path::from_d(
+            &def_path.d, None, None, Transform::default(),
+        )?;
+        let skia_path = usvg_path.data().clone();
+
+        // Parse startOffset (percentage or length).
+        // Percentages are resolved to absolute path distance (matching usvg's
+        // own parser behavior), so we need the path length.
+        let start_offset_str = get_attr(&elem, "startOffset").unwrap_or_else(|| "0%".into());
+        let start_offset = if let Some(pct) = start_offset_str.strip_suffix('%') {
+            let pct_val: f64 = pct.parse::<f32>().ok()? as f64;
+            let path_len = compute_path_length(&skia_path);
+            (path_len * pct_val / 100.0) as f32
+        } else {
+            start_offset_str.parse::<f32>().ok()?
+        };
+
+        return usvg::TextPath::new(
+            path_id,
+            start_offset,
+            std::sync::Arc::new(skia_path),
+        );
+    }
+    None
+}
+
+/// Compute the total arc length of a `tiny_skia_path::Path` using
+/// `kurbo` for accurate curve length (same approach as usvg's internal
+/// `path_length` function).
+fn compute_path_length(path: &tiny_skia_path::Path) -> f64 {
+    use kurbo::{ParamCurve, ParamCurveArclen};
+    use tiny_skia_path::PathSegment;
+
+    let mut prev_mx = path.points()[0].x;
+    let mut prev_my = path.points()[0].y;
+    let mut prev_x = prev_mx;
+    let mut prev_y = prev_my;
+    let mut length = 0.0f64;
+
+    fn line_to_cubic(px: f32, py: f32, x: f32, y: f32) -> kurbo::CubicBez {
+        let line = kurbo::Line::new(
+            kurbo::Point::new(px as f64, py as f64),
+            kurbo::Point::new(x as f64, y as f64),
+        );
+        let p1 = line.eval(0.33);
+        let p2 = line.eval(0.66);
+        kurbo::CubicBez::new(line.p0, p1, p2, line.p1)
+    }
+
+    for seg in path.segments() {
+        let curve = match seg {
+            PathSegment::MoveTo(p) => {
+                prev_mx = p.x;
+                prev_my = p.y;
+                prev_x = p.x;
+                prev_y = p.y;
+                continue;
+            }
+            PathSegment::LineTo(p) => line_to_cubic(prev_x, prev_y, p.x, p.y),
+            PathSegment::QuadTo(p1, p) => kurbo::QuadBez::new(
+                kurbo::Point::new(prev_x as f64, prev_y as f64),
+                kurbo::Point::new(p1.x as f64, p1.y as f64),
+                kurbo::Point::new(p.x as f64, p.y as f64),
+            ).raise(),
+            PathSegment::CubicTo(p1, p2, p) => kurbo::CubicBez::new(
+                kurbo::Point::new(prev_x as f64, prev_y as f64),
+                kurbo::Point::new(p1.x as f64, p1.y as f64),
+                kurbo::Point::new(p2.x as f64, p2.y as f64),
+                kurbo::Point::new(p.x as f64, p.y as f64),
+            ),
+            PathSegment::Close => line_to_cubic(prev_x, prev_y, prev_mx, prev_my),
+        };
+        length += curve.arclen(0.5);
+        prev_x = curve.p3.x as f32;
+        prev_y = curve.p3.y as f32;
+    }
+    length
 }
 
 fn build_fill(element: &ServoLayoutElement, gradients: &GradientStore) -> Option<Fill> {
@@ -610,6 +752,57 @@ fn build_line(element: &ServoLayoutElement, gradients: &GradientStore) -> Option
 
 // ======================= Complex Shape Builders =======================
 
+/// Build a `<use>` element — looks up the referenced element in `<defs>` and
+/// renders a clone at the `use` element's position.
+fn build_use_element(element: &ServoLayoutElement, defs: &GradientStore) -> Option<Node> {
+    let href = get_attr(element, "href")
+        .or_else(|| get_attr(element, "xlink:href"))?;
+    let ref_id = href.strip_prefix('#')?;
+
+    // Try to find a path with this id in defs.
+    if let Some(def_path) = defs.lookup_path(ref_id) {
+        let x = attr_f32(element, "x", 0.0);
+        let y = attr_f32(element, "y", 0.0);
+        let transform = if x != 0.0 || y != 0.0 {
+            Transform::from_translate(x, y)
+        } else {
+            Transform::default()
+        };
+        // Inherit fill/stroke from the referenced path when <use> doesn't
+        // specify its own.
+        let fill = build_fill(element, defs)
+            .or_else(|| build_fill_from_defs(def_path));
+        let stroke = build_stroke(element, defs)
+            .or_else(|| build_stroke_from_defs(def_path));
+        return Path::from_d(&def_path.d, fill, stroke, transform)
+            .map(|p| Node::Path(Box::new(p)));
+    }
+
+    // TODO: support other element types (rect, circle, etc.)
+
+    None
+}
+
+/// Build a [`Fill`] from a [`DefPath`]'s stored attributes.
+fn build_fill_from_defs(def: &DefPath) -> Option<Fill> {
+    let fill_str = def.fill.as_deref()?;
+    if fill_str == "none" { return None; }
+    let color = parse_color(fill_str)?;
+    Some(Fill::new(Paint::Color(color), Opacity::ONE, FillRule::NonZero))
+}
+
+/// Build a [`Stroke`] from a [`DefPath`]'s stored attributes.
+fn build_stroke_from_defs(def: &DefPath) -> Option<Stroke> {
+    let stroke_str = def.stroke.as_deref()?;
+    if stroke_str == "none" { return None; }
+    let color = parse_color(stroke_str)?;
+    let width = def.stroke_width.as_deref()
+        .and_then(|w| w.parse::<f32>().ok())
+        .unwrap_or(1.0);
+    StrokeWidth::new(width.max(0.01))
+        .map(|sw| Stroke::new(Paint::Color(color), sw))
+}
+
 fn build_path_element(element: &ServoLayoutElement, gradients: &GradientStore) -> Option<Path> {
     let d = get_attr(element, "d")?;
     let fill = build_fill(element, gradients);
@@ -648,11 +841,13 @@ fn build_colored_spans<'dom>(
     for child in node.dom_children() {
         if let Some(elem) = child.as_element() {
             let tag = elem.local_name().as_ref();
-            if tag == "tspan" {
-                // Normalize this tspan's text and build a span with the tspan's style.
-                let tspan_text: String = extract_text_content(child)
+            if tag == "tspan" || tag == "textPath" || tag == "textpath" {
+                // Normalize this child's text and build a span with its style.
+                // Handles <tspan> and <textPath> children the same way — both
+                // contribute text content to the chunk.
+                let child_text: String = extract_text_content(child)
                     .split_whitespace().collect::<Vec<_>>().join(" ");
-                if !tspan_text.is_empty() {
+                if !child_text.is_empty() {
                     // Push an inter-word space before this span (except for the
                     // first). Include the space in the span's text range so it
                     // gets shaped as a glyph and produces visible spacing.
@@ -661,7 +856,7 @@ fn build_colored_spans<'dom>(
                         1
                     };
                     let start = full_text.len() - space_len;
-                    full_text.push_str(&tspan_text);
+                    full_text.push_str(&child_text);
                     let end = full_text.len();
                     if let Some(mut span) = make_span(&elem, parent_elem, start, end) {
                         if let Some(h) = shape_span_with_servo_fonts(
@@ -725,19 +920,24 @@ fn make_span(
         _ => FontStyle::Normal,
     };
     let font = Font::from_attrs(&font_family_str, font_weight, font_style);
-    let fill = build_fill(elem, &GradientStore { linear: vec![], radial: vec![] })
+    // Fill: try element first, then parent, then default to black.
+    let empty_defs = GradientStore { linear: vec![], radial: vec![], paths: Default::default() };
+    let fill = build_fill(elem, &empty_defs)
+        .or_else(|| build_fill(parent_elem, &empty_defs))
         .unwrap_or_else(|| Fill::new(
             Paint::Color(Color::new_rgb(0, 0, 0)),
             Opacity::ONE, FillRule::NonZero,
         ));
-    // Capture stroke so the emitter can route stroked text to the path
-    // fallback (WebRender's push_text can't produce outline glyphs).
-    let stroke = build_stroke(elem, &GradientStore { linear: vec![], radial: vec![] });
+    // Stroke: try element first, then parent. Capture stroke so the emitter
+    // can route stroked text to the path fallback.
+    let stroke = build_stroke(elem, &empty_defs)
+        .or_else(|| build_stroke(parent_elem, &empty_defs));
     TextSpan::new(start, end, Some(fill), stroke, font, font_size)
 }
 
 fn build_text_element<'dom>(
     node: ServoLayoutNode<'dom>,
+    defs: &GradientStore,
     context: &LayoutContext,
     font_keys: &mut svg_engine::FontKeyRegistry,
     glyphs: &mut svg_engine::GlyphStore,
@@ -757,6 +957,14 @@ fn build_text_element<'dom>(
         _ => TextRendering::default(),
     };
 
+    // Read per-glyph transform attributes (dx, dy, rotate).
+    let dx = parse_f32_list(&get_attr(&element, "dx").unwrap_or_default());
+    let dy = parse_f32_list(&get_attr(&element, "dy").unwrap_or_default());
+    let rotate = parse_f32_list(&get_attr(&element, "rotate").unwrap_or_default());
+
+    // Check for <textPath> child and build the referenced path.
+    let text_path = build_text_path(&element, node, defs);
+
     // Build spans from DOM children — each <tspan> gets its own TextSpan
     // with that tspan's fill color. Text not in a <tspan> uses parent fill.
     // Shaping + font resolution happens inside so each span has access to its
@@ -766,8 +974,15 @@ fn build_text_element<'dom>(
         return None;
     }
 
-    let chunk = TextChunk::new(x, y, text_anchor, spans, content);
+    let mut chunk = TextChunk::new(x, y, text_anchor, spans, content);
+    if let Some(tp) = text_path {
+        chunk.set_text_path(tp);
+    }
+
     let mut text = Text::new(String::new(), rendering_mode, Transform::default());
+    if !dx.is_empty() { text.set_dx(dx); }
+    if !dy.is_empty() { text.set_dy(dy); }
+    if !rotate.is_empty() { text.set_rotate(rotate); }
     text.push_chunk(chunk);
 
     // Run usvg's layout + flattening so that complex text (textPath, gradient
