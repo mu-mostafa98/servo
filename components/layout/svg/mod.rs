@@ -310,12 +310,16 @@ pub(crate) fn build_svg_render_tree<'dom>(
     let mut font_keys = svg_engine::FontKeyRegistry::new();
     let mut glyphs = svg_engine::GlyphStore::new();
 
-    // Load the font database once — shared across all text elements.
-    // Previously this was done per-element in build_text_element, which
-    // caused ~5s delay for pages with many text elements.
-    let mut fontdb_db = fontdb::Database::new();
-    fontdb_db.load_system_fonts();
-    let fontdb = Arc::new(fontdb_db);
+    // Load the font database once per process — shared across all SVG
+    // elements. load_system_fonts() scans the filesystem, so it must only
+    // happen once total, not once per <svg> element.
+    static FONTDB: once_cell::sync::Lazy<Arc<fontdb::Database>> =
+        once_cell::sync::Lazy::new(|| {
+            let mut db = fontdb::Database::new();
+            db.load_system_fonts();
+            Arc::new(db)
+        });
+    let fontdb = FONTDB.clone();
     let mut cache = usvg::Cache::new(fontdb.clone());
 
     // Extract gradient definitions directly from <defs> DOM children.
