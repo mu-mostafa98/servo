@@ -5,7 +5,7 @@
 //! Image emitter — renders usvg::Image nodes via vello_cpu + upload pipeline.
 
 use vello_cpu::kurbo::Rect as KrRect;
-use vello_cpu::{Pixmap, RenderContext, Resources};
+use vello_cpu::{Pixmap, RenderContext, RenderSettings, Resources};
 
 use super::{Emit, EmitContext, PaintColor, PaintCommand};
 
@@ -35,7 +35,10 @@ impl Emit for usvg::Image {
                 (vec![0u8; (w as u32 * h as u32 * 4) as usize], w as u32, h as u32)
             }
             usvg::ImageKind::SVG(_tree) => {
-                let mut context = RenderContext::new(w, h);
+                let mut context = RenderContext::new_with(w, h, RenderSettings {
+                    num_threads: 0,
+                    ..Default::default()
+                });
                 let mut resources = Resources::new();
                 let mut target = Pixmap::new(w, h);
                 let rect = KrRect::from_origin_size((0.0, 0.0), (w as f64, h as f64));

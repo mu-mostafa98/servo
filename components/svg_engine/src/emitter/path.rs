@@ -8,7 +8,7 @@ use std::collections::HashMap;
 use std::hash::{Hash, Hasher};
 
 use vello_cpu::kurbo::BezPath;
-use vello_cpu::{Pixmap, RenderContext, Resources};
+use vello_cpu::{Pixmap, RenderContext, RenderSettings, Resources};
 
 use super::{
     color_from_usvg, convert_linear_gradient, convert_radial_gradient,
@@ -104,7 +104,10 @@ impl Emit for usvg::Path {
         let w = (b.width().ceil() as u16).max(1);
         let h = (b.height().ceil() as u16).max(1);
 
-        let mut context = RenderContext::new(w, h);
+        let mut context = RenderContext::new_with(w, h, RenderSettings {
+            num_threads: 0,
+            ..Default::default()
+        });
         let mut resources = Resources::new();
         let mut target = Pixmap::new(w, h);
 
