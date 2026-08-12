@@ -191,6 +191,7 @@ fn shape_enum_all_variants_constructible() {
         width: 100.0,
         height: 100.0,
         href: Some("test.png".into()),
+        image_key: None,
     });
     // All construct without panic.
 }
@@ -277,10 +278,12 @@ fn svg_image_data() {
         width: 300.0,
         height: 200.0,
         href: Some("image.png".into()),
+        image_key: None,
     };
     assert_eq!(img.width, 300.0);
     assert_eq!(img.height, 200.0);
     assert_eq!(img.href, Some("image.png".into()));
+    assert!(img.image_key.is_none());
 }
 
 #[test]
@@ -291,8 +294,10 @@ fn svg_image_no_href() {
         width: 50.0,
         height: 50.0,
         href: None,
+        image_key: None,
     };
     assert!(img.href.is_none());
+    assert!(img.image_key.is_none());
 }
 
 #[test]

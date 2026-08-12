@@ -502,7 +502,7 @@ fn recurse_children(
 
 /// Compute the viewBox → viewport scale and translation.
 /// Returns `(scale_x, scale_y, offset_x, offset_y)`.
-fn compute_viewbox_transform(
+pub(crate) fn compute_viewbox_transform(
     vb_w: f32,
     vb_h: f32,
     vp_w: f32,
