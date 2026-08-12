@@ -94,7 +94,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
             .style_data()
             .is_some()
             .then(|| node.style(&self.context.style_context));
-        let tag = build_tag(&element, computed.as_ref().map(|v| &**v))?;
+        let tag = build_tag(&element, computed.as_ref().map(|v| &**v), node, self.context)?;
         let (style, transforms) = build_style(node, self.context, &self.css_rules);
         let id = extract_id(&element);
         let children = resolve_children(node, &tag, root_node, self, resolving);
@@ -171,7 +171,7 @@ fn build_text_node(
     // Shape each run first (so total_advance reflects real glyph widths),
     // then compute cumulative advance_offset and apply the <text>'s
     // text-anchor as a single shift on the first run.
-    let mut shaped = runs
+    let shaped = runs
         .into_iter()
         .map(|(mut span, run_node)| {
             shape_text_span(&mut span, run_node, context);
@@ -471,6 +471,8 @@ fn collect_definitions<'dom>(
 fn build_tag<'dom>(
     element: &ServoLayoutElement<'dom>,
     computed: Option<&style::properties::ComputedValues>,
+    node: ServoLayoutNode<'dom>,
+    context: &LayoutContext,
 ) -> Option<SvgTag> {
     let tag = element.local_name().as_ref();
     match tag {
@@ -479,13 +481,27 @@ fn build_tag<'dom>(
         "defs" => Some(SvgTag::Container(Container::Defs)),
         "use" => Some(SvgTag::Container(Container::Use)),
         "symbol" => Some(SvgTag::Container(Container::Symbol)),
-        "image" => build_image_tag(element).map(SvgTag::Image),
+        "image" => build_image_tag(element, node, context).map(SvgTag::Image),
         _ => build_shape(element, tag, computed).map(SvgTag::Shape),
     }
 }
 
 /// Build an [`SvgImage`] from element attributes.
-fn build_image_tag(element: &ServoLayoutElement) -> Option<SvgImage> {
+///
+/// Resolves the `href`/`xlink:href` attribute to a WebRender [`ImageKey`] via
+/// the layout image cache: the URL is resolved against the owner document's
+/// base URL, then looked up (or requested) through `image_resolver`. When the
+/// image is not yet loaded the key is `None` and the renderer draws a
+/// placeholder; once it loads, a reflow re-runs this and yields `Some(key)`.
+fn build_image_tag(
+    element: &ServoLayoutElement,
+    node: ServoLayoutNode,
+    context: &LayoutContext,
+) -> Option<SvgImage> {
+    use layout_api::LayoutNode;
+    use net_traits::request::InternalRequest;
+    use net_traits::image_cache::Image;
+    use layout_api::LayoutImageDestination;
     use svg_engine::attr_parsers::parse_length;
     let fs = 16.0;
     let get = |name: &str| super::style::get_attr(element, name);
@@ -500,12 +516,51 @@ fn build_image_tag(element: &ServoLayoutElement) -> Option<SvgImage> {
         element.attribute_as_str(&ns!(xlink), &LocalName::from(name)).map(|s| s.to_string())
     };
     let href = get("href").or_else(|| get_xlink("href"));
+    // Resolve href → ImageKey + natural dimensions. Relative URLs are resolved
+    // against the owner document's base URL; data: URIs parse directly.  A
+    // None/empty href, a pending load, or a decode failure all yield
+    // `image_key = None`, in which case the renderer falls back to a
+    // placeholder.
+    let raster_data: Option<(Option<webrender_api::ImageKey>, u32, u32)> =
+        href.as_deref().and_then(|href_str| {
+            let base = node.base_url();
+            let resolved = base.join(href_str.trim()).ok()?;
+            context
+                .image_resolver
+                .get_cached_image_for_url(
+                    node.opaque(),
+                    resolved,
+                    LayoutImageDestination::BoxTreeConstruction,
+                    InternalRequest::No,
+                )
+                .ok()
+                .and_then(|image| match image {
+                    Image::Raster(raster) => {
+                        Some((raster.id, raster.metadata.width, raster.metadata.height))
+                    },
+                    Image::Vector(..) => None, // vector images need rasterization; not handled here
+                })
+        });
+    let (image_key, natural_width, natural_height) = match raster_data {
+        Some((id, w, h)) => (id, Some(w), Some(h)),
+        None => (None, None, None),
+    };
+
+    // Parse preserveAspectRatio — defaults to xMidYMid meet per SVG spec.
+    let preserve_aspect_ratio = get("preserveAspectRatio")
+        .map(|v| parse_aspect_ratio(&v))
+        .unwrap_or_default();
+
     Some(SvgImage {
         x,
         y,
         width: w,
         height: h,
         href,
+        image_key,
+        natural_width,
+        natural_height,
+        preserve_aspect_ratio,
     })
 }
 

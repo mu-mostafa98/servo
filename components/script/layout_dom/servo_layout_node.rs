@@ -254,6 +254,10 @@ impl<'dom> LayoutNode<'dom> for ServoLayoutNode<'dom> {
         self.node.image_url()
     }
 
+    fn base_url(&self) -> ServoUrl {
+        self.node.owner_doc_for_layout().url_for_layout()
+    }
+
     fn image_density(&self) -> Option<f64> {
         self.node.image_density()
     }

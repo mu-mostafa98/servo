@@ -175,6 +175,11 @@ pub trait LayoutNode<'dom>: Copy + Debug + NodeInfo + Send + Sync {
     /// If this is an image element, returns its URL. If this is not an image element, fails.
     fn image_url(&self) -> Option<ServoUrl>;
 
+    /// Returns the owner document's base URL, used to resolve relative URLs
+    /// (e.g. SVG `<image href>` presentation attributes) into absolute
+    /// `ServoUrl`s for the image cache.
+    fn base_url(&self) -> ServoUrl;
+
     /// If this is an image element, returns its current-pixel-density. If this is not an image element, fails.
     fn image_density(&self) -> Option<f64>;
 
