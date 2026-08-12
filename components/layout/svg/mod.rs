@@ -474,17 +474,22 @@ fn parse_svg_font_family(family_str: &str) -> ::style::values::computed::font::F
         .split(',')
         .map(|s| s.trim().trim_matches(|c| c == '"' || c == '\''))
         .filter(|s| !s.is_empty())
-        .map(|name| match name.to_lowercase().as_str() {
-            "serif" => SingleFontFamily::Generic(GenericFontFamily::Serif),
-            "sans-serif" => SingleFontFamily::Generic(GenericFontFamily::SansSerif),
-            "monospace" => SingleFontFamily::Generic(GenericFontFamily::Monospace),
-            "cursive" => SingleFontFamily::Generic(GenericFontFamily::Cursive),
-            "fantasy" => SingleFontFamily::Generic(GenericFontFamily::Fantasy),
-            "system-ui" => SingleFontFamily::Generic(GenericFontFamily::SystemUi),
-            _ => SingleFontFamily::FamilyName(FamilyName {
-                name: Atom::from(name),
-                syntax: FontFamilyNameSyntax::Quoted,
-            }),
+        .flat_map(|name| {
+            let lower = name.to_lowercase();
+            match lower.as_str() {
+                "serif" => vec![SingleFontFamily::Generic(GenericFontFamily::Serif)],
+                "sans-serif" => vec![SingleFontFamily::Generic(GenericFontFamily::SansSerif)],
+                // For monospace, try the system generic first, then common
+                // monospace fonts as explicit fallbacks.
+                "monospace" => vec![SingleFontFamily::Generic(GenericFontFamily::Monospace)],
+                "cursive" => vec![SingleFontFamily::Generic(GenericFontFamily::Cursive)],
+                "fantasy" => vec![SingleFontFamily::Generic(GenericFontFamily::Fantasy)],
+                "system-ui" => vec![SingleFontFamily::Generic(GenericFontFamily::SystemUi)],
+                _ => vec![SingleFontFamily::FamilyName(FamilyName {
+                    name: Atom::from(name),
+                    syntax: FontFamilyNameSyntax::Quoted,
+                })],
+            }
         })
         .collect();
 
@@ -1024,35 +1029,28 @@ fn shape_span_with_servo_fonts(
     font_keys: &mut svg_engine::FontKeyRegistry,
     glyphs: &mut svg_engine::GlyphStore,
 ) -> Option<usize> {
-    use layout_api::LayoutElement;
-
     let span_text = &full_text[span_start..span_end];
     if span_text.is_empty() {
         return None;
     }
 
-    // Build a font group from the element's computed font style, but override
-    // font properties with SVG presentation attributes (with inheritance from
-    // the parent element, e.g. `<text>` → `<tspan>`). SVG presentation
-    // attributes may not be mapped to CSS computed style for SVG text
-    // elements, so we must apply them explicitly.
-    let element_style = elem.style(&context.style_context);
-    let mut font_style = (*element_style.clone_font()).clone();
+    // Build a font group from scratch using only the SVG presentation
+    // attributes (with inheritance from the parent element). We don't use
+    // the CSS computed style for SVG text because presentation attributes
+    // may not be mapped to CSS for SVG text elements.
+    let mut font_style = ::style::properties::style_structs::Font::initial_values();
 
-    // Override font-family from the SVG attribute (with parent fallback).
-    let svg_font_family = attr_or_inherit(elem, parent_elem, "font-family", "sans-serif");
-    font_style.set_font_family(parse_svg_font_family(&svg_font_family));
+    font_style.set_font_family(parse_svg_font_family(
+        &attr_or_inherit(elem, parent_elem, "font-family", "sans-serif"),
+    ));
 
-    // Override font-style from the SVG attribute (with parent fallback).
-    let svg_font_style = match attr_or_inherit(elem, parent_elem, "font-style", "normal").as_str() {
+    font_style.set_font_style(match attr_or_inherit(elem, parent_elem, "font-style", "normal").as_str() {
         "italic" => ::style::values::computed::font::FontStyle::ITALIC,
         "oblique" => ::style::values::computed::font::FontStyle::OBLIQUE,
         _ => ::style::values::computed::font::FontStyle::NORMAL,
-    };
-    font_style.set_font_style(svg_font_style);
+    });
 
-    // Override font-weight from the SVG attribute (with parent fallback).
-    let svg_font_weight = match attr_or_inherit(elem, parent_elem, "font-weight", "normal").as_str() {
+    font_style.set_font_weight(match attr_or_inherit(elem, parent_elem, "font-weight", "normal").as_str() {
         "bold" => ::style::values::computed::font::FontWeight::BOLD,
         "normal" => ::style::values::computed::font::FontWeight::NORMAL,
         val => {
@@ -1060,12 +1058,10 @@ fn shape_span_with_servo_fonts(
                 .map(|w| ::style::values::computed::font::FontWeight::from_float(w))
                 .unwrap_or(::style::values::computed::font::FontWeight::NORMAL)
         }
-    };
-    font_style.set_font_weight(svg_font_weight);
+    });
 
     font_style.compute_font_hash();
 
-    // Override font-size from the SVG attribute (in app units).
     let au_size = app_units::Au::from_f32_px(font_size);
     let font_group = context.font_context.font_group_with_size(
         servo_arc::Arc::new(font_style),
