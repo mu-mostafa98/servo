@@ -310,6 +310,14 @@ pub(crate) fn build_svg_render_tree<'dom>(
     let mut font_keys = svg_engine::FontKeyRegistry::new();
     let mut glyphs = svg_engine::GlyphStore::new();
 
+    // Load the font database once — shared across all text elements.
+    // Previously this was done per-element in build_text_element, which
+    // caused ~5s delay for pages with many text elements.
+    let mut fontdb_db = fontdb::Database::new();
+    fontdb_db.load_system_fonts();
+    let fontdb = Arc::new(fontdb_db);
+    let mut cache = usvg::Cache::new(fontdb.clone());
+
     // Extract gradient definitions directly from <defs> DOM children.
     // No XML serialization — we read attributes from the DOM and construct
     // usvg types using their public constructors.
@@ -317,7 +325,11 @@ pub(crate) fn build_svg_render_tree<'dom>(
 
     // Build the render tree (with gradient resolution available).
     for child in root_node.dom_children() {
-        if let Some(node) = build_node(child, &gradients, context, &mut font_keys, &mut glyphs) {
+        if let Some(node) = build_node(
+            child, &gradients, context,
+            &mut font_keys, &mut glyphs,
+            &fontdb, &mut cache,
+        ) {
             root.push_child(node);
         }
     }
@@ -328,14 +340,8 @@ pub(crate) fn build_svg_render_tree<'dom>(
     for lg in &gradients.linear { tree.push_linear_gradient(lg.clone()); }
     for rg in &gradients.radial { tree.push_radial_gradient(rg.clone()); }
 
-    // Ensure the font database has system fonts loaded for usvg's own
-    // layout/flattening of complex text (textPath, gradient-filled text).
-    // Simple text is shaped with Servo's FontContext above, not this db.
-    {
-        let mut db = fontdb::Database::new();
-        db.load_system_fonts();
-        tree.set_fontdb(Arc::new(db));
-    }
+    // Store the fontdb on the tree for usvg's own use.
+    tree.set_fontdb(fontdb);
 
     Some(Arc::new(svg_engine::SvgRenderData {
         tree: Arc::new(tree),
@@ -350,6 +356,8 @@ fn build_node<'dom>(
     context: &LayoutContext,
     font_keys: &mut svg_engine::FontKeyRegistry,
     glyphs: &mut svg_engine::GlyphStore,
+    fontdb: &Arc<fontdb::Database>,
+    cache: &mut usvg::Cache,
 ) -> Option<Node> {
     let element = node.as_element()?;
     let tag = element.local_name().as_ref().to_owned();
@@ -364,7 +372,7 @@ fn build_node<'dom>(
                         continue; // defs children not rendered
                     }
                 }
-                if let Some(n) = build_node(child, gradients, context, font_keys, glyphs) {
+                if let Some(n) = build_node(child, gradients, context, font_keys, glyphs, fontdb, cache) {
                     group.push_child(n);
                 }
             }
@@ -378,7 +386,7 @@ fn build_node<'dom>(
         "path" => build_path_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
         "polygon" => build_polygon_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
         "polyline" => build_polyline_element(&element, gradients).map(|p| Node::Path(Box::new(p))),
-        "text" => build_text_element(node, gradients, context, font_keys, glyphs),
+        "text" => build_text_element(node, gradients, context, font_keys, glyphs, fontdb, cache),
         "use" => build_use_element(&element, gradients),
         "image" | "img" => build_image_element(node),
         _ => None,
@@ -946,6 +954,8 @@ fn build_text_element<'dom>(
     context: &LayoutContext,
     font_keys: &mut svg_engine::FontKeyRegistry,
     glyphs: &mut svg_engine::GlyphStore,
+    _fontdb: &Arc<fontdb::Database>,
+    cache: &mut usvg::Cache,
 ) -> Option<Node> {
     let element = node.as_element()?;
     let x = attr_f32(&element, "x", 0.0);
@@ -979,6 +989,17 @@ fn build_text_element<'dom>(
         return None;
     }
 
+    // Check if usvg::convert() is needed before we move values into Text.
+    // Only complex text needs path flattening; simple text with font_handles
+    // uses the native WebRender path directly.
+    let needs_convert = !dx.is_empty()
+        || !dy.is_empty()
+        || !rotate.is_empty()
+        || text_path.is_some()
+        || spans.iter().any(|s| {
+            s.stroke().is_some() || s.font_handle().is_none()
+        });
+
     let mut chunk = TextChunk::new(x, y, text_anchor, spans, content);
     if let Some(tp) = text_path {
         chunk.set_text_path(tp);
@@ -990,19 +1011,10 @@ fn build_text_element<'dom>(
     if !rotate.is_empty() { text.set_rotate(rotate); }
     text.push_chunk(chunk);
 
-    // Run usvg's layout + flattening so that complex text (textPath, gradient
-    // fills, per-glyph transforms) has a flattened-path fallback that the
-    // emitter can use. Simple text with a resolved font_handle bypasses this
-    // and is rendered via native glyphs in the emitter.
-    let mut db = fontdb::Database::new();
-    db.load_system_fonts();
-    let fontdb = Arc::new(db);
-    let resolver = FontResolver::default();
-    let mut cache = usvg::Cache::new(fontdb.clone());
-    // convert() is optional for simple text but required to populate
-    // `flattened` for the complex fallback. Failure is non-fatal — simple
-    // spans with a font_handle still render via native glyphs.
-    let _ = usvg::convert(&mut text, &resolver, &mut cache);
+    if needs_convert {
+        let resolver = FontResolver::default();
+        let _ = usvg::convert(&mut text, &resolver, cache);
+    }
 
     Some(Node::Text(Box::new(text)))
 }
