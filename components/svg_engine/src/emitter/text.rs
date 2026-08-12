@@ -40,6 +40,13 @@ impl Emit for usvg::Text {
             return;
         }
 
+        // Check for text-decoration. push_text can't draw underlines/overlines
+        // or line-through — route to the path fallback.
+        if has_decoration(self) {
+            emit_group_flattened(self.flattened(), ctx, commands);
+            return;
+        }
+
         // Simple text: emit native glyph commands using pre-shaped glyphs.
         emit_simple_text(self, ctx, commands);
     }
@@ -66,6 +73,19 @@ fn has_stroke(text: &usvg::Text) -> bool {
     for chunk in text.chunks() {
         for span in chunk.spans() {
             if span.stroke().is_some() {
+                return true;
+            }
+        }
+    }
+    false
+}
+
+/// Check if any span has text decoration.
+fn has_decoration(text: &usvg::Text) -> bool {
+    for chunk in text.chunks() {
+        for span in chunk.spans() {
+            let d = span.decoration();
+            if d.underline().is_some() || d.overline().is_some() || d.line_through().is_some() {
                 return true;
             }
         }
@@ -176,7 +196,7 @@ fn emit_simple_text(
             let paint_color = match span.fill() {
                 Some(fill) => match fill.paint() {
                     usvg::Paint::Color(c) => {
-                        color_from_usvg(&c, fill.opacity().get())
+                        color_from_usvg(&c, fill.opacity().get(), ctx.group_opacity)
                     }
                     _ => {
                         // Non-color fill on this span — advance cursor and skip.

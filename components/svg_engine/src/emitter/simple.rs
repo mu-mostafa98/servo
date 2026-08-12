@@ -76,12 +76,12 @@ fn rasterize_simple_shape_with_gradient(
 
     // Fallback color from fill or stroke.
     let fallback = shape.fill().and_then(|f| match f.paint() {
-        usvg::Paint::Color(c) => Some(color_from_usvg(c, f.opacity().get())),
+        usvg::Paint::Color(c) => Some(color_from_usvg(c, f.opacity().get(), ctx.group_opacity)),
         usvg::Paint::LinearGradient(lg) => Some(gradient_fallback_color(lg.stops())),
         usvg::Paint::RadialGradient(rg) => Some(gradient_fallback_color(rg.stops())),
         _ => None,
     }).or_else(|| shape.stroke().and_then(|s| match s.paint() {
-        usvg::Paint::Color(c) => Some(color_from_usvg(c, s.opacity().get())),
+        usvg::Paint::Color(c) => Some(color_from_usvg(c, s.opacity().get(), ctx.group_opacity)),
         usvg::Paint::LinearGradient(lg) => Some(gradient_fallback_color(lg.stops())),
         usvg::Paint::RadialGradient(rg) => Some(gradient_fallback_color(rg.stops())),
         _ => None,
@@ -316,7 +316,7 @@ fn emit_rect(
     // Fill
     if let Some(fill) = shape.fill() {
         if let usvg::Paint::Color(c) = fill.paint() {
-            let color = color_from_usvg(c, fill.opacity().get());
+            let color = color_from_usvg(c, fill.opacity().get(), ctx.group_opacity);
             commands.push(PaintCommand::FillRect { bounds, color, clip });
         }
     }
@@ -324,7 +324,7 @@ fn emit_rect(
     // Stroke
     if let Some(stroke) = shape.stroke() {
         if let usvg::Paint::Color(c) = stroke.paint() {
-            let color = color_from_usvg(c, stroke.opacity().get());
+            let color = color_from_usvg(c, stroke.opacity().get(), ctx.group_opacity);
             let sw = stroke.width().get();
             commands.push(PaintCommand::StrokeRect {
                 bounds,
@@ -370,7 +370,7 @@ fn emit_line(
         usvg::Paint::Color(c) => c,
         _ => return,
     };
-    let color = color_from_usvg(c, stroke.opacity().get());
+    let color = color_from_usvg(c, stroke.opacity().get(), ctx.group_opacity);
     let sw = stroke.width().get();
 
     commands.push(PaintCommand::StrokeLine {

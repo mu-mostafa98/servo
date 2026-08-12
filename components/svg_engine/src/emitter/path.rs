@@ -139,12 +139,12 @@ impl Emit for usvg::Path {
 
         // Fallback color from first fill or stroke.
         let fallback = self.fill().and_then(|f| match f.paint() {
-            usvg::Paint::Color(c) => Some(color_from_usvg(c, f.opacity().get())),
+            usvg::Paint::Color(c) => Some(color_from_usvg(c, f.opacity().get(), ctx.group_opacity)),
             usvg::Paint::LinearGradient(lg) => Some(gradient_fallback_color(lg.stops())),
             usvg::Paint::RadialGradient(rg) => Some(gradient_fallback_color(rg.stops())),
             _ => None,
         }).or_else(|| self.stroke().and_then(|s| match s.paint() {
-            usvg::Paint::Color(c) => Some(color_from_usvg(c, s.opacity().get())),
+            usvg::Paint::Color(c) => Some(color_from_usvg(c, s.opacity().get(), ctx.group_opacity)),
             usvg::Paint::LinearGradient(lg) => Some(gradient_fallback_color(lg.stops())),
             usvg::Paint::RadialGradient(rg) => Some(gradient_fallback_color(rg.stops())),
             _ => None,

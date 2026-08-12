@@ -210,7 +210,7 @@ fn parse_stop_offset(s: &str) -> Option<f32> {
 fn parse_stop_color(elem: &ServoLayoutElement) -> Option<Color> {
     get_attr(elem, "stop-color")
         .as_deref()
-        .and_then(parse_color)
+        .and_then(|c| resolve_color(elem, c))
         .or_else(|| Some(Color::black()))
 }
 
@@ -364,12 +364,26 @@ fn build_node<'dom>(
     cache: &mut usvg::Cache,
 ) -> Option<Node> {
     let element = node.as_element()?;
+
+    // Skip hidden elements.
+    if get_attr(&element, "display").as_deref() == Some("none") { return None; }
+    if get_attr(&element, "visibility").as_deref() == Some("hidden") { return None; }
+
     let tag = element.local_name().as_ref().to_owned();
 
     let mut group = Group::new();
 
     match tag.as_str() {
         "svg" | "g" => {
+            // Apply element-level opacity to the group.
+            if let Some(opacity_str) = get_attr(&element, "opacity") {
+                if let Some(opacity_val) = parse_f32(&opacity_str) {
+                    if let Some(opacity) = Opacity::new(opacity_val) {
+                        group.set_opacity(opacity);
+                    }
+                }
+            }
+
             for child in node.dom_children() {
                 if let Some(elem) = child.as_element() {
                     if elem.local_name().as_ref() == "defs" {
@@ -447,6 +461,7 @@ fn parse_color(val: &str) -> Option<Color> {
         "hotpink" => Some(Color::new_rgb(255, 105, 180)),
         "gray" | "grey" => Some(Color::new_rgb(128, 128, 128)),
         "lightgray" | "lightgrey" => Some(Color::new_rgb(211, 211, 211)),
+        "currentcolor" => Some(Color::new_rgb(0, 0, 0)), // default; CSS color integration is follow-up
         _ if val.starts_with('#') => {
             let hex = &val[1..];
             if hex.len() == 6 {
@@ -465,6 +480,17 @@ fn parse_color(val: &str) -> Option<Color> {
             }
         }
         _ => None,
+    }
+}
+
+/// Resolve a color string including `currentColor` by reading the element's
+/// `color` attribute. Falls back to black if the color attribute is missing.
+fn resolve_color(element: &ServoLayoutElement, color_str: &str) -> Option<Color> {
+    if color_str.eq_ignore_ascii_case("currentColor") {
+        let color_attr = get_attr(element, "color").unwrap_or_else(|| "black".into());
+        parse_color(&color_attr)
+    } else {
+        parse_color(color_str)
     }
 }
 
@@ -656,7 +682,7 @@ fn build_fill(element: &ServoLayoutElement, gradients: &GradientStore) -> Option
         // Gradient not found — fall back to black.
         return Some(Fill::new(Paint::Color(Color::new_rgb(0, 0, 0)), opacity, FillRule::NonZero));
     }
-    let color = parse_color(&fill_str)?;
+    let color = resolve_color(element, &fill_str)?;
     Some(Fill::new(Paint::Color(color), opacity, FillRule::NonZero))
 }
 
@@ -685,7 +711,7 @@ fn build_stroke(element: &ServoLayoutElement, gradients: &GradientStore) -> Opti
         // Gradient not found — fall back to black.
         return Some(Stroke::new(Paint::Color(Color::new_rgb(0, 0, 0)), sw));
     }
-    let color = parse_color(&stroke_str)?;
+    let color = resolve_color(element, &stroke_str)?;
     Some(Stroke::new(Paint::Color(color), sw))
 }
 
@@ -852,6 +878,14 @@ fn build_colored_spans<'dom>(
     font_keys: &mut svg_engine::FontKeyRegistry,
     glyphs: &mut svg_engine::GlyphStore,
 ) -> Option<(String, Vec<TextSpan>)> {
+    // Check xml:space — when "preserve", whitespace in text content is kept as-is.
+    // xml:space is in the XML namespace, not SVG or empty namespace, so we
+    // must check it explicitly.
+    let preserve_space = parent_elem
+        .attribute_as_str(&ns!(xml), &LocalName::from("space"))
+        .map(|s| s.to_string())
+        .as_deref() == Some("preserve");
+
     let mut full_text = String::new();
     let mut spans = Vec::new();
 
@@ -862,8 +896,14 @@ fn build_colored_spans<'dom>(
                 // Normalize this child's text and build a span with its style.
                 // Handles <tspan> and <textPath> children the same way — both
                 // contribute text content to the chunk.
-                let child_text: String = extract_text_content(child)
-                    .split_whitespace().collect::<Vec<_>>().join(" ");
+                let child_text: String = {
+                    let raw = extract_text_content(child);
+                    if preserve_space {
+                        raw
+                    } else {
+                        raw.split_whitespace().collect::<Vec<_>>().join(" ")
+                    }
+                };
                 if !child_text.is_empty() {
                     // Push an inter-word space before this span (except for the
                     // first). Include the space in the span's text range so it
@@ -888,8 +928,12 @@ fn build_colored_spans<'dom>(
             }
         } else {
             // Direct text content — use parent's style.
-            let text: String = child.text_content()
-                .split_whitespace().collect::<Vec<_>>().join(" ");
+            let text: String = if preserve_space {
+                child.text_content().to_string()
+            } else {
+                child.text_content()
+                    .split_whitespace().collect::<Vec<_>>().join(" ")
+            };
             if !text.is_empty() {
                 let space_len = if full_text.is_empty() { 0 } else {
                     full_text.push(' ');
@@ -949,7 +993,44 @@ fn make_span(
     // can route stroked text to the path fallback.
     let stroke = build_stroke(elem, &empty_defs)
         .or_else(|| build_stroke(parent_elem, &empty_defs));
-    TextSpan::new(start, end, Some(fill), stroke, font, font_size)
+
+    let mut span = TextSpan::new(start, end, Some(fill), stroke, font, font_size)?;
+
+    // Letter spacing.
+    let letter_spacing = attr_opt_f32(elem, "letter-spacing").unwrap_or(0.0);
+    if letter_spacing != 0.0 {
+        span.set_letter_spacing(letter_spacing);
+    }
+
+    // Word spacing.
+    let word_spacing = attr_opt_f32(elem, "word-spacing").unwrap_or(0.0);
+    if word_spacing != 0.0 {
+        span.set_word_spacing(word_spacing);
+    }
+
+    // Text decoration.
+    let decoration_str = get_attr(elem, "text-decoration").unwrap_or_default();
+    if !decoration_str.is_empty() && decoration_str != "none" {
+        let deco_style = TextDecorationStyle::new(
+            Some(Fill::new(
+                Paint::Color(Color::new_rgb(0, 0, 0)),
+                Opacity::ONE, FillRule::NonZero,
+            )),
+            None,
+        );
+        let d = decoration_str.to_lowercase();
+        let has_u = d.contains("underline");
+        let has_o = d.contains("overline");
+        let has_l = d.contains("line-through");
+        let decoration = TextDecoration::new(
+            if has_u { Some(deco_style.clone()) } else { None },
+            if has_o { Some(deco_style.clone()) } else { None },
+            if has_l { Some(deco_style) } else { None },
+        );
+        span.set_decoration(decoration);
+    }
+
+    Some(span)
 }
 
 fn build_text_element<'dom>(
@@ -1002,6 +1083,9 @@ fn build_text_element<'dom>(
         || text_path.is_some()
         || spans.iter().any(|s| {
             s.stroke().is_some() || s.font_handle().is_none()
+                || s.decoration().underline().is_some()
+                || s.decoration().overline().is_some()
+                || s.decoration().line_through().is_some()
         });
 
     let mut chunk = TextChunk::new(x, y, text_anchor, spans, content);
@@ -1119,14 +1203,24 @@ fn shape_span_with_servo_fonts(
         }
 
         let advance_f32 = advance as f32;
+
+        // Apply letter-spacing and word-spacing to the advance.
+        let letter_spacing = attr_opt_f32(elem, "letter-spacing").unwrap_or(0.0);
+        let word_spacing = if *ch == ' ' {
+            attr_opt_f32(elem, "word-spacing").unwrap_or(0.0)
+        } else {
+            0.0
+        };
+        let spacing = letter_spacing + word_spacing;
+
         shaped.push(svg_engine::ShapedGlyph {
             glyph_id,
             x: x_cursor,
             y: 0.0,
-            advance: advance_f32,
+            advance: advance_f32 + spacing,
         });
-        x_cursor += advance_f32;
-        total_advance += advance_f32;
+        x_cursor += advance_f32 + spacing;
+        total_advance += advance_f32 + spacing;
     }
 
     let key = first_key?;

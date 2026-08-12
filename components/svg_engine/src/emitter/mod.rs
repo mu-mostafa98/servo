@@ -109,6 +109,9 @@ pub(crate) struct EmitContext<'a> {
     /// backend's `draw_text`. Read here only to pass the handle through
     /// `PaintCommand::Text`; the backend does the actual lookup.
     pub font_keys: &'a crate::FontKeyRegistry,
+    /// Accumulated group opacity (1.0 = fully opaque).
+    /// Multiplied by parent group opacities when descending into child groups.
+    pub group_opacity: f32,
 }
 
 /// Convert an SVG shape into backend-agnostic paint commands.
@@ -119,12 +122,12 @@ pub(crate) trait Emit {
 
 // ======================= Helpers =======================
 
-pub(crate) fn color_from_usvg(c: &usvg::Color, opacity: f32) -> PaintColor {
+pub(crate) fn color_from_usvg(c: &usvg::Color, opacity: f32, group_opacity: f32) -> PaintColor {
     PaintColor {
         r: c.red as f32 / 255.0,
         g: c.green as f32 / 255.0,
         b: c.blue as f32 / 255.0,
-        a: opacity,
+        a: opacity * group_opacity,
     }
 }
 

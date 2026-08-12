@@ -91,6 +91,7 @@ pub fn render_svg_tree_to<B: Backend>(
         svg_origin: *svg_origin,
         glyphs,
         font_keys,
+        group_opacity: 1.0,
     };
     emit_group(tree.root(), &emit_ctx, &mut commands);
 
@@ -115,26 +116,26 @@ pub fn render_svg_tree_to<B: Backend>(
 // ======================= Group Traversal =======================
 
 fn emit_group(group: &usvg::Group, ctx: &EmitContext, commands: &mut Vec<PaintCommand>) {
+    // Multiply accumulated opacity by this group's opacity.
+    let group_opac = ctx.group_opacity * group.opacity().get();
+
     // Apply group's transform.
-    let sub_ctx = if group.transform().is_identity() {
-        EmitContext {
-            svg_origin: ctx.svg_origin,
-            glyphs: ctx.glyphs,
-            font_keys: ctx.font_keys,
-        }
-    } else {
-        EmitContext {
-            svg_origin: LayoutPoint::new(
+    let base_ctx = EmitContext {
+        svg_origin: if group.transform().is_identity() {
+            ctx.svg_origin
+        } else {
+            LayoutPoint::new(
                 ctx.svg_origin.x + group.transform().tx,
                 ctx.svg_origin.y + group.transform().ty,
-            ),
-            glyphs: ctx.glyphs,
-            font_keys: ctx.font_keys,
-        }
+            )
+        },
+        glyphs: ctx.glyphs,
+        font_keys: ctx.font_keys,
+        group_opacity: group_opac,
     };
 
     for child in group.children() {
-        emit_node(child, &sub_ctx, commands);
+        emit_node(child, &base_ctx, commands);
     }
 }
 
