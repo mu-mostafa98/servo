@@ -2,29 +2,48 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use crate::renderer::{Render, RenderContext};
-use crate::shapes::{Polygon, Polyline};
+use euclid::Transform2D;
+use webrender_api::units::LayoutPoint;
 
-/// Renders an SVG `<polygon>`.
+use crate::renderer::path::rasterize_bez;
+use crate::renderer::polyline::points_to_bez;
+use crate::renderer::{Render, RenderContext};
+use crate::shapes::Polygon;
+
+/// Renders an SVG `<polygon>` as a closed path.
 ///
-/// LSP contract:
-/// - Closes the point list by appending the first point, then delegates
-///   to [`Polyline::render`].  This ensures the stroke closes back to start.
-/// - All LSP invariants are preserved through the delegation chain.
+/// - Default: vello_cpu rasterization.
+/// - `native_rendering` (pattern content): WebRender primitives.
 impl Render for Polygon {
     fn render(&self, ctx: &mut RenderContext) {
-        // A polygon is a closed shape: append the first point to the end so the
-        // stroke renders an edge from the last point back to the first.
-        // The fill is unaffected — the tessellator already treats vertices as
-        // a closed polygon regardless of duplication.
-        let mut closed_points = self.points.clone();
-        if let Some(first) = self.points.first() {
-            closed_points.push(*first);
+        if ctx.native_rendering {
+            // Close the point list and delegate to Polyline's native path.
+            let mut closed_points = self.points.clone();
+            if let Some(first) = self.points.first() {
+                closed_points.push(*first);
+            }
+            crate::renderer::polyline::render_native_polyline(&closed_points, ctx, true);
+            return;
         }
 
-        let polyline = Polyline {
-            points: closed_points,
-        };
-        polyline.render(ctx);
+        let bez = points_to_bez(&self.points, true);
+        // CPU-rasterized shapes bypass reference frames, so fold the nested
+        // viewBox translation into the raster position explicitly.
+        let raster_origin = LayoutPoint::new(
+            ctx.svg_origin.x + ctx.raster_offset.x,
+            ctx.svg_origin.y + ctx.raster_offset.y,
+        );
+        rasterize_bez(
+            &bez,
+            ctx.style.fill.as_ref(),
+            ctx.style.stroke.as_ref(),
+            ctx.style.opacity,
+            &raster_origin,
+            ctx.viewbox_scale,
+            Transform2D::identity(),
+            None,
+            ctx.paints,
+            ctx.rasters,
+        );
     }
 }

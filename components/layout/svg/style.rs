@@ -105,7 +105,9 @@ impl FromComputedValues for FillParams {
                 fill_rule,
             }),
             ResolvedPaint::PaintServer(id) => Some(FillParams {
-                color: None,
+                // Fall back to black (SVG default) if the paint server
+                // reference is invalid / not found at render time.
+                color: Some(SvgColor::new_rgb(0, 0, 0)),
                 paint_server: Some(PaintServer::Gradient(id)),
                 opacity,
                 fill_rule,
@@ -192,7 +194,9 @@ impl FromComputedValues for StrokeParams {
                 dash_offset,
             }),
             ResolvedPaint::PaintServer(id) => Some(StrokeParams {
-                color: None,
+                // Fall back to black (SVG default) if the paint server
+                // reference is invalid / not found at render time.
+                color: Some(SvgColor::new_rgb(0, 0, 0)),
                 paint_server: Some(PaintServer::Gradient(id)),
                 opacity,
                 width,
@@ -373,11 +377,11 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
             stroke.paint_server = None;
         },
         Some(PaintServer::Gradient(id)) => {
-            stroke.color = None;
+            stroke.color = Some(SvgColor::new_rgb(0, 0, 0));
             stroke.paint_server = Some(PaintServer::Gradient(id));
         },
         Some(PaintServer::Pattern(_)) => {
-            stroke.color = None;
+            stroke.color = Some(SvgColor::new_rgb(0, 0, 0));
             stroke.paint_server = None;
         },
         None => {
@@ -472,11 +476,11 @@ fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeS
             fill.paint_server = None;
         },
         Some(PaintServer::Gradient(id)) => {
-            fill.color = None;
+            fill.color = Some(SvgColor::new_rgb(0, 0, 0));
             fill.paint_server = Some(PaintServer::Gradient(id));
         },
         Some(PaintServer::Pattern(id)) => {
-            fill.color = None;
+            fill.color = Some(SvgColor::new_rgb(0, 0, 0));
             fill.paint_server = Some(PaintServer::Pattern(id));
         },
         None => {

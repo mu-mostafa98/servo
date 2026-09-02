@@ -192,6 +192,9 @@ fn shape_enum_all_variants_constructible() {
         height: 100.0,
         href: Some("test.png".into()),
         image_key: None,
+        natural_width: None,
+        natural_height: None,
+        preserve_aspect_ratio: AspectRatio::default(),
     });
     // All construct without panic.
 }
@@ -279,6 +282,9 @@ fn svg_image_data() {
         height: 200.0,
         href: Some("image.png".into()),
         image_key: None,
+        natural_width: None,
+        natural_height: None,
+        preserve_aspect_ratio: AspectRatio::default(),
     };
     assert_eq!(img.width, 300.0);
     assert_eq!(img.height, 200.0);
@@ -295,6 +301,9 @@ fn svg_image_no_href() {
         height: 50.0,
         href: None,
         image_key: None,
+        natural_width: None,
+        natural_height: None,
+        preserve_aspect_ratio: AspectRatio::default(),
     };
     assert!(img.href.is_none());
     assert!(img.image_key.is_none());
@@ -834,6 +843,9 @@ fn pattern_def_basic() {
         y: 0.0,
         pattern_units: PatternUnits::UserSpaceOnUse,
         pattern_content_units: PatternContentUnits::UserSpaceOnUse,
+        transform: vec![],
+        view_box: None,
+        aspect_ratio: None,
         shapes,
     };
     assert_eq!(def.width, 20.0);
@@ -1148,6 +1160,9 @@ fn paintserver_fixup_converts_gradient_to_pattern() {
             y: 0.0,
             pattern_units: PatternUnits::UserSpaceOnUse,
             pattern_content_units: PatternContentUnits::UserSpaceOnUse,
+            transform: vec![],
+            view_box: None,
+            aspect_ratio: None,
             shapes: vec![],
         },
     );
@@ -1216,6 +1231,7 @@ fn defs_container_in_tree() {
         tag: SvgTag::Container(Container::Defs),
         style: NodeStyle::default(),
         transforms: vec![],
+        viewport: None,
         children: vec![],
     };
     assert!(matches!(defs.tag, SvgTag::Container(Container::Defs)));
@@ -1229,6 +1245,7 @@ fn svg_render_node_with_transforms() {
         tag: SvgTag::Container(Container::Group),
         style: NodeStyle::default(),
         transforms: vec![TransformOp::Translate(50.0, 50.0)],
+        viewport: None,
         children: vec![],
     };
     assert_eq!(node.transforms.len(), 1);
@@ -1391,6 +1408,7 @@ fn make_svg_node() -> SvgRenderNode {
         tag: SvgTag::Container(Container::Svg),
         style: NodeStyle::default(),
         transforms: vec![],
+        viewport: None,
         children: vec![],
     }
 }
@@ -1405,6 +1423,7 @@ fn make_simple_tree() -> SvgRenderTree {
         })),
         style: NodeStyle::default(),
         transforms: vec![],
+        viewport: None,
         children: vec![],
     };
     let child2 = SvgRenderNode {
@@ -1419,6 +1438,7 @@ fn make_simple_tree() -> SvgRenderTree {
         })),
         style: NodeStyle::default(),
         transforms: vec![],
+        viewport: None,
         children: vec![],
     };
     let root = SvgRenderNode {
@@ -1426,6 +1446,7 @@ fn make_simple_tree() -> SvgRenderTree {
         tag: SvgTag::Container(Container::Svg),
         style: NodeStyle::default(),
         transforms: vec![],
+        viewport: None,
         children: vec![child1, child2],
     };
     SvgRenderTree {
@@ -1462,6 +1483,7 @@ fn make_empty_tree() -> SvgRenderTree {
         tag: SvgTag::Container(Container::Svg),
         style: NodeStyle::default(),
         transforms: vec![],
+        viewport: None,
         children: vec![],
     };
     SvgRenderTree {

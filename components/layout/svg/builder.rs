@@ -25,7 +25,7 @@ use super::defines::{
 };
 use super::geometry::{build_shape, build_text};
 use super::style::build_style;
-use super::viewport::extract_viewport_info;
+use super::viewport::{extract_nested_viewport, extract_viewport_info};
 use crate::context::LayoutContext;
 
 // ======================= Builder =======================
@@ -99,11 +99,20 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
         let id = extract_id(&element);
         let children = resolve_children(node, &tag, root_node, self, resolving);
 
+        // A nested `<svg>` (any `<svg>` except the root) establishes its own
+        // viewport. The root's viewport is handled via `SvgRenderTree::viewport`.
+        let viewport = if tag_name == "svg" && node != root_node {
+            extract_nested_viewport(node)
+        } else {
+            None
+        };
+
         Some(SvgRenderNode {
             id,
             tag,
             style,
             transforms,
+            viewport,
             children,
         })
     }
@@ -146,6 +155,7 @@ fn build_text_node(
             tag: SvgTag::Text(span),
             style,
             transforms,
+            viewport: None,
             children: vec![],
         });
     }
@@ -163,6 +173,7 @@ fn build_text_node(
             tag: SvgTag::Text(span),
             style,
             transforms,
+            viewport: None,
             children: vec![],
         });
     }
@@ -201,6 +212,7 @@ fn build_text_node(
             tag: SvgTag::Text(span),
             style: run_style,
             transforms: run_transforms,
+            viewport: None,
             children: vec![],
         });
     }
@@ -212,6 +224,7 @@ fn build_text_node(
         tag: SvgTag::Container(Container::Text),
         style,
         transforms,
+        viewport: None,
         children,
     })
 }

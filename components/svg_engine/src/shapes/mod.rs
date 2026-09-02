@@ -21,6 +21,8 @@ pub(crate) mod rectangle;
 use webrender_api::BorderRadius;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
+use kurbo::Shape as _;
+
 pub use self::circle::Circle;
 pub use self::ellipse::Ellipse;
 pub use self::line::Line;
@@ -79,6 +81,66 @@ impl Shape {
             Shape::Line(_) => None,
         }
     }
+}
+
+impl Shape {
+    /// Convert the shape to a [`kurbo::BezPath`] in its local coordinate
+    /// space, used for vello_cpu rasterization (gradient fills/strokes).
+    pub(crate) fn to_bez_path(&self) -> Option<kurbo::BezPath> {
+        use kurbo::{BezPath, Circle, Ellipse, Rect, RoundedRect, RoundedRectRadii, Vec2};
+
+        match self {
+            Shape::Rect(r) => {
+                let x0 = r.x as f64;
+                let y0 = r.y as f64;
+                let x1 = (r.x + r.width) as f64;
+                let y1 = (r.y + r.height) as f64;
+                let rx = r.rx.unwrap_or(0.0) as f64;
+                let ry = r.ry.unwrap_or(rx as f32) as f64;
+                if rx > 0.0 || ry > 0.0 {
+                    let radius = (rx + ry) / 2.0;
+                    Some(RoundedRect::new(x0, y0, x1, y1, RoundedRectRadii::from(radius)).to_path(0.1))
+                } else {
+                    Some(Rect::new(x0, y0, x1, y1).to_path(0.1))
+                }
+            },
+            Shape::Circle(c) => {
+                Some(Circle::new((c.cx as f64, c.cy as f64), c.r as f64).to_path(0.1))
+            },
+            Shape::Ellipse(e) => {
+                Some(Ellipse::new(
+                    (e.cx as f64, e.cy as f64),
+                    Vec2::new(e.rx as f64, e.ry as f64),
+                    0.0,
+                ).to_path(0.1))
+            },
+            Shape::Line(l) => {
+                let mut bez = BezPath::new();
+                bez.move_to((l.x1 as f64, l.y1 as f64));
+                bez.line_to((l.x2 as f64, l.y2 as f64));
+                Some(bez)
+            },
+            Shape::Polyline(p) => Some(points_to_bez(&p.points, false)),
+            Shape::Polygon(p) => Some(points_to_bez(&p.points, true)),
+            Shape::Path(p) => Some(p.path.clone()),
+        }
+    }
+}
+
+/// Build an open or closed [`kurbo::BezPath`] from a list of points.
+fn points_to_bez(points: &[kurbo::Point], close: bool) -> kurbo::BezPath {
+    let mut bez = kurbo::BezPath::new();
+    for (i, p) in points.iter().enumerate() {
+        if i == 0 {
+            bez.move_to((p.x, p.y));
+        } else {
+            bez.line_to((p.x, p.y));
+        }
+    }
+    if close {
+        bez.close_path();
+    }
+    bez
 }
 
 // ======================= Clip geometry helpers =======================

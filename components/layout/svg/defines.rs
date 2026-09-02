@@ -238,6 +238,18 @@ impl DefinitionParser for PatternParser {
                 _ => None,
             })
             .unwrap_or(PatternContentUnits::UserSpaceOnUse);
+        let transform = element
+            .attribute_as_str(&ns!(), &local_name!("patternTransform"))
+            .map(|s| svg_engine::style::transform_ops::parse_transform_str(s))
+            .unwrap_or_default();
+        let view_box = element
+            .attribute_as_str(&ns!(), &local_name!("viewBox"))
+            .as_deref()
+            .and_then(svg_engine::render_tree::extract_viewbox);
+        let aspect_ratio = element
+            .attribute_as_str(&ns!(), &local_name!("preserveAspectRatio"))
+            .as_deref()
+            .map(svg_engine::render_tree::parse_aspect_ratio);
         let mut shapes = Vec::new();
         for child_node in node.dom_children() {
             if let Some(child_elem) = child_node.as_element() {
@@ -264,6 +276,9 @@ impl DefinitionParser for PatternParser {
                     y,
                     pattern_units,
                     pattern_content_units,
+                    transform,
+                    view_box,
+                    aspect_ratio,
                     shapes,
                 },
             ))

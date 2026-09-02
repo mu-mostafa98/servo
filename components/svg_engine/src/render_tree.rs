@@ -105,6 +105,10 @@ pub struct SvgRenderNode {
     /// SVG transforms applied to this node (CSS transform + `transform` attribute).
     /// These are structural (affect coordinate system), not paint-level style.
     pub transforms: Vec<TransformOp>,
+    /// Nested `<svg>` viewport (viewBox + x/y/width/height + preserveAspectRatio).
+    /// `None` for the root `<svg>` (handled via [`SvgRenderTree::viewport`]) and
+    /// for every non-`<svg>` node.
+    pub viewport: Option<SvgViewport>,
     pub children: Vec<SvgRenderNode>,
 }
 
@@ -162,6 +166,27 @@ pub struct ViewportInfo {
     pub overflow_visible: bool,
     /// Parsed preserveAspectRatio (defaults to xMidYMid meet).
     pub aspect_ratio: Option<AspectRatio>,
+}
+
+/// Viewport established by a nested `<svg>` element.
+///
+/// Unlike the root [`ViewportInfo`] (whose size is imposed by layout), a nested
+/// `<svg>` carries its own `x`/`y`/`width`/`height` attributes that position and
+/// size the sub-viewport in the parent user coordinate system, plus an optional
+/// `viewBox` and `preserveAspectRatio` that map content into it.
+#[derive(Debug, Clone)]
+pub struct SvgViewport {
+    /// Position of the viewport in the parent user coordinate system.
+    pub x: f32,
+    pub y: f32,
+    /// Size of the viewport (from the `width`/`height` attributes).
+    pub width: f32,
+    pub height: f32,
+    pub view_box: Option<ViewBox>,
+    /// Parsed preserveAspectRatio (defaults to xMidYMid meet via the renderer).
+    pub aspect_ratio: Option<AspectRatio>,
+    /// When true, the sub-viewport clip is omitted (`overflow: visible`).
+    pub overflow_visible: bool,
 }
 
 /// A clip path definition collected from `<clipPath>`.
@@ -278,6 +303,12 @@ pub struct PatternDef {
     pub y: f32,
     pub pattern_units: PatternUnits,
     pub pattern_content_units: PatternContentUnits,
+    /// The `patternTransform` attribute, applied to the tile coordinate system.
+    pub transform: Vec<crate::style::transform_ops::TransformOp>,
+    /// Optional `viewBox` on the pattern, mapped into the tile via
+    /// `preserveAspectRatio`.
+    pub view_box: Option<ViewBox>,
+    pub aspect_ratio: Option<AspectRatio>,
     /// The content shapes and their styles that form the pattern tile.
     pub shapes: Vec<(Shape, NodeStyle)>,
 }
