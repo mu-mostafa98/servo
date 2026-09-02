@@ -30,6 +30,15 @@ pub use self::node_effects::NodeEffects;
 pub use self::stroke::{LineCap, LineJoin, StrokeParams};
 pub use self::visibility::{Display, Visibility};
 
+/// Marker references attached to a shape (`marker-start`, `marker-mid`,
+/// `marker-end`), each holding the referenced `id` (without the `#` prefix).
+#[derive(Debug, Clone, Default)]
+pub struct MarkerRefs {
+    pub start: Option<String>,
+    pub mid: Option<String>,
+    pub end: Option<String>,
+}
+
 /// Combined fill + stroke styling for an SVG render node.
 ///
 /// Layout-affecting properties (transforms) live on [`SvgRenderNode`],
@@ -45,6 +54,8 @@ pub struct NodeStyle {
     /// Element-level opacity (the CSS `opacity` property).
     /// Applied as a multiplier on top of fill-/stroke-opacity.
     pub opacity: f32,
+    /// Marker references (start/mid/end).
+    pub markers: Option<MarkerRefs>,
 }
 
 impl Default for NodeStyle {
@@ -57,6 +68,7 @@ impl Default for NodeStyle {
             render_hints: None,
             effects: None,
             opacity: 1.0,
+            markers: None,
         }
     }
 }
