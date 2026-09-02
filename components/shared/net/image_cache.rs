@@ -194,6 +194,13 @@ pub trait ImageCache: Sync + Send {
     /// be generated properly.
     fn get_image_key(&self) -> Option<ImageKey>;
 
+    /// Upload raw RGBA pixel data to WebRender, keyed by a content hash.
+    /// Used for CPU-rasterized images (e.g. vello_cpu path rendering).
+    fn upload_raw_pixels(&self, hash: u64, data: Vec<u8>, width: u32, height: u32);
+
+    /// Retrieve the WebRender [`ImageKey`] for previously-uploaded raw pixels.
+    fn raw_pixel_image_key(&self, hash: u64) -> Option<ImageKey>;
+
     /// Definitively check whether there is a cached, fully loaded image available.
     fn get_image(
         &self,

@@ -383,6 +383,10 @@ fn scanline_fill_triangle(
                             wr: &mut *ctx.wr,
                             paints: ctx.paints,
                             accumulated_scale: ctx.accumulated_scale,
+                            viewbox_scale: ctx.viewbox_scale,
+                            raster_offset: ctx.raster_offset,
+                            native_rendering: ctx.native_rendering,
+                            rasters: &mut *ctx.rasters,
                         };
                         shape.render(&mut shape_ctx);
                     }

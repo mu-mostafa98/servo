@@ -11,6 +11,7 @@ use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 use crate::renderer::providers::PaintResourceProvider;
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
+use crate::RasterizedImage;
 
 /// Bundled rendering parameters passed to every [`Render::render`] call.
 pub(crate) struct RenderContext<'a> {
@@ -27,6 +28,22 @@ pub(crate) struct RenderContext<'a> {
     /// Accumulated transform scale from all ancestor transforms.
     /// Used by `vector-effect: non-scaling-stroke` to compensate stroke width.
     pub accumulated_scale: f32,
+    /// The viewBox → viewport scale factor, used to rasterize paths at the
+    /// correct resolution. `(1.0, 1.0)` when there is no viewBox (or it is
+    /// identity).
+    pub viewbox_scale: (f32, f32),
+    /// Accumulated translation of nested viewBox frames, in the root user
+    /// space. CPU-rasterized shapes (vello_cpu) bypass reference frames, so
+    /// they need this explicit offset folded into their raster position.
+    pub raster_offset: LayoutPoint,
+    /// When true, shapes are rendered via native WebRender primitives
+    /// (respecting reference frames) rather than vello_cpu rasterization.
+    /// Used for pattern content, which must be tiled correctly.
+    pub native_rendering: bool,
+    /// CPU-rasterized images collected during rendering. Shape `Render` impls
+    /// that rasterize via vello_cpu push their output here; the layout layer
+    /// uploads and pushes them as WebRender images after traversal.
+    pub rasters: &'a mut Vec<RasterizedImage>,
 }
 
 /// Convert an SVG shape into WebRender display list commands.

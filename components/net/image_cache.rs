@@ -525,6 +525,10 @@ struct ImageCacheStore {
     #[conditional_malloc_size_of]
     broken_image_icon_image: OnceCell<Option<Arc<RasterImage>>>,
 
+    /// Raw-pixel images uploaded directly (e.g. CPU-rasterized SVG paths),
+    /// keyed by content hash.
+    raw_pixel_keys: FxHashMap<u64, WebRenderImageKey>,
+
     /// Cross-process `Paint` API instance.
     paint_api: CrossProcessPaintApi,
 
@@ -845,6 +849,7 @@ impl ImageCacheFactory for ImageCacheFactoryImpl {
                 vector_images: FxHashMap::default(),
                 rasterized_vector_images: FxHashMap::default(),
                 broken_image_icon_image: OnceCell::new(),
+                raw_pixel_keys: FxHashMap::default(),
                 paint_api: paint_api.clone(),
                 pipeline_id,
                 webview_id,
@@ -913,6 +918,38 @@ impl ImageCache for ImageCacheImpl {
         store
             .paint_api
             .generate_image_key_blocking(store.webview_id)
+    }
+
+    fn upload_raw_pixels(&self, hash: u64, data: Vec<u8>, width: u32, height: u32) {
+        let mut store = self.store.lock();
+        if store.raw_pixel_keys.contains_key(&hash) {
+            return;
+        }
+        // Build a minimal RasterImage and use the existing upload path.
+        let frame = ImageFrame {
+            delay: None,
+            byte_range: 0..data.len(),
+            width,
+            height,
+        };
+        let mut image = RasterImage {
+            metadata: ImageMetadata { width, height },
+            format: PixelFormat::RGBA8,
+            frames: vec![frame],
+            bytes: Arc::new(data),
+            id: None,
+            cors_status: CorsStatus::Unsafe,
+            is_opaque: false,
+            loop_count: None,
+        };
+        if let Some(key) = store.paint_api.generate_image_key_blocking(store.webview_id) {
+            set_webrender_image_key(&store.paint_api, &mut image, key);
+            store.raw_pixel_keys.insert(hash, key);
+        }
+    }
+
+    fn raw_pixel_image_key(&self, hash: u64) -> Option<WebRenderImageKey> {
+        self.store.lock().raw_pixel_keys.get(&hash).copied()
     }
 
     fn get_image(

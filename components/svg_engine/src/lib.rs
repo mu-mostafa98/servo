@@ -44,3 +44,21 @@ pub use traversal::render_svg_tree;
 
 pub use self::image::SvgImage;
 pub use self::text::{ShapedGlyph, TextAnchor, TextSpan};
+
+/// A CPU-rasterized image (e.g. from vello_cpu path rendering) ready to be
+/// uploaded to WebRender and pushed as a single image display item.
+#[derive(Debug, Clone)]
+pub struct RasterizedImage {
+    /// X position in layout space.
+    pub x: f32,
+    /// Y position in layout space.
+    pub y: f32,
+    /// Width in pixels.
+    pub width: u32,
+    /// Height in pixels.
+    pub height: u32,
+    /// RGBA pixel data.
+    pub data: Vec<u8>,
+    /// Content hash used to key the image cache.
+    pub content_hash: u64,
+}

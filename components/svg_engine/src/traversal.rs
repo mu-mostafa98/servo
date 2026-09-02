@@ -22,6 +22,8 @@ use crate::renderer::{
     ClipMaskProvider, FilterProvider, PaintResourceProvider, Render, RenderContext,
     clip_chain_option, transform,
 };
+use crate::renderer::path::rasterize_bez;
+use crate::RasterizedImage;
 
 // ======================= Public Entry Point =======================
 
@@ -37,11 +39,11 @@ pub fn render_svg_tree(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
-) {
+) -> Vec<RasterizedImage> {
     let svg_clip_chain =
         build_viewport_clip(tree, svg_origin, svg_size, spatial_id, clip_chain_id, wr);
 
-    let (root_origin, root_spatial_id, pop_frame) =
+    let (root_origin, root_spatial_id, pop_frame, viewbox) =
         push_viewbox_frame(tree, svg_origin, svg_size, spatial_id, wr);
 
     let providers = ResourceProviders {
@@ -49,6 +51,20 @@ pub fn render_svg_tree(
         clips: tree,
         filters: tree,
     };
+    let viewbox_scale = viewbox
+        .as_ref()
+        .map(|v| (v.sx, v.sy))
+        .unwrap_or((1.0, 1.0));
+    // Fold the root viewBox translation into the raster offset up front. The
+    // scale is applied during rasterization (via `viewbox_scale`), and the
+    // document-space `svg_origin` is added back when the rasters are finalized
+    // below. Keeping the full translation in `raster_offset` also lets the
+    // traversal detect a non-identity viewBox (to rasterize native shapes).
+    let root_raster_offset = viewbox
+        .as_ref()
+        .map(|v| LayoutPoint::new(v.ox - v.min_x * v.sx, v.oy - v.min_y * v.sy))
+        .unwrap_or(LayoutPoint::zero());
+    let mut rasters: Vec<RasterizedImage> = Vec::new();
     render_node(
         &tree.root,
         &root_origin,
@@ -57,11 +73,36 @@ pub fn render_svg_tree(
         wr,
         &providers,
         1.0,
+        viewbox_scale,
+        root_raster_offset,
+        None,
+        Transform2D::<f32, (), ()>::identity(),
+        &mut rasters,
     );
 
     if pop_frame {
         wr.pop_reference_frame();
     }
+
+    // Rasterized images bypass the viewBox reference frame, so add back the
+    // document-space origin. The viewBox translation was already folded into
+    // `raster_offset` and the scale into `viewbox_scale` during rasterization.
+    for raster in &mut rasters {
+        raster.x = svg_origin.x + raster.x;
+        raster.y = svg_origin.y + raster.y;
+    }
+
+    rasters
+}
+
+/// The resolved viewBox → viewport transform.
+struct ViewboxTransform {
+    sx: f32,
+    sy: f32,
+    ox: f32,
+    oy: f32,
+    min_x: f32,
+    min_y: f32,
 }
 
 // ======================= Viewport Setup =======================
@@ -85,16 +126,16 @@ fn build_viewport_clip(
 }
 
 /// Push a reference frame that implements the viewBox → viewport transform.
-/// Returns `(new_origin, new_spatial_id, should_pop)`.
+/// Returns `(new_origin, new_spatial_id, should_pop, viewbox_transform)`.
 fn push_viewbox_frame(
     tree: &SvgRenderTree,
     svg_origin: &LayoutPoint,
     svg_size: LayoutSize,
     spatial_id: SpatialId,
     wr: &mut DisplayListBuilder,
-) -> (LayoutPoint, SpatialId, bool) {
+) -> (LayoutPoint, SpatialId, bool, Option<ViewboxTransform>) {
     let Some(ref vb) = tree.viewport.view_box else {
-        return (*svg_origin, spatial_id, false);
+        return (*svg_origin, spatial_id, false, None);
     };
     let (sx, sy, ox, oy) = compute_viewbox_transform(
         vb.width,
@@ -119,7 +160,19 @@ fn push_viewbox_frame(
             paired_with_perspective: false,
         },
     );
-    (LayoutPoint::new(0.0, 0.0), fid, true)
+    (
+        LayoutPoint::new(0.0, 0.0),
+        fid,
+        true,
+        Some(ViewboxTransform {
+            sx,
+            sy,
+            ox,
+            oy,
+            min_x: vb.min_x,
+            min_y: vb.min_y,
+        }),
+    )
 }
 
 // ======================= Bundled Parameter Structs =======================
@@ -156,26 +209,110 @@ fn render_node(
     wr: &mut DisplayListBuilder,
     providers: &ResourceProviders,
     parent_scale: f32,
+    viewbox_scale: (f32, f32),
+    mut raster_offset: LayoutPoint,
+    mut clip_rect: Option<LayoutRect>,
+    mut node_xform: Transform2D<f32, (), ()>,
+    rasters: &mut Vec<RasterizedImage>,
 ) {
     if !node.style.is_displayed() {
         return;
     }
 
     // Step 1 — Apply transforms.
-    let (cur_origin, cur_spatial_id, pushed_count, accumulated_scale) =
+    let (mut cur_origin, mut cur_spatial_id, mut pushed_count, accumulated_scale) =
         apply_node_transforms(node, svg_origin, spatial_id, parent_scale, wr);
 
-    // Step 2 — Resolve effects (clip-path, mask, filter).
+    // Fold the node's own transform into the raster-space affine so the
+    // CPU-rasterized path can apply it (it bypasses the reference frame).
+    // `a.then(b) == b * a`, so compose as `node_xform * node_matrix`.
+    node_xform = transform::compute_transform_matrix(&node.transforms).then(&node_xform);
+
+    // Step 2 — Establish a nested viewport for nested `<svg>` elements. When a
+    // viewBox is present, push the viewBox → viewport reference frame (native
+    // shapes) and fold its translation into `raster_offset` (CPU-rasterized
+    // shapes, which bypass reference frames).
+    let cur_clip_chain = clip_chain_id;
+    let mut cur_viewbox_scale = viewbox_scale;
+    if let Some(vp) = &node.viewport {
+        // Sub-viewport clip: a nested `<svg>` clips its content to its own
+        // viewport (unless `overflow: visible`). The clip rect is expressed in
+        // the SVG-local space tracked by `raster_offset`/`cur_viewbox_scale`,
+        // so it can be intersected with any inherited clip and later applied
+        // to the CPU-rasterized shapes.
+        if !vp.overflow_visible {
+            let clip_origin = LayoutPoint::new(
+                raster_offset.x + cur_viewbox_scale.0 * vp.x,
+                raster_offset.y + cur_viewbox_scale.1 * vp.y,
+            );
+            let clip_size = LayoutSize::new(
+                cur_viewbox_scale.0 * vp.width,
+                cur_viewbox_scale.1 * vp.height,
+            );
+            let sub_clip = LayoutRect::from_origin_and_size(clip_origin, clip_size);
+            clip_rect = match clip_rect {
+                Some(existing) => Some(existing.intersection(&sub_clip).unwrap_or_else(|| {
+                    // Non-overlapping viewports: clip everything (zero-size).
+                    LayoutRect::from_origin_and_size(existing.min, LayoutSize::new(0.0, 0.0))
+                })),
+                None => Some(sub_clip),
+            };
+        }
+
+        let vp_origin = LayoutPoint::new(cur_origin.x + vp.x, cur_origin.y + vp.y);
+
+        if let Some(vb) = &vp.view_box {
+            let (sx, sy, ox, oy) = compute_viewbox_transform(
+                vb.width,
+                vb.height,
+                vp.width,
+                vp.height,
+                vp.aspect_ratio.as_ref(),
+            );
+
+            // Translation that maps viewBox space → parent space:
+            //   p -> scale(p - min) + offset, then + (x, y)
+            //   = scale*p + (x + offset - scale*min)
+            let tx = vp.x + ox - vb.min_x * sx;
+            let ty = vp.y + oy - vb.min_y * sy;
+            raster_offset = LayoutPoint::new(
+                raster_offset.x + cur_viewbox_scale.0 * tx,
+                raster_offset.y + cur_viewbox_scale.1 * ty,
+            );
+
+            let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x, -vb.min_y);
+            let s = Transform2D::<f32, (), ()>::scale(sx, sy);
+            let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
+            let combined = t1.then(&s).then(&t2);
+            let lt = transform::to_layout_transform(&combined);
+            cur_spatial_id = wr.push_reference_frame(
+                vp_origin,
+                cur_spatial_id,
+                TransformStyle::Flat,
+                PropertyBinding::Value(lt),
+                ReferenceFrameKind::Transform {
+                    is_2d_scale_translation: false,
+                    should_snap: false,
+                    paired_with_perspective: false,
+                },
+            );
+            cur_origin = LayoutPoint::new(0.0, 0.0);
+            pushed_count += 1;
+            cur_viewbox_scale = (cur_viewbox_scale.0 * sx, cur_viewbox_scale.1 * sy);
+        }
+    }
+
+    // Step 3 — Resolve effects (clip-path, mask, filter).
     let resolved = resolve_node_effects(
         node,
         providers,
         &cur_origin,
         cur_spatial_id,
-        clip_chain_id,
+        cur_clip_chain,
         wr,
     );
 
-    // Step 3 — Render the element.
+    // Step 4 — Render the element.
     let shape_params = EffectParams {
         mask_clips: &resolved.mask_clips,
         filter_ops: &resolved.filter_ops,
@@ -189,9 +326,14 @@ fn render_node(
         accumulated_scale,
         wr,
         &shape_params,
+        cur_viewbox_scale,
+        raster_offset,
+        clip_rect,
+        node_xform,
+        rasters,
     );
 
-    // Step 4 — Recurse into children.
+    // Step 5 — Recurse into children.
     recurse_children(
         node,
         &cur_origin,
@@ -200,9 +342,14 @@ fn render_node(
         providers,
         accumulated_scale,
         wr,
+        cur_viewbox_scale,
+        raster_offset,
+        clip_rect,
+        node_xform,
+        rasters,
     );
 
-    // Step 5 — Pop transform reference frames.
+    // Step 6 — Pop transform reference frames.
     for _ in 0..pushed_count {
         wr.pop_reference_frame();
     }
@@ -293,6 +440,11 @@ fn emit_element(
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
+    viewbox_scale: (f32, f32),
+    raster_offset: LayoutPoint,
+    clip_rect: Option<LayoutRect>,
+    node_xform: Transform2D<f32, (), ()>,
+    rasters: &mut Vec<RasterizedImage>,
 ) {
     match &node.tag {
         SvgTag::Shape(shape) => emit_geometry(
@@ -304,6 +456,11 @@ fn emit_element(
             accumulated_scale,
             wr,
             params,
+            viewbox_scale,
+            raster_offset,
+            clip_rect,
+            node_xform,
+            rasters,
         ),
         SvgTag::Text(text) => emit_leaf(
             text,
@@ -313,6 +470,9 @@ fn emit_element(
             node_clip_chain,
             wr,
             params,
+            viewbox_scale,
+            raster_offset,
+            rasters,
         ),
         SvgTag::Image(img) => emit_leaf(
             img,
@@ -322,6 +482,9 @@ fn emit_element(
             node_clip_chain,
             wr,
             params,
+            viewbox_scale,
+            raster_offset,
+            rasters,
         ),
         SvgTag::Container(_) => {},
     }
@@ -337,6 +500,11 @@ fn emit_geometry(
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
+    viewbox_scale: (f32, f32),
+    raster_offset: LayoutPoint,
+    clip_rect: Option<LayoutRect>,
+    node_xform: Transform2D<f32, (), ()>,
+    rasters: &mut Vec<RasterizedImage>,
 ) {
     if !style.is_visible() {
         return;
@@ -361,6 +529,11 @@ fn emit_geometry(
                 accumulated_scale,
                 params.paints,
                 wr,
+                viewbox_scale,
+                raster_offset,
+                clip_rect,
+                node_xform,
+                rasters,
             );
         }
     } else {
@@ -373,6 +546,11 @@ fn emit_geometry(
             accumulated_scale,
             params.paints,
             wr,
+            viewbox_scale,
+            raster_offset,
+            clip_rect,
+            node_xform,
+            rasters,
         );
     }
 
@@ -391,7 +569,42 @@ fn emit_shape(
     accumulated_scale: f32,
     paints: &dyn PaintResourceProvider,
     wr: &mut DisplayListBuilder,
+    viewbox_scale: (f32, f32),
+    raster_offset: LayoutPoint,
+    clip_rect: Option<LayoutRect>,
+    node_xform: Transform2D<f32, (), ()>,
+    rasters: &mut Vec<RasterizedImage>,
 ) {
+    // All painted shapes are rasterized via vello_cpu into one ordered list.
+    // Keeping every shape in that single list preserves z-order between
+    // transformed and untransformed shapes (native WebRender primitives are
+    // emitted inline, so mixing them with the deferred rasterized images would
+    // break paint order), and gives fill/stroke/dash and gradient support
+    // uniformly — the native primitives don't handle dashed strokes.
+    let has_paint = style.fill.is_some() || style.stroke.is_some();
+    if has_paint {
+        if let Some(bez) = shape.to_bez_path() {
+            // The node transform (translate/scale/rotate/…) is applied to the
+            // path inside `rasterize_bez`; `raster_offset` carries only the
+            // viewBox translation, and the document-space origin is added back
+            // when the rasters are finalized in `render_svg_tree`.
+            let raster_origin = raster_offset;
+            rasterize_bez(
+                &bez,
+                style.fill.as_ref(),
+                style.stroke.as_ref(),
+                style.opacity,
+                &raster_origin,
+                viewbox_scale,
+                node_xform,
+                clip_rect,
+                paints,
+                rasters,
+            );
+            return;
+        }
+    }
+
     let mut ctx = RenderContext {
         style,
         svg_origin: *svg_origin,
@@ -400,6 +613,10 @@ fn emit_shape(
         wr: &mut *wr,
         paints,
         accumulated_scale,
+        viewbox_scale,
+        raster_offset,
+        native_rendering: false,
+        rasters,
     };
     shape.render(&mut ctx);
 }
@@ -438,6 +655,9 @@ fn emit_leaf<T: crate::renderer::Render>(
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
+    viewbox_scale: (f32, f32),
+    raster_offset: LayoutPoint,
+    rasters: &mut Vec<RasterizedImage>,
 ) {
     if !node.style.is_visible() {
         return;
@@ -460,6 +680,10 @@ fn emit_leaf<T: crate::renderer::Render>(
         wr: &mut *wr,
         paints: params.paints,
         accumulated_scale: 1.0,
+        viewbox_scale,
+        raster_offset,
+        native_rendering: false,
+        rasters,
     };
     item.render(&mut ctx);
 
@@ -479,6 +703,11 @@ fn recurse_children(
     providers: &ResourceProviders,
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
+    viewbox_scale: (f32, f32),
+    raster_offset: LayoutPoint,
+    clip_rect: Option<LayoutRect>,
+    node_xform: Transform2D<f32, (), ()>,
+    rasters: &mut Vec<RasterizedImage>,
 ) {
     // <defs> and <symbol> children are only rendered when referenced
     // via <use>, never directly during tree traversal.
@@ -494,6 +723,11 @@ fn recurse_children(
             wr,
             providers,
             accumulated_scale,
+            viewbox_scale,
+            raster_offset,
+            clip_rect,
+            node_xform,
+            rasters,
         );
     }
 }
@@ -512,9 +746,10 @@ pub(crate) fn compute_viewbox_transform(
     if vb_w <= 0.0 || vb_h <= 0.0 {
         return (1.0, 1.0, 0.0, 0.0);
     }
-    let Some(ar) = ar else {
-        return (vp_w / vb_w, vp_h / vb_h, 0.0, 0.0);
-    };
+    // No `preserveAspectRatio` specified → SVG spec default `xMidYMid meet`.
+    // (Explicit `preserveAspectRatio="none"` is represented as
+    // `Some(AspectRatio { align: AspectAlign::None, .. })`, which is distinct.)
+    let ar = ar.copied().unwrap_or_default();
     if matches!(ar.align, AspectAlign::None) {
         return (vp_w / vb_w, vp_h / vb_h, 0.0, 0.0);
     }

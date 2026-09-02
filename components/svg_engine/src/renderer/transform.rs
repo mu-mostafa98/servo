@@ -128,11 +128,54 @@ fn push_reference_frame(
 fn build_rotation_transform(angle_deg: f32, cx: f32, cy: f32) -> LayoutTransform {
     let radians = angle_deg.to_radians();
     let (s, c) = radians.sin_cos();
-    let t1: Transform2D<f32, (), ()> = Transform2D::translation(cx, cy);
-    let rotate: Transform2D<f32, (), ()> = Transform2D::new(c, -s, s, c, 0.0, 0.0);
-    let t2: Transform2D<f32, (), ()> = Transform2D::translation(-cx, -cy);
+    // `a.then(b) == b * a`, so compose in the reverse order to obtain
+    // T(cx,cy) · R(a) · T(-cx,-cy) (rotate about the pivot (cx,cy)).
+    let t1: Transform2D<f32, (), ()> = Transform2D::translation(-cx, -cy);
+    // SVG `rotate(a)` is clockwise (y-down): x' = c·x − s·y, y' = s·x + c·y.
+    let rotate: Transform2D<f32, (), ()> = Transform2D::new(c, s, -s, c, 0.0, 0.0);
+    let t2: Transform2D<f32, (), ()> = Transform2D::translation(cx, cy);
     let combined = t1.then(&rotate).then(&t2);
     to_layout_transform(&combined)
+}
+
+/// The 2D affine matrix for a single transform operation.
+fn op_to_matrix(op: &TransformOp) -> Transform2D<f32, (), ()> {
+    match op {
+        TransformOp::Translate(tx, ty) => Transform2D::translation(*tx, *ty),
+        TransformOp::Scale(sx, sy) => Transform2D::scale(*sx, *sy),
+        TransformOp::Rotate(a, cx, cy) => {
+            let (s, c) = a.to_radians().sin_cos();
+            // SVG `rotate(a)` is clockwise (y-down): x' = c·x − s·y, y' = s·x + c·y.
+            // rotate(a, cx, cy) = translate(cx,cy) · rotate(a) · translate(-cx,-cy).
+            let rotate: Transform2D<f32, (), ()> = Transform2D::new(c, s, -s, c, 0.0, 0.0);
+            Transform2D::translation(-*cx, -*cy)
+                .then(&rotate)
+                .then(&Transform2D::translation(*cx, *cy))
+        },
+        TransformOp::SkewX(a) => {
+            let tan_a = a.to_radians().tan();
+            Transform2D::new(1.0, 0.0, tan_a, 1.0, 0.0, 0.0)
+        },
+        TransformOp::SkewY(a) => {
+            let tan_a = a.to_radians().tan();
+            Transform2D::new(1.0, tan_a, 0.0, 1.0, 0.0, 0.0)
+        },
+        TransformOp::Matrix([a, b, c, d, e, f]) => {
+            Transform2D::new(*a, *b, *c, *d, *e, *f)
+        },
+    }
+}
+
+/// The combined transform matrix for a list of operations, applied left-to-right
+/// (matching SVG semantics: the leftmost transform is the outer/last-applied one).
+pub(crate) fn compute_transform_matrix(ops: &[TransformOp]) -> Transform2D<f32, (), ()> {
+    let mut matrix = Transform2D::<f32, (), ()>::identity();
+    for op in ops {
+        // `a.then(b) == b * a`, so pre-multiply to keep left-to-right order:
+        // translate(160,10) scale(1.5) → T(160,10) * S(1.5).
+        matrix = op_to_matrix(op).then(&matrix);
+    }
+    matrix
 }
 
 /// Compute the approximate uniform scale factor from a list of transform operations.

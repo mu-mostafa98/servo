@@ -79,6 +79,7 @@ mod tests {
                 ..Default::default()
             },
             transforms: vec![],
+            viewport: None,
             children: vec![],
         }
     }
@@ -96,6 +97,9 @@ mod tests {
                 y: 0.0,
                 pattern_units: crate::render_tree::PatternUnits::UserSpaceOnUse,
                 pattern_content_units: crate::render_tree::PatternContentUnits::UserSpaceOnUse,
+                transform: vec![],
+                view_box: None,
+                aspect_ratio: None,
                 shapes: vec![],
             },
         );
