@@ -8,7 +8,7 @@
 //! clip masks, and filters are stored — typically the [`SvgRenderTree`]
 //! itself, but mock providers exist for non-geometric elements.
 
-use crate::render_tree::{ClipPathDef, FilterDef, MaskDef, PatternDef};
+use crate::render_tree::{ClipPathDef, FilterDef, MarkerDef, MaskDef, PatternDef};
 use crate::style::gradient::GradientDef;
 
 /// Provider for paint-server resources (gradients and patterns).
@@ -29,4 +29,9 @@ pub(crate) trait ClipMaskProvider {
 /// Provider for filter-effect resources.
 pub(crate) trait FilterProvider {
     fn filter(&self, id: &str) -> Option<&FilterDef>;
+}
+
+/// Provider for marker definitions.
+pub(crate) trait MarkerProvider {
+    fn marker(&self, id: &str) -> Option<&MarkerDef>;
 }

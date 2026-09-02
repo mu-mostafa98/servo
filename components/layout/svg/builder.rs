@@ -21,7 +21,8 @@ use web_atoms::ns;
 
 use super::css::collect_svg_css_rules;
 use super::defines::{
-    ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MaskParser, PatternParser,
+    ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MarkerParser, MaskParser,
+    PatternParser,
 };
 use super::geometry::{build_shape, build_text};
 use super::style::build_style;
@@ -62,6 +63,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
             patterns: definitions.patterns,
             masks: definitions.masks,
             filters: definitions.filters,
+            markers: definitions.markers,
         };
 
         // Post-process: convert PaintServer::Gradient → PaintServer::Pattern
@@ -461,10 +463,11 @@ struct DefinitionMaps {
     patterns: HashMap<String, PatternDef>,
     masks: HashMap<String, MaskDef>,
     filters: HashMap<String, FilterDef>,
+    markers: HashMap<String, MarkerDef>,
 }
 
 /// Collect all definition types (gradients, clip-paths, patterns, masks,
-/// filters) from `<defs>` containers in the SVG subtree.
+/// filters, markers) from `<defs>` containers in the SVG subtree.
 fn collect_definitions<'dom>(
     node: ServoLayoutNode<'dom>,
     context: &LayoutContext,
@@ -475,6 +478,7 @@ fn collect_definitions<'dom>(
         patterns: DefinitionCollector::collect::<PatternParser>(node, context),
         masks: DefinitionCollector::collect::<MaskParser>(node, context),
         filters: DefinitionCollector::collect::<FilterParser>(node, context),
+        markers: DefinitionCollector::collect::<MarkerParser>(node, context),
     }
 }
 

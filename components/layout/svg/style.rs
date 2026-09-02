@@ -303,6 +303,7 @@ impl FromComputedValues for NodeStyle {
             }),
             effects,
             opacity: values.get_effects().opacity,
+            markers: None,
         })
     }
 }
@@ -536,6 +537,25 @@ fn apply_render_hints_from_attrs(element: &ServoLayoutElement, style: &mut NodeS
 
 // ======================= Main Style Construction =======================
 
+fn apply_marker_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle) {
+    let style_attr = get_attr(element, "style");
+    let read_attr = |name: &str| -> Option<String> {
+        get_attr(element, name).or_else(|| {
+            style_attr
+                .as_ref()
+                .and_then(|s| parse_inline_style_prop(s, name))
+        })
+    };
+
+    let start = read_attr("marker-start").as_deref().and_then(extract_url_fragment);
+    let mid = read_attr("marker-mid").as_deref().and_then(extract_url_fragment);
+    let end = read_attr("marker-end").as_deref().and_then(extract_url_fragment);
+
+    if start.is_some() || mid.is_some() || end.is_some() {
+        style.markers = Some(MarkerRefs { start, mid, end });
+    }
+}
+
 pub(crate) fn build_style(
     node: ServoLayoutNode,
     context: &LayoutContext,
@@ -560,6 +580,7 @@ pub(crate) fn build_style(
 fn apply_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle) {
     apply_stroke_presentation_attrs(element, style);
     apply_fill_presentation_attrs(element, style);
+    apply_marker_presentation_attrs(element, style);
 
     let style_attr = get_attr(element, "style");
     let read_attr_or_inline = |name: &str| -> Option<String> {

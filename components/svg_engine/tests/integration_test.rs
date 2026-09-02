@@ -1463,6 +1463,7 @@ fn make_simple_tree() -> SvgRenderTree {
         patterns: HashMap::new(),
         masks: HashMap::new(),
         filters: HashMap::new(),
+        markers: HashMap::new(),
     }
 }
 
@@ -1500,5 +1501,6 @@ fn make_empty_tree() -> SvgRenderTree {
         patterns: HashMap::new(),
         masks: HashMap::new(),
         filters: HashMap::new(),
+        markers: HashMap::new(),
     }
 }

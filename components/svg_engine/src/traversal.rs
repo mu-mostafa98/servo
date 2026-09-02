@@ -19,7 +19,7 @@ use crate::effects::clip::{build_mask_clips, resolve_node_clip_path};
 use crate::effects::filter::get_filter_ops;
 use crate::render_tree::*;
 use crate::renderer::{
-    ClipMaskProvider, FilterProvider, PaintResourceProvider, Render, RenderContext,
+    ClipMaskProvider, FilterProvider, MarkerProvider, PaintResourceProvider, Render, RenderContext,
     clip_chain_option, transform,
 };
 use crate::renderer::path::rasterize_bez;
@@ -50,6 +50,7 @@ pub fn render_svg_tree(
         paints: tree,
         clips: tree,
         filters: tree,
+        markers: tree,
     };
     let viewbox_scale = viewbox
         .as_ref()
@@ -182,6 +183,7 @@ struct ResourceProviders<'a> {
     paints: &'a dyn PaintResourceProvider,
     clips: &'a dyn ClipMaskProvider,
     filters: &'a dyn FilterProvider,
+    markers: &'a dyn MarkerProvider,
 }
 
 /// Bundled effect parameters — reduces argument count for `emit_geometry`.
@@ -189,6 +191,7 @@ struct EffectParams<'a> {
     mask_clips: &'a Option<Vec<ClipChainId>>,
     filter_ops: &'a Option<Vec<webrender_api::FilterOp>>,
     paints: &'a dyn PaintResourceProvider,
+    markers: &'a dyn MarkerProvider,
 }
 
 // ======================= Tree Traversal =======================
@@ -317,6 +320,7 @@ fn render_node(
         mask_clips: &resolved.mask_clips,
         filter_ops: &resolved.filter_ops,
         paints: providers.paints,
+        markers: providers.markers,
     };
     emit_element(
         node,
@@ -528,6 +532,7 @@ fn emit_geometry(
                 mask_chain,
                 accumulated_scale,
                 params.paints,
+                params.markers,
                 wr,
                 viewbox_scale,
                 raster_offset,
@@ -545,6 +550,7 @@ fn emit_geometry(
             effective_clip,
             accumulated_scale,
             params.paints,
+            params.markers,
             wr,
             viewbox_scale,
             raster_offset,
@@ -568,6 +574,7 @@ fn emit_shape(
     clip_chain_id: ClipChainId,
     accumulated_scale: f32,
     paints: &dyn PaintResourceProvider,
+    markers: &dyn MarkerProvider,
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
     raster_offset: LayoutPoint,
@@ -582,7 +589,12 @@ fn emit_shape(
     // break paint order), and gives fill/stroke/dash and gradient support
     // uniformly — the native primitives don't handle dashed strokes.
     let has_paint = style.fill.is_some() || style.stroke.is_some();
-    if has_paint {
+    // Pattern fills/strokes can't be rasterized by vello_cpu (it only handles
+    // solid colors and gradients), so route them through the native renderer,
+    // which tiles the pattern via `fill_rect_with_pattern_by_id`.
+    let has_pattern = style_has_pattern(style);
+
+    if has_paint && !has_pattern {
         if let Some(bez) = shape.to_bez_path() {
             // The node transform (translate/scale/rotate/…) is applied to the
             // path inside `rasterize_bez`; `raster_offset` carries only the
@@ -601,24 +613,225 @@ fn emit_shape(
                 paints,
                 rasters,
             );
-            return;
         }
     }
 
-    let mut ctx = RenderContext {
+    // Markers are drawn on top of the shape (paint-order default: fill → stroke
+    // → markers).
+    emit_markers(
+        shape,
         style,
-        svg_origin: *svg_origin,
-        spatial_id,
-        clip_chain_id,
-        wr: &mut *wr,
-        paints,
-        accumulated_scale,
+        markers,
+        node_xform,
         viewbox_scale,
         raster_offset,
-        native_rendering: false,
+        clip_rect,
+        paints,
         rasters,
+    );
+
+    if !has_paint || has_pattern {
+        // Native path — used for pattern paint servers (which vello_cpu can't
+        // rasterize) and as a no-op fallback for shapes with neither paint nor
+        // a bez path.
+        let mut ctx = RenderContext {
+            style,
+            svg_origin: *svg_origin,
+            spatial_id,
+            clip_chain_id,
+            wr: &mut *wr,
+            paints,
+            accumulated_scale,
+            viewbox_scale,
+            raster_offset,
+            native_rendering: false,
+            rasters,
+        };
+        shape.render(&mut ctx);
+    }
+}
+
+/// Whether the style uses a `<pattern>` paint server for its fill or stroke.
+fn style_has_pattern(style: &crate::style::NodeStyle) -> bool {
+    use crate::style::gradient::PaintServer;
+    let fill_pattern = style
+        .fill
+        .as_ref()
+        .and_then(|f| f.paint_server.as_ref())
+        .is_some_and(|p| matches!(p, PaintServer::Pattern(_)));
+    let stroke_pattern = style
+        .stroke
+        .as_ref()
+        .and_then(|s| s.paint_server.as_ref())
+        .is_some_and(|p| matches!(p, PaintServer::Pattern(_)));
+    fill_pattern || stroke_pattern
+}
+
+// ======================= Marker Rendering =======================
+
+/// Compute the vertices of a marker-bearing shape (`line`/`polyline`/`polygon`/
+/// `path`), in the shape's local coordinate space. Returns `None` for shapes
+/// that don't carry markers (rect/circle/ellipse).
+fn shape_vertices(shape: &crate::shapes::Shape) -> Option<Vec<(f32, f32)>> {
+    use crate::shapes::Shape;
+    match shape {
+        Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => None,
+        _ => {
+            let bez = shape.to_bez_path()?;
+            let mut vertices = Vec::new();
+            for el in bez.elements() {
+                match el {
+                    kurbo::PathEl::MoveTo(p) | kurbo::PathEl::LineTo(p) => {
+                        vertices.push((p.x as f32, p.y as f32));
+                    },
+                    kurbo::PathEl::QuadTo(_, p) => vertices.push((p.x as f32, p.y as f32)),
+                    kurbo::PathEl::CurveTo(_, _, p) => vertices.push((p.x as f32, p.y as f32)),
+                    kurbo::PathEl::ClosePath => {},
+                }
+            }
+            if vertices.len() >= 2 {
+                Some(vertices)
+            } else {
+                None
+            }
+        },
+    }
+}
+
+/// Render the start/mid/end markers for a shape (on top of its fill/stroke).
+#[allow(clippy::too_many_arguments)]
+fn emit_markers(
+    shape: &crate::shapes::Shape,
+    style: &crate::style::NodeStyle,
+    markers: &dyn MarkerProvider,
+    node_xform: Transform2D<f32, (), ()>,
+    viewbox_scale: (f32, f32),
+    raster_offset: LayoutPoint,
+    clip_rect: Option<LayoutRect>,
+    paints: &dyn PaintResourceProvider,
+    rasters: &mut Vec<RasterizedImage>,
+) {
+    let Some(refs) = &style.markers else { return };
+    let Some(vertices) = shape_vertices(shape) else { return };
+    let n = vertices.len();
+
+    let stroke_width = style.stroke.as_ref().map(|s| s.width).unwrap_or(1.0);
+
+    if let Some(id) = &refs.start {
+        let (x, y) = vertices[0];
+        let (nx, ny) = vertices[1];
+        emit_marker(
+            id, x, y, nx - x, ny - y, true, markers, stroke_width,
+            node_xform, viewbox_scale, raster_offset, clip_rect, paints, rasters,
+        );
+    }
+    if let Some(id) = &refs.mid {
+        for i in 1..n - 1 {
+            let (x, y) = vertices[i];
+            let (nx, ny) = vertices[i + 1];
+            emit_marker(
+                id, x, y, nx - x, ny - y, false, markers, stroke_width,
+                node_xform, viewbox_scale, raster_offset, clip_rect, paints, rasters,
+            );
+        }
+    }
+    if let Some(id) = &refs.end {
+        let (x, y) = vertices[n - 1];
+        let (px, py) = vertices[n - 2];
+        emit_marker(
+            id, x, y, x - px, y - py, false, markers, stroke_width,
+            node_xform, viewbox_scale, raster_offset, clip_rect, paints, rasters,
+        );
+    }
+}
+
+/// Place a single marker at `(x, y)`, oriented along `(tangent_x, tangent_y)`.
+#[allow(clippy::too_many_arguments)]
+fn emit_marker(
+    id: &str,
+    x: f32,
+    y: f32,
+    tangent_x: f32,
+    tangent_y: f32,
+    is_start: bool,
+    markers: &dyn MarkerProvider,
+    stroke_width: f32,
+    node_xform: Transform2D<f32, (), ()>,
+    viewbox_scale: (f32, f32),
+    raster_offset: LayoutPoint,
+    clip_rect: Option<LayoutRect>,
+    paints: &dyn PaintResourceProvider,
+    rasters: &mut Vec<RasterizedImage>,
+) {
+    let Some(def) = markers.marker(id) else { return };
+
+    let unit_factor = match def.marker_units {
+        MarkerUnits::StrokeWidth => stroke_width,
+        MarkerUnits::UserSpaceOnUse => 1.0,
     };
-    shape.render(&mut ctx);
+    let (vb_w, vb_h) = match &def.view_box {
+        Some(vb) => (vb.width, vb.height),
+        None => (def.marker_width, def.marker_height),
+    };
+    if vb_w <= 0.0 || vb_h <= 0.0 {
+        return;
+    }
+    let scale_x = def.marker_width * unit_factor / vb_w;
+    let scale_y = def.marker_height * unit_factor / vb_h;
+
+    let angle = match &def.orient {
+        MarkerOrient::Auto => tangent_angle_deg(tangent_x, tangent_y),
+        MarkerOrient::AutoStartReverse => {
+            let a = tangent_angle_deg(tangent_x, tangent_y);
+            if is_start {
+                a + 180.0
+            } else {
+                a
+            }
+        },
+        MarkerOrient::Angle(a) => *a,
+    };
+
+    // marker viewBox coords → shape local coords:
+    //   T(vertex) · R(angle) · S(sx,sy) · T(-refX,-refY)
+    let marker_local: Transform2D<f32, (), ()> =
+        Transform2D::<f32, (), ()>::translation(-def.ref_x, -def.ref_y)
+            .then(&Transform2D::<f32, (), ()>::scale(scale_x, scale_y))
+            .then(&rotation_matrix(angle))
+            .then(&Transform2D::<f32, (), ()>::translation(x, y));
+
+    // Compose with the shape's accumulated node transform.
+    let full_xform = marker_local.then(&node_xform);
+
+    for (m_shape, m_style) in &def.shapes {
+        if !m_style.is_visible() {
+            continue;
+        }
+        let Some(bez) = m_shape.to_bez_path() else { continue };
+        rasterize_bez(
+            &bez,
+            m_style.fill.as_ref(),
+            m_style.stroke.as_ref(),
+            m_style.opacity,
+            &raster_offset,
+            viewbox_scale,
+            full_xform,
+            clip_rect,
+            paints,
+            rasters,
+        );
+    }
+}
+
+/// Angle (degrees) of a direction vector, falling back to 0 for a zero vector.
+fn tangent_angle_deg(dx: f32, dy: f32) -> f32 {
+    dy.atan2(dx).to_degrees()
+}
+
+/// Clockwise rotation matrix (SVG y-down) by `angle_deg` degrees.
+fn rotation_matrix(angle_deg: f32) -> Transform2D<f32, (), ()> {
+    let (s, c) = angle_deg.to_radians().sin_cos();
+    Transform2D::new(c, s, -s, c, 0.0, 0.0)
 }
 
 /// Push a filter stacking context. Returns `true` if one was pushed (caller must pop).

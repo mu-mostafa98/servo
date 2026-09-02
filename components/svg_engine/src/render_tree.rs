@@ -7,7 +7,7 @@ use std::collections::HashMap;
 use svgtypes::ViewBox as SvgViewBox;
 
 pub use crate::image::SvgImage;
-use crate::renderer::{ClipMaskProvider, FilterProvider, PaintResourceProvider};
+use crate::renderer::{ClipMaskProvider, FilterProvider, MarkerProvider, PaintResourceProvider};
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
 use crate::style::gradient::GradientDef;
@@ -71,6 +71,8 @@ pub struct SvgRenderTree {
     pub masks: HashMap<String, MaskDef>,
     /// Filter definitions keyed by their `id` (without the `#` prefix).
     pub filters: HashMap<String, FilterDef>,
+    /// Marker definitions keyed by their `id` (without the `#` prefix).
+    pub markers: HashMap<String, MarkerDef>,
 }
 
 impl PaintResourceProvider for SvgRenderTree {
@@ -94,6 +96,12 @@ impl ClipMaskProvider for SvgRenderTree {
 impl FilterProvider for SvgRenderTree {
     fn filter(&self, id: &str) -> Option<&FilterDef> {
         self.filters.get(id)
+    }
+}
+
+impl MarkerProvider for SvgRenderTree {
+    fn marker(&self, id: &str) -> Option<&MarkerDef> {
+        self.markers.get(id)
     }
 }
 
@@ -311,6 +319,49 @@ pub struct PatternDef {
     pub aspect_ratio: Option<AspectRatio>,
     /// The content shapes and their styles that form the pattern tile.
     pub shapes: Vec<(Shape, NodeStyle)>,
+}
+
+/// Coordinate system for marker sizing.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum MarkerUnits {
+    /// Marker size scales with the referencing shape's stroke width (default).
+    StrokeWidth,
+    /// Marker size is fixed in the current user coordinate system.
+    UserSpaceOnUse,
+}
+
+/// Orientation of a marker relative to the path.
+#[derive(Debug, Clone, PartialEq)]
+pub enum MarkerOrient {
+    /// Rotate to align with the path tangent (default).
+    Auto,
+    /// Like `Auto`, but the marker at the path *start* is flipped 180°.
+    AutoStartReverse,
+    /// Fixed rotation angle in degrees.
+    Angle(f32),
+}
+
+impl Default for MarkerOrient {
+    fn default() -> Self {
+        MarkerOrient::Auto
+    }
+}
+
+/// A marker definition collected from `<marker>`.
+#[derive(Debug)]
+pub struct MarkerDef {
+    /// Marker content shapes and their styles.
+    pub shapes: Vec<(Shape, NodeStyle)>,
+    /// Optional `viewBox` establishing the marker's coordinate system.
+    pub view_box: Option<ViewBox>,
+    /// Reference point (in viewBox coords) aligned with the path vertex.
+    pub ref_x: f32,
+    pub ref_y: f32,
+    /// Rendered marker viewport width (scaled per `marker_units`).
+    pub marker_width: f32,
+    pub marker_height: f32,
+    pub marker_units: MarkerUnits,
+    pub orient: MarkerOrient,
 }
 
 // ======================= AspectRatio Parsing =======================

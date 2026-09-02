@@ -604,6 +604,99 @@ fn parse_named_color(name: &str) -> Option<(u8, u8, u8)> {
     }
 }
 
+// ======================= Marker Parser =======================
+
+pub(crate) struct MarkerParser;
+
+impl DefinitionParser for MarkerParser {
+    type Definition = MarkerDef;
+    fn tag_names() -> &'static [&'static str] {
+        &["marker"]
+    }
+
+    fn parse(node: ServoLayoutNode, context: &LayoutContext) -> Option<(String, Self::Definition)> {
+        let element = node.as_element()?;
+        let id = element
+            .attribute_as_str(&ns!(), &local_name!("id"))
+            .map(|s| s.to_string())?;
+
+        let parse_attr = |attr: &str, default: f32| -> f32 {
+            element
+                .attribute_as_str(&ns!(), &LocalName::from(attr))
+                .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
+                .unwrap_or(default)
+        };
+
+        let view_box = element
+            .attribute_as_str(&ns!(), &local_name!("viewBox"))
+            .as_deref()
+            .and_then(extract_viewbox);
+
+        let marker_units = element
+            .attribute_as_str(&ns!(), &local_name!("markerUnits"))
+            .and_then(|s| match s.trim() {
+                "userSpaceOnUse" => Some(MarkerUnits::UserSpaceOnUse),
+                _ => None,
+            })
+            .unwrap_or(MarkerUnits::StrokeWidth);
+
+        let orient = element
+            .attribute_as_str(&ns!(), &local_name!("orient"))
+            .map(|s| parse_orient(s.trim()))
+            .unwrap_or_default();
+
+        let mut shapes = Vec::new();
+        for child_node in node.dom_children() {
+            if let Some(child_elem) = child_node.as_element() {
+                let tag_name = child_elem.local_name().as_ref().to_owned();
+                let computed = child_elem
+                    .style_data()
+                    .is_some()
+                    .then(|| child_node.style(&context.style_context));
+                if let Some(shape) =
+                    build_shape(&child_elem, &tag_name, computed.as_ref().map(|v| &**v))
+                {
+                    let style = build_style_from_attrs(child_node, context);
+                    shapes.push((shape, style));
+                }
+            }
+        }
+
+        Some((
+            id,
+            MarkerDef {
+                shapes,
+                view_box,
+                ref_x: parse_attr("refX", 0.0),
+                ref_y: parse_attr("refY", 0.0),
+                marker_width: parse_attr("markerWidth", 3.0),
+                marker_height: parse_attr("markerHeight", 3.0),
+                marker_units,
+                orient,
+            },
+        ))
+    }
+}
+
+fn parse_orient(s: &str) -> MarkerOrient {
+    match s {
+        "auto" => MarkerOrient::Auto,
+        "auto-start-reverse" => MarkerOrient::AutoStartReverse,
+        _ => {
+            // Extract the leading numeric part, e.g. "45" from "45deg".
+            let digits: String = s
+                .chars()
+                .take_while(|c| c.is_ascii_digit() || *c == '.' || *c == '-')
+                .collect();
+            if let Ok(deg) = digits.parse::<f32>() {
+                MarkerOrient::Angle(deg)
+            } else {
+                MarkerOrient::Auto
+            }
+        },
+    }
+}
+
 // ======================= Tests =======================
 
 #[cfg(test)]
