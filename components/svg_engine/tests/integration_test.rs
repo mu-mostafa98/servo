@@ -16,7 +16,7 @@ use svg_engine::shapes::*;
 use svg_engine::style::gradient::{SpreadMethod, *};
 use svg_engine::style::transform_ops::TransformOp;
 use svg_engine::style::*;
-use svg_engine::{SvgImage, SvgTag, TextAnchor, TextSpan};
+use svg_engine::{DominantBaseline, SvgImage, SvgTag, TextAnchor, TextSpan};
 
 // ============================================================
 // 1. SHAPE DATA STRUCT TESTS
@@ -180,7 +180,10 @@ fn shape_enum_all_variants_constructible() {
         y: 20.0,
         dx: vec![],
         dy: vec![],
+        rotate: vec![],
         text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
         glyphs: vec![],
         font_instance_key: None,
         advance_offset: 0.0,
@@ -207,7 +210,10 @@ fn text_span_data() {
         y: 30.0,
         dx: vec![],
         dy: vec![],
+        rotate: vec![],
         text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
         glyphs: vec![],
         font_instance_key: None,
         advance_offset: 0.0,
@@ -226,7 +232,10 @@ fn text_span_with_dx_dy() {
         y: 0.0,
         dx: vec![5.0, 10.0],
         dy: vec![0.0, 3.0],
+        rotate: vec![],
         text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
         glyphs: vec![],
         font_instance_key: None,
         advance_offset: 0.0,
@@ -245,7 +254,10 @@ fn text_span_advance_offset_positions_runs() {
         y: 80.0,
         dx: vec![],
         dy: vec![],
+        rotate: vec![],
         text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
         glyphs: vec![],
         font_instance_key: None,
         advance_offset: 0.0,
@@ -256,7 +268,10 @@ fn text_span_advance_offset_positions_runs() {
         y: 80.0,
         dx: vec![],
         dy: vec![],
+        rotate: vec![],
         text_anchor: TextAnchor::Start,
+        rtl: false,
+        dominant_baseline: DominantBaseline::Auto,
         glyphs: vec![],
         font_instance_key: None,
         advance_offset: first.total_advance(),

@@ -18,6 +18,11 @@ pub struct ShapedGlyph {
     pub glyph_id: u32,
     /// Character this glyph represents.
     pub character: char,
+    /// The font this glyph was shaped with. `None` for fallback glyphs that
+    /// have no resolved font (they are skipped during rendering). Mixed-script
+    /// runs shape different characters with different fonts, so the key is
+    /// stored per-glyph rather than once per span.
+    pub font_instance_key: Option<webrender_api::FontInstanceKey>,
 }
 
 /// A single text span within an SVG `<text>` or `<tspan>` element.
@@ -33,11 +38,18 @@ pub struct TextSpan {
     pub dx: Vec<f32>,
     /// Per-character Y offsets (SVG `dy` attribute).
     pub dy: Vec<f32>,
+    /// Per-character rotation angles in degrees (SVG `rotate` attribute).
+    pub rotate: Vec<f32>,
     /// Pre-shaped glyph positions (from font subsystem). If empty, falls back
     /// to estimated rectangle rendering.
     pub glyphs: Vec<ShapedGlyph>,
     /// Text alignment anchor.
     pub text_anchor: TextAnchor,
+    /// Right-to-left text (`direction="rtl"`). The text is pre-reversed, and
+    /// the anchor is mirrored so `start` aligns to the right edge.
+    pub rtl: bool,
+    /// Vertical baseline alignment (SVG `dominant-baseline`).
+    pub dominant_baseline: DominantBaseline,
     /// WebRender font instance key for glyph rendering.
     /// When `Some`, the renderer uses `push_text` for real glyph shapes.
     pub font_instance_key: Option<webrender_api::FontInstanceKey>,
@@ -53,11 +65,36 @@ impl TextSpan {
     /// width when no glyphs are shaped yet).
     pub fn total_advance(&self) -> f32 {
         if let Some(last) = self.glyphs.last() {
-            last.x + last.advance
+            let total = last.x + last.advance;
+            // Trailing whitespace is skipped during shaping (advance, no
+            // glyph), so add its approximate advance back so the following run
+            // is placed after the space.
+            let trailing_ws = self
+                .text
+                .chars()
+                .rev()
+                .take_while(|c| c.is_whitespace())
+                .count();
+            total + trailing_ws as f32 * 4.0
         } else {
             self.text.chars().count() as f32 * 8.0
         }
     }
+}
+
+/// Vertical alignment of the text relative to the `y` coordinate
+/// (SVG `dominant-baseline`).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum DominantBaseline {
+    /// Alphabetic baseline (the default).
+    #[default]
+    Auto,
+    /// Hanging baseline (top of the em box).
+    Hanging,
+    /// Middle of the em box.
+    Middle,
+    /// Central baseline (middle of the em box, similar to `Middle`).
+    Central,
 }
 
 /// Text alignment anchor point.

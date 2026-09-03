@@ -16,6 +16,7 @@ use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::render_tree::*;
 use svg_engine::style::gradient::GradientDef;
+use svg_engine::text::TextAnchor;
 use svg_engine::visitor::PaintServerFixupVisitor;
 use web_atoms::ns;
 
@@ -203,9 +204,18 @@ fn build_text_node(
         * total_advance;
 
     let mut pen = anchor_shift;
+    // `dy` shifts the *current* text position, so it accumulates across runs
+    // (a later tspan's `dy` is relative to the position after earlier ones).
+    let mut dy_pen = 0.0f32;
     let mut children = Vec::with_capacity(shaped.len());
     for (mut span, run_node) in shaped {
         span.advance_offset = pen;
+        // The whole-line anchor shift is already folded into `advance_offset`,
+        // so clear each run's own text-anchor to avoid double-applying it.
+        span.text_anchor = TextAnchor::Start;
+        // Offset this run by the accumulated vertical shift from preceding runs.
+        span.y += dy_pen;
+        dy_pen += span.dy.iter().sum::<f32>();
         pen += span.total_advance();
         let (run_style, run_transforms) = build_style(run_node, context, css_rules);
         let run_id = extract_id(&run_node.as_element()?);
@@ -257,12 +267,13 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
     let parent_y = super::style::get_attr(&parent_elem, "y")
         .and_then(|s| s.trim_end_matches("px").parse::<f32>().ok())
         .unwrap_or(0.0);
+    let children: Vec<_> = node.dom_children().collect();
     let mut runs = Vec::new();
-    for child in node.dom_children() {
+    for (i, child) in children.iter().enumerate() {
         if let Some(child_elem) = child.as_element() {
             if child_elem.local_name().as_ref() == "tspan" {
                 let get = |n: &str| super::style::get_attr(&child_elem, n);
-                if let Some(mut span) = build_text(child, &get, fs) {
+                if let Some(mut span) = build_text(*child, &get, fs) {
                     // Inherit the <text>'s baseline/origin for any axis the
                     // <tspan> does not set explicitly.
                     if super::style::get_attr(&child_elem, "x").is_none() {
@@ -271,7 +282,7 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
                     if super::style::get_attr(&child_elem, "y").is_none() {
                         span.y = parent_y;
                     }
-                    runs.push((span, child));
+                    runs.push((span, *child));
                 }
             }
         } else {
@@ -279,9 +290,30 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
             if t.trim().is_empty() {
                 continue;
             }
+            // Trim leading whitespace (the text node usually starts with the
+            // newline + indentation that precedes the visible text).
+            let text = t.trim_start();
+            let trimmed = text.trim_end();
+            if trimmed.is_empty() {
+                continue;
+            }
+            // Strip trailing whitespace (the indentation before `</text>`), but
+            // keep a single separating space when this run is followed by more
+            // inline content so adjacent runs stay separated. This also stops a
+            // trailing newline from shaping into a `.notdef` box and from
+            // inflating the RTL anchor offset.
+            let followed_by_content = children[i + 1..].iter().any(|c| match c.as_element() {
+                Some(e) => e.local_name().as_ref() == "tspan",
+                None => !(*c).text_content().trim().is_empty(),
+            });
+            let text = if followed_by_content && trimmed.len() < text.len() {
+                format!("{} ", trimmed)
+            } else {
+                trimmed.to_owned()
+            };
             // Bare-text runs always use the <text>'s x/y (no own attributes).
             let get = |n: &str| super::style::get_attr(&parent_elem, n);
-            if let Some(span) = build_text_run(t.into_owned(), &get, fs) {
+            if let Some(span) = build_text_run(text, &get, fs) {
                 runs.push((span, node));
             }
         }
@@ -289,18 +321,27 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
     runs
 }
 
-/// Shape a [`TextSpan`]'s text using the font subsystem.
-/// Falls back gracefully to estimated widths if any step fails.
+/// Shape a [`TextSpan`]'s text using the font subsystem (HarfBuzz), so cursive
+/// scripts like Arabic get proper contextual joining. Text is grouped into runs
+/// of consecutive characters that use the same fallback font, and each run is
+/// shaped as a whole.
 fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutContext) {
+    use fonts::{ShapingFlags, ShapingOptions};
     use layout_api::LayoutNode;
-    use svg_engine::text::ShapedGlyph;
+    use style::computed_values::font_variant_position::T as FontVariantPosition;
+    use style::values::computed::{
+        FontFeatureSettings, FontVariantEastAsian, FontVariantLigatures, FontVariantNumeric,
+    };
+    use svg_engine::text::{DominantBaseline, ShapedGlyph};
+    use unicode_script::Script;
 
     if span.text.is_empty() {
         return;
     }
 
-    // Build a font group from the element's computed style.
-    let Some(font_group) = (|| {
+    // Build a font group from the element's computed style, and capture the
+    // resolved font size (needed for the dominant-baseline offset below).
+    let Some((font_group, font_size)) = (|| {
         let element = node.as_element()?;
         if !element.style_data().is_some() {
             return None;
@@ -311,49 +352,121 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         if font_size <= 0.0 {
             return None;
         }
-        Some(context.font_context.font_group(font_style))
+        Some((context.font_context.font_group(font_style), font_size))
     })() else {
         return;
     };
 
+    // Approximate vertical offset for `dominant-baseline` (relative to the
+    // alphabetic baseline at `y`).
+    let baseline_shift = match span.dominant_baseline {
+        DominantBaseline::Auto => 0.0,
+        DominantBaseline::Hanging => 0.8 * font_size,
+        // `middle` = alphabetic + x-height/2; `central` = center of the em box
+        // (= (ascent - descent) / 2), which sits a little lower than `middle`.
+        DominantBaseline::Middle => 0.35 * font_size,
+        DominantBaseline::Central => 0.45 * font_size,
+    };
+
     let language: icu_locid::subtags::Language = "und".parse().unwrap();
     let mut glyphs = Vec::with_capacity(span.text.len());
-    let mut x = 0.0f32;
+    let mut pen_x = 0.0f32;
+    let mut pen_y = 0.0f32;
     let chars: Vec<char> = span.text.chars().collect();
     let mut font_instance_key = None;
 
-    for (i, &ch) in chars.iter().enumerate() {
-        let next_ch = chars.get(i + 1).copied();
-        if let Some(font) =
-            font_group.find_by_codepoint(&*context.font_context, ch, next_ch, language)
-        {
-            if font_instance_key.is_none() {
-                font_instance_key = Some(font.key(context.painter_id, &*context.font_context));
-            }
-            if let Some(glyph_id) = font.glyph_index(ch) {
-                let advance = font.glyph_h_advance(glyph_id) as f32;
+    let mut ci = 0;
+    while ci < chars.len() {
+        let Some(font) = font_group.find_by_codepoint(
+            &*context.font_context,
+            chars[ci],
+            chars.get(ci + 1).copied(),
+            language,
+        ) else {
+            // No font for this character — fallback. Whitespace is skipped.
+            let ch = chars[ci];
+            pen_x += span.dx.get(ci).copied().unwrap_or(0.0);
+            pen_y += span.dy.get(ci).copied().unwrap_or(0.0);
+            let advance = if ch.is_whitespace() { 4.0f32 } else { 8.0f32 };
+            if !ch.is_whitespace() {
                 glyphs.push(ShapedGlyph {
-                    x,
-                    y: 0.0,
+                    x: pen_x,
+                    y: pen_y + baseline_shift,
                     advance,
-                    glyph_id: glyph_id as u32,
+                    glyph_id: 0,
                     character: ch,
+                    font_instance_key: None,
                 });
-                x += advance + span.dx.get(i).copied().unwrap_or(0.0);
-                continue;
+            }
+            pen_x += advance;
+            ci += 1;
+            continue;
+        };
+
+        // Extend the run over consecutive characters that map to the same font.
+        let mut cj = ci + 1;
+        while cj < chars.len() {
+            match font_group.find_by_codepoint(
+                &*context.font_context,
+                chars[cj],
+                chars.get(cj + 1).copied(),
+                language,
+            ) {
+                Some(next_font) if next_font == font => cj += 1,
+                _ => break,
             }
         }
-        // Fallback: 8px per character.
-        let advance = 8.0f32;
-        glyphs.push(ShapedGlyph {
-            x,
-            y: 0.0,
-            advance,
-            glyph_id: 0,
-            character: ch,
-        });
-        x += advance + span.dx.get(i).copied().unwrap_or(0.0);
+
+        // Shape the whole run (HarfBuzz handles Arabic joining, ligatures, …).
+        let run_text: String = chars[ci..cj].iter().collect();
+        let options = ShapingOptions {
+            letter_spacing: None,
+            word_spacing: None,
+            script: Script::from(chars[ci]),
+            language,
+            ligatures: FontVariantLigatures::NORMAL,
+            numeric: FontVariantNumeric::NORMAL,
+            east_asian: FontVariantEastAsian::NORMAL,
+            feature_settings: FontFeatureSettings::normal(),
+            position: FontVariantPosition::Normal,
+            flags: if span.rtl {
+                ShapingFlags::RTL_FLAG
+            } else {
+                ShapingFlags::empty()
+            },
+        };
+
+        let key = font.key(context.painter_id, &*context.font_context);
+        if font_instance_key.is_none() {
+            font_instance_key = Some(key);
+        }
+
+        let shaped = font.shape_text(&run_text, &options);
+
+        // Map the shaped glyphs (already in visual order) to positions,
+        // applying the per-character `dx`/`dy` (reversed for RTL).
+        let mut run_char_index = 0;
+        for glyph_info in shaped.glyphs() {
+            let char_idx = (ci + run_char_index).min(chars.len() - 1);
+            pen_x += span.dx.get(char_idx).copied().unwrap_or(0.0);
+            pen_y += span.dy.get(char_idx).copied().unwrap_or(0.0);
+            let advance = glyph_info.advance().to_f32_px();
+
+            glyphs.push(ShapedGlyph {
+                x: pen_x,
+                y: pen_y + baseline_shift,
+                advance,
+                glyph_id: glyph_info.id() as u32,
+                character: chars[char_idx],
+                font_instance_key: Some(key),
+            });
+            pen_x += advance;
+            run_char_index += glyph_info.character_count().max(1);
+        }
+
+        ci = cj;
     }
+
     span.glyphs = glyphs;
     span.font_instance_key = font_instance_key;
 }

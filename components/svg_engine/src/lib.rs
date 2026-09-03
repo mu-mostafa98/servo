@@ -43,7 +43,7 @@ pub use renderer::gradient::color_at_t_with_space;
 pub use traversal::render_svg_tree;
 
 pub use self::image::SvgImage;
-pub use self::text::{ShapedGlyph, TextAnchor, TextSpan};
+pub use self::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
 
 /// A CPU-rasterized image (e.g. from vello_cpu path rendering) ready to be
 /// uploaded to WebRender and pushed as a single image display item.
