@@ -15,6 +15,7 @@ use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::render_tree::*;
+use svg_engine::style::NodeStyle;
 use svg_engine::style::gradient::GradientDef;
 use svg_engine::text::TextAnchor;
 use svg_engine::visitor::PaintServerFixupVisitor;
@@ -52,7 +53,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
 
     /// Build the complete [`SvgRenderTree`].
     pub(crate) fn build(self) -> Option<Arc<SvgRenderTree>> {
-        let root = self.build_render_node(self.root_node, self.root_node, &mut HashSet::new())?;
+        let root = self.build_render_node(self.root_node, self.root_node, &mut HashSet::new(), None)?;
         let viewport = extract_viewport_info(self.root_node);
         let definitions = collect_definitions(self.root_node, self.context);
 
@@ -84,6 +85,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
         node: ServoLayoutNode<'dom>,
         root_node: ServoLayoutNode<'dom>,
         resolving: &mut HashSet<String>,
+        inherited: Option<&NodeStyle>,
     ) -> Option<SvgRenderNode> {
         let element = node.as_element()?;
         let tag_name = element.local_name().as_ref().to_owned();
@@ -98,9 +100,17 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
             .is_some()
             .then(|| node.style(&self.context.style_context));
         let tag = build_tag(&element, computed.as_ref().map(|v| &**v), node, self.context)?;
-        let (style, transforms) = build_style(node, self.context, &self.css_rules);
+        let (style, transforms) = build_style(node, self.context, &self.css_rules, inherited);
         let id = extract_id(&element);
-        let children = resolve_children(node, &tag, root_node, self, resolving);
+        let children = resolve_children(
+            node,
+            &tag,
+            root_node,
+            self,
+            resolving,
+            &style,
+            inherited.is_some(),
+        );
 
         // A nested `<svg>` (any `<svg>` except the root) establishes its own
         // viewport. The root's viewport is handled via `SvgRenderTree::viewport`.
@@ -151,7 +161,7 @@ fn build_text_node(
     if runs.is_empty() {
         let mut span = build_text(node, &get, fs)?;
         shape_text_span(&mut span, node, context);
-        let (style, transforms) = build_style(node, context, css_rules);
+        let (style, transforms) = build_style(node, context, css_rules, None);
         let id = extract_id(&element);
         return Some(SvgRenderNode {
             id,
@@ -169,7 +179,7 @@ fn build_text_node(
         // Shape with the run's own node (the <tspan> for tspan runs, the
         // <text> itself for bare-text runs) so the run's font-size applies.
         shape_text_span(&mut span, run_node, context);
-        let (style, transforms) = build_style(node, context, css_rules);
+        let (style, transforms) = build_style(node, context, css_rules, None);
         let id = extract_id(&element);
         return Some(SvgRenderNode {
             id,
@@ -217,7 +227,7 @@ fn build_text_node(
         span.y += dy_pen;
         dy_pen += span.dy.iter().sum::<f32>();
         pen += span.total_advance();
-        let (run_style, run_transforms) = build_style(run_node, context, css_rules);
+        let (run_style, run_transforms) = build_style(run_node, context, css_rules, None);
         let run_id = extract_id(&run_node.as_element()?);
         children.push(SvgRenderNode {
             id: run_id,
@@ -229,7 +239,7 @@ fn build_text_node(
         });
     }
 
-    let (style, transforms) = build_style(node, context, css_rules);
+    let (style, transforms) = build_style(node, context, css_rules, None);
     let id = extract_id(&element);
     Some(SvgRenderNode {
         id,
@@ -482,12 +492,22 @@ fn resolve_children<'dom>(
     root_node: ServoLayoutNode<'dom>,
     builder: &SvgRenderTreeBuilder<'dom, '_>,
     resolving: &mut HashSet<String>,
+    node_style: &NodeStyle,
+    in_shadow: bool,
 ) -> Vec<SvgRenderNode> {
     if let SvgTag::Container(Container::Use) = tag {
-        resolve_use_children(node, root_node, builder, resolving)
+        resolve_use_children(node, root_node, builder, resolving, node_style)
     } else {
+        // Manual inheritance only applies inside a `<use>` shadow tree; for
+        // normal content Stylo already resolves inherited properties along the
+        // real DOM ancestry.
+        let child_inherited = if in_shadow {
+            Some(node_style)
+        } else {
+            None
+        };
         node.dom_children()
-            .filter_map(|child| builder.build_render_node(child, root_node, resolving))
+            .filter_map(|child| builder.build_render_node(child, root_node, resolving, child_inherited))
             .collect()
     }
 }
@@ -501,6 +521,7 @@ fn resolve_use_children<'dom>(
     root_node: ServoLayoutNode<'dom>,
     builder: &SvgRenderTreeBuilder<'dom, '_>,
     resolving: &mut HashSet<String>,
+    use_style: &NodeStyle,
 ) -> Vec<SvgRenderNode> {
     let element = node.as_element().unwrap();
 
@@ -532,8 +553,29 @@ fn resolve_use_children<'dom>(
     let offset = (parse_coord("x"), parse_coord("y"));
 
     // Build target and clone with optional translation.
-    let result = find_element_by_id(root_node, &ref_id)
-        .and_then(|target| builder.build_render_node(target, root_node, resolving))
+    let target = find_element_by_id(root_node, &ref_id);
+    let target_element = target.as_ref().and_then(|n| n.as_element());
+
+    // The referenced element's viewport attributes, used when the target is a
+    // <symbol> whose viewBox maps its internal coordinates onto the viewport
+    // declared by the <use> (falling back to the symbol's own width/height).
+    let parse_len = |e: &ServoLayoutElement, name: &str| -> Option<f32> {
+        super::style::get_attr(e, name)
+            .and_then(|s| s.trim_end_matches("px").parse::<f32>().ok())
+    };
+    let sym_view_box = target_element
+        .and_then(|e| super::style::get_attr(&e, "viewBox"))
+        .as_deref()
+        .and_then(extract_viewbox);
+    let sym_aspect_ratio = target_element
+        .and_then(|e| super::style::get_attr(&e, "preserveAspectRatio"))
+        .as_deref()
+        .map(parse_aspect_ratio);
+    let sym_width = target_element.and_then(|e| parse_len(&e, "width"));
+    let sym_height = target_element.and_then(|e| parse_len(&e, "height"));
+
+    let result = target
+        .and_then(|t| builder.build_render_node(t, root_node, resolving, Some(use_style)))
         .map(|target_node| {
             // Shared helper: apply <use> x/y offset as a translate transform.
             let apply_offset = |node: &mut SvgRenderNode| {
@@ -547,9 +589,34 @@ fn resolve_use_children<'dom>(
                 }
             };
 
-            // <symbol> is never rendered directly — unwrap its children
-            // so they render when referenced via <use>.
+            // <symbol> is never rendered directly. When it carries a viewBox,
+            // wrap its children in a viewport-carrying group so the traversal
+            // maps the symbol's coordinates onto the <use> viewport (the same
+            // viewBox → viewport machinery used for nested <svg> elements).
             if let SvgTag::Container(Container::Symbol) = &target_node.tag {
+                if let Some(vb) = sym_view_box {
+                    let width = parse_coord("width").or(sym_width).unwrap_or(vb.width);
+                    let height = parse_coord("height").or(sym_height).unwrap_or(vb.height);
+                    let wrapper = SvgRenderNode {
+                        id: target_node.id,
+                        tag: SvgTag::Container(Container::Group),
+                        style: target_node.style,
+                        transforms: Vec::new(),
+                        viewport: Some(SvgViewport {
+                            x: offset.0.unwrap_or(0.0),
+                            y: offset.1.unwrap_or(0.0),
+                            width,
+                            height,
+                            view_box: Some(vb),
+                            aspect_ratio: sym_aspect_ratio,
+                            overflow_visible: false,
+                        }),
+                        children: target_node.children,
+                    };
+                    return vec![wrapper];
+                }
+
+                // No viewBox — unwrap the children with the x/y offset applied.
                 let mut children = target_node.children;
                 for child in &mut children {
                     apply_offset(child);
