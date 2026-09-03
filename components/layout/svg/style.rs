@@ -560,6 +560,7 @@ pub(crate) fn build_style(
     node: ServoLayoutNode,
     context: &LayoutContext,
     css_rules: &CssClassRules,
+    inherited: Option<&NodeStyle>,
 ) -> (NodeStyle, Vec<TransformOp>) {
     let element = node.as_element().unwrap();
     let (mut style, css_transform) = if element.style_data().is_some() {
@@ -574,7 +575,84 @@ pub(crate) fn build_style(
     apply_css_class_rules(&element, css_rules, &mut style);
     apply_presentation_attrs(&element, &mut style);
     apply_render_hints_from_attrs(&element, &mut style);
+    if let Some(inherited) = inherited {
+        apply_use_inheritance(&element, &mut style, inherited);
+    }
     (style, transforms)
+}
+
+/// Whether an element explicitly sets a presentation attribute (or the same
+/// property via its inline `style`), so it should NOT be overridden by an
+/// inherited value from a referencing `<use>` element.
+fn attr_is_set(element: &ServoLayoutElement, name: &str) -> bool {
+    if get_attr(element, name).is_some() {
+        return true;
+    }
+    get_attr(element, "style")
+        .as_ref()
+        .map(|s| parse_inline_style_prop(s, name).is_some())
+        .unwrap_or(false)
+}
+
+/// Merge inherited presentation properties from a referencing `<use>` element
+/// into a cloned shadow-content element's style.
+///
+/// SVG presentation attributes on `<use>` (`fill`, `stroke`, `stroke-width`,
+/// `opacity`, …) are *inherited* by the referenced content per the SVG spec:
+/// they act as the parent style for the shadow tree. The referenced element's
+/// own explicit attributes always win; only properties the element does not
+/// set itself fall back to the `<use>` value. This mirrors CSS inheritance
+/// across the `<use>` shadow boundary, which Stylo cannot see because the
+/// referenced content lives under `<defs>`, not under `<use>`.
+fn apply_use_inheritance(
+    element: &ServoLayoutElement,
+    style: &mut NodeStyle,
+    inherited: &NodeStyle,
+) {
+    // fill — inherit the whole FillParams when the element sets no `fill` at
+    // all (fill-opacity/fill-rule are rarely split from fill in practice).
+    if !attr_is_set(element, "fill") {
+        style.fill = inherited.fill.clone();
+    }
+
+    // stroke — inherit color + sub-properties together when `stroke` is unset.
+    if !attr_is_set(element, "stroke") {
+        style.stroke = inherited.stroke.clone();
+    } else if let (Some(own), Some(inh)) = (&mut style.stroke, &inherited.stroke) {
+        // The element sets its own `stroke` color; the sub-properties
+        // (width, cap, join, …) still inherit individually.
+        if !attr_is_set(element, "stroke-width") {
+            own.width = inh.width;
+        }
+        if !attr_is_set(element, "stroke-opacity") {
+            own.opacity = inh.opacity;
+        }
+        if !attr_is_set(element, "stroke-linecap") {
+            own.line_cap = inh.line_cap;
+        }
+        if !attr_is_set(element, "stroke-linejoin") {
+            own.line_join = inh.line_join;
+        }
+        if !attr_is_set(element, "stroke-miterlimit") {
+            own.miter_limit = inh.miter_limit;
+        }
+        if !attr_is_set(element, "stroke-dasharray") {
+            own.dash_array = inh.dash_array.clone();
+        }
+        if !attr_is_set(element, "stroke-dashoffset") {
+            own.dash_offset = inh.dash_offset;
+        }
+    }
+
+    // Element-level opacity.
+    if !attr_is_set(element, "opacity") {
+        style.opacity = inherited.opacity;
+    }
+
+    // Visibility.
+    if !attr_is_set(element, "visibility") {
+        style.visibility = inherited.visibility;
+    }
 }
 
 fn apply_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle) {
