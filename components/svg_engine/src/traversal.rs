@@ -36,6 +36,7 @@ pub fn render_svg_tree(
     tree: &SvgRenderTree,
     svg_origin: &LayoutPoint,
     svg_size: LayoutSize,
+    device_scale: f32,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
@@ -75,6 +76,7 @@ pub fn render_svg_tree(
         &providers,
         1.0,
         viewbox_scale,
+        device_scale,
         root_raster_offset,
         None,
         Transform2D::<f32, (), ()>::identity(),
@@ -213,6 +215,7 @@ fn render_node(
     providers: &ResourceProviders,
     parent_scale: f32,
     viewbox_scale: (f32, f32),
+    device_scale: f32,
     mut raster_offset: LayoutPoint,
     mut clip_rect: Option<LayoutRect>,
     mut node_xform: Transform2D<f32, (), ()>,
@@ -331,6 +334,7 @@ fn render_node(
         wr,
         &shape_params,
         cur_viewbox_scale,
+        device_scale,
         raster_offset,
         clip_rect,
         node_xform,
@@ -347,6 +351,7 @@ fn render_node(
         accumulated_scale,
         wr,
         cur_viewbox_scale,
+        device_scale,
         raster_offset,
         clip_rect,
         node_xform,
@@ -445,6 +450,7 @@ fn emit_element(
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
+    device_scale: f32,
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
@@ -461,6 +467,7 @@ fn emit_element(
             wr,
             params,
             viewbox_scale,
+            device_scale,
             raster_offset,
             clip_rect,
             node_xform,
@@ -475,6 +482,7 @@ fn emit_element(
             wr,
             params,
             viewbox_scale,
+            device_scale,
             raster_offset,
             rasters,
         ),
@@ -487,6 +495,7 @@ fn emit_element(
             wr,
             params,
             viewbox_scale,
+            device_scale,
             raster_offset,
             rasters,
         ),
@@ -505,6 +514,7 @@ fn emit_geometry(
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
+    device_scale: f32,
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
@@ -535,6 +545,7 @@ fn emit_geometry(
                 params.markers,
                 wr,
                 viewbox_scale,
+                device_scale,
                 raster_offset,
                 clip_rect,
                 node_xform,
@@ -553,6 +564,7 @@ fn emit_geometry(
             params.markers,
             wr,
             viewbox_scale,
+            device_scale,
             raster_offset,
             clip_rect,
             node_xform,
@@ -577,6 +589,7 @@ fn emit_shape(
     markers: &dyn MarkerProvider,
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
+    device_scale: f32,
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
@@ -608,6 +621,7 @@ fn emit_shape(
                 style.opacity,
                 &raster_origin,
                 viewbox_scale,
+                device_scale,
                 node_xform,
                 clip_rect,
                 paints,
@@ -624,6 +638,7 @@ fn emit_shape(
         markers,
         node_xform,
         viewbox_scale,
+        device_scale,
         raster_offset,
         clip_rect,
         paints,
@@ -643,6 +658,7 @@ fn emit_shape(
             paints,
             accumulated_scale,
             viewbox_scale,
+            device_scale,
             raster_offset,
             native_rendering: false,
             rasters,
@@ -706,6 +722,7 @@ fn emit_markers(
     markers: &dyn MarkerProvider,
     node_xform: Transform2D<f32, (), ()>,
     viewbox_scale: (f32, f32),
+    device_scale: f32,
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     paints: &dyn PaintResourceProvider,
@@ -722,7 +739,7 @@ fn emit_markers(
         let (nx, ny) = vertices[1];
         emit_marker(
             id, x, y, nx - x, ny - y, true, markers, stroke_width,
-            node_xform, viewbox_scale, raster_offset, clip_rect, paints, rasters,
+            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, rasters,
         );
     }
     if let Some(id) = &refs.mid {
@@ -731,7 +748,7 @@ fn emit_markers(
             let (nx, ny) = vertices[i + 1];
             emit_marker(
                 id, x, y, nx - x, ny - y, false, markers, stroke_width,
-                node_xform, viewbox_scale, raster_offset, clip_rect, paints, rasters,
+                node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, rasters,
             );
         }
     }
@@ -740,7 +757,7 @@ fn emit_markers(
         let (px, py) = vertices[n - 2];
         emit_marker(
             id, x, y, x - px, y - py, false, markers, stroke_width,
-            node_xform, viewbox_scale, raster_offset, clip_rect, paints, rasters,
+            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, rasters,
         );
     }
 }
@@ -758,6 +775,7 @@ fn emit_marker(
     stroke_width: f32,
     node_xform: Transform2D<f32, (), ()>,
     viewbox_scale: (f32, f32),
+    device_scale: f32,
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     paints: &dyn PaintResourceProvider,
@@ -815,6 +833,7 @@ fn emit_marker(
             m_style.opacity,
             &raster_offset,
             viewbox_scale,
+            device_scale,
             full_xform,
             clip_rect,
             paints,
@@ -869,6 +888,7 @@ fn emit_leaf<T: crate::renderer::Render>(
     wr: &mut DisplayListBuilder,
     params: &EffectParams,
     viewbox_scale: (f32, f32),
+    device_scale: f32,
     raster_offset: LayoutPoint,
     rasters: &mut Vec<RasterizedImage>,
 ) {
@@ -894,6 +914,7 @@ fn emit_leaf<T: crate::renderer::Render>(
         paints: params.paints,
         accumulated_scale: 1.0,
         viewbox_scale,
+        device_scale,
         raster_offset,
         native_rendering: false,
         rasters,
@@ -917,6 +938,7 @@ fn recurse_children(
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
+    device_scale: f32,
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
@@ -937,6 +959,7 @@ fn recurse_children(
             providers,
             accumulated_scale,
             viewbox_scale,
+            device_scale,
             raster_offset,
             clip_rect,
             node_xform,

@@ -53,10 +53,13 @@ pub struct RasterizedImage {
     pub x: f32,
     /// Y position in layout space.
     pub y: f32,
-    /// Width in pixels.
+    /// Width of the pixel data, in device pixels.
     pub width: u32,
-    /// Height in pixels.
+    /// Height of the pixel data, in device pixels.
     pub height: u32,
+    /// Device scale factor used to rasterize the image (device pixel ratio).
+    /// The on-screen size in layout space is `width / scale × height / scale`.
+    pub scale: f32,
     /// RGBA pixel data.
     pub data: Vec<u8>,
     /// Content hash used to key the image cache.

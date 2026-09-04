@@ -32,6 +32,10 @@ pub(crate) struct RenderContext<'a> {
     /// correct resolution. `(1.0, 1.0)` when there is no viewBox (or it is
     /// identity).
     pub viewbox_scale: (f32, f32),
+    /// The device pixel ratio (page zoom × hidpi), used to rasterize CPU
+    /// shapes at device resolution so the compositor downscales rather than
+    /// upscales the resulting bitmap.
+    pub device_scale: f32,
     /// Accumulated translation of nested viewBox frames, in the root user
     /// space. CPU-rasterized shapes (vello_cpu) bypass reference frames, so
     /// they need this explicit offset folded into their raster position.

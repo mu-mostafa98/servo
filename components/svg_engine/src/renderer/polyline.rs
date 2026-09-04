@@ -38,6 +38,7 @@ impl Render for Polyline {
             ctx.style.opacity,
             &ctx.svg_origin,
             ctx.viewbox_scale,
+            ctx.device_scale,
             Transform2D::identity(),
             None,
             ctx.paints,

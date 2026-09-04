@@ -840,6 +840,7 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
                 svg_tree,
                 &origin,
                 size,
+                self.device_pixel_ratio.get(),
                 spatial_id,
                 clip_chain_id,
                 self.wr(),
@@ -858,8 +859,8 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
                     let img_rect = webrender_api::units::LayoutRect::from_origin_and_size(
                         webrender_api::units::LayoutPoint::new(raster.x, raster.y),
                         webrender_api::units::LayoutSize::new(
-                            raster.width as f32,
-                            raster.height as f32,
+                            raster.width as f32 / raster.scale,
+                            raster.height as f32 / raster.scale,
                         ),
                     );
                     let img_info = self.common_properties(state, clip, &style);

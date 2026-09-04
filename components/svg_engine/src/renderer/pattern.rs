@@ -187,6 +187,7 @@ pub(crate) fn fill_rect_with_pattern_by_id(
                     paints: ctx.paints,
                     accumulated_scale: ctx.accumulated_scale,
                     viewbox_scale: ctx.viewbox_scale,
+                    device_scale: ctx.device_scale,
                     raster_offset: ctx.raster_offset,
                     native_rendering: true,
                     rasters: &mut *ctx.rasters,

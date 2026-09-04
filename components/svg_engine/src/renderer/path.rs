@@ -97,6 +97,7 @@ impl Render for Path {
             ctx.style.opacity,
             &raster_origin,
             ctx.viewbox_scale,
+            ctx.device_scale,
             Transform2D::identity(),
             None,
             ctx.paints,
@@ -129,6 +130,7 @@ pub(crate) fn rasterize_bez(
     node_opacity: f32,
     svg_origin: &LayoutPoint,
     viewbox_scale: (f32, f32),
+    scale: f32,
     node_xform: Transform2D<f32, (), ()>,
     clip_rect: Option<LayoutRect>,
     paints: &dyn PaintResourceProvider,
@@ -141,7 +143,12 @@ pub(crate) fn rasterize_bez(
         .abs()
         .sqrt()
         .max(1e-4);
-    let total_scale = viewbox_scale.0 * node_scale;
+    // CSS-space scale (viewBox × node transform), used for the stroke inset
+    // that expands the layout-space bounding box.
+    let css_scale = viewbox_scale.0 * node_scale;
+    // Device-space scale (CSS scale × device pixel ratio), used for the stroke
+    // width/dash lengths at raster time.
+    let total_scale = css_scale * scale;
 
     // Apply the node transform (full affine: translate/scale/rotate/skew), then
     // the viewBox scale so the pixmap is rasterized at viewport resolution.
@@ -156,7 +163,7 @@ pub(crate) fn rasterize_bez(
     // Expand the pixmap to include the stroke, which is centered on the path
     // outline and would otherwise be clipped at the fill's bounding box.
     if let Some(s) = stroke {
-        let inset = s.width as f64 * total_scale as f64 / 2.0;
+        let inset = s.width as f64 * css_scale as f64 / 2.0;
         bbox = kurbo::Rect::new(
             bbox.x0 - inset,
             bbox.y0 - inset,
@@ -167,8 +174,12 @@ pub(crate) fn rasterize_bez(
     if bbox.width() <= 0.0 || bbox.height() <= 0.0 {
         return;
     }
-    let w = (bbox.width().ceil() as u16).max(1);
-    let h = (bbox.height().ceil() as u16).max(1);
+    // Layout-space pixmap size (1 CSS pixel = 1 pixel), then scaled up to the
+    // device resolution so the compositor downsamples instead of upsampling.
+    let css_w = (bbox.width().ceil() as u16).max(1);
+    let css_h = (bbox.height().ceil() as u16).max(1);
+    let w = ((css_w as f32 * scale).ceil() as u16).max(1);
+    let h = ((css_h as f32 * scale).ceil() as u16).max(1);
 
     let mut context = vello_cpu::RenderContext::new_with(
         w,
@@ -181,35 +192,43 @@ pub(crate) fn rasterize_bez(
     let mut resources = vello_cpu::Resources::new();
     let mut target = vello_cpu::Pixmap::new(w, h);
 
-    // Offset the path so its bounding box sits at (0,0) within the pixmap.
+    // Scale to device resolution, then offset the path so its (device-space)
+    // bounding box sits at (0,0) within the device-resolution pixmap.
     let mut bez_local = bez_scaled;
-    bez_local.apply_affine(vello_cpu::kurbo::Affine::translate((-bbox.x0, -bbox.y0)));
+    bez_local.apply_affine(vello_cpu::kurbo::Affine::scale_non_uniform(
+        scale as f64,
+        scale as f64,
+    ));
+    bez_local.apply_affine(vello_cpu::kurbo::Affine::translate((
+        -bbox.x0 * scale as f64,
+        -bbox.y0 * scale as f64,
+    )));
 
     if let Some(f) = fill {
-        if let Some(paint) = resolve_fill_paint(f, w as f32, h as f32, viewbox_scale, &bbox, node_opacity, paints) {
+        if let Some(paint) = resolve_fill_paint(f, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity, paints) {
             context.set_fill_rule(match f.fill_rule {
                 FillRule::NonZero => vello_cpu::peniko::Fill::NonZero,
                 FillRule::EvenOdd => vello_cpu::peniko::Fill::EvenOdd,
             });
-            apply_paint(&mut context, paint);
+            apply_paint(&mut context, scale_paint(paint, scale as f64));
             context.fill_path(&bez_local);
         }
     }
 
     if let Some(s) = stroke {
-        if let Some(paint) = resolve_stroke_paint(s, w as f32, h as f32, viewbox_scale, &bbox, node_opacity, paints) {
-            apply_paint(&mut context, paint);
+        if let Some(paint) = resolve_stroke_paint(s, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity, paints) {
+            apply_paint(&mut context, scale_paint(paint, scale as f64));
             let mut vello_stroke =
                 vello_cpu::kurbo::Stroke::new(s.width as f64 * total_scale as f64);
             // Dash lengths/offset are in user units, so scale them by the
-            // same factor as the path (viewBox scale × node-transform scale)
-            // before handing them to kurbo, which implements SVG's
-            // odd-length-doubling rule.
+            // same factor as the path (viewBox scale × node-transform scale
+            // × device scale) before handing them to kurbo, which implements
+            // SVG's odd-length-doubling rule.
             if let Some(dashes) = &s.dash_array {
-                let scale = total_scale as f64;
-                let pattern: Vec<f64> = dashes.iter().map(|d| *d as f64 * scale).collect();
+                let dash_scale = total_scale as f64;
+                let pattern: Vec<f64> = dashes.iter().map(|d| *d as f64 * dash_scale).collect();
                 vello_stroke =
-                    vello_stroke.with_dashes(s.dash_offset as f64 * scale, &pattern);
+                    vello_stroke.with_dashes(s.dash_offset as f64 * dash_scale, &pattern);
             }
             context.set_stroke(vello_stroke);
             context.stroke_path(&bez_local);
@@ -226,7 +245,8 @@ pub(crate) fn rasterize_bez(
         .collect();
 
     // Position and size of the raster in the target space (the space of
-    // `svg_origin`), before any sub-viewport clip is applied.
+    // `svg_origin`), before any sub-viewport clip is applied. `x`/`y` are in
+    // layout space; `width`/`height` are device pixels.
     let mut raster_x = svg_origin.x + bbox.x0 as f32;
     let mut raster_y = svg_origin.y + bbox.y0 as f32;
     let mut raster_w = w as u32;
@@ -234,19 +254,22 @@ pub(crate) fn rasterize_bez(
 
     // Clip the raster to the sub-viewport rect (when present), cropping the
     // pixmap data and repositioning it so only the visible part remains. The
-    // clip rect lives in the same space as `svg_origin`.
+    // clip rect lives in the same layout space as `svg_origin`, so pixel
+    // offsets are scaled by the device factor.
     if let Some(clip) = clip_rect {
+        let css_w = raster_w as f32 / scale;
+        let css_h = raster_h as f32 / scale;
         let cx0 = raster_x.max(clip.min.x);
         let cy0 = raster_y.max(clip.min.y);
-        let cx1 = (raster_x + raster_w as f32).min(clip.max.x);
-        let cy1 = (raster_y + raster_h as f32).min(clip.max.y);
+        let cx1 = (raster_x + css_w).min(clip.max.x);
+        let cy1 = (raster_y + css_h).min(clip.max.y);
         if cx0 >= cx1 || cy0 >= cy1 {
             return; // fully outside the clip — nothing to draw
         }
-        let px0 = (cx0 - raster_x).floor() as u32;
-        let py0 = (cy0 - raster_y).floor() as u32;
-        let px1 = ((cx1 - raster_x).ceil() as u32).min(raster_w);
-        let py1 = ((cy1 - raster_y).ceil() as u32).min(raster_h);
+        let px0 = ((cx0 - raster_x) * scale).floor() as u32;
+        let py0 = ((cy0 - raster_y) * scale).floor() as u32;
+        let px1 = (((cx1 - raster_x) * scale).ceil() as u32).min(raster_w);
+        let py1 = (((cy1 - raster_y) * scale).ceil() as u32).min(raster_h);
         let cw = px1 - px0;
         let ch = py1 - py0;
 
@@ -257,8 +280,8 @@ pub(crate) fn rasterize_bez(
             cropped.extend_from_slice(&rgba[start..end]);
         }
         rgba = cropped;
-        raster_x += px0 as f32;
-        raster_y += py0 as f32;
+        raster_x += px0 as f32 / scale;
+        raster_y += py0 as f32 / scale;
         raster_w = cw;
         raster_h = ch;
     }
@@ -272,6 +295,7 @@ pub(crate) fn rasterize_bez(
         y: raster_y,
         width: raster_w,
         height: raster_h,
+        scale,
         data: rgba,
         content_hash: hash,
     });
@@ -282,6 +306,36 @@ fn apply_paint(context: &mut vello_cpu::RenderContext, paint: ResolvedPaint) {
     match paint {
         ResolvedPaint::Solid(c) => context.set_paint(c),
         ResolvedPaint::Gradient(g) => context.set_paint(g),
+    }
+}
+
+/// Scale a resolved paint's gradient geometry into device space.
+fn scale_paint(mut paint: ResolvedPaint, scale: f64) -> ResolvedPaint {
+    if let ResolvedPaint::Gradient(g) = &mut paint {
+        scale_gradient(g, scale);
+    }
+    paint
+}
+
+/// Scale a gradient's endpoints/radius by `scale` (device pixel ratio).
+fn scale_gradient(gradient: &mut Gradient, scale: f64) {
+    use vello_cpu::peniko::GradientKind;
+    match &mut gradient.kind {
+        GradientKind::Linear(pos) => {
+            pos.start.x *= scale;
+            pos.start.y *= scale;
+            pos.end.x *= scale;
+            pos.end.y *= scale;
+        },
+        GradientKind::Radial(pos) => {
+            pos.start_center.x *= scale;
+            pos.start_center.y *= scale;
+            pos.start_radius = (pos.start_radius as f64 * scale) as f32;
+            pos.end_center.x *= scale;
+            pos.end_center.y *= scale;
+            pos.end_radius = (pos.end_radius as f64 * scale) as f32;
+        },
+        GradientKind::Sweep(_) => {},
     }
 }
 

@@ -40,6 +40,7 @@ impl Render for Polygon {
             ctx.style.opacity,
             &raster_origin,
             ctx.viewbox_scale,
+            ctx.device_scale,
             Transform2D::identity(),
             None,
             ctx.paints,
