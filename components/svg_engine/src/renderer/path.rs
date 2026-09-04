@@ -217,7 +217,7 @@ pub(crate) fn rasterize_bez(
     }
 
     context.flush();
-    context.render_to_pixmap(&mut resources, &mut target);
+    context.render(&mut target, &mut resources);
 
     let mut rgba: Vec<u8> = target
         .data()
