@@ -24,7 +24,7 @@ use net_traits::image_cache::ImageCache;
 use resvg::usvg::{self, tiny_skia_path};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::color::ColorSpace;
-use style::dom::OpaqueNode;
+use style::dom::{OpaqueNode, TNode};
 use style::properties::ComputedValues;
 use style::values::computed::{LengthPercentage, NonNegativeLengthPercentageOrAuto};
 use style::values::computed::svg::{SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray};
@@ -46,12 +46,19 @@ struct Gradients {
 
 /// Builds a [`usvg::Tree`] from the `<svg>` element at `node`.
 ///
+/// Returns the tree together with the parsed [`usvg::ViewBox`] (if any). The
+/// viewBox transform is deliberately *not* baked into the tree: content stays in
+/// viewBox coordinates, and the viewBox→device mapping is applied at raster time
+/// (see [`rasterize_svg_tree`]) so `preserveAspectRatio` is honoured uniformly
+/// rather than being distorted by a non-uniform CSS-box stretch.
+///
 /// Returns `None` when `node` is not an `<svg>` element or the tree would be
 /// empty/invalid.
+#[expect(unsafe_code)]
 pub(crate) fn build_usvg_tree(
     node: ServoLayoutNode<'_>,
     context: &LayoutContext,
-) -> Option<usvg::Tree> {
+) -> Option<(usvg::Tree, Option<usvg::ViewBox>)> {
     let element = node.as_element()?;
     if element.local_name() != &LocalName::from("svg") {
         return None;
@@ -66,33 +73,33 @@ pub(crate) fn build_usvg_tree(
         collect_gradients(child, context, &mut gradients);
     }
 
-    let root_ts = view_box
-        .map(|vb| vb.to_transform(size))
-        .unwrap_or_else(usvg::Transform::identity);
-
-    // Mirror usvg's XML parser: when a viewBox transform is present, wrap the
-    // children in a group carrying that transform; otherwise build straight into
-    // the root.
-    let mut root = usvg::Group::empty();
-    let mut content = usvg::Group::empty();
-    content.transform = root_ts;
-    content.abs_transform = root_ts;
-
-    for child in node.dom_children() {
-        if let Some(child_node) = convert_node(child, context, &gradients, root_ts) {
-            content.push_child(child_node);
-        }
+    // Collect every `id`'d element in the document so `<use href="#id">` can be
+    // resolved to its referenced element (which may live in a sibling subtree).
+    let document = unsafe { node.dangerous_style_node() }.owner_doc();
+    let mut defs = HashMap::new();
+    if let Some(root_element) = document.root_element() {
+        collect_element_ids(root_element.as_node(), &mut defs);
     }
 
-    if root_ts.is_identity() {
-        root = content;
-    } else {
-        root.push_child(usvg::Node::Group(Box::new(content)));
+    // Children are built in viewBox (user) coordinates; the viewBox transform is
+    // applied later, at raster time.
+    let mut root = usvg::Group::empty();
+    for child in node.dom_children() {
+        if let Some(child_node) = convert_node(
+            child,
+            context,
+            &gradients,
+            &defs,
+            usvg::Transform::identity(),
+            None,
+        ) {
+            root.push_child(child_node);
+        }
     }
 
     let mut tree = usvg::Tree::new(size, root);
     tree.finalize();
-    Some(tree)
+    Some((tree, view_box))
 }
 
 /// Determines the image size and view box from the root `<svg>` element.
@@ -171,6 +178,23 @@ fn element_id(element: &ServoLayoutElement<'_>) -> Option<String> {
         None
     } else {
         Some(id.to_string())
+    }
+}
+
+/// Recursively collects every element with a non-empty `id` attribute into `map`,
+/// keyed by that id. Used to resolve `<use href="#id">` references anywhere in the
+/// document, not just within the current `<svg>` subtree.
+fn collect_element_ids<'a>(
+    node: ServoLayoutNode<'a>,
+    map: &mut HashMap<String, ServoLayoutElement<'a>>,
+) {
+    if let Some(element) = node.as_element() &&
+        let Some(id) = element_id(&element)
+    {
+        map.entry(id).or_insert(element);
+    }
+    for child in node.dom_children() {
+        collect_element_ids(child, map);
     }
 }
 
@@ -262,17 +286,28 @@ fn build_stop(element: &ServoLayoutElement<'_>) -> Option<usvg::Stop> {
 }
 
 /// Converts a DOM node (and its subtree) into a [`usvg::Node`].
+///
+/// `defs` is a document-wide `id`→element map used to resolve `<use>` references.
+/// `host` is the computed style of the enclosing `<use>` element (if any): it is
+/// used as the inheritance parent for paint, since `<use>` shadow content inherits
+/// from the `<use>` host rather than from its location in the `<defs>`.
 fn convert_node(
     node: ServoLayoutNode<'_>,
     context: &LayoutContext,
     gradients: &Gradients,
+    defs: &HashMap<String, ServoLayoutElement<'_>>,
     parent_abs_transform: usvg::Transform,
+    host: Option<&ComputedValues>,
 ) -> Option<usvg::Node> {
     let element = node.as_element()?;
     let name = element.local_name().clone();
 
     if is_group_element(&name) {
-        return convert_group(node, context, gradients, parent_abs_transform);
+        return convert_group(node, context, gradients, defs, parent_abs_transform, host);
+    }
+
+    if name.as_ref() == "use" {
+        return convert_use(node, context, gradients, defs, parent_abs_transform);
     }
 
     let computed = element
@@ -284,13 +319,14 @@ fn convert_node(
         &element,
         &name,
         computed.as_deref(),
+        host,
         gradients,
         parent_abs_transform,
     ) {
         return Some(shape);
     }
 
-    // Elements we don't handle yet (text, image, use, …) are silently skipped.
+    // Elements we don't handle yet (text, image, …) are silently skipped.
     None
 }
 
@@ -305,7 +341,9 @@ fn convert_group(
     node: ServoLayoutNode<'_>,
     context: &LayoutContext,
     gradients: &Gradients,
+    defs: &HashMap<String, ServoLayoutElement<'_>>,
     parent_abs_transform: usvg::Transform,
+    host: Option<&ComputedValues>,
 ) -> Option<usvg::Node> {
     let element = node.as_element()?;
     let computed = element
@@ -330,7 +368,9 @@ fn convert_group(
     }
 
     for child in node.dom_children() {
-        if let Some(child_node) = convert_node(child, context, gradients, abs_transform) {
+        if let Some(child_node) =
+            convert_node(child, context, gradients, defs, abs_transform, host)
+        {
             group.push_child(child_node);
         }
     }
@@ -338,10 +378,92 @@ fn convert_group(
     Some(usvg::Node::Group(Box::new(group)))
 }
 
+/// Converts a `<use href="#id">` element by cloning the referenced element's
+/// subtree into a group that carries the `<use>` element's transform and opacity.
+/// The referenced content inherits paint from the `<use>` host (shadow-tree
+/// semantics) via the `host` parameter passed down to [`build_shape_node`].
+fn convert_use(
+    node: ServoLayoutNode<'_>,
+    context: &LayoutContext,
+    gradients: &Gradients,
+    defs: &HashMap<String, ServoLayoutElement<'_>>,
+    parent_abs_transform: usvg::Transform,
+) -> Option<usvg::Node> {
+    let element = node.as_element()?;
+
+    let href = element
+        .attribute_as_str(&ns!(), &LocalName::from("href"))
+        .or_else(|| element.attribute_as_str(&ns!(xlink), &LocalName::from("href")))?;
+    let id = href.trim_start_matches('#');
+    if id.is_empty() {
+        return None;
+    }
+
+    let referenced = defs.get(id)?;
+    if referenced.as_node().opaque() == node.opaque() {
+        return None;
+    }
+
+    let computed = element
+        .style_data()
+        .is_some()
+        .then(|| node.style(&context.style_context));
+
+    let mut group = usvg::Group::empty();
+    group.id = element_id(&element).unwrap_or_default();
+
+    let mut transform = element
+        .attribute_as_str(&ns!(), &LocalName::from("transform"))
+        .map(parse_transform)
+        .unwrap_or_else(usvg::Transform::identity);
+    let x = length_attr_opt(&element, "x").unwrap_or(0.0);
+    let y = length_attr_opt(&element, "y").unwrap_or(0.0);
+    if x != 0.0 || y != 0.0 {
+        transform = transform.pre_concat(usvg::Transform::from_translate(x, y));
+    }
+    group.transform = transform;
+    let abs_transform = parent_abs_transform.pre_concat(transform);
+    group.abs_transform = abs_transform;
+
+    if let Some(computed) = computed.as_deref() {
+        group.opacity = usvg::Opacity::new(computed.get_effects().opacity)
+            .unwrap_or(usvg::Opacity::ONE);
+    }
+
+    let referenced_node = referenced.as_node();
+    if let Some(child_node) = convert_node(
+        referenced_node,
+        context,
+        gradients,
+        defs,
+        abs_transform,
+        computed.as_deref(),
+    ) {
+        group.push_child(child_node);
+    }
+
+    Some(usvg::Node::Group(Box::new(group)))
+}
+
+/// Whether an element explicitly sets its own paint, in which case it should not
+/// inherit fill/stroke from an enclosing `<use>` host.
+fn element_has_explicit_paint(element: &ServoLayoutElement<'_>) -> bool {
+    element
+        .attribute_as_str(&ns!(), &LocalName::from("fill"))
+        .is_some()
+        || element
+            .attribute_as_str(&ns!(), &LocalName::from("stroke"))
+            .is_some()
+        || element
+            .attribute_as_str(&ns!(), &LocalName::from("style"))
+            .is_some()
+}
+
 fn build_shape_node(
     element: &ServoLayoutElement<'_>,
     name: &LocalName,
     computed: Option<&ComputedValues>,
+    host: Option<&ComputedValues>,
     gradients: &Gradients,
     parent_abs_transform: usvg::Transform,
 ) -> Option<usvg::Node> {
@@ -364,8 +486,14 @@ fn build_shape_node(
         })
         .unwrap_or(true);
 
-    let fill = computed.and_then(|c| build_fill(c, gradients));
-    let stroke = computed.and_then(|c| build_stroke(c, gradients));
+    // When this shape is reachable through a `<use>`, its paint inherits from the
+    // `<use>` host unless it explicitly sets `fill`/`stroke` (or inline `style`).
+    let paint_computed = match host {
+        Some(_) if !element_has_explicit_paint(element) => host,
+        _ => computed,
+    };
+    let fill = paint_computed.and_then(|c| build_fill(c, gradients));
+    let stroke = paint_computed.and_then(|c| build_stroke(c, gradients));
 
     usvg::Path::new(
         id,
@@ -1060,27 +1188,40 @@ fn parse_color(value: &str) -> usvg::Color {
 ///
 /// This runs synchronously on the layout thread, replacing the asynchronous
 /// vector-image cache rasterization path for inline SVGs built from the DOM.
+///
+/// When `view_box` is present the content is in viewBox coordinates, so the
+/// viewBox→device transform (`preserveAspectRatio`-aware) is applied directly.
+/// Otherwise the content is in viewport coordinates and a simple non-uniform
+/// stretch from the tree's natural size to the device box is used.
 pub(crate) fn rasterize_svg_tree(
     image_cache: &dyn ImageCache,
     tree: &usvg::Tree,
     node: OpaqueNode,
     raster_size: DeviceIntSize,
+    view_box: Option<usvg::ViewBox>,
 ) -> Option<ImageKey> {
     const MAX_SVG_PIXMAP_DIMENSION: i32 = 5000;
 
-    let natural_size = tree.size().to_int_size();
-    if natural_size.width() == 0 || natural_size.height() == 0 {
-        return None;
-    }
-
     let width = raster_size.width.clamp(1, MAX_SVG_PIXMAP_DIMENSION) as u32;
     let height = raster_size.height.clamp(1, MAX_SVG_PIXMAP_DIMENSION) as u32;
+    let img_size = usvg::Size::from_wh(width as f32, height as f32)?;
 
     let mut pixmap = resvg::tiny_skia::Pixmap::new(width, height)?;
-    let transform = usvg::Transform::from_scale(
-        width as f32 / natural_size.width() as f32,
-        height as f32 / natural_size.height() as f32,
-    );
+
+    let transform = match view_box {
+        Some(vb) => vb.to_transform(img_size),
+        None => {
+            let natural_size = tree.size().to_int_size();
+            if natural_size.width() == 0 || natural_size.height() == 0 {
+                return None;
+            }
+            usvg::Transform::from_scale(
+                width as f32 / natural_size.width() as f32,
+                height as f32 / natural_size.height() as f32,
+            )
+        },
+    };
+
     resvg::render(tree, transform, &mut pixmap.as_mut());
     let bytes = pixmap.take();
 

@@ -153,6 +153,9 @@ pub(crate) enum ReplacedContentKind {
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
+        /// The parsed `viewBox` (with `preserveAspectRatio`), applied at raster
+        /// time to map viewBox coordinates onto the device box.
+        view_box: Option<usvg::ViewBox>,
         /// The programmatically-built render tree, constructed on the layout thread
         /// from computed styles (so the CSS cascade applies). When present, this is
         /// rasterized synchronously instead of going through the vector-image cache.
@@ -328,12 +331,16 @@ impl ReplacedContents {
         // thread. This is what makes the CSS cascade apply to SVG: instead of
         // re-parsing raw XML (which only sees presentation attributes), we read the
         // post-cascade computed values for fill/stroke/geometry.
-        let svg_tree = crate::svg::build_usvg_tree(node, context).map(Arc::new);
+        let (svg_tree, view_box) = match crate::svg::build_usvg_tree(node, context) {
+            Some((tree, view_box)) => (Some(Arc::new(tree)), view_box),
+            None => (None, None),
+        };
 
         (
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox: svg_data.view_box.is_some(),
+                view_box,
                 svg_tree,
             },
             natural_size,
@@ -617,6 +624,7 @@ impl ReplacedContents {
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
+                view_box,
                 svg_tree,
             } => {
                 let scale = layout_context.style_context.device_pixel_ratio();
@@ -636,6 +644,7 @@ impl ReplacedContents {
                         svg_tree,
                         tag.node,
                         raster_size,
+                        *view_box,
                     );
 
                     return image_key
