@@ -217,22 +217,22 @@ fn collect_element_ids<'a>(
 
 fn build_linear_gradient(element: &ServoLayoutElement<'_>) -> Option<usvg::LinearGradient> {
     let id = usvg::NonEmptyString::new(element_id(element)?)?;
-    let x1 = length_attr(element, "x1", 0.0);
-    let y1 = length_attr(element, "y1", 0.0);
-    let x2 = length_attr(element, "x2", 1.0);
-    let y2 = length_attr(element, "y2", 0.0);
+    let x1 = number_or_percentage_attr(element, "x1", 0.0);
+    let y1 = number_or_percentage_attr(element, "y1", 0.0);
+    let x2 = number_or_percentage_attr(element, "x2", 1.0);
+    let y2 = number_or_percentage_attr(element, "y2", 0.0);
     let base = build_base_gradient(element, id)?;
     Some(usvg::LinearGradient::new(base, x1, y1, x2, y2))
 }
 
 fn build_radial_gradient(element: &ServoLayoutElement<'_>) -> Option<usvg::RadialGradient> {
     let id = usvg::NonEmptyString::new(element_id(element)?)?;
-    let cx = length_attr(element, "cx", 0.5);
-    let cy = length_attr(element, "cy", 0.5);
-    let r = usvg::PositiveF32::new(length_attr(element, "r", 0.5))?;
-    let fx = length_attr(element, "fx", cx);
-    let fy = length_attr(element, "fy", cy);
-    let fr = usvg::PositiveF32::new(length_attr(element, "fr", 0.0))?;
+    let cx = number_or_percentage_attr(element, "cx", 0.5);
+    let cy = number_or_percentage_attr(element, "cy", 0.5);
+    let r = usvg::PositiveF32::new(number_or_percentage_attr(element, "r", 0.5))?;
+    let fx = number_or_percentage_attr(element, "fx", cx);
+    let fy = number_or_percentage_attr(element, "fy", cy);
+    let fr = usvg::PositiveF32::new(number_or_percentage_attr(element, "fr", 0.0))?;
     let base = build_base_gradient(element, id)?;
     Some(usvg::RadialGradient::new(base, cx, cy, r, fx, fy, fr))
 }
@@ -957,6 +957,23 @@ fn parse_length_attr(value: &str) -> Option<f32> {
     let value = value.trim();
     let value = value.strip_suffix("px").unwrap_or(value);
     value.parse::<f32>().ok()
+}
+
+/// Parses a gradient coordinate attribute (`x1`, `cx`, `r`, …).
+///
+/// Per SVG these accept either a bare `<number>` or a `<percentage>`; a
+/// percentage is the same fraction expressed in the 0–100 range. Returns
+/// `default` when missing or unparseable.
+fn number_or_percentage_attr(element: &ServoLayoutElement<'_>, attr: &str, default: f32) -> f32 {
+    let Some(value) = element.attribute_as_str(&ns!(), &LocalName::from(attr)) else {
+        return default;
+    };
+    let value = value.trim();
+    if let Some(pct) = value.strip_suffix('%') {
+        pct.parse::<f32>().ok().map(|v| v / 100.0).unwrap_or(default)
+    } else {
+        parse_length_attr(value).unwrap_or(default)
+    }
 }
 
 fn parse_transform(value: &str) -> usvg::Transform {
