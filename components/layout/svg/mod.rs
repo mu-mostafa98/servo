@@ -30,7 +30,7 @@ use style::values::computed::{LengthPercentage, NonNegativeLengthPercentageOrAut
 use style::values::computed::svg::{SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray};
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use style::values::generics::svg::SVGLength;
-use svgtypes::{PathParser, PathSegment, TransformListParser, TransformListToken};
+use svgtypes::{SimplePathSegment, SimplifyingPathParser, TransformListParser, TransformListToken};
 use webrender_api::units::DeviceIntSize;
 use webrender_api::ImageKey;
 
@@ -702,45 +702,26 @@ fn rounded_rect(
 }
 
 fn parse_path_d(d: &str) -> Option<tiny_skia_path::Path> {
+    // Delegate to `SimplifyingPathParser`, the same parser usvg uses in its own
+    // `convert_path`: it resolves relative→absolute coordinates, `S`/`T`
+    // reflection, `H`/`V`→`L`, and converts elliptical arcs (`A`) to cubic
+    // Béziers via `kurbo` (correct math, including the coincident-points and
+    // radii-correction edge cases). Hand-rolling that here previously produced
+    // distorted arcs (see `arc_to`'s incorrect control-point factor).
     let mut pb = tiny_skia_path::PathBuilder::new();
-    let mut cur_x = 0.0f64;
-    let mut cur_y = 0.0f64;
-    let mut start_x = 0.0f64;
-    let mut start_y = 0.0f64;
-    let mut last_cx = 0.0f64;
-    let mut last_cy = 0.0f64;
-    let mut last_qx = 0.0f64;
-    let mut last_qy = 0.0f64;
-
-    for seg in PathParser::from(d) {
+    for seg in SimplifyingPathParser::from(d) {
         let seg = seg.ok()?;
         match seg {
-            PathSegment::MoveTo { abs, x, y } => {
-                let (x, y) = abs_xy(abs, x, y, cur_x, cur_y);
+            SimplePathSegment::MoveTo { x, y } => {
                 pb.move_to(x as f32, y as f32);
-                cur_x = x;
-                cur_y = y;
-                start_x = x;
-                start_y = y;
             },
-            PathSegment::LineTo { abs, x, y } => {
-                let (x, y) = abs_xy(abs, x, y, cur_x, cur_y);
+            SimplePathSegment::LineTo { x, y } => {
                 pb.line_to(x as f32, y as f32);
-                cur_x = x;
-                cur_y = y;
             },
-            PathSegment::HorizontalLineTo { abs, x } => {
-                let x = if abs { x } else { cur_x + x };
-                pb.line_to(x as f32, cur_y as f32);
-                cur_x = x;
+            SimplePathSegment::Quadratic { x1, y1, x, y } => {
+                pb.quad_to(x1 as f32, y1 as f32, x as f32, y as f32);
             },
-            PathSegment::VerticalLineTo { abs, y } => {
-                let y = if abs { y } else { cur_y + y };
-                pb.line_to(cur_x as f32, y as f32);
-                cur_y = y;
-            },
-            PathSegment::CurveTo {
-                abs,
+            SimplePathSegment::CurveTo {
                 x1,
                 y1,
                 x2,
@@ -748,238 +729,16 @@ fn parse_path_d(d: &str) -> Option<tiny_skia_path::Path> {
                 x,
                 y,
             } => {
-                let (x1, y1) = abs_xy(abs, x1, y1, cur_x, cur_y);
-                let (x2, y2) = abs_xy(abs, x2, y2, cur_x, cur_y);
-                let (x, y) = abs_xy(abs, x, y, cur_x, cur_y);
                 pb.cubic_to(
-                    x1 as f32,
-                    y1 as f32,
-                    x2 as f32,
-                    y2 as f32,
-                    x as f32,
-                    y as f32,
+                    x1 as f32, y1 as f32, x2 as f32, y2 as f32, x as f32, y as f32,
                 );
-                last_cx = x2;
-                last_cy = y2;
-                cur_x = x;
-                cur_y = y;
             },
-            PathSegment::SmoothCurveTo { abs, x2, y2, x, y } => {
-                let (x2, y2) = abs_xy(abs, x2, y2, cur_x, cur_y);
-                let (x, y) = abs_xy(abs, x, y, cur_x, cur_y);
-                let x1 = cur_x + (cur_x - last_cx);
-                let y1 = cur_y + (cur_y - last_cy);
-                pb.cubic_to(
-                    x1 as f32,
-                    y1 as f32,
-                    x2 as f32,
-                    y2 as f32,
-                    x as f32,
-                    y as f32,
-                );
-                last_cx = x2;
-                last_cy = y2;
-                cur_x = x;
-                cur_y = y;
-            },
-            PathSegment::Quadratic { abs, x1, y1, x, y } => {
-                let (x1, y1) = abs_xy(abs, x1, y1, cur_x, cur_y);
-                let (x, y) = abs_xy(abs, x, y, cur_x, cur_y);
-                pb.quad_to(x1 as f32, y1 as f32, x as f32, y as f32);
-                last_qx = x1;
-                last_qy = y1;
-                cur_x = x;
-                cur_y = y;
-            },
-            PathSegment::SmoothQuadratic { abs, x, y } => {
-                let (x, y) = abs_xy(abs, x, y, cur_x, cur_y);
-                let x1 = cur_x + (cur_x - last_qx);
-                let y1 = cur_y + (cur_y - last_qy);
-                pb.quad_to(x1 as f32, y1 as f32, x as f32, y as f32);
-                last_qx = x1;
-                last_qy = y1;
-                cur_x = x;
-                cur_y = y;
-            },
-            PathSegment::EllipticalArc {
-                abs,
-                rx,
-                ry,
-                x_axis_rotation,
-                large_arc,
-                sweep,
-                x,
-                y,
-            } => {
-                let (x, y) = abs_xy(abs, x, y, cur_x, cur_y);
-                arc_to(
-                    &mut pb,
-                    cur_x,
-                    cur_y,
-                    rx,
-                    ry,
-                    x_axis_rotation,
-                    large_arc,
-                    sweep,
-                    x,
-                    y,
-                );
-                cur_x = x;
-                cur_y = y;
-            },
-            PathSegment::ClosePath { .. } => {
+            SimplePathSegment::ClosePath => {
                 pb.close();
-                cur_x = start_x;
-                cur_y = start_y;
             },
         }
     }
     pb.finish()
-}
-
-#[inline]
-fn abs_xy(abs: bool, x: f64, y: f64, cur_x: f64, cur_y: f64) -> (f64, f64) {
-    if abs {
-        (x, y)
-    } else {
-        (cur_x + x, cur_y + y)
-    }
-}
-
-/// Converts an SVG elliptical arc segment to cubic Bézier curves (per
-/// <https://www.w3.org/TR/SVG11/implnote.html#ArcImplementationNotes>).
-#[allow(clippy::too_many_arguments)]
-fn arc_to(
-    pb: &mut tiny_skia_path::PathBuilder,
-    x0: f64,
-    y0: f64,
-    mut rx: f64,
-    mut ry: f64,
-    phi: f64,
-    large_arc: bool,
-    sweep: bool,
-    x: f64,
-    y: f64,
-) {
-    if rx == 0.0 || ry == 0.0 {
-        pb.line_to(x as f32, y as f32);
-        return;
-    }
-    rx = rx.abs();
-    ry = ry.abs();
-    let phi = phi.to_radians();
-
-    let dx2 = (x0 - x) / 2.0;
-    let dy2 = (y0 - y) / 2.0;
-    let x1p = phi.cos() * dx2 + phi.sin() * dy2;
-    let y1p = -phi.sin() * dx2 + phi.cos() * dy2;
-
-    let mut rx2 = rx * rx;
-    let mut ry2 = ry * ry;
-    let x1p2 = x1p * x1p;
-    let y1p2 = y1p * y1p;
-    let lambda = x1p2 / rx2 + y1p2 / ry2;
-    if lambda > 1.0 {
-        let s = lambda.sqrt();
-        rx *= s;
-        ry *= s;
-        rx2 = rx * rx;
-        ry2 = ry * ry;
-    }
-
-    let numerator = rx2 * ry2 - rx2 * y1p2 - ry2 * x1p2;
-    let denominator = rx2 * y1p2 + ry2 * x1p2;
-    let mut radicand = if denominator == 0.0 {
-        0.0
-    } else {
-        numerator / denominator
-    };
-    if radicand < 0.0 {
-        radicand = 0.0;
-    }
-    let sign = if large_arc == sweep { -1.0 } else { 1.0 };
-    let coef = sign * radicand.sqrt();
-    let cxp = coef * (rx * y1p / ry);
-    let cyp = coef * (-(ry * x1p / rx));
-
-    let cx = phi.cos() * cxp - phi.sin() * cyp + (x0 + x) / 2.0;
-    let cy = phi.sin() * cxp + phi.cos() * cyp + (y0 + y) / 2.0;
-
-    let angle = |ux: f64, uy: f64, vx: f64, vy: f64| -> f64 {
-        let dot = ux * vx + uy * vy;
-        let len = (ux * ux + uy * uy).sqrt() * (vx * vx + vy * vy).sqrt();
-        let mut a = (dot / len).clamp(-1.0, 1.0).acos();
-        if ux * vy - uy * vx < 0.0 {
-            a = -a;
-        }
-        a
-    };
-
-    let theta1 = angle(
-        1.0,
-        0.0,
-        (x1p - cxp) / rx,
-        (y1p - cyp) / ry,
-    );
-    let mut dtheta = angle(
-        (x1p - cxp) / rx,
-        (y1p - cyp) / ry,
-        (-x1p - cxp) / rx,
-        (-y1p - cyp) / ry,
-    );
-    if !sweep && dtheta > 0.0 {
-        dtheta -= std::f64::consts::TAU;
-    } else if sweep && dtheta < 0.0 {
-        dtheta += std::f64::consts::TAU;
-    }
-
-    let segments = (dtheta.abs() / (std::f64::consts::FRAC_PI_2)).ceil().max(1.0) as usize;
-    let delta = dtheta / segments as f64;
-    let t = (8.0 / 3.0) * (delta / 4.0).sin() * (delta / 4.0).sin() / delta.sin();
-
-    let mut theta = theta1;
-    let mut prev_x = x0;
-    let mut prev_y = y0;
-    for _ in 0..segments {
-        let cos_t = theta.cos();
-        let sin_t = theta.sin();
-        let cos_t2 = (theta + delta).cos();
-        let sin_t2 = (theta + delta).sin();
-
-        let p1x = cx + rx * cos_t;
-        let p1y = cy + ry * sin_t;
-        let p2x = cx + rx * cos_t2;
-        let p2y = cy + ry * sin_t2;
-
-        let c1x = p1x - t * (-rx * sin_t);
-        let c1y = p1y - t * (ry * cos_t);
-        let c2x = p2x + t * (-rx * sin_t2);
-        let c2y = p2y + t * (ry * cos_t2);
-
-        // Rotate back into user space.
-        let rot = |px: f64, py: f64| -> (f64, f64) {
-            (
-                phi.cos() * px - phi.sin() * py,
-                phi.sin() * px + phi.cos() * py,
-            )
-        };
-        let (c1x, c1y) = rot(c1x, c1y);
-        let (c2x, c2y) = rot(c2x, c2y);
-        let (p2x, p2y) = rot(p2x, p2y);
-
-        pb.cubic_to(
-            c1x as f32,
-            c1y as f32,
-            c2x as f32,
-            c2y as f32,
-            p2x as f32,
-            p2y as f32,
-        );
-        prev_x = p2x;
-        prev_y = p2y;
-        theta += delta;
-    }
-    let _ = (prev_x, prev_y);
 }
 
 fn build_fill(computed: &ComputedValues, gradients: &Gradients) -> Option<usvg::Fill> {
