@@ -587,7 +587,7 @@ fn build_shape_path(
                 return None;
             }
             let mut pb = tiny_skia_path::PathBuilder::new();
-            ellipse(&mut pb, cx, cy, r, r);
+            pb.push_circle(cx, cy, r);
             pb.finish()
         },
         "ellipse" => {
@@ -611,8 +611,12 @@ fn build_shape_path(
             if rx <= 0.0 || ry <= 0.0 {
                 return None;
             }
+            let Some(oval) = tiny_skia_path::Rect::from_xywh(cx - rx, cy - ry, rx + rx, ry + ry)
+            else {
+                return None;
+            };
             let mut pb = tiny_skia_path::PathBuilder::new();
-            ellipse(&mut pb, cx, cy, rx, ry);
+            pb.push_oval(oval);
             pb.finish()
         },
         "line" => {
@@ -659,18 +663,6 @@ fn polygon_points(
     pb.finish()
 }
 
-fn ellipse(pb: &mut tiny_skia_path::PathBuilder, cx: f32, cy: f32, rx: f32, ry: f32) {
-    const K: f32 = 0.5522847498;
-    let ox = rx * K;
-    let oy = ry * K;
-    pb.move_to(cx + rx, cy);
-    pb.cubic_to(cx + rx, cy + oy, cx + ox, cy + ry, cx, cy + ry);
-    pb.cubic_to(cx - ox, cy + ry, cx - rx, cy + oy, cx - rx, cy);
-    pb.cubic_to(cx - rx, cy - oy, cx - ox, cy - ry, cx, cy - ry);
-    pb.cubic_to(cx + ox, cy - ry, cx + rx, cy - oy, cx + rx, cy);
-    pb.close();
-}
-
 fn rounded_rect(
     pb: &mut tiny_skia_path::PathBuilder,
     x: f32,
@@ -680,25 +672,67 @@ fn rounded_rect(
     rx: f32,
     ry: f32,
 ) {
+    // Mirrors usvg's `convert_rect`: a plain rectangle for zero radii, otherwise
+    // four corner arcs appended via the kurbo-backed [`arc_to`]. This reuses the
+    // same correct 90° arc→cubic conversion as `SimplifyingPathParser` instead of
+    // the old hand-rolled `K = 0.5522847498` control-point factor.
     if rx <= 0.0 || ry <= 0.0 {
-        pb.move_to(x, y);
-        pb.line_to(x + w, y);
-        pb.line_to(x + w, y + h);
-        pb.line_to(x, y + h);
-        pb.close();
+        let Some(rect) = tiny_skia_path::Rect::from_xywh(x, y, w, h) else {
+            return;
+        };
+        pb.push_rect(rect);
         return;
     }
-    const K: f32 = 0.5522847498;
+
     pb.move_to(x + rx, y);
     pb.line_to(x + w - rx, y);
-    pb.cubic_to(x + w - rx + rx * K, y, x + w, y + ry - ry * K, x + w, y + ry);
+    arc_to(pb, rx, ry, x + w, y + ry);
+
     pb.line_to(x + w, y + h - ry);
-    pb.cubic_to(x + w, y + h - ry + ry * K, x + w - rx + rx * K, y + h, x + w - rx, y + h);
+    arc_to(pb, rx, ry, x + w - rx, y + h);
+
     pb.line_to(x + rx, y + h);
-    pb.cubic_to(x + rx - rx * K, y + h, x, y + h - ry + ry * K, x, y + h - ry);
+    arc_to(pb, rx, ry, x, y + h - ry);
+
     pb.line_to(x, y + ry);
-    pb.cubic_to(x, y + ry - ry * K, x + rx - rx * K, y, x + rx, y);
+    arc_to(pb, rx, ry, x + rx, y);
+
     pb.close();
+}
+
+/// Appends a 90° corner arc from the current point to `(x, y)`, converting it to
+/// cubic Béziers via `kurbo::Arc::from_svg_arc`. Mirrors usvg's `PathBuilderExt::arc_to`.
+fn arc_to(pb: &mut tiny_skia_path::PathBuilder, rx: f32, ry: f32, x: f32, y: f32) {
+    let Some(prev) = pb.last_point() else {
+        return;
+    };
+
+    let svg_arc = kurbo::SvgArc {
+        from: kurbo::Point::new(prev.x as f64, prev.y as f64),
+        to: kurbo::Point::new(x as f64, y as f64),
+        radii: kurbo::Vec2::new(rx as f64, ry as f64),
+        x_rotation: 0.0,
+        large_arc: false,
+        sweep: true,
+    };
+
+    match kurbo::Arc::from_svg_arc(&svg_arc) {
+        Some(arc) => {
+            arc.to_cubic_beziers(0.1, |p1, p2, p| {
+                pb.cubic_to(
+                    p1.x as f32,
+                    p1.y as f32,
+                    p2.x as f32,
+                    p2.y as f32,
+                    p.x as f32,
+                    p.y as f32,
+                );
+            });
+        },
+        None => {
+            pb.line_to(x, y);
+        },
+    }
 }
 
 fn parse_path_d(d: &str) -> Option<tiny_skia_path::Path> {
