@@ -30,7 +30,9 @@ use style::values::computed::{LengthPercentage, NonNegativeLengthPercentageOrAut
 use style::values::computed::svg::{SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray};
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use style::values::generics::svg::SVGLength;
-use svgtypes::{SimplePathSegment, SimplifyingPathParser, TransformListParser, TransformListToken};
+use svgtypes::{
+    PointsParser, SimplePathSegment, SimplifyingPathParser, TransformListParser, TransformListToken,
+};
 use webrender_api::units::DeviceIntSize;
 use webrender_api::ImageKey;
 
@@ -128,12 +130,13 @@ fn resolve_size_and_view_box(
 
 fn parse_view_box(element: &ServoLayoutElement<'_>) -> Option<usvg::ViewBox> {
     let value = element.attribute_as_str(&ns!(), &LocalName::from("viewBox"))?;
-    let mut nums = value.split(|c: char| c.is_ascii_whitespace() || c == ',');
-    let x = nums.next()?.trim().parse::<f32>().ok()?;
-    let y = nums.next()?.trim().parse::<f32>().ok()?;
-    let w = nums.next()?.trim().parse::<f32>().ok()?;
-    let h = nums.next()?.trim().parse::<f32>().ok()?;
-    let rect = usvg::NonZeroRect::from_xywh(x, y, w, h)?;
+    let vb = value.parse::<svgtypes::ViewBox>().ok()?;
+    let rect = usvg::NonZeroRect::from_xywh(
+        vb.x as f32,
+        vb.y as f32,
+        vb.w as f32,
+        vb.h as f32,
+    )?;
 
     let aspect = element
         .attribute_as_str(&ns!(), &LocalName::from("preserveAspectRatio"))
@@ -274,15 +277,22 @@ fn build_stop(element: &ServoLayoutElement<'_>) -> Option<usvg::Stop> {
 
     let color = element
         .attribute_as_str(&ns!(), &LocalName::from("stop-color"))
-        .map(parse_color)
-        .unwrap_or_else(usvg::Color::black);
-    let opacity = element
+        .and_then(|s| s.parse::<svgtypes::Color>().ok())
+        .unwrap_or_else(svgtypes::Color::black);
+
+    let stop_opacity = element
         .attribute_as_str(&ns!(), &LocalName::from("stop-opacity"))
         .and_then(|s| s.parse::<f32>().ok())
-        .and_then(usvg::Opacity::new)
-        .unwrap_or(usvg::Opacity::ONE);
+        .unwrap_or(1.0);
+    // Fold any alpha carried by `stop-color` (`rgba()`/8-digit hex) into the stop
+    // opacity, mirroring usvg's `split_alpha`.
+    let opacity = (stop_opacity * color.alpha as f32 / 255.0).clamp(0.0, 1.0);
 
-    Some(usvg::Stop::new(offset, color, opacity))
+    Some(usvg::Stop::new(
+        offset,
+        usvg::Color::new_rgb(color.red, color.green, color.blue),
+        usvg::Opacity::new(opacity).unwrap_or(usvg::Opacity::ONE),
+    ))
 }
 
 /// Converts a DOM node (and its subtree) into a [`usvg::Node`].
@@ -630,24 +640,14 @@ fn polygon_points(
     close: bool,
 ) -> Option<tiny_skia_path::Path> {
     let value = element.attribute_as_str(&ns!(), &LocalName::from(attr))?;
-    let mut nums = value.split(|c: char| c.is_ascii_whitespace() || c == ',');
     let mut pb = tiny_skia_path::PathBuilder::new();
-    let mut first = true;
     let mut has_point = false;
-    loop {
-        let x = nums.next().and_then(|s| s.trim().parse::<f32>().ok());
-        let y = nums.next().and_then(|s| s.trim().parse::<f32>().ok());
-        match (x, y) {
-            (Some(x), Some(y)) => {
-                if first {
-                    pb.move_to(x, y);
-                    first = false;
-                } else {
-                    pb.line_to(x, y);
-                }
-                has_point = true;
-            },
-            _ => break,
+    for (x, y) in PointsParser::from(value) {
+        if !has_point {
+            pb.move_to(x as f32, y as f32);
+            has_point = true;
+        } else {
+            pb.line_to(x as f32, y as f32);
         }
     }
     if !has_point {
@@ -903,43 +903,6 @@ fn parse_transform(value: &str) -> usvg::Transform {
         transform = transform.pre_concat(t);
     }
     transform
-}
-
-fn parse_color(value: &str) -> usvg::Color {
-    let value = value.trim();
-    if let Some(hex) = value.strip_prefix('#') {
-        if hex.len() == 3 {
-            let r = u8::from_str_radix(&hex[0..1], 16).unwrap_or(0) * 17;
-            let g = u8::from_str_radix(&hex[1..2], 16).unwrap_or(0) * 17;
-            let b = u8::from_str_radix(&hex[2..3], 16).unwrap_or(0) * 17;
-            return usvg::Color::new_rgb(r, g, b);
-        }
-        if hex.len() == 6 {
-            let r = u8::from_str_radix(&hex[0..2], 16).unwrap_or(0);
-            let g = u8::from_str_radix(&hex[2..4], 16).unwrap_or(0);
-            let b = u8::from_str_radix(&hex[4..6], 16).unwrap_or(0);
-            return usvg::Color::new_rgb(r, g, b);
-        }
-    }
-    if let Some(inner) = value
-        .strip_prefix("rgb(")
-        .and_then(|s| s.strip_suffix(')'))
-    {
-        let mut nums = inner.split(',');
-        let r = nums.next().and_then(|s| s.trim().parse::<u8>().ok()).unwrap_or(0);
-        let g = nums.next().and_then(|s| s.trim().parse::<u8>().ok()).unwrap_or(0);
-        let b = nums.next().and_then(|s| s.trim().parse::<u8>().ok()).unwrap_or(0);
-        return usvg::Color::new_rgb(r, g, b);
-    }
-    match value {
-        "black" => usvg::Color::black(),
-        "white" => usvg::Color::white(),
-        "red" => usvg::Color::new_rgb(255, 0, 0),
-        "green" => usvg::Color::new_rgb(0, 128, 0),
-        "blue" => usvg::Color::new_rgb(0, 0, 255),
-        "none" | "transparent" => usvg::Color::new_rgb(0, 0, 0),
-        _ => usvg::Color::black(),
-    }
 }
 
 /// Rasterizes `tree` into an RGBA8 pixmap at `raster_size`, uploads the raw pixels to
