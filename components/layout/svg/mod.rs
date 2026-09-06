@@ -26,8 +26,10 @@ use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::color::ColorSpace;
 use style::dom::{OpaqueNode, TNode};
 use style::properties::ComputedValues;
-use style::values::computed::{LengthPercentage, NonNegativeLengthPercentageOrAuto};
-use style::values::computed::svg::{SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray};
+use style::values::computed::{Length, LengthPercentage, NonNegativeLengthPercentageOrAuto};
+use style::values::computed::svg::{
+    SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray, VectorEffect,
+};
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use style::values::generics::svg::SVGLength;
 use svgtypes::{
@@ -68,6 +70,10 @@ pub(crate) fn build_usvg_tree(
 
     let (size, view_box) = resolve_size_and_view_box(&element)?;
 
+    // Reference length for `<percentage>` stroke-width/dash values: the SVG
+    // "normalized diagonal" of the viewport, √(w² + h²) / √2.
+    let diagonal = normalized_diagonal(size);
+
     // Collect gradient definitions up front so that `fill`/`stroke` referencing
     // them can be resolved during the main walk.
     let mut gradients = Gradients::default();
@@ -92,6 +98,7 @@ pub(crate) fn build_usvg_tree(
             context,
             &gradients,
             &defs,
+            diagonal,
             usvg::Transform::identity(),
             None,
         ) {
@@ -126,6 +133,13 @@ fn resolve_size_and_view_box(
     }?;
 
     Some((size, view_box))
+}
+
+/// The SVG "normalized diagonal" of a viewport, used as the reference length for
+/// `<percentage>` values of `stroke-width`, `stroke-dasharray` and `stroke-dashoffset`.
+fn normalized_diagonal(size: usvg::Size) -> f32 {
+    (size.width() * size.width() + size.height() * size.height()).sqrt()
+        / std::f32::consts::SQRT_2
 }
 
 fn parse_view_box(element: &ServoLayoutElement<'_>) -> Option<usvg::ViewBox> {
@@ -306,6 +320,7 @@ fn convert_node(
     context: &LayoutContext,
     gradients: &Gradients,
     defs: &HashMap<String, ServoLayoutElement<'_>>,
+    diagonal: f32,
     parent_abs_transform: usvg::Transform,
     host: Option<&ComputedValues>,
 ) -> Option<usvg::Node> {
@@ -313,11 +328,11 @@ fn convert_node(
     let name = element.local_name().clone();
 
     if is_group_element(&name) {
-        return convert_group(node, context, gradients, defs, parent_abs_transform, host);
+        return convert_group(node, context, gradients, defs, diagonal, parent_abs_transform, host);
     }
 
     if name.as_ref() == "use" {
-        return convert_use(node, context, gradients, defs, parent_abs_transform);
+        return convert_use(node, context, gradients, defs, diagonal, parent_abs_transform);
     }
 
     let computed = element
@@ -331,6 +346,7 @@ fn convert_node(
         computed.as_deref(),
         host,
         gradients,
+        diagonal,
         parent_abs_transform,
     ) {
         return Some(shape);
@@ -352,6 +368,7 @@ fn convert_group(
     context: &LayoutContext,
     gradients: &Gradients,
     defs: &HashMap<String, ServoLayoutElement<'_>>,
+    diagonal: f32,
     parent_abs_transform: usvg::Transform,
     host: Option<&ComputedValues>,
 ) -> Option<usvg::Node> {
@@ -379,7 +396,7 @@ fn convert_group(
 
     for child in node.dom_children() {
         if let Some(child_node) =
-            convert_node(child, context, gradients, defs, abs_transform, host)
+            convert_node(child, context, gradients, defs, diagonal, abs_transform, host)
         {
             group.push_child(child_node);
         }
@@ -397,6 +414,7 @@ fn convert_use(
     context: &LayoutContext,
     gradients: &Gradients,
     defs: &HashMap<String, ServoLayoutElement<'_>>,
+    diagonal: f32,
     parent_abs_transform: usvg::Transform,
 ) -> Option<usvg::Node> {
     let element = node.as_element()?;
@@ -446,6 +464,7 @@ fn convert_use(
         context,
         gradients,
         defs,
+        diagonal,
         abs_transform,
         computed.as_deref(),
     ) {
@@ -475,6 +494,7 @@ fn build_shape_node(
     computed: Option<&ComputedValues>,
     host: Option<&ComputedValues>,
     gradients: &Gradients,
+    diagonal: f32,
     parent_abs_transform: usvg::Transform,
 ) -> Option<usvg::Node> {
     let data = build_shape_path(element, name, computed)?;
@@ -503,7 +523,7 @@ fn build_shape_node(
         _ => computed,
     };
     let fill = paint_computed.and_then(|c| build_fill(c, gradients));
-    let stroke = paint_computed.and_then(|c| build_stroke(c, gradients));
+    let stroke = paint_computed.and_then(|c| build_stroke(c, gradients, diagonal));
 
     usvg::Path::new(
         id,
@@ -794,12 +814,20 @@ fn build_fill(computed: &ComputedValues, gradients: &Gradients) -> Option<usvg::
     Some(fill)
 }
 
-fn build_stroke(computed: &ComputedValues, gradients: &Gradients) -> Option<usvg::Stroke> {
+fn build_stroke(
+    computed: &ComputedValues,
+    gradients: &Gradients,
+    diagonal: f32,
+) -> Option<usvg::Stroke> {
     let inherited = computed.get_inherited_svg();
     let paint = resolve_paint(&inherited.stroke, computed, gradients)?;
 
+    // A negative `stroke-width` is invalid CSS and is rejected by the parser
+    // (`SVGWidth = NonNegativeLengthPercentage`), so it falls back to the
+    // initial value `1` here in the computed style. We faithfully pass that
+    // through to usvg/resvg, which renders a 1px stroke — matching Chrome/Edge.
     let width = match &inherited.stroke_width {
-        SVGLength::LengthPercentage(nn_lp) => nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0),
+        SVGLength::LengthPercentage(nn_lp) => nn_lp.0.resolve(Length::new(diagonal)).px(),
         _ => 1.0,
     };
     if width <= 0.0 {
@@ -825,17 +853,38 @@ fn build_stroke(computed: &ComputedValues, gradients: &Gradients) -> Option<usvg
     stroke.miterlimit = usvg::StrokeMiterlimit::new(inherited.stroke_miterlimit.0);
     if let SVGStrokeDashArray::Values(vs) = &inherited.stroke_dasharray {
         if !vs.is_empty() {
-            stroke.dasharray = Some(
-                vs.iter()
-                    .map(|v| v.0.to_length().map(|l| l.px()).unwrap_or(0.0))
-                    .collect(),
-            );
+            let mut dasharray: Vec<f32> = vs
+                .iter()
+                .map(|v| v.0.resolve(Length::new(diagonal)).px())
+                .collect();
+
+            // Per SVG2, an odd-length dash array is repeated to yield an even
+            // length, so dashes and gaps alternate correctly. usvg's own XML
+            // parser does the same (`parser::style::conv_dasharray`); since we
+            // build the tree programmatically we must replicate it here,
+            // otherwise `tiny_skia_path::StrokeDash::new` rejects the odd list
+            // and the stroke renders solid.
+            if dasharray.len() % 2 != 0 {
+                let mut doubled = dasharray.clone();
+                doubled.extend_from_slice(&dasharray);
+                dasharray = doubled;
+            }
+
+            stroke.dasharray = Some(dasharray);
         }
     }
     stroke.dashoffset = match &inherited.stroke_dashoffset {
-        SVGLength::LengthPercentage(lp) => lp.to_length().map(|l| l.px()).unwrap_or(0.0),
+        SVGLength::LengthPercentage(lp) => lp.resolve(Length::new(diagonal)).px(),
         _ => 0.0,
     };
+
+    // `vector-effect: non-scaling-stroke` keeps the stroke width in the outermost
+    // SVG coordinate space, unaffected by the element's transform. resvg
+    // compensates for this at render time using the path's `abs_transform`.
+    stroke.non_scaling_stroke = computed
+        .get_svg()
+        .vector_effect
+        .contains(VectorEffect::NON_SCALING_STROKE);
 
     Some(stroke)
 }
