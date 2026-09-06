@@ -210,6 +210,7 @@ rayon = "1"
 read-fonts = "0.43.3"
 regex = "1.12"
 resvg = "0.48.1"
+svgtypes = "0.16.1"
 rsa = "=0.10.0-rc.18"
 rusqlite = { version = "0.38", features = ["bundled"] }
 rustc-demangle = "0.1"
@@ -439,6 +440,11 @@ lto = "thin"
 codegen-units = 1
 
 [patch.crates-io]
+# Use the local resvg/usvg checkout so Servo picks up the programmatic
+# tree-building API (public constructors + mutability + finalize()).
+resvg = { path = "D:/Projects/resvg/crates/resvg" }
+usvg = { path = "D:/Projects/resvg/crates/usvg" }
+
 # If you need to temporarily test Servo with a local fork of some upstream
 # crate, add that here. Use the form:
 #
@@ -468,15 +474,15 @@ codegen-units = 1
 #
 # Or for Stylo:
 #
-# [patch."https://github.com/servo/stylo"]
-# selectors = { path = "../stylo/selectors" }
-# servo_arc = { path = "../stylo/servo_arc" }
-# stylo = { path = "../stylo/style" }
-# stylo_atoms = { path = "../stylo/stylo_atoms" }
-# stylo_dom = { path = "../stylo/stylo_dom" }
-# stylo_malloc_size_of = { path = "../stylo/malloc_size_of" }
-# stylo_static_prefs = { path = "../stylo/stylo_static_prefs" }
-# stylo_traits = { path = "../stylo/style_traits" }
+[patch."https://github.com/servo/stylo"]
+selectors = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+servo_arc = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_atoms = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_dom = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_malloc_size_of = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_static_prefs = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
+stylo_traits = { git = "https://github.com/mu-mostafa98/stylo", branch = "svg-engine" }
 #
 # Or for another Git dependency:
 #

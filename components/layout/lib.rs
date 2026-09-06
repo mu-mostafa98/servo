@@ -31,6 +31,7 @@ mod quotes;
 mod replaced;
 mod sizing;
 mod style_ext;
+mod svg;
 pub mod table;
 mod traversal;
 

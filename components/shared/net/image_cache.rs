@@ -201,6 +201,19 @@ pub trait ImageCache: Sync + Send {
     /// be generated properly.
     fn get_image_key(&self) -> Option<ImageKey>;
 
+    /// Upload raw RGBA8 pixel data to WebRender, keyed by `hash`. If the same `hash`
+    /// has already been uploaded, this is a no-op. The pixels become available
+    /// through [`Self::raw_pixel_image_key`] immediately after this call returns.
+    ///
+    /// This is used to rasterize SVG content synchronously on the layout thread and
+    /// hand the resulting pixels directly to WebRender, bypassing the vector-image
+    /// cache and its asynchronous rasterization path.
+    fn upload_raw_pixels(&self, hash: u64, data: Vec<u8>, width: u32, height: u32);
+
+    /// Returns the [`ImageKey`] previously created for `hash` by
+    /// [`Self::upload_raw_pixels`], if any.
+    fn raw_pixel_image_key(&self, hash: u64) -> Option<ImageKey>;
+
     /// Definitively check whether there is a cached, fully loaded image available.
     fn get_image(
         &self,

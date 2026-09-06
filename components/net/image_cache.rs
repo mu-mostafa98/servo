@@ -515,6 +515,10 @@ struct ImageCacheStore {
     /// Main struct to handle the cache of `WebRenderImageKey` and
     /// images that do not have a key yet.
     key_cache: KeyCache,
+
+    /// [`WebRenderImageKey`]s created for raw pixel data uploaded via
+    /// [`ImageCache::upload_raw_pixels`], keyed by the caller-provided hash.
+    raw_pixel_keys: FxHashMap<u64, WebRenderImageKey>,
 }
 
 impl ImageCacheStore {
@@ -845,6 +849,7 @@ impl ImageCacheFactory for ImageCacheFactoryImpl {
                 webview_id,
                 key_cache: KeyCache::new(),
                 svg_rasterization_task_store: SvgRasterizationTaskStore::default(),
+                raw_pixel_keys: FxHashMap::default(),
             })),
             svg_id_image_id_map: Arc::new(Mutex::new(FxHashMap::default())),
             broken_image_icon_data: self.broken_image_icon_data.clone(),
@@ -927,6 +932,49 @@ impl ImageCache for ImageCacheImpl {
         store
             .paint_api
             .generate_image_key_blocking(store.webview_id)
+    }
+
+    fn upload_raw_pixels(&self, hash: u64, data: Vec<u8>, width: u32, height: u32) {
+        let mut store = self.store.lock();
+
+        // Build a minimal [`RasterImage`] and reuse the existing upload path, which
+        // generates an image key and pushes the pixels to WebRender.
+        let frame = ImageFrame {
+            delay: None,
+            byte_range: 0..data.len(),
+            width,
+            height,
+        };
+        let mut image = RasterImage {
+            metadata: ImageMetadata { width, height },
+            format: PixelFormat::RGBA8,
+            frames: vec![frame],
+            bytes: Arc::new(data),
+            id: None,
+            cors_status: CorsStatus::Unsafe,
+            is_opaque: false,
+            loop_count: None,
+        };
+
+        // If this hash was already uploaded (e.g. a re-layout of the same SVG after a
+        // mutation), refresh the pixels in place rather than skipping, so the rendered
+        // content always reflects the latest DOM.
+        if let Some(key) = store.raw_pixel_keys.get(&hash).copied() {
+            let (descriptor, ipc_shared_memory, _) =
+                image.webrender_image_descriptor_and_data_for_frame(0);
+            let data = SerializableImageData::Raw(ipc_shared_memory);
+            store.paint_api.update_image(key, descriptor, data, None);
+            return;
+        }
+
+        if let Some(key) = store.paint_api.generate_image_key_blocking(store.webview_id) {
+            set_webrender_image_key(&store.paint_api, &mut image, key);
+            store.raw_pixel_keys.insert(hash, key);
+        }
+    }
+
+    fn raw_pixel_image_key(&self, hash: u64) -> Option<WebRenderImageKey> {
+        self.store.lock().raw_pixel_keys.get(&hash).copied()
     }
 
     fn get_image(
