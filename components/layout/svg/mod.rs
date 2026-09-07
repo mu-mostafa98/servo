@@ -431,6 +431,14 @@ fn convert_node(
     };
     let ty = element_layout_type(&element);
 
+    // A nested `<svg>` establishes a new viewport (x/y + viewBox transform), so it
+    // needs dedicated handling rather than the plain `<g>` group path.
+    if ty == LayoutElementType::SVGSVGElement {
+        return convert_svg(node, context, gradients, defs, diagonal, parent_abs_transform, host)
+            .into_iter()
+            .collect();
+    }
+
     if is_group_element(ty) {
         return convert_group(node, context, gradients, defs, diagonal, parent_abs_transform, host)
             .into_iter()
@@ -514,6 +522,116 @@ fn convert_group(
     }
 
     Some(usvg::Node::Group(Box::new(group)))
+}
+
+/// Converts a nested `<svg>` element, which establishes a new viewport: its `x`/`y`
+/// position plus a `viewBox`→viewport transform (`preserveAspectRatio`-aware). When
+/// `overflow` is not `visible` (and explicit `width`/`height` form a rectangle), a
+/// synthetic clip path limits rendering to the new viewport — mirroring the parser's
+/// `use_node::convert_svg` in usvg.
+///
+/// The structure matches usvg: an outer group carries the `transform` attribute and
+/// (optionally) the clip path, and an inner group carries the viewport transform
+/// (`translate(x, y) · viewBox`) so that it participates correctly in bounding-box
+/// and clipping calculations.
+fn convert_svg(
+    node: ServoLayoutNode<'_>,
+    context: &LayoutContext,
+    gradients: &Gradients,
+    defs: &HashMap<String, ServoLayoutElement<'_>>,
+    diagonal: f32,
+    parent_abs_transform: usvg::Transform,
+    host: Option<&ComputedValues>,
+) -> Option<usvg::Node> {
+    let element = node.as_element()?;
+    let computed = element
+        .style_data()
+        .is_some()
+        .then(|| node.style(&context.style_context));
+
+    let x = length_attr_opt(&element, "x").unwrap_or(0.0);
+    let y = length_attr_opt(&element, "y").unwrap_or(0.0);
+
+    // The `transform` attribute operates in the parent user space, before the new
+    // viewport is established, so it stays on the outer group.
+    let orig_ts = element
+        .attribute_as_str(&ns!(), &LocalName::from("transform"))
+        .map(parse_transform)
+        .unwrap_or_else(usvg::Transform::identity);
+
+    // Viewport transform: translate to (x, y), then map the `viewBox` onto the
+    // viewport rectangle.
+    let mut viewport_ts = usvg::Transform::from_translate(x, y);
+    if let Some(vb) = parse_view_box(&element) {
+        let w = length_attr_opt(&element, "width").unwrap_or(100.0);
+        let h = length_attr_opt(&element, "height").unwrap_or(100.0);
+        if let Some(size) = usvg::Size::from_wh(w, h) {
+            viewport_ts = viewport_ts.pre_concat(vb.to_transform(size));
+        }
+    }
+
+    let mut group = usvg::Group::empty();
+    group.id = element_id(&element).unwrap_or_default();
+    group.transform = orig_ts;
+    let abs_transform = parent_abs_transform.pre_concat(orig_ts);
+    group.abs_transform = abs_transform;
+
+    if let Some(computed) = computed.as_deref() {
+        group.opacity = usvg::Opacity::new(computed.get_effects().opacity)
+            .unwrap_or(usvg::Opacity::ONE);
+    }
+
+    // A nested `svg` with explicit `width`/`height` is clipped to its viewport
+    // rectangle unless `overflow` is `visible` (or `auto`).
+    let overflow_visible = matches!(
+        element.attribute_as_str(&ns!(), &LocalName::from("overflow")),
+        Some("visible") | Some("auto")
+    );
+    if !overflow_visible {
+        if let (Some(w), Some(h)) = (
+            length_attr_opt(&element, "width"),
+            length_attr_opt(&element, "height"),
+        ) {
+            if let Some(clip_rect) = usvg::NonZeroRect::from_xywh(x, y, w, h) {
+                group.clip_path = rect_clip_path(clip_rect);
+            }
+        }
+    }
+
+    // Wrap the children in an inner group carrying the viewport transform, so it
+    // applies as a proper transform in bounding-box and clip calculations.
+    let mut inner = usvg::Group::empty();
+    inner.transform = viewport_ts;
+    inner.abs_transform = abs_transform.pre_concat(viewport_ts);
+
+    for child in node.dom_children() {
+        for child_node in
+            convert_node(child, context, gradients, defs, diagonal, inner.abs_transform, host)
+        {
+            inner.push_child(child_node);
+        }
+    }
+
+    group.push_child(usvg::Node::Group(Box::new(inner)));
+    Some(usvg::Node::Group(Box::new(group)))
+}
+
+/// Builds a synthetic `clipPath` containing a single rectangle, used to emulate a
+/// nested `<svg>` viewport's `overflow` clipping.
+fn rect_clip_path(rect: usvg::NonZeroRect) -> Option<Arc<usvg::ClipPath>> {
+    let id = usvg::NonEmptyString::new(format!(
+        "svg-clip-{}",
+        SVG_CLIP_ID.fetch_add(1, Ordering::Relaxed)
+    ))
+    .expect("synthetic svg clip-path id is never empty");
+    let mut clip_path = usvg::ClipPath::empty(id);
+
+    let rect_path = tiny_skia_path::PathBuilder::from_rect(rect.to_rect());
+    let mut p = usvg::Path::new_simple(Arc::new(rect_path))?;
+    p.fill = Some(usvg::Fill::default());
+    clip_path.root.children.push(usvg::Node::Path(Box::new(p)));
+
+    Some(Arc::new(clip_path))
 }
 
 /// Converts a `<use href="#id">` element by cloning the referenced element's
@@ -971,6 +1089,9 @@ enum MarkerOrientation {
 /// clipping produces. The id only matters for SVG re-serialization; resvg keys clip
 /// paths by pointer identity, so it just needs to be a valid non-empty string.
 static MARKER_CLIP_ID: AtomicU32 = AtomicU32::new(0);
+/// Monotonic counter for synthetic clip-path ids used by nested-`<svg>` viewport
+/// clipping.
+static SVG_CLIP_ID: AtomicU32 = AtomicU32::new(0);
 
 /// Whether `element` is a `<marker>` element. Markers are only referenced by `id`
 /// (they are not rendered on their own and have no dedicated DOM type), so they are
