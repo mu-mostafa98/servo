@@ -95,6 +95,7 @@ use crate::dom::svg::svgimageelement::SVGImageElement;
 use crate::dom::svg::svglineargradientelement::SVGLinearGradientElement;
 use crate::dom::svg::svglineelement::SVGLineElement;
 use crate::dom::svg::svgpathelement::SVGPathElement;
+use crate::dom::svg::svgpatternelement::SVGPatternElement;
 use crate::dom::svg::svgpolygonelement::SVGPolygonElement;
 use crate::dom::svg::svgpolylineelement::SVGPolylineElement;
 use crate::dom::svg::svgradialgradientelement::SVGRadialGradientElement;
@@ -133,6 +134,7 @@ fn create_svg_element(
         local_name!("line") => make!(SVGLineElement),
         local_name!("linearGradient") => make!(SVGLinearGradientElement),
         local_name!("path") => make!(SVGPathElement),
+        local_name!("pattern") => make!(SVGPatternElement),
         local_name!("polygon") => make!(SVGPolygonElement),
         local_name!("polyline") => make!(SVGPolylineElement),
         local_name!("radialGradient") => make!(SVGRadialGradientElement),

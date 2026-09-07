@@ -33,19 +33,22 @@ use style::values::computed::svg::{
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use style::values::generics::svg::SVGLength;
 use svgtypes::{
-    PointsParser, SimplePathSegment, SimplifyingPathParser, TransformListParser, TransformListToken,
+    LengthUnit, PointsParser, SimplePathSegment, SimplifyingPathParser, TransformListParser,
+    TransformListToken,
 };
 use webrender_api::units::DeviceIntSize;
 use webrender_api::ImageKey;
 
 use crate::context::LayoutContext;
 
-/// Paint servers referenced by `url(#id)` and collected from `<linearGradient>`
-/// and `<radialGradient>` elements before the main tree walk.
+/// Paint servers referenced by `url(#id)` and collected from
+/// `<linearGradient>`, `<radialGradient>` and `<pattern>` elements before the
+/// main tree walk.
 #[derive(Default)]
 struct Gradients {
     linear: HashMap<String, Arc<usvg::LinearGradient>>,
     radial: HashMap<String, Arc<usvg::RadialGradient>>,
+    pattern: HashMap<String, Arc<usvg::Pattern>>,
 }
 
 /// Builds a [`usvg::Tree`] from the `<svg>` element at `node`.
@@ -74,19 +77,29 @@ pub(crate) fn build_usvg_tree(
     // "normalized diagonal" of the viewport, √(w² + h²) / √2.
     let diagonal = normalized_diagonal(size);
 
-    // Collect gradient definitions up front so that `fill`/`stroke` referencing
-    // them can be resolved during the main walk.
-    let mut gradients = Gradients::default();
-    for child in node.dom_children() {
-        collect_gradients(child, context, &mut gradients);
-    }
-
     // Collect every `id`'d element in the document so `<use href="#id">` can be
     // resolved to its referenced element (which may live in a sibling subtree).
     let document = unsafe { node.dangerous_style_node() }.owner_doc();
     let mut defs = HashMap::new();
     if let Some(root_element) = document.root_element() {
         collect_element_ids(root_element.as_node(), &mut defs);
+    }
+
+    // Collect paint-server definitions up front so that `fill`/`stroke`
+    // referencing them can be resolved during the main walk. Gradients are
+    // collected first; patterns are built second so their content can reference
+    // the already-collected gradients.
+    let mut gradients = Gradients::default();
+    let mut pattern_elements = Vec::new();
+    for child in node.dom_children() {
+        collect_paint_servers(child, &mut gradients, &mut pattern_elements);
+    }
+    for element in &pattern_elements {
+        if let Some(id) = element_id(element) {
+            if let Some(pattern) = build_pattern(element, context, &gradients, &defs, diagonal) {
+                gradients.pattern.insert(id, Arc::new(pattern));
+            }
+        }
     }
 
     // Children are built in viewBox (user) coordinates; the viewBox transform is
@@ -161,11 +174,12 @@ fn parse_view_box(element: &ServoLayoutElement<'_>) -> Option<usvg::ViewBox> {
 }
 
 /// Collects `<linearGradient>`/`<radialGradient>` definitions (and their
-/// `<stop>` children) into `gradients`.
-fn collect_gradients(
-    node: ServoLayoutNode<'_>,
-    context: &LayoutContext,
+/// `<stop>` children) into `gradients`, and records `<pattern>` elements into
+/// `pattern_elements` for a second build pass.
+fn collect_paint_servers<'a>(
+    node: ServoLayoutNode<'a>,
     gradients: &mut Gradients,
+    pattern_elements: &mut Vec<ServoLayoutElement<'a>>,
 ) {
     let Some(element) = node.as_element() else {
         return;
@@ -183,9 +197,15 @@ fn collect_gradients(
         }
         return;
     }
+    if name == LocalName::from("pattern") {
+        if element_id(&element).is_some() {
+            pattern_elements.push(element);
+        }
+        return;
+    }
 
     for child in node.dom_children() {
-        collect_gradients(child, context, gradients);
+        collect_paint_servers(child, gradients, pattern_elements);
     }
 }
 
@@ -309,6 +329,70 @@ fn build_stop(element: &ServoLayoutElement<'_>) -> Option<usvg::Stop> {
     ))
 }
 
+/// Builds a [`usvg::Pattern`] from a `<pattern>` element.
+fn build_pattern(
+    element: &ServoLayoutElement<'_>,
+    context: &LayoutContext,
+    gradients: &Gradients,
+    defs: &HashMap<String, ServoLayoutElement<'_>>,
+    diagonal: f32,
+) -> Option<usvg::Pattern> {
+    let id = usvg::NonEmptyString::new(element_id(element)?)?;
+
+    let units = match element
+        .attribute_as_str(&ns!(), &LocalName::from("patternUnits"))
+        .unwrap_or("objectBoundingBox")
+    {
+        "userSpaceOnUse" => usvg::Units::UserSpaceOnUse,
+        _ => usvg::Units::ObjectBoundingBox,
+    };
+    let content_units = match element
+        .attribute_as_str(&ns!(), &LocalName::from("patternContentUnits"))
+        .unwrap_or("userSpaceOnUse")
+    {
+        "objectBoundingBox" => usvg::Units::ObjectBoundingBox,
+        _ => usvg::Units::UserSpaceOnUse,
+    };
+
+    let transform = element
+        .attribute_as_str(&ns!(), &LocalName::from("patternTransform"))
+        .map(parse_transform)
+        .unwrap_or_else(usvg::Transform::identity);
+
+    let x = length_or_percentage_attr(element, "x", 0.0);
+    let y = length_or_percentage_attr(element, "y", 0.0);
+    let width = length_or_percentage_attr(element, "width", 0.0);
+    let height = length_or_percentage_attr(element, "height", 0.0);
+    let rect = usvg::NonZeroRect::from_xywh(x, y, width, height)?;
+
+    let view_box = parse_view_box(element);
+
+    let mut root = usvg::Group::empty();
+    for child in element.as_node().dom_children() {
+        if let Some(child_node) = convert_node(
+            child,
+            context,
+            gradients,
+            defs,
+            diagonal,
+            usvg::Transform::identity(),
+            None,
+        ) {
+            root.push_child(child_node);
+        }
+    }
+
+    Some(usvg::Pattern::new(
+        id,
+        units,
+        content_units,
+        transform,
+        rect,
+        view_box,
+        root,
+    ))
+}
+
 /// Converts a DOM node (and its subtree) into a [`usvg::Node`].
 ///
 /// `defs` is a document-wide `id`→element map used to resolve `<use>` references.
@@ -359,7 +443,7 @@ fn convert_node(
 fn is_group_element(name: &LocalName) -> bool {
     matches!(
         name.as_ref(),
-        "svg" | "g" | "defs" | "symbol" | "a" | "clipPath" | "mask" | "pattern"
+        "svg" | "g" | "defs" | "symbol" | "a" | "clipPath" | "mask"
     )
 }
 
@@ -919,9 +1003,11 @@ fn resolve_paint(
                 Some(usvg::Paint::LinearGradient(g.clone()))
             } else if let Some(g) = gradients.radial.get(&fragment) {
                 Some(usvg::Paint::RadialGradient(g.clone()))
+            } else if let Some(p) = gradients.pattern.get(&fragment) {
+                Some(usvg::Paint::Pattern(p.clone()))
             } else {
                 // Unresolved paint server: fall back to black, matching usvg's
-                // behaviour when a referenced gradient is missing.
+                // behaviour when a referenced paint server is missing.
                 Some(usvg::Paint::Color(usvg::Color::black()))
             }
         },
@@ -973,6 +1059,20 @@ fn number_or_percentage_attr(element: &ServoLayoutElement<'_>, attr: &str, defau
         pct.parse::<f32>().ok().map(|v| v / 100.0).unwrap_or(default)
     } else {
         parse_length_attr(value).unwrap_or(default)
+    }
+}
+
+/// Parses a `<length>|<percentage>` attribute value (used for a `pattern`'s
+/// `x`/`y`/`width`/`height`). A percentage becomes a 0–1 fraction; any other
+/// value is taken as a raw number (font-relative units are not resolved here).
+fn length_or_percentage_attr(element: &ServoLayoutElement<'_>, attr: &str, default: f32) -> f32 {
+    let Some(value) = element.attribute_as_str(&ns!(), &LocalName::from(attr)) else {
+        return default;
+    };
+    match value.trim().parse::<svgtypes::Length>() {
+        Ok(length) if length.unit == LengthUnit::Percent => length.number as f32 / 100.0,
+        Ok(length) => length.number as f32,
+        Err(_) => default,
     }
 }
 

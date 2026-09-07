@@ -14,6 +14,7 @@ pub(crate) mod svgimageelement;
 pub(crate) mod svglineargradientelement;
 pub(crate) mod svglineelement;
 pub(crate) mod svgpathelement;
+pub(crate) mod svgpatternelement;
 pub(crate) mod svgpolygonelement;
 pub(crate) mod svgpolylineelement;
 pub(crate) mod svgradialgradientelement;
