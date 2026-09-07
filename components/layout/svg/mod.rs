@@ -19,7 +19,7 @@ use std::sync::Arc;
 use std::hash::{Hash, Hasher};
 
 use html5ever::{LocalName, ns};
-use layout_api::{LayoutElement, LayoutNode};
+use layout_api::{LayoutElement, LayoutElementType, LayoutNode, LayoutNodeType};
 use net_traits::image_cache::ImageCache;
 use resvg::usvg::{self, tiny_skia_path};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
@@ -67,7 +67,7 @@ pub(crate) fn build_usvg_tree(
     context: &LayoutContext,
 ) -> Option<(usvg::Tree, Option<usvg::ViewBox>)> {
     let element = node.as_element()?;
-    if element.local_name() != &LocalName::from("svg") {
+    if element_layout_type(&element) != LayoutElementType::SVGSVGElement {
         return None;
     }
 
@@ -184,24 +184,26 @@ fn collect_paint_servers<'a>(
     let Some(element) = node.as_element() else {
         return;
     };
-    let name = element.local_name().clone();
-    if name == LocalName::from("linearGradient") {
-        if let (Some(id), Some(grad)) = (element_id(&element), build_linear_gradient(&element)) {
-            gradients.linear.insert(id, Arc::new(grad));
-        }
-        return;
-    }
-    if name == LocalName::from("radialGradient") {
-        if let (Some(id), Some(grad)) = (element_id(&element), build_radial_gradient(&element)) {
-            gradients.radial.insert(id, Arc::new(grad));
-        }
-        return;
-    }
-    if name == LocalName::from("pattern") {
-        if element_id(&element).is_some() {
-            pattern_elements.push(element);
-        }
-        return;
+    match element_layout_type(&element) {
+        LayoutElementType::SVGLinearGradientElement => {
+            if let (Some(id), Some(grad)) = (element_id(&element), build_linear_gradient(&element)) {
+                gradients.linear.insert(id, Arc::new(grad));
+            }
+            return;
+        },
+        LayoutElementType::SVGRadialGradientElement => {
+            if let (Some(id), Some(grad)) = (element_id(&element), build_radial_gradient(&element)) {
+                gradients.radial.insert(id, Arc::new(grad));
+            }
+            return;
+        },
+        LayoutElementType::SVGPatternElement => {
+            if element_id(&element).is_some() {
+                pattern_elements.push(element);
+            }
+            return;
+        },
+        _ => {},
     }
 
     for child in node.dom_children() {
@@ -215,6 +217,17 @@ fn element_id(element: &ServoLayoutElement<'_>) -> Option<String> {
         None
     } else {
         Some(id.to_string())
+    }
+}
+
+/// Returns the [`LayoutElementType`] for `element`, the layout-standard way to
+/// discriminate element kinds (as opposed to matching the tag name). Falls back to
+/// the generic [`LayoutElementType::Element`] for pseudo-elements, which have no
+/// type id.
+fn element_layout_type(element: &ServoLayoutElement<'_>) -> LayoutElementType {
+    match element.type_id() {
+        Some(LayoutNodeType::Element(ty)) => ty,
+        _ => LayoutElementType::Element,
     }
 }
 
@@ -298,7 +311,7 @@ fn build_base_gradient(
 }
 
 fn build_stop(element: &ServoLayoutElement<'_>) -> Option<usvg::Stop> {
-    if element.local_name() != &LocalName::from("stop") {
+    if element_layout_type(element) != LayoutElementType::SVGStopElement {
         return None;
     }
     let offset_raw = element.attribute_as_str(&ns!(), &LocalName::from("offset"))?;
@@ -409,13 +422,13 @@ fn convert_node(
     host: Option<&ComputedValues>,
 ) -> Option<usvg::Node> {
     let element = node.as_element()?;
-    let name = element.local_name().clone();
+    let ty = element_layout_type(&element);
 
-    if is_group_element(&name) {
+    if is_group_element(ty) {
         return convert_group(node, context, gradients, defs, diagonal, parent_abs_transform, host);
     }
 
-    if name.as_ref() == "use" {
+    if ty == LayoutElementType::SVGUseElement {
         return convert_use(node, context, gradients, defs, diagonal, parent_abs_transform);
     }
 
@@ -426,7 +439,7 @@ fn convert_node(
 
     if let Some(shape) = build_shape_node(
         &element,
-        &name,
+        ty,
         computed.as_deref(),
         host,
         gradients,
@@ -440,10 +453,16 @@ fn convert_node(
     None
 }
 
-fn is_group_element(name: &LocalName) -> bool {
+fn is_group_element(ty: LayoutElementType) -> bool {
     matches!(
-        name.as_ref(),
-        "svg" | "g" | "defs" | "symbol" | "a" | "clipPath" | "mask"
+        ty,
+        LayoutElementType::SVGSVGElement
+            | LayoutElementType::SVGGElement
+            | LayoutElementType::SVGDefsElement
+            | LayoutElementType::SVGSymbolElement
+            | LayoutElementType::SVGAElement
+            | LayoutElementType::SVGClipPathElement
+            | LayoutElementType::SVGMaskElement
     )
 }
 
@@ -574,14 +593,14 @@ fn element_has_explicit_paint(element: &ServoLayoutElement<'_>) -> bool {
 
 fn build_shape_node(
     element: &ServoLayoutElement<'_>,
-    name: &LocalName,
+    ty: LayoutElementType,
     computed: Option<&ComputedValues>,
     host: Option<&ComputedValues>,
     gradients: &Gradients,
     diagonal: f32,
     parent_abs_transform: usvg::Transform,
 ) -> Option<usvg::Node> {
-    let data = build_shape_path(element, name, computed)?;
+    let data = build_shape_path(element, ty, computed)?;
 
     let transform = element
         .attribute_as_str(&ns!(), &LocalName::from("transform"))
@@ -628,11 +647,11 @@ fn build_shape_node(
 /// attributes.
 fn build_shape_path(
     element: &ServoLayoutElement<'_>,
-    name: &LocalName,
+    ty: LayoutElementType,
     computed: Option<&ComputedValues>,
 ) -> Option<tiny_skia_path::Path> {
-    match name.as_ref() {
-        "rect" => {
+    match ty {
+        LayoutElementType::SVGRectElement => {
             let (x, y, rx, ry) = match computed {
                 Some(cv) => {
                     let svg = cv.get_svg();
@@ -671,7 +690,7 @@ fn build_shape_path(
             rounded_rect(&mut pb, x, y, w, h, rx, ry);
             pb.finish()
         },
-        "circle" => {
+        LayoutElementType::SVGCircleElement => {
             let (cx, cy, r) = match computed {
                 Some(cv) => {
                     let svg = cv.get_svg();
@@ -694,7 +713,7 @@ fn build_shape_path(
             pb.push_circle(cx, cy, r);
             pb.finish()
         },
-        "ellipse" => {
+        LayoutElementType::SVGEllipseElement => {
             let (cx, cy, rx, ry) = match computed {
                 Some(cv) => {
                     let svg = cv.get_svg();
@@ -723,7 +742,7 @@ fn build_shape_path(
             pb.push_oval(oval);
             pb.finish()
         },
-        "line" => {
+        LayoutElementType::SVGLineElement => {
             let x1 = length_attr(element, "x1", 0.0);
             let y1 = length_attr(element, "y1", 0.0);
             let x2 = length_attr(element, "x2", 0.0);
@@ -733,9 +752,9 @@ fn build_shape_path(
             pb.line_to(x2, y2);
             pb.finish()
         },
-        "polyline" => polygon_points(element, "points", false),
-        "polygon" => polygon_points(element, "points", true),
-        "path" => element
+        LayoutElementType::SVGPolylineElement => polygon_points(element, "points", false),
+        LayoutElementType::SVGPolygonElement => polygon_points(element, "points", true),
+        LayoutElementType::SVGPathElement => element
             .attribute_as_str(&ns!(), &LocalName::from("d"))
             .and_then(parse_path_d),
         _ => None,

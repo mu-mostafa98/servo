@@ -68,7 +68,9 @@ use crate::dom::node::{
     BindContext, ChildrenMutation, CloneChildrenFlag, MoveContext, Node, UnbindContext,
 };
 use crate::dom::shadowroot::ShadowRoot;
+use crate::dom::svg::svgaelement::SVGAElement;
 use crate::dom::svg::svgcircleelement::SVGCircleElement;
+use crate::dom::svg::svgclippathelement::SVGClipPathElement;
 use crate::dom::svg::svgdefselement::SVGDefsElement;
 use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
@@ -76,6 +78,7 @@ use crate::dom::svg::svggelement::SVGGElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
 use crate::dom::svg::svglineargradientelement::SVGLinearGradientElement;
 use crate::dom::svg::svglineelement::SVGLineElement;
+use crate::dom::svg::svgmaskelement::SVGMaskElement;
 use crate::dom::svg::svgpathelement::SVGPathElement;
 use crate::dom::svg::svgpatternelement::SVGPatternElement;
 use crate::dom::svg::svgpolygonelement::SVGPolygonElement;
@@ -445,6 +448,15 @@ pub(crate) fn vtable_for(node: &Node) -> &dyn VirtualMethods {
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGPatternElement)) => {
             node.downcast::<SVGPatternElement>().unwrap() as &dyn VirtualMethods
         },
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGClipPathElement)) => {
+            node.downcast::<SVGClipPathElement>().unwrap() as &dyn VirtualMethods
+        },
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGMaskElement)) => {
+            node.downcast::<SVGMaskElement>().unwrap() as &dyn VirtualMethods
+        },
+        NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+            SVGGraphicsElementTypeId::SVGAElement,
+        ))) => node.downcast::<SVGAElement>().unwrap() as &dyn VirtualMethods,
         NodeTypeId::Element(ElementTypeId::SVGElement(SVGElementTypeId::SVGElement)) => {
             node.downcast::<SVGElement>().unwrap() as &dyn VirtualMethods
         },

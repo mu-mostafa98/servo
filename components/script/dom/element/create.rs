@@ -86,7 +86,9 @@ use crate::dom::html::htmlulistelement::HTMLUListElement;
 use crate::dom::html::htmlunknownelement::HTMLUnknownElement;
 use crate::dom::html::htmlvideoelement::HTMLVideoElement;
 use crate::dom::htmlmarqueeelement::HTMLMarqueeElement;
+use crate::dom::svg::svgaelement::SVGAElement;
 use crate::dom::svg::svgcircleelement::SVGCircleElement;
+use crate::dom::svg::svgclippathelement::SVGClipPathElement;
 use crate::dom::svg::svgdefselement::SVGDefsElement;
 use crate::dom::svg::svgelement::SVGElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
@@ -94,6 +96,7 @@ use crate::dom::svg::svggelement::SVGGElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
 use crate::dom::svg::svglineargradientelement::SVGLinearGradientElement;
 use crate::dom::svg::svglineelement::SVGLineElement;
+use crate::dom::svg::svgmaskelement::SVGMaskElement;
 use crate::dom::svg::svgpathelement::SVGPathElement;
 use crate::dom::svg::svgpatternelement::SVGPatternElement;
 use crate::dom::svg::svgpolygonelement::SVGPolygonElement;
@@ -126,13 +129,16 @@ fn create_svg_element(
     );
 
     match name.local {
+        local_name!("a") => make!(SVGAElement),
         local_name!("circle") => make!(SVGCircleElement),
+        local_name!("clipPath") => make!(SVGClipPathElement),
         local_name!("defs") => make!(SVGDefsElement),
         local_name!("ellipse") => make!(SVGEllipseElement),
         local_name!("g") => make!(SVGGElement),
         local_name!("image") => make!(SVGImageElement),
         local_name!("line") => make!(SVGLineElement),
         local_name!("linearGradient") => make!(SVGLinearGradientElement),
+        local_name!("mask") => make!(SVGMaskElement),
         local_name!("path") => make!(SVGPathElement),
         local_name!("pattern") => make!(SVGPatternElement),
         local_name!("polygon") => make!(SVGPolygonElement),

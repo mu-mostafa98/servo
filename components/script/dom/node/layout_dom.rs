@@ -12,7 +12,8 @@ use layout_api::{
 use net_traits::image_cache::Image;
 use pixels::ImageMetadata;
 use script_bindings::codegen::InheritTypes::{
-    ElementTypeId, HTMLElementTypeId, SVGElementTypeId, SVGGraphicsElementTypeId,
+    ElementTypeId, HTMLElementTypeId, SVGElementTypeId, SVGGeometryElementTypeId,
+    SVGGradientElementTypeId, SVGGraphicsElementTypeId,
 };
 use servo_base::id::{BrowsingContextId, PipelineId};
 use servo_base::text::{RangeAny, Utf16CodeUnits, Utf32CodeUnits};
@@ -464,6 +465,68 @@ impl From<ElementTypeIdWrapper> for LayoutElementType {
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
                 SVGGraphicsElementTypeId::SVGSVGElement,
             )) => LayoutElementType::SVGSVGElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGAElement,
+            )) => LayoutElementType::SVGAElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGCircleElement,
+                ),
+            )) => LayoutElementType::SVGCircleElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGEllipseElement,
+                ),
+            )) => LayoutElementType::SVGEllipseElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGLineElement),
+            )) => LayoutElementType::SVGLineElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGPathElement),
+            )) => LayoutElementType::SVGPathElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPolygonElement,
+                ),
+            )) => LayoutElementType::SVGPolygonElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPolylineElement,
+                ),
+            )) => LayoutElementType::SVGPolylineElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGRectElement),
+            )) => LayoutElementType::SVGRectElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGDefsElement,
+            )) => LayoutElementType::SVGDefsElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGElement,
+            )) => LayoutElementType::SVGGElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGSymbolElement,
+            )) => LayoutElementType::SVGSymbolElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGUseElement,
+            )) => LayoutElementType::SVGUseElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGClipPathElement) => {
+                LayoutElementType::SVGClipPathElement
+            },
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGMaskElement) => {
+                LayoutElementType::SVGMaskElement
+            },
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGradientElement(
+                SVGGradientElementTypeId::SVGLinearGradientElement,
+            )) => LayoutElementType::SVGLinearGradientElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGradientElement(
+                SVGGradientElementTypeId::SVGRadialGradientElement,
+            )) => LayoutElementType::SVGRadialGradientElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGStopElement) => {
+                LayoutElementType::SVGStopElement
+            },
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGPatternElement) => {
+                LayoutElementType::SVGPatternElement
+            },
             _ => LayoutElementType::Element,
         }
     }
