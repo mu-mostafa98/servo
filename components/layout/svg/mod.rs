@@ -800,7 +800,27 @@ fn build_shape_node(
         diagonal,
         abs_transform,
     ));
-    nodes
+
+    // A shape's `transform` and `opacity` attributes cannot be folded into the
+    // path: `usvg::Path` has no local `transform` field, and resvg positions path
+    // geometry with the *accumulated group* transform (it never reads
+    // `path.abs_transform()` for positioning). So when a shape sets its own
+    // transform (or an `opacity < 1`), wrap the path + markers in a group that
+    // carries them — mirroring usvg's `convert_group` wrapper. The path keeps its
+    // id; the wrapper group is anonymous (usvg only ids the element for `<g>`/`<use>`).
+    let element_opacity = computed.map(|c| c.get_effects().opacity).unwrap_or(1.0);
+    if !transform.is_identity() || element_opacity < 1.0 {
+        let mut group = usvg::Group::empty();
+        group.transform = transform;
+        group.abs_transform = abs_transform;
+        group.opacity = usvg::Opacity::new(element_opacity).unwrap_or(usvg::Opacity::ONE);
+        for node in nodes {
+            group.push_child(node);
+        }
+        vec![usvg::Node::Group(Box::new(group))]
+    } else {
+        nodes
+    }
 }
 
 /// Builds the path geometry for a shape element. Geometry properties that are
