@@ -28,7 +28,7 @@ use style::dom::{OpaqueNode, TNode};
 use style::properties::ComputedValues;
 use style::values::computed::{Length, LengthPercentage, NonNegativeLengthPercentageOrAuto};
 use style::values::computed::svg::{
-    SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray, VectorEffect,
+    SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray,
 };
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use style::values::generics::svg::SVGLength;
@@ -980,14 +980,6 @@ fn build_stroke(
         SVGLength::LengthPercentage(lp) => lp.resolve(Length::new(diagonal)).px(),
         _ => 0.0,
     };
-
-    // `vector-effect: non-scaling-stroke` keeps the stroke width in the outermost
-    // SVG coordinate space, unaffected by the element's transform. resvg
-    // compensates for this at render time using the path's `abs_transform`.
-    stroke.non_scaling_stroke = computed
-        .get_svg()
-        .vector_effect
-        .contains(VectorEffect::NON_SCALING_STROKE);
 
     Some(stroke)
 }
