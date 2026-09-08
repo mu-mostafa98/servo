@@ -244,7 +244,8 @@ fn fill_gradient_stroke(
         device_scale: ctx.device_scale,
         raster_offset: ctx.raster_offset,
         native_rendering: ctx.native_rendering,
-        rasters: &mut *ctx.rasters,
+        defer_gradients: false,
+        output: &mut *ctx.output,
     };
     gradient::fill_rect_with_gradient_by_id(
         gradient_id,
@@ -406,9 +407,10 @@ pub(crate) fn stroke_rect(
         let common = make_common_props(bounds, ctx.spatial_id, ctx.clip_chain_id);
         ctx.wr.push_border(&common, bounds, widths, details);
     } else if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
-        // Gradient border: render gradient clipped to the outer shape
-        // (with radii for circles/ellipses), then punch out the interior
-        // with white so only the border band shows the gradient.
+        // Gradient border: clip a full-rect gradient fill to a band between the
+        // outer shape outline (with radii for circles/ellipses) and the inset
+        // inner outline, using a Clip/ClipOut clip chain. This works on any
+        // background, unlike the previous white interior "punch-out".
         let stroke_width = effective_stroke_width(ctx, stroke.width);
         let inset = stroke_width;
         let inner_bounds = LayoutRect::from_origin_and_size(
@@ -418,7 +420,7 @@ pub(crate) fn stroke_rect(
                 (bounds.size().height - inset * 2.0).max(0.0),
             ),
         );
-        // Compute inner radii for the punch-out (outer radii shrunk by stroke).
+        // Compute inner radii for the clip-out (outer radii shrunk by stroke).
         let inner_radii = radii.map(|r| BorderRadius {
             top_left: LayoutSize::new(
                 (r.top_left.width - stroke_width).max(0.0),
@@ -438,7 +440,7 @@ pub(crate) fn stroke_rect(
             ),
         });
 
-        // Phase 1: fill the full rect with gradient, clipped to outer radii.
+        // Outer outline clip (Clip) — the gradient is confined to the shape.
         let outer_clip = if let Some(r) = radii {
             let clip_id = ctx.wr.define_clip_rounded_rect(
                 ctx.spatial_id,
@@ -453,32 +455,43 @@ pub(crate) fn stroke_rect(
         } else {
             ctx.clip_chain_id
         };
-        let saved_clip = ctx.clip_chain_id;
-        ctx.clip_chain_id = outer_clip;
-        gradient::fill_rect_with_gradient_by_id(id, bounds, ctx, stroke.opacity);
 
-        // Phase 2: punch out the interior so only the border band remains.
-        if inner_bounds.size().width > 0.0 && inner_bounds.size().height > 0.0 {
-            let inner_clip_id = if let Some(ir) = inner_radii {
+        // Build the band clip chain: outer outline (Clip) minus inner outline
+        // (ClipOut), leaving only the stroke band visible.
+        let band_clip = if inner_bounds.size().width > 0.0 && inner_bounds.size().height > 0.0 {
+            let inner_id = if let Some(ir) = inner_radii {
                 ctx.wr.define_clip_rounded_rect(
                     ctx.spatial_id,
                     ComplexClipRegion {
                         rect: inner_bounds,
                         radii: ir,
-                        mode: ClipMode::Clip,
+                        mode: ClipMode::ClipOut,
                     },
                 )
             } else {
-                ctx.wr.define_clip_rect(ctx.spatial_id, inner_bounds)
+                ctx.wr.define_clip_rounded_rect(
+                    ctx.spatial_id,
+                    ComplexClipRegion {
+                        rect: inner_bounds,
+                        radii: BorderRadius {
+                            top_left: LayoutSize::zero(),
+                            top_right: LayoutSize::zero(),
+                            bottom_left: LayoutSize::zero(),
+                            bottom_right: LayoutSize::zero(),
+                        },
+                        mode: ClipMode::ClipOut,
+                    },
+                )
             };
-            let inner_chain = ctx
-                .wr
-                .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [inner_clip_id]);
-            ctx.clip_chain_id = inner_chain;
-            let white = ColorF::new(1.0, 1.0, 1.0, 1.0);
-            let common = make_common_props(bounds, ctx.spatial_id, inner_chain);
-            ctx.wr.push_rect(&common, bounds, white);
-        }
+            ctx.wr
+                .define_clip_chain(clip_chain_option(outer_clip), [inner_id])
+        } else {
+            outer_clip
+        };
+
+        let saved_clip = ctx.clip_chain_id;
+        ctx.clip_chain_id = band_clip;
+        gradient::fill_rect_with_gradient_by_id(id, bounds, ctx, stroke.opacity);
         ctx.clip_chain_id = saved_clip;
     }
 }
@@ -546,7 +559,8 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         device_scale: ctx.device_scale,
         raster_offset: ctx.raster_offset,
         native_rendering: ctx.native_rendering,
-        rasters: &mut *ctx.rasters,
+        defer_gradients: false,
+        output: &mut *ctx.output,
     };
 
     for pair in pts.windows(2) {

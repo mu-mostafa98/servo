@@ -45,6 +45,9 @@ pub use traversal::render_svg_tree;
 pub use self::image::SvgImage;
 pub use self::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
 
+use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
+use webrender_api::{ClipChainId, ExtendMode, GradientStop, SpatialId};
+
 /// A CPU-rasterized image (e.g. from vello_cpu path rendering) ready to be
 /// uploaded to WebRender and pushed as a single image display item.
 #[derive(Debug, Clone)]
@@ -64,4 +67,49 @@ pub struct RasterizedImage {
     pub data: Vec<u8>,
     /// Content hash used to key the image cache.
     pub content_hash: u64,
+}
+
+/// A native WebRender gradient, fully resolved to absolute layout coordinates
+/// and ready to be pushed via `create_gradient`/`create_radial_gradient` +
+/// `push_gradient`/`push_radial_gradient`.
+#[derive(Debug, Clone)]
+pub enum GradientKind {
+    Linear {
+        start: LayoutPoint,
+        end: LayoutPoint,
+        stops: Vec<GradientStop>,
+        extend_mode: ExtendMode,
+    },
+    Radial {
+        center: LayoutPoint,
+        radius: LayoutSize,
+        stops: Vec<GradientStop>,
+        extend_mode: ExtendMode,
+    },
+}
+
+/// A native gradient display item emitted during traversal and replayed by the
+/// layout layer in document order (alongside [`RasterizedImage`]s).
+///
+/// Native gradient items are deferred (like rasters) so they preserve paint
+/// order against vello-rasterized shapes, but they carry their own `spatial_id`
+/// and `clip_chain_id` so they still respect reference frames and rounded-rect
+/// clips.
+#[derive(Debug, Clone)]
+pub struct GradientCmd {
+    pub bounds: LayoutRect,
+    pub spatial_id: SpatialId,
+    pub clip_chain_id: ClipChainId,
+    pub kind: GradientKind,
+}
+
+/// Deferred render output, replayed in document order by the layout layer.
+///
+/// `Raster` carries a CPU-rasterized bitmap; `Gradient` carries a native
+/// gradient. Keeping both in one ordered list is what preserves z-order between
+/// native gradient shapes and vello-rasterized shapes.
+#[derive(Debug, Clone)]
+pub enum RenderOutput {
+    Raster(RasterizedImage),
+    Gradient(GradientCmd),
 }

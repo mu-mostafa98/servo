@@ -23,7 +23,7 @@ use crate::renderer::{
     clip_chain_option, transform,
 };
 use crate::renderer::path::rasterize_bez;
-use crate::RasterizedImage;
+use crate::RenderOutput;
 
 // ======================= Public Entry Point =======================
 
@@ -40,7 +40,7 @@ pub fn render_svg_tree(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
-) -> Vec<RasterizedImage> {
+) -> Vec<RenderOutput> {
     let svg_clip_chain =
         build_viewport_clip(tree, svg_origin, svg_size, spatial_id, clip_chain_id, wr);
 
@@ -66,7 +66,7 @@ pub fn render_svg_tree(
         .as_ref()
         .map(|v| LayoutPoint::new(v.ox - v.min_x * v.sx, v.oy - v.min_y * v.sy))
         .unwrap_or(LayoutPoint::zero());
-    let mut rasters: Vec<RasterizedImage> = Vec::new();
+    let mut output: Vec<RenderOutput> = Vec::new();
     render_node(
         &tree.root,
         &root_origin,
@@ -80,7 +80,7 @@ pub fn render_svg_tree(
         root_raster_offset,
         None,
         Transform2D::<f32, (), ()>::identity(),
-        &mut rasters,
+        &mut output,
     );
 
     if pop_frame {
@@ -90,12 +90,16 @@ pub fn render_svg_tree(
     // Rasterized images bypass the viewBox reference frame, so add back the
     // document-space origin. The viewBox translation was already folded into
     // `raster_offset` and the scale into `viewbox_scale` during rasterization.
-    for raster in &mut rasters {
-        raster.x = svg_origin.x + raster.x;
-        raster.y = svg_origin.y + raster.y;
+    // Native gradient items reuse their recorded spatial/clip ids, so they need
+    // no origin adjustment here.
+    for out in &mut output {
+        if let RenderOutput::Raster(raster) = out {
+            raster.x = svg_origin.x + raster.x;
+            raster.y = svg_origin.y + raster.y;
+        }
     }
 
-    rasters
+    output
 }
 
 /// The resolved viewBox → viewport transform.
@@ -219,7 +223,7 @@ fn render_node(
     mut raster_offset: LayoutPoint,
     mut clip_rect: Option<LayoutRect>,
     mut node_xform: Transform2D<f32, (), ()>,
-    rasters: &mut Vec<RasterizedImage>,
+    output: &mut Vec<RenderOutput>,
 ) {
     if !node.style.is_displayed() {
         return;
@@ -338,7 +342,7 @@ fn render_node(
         raster_offset,
         clip_rect,
         node_xform,
-        rasters,
+        output,
     );
 
     // Step 5 — Recurse into children.
@@ -355,7 +359,7 @@ fn render_node(
         raster_offset,
         clip_rect,
         node_xform,
-        rasters,
+        output,
     );
 
     // Step 6 — Pop transform reference frames.
@@ -454,7 +458,7 @@ fn emit_element(
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
-    rasters: &mut Vec<RasterizedImage>,
+    output: &mut Vec<RenderOutput>,
 ) {
     match &node.tag {
         SvgTag::Shape(shape) => emit_geometry(
@@ -471,7 +475,7 @@ fn emit_element(
             raster_offset,
             clip_rect,
             node_xform,
-            rasters,
+            output,
         ),
         SvgTag::Text(text) => emit_leaf(
             text,
@@ -484,7 +488,7 @@ fn emit_element(
             viewbox_scale,
             device_scale,
             raster_offset,
-            rasters,
+            output,
         ),
         SvgTag::Image(img) => emit_leaf(
             img,
@@ -497,7 +501,7 @@ fn emit_element(
             viewbox_scale,
             device_scale,
             raster_offset,
-            rasters,
+            output,
         ),
         SvgTag::Container(_) => {},
     }
@@ -518,7 +522,7 @@ fn emit_geometry(
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
-    rasters: &mut Vec<RasterizedImage>,
+    output: &mut Vec<RenderOutput>,
 ) {
     if !style.is_visible() {
         return;
@@ -549,7 +553,7 @@ fn emit_geometry(
                 raster_offset,
                 clip_rect,
                 node_xform,
-                rasters,
+                output,
             );
         }
     } else {
@@ -568,7 +572,7 @@ fn emit_geometry(
             raster_offset,
             clip_rect,
             node_xform,
-            rasters,
+            output,
         );
     }
 
@@ -593,7 +597,7 @@ fn emit_shape(
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
-    rasters: &mut Vec<RasterizedImage>,
+    output: &mut Vec<RenderOutput>,
 ) {
     // All painted shapes are rasterized via vello_cpu into one ordered list.
     // Keeping every shape in that single list preserves z-order between
@@ -608,25 +612,41 @@ fn emit_shape(
     let has_pattern = style_has_pattern(style);
 
     if has_paint && !has_pattern {
-        if let Some(bez) = shape.to_bez_path() {
-            // The node transform (translate/scale/rotate/…) is applied to the
-            // path inside `rasterize_bez`; `raster_offset` carries only the
-            // viewBox translation, and the document-space origin is added back
-            // when the rasters are finalized in `render_svg_tree`.
-            let raster_origin = raster_offset;
-            rasterize_bez(
-                &bez,
-                style.fill.as_ref(),
-                style.stroke.as_ref(),
-                style.opacity,
-                &raster_origin,
-                viewbox_scale,
-                device_scale,
-                node_xform,
-                clip_rect,
-                paints,
-                rasters,
-            );
+        // Top-level gradient shapes (rect/circle/ellipse whose fill and stroke
+        // are both native-eligible gradients) render as deferred native
+        // gradients; everything else stays on the vello raster path.
+        let handled = emit_native_gradients(
+            shape,
+            style,
+            svg_origin,
+            spatial_id,
+            clip_chain_id,
+            accumulated_scale,
+            paints,
+            wr,
+            output,
+        );
+        if !handled {
+            if let Some(bez) = shape.to_bez_path() {
+                // The node transform (translate/scale/rotate/…) is applied to the
+                // path inside `rasterize_bez`; `raster_offset` carries only the
+                // viewBox translation, and the document-space origin is added back
+                // when the rasters are finalized in `render_svg_tree`.
+                let raster_origin = raster_offset;
+                rasterize_bez(
+                    &bez,
+                    style.fill.as_ref(),
+                    style.stroke.as_ref(),
+                    style.opacity,
+                    &raster_origin,
+                    viewbox_scale,
+                    device_scale,
+                    node_xform,
+                    clip_rect,
+                    paints,
+                    output,
+                );
+            }
         }
     }
 
@@ -642,7 +662,7 @@ fn emit_shape(
         raster_offset,
         clip_rect,
         paints,
-        rasters,
+        output,
     );
 
     if !has_paint || has_pattern {
@@ -661,10 +681,116 @@ fn emit_shape(
             device_scale,
             raster_offset,
             native_rendering: false,
-            rasters,
+            defer_gradients: false,
+            output,
         };
         shape.render(&mut ctx);
     }
+}
+
+/// For rect/circle/ellipse shapes whose fill and stroke are both native-eligible
+/// gradients, render them as deferred [`RenderOutput::Gradient`]s (via the
+/// native shape renderer with `defer_gradients: true`). Returns `true` when the
+/// shape was fully handled natively; `false` means the caller should fall back
+/// to vello rasterization.
+#[allow(clippy::too_many_arguments)]
+fn emit_native_gradients(
+    shape: &crate::shapes::Shape,
+    style: &crate::style::NodeStyle,
+    svg_origin: &LayoutPoint,
+    spatial_id: SpatialId,
+    clip_chain_id: ClipChainId,
+    accumulated_scale: f32,
+    paints: &dyn PaintResourceProvider,
+    wr: &mut DisplayListBuilder,
+    output: &mut Vec<RenderOutput>,
+) -> bool {
+    use crate::style::gradient::PaintServer;
+
+    // Only bounded shapes (rect/circle/ellipse) can be clipped natively.
+    let Some((bounds, _)) =
+        crate::renderer::rect::rect_bounds_and_radii(shape, *svg_origin)
+    else {
+        return false;
+    };
+
+    let mut ctx = RenderContext {
+        style,
+        svg_origin: *svg_origin,
+        spatial_id,
+        clip_chain_id,
+        wr: &mut *wr,
+        paints,
+        accumulated_scale,
+        viewbox_scale: (1.0, 1.0),
+        device_scale: 1.0,
+        raster_offset: LayoutPoint::zero(),
+        native_rendering: false,
+        defer_gradients: true,
+        output: &mut *output,
+    };
+
+    // Every present paint must be a native-eligible gradient. A solid color or a
+    // dashed stroke forces a vello fallback so paint order and dash handling
+    // stay correct (only fully-native shapes are safe to defer).
+    let mut any_gradient = false;
+
+    if let Some(fill) = &style.fill {
+        match &fill.paint_server {
+            Some(PaintServer::Gradient(id)) => {
+                let Some(def) = paints.gradient(id) else {
+                    return false;
+                };
+                if crate::renderer::gradient::resolve_gradient(
+                    def,
+                    bounds,
+                    &ctx,
+                    fill.opacity * style.opacity,
+                )
+                .is_none()
+                {
+                    return false;
+                }
+                any_gradient = true;
+            },
+            _ => return false,
+        }
+    }
+
+    if let Some(stroke) = &style.stroke {
+        // Native gradient strokes can't express dash arrays.
+        if stroke.dash_array.as_ref().is_some_and(|d| !d.is_empty()) {
+            return false;
+        }
+        match &stroke.paint_server {
+            Some(PaintServer::Gradient(id)) => {
+                let Some(def) = paints.gradient(id) else {
+                    return false;
+                };
+                if crate::renderer::gradient::resolve_gradient(
+                    def,
+                    bounds,
+                    &ctx,
+                    stroke.opacity * style.opacity,
+                )
+                .is_none()
+                {
+                    return false;
+                }
+                any_gradient = true;
+            },
+            _ => return false,
+        }
+    }
+
+    if !any_gradient {
+        return false;
+    }
+
+    // Render natively; `defer_gradients` routes each gradient fill/stroke into
+    // `output` as a deferred `GradientCmd` (in paint order), preserving z-order.
+    shape.render(&mut ctx);
+    true
 }
 
 /// Whether the style uses a `<pattern>` paint server for its fill or stroke.
@@ -726,7 +852,7 @@ fn emit_markers(
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     paints: &dyn PaintResourceProvider,
-    rasters: &mut Vec<RasterizedImage>,
+    output: &mut Vec<RenderOutput>,
 ) {
     let Some(refs) = &style.markers else { return };
     let Some(vertices) = shape_vertices(shape) else { return };
@@ -739,7 +865,7 @@ fn emit_markers(
         let (nx, ny) = vertices[1];
         emit_marker(
             id, x, y, nx - x, ny - y, true, markers, stroke_width,
-            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, rasters,
+            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, output,
         );
     }
     if let Some(id) = &refs.mid {
@@ -748,7 +874,7 @@ fn emit_markers(
             let (nx, ny) = vertices[i + 1];
             emit_marker(
                 id, x, y, nx - x, ny - y, false, markers, stroke_width,
-                node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, rasters,
+                node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, output,
             );
         }
     }
@@ -757,7 +883,7 @@ fn emit_markers(
         let (px, py) = vertices[n - 2];
         emit_marker(
             id, x, y, x - px, y - py, false, markers, stroke_width,
-            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, rasters,
+            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, output,
         );
     }
 }
@@ -779,7 +905,7 @@ fn emit_marker(
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     paints: &dyn PaintResourceProvider,
-    rasters: &mut Vec<RasterizedImage>,
+    output: &mut Vec<RenderOutput>,
 ) {
     let Some(def) = markers.marker(id) else { return };
 
@@ -837,7 +963,7 @@ fn emit_marker(
             full_xform,
             clip_rect,
             paints,
-            rasters,
+            output,
         );
     }
 }
@@ -890,7 +1016,7 @@ fn emit_leaf<T: crate::renderer::Render>(
     viewbox_scale: (f32, f32),
     device_scale: f32,
     raster_offset: LayoutPoint,
-    rasters: &mut Vec<RasterizedImage>,
+    output: &mut Vec<RenderOutput>,
 ) {
     if !node.style.is_visible() {
         return;
@@ -917,7 +1043,8 @@ fn emit_leaf<T: crate::renderer::Render>(
         device_scale,
         raster_offset,
         native_rendering: false,
-        rasters,
+        defer_gradients: false,
+        output,
     };
     item.render(&mut ctx);
 
@@ -942,7 +1069,7 @@ fn recurse_children(
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
-    rasters: &mut Vec<RasterizedImage>,
+    output: &mut Vec<RenderOutput>,
 ) {
     // <defs> and <symbol> children are only rendered when referenced
     // via <use>, never directly during tree traversal.
@@ -963,7 +1090,7 @@ fn recurse_children(
             raster_offset,
             clip_rect,
             node_xform,
-            rasters,
+            output,
         );
     }
 }

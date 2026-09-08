@@ -11,7 +11,7 @@ use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 use crate::renderer::providers::PaintResourceProvider;
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
-use crate::RasterizedImage;
+use crate::RenderOutput;
 
 /// Bundled rendering parameters passed to every [`Render::render`] call.
 pub(crate) struct RenderContext<'a> {
@@ -44,10 +44,16 @@ pub(crate) struct RenderContext<'a> {
     /// (respecting reference frames) rather than vello_cpu rasterization.
     /// Used for pattern content, which must be tiled correctly.
     pub native_rendering: bool,
-    /// CPU-rasterized images collected during rendering. Shape `Render` impls
-    /// that rasterize via vello_cpu push their output here; the layout layer
-    /// uploads and pushes them as WebRender images after traversal.
-    pub rasters: &'a mut Vec<RasterizedImage>,
+    /// When true, native gradient fills/strokes are *deferred* into `output` as
+    /// [`RenderOutput::Gradient`] instead of being pushed inline. Used only for
+    /// top-level gradient shapes, which must be replayed in document order
+    /// alongside vello-rasterized shapes (deferral preserves z-order).
+    pub defer_gradients: bool,
+    /// Deferred render output (rasterized images and native gradients)
+    /// collected during rendering. Shape `Render` impls that rasterize via
+    /// vello_cpu push `RenderOutput::Raster` here, and native gradient fills
+    /// push `RenderOutput::Gradient`; the layout layer replays them in order.
+    pub output: &'a mut Vec<RenderOutput>,
 }
 
 /// Convert an SVG shape into WebRender display list commands.

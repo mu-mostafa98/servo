@@ -387,7 +387,8 @@ fn scanline_fill_triangle(
                             device_scale: ctx.device_scale,
                             raster_offset: ctx.raster_offset,
                             native_rendering: ctx.native_rendering,
-                            rasters: &mut *ctx.rasters,
+                            defer_gradients: false,
+                            output: &mut *ctx.output,
                         };
                         shape.render(&mut shape_ctx);
                     }

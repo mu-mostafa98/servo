@@ -190,7 +190,8 @@ pub(crate) fn fill_rect_with_pattern_by_id(
                     device_scale: ctx.device_scale,
                     raster_offset: ctx.raster_offset,
                     native_rendering: true,
-                    rasters: &mut *ctx.rasters,
+                    defer_gradients: false,
+                    output: &mut *ctx.output,
                 };
                 shape.render(&mut shape_ctx);
             }

@@ -71,6 +71,14 @@ impl GradientLength {
             GradientLength::Percentage(p) => p / 100.0 * axis_len,
         }
     }
+
+    /// Whether this length is zero, regardless of unit.
+    pub fn is_zero(self) -> bool {
+        match self {
+            GradientLength::Number(v) => v == 0.0,
+            GradientLength::Percentage(p) => p == 0.0,
+        }
+    }
 }
 
 /// SVG `<linearGradient>` element data.
@@ -98,6 +106,10 @@ pub struct RadialGradient {
     pub r: GradientLength,
     pub fx: GradientLength,
     pub fy: GradientLength,
+    /// Focal radius (`fr`): radius of the focal circle. `0` means the focal
+    /// point is a point; a positive value renders a solid disk of the first
+    /// stop color around the focal point.
+    pub fr: GradientLength,
     pub units: GradientUnits,
     pub stops: Vec<GradientStop>,
     /// Transform applied to gradient coordinates (gradientTransform attribute).
@@ -224,6 +236,7 @@ pub fn parse_gradient_element(
             let r = parse_length_attr("r", get_attr).unwrap_or(GradientLength::Percentage(50.0));
             let fx = parse_length_attr("fx", get_attr).unwrap_or(cx);
             let fy = parse_length_attr("fy", get_attr).unwrap_or(cy);
+            let fr = parse_length_attr("fr", get_attr).unwrap_or(GradientLength::Number(0.0));
             Ok(GradientDef::Radial(RadialGradient {
                 id,
                 cx,
@@ -231,6 +244,7 @@ pub fn parse_gradient_element(
                 r,
                 fx,
                 fy,
+                fr,
                 units: gradient_units,
                 stops,
                 transform: parse_transform_str(&get_attr("gradientTransform").unwrap_or_default()),
