@@ -181,7 +181,17 @@ impl VirtualMethods for SVGElement {
                 &local_name!("font-size") |
                 &local_name!("font-family") |
                 &local_name!("font-style") |
-                &local_name!("font-weight")
+                &local_name!("font-weight") |
+                &local_name!("font-stretch") |
+                &local_name!("font-variant") |
+                &local_name!("text-anchor") |
+                &local_name!("dominant-baseline") |
+                &local_name!("alignment-baseline") |
+                &local_name!("baseline-shift") |
+                &local_name!("letter-spacing") |
+                &local_name!("word-spacing") |
+                &local_name!("direction") |
+                &local_name!("text-decoration")
         ) || self
             .super_type()
             .unwrap()
@@ -379,6 +389,70 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             &parser_context,
             "font-weight",
             longhands::font_weight::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-stretch",
+            longhands::font_stretch::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-variant",
+            longhands::font_variant_caps::parse_declared,
+            push,
+        );
+
+        // Text presentation attributes (SVG spec §10.8 / §11). These map to
+        // their CSS longhand equivalents so the computed style drives the SVG
+        // text shaper instead of raw XML attributes.
+        self.parse_svg_attribute(
+            &parser_context,
+            "text-anchor",
+            longhands::text_anchor::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "dominant-baseline",
+            longhands::dominant_baseline::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "alignment-baseline",
+            longhands::alignment_baseline::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "baseline-shift",
+            longhands::baseline_shift::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "letter-spacing",
+            longhands::letter_spacing::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "word-spacing",
+            longhands::word_spacing::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "direction",
+            longhands::direction::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "text-decoration",
+            longhands::text_decoration_line::parse_declared,
             push,
         );
 

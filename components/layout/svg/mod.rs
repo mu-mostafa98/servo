@@ -2361,29 +2361,76 @@ fn resolve_rotate_impl(
     }
 }
 
-fn text_anchor(element: &ServoLayoutElement<'_>) -> usvg::TextAnchor {
-    match element.attribute_as_str(&ns!(), &LocalName::from("text-anchor")) {
-        Some("middle") => usvg::TextAnchor::Middle,
-        Some("end") => usvg::TextAnchor::End,
+fn text_anchor(computed: &ComputedValues) -> usvg::TextAnchor {
+    match computed.get_inherited_svg().text_anchor {
+        style::computed_values::text_anchor::T::Middle => usvg::TextAnchor::Middle,
+        style::computed_values::text_anchor::T::End => usvg::TextAnchor::End,
         _ => usvg::TextAnchor::Start,
     }
 }
 
-fn dominant_baseline(element: &ServoLayoutElement<'_>) -> usvg::DominantBaseline {
-    match element.attribute_as_str(&ns!(), &LocalName::from("dominant-baseline")) {
-        Some("use-script") => usvg::DominantBaseline::UseScript,
-        Some("no-change") => usvg::DominantBaseline::NoChange,
-        Some("reset-size") => usvg::DominantBaseline::ResetSize,
-        Some("ideographic") => usvg::DominantBaseline::Ideographic,
-        Some("alphabetic") => usvg::DominantBaseline::Alphabetic,
-        Some("hanging") => usvg::DominantBaseline::Hanging,
-        Some("mathematical") => usvg::DominantBaseline::Mathematical,
-        Some("central") => usvg::DominantBaseline::Central,
-        Some("middle") => usvg::DominantBaseline::Middle,
-        Some("text-after-edge") => usvg::DominantBaseline::TextAfterEdge,
-        Some("text-before-edge") => usvg::DominantBaseline::TextBeforeEdge,
+fn dominant_baseline(computed: &ComputedValues) -> usvg::DominantBaseline {
+    use style::values::computed::DominantBaseline;
+    match computed.get_inherited_box().dominant_baseline {
+        DominantBaseline::Alphabetic => usvg::DominantBaseline::Alphabetic,
+        DominantBaseline::Ideographic => usvg::DominantBaseline::Ideographic,
+        DominantBaseline::Hanging => usvg::DominantBaseline::Hanging,
+        DominantBaseline::Mathematical => usvg::DominantBaseline::Mathematical,
+        DominantBaseline::Central => usvg::DominantBaseline::Central,
+        DominantBaseline::Middle => usvg::DominantBaseline::Middle,
+        DominantBaseline::TextTop => usvg::DominantBaseline::TextBeforeEdge,
+        DominantBaseline::TextBottom => usvg::DominantBaseline::TextAfterEdge,
         _ => usvg::DominantBaseline::Auto,
     }
+}
+
+fn alignment_baseline(computed: &ComputedValues) -> usvg::AlignmentBaseline {
+    use style::values::computed::AlignmentBaseline;
+    match computed.get_box().alignment_baseline {
+        AlignmentBaseline::Baseline => usvg::AlignmentBaseline::Baseline,
+        AlignmentBaseline::TextBottom => usvg::AlignmentBaseline::TextAfterEdge,
+        AlignmentBaseline::Middle => usvg::AlignmentBaseline::Middle,
+        AlignmentBaseline::TextTop => usvg::AlignmentBaseline::TextBeforeEdge,
+        _ => usvg::AlignmentBaseline::Auto,
+    }
+}
+
+fn baseline_shift(computed: &ComputedValues) -> Vec<usvg::BaselineShift> {
+    use style::values::computed::BaselineShift as ServoBaselineShift;
+    match &computed.get_box().baseline_shift {
+        ServoBaselineShift::Keyword(kw) => match kw {
+            style::values::generics::box_::BaselineShiftKeyword::Sub => {
+                vec![usvg::BaselineShift::Subscript]
+            },
+            style::values::generics::box_::BaselineShiftKeyword::Super => {
+                vec![usvg::BaselineShift::Superscript]
+            },
+            _ => Vec::new(),
+        },
+        ServoBaselineShift::Length(lp) => match lp.to_length() {
+            Some(length) if length.px() != 0.0 => vec![usvg::BaselineShift::Number(length.px())],
+            _ => Vec::new(),
+        },
+    }
+}
+
+fn letter_spacing(computed: &ComputedValues) -> f32 {
+    computed
+        .get_inherited_text()
+        .letter_spacing
+        .0
+        .to_length()
+        .map(|l| l.px())
+        .unwrap_or(0.0)
+}
+
+fn word_spacing(computed: &ComputedValues) -> f32 {
+    computed
+        .get_inherited_text()
+        .word_spacing
+        .to_length()
+        .map(|l| l.px())
+        .unwrap_or(0.0)
 }
 
 fn length_adjust(element: &ServoLayoutElement<'_>) -> usvg::LengthAdjust {
@@ -2402,9 +2449,9 @@ fn convert_writing_mode(element: &ServoLayoutElement<'_>) -> usvg::WritingMode {
     }
 }
 
-fn convert_direction(element: &ServoLayoutElement<'_>) -> usvg::TextDirection {
-    match element.attribute_as_str(&ns!(), &LocalName::from("direction")) {
-        Some("rtl") => usvg::TextDirection::RightToLeft,
+fn convert_direction(computed: &ComputedValues) -> usvg::TextDirection {
+    match computed.get_inherited_box().direction {
+        style::computed_values::direction::T::Rtl => usvg::TextDirection::RightToLeft,
         _ => usvg::TextDirection::LeftToRight,
     }
 }
@@ -2477,19 +2524,15 @@ fn convert_font(computed: &ComputedValues) -> usvg::Font {
     }
 }
 
-/// Builds the (empty) `text-decoration` for a span. Servo's computed
-/// `text-decoration-line` is not yet wired into presentational hints, so this is
-/// derived from the raw `text-decoration` attribute for now.
+/// Builds the `text-decoration` for a span from the computed
+/// `text-decoration-line` (wired into presentational hints in `svgelement.rs`).
 fn text_decoration(
-    element: &ServoLayoutElement<'_>,
     computed: &ComputedValues,
     gradients: &Gradients,
     diagonal: f32,
 ) -> usvg::TextDecoration {
-    let make_deco = |keyword: &str| -> Option<usvg::TextDecorationStyle> {
-        let has = element
-            .attribute_as_str(&ns!(), &LocalName::from("text-decoration"))
-            .is_some_and(|v| v.split_whitespace().any(|s| s == keyword));
+    let line = computed.get_text().text_decoration_line;
+    let make_deco = |has: bool| -> Option<usvg::TextDecorationStyle> {
         if !has {
             return None;
         }
@@ -2500,9 +2543,11 @@ fn text_decoration(
     };
 
     usvg::TextDecoration {
-        underline: make_deco("underline"),
-        overline: make_deco("overline"),
-        line_through: make_deco("line-through"),
+        underline: make_deco(line.contains(style::values::specified::TextDecorationLine::UNDERLINE)),
+        overline: make_deco(line.contains(style::values::specified::TextDecorationLine::OVERLINE)),
+        line_through: make_deco(
+            line.contains(style::values::specified::TextDecorationLine::LINE_THROUGH),
+        ),
     }
 }
 
@@ -2521,7 +2566,7 @@ fn build_text_span(
     );
 
     let small_caps =
-        element.attribute_as_str(&ns!(), &LocalName::from("font-variant")) == Some("small-caps");
+        computed.get_font().font_variant_caps == style::computed_values::font_variant_caps::T::SmallCaps;
 
     usvg::TextSpan {
         start: 0,
@@ -2534,13 +2579,13 @@ fn build_text_span(
         small_caps,
         apply_kerning: true,
         font_optical_sizing: usvg::FontOpticalSizing::Auto,
-        decoration: text_decoration(element, computed, gradients, diagonal),
-        dominant_baseline: dominant_baseline(element),
-        alignment_baseline: usvg::AlignmentBaseline::Auto,
-        baseline_shift: Vec::new(),
+        decoration: text_decoration(computed, gradients, diagonal),
+        dominant_baseline: dominant_baseline(computed),
+        alignment_baseline: alignment_baseline(computed),
+        baseline_shift: baseline_shift(computed),
         visible,
-        letter_spacing: length_attr(element, "letter-spacing", 0.0),
-        word_spacing: length_attr(element, "word-spacing", 0.0),
+        letter_spacing: letter_spacing(computed),
+        word_spacing: word_spacing(computed),
         text_length: length_attr_opt(element, "textLength").filter(|v| *v >= 0.0),
         length_adjust: length_adjust(element),
     }
@@ -2606,7 +2651,7 @@ fn collect_chunks_impl(
         };
 
         let span = build_text_span(element, &computed, font_size, gradients, diagonal);
-        let anchor = text_anchor(element);
+        let anchor = text_anchor(&computed);
 
         let mut is_new_span = true;
         for c in text.chars() {
@@ -2683,7 +2728,7 @@ fn convert_text(
     let pos_list = resolve_positions_list(node, &texts);
     let rotate_list = resolve_rotate_list(node, &texts);
     let writing_mode = convert_writing_mode(element);
-    let direction = convert_direction(element);
+    let direction = convert_direction(computed);
     let chunks = collect_text_chunks(element, &pos_list, context, gradients, defs, diagonal, &texts);
     if chunks.is_empty() {
         return Vec::new();
