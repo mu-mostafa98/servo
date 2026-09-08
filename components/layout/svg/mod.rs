@@ -917,13 +917,19 @@ fn convert_use_symbol(
 
 /// Whether an element explicitly sets its own paint, in which case it should not
 /// inherit fill/stroke from an enclosing `<use>` host.
-fn element_has_explicit_paint(element: &ServoLayoutElement<'_>) -> bool {
+fn element_has_explicit_fill(element: &ServoLayoutElement<'_>) -> bool {
     element
         .attribute_as_str(&ns!(), &LocalName::from("fill"))
         .is_some()
         || element
-            .attribute_as_str(&ns!(), &LocalName::from("stroke"))
+            .attribute_as_str(&ns!(), &LocalName::from("style"))
             .is_some()
+}
+
+fn element_has_explicit_stroke(element: &ServoLayoutElement<'_>) -> bool {
+    element
+        .attribute_as_str(&ns!(), &LocalName::from("stroke"))
+        .is_some()
         || element
             .attribute_as_str(&ns!(), &LocalName::from("style"))
             .is_some()
@@ -962,20 +968,27 @@ fn build_shape_node(
         })
         .unwrap_or(true);
 
-    // When this shape is reachable through a `<use>`, its paint inherits from the
-    // `<use>` host unless it explicitly sets `fill`/`stroke` (or inline `style`).
-    let paint_computed = match host {
-        Some(_) if !element_has_explicit_paint(element) => host,
+    // When this shape is reachable through a `<use>`, its `fill` and `stroke`
+    // inherit from the `<use>` host independently: each is taken from the host
+    // unless this element explicitly sets it (attribute or inline `style`). This
+    // matters for `<use href="#path" stroke="…">` guides, where the referenced
+    // path may set `fill="none"` but leave `stroke` to be inherited.
+    let fill_computed = match host {
+        Some(_) if !element_has_explicit_fill(element) => host,
         _ => computed,
     };
-    let fill = paint_computed.and_then(|c| build_fill(c, gradients));
-    let stroke = paint_computed.and_then(|c| build_stroke(c, gradients, diagonal));
+    let stroke_computed = match host {
+        Some(_) if !element_has_explicit_stroke(element) => host,
+        _ => computed,
+    };
+    let fill = fill_computed.and_then(|c| build_fill(c, gradients));
+    let stroke = stroke_computed.and_then(|c| build_stroke(c, gradients, diagonal));
 
     // Marker scaling uses the stroke width in `markerUnits="strokeWidth"` mode
     // (the default). This is the raw stroke width, resolved independently of
     // whether a stroke is actually painted (`stroke="none"` still scales markers
     // at the default 1.0).
-    let stroke_width = paint_computed
+    let stroke_width = stroke_computed
         .map(|c| {
             let inherited = c.get_inherited_svg();
             match &inherited.stroke_width {
@@ -2075,6 +2088,7 @@ struct IterState {
     chars_count: usize,
     chunk_bytes_count: usize,
     split_chunk: bool,
+    text_flow: usvg::TextFlow,
     chunks: Vec<usvg::TextChunk>,
 }
 
@@ -2606,6 +2620,7 @@ fn collect_text_chunks(
         chars_count: 0,
         chunk_bytes_count: 0,
         split_chunk: false,
+        text_flow: usvg::TextFlow::Linear,
         chunks: Vec::new(),
     };
     collect_chunks_impl(element, pos_list, context, gradients, defs, diagonal, &mut state, texts);
@@ -2624,9 +2639,39 @@ fn collect_chunks_impl(
 ) {
     for child in element.as_node().dom_children() {
         if let Some(child_element) = child.as_element() {
-            // Recurse into `<tspan>` children. `<textPath>` (text-on-path) is not
-            // yet handled.
+            // `<textPath>` (text-on-path) must be a direct child of `<text>`; any
+            // nested `<textPath>` is ignored. Resolve its referenced path and switch
+            // the current text flow, then split the chunk on either side of it.
+            let is_text_path = child_element.local_name() == &LocalName::from("textPath");
+            if is_text_path {
+                if element_layout_type(element) != LayoutElementType::SVGTextElement {
+                    state.chars_count += count_chars(child, texts);
+                    continue;
+                }
+
+                match resolve_text_flow(&child_element, context, defs) {
+                    Some(flow) => state.text_flow = flow,
+                    None => {
+                        // Skip an invalid text path and all its children. We still
+                        // advance the chars count because `pos_list` was built
+                        // including this subtree.
+                        state.chars_count += count_chars(child, texts);
+                        continue;
+                    },
+                }
+
+                state.split_chunk = true;
+            }
+
             collect_chunks_impl(&child_element, pos_list, context, gradients, defs, diagonal, state, texts);
+
+            state.text_flow = usvg::TextFlow::Linear;
+
+            // The next character after a `textPath` must start a new chunk too.
+            if is_text_path {
+                state.split_chunk = true;
+            }
+
             continue;
         }
 
@@ -2676,7 +2721,7 @@ fn collect_chunks_impl(
                     y: pos_list[state.chars_count].y,
                     anchor,
                     spans: vec![span2],
-                    text_flow: usvg::TextFlow::Linear,
+                    text_flow: state.text_flow.clone(),
                     text: c.to_string(),
                 });
             } else if is_new_span {
@@ -2699,6 +2744,58 @@ fn collect_chunks_impl(
             state.chunk_bytes_count += char_len;
         }
     }
+}
+
+/// Resolves a `<textPath>` element into a [`usvg::TextFlow::Path`], ported from
+/// usvg's `resolve_text_flow`: the `href` target is converted to a path outline,
+/// its own `transform` applied, and `startOffset` (a percentage relative to the
+/// whole path length, or an absolute length) resolved.
+fn resolve_text_flow(
+    element: &ServoLayoutElement<'_>,
+    context: &LayoutContext,
+    defs: &HashMap<String, ServoLayoutElement<'_>>,
+) -> Option<usvg::TextFlow> {
+    let href = element
+        .attribute_as_str(&ns!(), &LocalName::from("href"))
+        .or_else(|| element.attribute_as_str(&ns!(xlink), &LocalName::from("href")))?;
+    let linked = defs.get(href.trim_start_matches('#'))?;
+
+    let linked_ty = element_layout_type(linked);
+    let linked_computed = linked
+        .style_data()
+        .is_some()
+        .then(|| linked.as_node().style(&context.style_context));
+    let mut path = build_shape_path(linked, linked_ty, linked_computed.as_deref())?;
+
+    // The referenced path's own `transform` applies to its outline.
+    let transform = linked
+        .attribute_as_str(&ns!(), &LocalName::from("transform"))
+        .map(parse_transform)
+        .unwrap_or_else(usvg::Transform::identity);
+    if !transform.is_identity() {
+        path = path.transform(transform)?;
+    }
+    let path = Arc::new(path);
+
+    let start_offset = match element.attribute_as_str(&ns!(), &LocalName::from("startOffset")) {
+        Some(value) => match value.trim().parse::<svgtypes::Length>() {
+            // 'If a percentage is given, then the `startOffset` represents a
+            // percentage distance along the entire path.'
+            Ok(length) if length.unit == LengthUnit::Percent => {
+                usvg::path_length(&path) * (length.number as f32 / 100.0)
+            },
+            Ok(length) => length.number as f32,
+            Err(_) => 0.0,
+        },
+        None => 0.0,
+    };
+
+    let id = usvg::NonEmptyString::new(element_id(linked)?)?;
+    Some(usvg::TextFlow::Path(Arc::new(usvg::TextPath {
+        id,
+        start_offset,
+        path,
+    })))
 }
 
 /// Builds a [`usvg::Text`] node from a `<text>` element, laying it out into glyph
