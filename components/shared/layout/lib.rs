@@ -155,6 +155,8 @@ pub enum LayoutElementType {
     SVGStopElement,
     SVGSVGElement,
     SVGSymbolElement,
+    SVGTextElement,
+    SVGTSpanElement,
     SVGUseElement,
 }
 

@@ -33,7 +33,7 @@ pub struct SvgFontResolver {
 }
 
 impl SvgFontResolver {
-    pub(crate) fn new(context: Arc<FontContext>) -> Self {
+    pub fn new(context: Arc<FontContext>) -> Self {
         Self {
             font_id_cache: Mutex::new(FxHashMap::default()),
             fallback_id_cache: Mutex::new(FxHashMap::default()),

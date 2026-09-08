@@ -13,7 +13,8 @@ use net_traits::image_cache::Image;
 use pixels::ImageMetadata;
 use script_bindings::codegen::InheritTypes::{
     ElementTypeId, HTMLElementTypeId, SVGElementTypeId, SVGGeometryElementTypeId,
-    SVGGradientElementTypeId, SVGGraphicsElementTypeId,
+    SVGGradientElementTypeId, SVGGraphicsElementTypeId, SVGTextContentElementTypeId,
+    SVGTextPositioningElementTypeId,
 };
 use servo_base::id::{BrowsingContextId, PipelineId};
 use servo_base::text::{RangeAny, Utf16CodeUnits, Utf32CodeUnits};
@@ -506,6 +507,20 @@ impl From<ElementTypeIdWrapper> for LayoutElementType {
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
                 SVGGraphicsElementTypeId::SVGSymbolElement,
             )) => LayoutElementType::SVGSymbolElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGTextContentElement(
+                    SVGTextContentElementTypeId::SVGTextPositioningElement(
+                        SVGTextPositioningElementTypeId::SVGTextElement,
+                    ),
+                ),
+            )) => LayoutElementType::SVGTextElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGTextContentElement(
+                    SVGTextContentElementTypeId::SVGTextPositioningElement(
+                        SVGTextPositioningElementTypeId::SVGTSpanElement,
+                    ),
+                ),
+            )) => LayoutElementType::SVGTSpanElement,
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
                 SVGGraphicsElementTypeId::SVGUseElement,
             )) => LayoutElementType::SVGUseElement,
