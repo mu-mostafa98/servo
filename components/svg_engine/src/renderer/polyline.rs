@@ -42,7 +42,8 @@ impl Render for Polyline {
             Transform2D::identity(),
             None,
             ctx.paints,
-            ctx.output,
+            ctx.wr,
+            ctx.sink,
         );
     }
 }

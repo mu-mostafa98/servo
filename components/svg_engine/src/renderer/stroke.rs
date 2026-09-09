@@ -244,8 +244,7 @@ fn fill_gradient_stroke(
         device_scale: ctx.device_scale,
         raster_offset: ctx.raster_offset,
         native_rendering: ctx.native_rendering,
-        defer_gradients: false,
-        output: &mut *ctx.output,
+        sink: ctx.sink,
     };
     gradient::fill_rect_with_gradient_by_id(
         gradient_id,
@@ -559,8 +558,7 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         device_scale: ctx.device_scale,
         raster_offset: ctx.raster_offset,
         native_rendering: ctx.native_rendering,
-        defer_gradients: false,
-        output: &mut *ctx.output,
+        sink: ctx.sink,
     };
 
     for pair in pts.windows(2) {

@@ -607,22 +607,6 @@ fn push_linear_native(
     let origin = bounds.min.to_vector();
     let start = start - origin;
     let end = end - origin;
-    if ctx.defer_gradients {
-        // Top-level gradient: defer into the ordered output list so the layout
-        // layer replays it in document order alongside vello rasters.
-        ctx.output.push(crate::RenderOutput::Gradient(crate::GradientCmd {
-            bounds,
-            spatial_id: ctx.spatial_id,
-            clip_chain_id: ctx.clip_chain_id,
-            kind: crate::GradientKind::Linear {
-                start,
-                end,
-                stops,
-                extend_mode,
-            },
-        }));
-        return true;
-    }
     let gradient = ctx.wr.create_gradient(start, end, stops, extend_mode);
     let common = CommonItemProperties::new(
         bounds,
@@ -662,22 +646,6 @@ fn push_radial_native(
     // See `push_linear_native`: WebRender adds `bounds.min` back in the shader,
     // so store the center relative to the primitive origin.
     let center = center - bounds.min.to_vector();
-    if ctx.defer_gradients {
-        // Top-level gradient: defer into the ordered output list so the layout
-        // layer replays it in document order alongside vello rasters.
-        ctx.output.push(crate::RenderOutput::Gradient(crate::GradientCmd {
-            bounds,
-            spatial_id: ctx.spatial_id,
-            clip_chain_id: ctx.clip_chain_id,
-            kind: crate::GradientKind::Radial {
-                center,
-                radius,
-                stops,
-                extend_mode,
-            },
-        }));
-        return true;
-    }
     let gradient = ctx
         .wr
         .create_radial_gradient(center, radius, stops, extend_mode);

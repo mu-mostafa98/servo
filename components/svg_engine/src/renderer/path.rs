@@ -5,13 +5,14 @@
 use euclid::Transform2D;
 use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
 use webrender_api::units::{LayoutPoint, LayoutRect};
+use webrender_api::DisplayListBuilder;
 
 use crate::renderer::providers::PaintResourceProvider;
 use crate::renderer::{Render, RenderContext};
 use crate::shapes::Path;
 use crate::style::gradient::{GradientDef, GradientUnits, SpreadMethod};
 use crate::style::{FillParams, FillRule, StrokeParams};
-use crate::{RasterizedImage, RenderOutput};
+use crate::{RasterSink, RasterizedImage};
 
 use std::hash::{Hash, Hasher};
 
@@ -101,7 +102,8 @@ impl Render for Path {
             Transform2D::identity(),
             None,
             ctx.paints,
-            ctx.output,
+            ctx.wr,
+            ctx.sink,
         );
     }
 }
@@ -122,7 +124,7 @@ fn transform_to_affine(xform: &Transform2D<f32, (), ()>) -> vello_cpu::kurbo::Af
 }
 
 /// Rasterize a `BezPath` (solid fill/stroke or gradient) via vello_cpu into a
-/// [`RasterizedImage`], pushed onto `output` as `RenderOutput::Raster`.
+/// [`RasterizedImage`], uploaded and pushed inline through `sink`.
 pub(crate) fn rasterize_bez(
     bez: &BezPath,
     fill: Option<&FillParams>,
@@ -134,7 +136,8 @@ pub(crate) fn rasterize_bez(
     node_xform: Transform2D<f32, (), ()>,
     clip_rect: Option<LayoutRect>,
     paints: &dyn PaintResourceProvider,
-    output: &mut Vec<RenderOutput>,
+    wr: &mut DisplayListBuilder,
+    sink: &RasterSink,
 ) {
     // Approximate scalar scale of the accumulated node transform, used to keep
     // stroke widths/dashes proportional. `sqrt(|det|)` is exact for uniform
@@ -290,15 +293,18 @@ pub(crate) fn rasterize_bez(
     rgba.hash(&mut hasher);
     let hash = hasher.finish();
 
-    output.push(RenderOutput::Raster(RasterizedImage {
-        x: raster_x,
-        y: raster_y,
-        width: raster_w,
-        height: raster_h,
-        scale,
-        data: rgba,
-        content_hash: hash,
-    }));
+    sink.emit(
+        wr,
+        RasterizedImage {
+            x: raster_x,
+            y: raster_y,
+            width: raster_w,
+            height: raster_h,
+            scale,
+            data: rgba,
+            content_hash: hash,
+        },
+    );
 }
 
 /// Set the resolved paint on the render context.

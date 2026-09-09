@@ -46,7 +46,10 @@ pub use self::image::SvgImage;
 pub use self::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
 
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
-use webrender_api::{ClipChainId, ExtendMode, GradientStop, SpatialId};
+use webrender_api::{
+    AlphaType, ClipChainId, ColorF, CommonItemProperties, DisplayListBuilder, ExtendMode,
+    GradientStop, ImageKey, ImageRendering, PrimitiveFlags, SpatialId,
+};
 
 /// A CPU-rasterized image (e.g. from vello_cpu path rendering) ready to be
 /// uploaded to WebRender and pushed as a single image display item.
@@ -88,28 +91,69 @@ pub enum GradientKind {
     },
 }
 
-/// A native gradient display item emitted during traversal and replayed by the
-/// layout layer in document order (alongside [`RasterizedImage`]s).
+/// Uploads CPU-rasterized RGBA pixels into the WebRender image cache and
+/// returns the resulting [`ImageKey`].
 ///
-/// Native gradient items are deferred (like rasters) so they preserve paint
-/// order against vello-rasterized shapes, but they carry their own `spatial_id`
-/// and `clip_chain_id` so they still respect reference frames and rounded-rect
-/// clips.
-#[derive(Debug, Clone)]
-pub struct GradientCmd {
-    pub bounds: LayoutRect,
-    pub spatial_id: SpatialId,
-    pub clip_chain_id: ClipChainId,
-    pub kind: GradientKind,
+/// Kept minimal (a single method) so [`crate`] does not depend on `net_traits`;
+/// the layout layer adapts its `ImageCache` to this trait.
+pub trait RasterImageUploader {
+    /// Upload raw RGBA pixels keyed by `hash`; return the image key, or `None`
+    /// if the upload produced no key.
+    fn upload(&self, hash: u64, data: Vec<u8>, width: u32, height: u32) -> Option<ImageKey>;
 }
 
-/// Deferred render output, replayed in document order by the layout layer.
+/// Inline raster sink: pushes CPU-rasterized images directly into the display
+/// list in document order, instead of deferring them for a later replay.
 ///
-/// `Raster` carries a CPU-rasterized bitmap; `Gradient` carries a native
-/// gradient. Keeping both in one ordered list is what preserves z-order between
-/// native gradient shapes and vello-rasterized shapes.
-#[derive(Debug, Clone)]
-pub enum RenderOutput {
-    Raster(RasterizedImage),
-    Gradient(GradientCmd),
+/// Rasters carry no spatial id — their geometry is baked into absolute layout
+/// space — so they are pushed with the *outer* SVG element's `spatial_id` and
+/// `clip_chain_id`, plus the fragment `clip_rect` and primitive `flags`, exactly
+/// as the old replay path did via `common_properties`.
+pub struct RasterSink<'a> {
+    pub uploader: &'a dyn RasterImageUploader,
+    /// Outer SVG element spatial id.
+    pub spatial_id: SpatialId,
+    /// Outer SVG element clip chain (clip-path/mask).
+    pub clip_chain_id: ClipChainId,
+    /// Fragment clip rect, mirroring `common_properties`.
+    pub clip_rect: LayoutRect,
+    /// Style primitive flags, mirroring `common_properties`.
+    pub flags: PrimitiveFlags,
+    /// Document origin (`svg_origin`); added to each raster's position.
+    pub origin: LayoutPoint,
+}
+
+impl RasterSink<'_> {
+    /// Upload `raster` and push it as a single image display item.
+    pub(crate) fn emit(&self, wr: &mut DisplayListBuilder, raster: RasterizedImage) {
+        let Some(key) = self.uploader.upload(
+            raster.content_hash,
+            raster.data,
+            raster.width,
+            raster.height,
+        ) else {
+            return;
+        };
+        let img_rect = LayoutRect::from_origin_and_size(
+            LayoutPoint::new(self.origin.x + raster.x, self.origin.y + raster.y),
+            LayoutSize::new(
+                raster.width as f32 / raster.scale,
+                raster.height as f32 / raster.scale,
+            ),
+        );
+        let common = CommonItemProperties {
+            clip_rect: self.clip_rect,
+            spatial_id: self.spatial_id,
+            clip_chain_id: self.clip_chain_id,
+            flags: self.flags,
+        };
+        wr.push_image(
+            &common,
+            img_rect,
+            ImageRendering::Auto,
+            AlphaType::PremultipliedAlpha,
+            key,
+            ColorF::WHITE,
+        );
+    }
 }

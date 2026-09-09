@@ -44,7 +44,8 @@ impl Render for Polygon {
             Transform2D::identity(),
             None,
             ctx.paints,
-            ctx.output,
+            ctx.wr,
+            ctx.sink,
         );
     }
 }
