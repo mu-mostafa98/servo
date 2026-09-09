@@ -617,10 +617,20 @@ fn convert_group(
         }
     }
 
-    match resolve_clip_path(&element, context, gradients, defs, diagonal, fonts, None) {
+    // Compute the object bounding box before resolving `clip-path`/`mask`, since
+    // either may use `objectBoundingBox` units that depend on it.
+    let object_bbox = group.compute_object_bbox();
+
+    match resolve_clip_path(&element, context, gradients, defs, diagonal, fonts, object_bbox) {
         ClipPathOutcome::Clip(clip) => group.clip_path = Some(clip),
         ClipPathOutcome::Invalid => return None,
         ClipPathOutcome::None => {}
+    }
+
+    match resolve_mask(&element, context, gradients, defs, diagonal, fonts, object_bbox) {
+        MaskOutcome::Mask(mask) => group.mask = Some(mask),
+        MaskOutcome::Invalid => return None,
+        MaskOutcome::None => {}
     }
 
     Some(usvg::Node::Group(Box::new(group)))
@@ -1097,6 +1107,218 @@ fn resolve_clip_path(
     }
 }
 
+/// Extracts the referenced id from a `mask` attribute, if it is a local
+/// `url(#id)` reference (not `none`).
+fn mask_reference(element: &ServoLayoutElement<'_>) -> Option<String> {
+    let value = element
+        .attribute_as_str(&ns!(), &LocalName::from("mask"))?
+        .trim();
+    if value.eq_ignore_ascii_case("none") {
+        return None;
+    }
+    let inner = value.strip_prefix("url(")?.strip_suffix(')')?;
+    let inner = inner.trim().trim_matches('"').trim_matches('\'');
+    let id = inner.strip_prefix('#')?.trim();
+    if id.is_empty() {
+        None
+    } else {
+        Some(id.to_string())
+    }
+}
+
+/// Builds a [`usvg::Mask`] from a `<mask>` element, mirroring usvg's
+/// `parser::mask::convert`.
+///
+/// `object_bbox` is the bounding box of the element *being masked* (in its local
+/// coordinate system); `depth` guards against cyclic `mask` references.
+fn build_mask(
+    element: &ServoLayoutElement<'_>,
+    context: &LayoutContext,
+    gradients: &Gradients,
+    defs: &HashMap<String, ServoLayoutElement<'_>>,
+    diagonal: f32,
+    fonts: &SvgFonts,
+    object_bbox: Option<usvg::NonZeroRect>,
+    depth: usize,
+) -> Option<Arc<usvg::Mask>> {
+    if depth > 8 || element_layout_type(element) != LayoutElementType::SVGMaskElement {
+        return None;
+    }
+    let id_str = element_id(element)?;
+
+    // `maskUnits` (the mask *region*) defaults to `objectBoundingBox`; the mask
+    // *content* (`maskContentUnits`) defaults to `userSpaceOnUse`.
+    let units = match element
+        .attribute_as_str(&ns!(), &LocalName::from("maskUnits"))
+        .unwrap_or("objectBoundingBox")
+    {
+        "userSpaceOnUse" => usvg::Units::UserSpaceOnUse,
+        _ => usvg::Units::ObjectBoundingBox,
+    };
+    let content_units = match element
+        .attribute_as_str(&ns!(), &LocalName::from("maskContentUnits"))
+        .unwrap_or("userSpaceOnUse")
+    {
+        "objectBoundingBox" => usvg::Units::ObjectBoundingBox,
+        _ => usvg::Units::UserSpaceOnUse,
+    };
+
+    // Region x/y/width/height default to `-10% -10% 120% 120%`. Percentages are
+    // resolved as a fraction of the object bbox (`length_or_percentage_attr` maps
+    // `%` → `value/100`), which is the correct interpretation for `objectBoundingBox`.
+    let x = length_or_percentage_attr(element, "x", -0.1);
+    let y = length_or_percentage_attr(element, "y", -0.1);
+    let width = length_or_percentage_attr(element, "width", 1.2);
+    let height = length_or_percentage_attr(element, "height", 1.2);
+    let rect = usvg::NonZeroRect::from_xywh(x, y, width, height)?;
+
+    let mut rect = match units {
+        usvg::Units::ObjectBoundingBox => {
+            // `objectBoundingBox` maps the `(0,0)-(1,1)` square onto the object's
+            // bbox. When there is no bbox (zero-sized/empty object), the whole
+            // element is masked, mirroring usvg's `mask_all` branch.
+            match object_bbox {
+                Some(bbox) => rect.bbox_transform(bbox),
+                None => {
+                    let id = usvg::NonEmptyString::new(id_str)?;
+                    return Some(Arc::new(usvg::Mask::new(
+                        id,
+                        rect,
+                        usvg::MaskType::Luminance,
+                        None,
+                        usvg::Group::empty(),
+                    )));
+                },
+            }
+        },
+        usvg::Units::UserSpaceOnUse => rect,
+    };
+
+    // A `<mask>` may itself reference another `<mask>` via its own `mask` attribute,
+    // nesting the two.
+    let mask = match mask_reference(element) {
+        Some(ref_id) => {
+            let linked = defs.get(&ref_id)?;
+            Some(build_mask(
+                linked,
+                context,
+                gradients,
+                defs,
+                diagonal,
+                fonts,
+                object_bbox,
+                depth + 1,
+            )?)
+        },
+        None => None,
+    };
+
+    let kind = if element.attribute_as_str(&ns!(), &LocalName::from("mask-type")) == Some("alpha") {
+        usvg::MaskType::Alpha
+    } else {
+        usvg::MaskType::Luminance
+    };
+
+    let mut root = usvg::Group::empty();
+
+    // Mask content is authored in the referencing element's user space
+    // (`maskContentUnits="userSpaceOnUse"`, the default) or in `[0,1]` bbox units
+    // (`objectBoundingBox`), in which case it is wrapped in a `from_bbox` group.
+    if content_units == usvg::Units::ObjectBoundingBox {
+        let object_bbox = object_bbox?;
+        let mut subroot = usvg::Group::empty();
+        subroot.transform = usvg::Transform::from_bbox(object_bbox);
+        subroot.abs_transform = subroot.transform;
+
+        for child in element.as_node().dom_children() {
+            for node in convert_node(
+                child,
+                context,
+                gradients,
+                defs,
+                diagonal,
+                subroot.transform,
+                None,
+                fonts,
+            ) {
+                subroot.push_child(node);
+            }
+        }
+
+        if !subroot.has_children() {
+            return None;
+        }
+
+        root.push_child(usvg::Node::Group(Box::new(subroot)));
+    } else {
+        for child in element.as_node().dom_children() {
+            for node in convert_node(
+                child,
+                context,
+                gradients,
+                defs,
+                diagonal,
+                usvg::Transform::identity(),
+                None,
+                fonts,
+            ) {
+                root.push_child(node);
+            }
+        }
+
+        // A mask without children is invalid (the referencing element is dropped),
+        // except in the zero-bbox case handled above.
+        if !root.has_children() {
+            return None;
+        }
+    }
+
+    Some(Arc::new(usvg::Mask::new(
+        usvg::NonEmptyString::new(id_str)?,
+        rect,
+        kind,
+        mask,
+        root,
+    )))
+}
+
+/// The result of resolving an element's `mask` attribute.
+enum MaskOutcome {
+    /// No mask: the attribute is absent, `none`, malformed, or a dangling
+    /// reference — render the element normally.
+    None,
+    /// A valid mask to apply.
+    Mask(Arc<usvg::Mask>),
+    /// The `mask` references a `mask` element that is invalid (empty, or not a
+    /// `<mask>`) — the element must be dropped entirely.
+    Invalid,
+}
+
+/// Resolves an element's `mask` reference into a [`usvg::Mask`], mirroring usvg's
+/// `convert_group`/`mask::convert` handshake: a dangling reference is ignored, while
+/// a present-but-invalid mask drops the element.
+fn resolve_mask(
+    element: &ServoLayoutElement<'_>,
+    context: &LayoutContext,
+    gradients: &Gradients,
+    defs: &HashMap<String, ServoLayoutElement<'_>>,
+    diagonal: f32,
+    fonts: &SvgFonts,
+    object_bbox: Option<usvg::NonZeroRect>,
+) -> MaskOutcome {
+    let Some(ref_id) = mask_reference(element) else {
+        return MaskOutcome::None;
+    };
+    let Some(linked) = defs.get(&ref_id) else {
+        // Dangling id: not in the document, so treat as "no mask" like usvg.
+        return MaskOutcome::None;
+    };
+    match build_mask(linked, context, gradients, defs, diagonal, fonts, object_bbox, 0) {
+        Some(mask) => MaskOutcome::Mask(mask),
+        None => MaskOutcome::Invalid,
+    }
+}
+
 /// Converts a `<use href="#id">` element by cloning the referenced element's
 /// subtree into a group that carries the `<use>` element's transform and opacity.
 /// The referenced content inherits paint from the `<use>` host (shadow-tree
@@ -1395,6 +1617,7 @@ fn build_shape_node(
     // carries them — mirroring usvg's `convert_group` wrapper. The path keeps its
     // id; the wrapper group is anonymous (usvg only ids the element for `<g>`/`<use>`).
     let element_opacity = computed.map(|c| c.get_effects().opacity).unwrap_or(1.0);
+    let object_bbox = data.bounds().to_non_zero_rect();
     let clip_path = match resolve_clip_path(
         element,
         context,
@@ -1402,18 +1625,24 @@ fn build_shape_node(
         defs,
         diagonal,
         fonts,
-        data.bounds().to_non_zero_rect(),
+        object_bbox,
     ) {
         ClipPathOutcome::Clip(clip) => Some(clip),
         ClipPathOutcome::Invalid => return Vec::new(),
         ClipPathOutcome::None => None,
     };
-    if !transform.is_identity() || element_opacity < 1.0 || clip_path.is_some() {
+    let mask = match resolve_mask(element, context, gradients, defs, diagonal, fonts, object_bbox) {
+        MaskOutcome::Mask(mask) => Some(mask),
+        MaskOutcome::Invalid => return Vec::new(),
+        MaskOutcome::None => None,
+    };
+    if !transform.is_identity() || element_opacity < 1.0 || clip_path.is_some() || mask.is_some() {
         let mut group = usvg::Group::empty();
         group.transform = transform;
         group.abs_transform = abs_transform;
         group.opacity = usvg::Opacity::new(element_opacity).unwrap_or(usvg::Opacity::ONE);
         group.clip_path = clip_path;
+        group.mask = mask;
         for node in nodes {
             group.push_child(node);
         }
@@ -3222,22 +3451,31 @@ fn convert_text(
         return Vec::new();
     }
 
+    let object_bbox = text.bounding_box().to_non_zero_rect();
+
     let node = usvg::Node::Text(Box::new(text));
 
-    // Like shapes, a `<text>` element's local `transform`/`opacity`/`clip-path` are
-    // carried by a wrapper group (usvg::Text has no such fields).
+    // Like shapes, a `<text>` element's local `transform`/`opacity`/`clip-path`/
+    // `mask` are carried by a wrapper group (usvg::Text has no such fields).
     let element_opacity = computed.get_effects().opacity;
-    let clip_path = match resolve_clip_path(element, context, gradients, defs, diagonal, fonts, None) {
-        ClipPathOutcome::Clip(clip) => Some(clip),
-        ClipPathOutcome::Invalid => return Vec::new(),
-        ClipPathOutcome::None => None,
+    let clip_path =
+        match resolve_clip_path(element, context, gradients, defs, diagonal, fonts, object_bbox) {
+            ClipPathOutcome::Clip(clip) => Some(clip),
+            ClipPathOutcome::Invalid => return Vec::new(),
+            ClipPathOutcome::None => None,
+        };
+    let mask = match resolve_mask(element, context, gradients, defs, diagonal, fonts, object_bbox) {
+        MaskOutcome::Mask(mask) => Some(mask),
+        MaskOutcome::Invalid => return Vec::new(),
+        MaskOutcome::None => None,
     };
-    if !transform.is_identity() || element_opacity < 1.0 || clip_path.is_some() {
+    if !transform.is_identity() || element_opacity < 1.0 || clip_path.is_some() || mask.is_some() {
         let mut group = usvg::Group::empty();
         group.transform = transform;
         group.abs_transform = abs_transform;
         group.opacity = usvg::Opacity::new(element_opacity).unwrap_or(usvg::Opacity::ONE);
         group.clip_path = clip_path;
+        group.mask = mask;
         group.push_child(node);
         vec![usvg::Node::Group(Box::new(group))]
     } else {
