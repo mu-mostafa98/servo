@@ -13,6 +13,8 @@ use fonts::ShapedTextSlice;
 use gradient::WebRenderGradient;
 use layout_api::ReflowStatistics;
 use net_traits::image_cache::Image as CachedImage;
+#[cfg(feature = "svg-engine")]
+use net_traits::image_cache::ImageCache;
 use paint_api::display_list::{PaintDisplayListInfo, SpatialTreeNodeInfo};
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{PipelineId, ScrollTreeNodeId};
@@ -71,6 +73,25 @@ use crate::geom::{
 };
 use crate::replaced::NaturalSizes;
 use crate::style_ext::{BorderStyleColor, ComputedValuesExt};
+
+#[cfg(feature = "svg-engine")]
+/// Adapts the layout image cache to [`svg_engine::RasterImageUploader`] so the
+/// SVG engine can upload CPU-rasterized pixels inline, in document order.
+struct ImageCacheUploader(Arc<dyn ImageCache>);
+
+#[cfg(feature = "svg-engine")]
+impl svg_engine::RasterImageUploader for ImageCacheUploader {
+    fn upload(
+        &self,
+        hash: u64,
+        data: Vec<u8>,
+        width: u32,
+        height: u32,
+    ) -> Option<webrender_api::ImageKey> {
+        self.0.upload_raw_pixels(hash, data, width, height);
+        self.0.raw_pixel_image_key(hash)
+    }
+}
 
 mod background;
 mod clip;
@@ -836,44 +857,30 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
             let clip_chain_id = self.clip_chain_id(state.clip_id);
             let origin = rect.min;
             let size = rect.size();
-            let rasters = render_svg_tree(
+            // Upload CPU-rasterized pixels inline (in document order) through the
+            // layout image cache. Rasters carry no spatial id — their geometry is
+            // baked to absolute space — so the sink pushes them with the *outer*
+            // SVG element's spatial/clip ids, the fragment clip rect, and the
+            // style's primitive flags (mirroring `common_properties`).
+            let uploader = ImageCacheUploader(self.image_resolver.image_cache.clone());
+            let sink = svg_engine::RasterSink {
+                uploader: &uploader,
+                spatial_id,
+                clip_chain_id,
+                clip_rect: clip,
+                flags: style.get_webrender_primitive_flags(),
+                origin,
+            };
+            render_svg_tree(
                 svg_tree,
                 &origin,
                 size,
                 self.device_pixel_ratio.get(),
                 spatial_id,
                 clip_chain_id,
+                &sink,
                 self.wr(),
             );
-            // Upload vello_cpu-rasterized images and push them same-frame.
-            for raster in &rasters {
-                let hash = raster.content_hash;
-                let image_cache = &self.image_resolver.image_cache;
-                image_cache.upload_raw_pixels(
-                    hash,
-                    raster.data.clone(),
-                    raster.width,
-                    raster.height,
-                );
-                if let Some(key) = image_cache.raw_pixel_image_key(hash) {
-                    let img_rect = webrender_api::units::LayoutRect::from_origin_and_size(
-                        webrender_api::units::LayoutPoint::new(raster.x, raster.y),
-                        webrender_api::units::LayoutSize::new(
-                            raster.width as f32 / raster.scale,
-                            raster.height as f32 / raster.scale,
-                        ),
-                    );
-                    let img_info = self.common_properties(state, clip, &style);
-                    self.wr().push_image(
-                        &img_info,
-                        img_rect,
-                        webrender_api::ImageRendering::Auto,
-                        webrender_api::AlphaType::PremultipliedAlpha,
-                        key,
-                        webrender_api::ColorF::WHITE,
-                    );
-                }
-            }
             return;
         }
 

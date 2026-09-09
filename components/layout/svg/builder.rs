@@ -772,7 +772,37 @@ fn extract_id(element: &ServoLayoutElement) -> Option<String> {
 }
 
 /// Recursively search the SVG DOM subtree for an element by its `id`.
+/// Find an element by its `id` attribute anywhere in the document.
+///
+/// `<use href="#id">` references resolve against the whole document, not just
+/// the current `<svg>` subtree, so we walk up to the document root first. This
+/// lets a `<use>` in one `<svg>` reference an element (e.g. a `<g>` inside
+/// `<defs>`) defined in a sibling `<svg>`.
 fn find_element_by_id<'dom>(
+    node: ServoLayoutNode<'dom>,
+    target_id: &str,
+) -> Option<ServoLayoutNode<'dom>> {
+    find_element_by_id_in_subtree(document_root(node), target_id)
+}
+
+/// Walk up to the topmost DOM ancestor (the document node).
+///
+/// # Safety
+///
+/// Called during box tree construction, which runs on the main thread. The
+/// parent walk is only `unsafe` because accessing ancestors while layout worker
+/// threads are running is forbidden.
+#[expect(unsafe_code)]
+fn document_root<'dom>(node: ServoLayoutNode<'dom>) -> ServoLayoutNode<'dom> {
+    let mut root = node;
+    while let Some(parent) = unsafe { root.dangerous_dom_parent() } {
+        root = parent;
+    }
+    root
+}
+
+/// Recursively search `node`'s subtree for an element with the given `id`.
+fn find_element_by_id_in_subtree<'dom>(
     node: ServoLayoutNode<'dom>,
     target_id: &str,
 ) -> Option<ServoLayoutNode<'dom>> {
@@ -784,7 +814,7 @@ fn find_element_by_id<'dom>(
         }
     }
     for child in node.dom_children() {
-        if let Some(found) = find_element_by_id(child, target_id) {
+        if let Some(found) = find_element_by_id_in_subtree(child, target_id) {
             return Some(found);
         }
     }

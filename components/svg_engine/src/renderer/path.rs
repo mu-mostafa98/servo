@@ -5,13 +5,14 @@
 use euclid::Transform2D;
 use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
 use webrender_api::units::{LayoutPoint, LayoutRect};
+use webrender_api::DisplayListBuilder;
 
 use crate::renderer::providers::PaintResourceProvider;
 use crate::renderer::{Render, RenderContext};
 use crate::shapes::Path;
 use crate::style::gradient::{GradientDef, GradientUnits, SpreadMethod};
 use crate::style::{FillParams, FillRule, StrokeParams};
-use crate::RasterizedImage;
+use crate::{RasterSink, RasterizedImage};
 
 use std::hash::{Hash, Hasher};
 
@@ -101,7 +102,8 @@ impl Render for Path {
             Transform2D::identity(),
             None,
             ctx.paints,
-            ctx.rasters,
+            ctx.wr,
+            ctx.sink,
         );
     }
 }
@@ -122,7 +124,7 @@ fn transform_to_affine(xform: &Transform2D<f32, (), ()>) -> vello_cpu::kurbo::Af
 }
 
 /// Rasterize a `BezPath` (solid fill/stroke or gradient) via vello_cpu into a
-/// [`RasterizedImage`], pushed onto `rasters`.
+/// [`RasterizedImage`], uploaded and pushed inline through `sink`.
 pub(crate) fn rasterize_bez(
     bez: &BezPath,
     fill: Option<&FillParams>,
@@ -134,7 +136,8 @@ pub(crate) fn rasterize_bez(
     node_xform: Transform2D<f32, (), ()>,
     clip_rect: Option<LayoutRect>,
     paints: &dyn PaintResourceProvider,
-    rasters: &mut Vec<RasterizedImage>,
+    wr: &mut DisplayListBuilder,
+    sink: &RasterSink,
 ) {
     // Approximate scalar scale of the accumulated node transform, used to keep
     // stroke widths/dashes proportional. `sqrt(|det|)` is exact for uniform
@@ -290,15 +293,18 @@ pub(crate) fn rasterize_bez(
     rgba.hash(&mut hasher);
     let hash = hasher.finish();
 
-    rasters.push(RasterizedImage {
-        x: raster_x,
-        y: raster_y,
-        width: raster_w,
-        height: raster_h,
-        scale,
-        data: rgba,
-        content_hash: hash,
-    });
+    sink.emit(
+        wr,
+        RasterizedImage {
+            x: raster_x,
+            y: raster_y,
+            width: raster_w,
+            height: raster_h,
+            scale,
+            data: rgba,
+            content_hash: hash,
+        },
+    );
 }
 
 /// Set the resolved paint on the render context.
@@ -435,13 +441,14 @@ fn radial_to_peniko(
     bbox: &kurbo::Rect,
 ) -> Gradient {
     let scale = w.max(h);
-    let (cx, cy, r, fx, fy) = match rg.units {
+    let (cx, cy, r, fx, fy, fr) = match rg.units {
         GradientUnits::ObjectBoundingBox => (
             rg.cx.to_object_bbox() * w,
             rg.cy.to_object_bbox() * h,
             rg.r.to_object_bbox() * scale,
             rg.fx.to_object_bbox() * w,
             rg.fy.to_object_bbox() * h,
+            rg.fr.to_object_bbox() * scale,
         ),
         GradientUnits::UserSpaceOnUse => (
             rg.cx.to_user_space(w) * viewbox_scale.0 - bbox.x0 as f32,
@@ -449,11 +456,12 @@ fn radial_to_peniko(
             rg.r.to_user_space(scale) * viewbox_scale.0,
             rg.fx.to_user_space(w) * viewbox_scale.0 - bbox.x0 as f32,
             rg.fy.to_user_space(h) * viewbox_scale.1 - bbox.y0 as f32,
+            rg.fr.to_user_space(scale) * viewbox_scale.0,
         ),
     };
     let mut g = Gradient::new_two_point_radial(
         vello_cpu::kurbo::Point::new(fx as f64, fy as f64),
-        0.0, // focal radius (fr) — not modelled by svg-text's gradient type
+        fr.max(0.0), // focal radius (fr); clamp negative to 0 per SVG 2
         vello_cpu::kurbo::Point::new(cx as f64, cy as f64),
         r,
     );

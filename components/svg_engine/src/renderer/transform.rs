@@ -206,20 +206,19 @@ pub(crate) fn compute_transform_scale(ops: &[TransformOp]) -> f32 {
 
 /// Convert a `Transform2D` to a `LayoutTransform` suitable for WebRender.
 pub(crate) fn to_layout_transform(xform: &Transform2D<f32, (), ()>) -> LayoutTransform {
-    // Transform2D stores column-vector: P' = [m11 m21 m31; m12 m22 m32; 0 0 1] * P
-    //   x' = m11*x + m21*y + m31
-    //   y' = m12*x + m22*y + m32
+    // euclid's `m` fields are named row-first but `transform_point` reads them
+    // transposed (both `Transform2D` and `Transform3D` are effectively
+    // column-major):
     //
-    // LayoutTransform (row-major new()):
-    //   Column j = (m1j, m2j, m3j, m4j)
-    //   x' = m11*x + m21*y + m31*z + m41
-    //   y' = m12*x + m22*y + m32*z + m42
+    //   Transform2D:  x' = m11·x + m21·y + m31
+    //                 y' = m12·x + m22·y + m32
+    //   Transform3D:  x' = m11·x + m21·y + m31·z + m41
+    //                 y' = m12·x + m22·y + m32·z + m42
     //
-    // Mapping: col0=(m11_T, m12_T, 0, 0), col1=(m21_T, m22_T, 0, 0), col3=(m31_T, m32_T, 0, 1)
-    //   m11=m11_T, m12=m21_T, m13=0, m14=m31_T
-    //   m21=m12_T, m22=m22_T, m23=0, m24=m32_T
-    LayoutTransform::new(
-        xform.m11, xform.m21, 0.0, xform.m31, xform.m12, xform.m22, 0.0, xform.m32, 0.0, 0.0, 1.0,
-        0.0, 0.0, 0.0, 0.0, 1.0,
+    // So a 2D affine embeds into a 3D affine with the 2D translation (m31, m32)
+    // landing in the 3D translation slots (m41, m42) and a unit perspective row
+    // (0, 0, 0, 1). This is exactly `Transform3D::new_2d(m11, m12, m21, m22, m31, m32)`.
+    LayoutTransform::new_2d(
+        xform.m11, xform.m12, xform.m21, xform.m22, xform.m31, xform.m32,
     )
 }

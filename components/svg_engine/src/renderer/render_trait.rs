@@ -11,7 +11,7 @@ use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 use crate::renderer::providers::PaintResourceProvider;
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
-use crate::RasterizedImage;
+use crate::RasterSink;
 
 /// Bundled rendering parameters passed to every [`Render::render`] call.
 pub(crate) struct RenderContext<'a> {
@@ -44,10 +44,9 @@ pub(crate) struct RenderContext<'a> {
     /// (respecting reference frames) rather than vello_cpu rasterization.
     /// Used for pattern content, which must be tiled correctly.
     pub native_rendering: bool,
-    /// CPU-rasterized images collected during rendering. Shape `Render` impls
-    /// that rasterize via vello_cpu push their output here; the layout layer
-    /// uploads and pushes them as WebRender images after traversal.
-    pub rasters: &'a mut Vec<RasterizedImage>,
+    /// Inline raster sink: CPU-rasterized shapes are uploaded and pushed here in
+    /// document order, preserving z-order against native primitives.
+    pub sink: &'a RasterSink<'a>,
 }
 
 /// Convert an SVG shape into WebRender display list commands.
