@@ -3435,12 +3435,15 @@ fn quad_to_curve(
 
 fn build_fill(computed: &ComputedValues, gradients: &Gradients) -> Option<usvg::Fill> {
     let inherited = computed.get_inherited_svg();
-    let paint = resolve_paint(&inherited.fill, computed, gradients)?;
+    let (paint, color_alpha) = resolve_paint(&inherited.fill, computed, gradients)?;
 
-    let opacity = match inherited.fill_opacity {
+    // `fill-opacity` multiplies the alpha already carried by the `fill` color
+    // (e.g. `fill="rgba(..., 0.4)"`), per SVG2.
+    let opacity = (match inherited.fill_opacity {
         SVGOpacity::Opacity(op) => op,
         _ => 1.0,
-    };
+    } * color_alpha)
+        .clamp(0.0, 1.0);
     let rule = match inherited.fill_rule {
         style::computed_values::fill_rule::T::Evenodd => usvg::FillRule::EvenOdd,
         _ => usvg::FillRule::NonZero,
@@ -3458,7 +3461,7 @@ fn build_stroke(
     diagonal: f32,
 ) -> Option<usvg::Stroke> {
     let inherited = computed.get_inherited_svg();
-    let paint = resolve_paint(&inherited.stroke, computed, gradients)?;
+    let (paint, color_alpha) = resolve_paint(&inherited.stroke, computed, gradients)?;
 
     // A negative `stroke-width` is invalid CSS and is rejected by the parser
     // (`SVGWidth = NonNegativeLengthPercentage`), so it falls back to the
@@ -3474,9 +3477,12 @@ fn build_stroke(
 
     let mut stroke = usvg::Stroke::new(paint);
     stroke.width = usvg::StrokeWidth::new(width).unwrap_or(usvg::StrokeWidth::new(1.0).unwrap());
+    // `stroke-opacity` multiplies the alpha already carried by the `stroke`
+    // color, mirroring the fill path above.
     stroke.opacity = match inherited.stroke_opacity {
-        SVGOpacity::Opacity(op) => usvg::Opacity::new(op).unwrap_or(usvg::Opacity::ONE),
-        _ => usvg::Opacity::ONE,
+        SVGOpacity::Opacity(op) => usvg::Opacity::new((op * color_alpha).clamp(0.0, 1.0))
+            .unwrap_or(usvg::Opacity::ONE),
+        _ => usvg::Opacity::new(color_alpha).unwrap_or(usvg::Opacity::ONE),
     };
     stroke.linecap = match inherited.stroke_linecap {
         style::computed_values::stroke_linecap::T::Round => usvg::LineCap::Round,
@@ -3523,17 +3529,26 @@ fn resolve_paint(
     svg_paint: &SVGPaint,
     computed: &ComputedValues,
     gradients: &Gradients,
-) -> Option<usvg::Paint> {
+) -> Option<(usvg::Paint, f32)> {
     match &svg_paint.kind {
         SVGPaintKind::Color(color) => {
             let current_color = computed.clone_color();
             let absolute = color.resolve_to_absolute(&current_color);
             let srgb = absolute.to_color_space(ColorSpace::Srgb);
-            Some(usvg::Paint::Color(usvg::Color::new_rgb(
-                (srgb.components.0.clamp(0.0, 1.0) * 255.0).round() as u8,
-                (srgb.components.1.clamp(0.0, 1.0) * 255.0).round() as u8,
-                (srgb.components.2.clamp(0.0, 1.0) * 255.0).round() as u8,
-            )))
+            // `fill`/`stroke` may carry an alpha channel (`rgba()`, `hsla()`,
+            // 4/8-digit hex, `color(..., / alpha)`). usvg's `Paint::Color` is
+            // RGB-only, so we fold the color's own alpha into the fill/stroke
+            // opacity instead of dropping it (which would render the shape at
+            // full opacity).
+            let alpha = srgb.alpha.clamp(0.0, 1.0);
+            Some((
+                usvg::Paint::Color(usvg::Color::new_rgb(
+                    (srgb.components.0.clamp(0.0, 1.0) * 255.0).round() as u8,
+                    (srgb.components.1.clamp(0.0, 1.0) * 255.0).round() as u8,
+                    (srgb.components.2.clamp(0.0, 1.0) * 255.0).round() as u8,
+                )),
+                alpha,
+            ))
         },
         SVGPaintKind::None => None,
         SVGPaintKind::PaintServer(url) => {
@@ -3545,17 +3560,18 @@ fn resolve_paint(
                 },
             };
             let fragment = fragment?;
-            if let Some(g) = gradients.linear.get(&fragment) {
-                Some(usvg::Paint::LinearGradient(g.clone()))
+            let paint = if let Some(g) = gradients.linear.get(&fragment) {
+                usvg::Paint::LinearGradient(g.clone())
             } else if let Some(g) = gradients.radial.get(&fragment) {
-                Some(usvg::Paint::RadialGradient(g.clone()))
+                usvg::Paint::RadialGradient(g.clone())
             } else if let Some(p) = gradients.pattern.get(&fragment) {
-                Some(usvg::Paint::Pattern(p.clone()))
+                usvg::Paint::Pattern(p.clone())
             } else {
                 // Unresolved paint server: fall back to black, matching usvg's
                 // behaviour when a referenced paint server is missing.
-                Some(usvg::Paint::Color(usvg::Color::black()))
-            }
+                usvg::Paint::Color(usvg::Color::black())
+            };
+            Some((paint, 1.0))
         },
         _ => None,
     }
