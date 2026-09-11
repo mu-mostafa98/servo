@@ -26,8 +26,9 @@ use style::values::generics::svg::SVGLength;
 use crate::context::LayoutContext;
 use crate::svg::effects::clip::rect_clip_path;
 use crate::svg::effects::marker::build_markers;
-use crate::svg::effects::paint::{
-    Gradients, build_fill, build_pattern, build_stroke, collect_paint_servers,
+use crate::svg::effects::paint::build_pattern;
+use crate::svg::primitives::paint::{
+    Gradients, build_fill, build_stroke, collect_paint_servers,
 };
 use crate::svg::effects::{Effects, resolve_effects};
 use crate::svg::primitives::attrs::{

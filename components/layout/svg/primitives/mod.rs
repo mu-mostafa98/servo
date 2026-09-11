@@ -9,5 +9,7 @@
 pub(crate) mod attrs;
 pub(crate) mod geometry;
 pub(crate) mod image;
+pub(crate) mod marker;
+pub(crate) mod paint;
 pub(crate) mod shape;
 pub(crate) mod text;

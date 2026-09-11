@@ -5,7 +5,7 @@
 //! Marker placement: turns a shape's `marker-start`/`marker-mid`/`marker-end`
 //! references into marker groups positioned at each vertex of the shape's path.
 //!
-//! The vertex/angle math lives in [`crate::svg::primitives::geometry`]; the actual
+//! The vertex/angle math lives in [`crate::svg::primitives::marker`]; the actual
 //! construction of each marker group is delegated back to the builder via
 //! [`crate::svg::usvg_builder::build_marker`].
 
@@ -18,7 +18,7 @@ use resvg::usvg::{self, ApproxZeroUlps, tiny_skia_path};
 use script::layout_dom::ServoLayoutElement;
 
 use crate::svg::primitives::attrs::{length_attr, parse_view_box};
-use crate::svg::primitives::geometry::{
+use crate::svg::primitives::marker::{
     MarkerKind, MarkerOrientation, MarkerSegment, build_marker_segments, calc_vertex_angle,
     get_subpath_start,
 };
