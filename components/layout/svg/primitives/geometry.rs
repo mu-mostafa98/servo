@@ -7,7 +7,7 @@
 //! Everything here is Servo-free: it operates on `tiny_skia_path`, `kurbo` and
 //! `svgtypes` values only, so it is the sole unit-testable leaf of the SVG layer.
 
-use resvg::usvg::{tiny_skia_path, ApproxEqUlps};
+use resvg::usvg::{ApproxEqUlps, tiny_skia_path};
 use svgtypes::{Align, PointsParser, SimplePathSegment, SimplifyingPathParser};
 
 /// Computes the aligned origin for a `preserveAspectRatio` fit, mirroring usvg's
@@ -168,7 +168,11 @@ pub(crate) fn parse_path_d(d: &str) -> Option<tiny_skia_path::Path> {
 pub(crate) enum MarkerSegment {
     MoveTo(tiny_skia_path::Point),
     LineTo(tiny_skia_path::Point),
-    CubicTo(tiny_skia_path::Point, tiny_skia_path::Point, tiny_skia_path::Point),
+    CubicTo(
+        tiny_skia_path::Point,
+        tiny_skia_path::Point,
+        tiny_skia_path::Point,
+    ),
     Close,
 }
 
@@ -300,7 +304,9 @@ pub(crate) fn calc_vertex_angle(segments: &[MarkerSegment], idx: usize) -> f32 {
             },
             (MarkerSegment::LineTo(pl), MarkerSegment::CubicTo(p1, _, p)) => {
                 let prev = get_prev_vertex(segments, idx);
-                calc_curves_angle(prev.x, prev.y, prev.x, prev.y, pl.x, pl.y, p1.x, p1.y, p.x, p.y)
+                calc_curves_angle(
+                    prev.x, prev.y, prev.x, prev.y, pl.x, pl.y, p1.x, p1.y, p.x, p.y,
+                )
             },
             (MarkerSegment::CubicTo(_, p2, p), MarkerSegment::LineTo(pl)) => {
                 let prev = get_prev_vertex(segments, idx);
@@ -363,20 +369,12 @@ fn calc_angle(x1: f32, y1: f32, x2: f32, y2: f32, x3: f32, y3: f32, x4: f32, y4:
 
     fn normalize(rad: f32) -> f32 {
         let v = rad % (PI * 2.0);
-        if v < 0.0 {
-            v + PI * 2.0
-        } else {
-            v
-        }
+        if v < 0.0 { v + PI * 2.0 } else { v }
     }
 
     fn vector_angle(vx: f32, vy: f32) -> f32 {
         let rad = vy.atan2(vx);
-        if rad.is_nan() {
-            0.0
-        } else {
-            normalize(rad)
-        }
+        if rad.is_nan() { 0.0 } else { normalize(rad) }
     }
 
     let in_a = vector_angle(x2 - x1, y2 - y1);
@@ -415,7 +413,11 @@ fn quad_to_curve(
     prev: tiny_skia_path::Point,
     p1: tiny_skia_path::Point,
     p: tiny_skia_path::Point,
-) -> (tiny_skia_path::Point, tiny_skia_path::Point, tiny_skia_path::Point) {
+) -> (
+    tiny_skia_path::Point,
+    tiny_skia_path::Point,
+    tiny_skia_path::Point,
+) {
     fn calc(n1: f32, n2: f32) -> f32 {
         (n1 + n2 * 2.0) / 3.0
     }

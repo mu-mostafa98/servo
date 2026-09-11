@@ -10,7 +10,7 @@ use resvg::usvg;
 use script::layout_dom::ServoLayoutNode;
 use style::properties::ComputedValues;
 
-use crate::svg::builder::{convert_node, SvgContext};
+use crate::svg::builder::{SvgContext, convert_node};
 use crate::svg::effects::clip::rect_clip_path;
 use crate::svg::primitives::attrs::{element_id, length_attr_opt, parse_view_box};
 

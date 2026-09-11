@@ -138,9 +138,7 @@ impl VirtualMethods for SVGElement {
     }
 
     fn children_changed(&self, cx: &mut js::context::JSContext, mutation: &ChildrenMutation) {
-        self.super_type()
-            .unwrap()
-            .children_changed(cx, mutation);
+        self.super_type().unwrap().children_changed(cx, mutation);
 
         self.invalidate_nearest_svg_ancestor(cx);
     }

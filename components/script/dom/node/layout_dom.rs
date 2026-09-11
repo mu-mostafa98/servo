@@ -480,10 +480,14 @@ impl From<ElementTypeIdWrapper> for LayoutElementType {
                 ),
             )) => LayoutElementType::SVGEllipseElement,
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
-                SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGLineElement),
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGLineElement,
+                ),
             )) => LayoutElementType::SVGLineElement,
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
-                SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGPathElement),
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPathElement,
+                ),
             )) => LayoutElementType::SVGPathElement,
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
                 SVGGraphicsElementTypeId::SVGGeometryElement(
@@ -496,7 +500,9 @@ impl From<ElementTypeIdWrapper> for LayoutElementType {
                 ),
             )) => LayoutElementType::SVGPolylineElement,
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
-                SVGGraphicsElementTypeId::SVGGeometryElement(SVGGeometryElementTypeId::SVGRectElement),
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGRectElement,
+                ),
             )) => LayoutElementType::SVGRectElement,
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
                 SVGGraphicsElementTypeId::SVGDefsElement,

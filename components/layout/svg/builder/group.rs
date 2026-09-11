@@ -9,10 +9,10 @@ use resvg::usvg;
 use script::layout_dom::ServoLayoutNode;
 use style::properties::ComputedValues;
 
-use crate::svg::builder::{convert_node, SvgContext};
-use crate::svg::effects::clip::{resolve_clip_path, ClipPathOutcome};
-use crate::svg::effects::filter::{resolve_filter, FilterOutcome};
-use crate::svg::effects::mask::{resolve_mask, MaskOutcome};
+use crate::svg::builder::{SvgContext, convert_node};
+use crate::svg::effects::clip::{ClipPathOutcome, resolve_clip_path};
+use crate::svg::effects::filter::{FilterOutcome, resolve_filter};
+use crate::svg::effects::mask::{MaskOutcome, resolve_mask};
 use crate::svg::primitives::attrs::element_id;
 
 /// Converts a group-like element into a [`usvg::Group`]. Unlike a basic shape, a
@@ -50,19 +50,19 @@ pub(crate) fn convert_group<'a, 'dom>(
     match resolve_clip_path(&element, ctx, object_bbox) {
         ClipPathOutcome::Clip(clip) => group.clip_path = Some(clip),
         ClipPathOutcome::Invalid => return None,
-        ClipPathOutcome::None => {}
+        ClipPathOutcome::None => {},
     }
 
     match resolve_mask(&element, ctx, object_bbox) {
         MaskOutcome::Mask(mask) => group.mask = Some(mask),
         MaskOutcome::Invalid => return None,
-        MaskOutcome::None => {}
+        MaskOutcome::None => {},
     }
 
     match resolve_filter(&element, ctx, object_bbox) {
         FilterOutcome::Filter(filter) => group.filters.push(filter),
         FilterOutcome::Invalid => return None,
-        FilterOutcome::None => {}
+        FilterOutcome::None => {},
     }
 
     Some(usvg::Node::Group(Box::new(group)))

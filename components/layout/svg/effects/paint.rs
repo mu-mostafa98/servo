@@ -13,11 +13,11 @@ use resvg::usvg;
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::color::ColorSpace;
 use style::properties::ComputedValues;
-use style::values::computed::svg::{SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray};
 use style::values::computed::Length;
+use style::values::computed::svg::{SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray};
 use style::values::generics::svg::SVGLength;
 
-use crate::svg::builder::{convert_node, SvgContext};
+use crate::svg::builder::{SvgContext, convert_node};
 use crate::svg::primitives::attrs::{
     element_id, element_layout_type, length_or_percentage_attr, number_or_percentage_attr,
     parse_transform, parse_view_box,
@@ -46,13 +46,15 @@ pub(crate) fn collect_paint_servers<'a>(
     };
     match element_layout_type(&element) {
         LayoutElementType::SVGLinearGradientElement => {
-            if let (Some(id), Some(grad)) = (element_id(&element), build_linear_gradient(&element)) {
+            if let (Some(id), Some(grad)) = (element_id(&element), build_linear_gradient(&element))
+            {
                 gradients.linear.insert(id, Arc::new(grad));
             }
             return;
         },
         LayoutElementType::SVGRadialGradientElement => {
-            if let (Some(id), Some(grad)) = (element_id(&element), build_radial_gradient(&element)) {
+            if let (Some(id), Some(grad)) = (element_id(&element), build_radial_gradient(&element))
+            {
                 gradients.radial.insert(id, Arc::new(grad));
             }
             return;
@@ -265,8 +267,9 @@ pub(crate) fn build_stroke(
     // `stroke-opacity` multiplies the alpha already carried by the `stroke`
     // color, mirroring the fill path above.
     stroke.opacity = match inherited.stroke_opacity {
-        SVGOpacity::Opacity(op) => usvg::Opacity::new((op * color_alpha).clamp(0.0, 1.0))
-            .unwrap_or(usvg::Opacity::ONE),
+        SVGOpacity::Opacity(op) => {
+            usvg::Opacity::new((op * color_alpha).clamp(0.0, 1.0)).unwrap_or(usvg::Opacity::ONE)
+        },
         _ => usvg::Opacity::new(color_alpha).unwrap_or(usvg::Opacity::ONE),
     };
     stroke.linecap = match inherited.stroke_linecap {

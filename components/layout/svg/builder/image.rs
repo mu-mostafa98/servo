@@ -15,9 +15,9 @@ use script::layout_dom::ServoLayoutElement;
 use style::properties::ComputedValues;
 
 use crate::svg::builder::SvgContext;
-use crate::svg::effects::clip::{resolve_clip_path, ClipPathOutcome};
-use crate::svg::effects::filter::{resolve_filter, FilterOutcome};
-use crate::svg::effects::mask::{resolve_mask, MaskOutcome};
+use crate::svg::effects::clip::{ClipPathOutcome, resolve_clip_path};
+use crate::svg::effects::filter::{FilterOutcome, resolve_filter};
+use crate::svg::effects::mask::{MaskOutcome, resolve_mask};
 use crate::svg::primitives::attrs::{element_id, length_attr, length_attr_opt};
 use crate::svg::primitives::geometry::aligned_pos;
 
@@ -193,11 +193,11 @@ pub(crate) fn convert_image<'a, 'dom>(
     inner.abs_transform = abs_transform;
     inner.push_child(usvg::Node::Image(Box::new(image)));
 
-    if !element_transform.is_identity()
-        || element_opacity < 1.0
-        || clip_path.is_some()
-        || mask.is_some()
-        || filter.is_some()
+    if !element_transform.is_identity() ||
+        element_opacity < 1.0 ||
+        clip_path.is_some() ||
+        mask.is_some() ||
+        filter.is_some()
     {
         let mut outer = usvg::Group::empty();
         outer.transform = element_transform;

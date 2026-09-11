@@ -10,7 +10,7 @@ use resvg::usvg;
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::properties::ComputedValues;
 
-use crate::svg::builder::{convert_node, SvgContext};
+use crate::svg::builder::{SvgContext, convert_node};
 use crate::svg::effects::clip::rect_clip_path;
 use crate::svg::primitives::attrs::{
     element_id, element_layout_type, length_attr_opt, parse_view_box,
@@ -43,7 +43,13 @@ pub(crate) fn convert_use<'a, 'dom>(
     // A `<use>` referencing a `<symbol>` establishes a new viewport (the symbol's
     // `viewBox` mapped onto the `<use>`'s `width`×`height`), handled separately.
     if element_layout_type(referenced) == LayoutElementType::SVGSymbolElement {
-        return convert_use_symbol(node, referenced, computed.as_deref(), ctx, parent_abs_transform);
+        return convert_use_symbol(
+            node,
+            referenced,
+            computed.as_deref(),
+            ctx,
+            parent_abs_transform,
+        );
     }
 
     let mut group = usvg::Group::empty();

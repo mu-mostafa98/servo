@@ -108,7 +108,10 @@ pub(crate) fn number_or_percentage_attr(
     };
     let value = value.trim();
     if let Some(pct) = value.strip_suffix('%') {
-        pct.parse::<f32>().ok().map(|v| v / 100.0).unwrap_or(default)
+        pct.parse::<f32>()
+            .ok()
+            .map(|v| v / 100.0)
+            .unwrap_or(default)
     } else {
         parse_length_attr(value).unwrap_or(default)
     }
@@ -145,16 +148,26 @@ pub(crate) fn parse_transform(value: &str) -> usvg::Transform {
             TransformListToken::Translate { tx, ty } => {
                 usvg::Transform::from_translate(tx as f32, ty as f32)
             },
-            TransformListToken::Scale { sx, sy } => usvg::Transform::from_scale(sx as f32, sy as f32),
-            TransformListToken::Rotate { angle } => {
-                usvg::Transform::from_rotate(angle as f32)
+            TransformListToken::Scale { sx, sy } => {
+                usvg::Transform::from_scale(sx as f32, sy as f32)
             },
-            TransformListToken::SkewX { angle } => {
-                usvg::Transform::from_row(1.0, 0.0, (angle as f32).to_radians().tan(), 1.0, 0.0, 0.0)
-            },
-            TransformListToken::SkewY { angle } => {
-                usvg::Transform::from_row(1.0, (angle as f32).to_radians().tan(), 0.0, 1.0, 0.0, 0.0)
-            },
+            TransformListToken::Rotate { angle } => usvg::Transform::from_rotate(angle as f32),
+            TransformListToken::SkewX { angle } => usvg::Transform::from_row(
+                1.0,
+                0.0,
+                (angle as f32).to_radians().tan(),
+                1.0,
+                0.0,
+                0.0,
+            ),
+            TransformListToken::SkewY { angle } => usvg::Transform::from_row(
+                1.0,
+                (angle as f32).to_radians().tan(),
+                0.0,
+                1.0,
+                0.0,
+                0.0,
+            ),
         };
         transform = transform.pre_concat(t);
     }
@@ -165,12 +178,7 @@ pub(crate) fn parse_transform(value: &str) -> usvg::Transform {
 pub(crate) fn parse_view_box(element: &ServoLayoutElement<'_>) -> Option<usvg::ViewBox> {
     let value = element.attribute_as_str(&ns!(), &LocalName::from("viewBox"))?;
     let vb = value.parse::<svgtypes::ViewBox>().ok()?;
-    let rect = usvg::NonZeroRect::from_xywh(
-        vb.x as f32,
-        vb.y as f32,
-        vb.w as f32,
-        vb.h as f32,
-    )?;
+    let rect = usvg::NonZeroRect::from_xywh(vb.x as f32, vb.y as f32, vb.w as f32, vb.h as f32)?;
 
     let aspect = element
         .attribute_as_str(&ns!(), &LocalName::from("preserveAspectRatio"))

@@ -9,7 +9,7 @@ use std::sync::Arc;
 
 use html5ever::{LocalName, ns};
 use layout_api::{LayoutElement, LayoutNode};
-use resvg::usvg::{self, filter, ApproxZeroUlps};
+use resvg::usvg::{self, ApproxZeroUlps, filter};
 use script::layout_dom::ServoLayoutElement;
 
 use crate::svg::builder::SvgContext;
@@ -196,7 +196,9 @@ fn build_filter_primitives(
                 )),
             },
             "feTile" => filter::Kind::Tile(filter::Tile::new(resolve_filter_input(
-                &child_el, "in", &primitives,
+                &child_el,
+                "in",
+                &primitives,
             ))),
             _ => continue,
         };
@@ -402,7 +404,10 @@ fn filter_offset(
     ))
 }
 
-fn filter_blend(element: &ServoLayoutElement<'_>, primitives: &[filter::Primitive]) -> filter::Kind {
+fn filter_blend(
+    element: &ServoLayoutElement<'_>,
+    primitives: &[filter::Primitive],
+) -> filter::Kind {
     let mode = match element.attribute_as_str(&ns!(), &LocalName::from("mode")) {
         Some("multiply") => usvg::BlendMode::Multiply,
         Some("screen") => usvg::BlendMode::Screen,
@@ -447,7 +452,10 @@ fn filter_composite(
     ))
 }
 
-fn filter_merge(element: &ServoLayoutElement<'_>, primitives: &[filter::Primitive]) -> filter::Kind {
+fn filter_merge(
+    element: &ServoLayoutElement<'_>,
+    primitives: &[filter::Primitive],
+) -> filter::Kind {
     let mut inputs = Vec::new();
     for child in element.as_node().dom_children() {
         if let Some(child_el) = child.as_element() {
@@ -605,8 +613,13 @@ fn filter_convolve_matrix(
         return None;
     }
 
-    let matrix_data =
-        filter::ConvolveMatrixData::new(target_x as u32, target_y as u32, order_x, order_y, matrix)?;
+    let matrix_data = filter::ConvolveMatrixData::new(
+        target_x as u32,
+        target_y as u32,
+        order_x,
+        order_y,
+        matrix,
+    )?;
 
     let edge_mode = match element.attribute_as_str(&ns!(), &LocalName::from("edgeMode")) {
         Some("none") => filter::EdgeMode::None,
@@ -615,8 +628,8 @@ fn filter_convolve_matrix(
     };
     let preserve_alpha = element
         .attribute_as_str(&ns!(), &LocalName::from("preserveAlpha"))
-        .unwrap_or("false")
-        == "true";
+        .unwrap_or("false") ==
+        "true";
 
     Some(filter::Kind::ConvolveMatrix(filter::ConvolveMatrix::new(
         resolve_filter_input(element, "in", primitives),
@@ -652,8 +665,10 @@ fn filter_morphology(
     } else if ry.approx_zero_ulps(4) {
         ry = 1.0;
     }
-    let rx = usvg::PositiveF32::new(rx * scale.width()).unwrap_or(usvg::PositiveF32::new(1.0).unwrap());
-    let ry = usvg::PositiveF32::new(ry * scale.height()).unwrap_or(usvg::PositiveF32::new(1.0).unwrap());
+    let rx =
+        usvg::PositiveF32::new(rx * scale.width()).unwrap_or(usvg::PositiveF32::new(1.0).unwrap());
+    let ry =
+        usvg::PositiveF32::new(ry * scale.height()).unwrap_or(usvg::PositiveF32::new(1.0).unwrap());
     filter::Kind::Morphology(filter::Morphology::new(
         resolve_filter_input(element, "in", primitives),
         operator,
@@ -685,22 +700,27 @@ fn filter_specular_lighting(
     if !(1.0..=128.0).contains(&specular_exponent) {
         return None;
     }
-    Some(filter::Kind::SpecularLighting(filter::SpecularLighting::new(
-        resolve_filter_input(element, "in", primitives),
-        number_attr(element, "surfaceScale", 1.0),
-        number_attr(element, "specularConstant", 1.0),
-        specular_exponent,
-        filter_color(element, "lighting-color", usvg::Color::white()),
-        light_source,
-    )))
+    Some(filter::Kind::SpecularLighting(
+        filter::SpecularLighting::new(
+            resolve_filter_input(element, "in", primitives),
+            number_attr(element, "surfaceScale", 1.0),
+            number_attr(element, "specularConstant", 1.0),
+            specular_exponent,
+            filter_color(element, "lighting-color", usvg::Color::white()),
+            light_source,
+        ),
+    ))
 }
 
 fn filter_light_source(element: &ServoLayoutElement<'_>) -> Option<filter::LightSource> {
     let child = element.as_node().dom_children().find_map(|c| {
         let el = c.as_element()?;
         let tag = el.local_name().to_string();
-        matches!(tag.as_str(), "feDistantLight" | "fePointLight" | "feSpotLight")
-            .then_some(el)
+        matches!(
+            tag.as_str(),
+            "feDistantLight" | "fePointLight" | "feSpotLight"
+        )
+        .then_some(el)
     })?;
     let tag = child.local_name().to_string();
     Some(match tag.as_str() {

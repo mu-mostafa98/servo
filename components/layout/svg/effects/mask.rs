@@ -11,7 +11,7 @@ use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
 use resvg::usvg;
 use script::layout_dom::ServoLayoutElement;
 
-use crate::svg::builder::{convert_node, SvgContext};
+use crate::svg::builder::{SvgContext, convert_node};
 use crate::svg::primitives::attrs::{element_id, element_layout_type, length_or_percentage_attr};
 
 /// Extracts the referenced id from a `mask` attribute, if it is a local

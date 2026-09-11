@@ -16,17 +16,17 @@ use html5ever::{LocalName, ns};
 use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
 use net_traits::image_cache::FontResolver;
 use resvg::usvg::{self, fontdb};
-use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use script::SvgFontResolver;
+use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::dom::{NodeInfo, OpaqueNode};
 use style::properties::ComputedValues;
-use style::values::computed::font::SingleFontFamily;
 use style::values::computed::FontStyle as ServoFontStyle;
+use style::values::computed::font::SingleFontFamily;
 use style::values::specified::font::FontStretchKeyword;
 use svgtypes::LengthUnit;
 
 use crate::context::LayoutContext;
-use crate::svg::effects::paint::{build_fill, build_stroke, Gradients};
+use crate::svg::effects::paint::{Gradients, build_fill, build_stroke};
 use crate::svg::primitives::attrs::{
     element_id, element_layout_type, length_attr_opt, parse_number_list, parse_transform,
 };
@@ -211,13 +211,23 @@ fn boundary_trim(nodes: &mut [RawTextNode]) {
         let is_first = i == 0;
         let is_last = i == len - 1;
 
-        if is_first && c1 == Some(b' ') && xmlspace1 == XmlSpace::Default && !node1.text.is_empty() {
+        if is_first && c1 == Some(b' ') && xmlspace1 == XmlSpace::Default && !node1.text.is_empty()
+        {
             remove_first_space(&mut node1.text);
-        } else if is_last && c4 == Some(b' ') && !node2.text.is_empty() && xmlspace2 == XmlSpace::Default {
+        } else if is_last &&
+            c4 == Some(b' ') &&
+            !node2.text.is_empty() &&
+            xmlspace2 == XmlSpace::Default
+        {
             remove_last_space(&mut node2.text);
         }
 
-        if is_last && c2 == Some(b' ') && !node1.text.is_empty() && node2.text.is_empty() && node1.text.ends_with(' ') {
+        if is_last &&
+            c2 == Some(b' ') &&
+            !node1.text.is_empty() &&
+            node2.text.is_empty() &&
+            node1.text.ends_with(' ')
+        {
             remove_last_space(&mut node1.text);
         }
 
@@ -296,9 +306,7 @@ fn resolve_positions_impl(
             let child_chars = count_chars(node, texts);
             macro_rules! push_list {
                 ($attr:literal, $field:ident) => {
-                    if let Some(value) =
-                        element.attribute_as_str(&ns!(), &LocalName::from($attr))
-                    {
+                    if let Some(value) = element.attribute_as_str(&ns!(), &LocalName::from($attr)) {
                         let nums = parse_number_list(value);
                         let len = nums.len().min(child_chars);
                         for i in 0..len {
@@ -510,8 +518,12 @@ fn convert_font(computed: &ComputedValues) -> usvg::Font {
         .map(|setting| usvg::FontVariation::new(setting.tag.0.to_be_bytes(), setting.value))
         .collect();
 
-    let mut families: Vec<usvg::FontFamily> =
-        font.font_family.families.iter().map(font_family_to_usvg).collect();
+    let mut families: Vec<usvg::FontFamily> = font
+        .font_family
+        .families
+        .iter()
+        .map(font_family_to_usvg)
+        .collect();
     if families.is_empty() {
         families.push(usvg::FontFamily::SansSerif);
     }
@@ -544,7 +556,9 @@ fn text_decoration(
     };
 
     usvg::TextDecoration {
-        underline: make_deco(line.contains(style::values::specified::TextDecorationLine::UNDERLINE)),
+        underline: make_deco(
+            line.contains(style::values::specified::TextDecorationLine::UNDERLINE),
+        ),
         overline: make_deco(line.contains(style::values::specified::TextDecorationLine::OVERLINE)),
         line_through: make_deco(
             line.contains(style::values::specified::TextDecorationLine::LINE_THROUGH),
@@ -566,8 +580,8 @@ fn build_text_span(
             style::computed_values::visibility::T::Collapse
     );
 
-    let small_caps =
-        computed.get_font().font_variant_caps == style::computed_values::font_variant_caps::T::SmallCaps;
+    let small_caps = computed.get_font().font_variant_caps ==
+        style::computed_values::font_variant_caps::T::SmallCaps;
 
     usvg::TextSpan {
         start: 0,
@@ -610,7 +624,9 @@ pub(crate) fn collect_text_chunks(
         text_flow: usvg::TextFlow::Linear,
         chunks: Vec::new(),
     };
-    collect_chunks_impl(element, pos_list, context, gradients, defs, diagonal, &mut state, texts);
+    collect_chunks_impl(
+        element, pos_list, context, gradients, defs, diagonal, &mut state, texts,
+    );
     state.chunks
 }
 
@@ -650,7 +666,16 @@ fn collect_chunks_impl(
                 state.split_chunk = true;
             }
 
-            collect_chunks_impl(&child_element, pos_list, context, gradients, defs, diagonal, state, texts);
+            collect_chunks_impl(
+                &child_element,
+                pos_list,
+                context,
+                gradients,
+                defs,
+                diagonal,
+                state,
+                texts,
+            );
 
             state.text_flow = usvg::TextFlow::Linear;
 
@@ -674,9 +699,9 @@ fn collect_chunks_impl(
 
         let computed = element.style(&context.style_context);
 
-        let Some(font_size) = usvg::NonZeroPositiveF32::new(
-            computed.get_font().font_size.computed_size().px(),
-        ) else {
+        let Some(font_size) =
+            usvg::NonZeroPositiveF32::new(computed.get_font().font_size.computed_size().px())
+        else {
             // A zero font size makes the span invalid; skip it.
             state.chars_count += text.chars().count();
             continue;
@@ -691,10 +716,10 @@ fn collect_chunks_impl(
 
             // A new chunk starts on the first span, whenever a character has an
             // absolute x/y coordinate, and after a `<textPath>` boundary.
-            let is_new_chunk = pos_list[state.chars_count].x.is_some()
-                || pos_list[state.chars_count].y.is_some()
-                || state.split_chunk
-                || state.chunks.is_empty();
+            let is_new_chunk = pos_list[state.chars_count].x.is_some() ||
+                pos_list[state.chars_count].y.is_some() ||
+                state.split_chunk ||
+                state.chunks.is_empty();
 
             state.split_chunk = false;
 

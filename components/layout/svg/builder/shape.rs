@@ -5,28 +5,28 @@
 //! Basic shape elements (`rect`/`circle`/`ellipse`/`line`/`polyline`/`polygon`/
 //! `path`) and marker placement.
 
-use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicU32, Ordering};
 
 use html5ever::{LocalName, ns};
 use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
-use resvg::usvg::{self, tiny_skia_path, ApproxZeroUlps};
+use resvg::usvg::{self, ApproxZeroUlps, tiny_skia_path};
 use script::layout_dom::ServoLayoutElement;
 use style::properties::ComputedValues;
 use style::values::computed::Length;
 use style::values::generics::svg::SVGLength;
 
-use crate::svg::builder::{convert_node, SvgContext};
-use crate::svg::effects::clip::{resolve_clip_path, ClipPathOutcome};
-use crate::svg::effects::filter::{resolve_filter, FilterOutcome};
-use crate::svg::effects::mask::{resolve_mask, MaskOutcome};
+use crate::svg::builder::{SvgContext, convert_node};
+use crate::svg::effects::clip::{ClipPathOutcome, resolve_clip_path};
+use crate::svg::effects::filter::{FilterOutcome, resolve_filter};
+use crate::svg::effects::mask::{MaskOutcome, resolve_mask};
 use crate::svg::effects::paint::{build_fill, build_stroke};
 use crate::svg::primitives::attrs::{
     element_has_explicit_fill, element_has_explicit_stroke, element_id, length_attr, parse_view_box,
 };
 use crate::svg::primitives::geometry::{
-    build_marker_segments, calc_vertex_angle, get_subpath_start, MarkerKind, MarkerOrientation,
-    MarkerSegment,
+    MarkerKind, MarkerOrientation, MarkerSegment, build_marker_segments, calc_vertex_angle,
+    get_subpath_start,
 };
 use crate::svg::primitives::shape::build_shape_path;
 
@@ -104,13 +104,18 @@ pub(crate) fn build_shape_node<'a, 'dom>(
         Arc::new(data.clone()),
         abs_transform,
     )
-    .map(|p| usvg::Node::Path(Box::new(p)))
-    else {
+    .map(|p| usvg::Node::Path(Box::new(p))) else {
         return Vec::new();
     };
 
     let mut nodes = vec![path_node];
-    nodes.extend(build_markers(element, &data, stroke_width, ctx, abs_transform));
+    nodes.extend(build_markers(
+        element,
+        &data,
+        stroke_width,
+        ctx,
+        abs_transform,
+    ));
 
     // A shape's `transform` and `opacity` attributes cannot be folded into the
     // path: `usvg::Path` has no local `transform` field, and resvg positions path
@@ -136,11 +141,11 @@ pub(crate) fn build_shape_node<'a, 'dom>(
         FilterOutcome::Invalid => return Vec::new(),
         FilterOutcome::None => None,
     };
-    if !transform.is_identity()
-        || element_opacity < 1.0
-        || clip_path.is_some()
-        || mask.is_some()
-        || filter.is_some()
+    if !transform.is_identity() ||
+        element_opacity < 1.0 ||
+        clip_path.is_some() ||
+        mask.is_some() ||
+        filter.is_some()
     {
         let mut group = usvg::Group::empty();
         group.transform = transform;
@@ -307,9 +312,8 @@ fn resolve_marker<'a, 'dom>(
         }
 
         if let Some(vbox) = view_box {
-            let size =
-                usvg::Size::from_wh(r.width() * stroke_scale, r.height() * stroke_scale)
-                    .expect("marker size is positive and non-zero");
+            let size = usvg::Size::from_wh(r.width() * stroke_scale, r.height() * stroke_scale)
+                .expect("marker size is positive and non-zero");
             let vbox_ts = vbox.to_transform(size);
             let (sx, sy) = vbox_ts.get_scale();
             ts = ts.pre_scale(sx, sy);

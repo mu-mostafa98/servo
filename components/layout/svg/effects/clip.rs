@@ -4,16 +4,16 @@
 
 //! `clip-path` resolution: turns a `<clipPath>` element into a [`usvg::ClipPath`].
 
-use std::sync::atomic::{AtomicU32, Ordering};
 use std::sync::Arc;
+use std::sync::atomic::{AtomicU32, Ordering};
 
 use html5ever::{LocalName, ns};
 use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
 use resvg::usvg::{self, tiny_skia_path};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 
-use crate::svg::builder::text::convert_text;
 use crate::svg::builder::SvgContext;
+use crate::svg::builder::text::convert_text;
 use crate::svg::primitives::attrs::{element_id, element_layout_type, length_attr_opt};
 use crate::svg::primitives::shape::build_shape_path;
 
@@ -163,9 +163,9 @@ fn convert_clip_child<'a, 'dom>(
     // match — the referencing element will then be dropped by the caller.
     if matches!(
         ty,
-        LayoutElementType::SVGGElement
-            | LayoutElementType::SVGAElement
-            | LayoutElementType::SVGSVGElement
+        LayoutElementType::SVGGElement |
+            LayoutElementType::SVGAElement |
+            LayoutElementType::SVGSVGElement
     ) {
         return Vec::new();
     }
@@ -199,8 +199,7 @@ fn convert_clip_child<'a, 'dom>(
             Arc::new(path),
             abs_transform,
         )
-        .map(|p| usvg::Node::Path(Box::new(p)))
-        else {
+        .map(|p| usvg::Node::Path(Box::new(p))) else {
             return Vec::new();
         };
 

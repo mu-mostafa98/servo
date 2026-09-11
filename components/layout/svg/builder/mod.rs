@@ -20,28 +20,26 @@ mod use_;
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use servo_arc::Arc as ServoArc;
-
+use group::convert_group;
 use html5ever::{LocalName, ns};
+use image::convert_image;
 use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
 use resvg::usvg;
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
+use servo_arc::Arc as ServoArc;
+use shape::build_shape_node;
 use style::dom::TNode;
 use style::properties::ComputedValues;
+use svg::convert_svg;
+use text::convert_text;
+use use_::convert_use;
 
 use crate::context::LayoutContext;
-use crate::svg::effects::paint::{build_pattern, collect_paint_servers, Gradients};
+use crate::svg::effects::paint::{Gradients, build_pattern, collect_paint_servers};
 use crate::svg::primitives::attrs::{
     element_id, element_layout_type, parse_length_attr, parse_transform, parse_view_box,
 };
 use crate::svg::primitives::text::SvgFonts;
-
-use group::convert_group;
-use image::convert_image;
-use shape::build_shape_node;
-use svg::convert_svg;
-use text::convert_text;
-use use_::convert_use;
 
 /// The shared state every converter needs to build its [`usvg::Node`].
 ///
@@ -204,8 +202,7 @@ fn resolve_size_and_view_box(
 /// The SVG "normalized diagonal" of a viewport, used as the reference length for
 /// `<percentage>` values of `stroke-width`, `stroke-dasharray` and `stroke-dashoffset`.
 fn normalized_diagonal(size: usvg::Size) -> f32 {
-    (size.width() * size.width() + size.height() * size.height()).sqrt()
-        / std::f32::consts::SQRT_2
+    (size.width() * size.width() + size.height() * size.height()).sqrt() / std::f32::consts::SQRT_2
 }
 
 /// Recursively collects every element with a non-empty `id` attribute into `map`,
@@ -229,11 +226,11 @@ fn collect_element_ids<'a>(
 fn is_group_element(ty: LayoutElementType) -> bool {
     matches!(
         ty,
-        LayoutElementType::SVGSVGElement
-            | LayoutElementType::SVGGElement
-            | LayoutElementType::SVGAElement
-            | LayoutElementType::SVGClipPathElement
-            | LayoutElementType::SVGMaskElement
+        LayoutElementType::SVGSVGElement |
+            LayoutElementType::SVGGElement |
+            LayoutElementType::SVGAElement |
+            LayoutElementType::SVGClipPathElement |
+            LayoutElementType::SVGMaskElement
     )
 }
 
@@ -298,5 +295,12 @@ pub(crate) fn convert_node<'a, 'dom>(
         return convert_image(&element, computed.as_deref(), ctx, parent_abs_transform);
     }
 
-    build_shape_node(&element, ty, computed.as_deref(), host, ctx, parent_abs_transform)
+    build_shape_node(
+        &element,
+        ty,
+        computed.as_deref(),
+        host,
+        ctx,
+        parent_abs_transform,
+    )
 }

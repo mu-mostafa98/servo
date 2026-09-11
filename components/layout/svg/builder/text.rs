@@ -11,8 +11,8 @@ use script::layout_dom::ServoLayoutElement;
 use style::properties::ComputedValues;
 
 use crate::svg::builder::SvgContext;
-use crate::svg::effects::clip::{resolve_clip_path, ClipPathOutcome};
-use crate::svg::effects::mask::{resolve_mask, MaskOutcome};
+use crate::svg::effects::clip::{ClipPathOutcome, resolve_clip_path};
+use crate::svg::effects::mask::{MaskOutcome, resolve_mask};
 use crate::svg::primitives::attrs::element_id;
 use crate::svg::primitives::text::{
     collect_text_chunks, convert_direction, convert_writing_mode, resolve_positions_list,
@@ -67,7 +67,13 @@ pub(crate) fn convert_text<'a, 'dom>(
     text.direction = direction;
     text.chunks = chunks;
 
-    if usvg::layout(&mut text, &ctx.fonts.resolver, &mut ctx.fonts.cache.borrow_mut()).is_none() {
+    if usvg::layout(
+        &mut text,
+        &ctx.fonts.resolver,
+        &mut ctx.fonts.cache.borrow_mut(),
+    )
+    .is_none()
+    {
         return Vec::new();
     }
 
@@ -78,12 +84,11 @@ pub(crate) fn convert_text<'a, 'dom>(
     // Like shapes, a `<text>` element's local `transform`/`opacity`/`clip-path`/
     // `mask` are carried by a wrapper group (usvg::Text has no such fields).
     let element_opacity = computed.get_effects().opacity;
-    let clip_path =
-        match resolve_clip_path(element, ctx, object_bbox) {
-            ClipPathOutcome::Clip(clip) => Some(clip),
-            ClipPathOutcome::Invalid => return Vec::new(),
-            ClipPathOutcome::None => None,
-        };
+    let clip_path = match resolve_clip_path(element, ctx, object_bbox) {
+        ClipPathOutcome::Clip(clip) => Some(clip),
+        ClipPathOutcome::Invalid => return Vec::new(),
+        ClipPathOutcome::None => None,
+    };
     let mask = match resolve_mask(element, ctx, object_bbox) {
         MaskOutcome::Mask(mask) => Some(mask),
         MaskOutcome::Invalid => return Vec::new(),
