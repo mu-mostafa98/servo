@@ -8,5 +8,6 @@
 
 pub(crate) mod attrs;
 pub(crate) mod geometry;
+pub(crate) mod image;
 pub(crate) mod shape;
 pub(crate) mod text;

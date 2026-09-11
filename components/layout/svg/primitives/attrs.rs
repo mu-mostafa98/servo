@@ -196,3 +196,40 @@ pub(crate) fn parse_number_list(value: &str) -> Vec<f32> {
         .filter_map(parse_length_attr)
         .collect()
 }
+
+/// Whether `ty` is a group-like element that is converted by the builder's
+/// [`crate::svg::usvg_builder::build_group`].
+pub(crate) fn is_group_element(ty: LayoutElementType) -> bool {
+    matches!(
+        ty,
+        LayoutElementType::SVGSVGElement |
+            LayoutElementType::SVGGElement |
+            LayoutElementType::SVGAElement |
+            LayoutElementType::SVGClipPathElement |
+            LayoutElementType::SVGMaskElement
+    )
+}
+
+/// Determines the image size and view box from the root `<svg>` element.
+pub(crate) fn resolve_size_and_view_box(
+    element: &ServoLayoutElement<'_>,
+) -> Option<(usvg::Size, Option<usvg::ViewBox>)> {
+    let view_box = parse_view_box(element);
+
+    let width = element
+        .attribute_as_str(&ns!(), &LocalName::from("width"))
+        .and_then(parse_length_attr);
+    let height = element
+        .attribute_as_str(&ns!(), &LocalName::from("height"))
+        .and_then(parse_length_attr);
+
+    let size = match (width, height, view_box.map(|vb| vb.rect)) {
+        (Some(w), Some(h), _) => usvg::Size::from_wh(w, h),
+        (Some(w), None, Some(vb)) => usvg::Size::from_wh(w, vb.height() * w / vb.width()),
+        (None, Some(h), Some(vb)) => usvg::Size::from_wh(vb.width() * h / vb.height(), h),
+        (None, None, Some(vb)) => usvg::Size::from_wh(vb.width(), vb.height()),
+        _ => usvg::Size::from_wh(100.0, 100.0),
+    }?;
+
+    Some((size, view_box))
+}

@@ -7,11 +7,17 @@
 //! Everything here is Servo-free: it operates on `tiny_skia_path`, `kurbo` and
 //! `svgtypes` values only, so it is the sole unit-testable leaf of the SVG layer.
 
-use resvg::usvg::{ApproxEqUlps, tiny_skia_path};
+use resvg::usvg::{self, ApproxEqUlps, tiny_skia_path};
 use svgtypes::{Align, PointsParser, SimplePathSegment, SimplifyingPathParser};
 
 /// Computes the aligned origin for a `preserveAspectRatio` fit, mirroring usvg's
 /// `crate::aligned_pos` (which is crate-private).
+/// The SVG "normalized diagonal" of a viewport, used as the reference length for
+/// `<percentage>` values of `stroke-width`, `stroke-dasharray` and `stroke-dashoffset`.
+pub(crate) fn normalized_diagonal(size: usvg::Size) -> f32 {
+    (size.width() * size.width() + size.height() * size.height()).sqrt() / std::f32::consts::SQRT_2
+}
+
 pub(crate) fn aligned_pos(align: Align, x: f32, y: f32, w: f32, h: f32) -> (f32, f32) {
     match align {
         Align::None | Align::XMinYMin => (x, y),

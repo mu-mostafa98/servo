@@ -18,7 +18,7 @@ use crate::svg::primitives::attrs::{length_attr, length_attr_opt, lp_or_auto_to_
 use crate::svg::primitives::geometry::{parse_path_d, polygon_points, rounded_rect};
 
 /// Builds the path geometry for a shape element.
-pub(crate) fn build_shape_path(
+pub(crate) fn resolve_shape_path(
     element: &ServoLayoutElement<'_>,
     ty: LayoutElementType,
     computed: Option<&ComputedValues>,

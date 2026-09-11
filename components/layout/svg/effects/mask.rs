@@ -11,8 +11,8 @@ use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
 use resvg::usvg;
 use script::layout_dom::ServoLayoutElement;
 
-use crate::svg::builder::{SvgContext, convert_node};
 use crate::svg::primitives::attrs::{element_id, element_layout_type, length_or_percentage_attr};
+use crate::svg::usvg_builder::{SvgContext, build_usvg_node};
 
 /// Extracts the referenced id from a `mask` attribute, if it is a local
 /// `url(#id)` reference (not `none`).
@@ -125,7 +125,7 @@ fn build_mask<'a, 'dom>(
         subroot.abs_transform = subroot.transform;
 
         for child in element.as_node().dom_children() {
-            for node in convert_node(child, ctx, subroot.transform, None) {
+            for node in build_usvg_node(child, ctx, subroot.transform, None) {
                 subroot.push_child(node);
             }
         }
@@ -137,7 +137,7 @@ fn build_mask<'a, 'dom>(
         root.push_child(usvg::Node::Group(Box::new(subroot)));
     } else {
         for child in element.as_node().dom_children() {
-            for node in convert_node(child, ctx, usvg::Transform::identity(), None) {
+            for node in build_usvg_node(child, ctx, usvg::Transform::identity(), None) {
                 root.push_child(node);
             }
         }

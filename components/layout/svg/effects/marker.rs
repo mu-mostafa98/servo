@@ -2,168 +2,32 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! Basic shape elements (`rect`/`circle`/`ellipse`/`line`/`polyline`/`polygon`/
-//! `path`) and marker placement.
+//! Marker placement: turns a shape's `marker-start`/`marker-mid`/`marker-end`
+//! references into marker groups positioned at each vertex of the shape's path.
+//!
+//! The vertex/angle math lives in [`crate::svg::primitives::geometry`]; the actual
+//! construction of each marker group is delegated back to the builder via
+//! [`crate::svg::usvg_builder::build_marker`].
 
 use std::sync::Arc;
 use std::sync::atomic::{AtomicU32, Ordering};
 
 use html5ever::{LocalName, ns};
-use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
+use layout_api::LayoutElement;
 use resvg::usvg::{self, ApproxZeroUlps, tiny_skia_path};
 use script::layout_dom::ServoLayoutElement;
-use style::properties::ComputedValues;
-use style::values::computed::Length;
-use style::values::generics::svg::SVGLength;
 
-use crate::svg::builder::{SvgContext, convert_node};
-use crate::svg::effects::clip::{ClipPathOutcome, resolve_clip_path};
-use crate::svg::effects::filter::{FilterOutcome, resolve_filter};
-use crate::svg::effects::mask::{MaskOutcome, resolve_mask};
-use crate::svg::effects::paint::{build_fill, build_stroke};
-use crate::svg::primitives::attrs::{
-    element_has_explicit_fill, element_has_explicit_stroke, element_id, length_attr, parse_view_box,
-};
+use crate::svg::primitives::attrs::{length_attr, parse_view_box};
 use crate::svg::primitives::geometry::{
     MarkerKind, MarkerOrientation, MarkerSegment, build_marker_segments, calc_vertex_angle,
     get_subpath_start,
 };
-use crate::svg::primitives::shape::build_shape_path;
+use crate::svg::usvg_builder::{SvgContext, build_marker};
 
 /// Monotonic id counter for the synthetic clip paths that `<marker>` overflow
 /// clipping produces. The id only matters for SVG re-serialization; resvg keys clip
 /// paths by pointer identity, so it just needs to be a valid non-empty string.
 static MARKER_CLIP_ID: AtomicU32 = AtomicU32::new(0);
-
-/// Builds the path geometry + paint + markers for a basic shape element.
-pub(crate) fn build_shape_node<'a, 'dom>(
-    element: &ServoLayoutElement<'dom>,
-    ty: LayoutElementType,
-    computed: Option<&ComputedValues>,
-    host: Option<&ComputedValues>,
-    ctx: &SvgContext<'a, 'dom>,
-    parent_abs_transform: usvg::Transform,
-) -> Vec<usvg::Node> {
-    let Some(data) = build_shape_path(element, ty, computed) else {
-        return Vec::new();
-    };
-
-    let transform = ctx.transform_attr(element);
-    let abs_transform = parent_abs_transform.pre_concat(transform);
-
-    let id = element_id(element).unwrap_or_default();
-    let visible = computed
-        .map(|c| {
-            !matches!(
-                c.get_inherited_box().visibility,
-                style::computed_values::visibility::T::Hidden |
-                    style::computed_values::visibility::T::Collapse
-            )
-        })
-        .unwrap_or(true);
-
-    // When this shape is reachable through a `<use>`, its `fill` and `stroke`
-    // inherit from the `<use>` host independently: each is taken from the host
-    // unless this element explicitly sets it (attribute or inline `style`). This
-    // matters for `<use href="#path" stroke="…">` guides, where the referenced
-    // path may set `fill="none"` but leave `stroke` to be inherited.
-    let fill_computed = match host {
-        Some(_) if !element_has_explicit_fill(element) => host,
-        _ => computed,
-    };
-    let stroke_computed = match host {
-        Some(_) if !element_has_explicit_stroke(element) => host,
-        _ => computed,
-    };
-    let fill = fill_computed.and_then(|c| build_fill(c, ctx.gradients));
-    let stroke = stroke_computed.and_then(|c| build_stroke(c, ctx.gradients, ctx.diagonal));
-
-    // Marker scaling uses the stroke width in `markerUnits="strokeWidth"` mode
-    // (the default). This is the raw stroke width, resolved independently of
-    // whether a stroke is actually painted (`stroke="none"` still scales markers
-    // at the default 1.0).
-    let stroke_width = stroke_computed
-        .map(|c| {
-            let inherited = c.get_inherited_svg();
-            match &inherited.stroke_width {
-                SVGLength::LengthPercentage(nn_lp) => {
-                    nn_lp.0.resolve(Length::new(ctx.diagonal)).px()
-                },
-                _ => 1.0,
-            }
-        })
-        .unwrap_or(1.0);
-
-    let Some(path_node) = usvg::Path::new(
-        id,
-        visible,
-        fill,
-        stroke,
-        usvg::PaintOrder::default(),
-        usvg::ShapeRendering::default(),
-        Arc::new(data.clone()),
-        abs_transform,
-    )
-    .map(|p| usvg::Node::Path(Box::new(p))) else {
-        return Vec::new();
-    };
-
-    let mut nodes = vec![path_node];
-    nodes.extend(build_markers(
-        element,
-        &data,
-        stroke_width,
-        ctx,
-        abs_transform,
-    ));
-
-    // A shape's `transform` and `opacity` attributes cannot be folded into the
-    // path: `usvg::Path` has no local `transform` field, and resvg positions path
-    // geometry with the *accumulated group* transform (it never reads
-    // `path.abs_transform()` for positioning). So when a shape sets its own
-    // transform (or an `opacity < 1`), wrap the path + markers in a group that
-    // carries them — mirroring usvg's `convert_group` wrapper. The path keeps its
-    // id; the wrapper group is anonymous (usvg only ids the element for `<g>`/`<use>`).
-    let element_opacity = computed.map(|c| c.get_effects().opacity).unwrap_or(1.0);
-    let object_bbox = data.bounds().to_non_zero_rect();
-    let clip_path = match resolve_clip_path(element, ctx, object_bbox) {
-        ClipPathOutcome::Clip(clip) => Some(clip),
-        ClipPathOutcome::Invalid => return Vec::new(),
-        ClipPathOutcome::None => None,
-    };
-    let mask = match resolve_mask(element, ctx, object_bbox) {
-        MaskOutcome::Mask(mask) => Some(mask),
-        MaskOutcome::Invalid => return Vec::new(),
-        MaskOutcome::None => None,
-    };
-    let filter = match resolve_filter(element, ctx, object_bbox) {
-        FilterOutcome::Filter(filter) => Some(filter),
-        FilterOutcome::Invalid => return Vec::new(),
-        FilterOutcome::None => None,
-    };
-    if !transform.is_identity() ||
-        element_opacity < 1.0 ||
-        clip_path.is_some() ||
-        mask.is_some() ||
-        filter.is_some()
-    {
-        let mut group = usvg::Group::empty();
-        group.transform = transform;
-        group.abs_transform = abs_transform;
-        group.opacity = usvg::Opacity::new(element_opacity).unwrap_or(usvg::Opacity::ONE);
-        group.clip_path = clip_path;
-        group.mask = mask;
-        if let Some(filter) = filter {
-            group.filters.push(filter);
-        }
-        for node in nodes {
-            group.push_child(node);
-        }
-        vec![usvg::Node::Group(Box::new(group))]
-    } else {
-        nodes
-    }
-}
 
 /// Whether `element` is a `<marker>` element. Markers are only referenced by `id`
 /// (they are not rendered on their own and have no dedicated DOM type), so they are
@@ -175,7 +39,7 @@ fn is_marker_element(element: &ServoLayoutElement<'_>) -> bool {
 /// Builds the marker groups for `element`'s shape `path`, returning them as sibling
 /// [`usvg::Node`]s to be placed after the path (the default paint order draws
 /// markers last).
-fn build_markers<'a, 'dom>(
+pub(crate) fn build_markers<'a, 'dom>(
     element: &ServoLayoutElement<'dom>,
     path: &tiny_skia_path::Path,
     stroke_width: f32,
@@ -323,20 +187,9 @@ fn resolve_marker<'a, 'dom>(
 
         ts = ts.pre_translate(-r.x(), -r.y());
 
-        let mut g = usvg::Group::empty();
-        g.transform = ts;
-        g.abs_transform = shape_abs_transform.pre_concat(ts);
-        g.clip_path = clip_path.clone();
-
-        // Marker content is converted in the marker's local coordinate system.
-        for child in marker.as_node().dom_children() {
-            for child_node in convert_node(child, ctx, g.abs_transform, None) {
-                g.push_child(child_node);
-            }
-        }
-
-        if g.has_children() {
-            out.push(usvg::Node::Group(Box::new(g)));
+        let abs_transform = shape_abs_transform.pre_concat(ts);
+        if let Some(node) = build_marker(&marker, ts, abs_transform, clip_path.clone(), ctx) {
+            out.push(node);
         }
     };
 

@@ -12,10 +12,9 @@ use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
 use resvg::usvg::{self, tiny_skia_path};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 
-use crate::svg::builder::SvgContext;
-use crate::svg::builder::text::convert_text;
 use crate::svg::primitives::attrs::{element_id, element_layout_type, length_attr_opt};
-use crate::svg::primitives::shape::build_shape_path;
+use crate::svg::primitives::shape::resolve_shape_path;
+use crate::svg::usvg_builder::{SvgContext, build_text};
 
 /// Monotonic counter for synthetic clip-path ids used by nested-`<svg>` viewport
 /// clipping.
@@ -173,11 +172,13 @@ fn convert_clip_child<'a, 'dom>(
     // Text contributes its flattened glyph outlines (fill color is irrelevant for
     // the alpha-only clip mask).
     if ty == LayoutElementType::SVGTextElement {
-        return convert_text(&element, computed.as_deref(), ctx, parent_abs_transform);
+        return build_text(&element, computed.as_deref(), ctx, parent_abs_transform)
+            .into_iter()
+            .collect();
     }
 
     // Shapes: geometry + a black fill (rule from `clip-rule`), never stroked.
-    if let Some(path) = build_shape_path(&element, ty, computed.as_deref()) {
+    if let Some(path) = resolve_shape_path(&element, ty, computed.as_deref()) {
         let transform = ctx.transform_attr(&element);
         let abs_transform = parent_abs_transform.pre_concat(transform);
 

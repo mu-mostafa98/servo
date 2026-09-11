@@ -5,7 +5,7 @@
 //! Text layout primitives: font resolution, whitespace trimming, per-character
 //! positioning/rotation lists, span/chunk collection, and textPath resolution.
 //!
-//! These are the building blocks used by [`crate::svg::builder::text::convert_text`]
+//! These are the building blocks used by [`crate::svg::usvg_builder::build_text`]
 //! to assemble a [`usvg::Text`] node.
 
 use std::cell::RefCell;
@@ -30,7 +30,7 @@ use crate::svg::effects::paint::{Gradients, build_fill, build_stroke};
 use crate::svg::primitives::attrs::{
     element_id, element_layout_type, length_attr_opt, parse_number_list, parse_transform,
 };
-use crate::svg::primitives::shape::build_shape_path;
+use crate::svg::primitives::shape::resolve_shape_path;
 
 /// Font database and resolver used to lay out `<text>` into glyph outlines.
 ///
@@ -777,7 +777,7 @@ pub(crate) fn resolve_text_flow(
         .style_data()
         .is_some()
         .then(|| linked.as_node().style(&context.style_context));
-    let mut path = build_shape_path(linked, linked_ty, linked_computed.as_deref())?;
+    let mut path = resolve_shape_path(linked, linked_ty, linked_computed.as_deref())?;
 
     // The referenced path's own `transform` applies to its outline.
     let transform = linked

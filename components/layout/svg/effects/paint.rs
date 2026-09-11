@@ -17,11 +17,11 @@ use style::values::computed::Length;
 use style::values::computed::svg::{SVGOpacity, SVGPaint, SVGPaintKind, SVGStrokeDashArray};
 use style::values::generics::svg::SVGLength;
 
-use crate::svg::builder::{SvgContext, convert_node};
 use crate::svg::primitives::attrs::{
     element_id, element_layout_type, length_or_percentage_attr, number_or_percentage_attr,
     parse_transform, parse_view_box,
 };
+use crate::svg::usvg_builder::{SvgContext, build_usvg_node};
 
 /// Paint servers referenced by `url(#id)` and collected from
 /// `<linearGradient>`, `<radialGradient>` and `<pattern>` elements before the
@@ -204,7 +204,7 @@ pub(crate) fn build_pattern<'a, 'dom>(
 
     let mut root = usvg::Group::empty();
     for child in element.as_node().dom_children() {
-        for child_node in convert_node(child, ctx, usvg::Transform::identity(), None) {
+        for child_node in build_usvg_node(child, ctx, usvg::Transform::identity(), None) {
             root.push_child(child_node);
         }
     }

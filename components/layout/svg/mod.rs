@@ -15,17 +15,17 @@
 //!
 //! The code is layered, with dependencies flowing downward:
 //!
-//! * [`builder`] — the entry point and per-element converter facades, coordinated
-//!   through a single [`builder::SvgContext`].
+//! * [`usvg_builder`] — the entry point and per-element build facades, coordinated
+//!   through a single [`usvg_builder::SvgContext`].
 //! * [`effects`] — paint servers, clip paths, masks and filters.
 //! * [`primitives`] — leaf attribute/geometry/text parsing, free of any effect or
 //!   builder knowledge.
 //! * [`raster`] — the final rasterization step into WebRender image-cache pixels.
 
-mod builder;
 mod effects;
 mod primitives;
 mod raster;
+mod usvg_builder;
 
-pub(crate) use builder::build_usvg_tree;
 pub(crate) use raster::rasterize_svg_tree;
+pub(crate) use usvg_builder::build_usvg_tree;
