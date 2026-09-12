@@ -17,6 +17,9 @@ doctest = false
 
 [features]
 tracing = ["dep:tracing"]
+# Build the usvg tree directly from the SVG DOM (post-cascade) and rasterize it
+# with resvg, instead of serializing back to XML and using the vector-image cache.
+dom-to-usvg = []
 
 [dependencies]
 accesskit = { workspace = true }
