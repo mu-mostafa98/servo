@@ -29,9 +29,10 @@ use crate::dom::document::Document;
 use crate::dom::document::focus::FocusableArea;
 use crate::dom::element::attributes::storage::AttrRef;
 use crate::dom::element::{AttributeMutation, Element};
+use crate::dom::iterators::ShadowIncluding;
 use crate::dom::node::focus::FocusTrigger;
 use crate::dom::node::virtualmethods::VirtualMethods;
-use crate::dom::node::{Node, NodeTraits};
+use crate::dom::node::{ChildrenMutation, Node, NodeTraits};
 use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
@@ -85,6 +86,25 @@ impl SVGElement {
     fn as_element(&self) -> &Element {
         self.upcast::<Element>()
     }
+
+    /// Invalidates the nearest enclosing [`SVGSVGElement`] after a mutation on
+    /// this element or one of its descendants.
+    ///
+    /// The `<svg>` element's own `attribute_mutated`/`children_changed` hooks
+    /// only fire for mutations on the `<svg>` element itself, not for changes to
+    /// nested descendants (a `<path>`'s `d`, a `<g>`'s children, a `<text>`'s
+    /// character data). Without this walk, such nested mutations would leave a
+    /// stale raster. This mirrors the DOM ancestor walk that the existing hooks
+    /// lack.
+    fn invalidate_nearest_svg_ancestor(&self, cx: &mut js::context::JSContext) {
+        let node = self.upcast::<Node>();
+        for ancestor in node.inclusive_ancestors_unrooted(cx.no_gc(), ShadowIncluding::No) {
+            if let Some(svg) = ancestor.downcast::<SVGSVGElement>() {
+                svg.invalidate_cached_serialized_subtree_and_rasterization_result(cx.no_gc());
+                return;
+            }
+        }
+    }
 }
 
 impl VirtualMethods for SVGElement {
@@ -113,12 +133,21 @@ impl VirtualMethods for SVGElement {
                 },
             }
         }
+
+        self.invalidate_nearest_svg_ancestor(cx);
+    }
+
+    fn children_changed(&self, cx: &mut js::context::JSContext, mutation: &ChildrenMutation) {
+        self.super_type().unwrap().children_changed(cx, mutation);
+
+        self.invalidate_nearest_svg_ancestor(cx);
     }
 
     fn attribute_affects_presentational_hints(&self, attr: AttrRef<'_>) -> bool {
         matches!(
             attr.local_name(),
-            &local_name!("fill") |
+            &local_name!("display") |
+                &local_name!("fill") |
                 &local_name!("fill-opacity") |
                 &local_name!("fill-rule") |
                 &local_name!("stroke") |
@@ -132,6 +161,11 @@ impl VirtualMethods for SVGElement {
                 &local_name!("display") |
                 &local_name!("visibility") |
                 &local_name!("opacity") |
+                &local_name!("vector-effect") |
+                &local_name!("shape-rendering") |
+                &local_name!("clip-path") |
+                &local_name!("mask") |
+                &local_name!("filter") |
                 &local_name!("cx") |
                 &local_name!("cy") |
                 &local_name!("r") |
@@ -141,7 +175,21 @@ impl VirtualMethods for SVGElement {
                 &local_name!("y") |
                 &local_name!("width") |
                 &local_name!("height") |
-                &local_name!("d")
+                &local_name!("d") |
+                &local_name!("font-size") |
+                &local_name!("font-family") |
+                &local_name!("font-style") |
+                &local_name!("font-weight") |
+                &local_name!("font-stretch") |
+                &local_name!("font-variant") |
+                &local_name!("text-anchor") |
+                &local_name!("dominant-baseline") |
+                &local_name!("alignment-baseline") |
+                &local_name!("baseline-shift") |
+                &local_name!("letter-spacing") |
+                &local_name!("word-spacing") |
+                &local_name!("direction") |
+                &local_name!("text-decoration")
         ) || self
             .super_type()
             .unwrap()
@@ -313,6 +361,99 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             push,
         );
 
+        // Font presentation attributes (SVG spec §10.10). These are required so
+        // that `<text>` and `<tspan>` `font-size`/`font-family`/`font-style`/
+        // `font-weight` attributes reach the computed `font` used by the SVG
+        // engine's text shaper. Without this, every span uses the default font.
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-size",
+            longhands::font_size::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-family",
+            longhands::font_family::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-style",
+            longhands::font_style::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-weight",
+            longhands::font_weight::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-stretch",
+            longhands::font_stretch::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "font-variant",
+            longhands::font_variant_caps::parse_declared,
+            push,
+        );
+
+        // Text presentation attributes (SVG spec §10.8 / §11). These map to
+        // their CSS longhand equivalents so the computed style drives the SVG
+        // text shaper instead of raw XML attributes.
+        self.parse_svg_attribute(
+            &parser_context,
+            "text-anchor",
+            longhands::text_anchor::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "dominant-baseline",
+            longhands::dominant_baseline::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "alignment-baseline",
+            longhands::alignment_baseline::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "baseline-shift",
+            longhands::baseline_shift::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "letter-spacing",
+            longhands::letter_spacing::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "word-spacing",
+            longhands::word_spacing::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "direction",
+            longhands::direction::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "text-decoration",
+            longhands::text_decoration_line::parse_declared,
+            push,
+        );
+
         self.parse_svg_attribute(
             &parser_context,
             "stroke",
@@ -377,6 +518,36 @@ impl<'dom> LayoutDom<'dom, SVGElement> {
             &parser_context,
             "opacity",
             longhands::opacity::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "vector-effect",
+            longhands::vector_effect::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "shape-rendering",
+            longhands::shape_rendering::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "clip-path",
+            longhands::clip_path::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "mask",
+            longhands::mask_image::parse_declared,
+            push,
+        );
+        self.parse_svg_attribute(
+            &parser_context,
+            "filter",
+            longhands::filter::parse_declared,
             push,
         );
 

@@ -1225,6 +1225,7 @@ malloc_size_of_is_0!(keyboard_types::Code);
 malloc_size_of_is_0!(keyboard_types::Modifiers);
 malloc_size_of_is_0!(mime::Mime);
 malloc_size_of_is_0!(resvg::usvg::fontdb::ID);
+malloc_size_of_is_0!(resvg::usvg::ViewBox);
 malloc_size_of_is_0!(resvg::usvg::fontdb::Style);
 malloc_size_of_is_0!(resvg::usvg::fontdb::Weight);
 malloc_size_of_is_0!(resvg::usvg::fontdb::Stretch);

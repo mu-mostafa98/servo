@@ -12,6 +12,8 @@ use layout_api::{IFrameSize, LayoutElement, LayoutImageDestination, LayoutNode, 
 use malloc_size_of_derive::MallocSizeOf;
 use net_traits::image_cache::{Image, ImageOrMetadataAvailable, VectorImage};
 use net_traits::request::InternalRequest;
+#[cfg(feature = "dom-to-usvg")]
+use resvg::usvg;
 use script::layout_dom::ServoLayoutNode;
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
@@ -152,6 +154,16 @@ pub(crate) enum ReplacedContentKind {
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
+        /// The parsed `viewBox` (with `preserveAspectRatio`), applied at raster
+        /// time to map viewBox coordinates onto the device box.
+        #[cfg(feature = "dom-to-usvg")]
+        view_box: Option<usvg::ViewBox>,
+        /// The programmatically-built render tree, constructed on the layout thread
+        /// from computed styles (so the CSS cascade applies). When present, this is
+        /// rasterized synchronously instead of going through the vector-image cache.
+        #[cfg(feature = "dom-to-usvg")]
+        #[conditional_malloc_size_of]
+        svg_tree: Option<Arc<usvg::Tree>>,
     },
     Audio,
 }
@@ -318,10 +330,24 @@ impl ReplacedContents {
             _ => unreachable!("SVG element can't contain a raster image."),
         });
 
+        // Build the usvg tree directly from the DOM + computed styles on the layout
+        // thread. This is what makes the CSS cascade apply to SVG: instead of
+        // re-parsing raw XML (which only sees presentation attributes), we read the
+        // post-cascade computed values for fill/stroke/geometry.
+        #[cfg(feature = "dom-to-usvg")]
+        let (svg_tree, view_box) = match crate::svg::build_usvg_tree(node, context) {
+            Some((tree, view_box)) => (Some(Arc::new(tree)), view_box),
+            None => (None, None),
+        };
+
         (
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox: svg_data.view_box.is_some(),
+                #[cfg(feature = "dom-to-usvg")]
+                view_box,
+                #[cfg(feature = "dom-to-usvg")]
+                svg_tree,
             },
             natural_size,
         )
@@ -604,7 +630,51 @@ impl ReplacedContents {
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
+                #[cfg(feature = "dom-to-usvg")]
+                view_box,
+                #[cfg(feature = "dom-to-usvg")]
+                svg_tree,
             } => {
+                let scale = layout_context.style_context.device_pixel_ratio();
+                let content_size = base.rect().size;
+                let raster_size = Size2D::new(
+                    content_size.width.scale_by(scale.0).to_px(),
+                    content_size.height.scale_by(scale.0).to_px(),
+                );
+
+                let tag = self.base_fragment_info.tag.unwrap();
+
+                // Preferred path: rasterize the programmatically-built tree synchronously
+                // on the layout thread and upload the raw pixels to WebRender directly.
+                #[cfg(feature = "dom-to-usvg")]
+                if let Some(svg_tree) = svg_tree {
+                    let image_key = crate::svg::rasterize_svg_tree(
+                        layout_context.image_resolver.image_cache.as_ref(),
+                        svg_tree,
+                        tag.node,
+                        raster_size,
+                        *view_box,
+                    );
+
+                    return image_key
+                        .map(|image_key| {
+                            Fragment::Image(Arc::new(ImageFragment {
+                                base,
+                                style: style.clone().into(),
+                                clip,
+                                image_key: Some(image_key),
+                                showing_broken_image_icon: false,
+                                url: None,
+                                natural_width: self.natural_size.width,
+                                natural_height: self.natural_size.height,
+                            }))
+                        })
+                        .into_iter()
+                        .collect();
+                }
+
+                // Fallback: legacy vector-image cache path (used when the DOM->usvg build
+                // produced no tree, e.g. for non-`<svg>` nodes).
                 let Some(vector_image) = vector_image else {
                     return vec![];
                 };
@@ -627,14 +697,6 @@ impl ReplacedContents {
                     );
                 }
 
-                let scale = layout_context.style_context.device_pixel_ratio();
-                let content_size = base.rect().size;
-                let raster_size = Size2D::new(
-                    content_size.width.scale_by(scale.0).to_px(),
-                    content_size.height.scale_by(scale.0).to_px(),
-                );
-
-                let tag = self.base_fragment_info.tag.unwrap();
                 layout_context
                     .image_resolver
                     .rasterize_vector_image(

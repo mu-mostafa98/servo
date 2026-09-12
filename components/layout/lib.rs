@@ -31,6 +31,8 @@ mod quotes;
 mod replaced;
 mod sizing;
 mod style_ext;
+#[cfg(feature = "dom-to-usvg")]
+mod svg;
 pub mod table;
 mod traversal;
 
