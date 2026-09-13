@@ -48,6 +48,8 @@ mod window_named_properties;
 mod xpath;
 
 pub use event_loop::script_thread::ScriptThread;
+#[cfg(feature = "dom-to-usvg")]
+pub use event_loop::svg_font::SvgFontResolver;
 pub(crate) use script_bindings::DomTypes;
 pub(crate) use script_bindings::reflector::{AssociatedMemory, DomObject, MutDomObject, Reflector};
 

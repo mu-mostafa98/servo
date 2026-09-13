@@ -14,6 +14,11 @@ use pixels::ImageMetadata;
 use script_bindings::codegen::InheritTypes::{
     ElementTypeId, HTMLElementTypeId, SVGElementTypeId, SVGGraphicsElementTypeId,
 };
+#[cfg(feature = "dom-to-usvg")]
+use script_bindings::codegen::InheritTypes::{
+    SVGGeometryElementTypeId, SVGGradientElementTypeId, SVGTextContentElementTypeId,
+    SVGTextPositioningElementTypeId,
+};
 use servo_base::id::{BrowsingContextId, PipelineId};
 use servo_base::text::{RangeAny, Utf16CodeUnits, Utf32CodeUnits};
 use servo_url::ServoUrl;
@@ -464,6 +469,108 @@ impl From<ElementTypeIdWrapper> for LayoutElementType {
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
                 SVGGraphicsElementTypeId::SVGSVGElement,
             )) => LayoutElementType::SVGSVGElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGAElement,
+            )) => LayoutElementType::SVGAElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGCircleElement,
+                ),
+            )) => LayoutElementType::SVGCircleElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGEllipseElement,
+                ),
+            )) => LayoutElementType::SVGEllipseElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGLineElement,
+                ),
+            )) => LayoutElementType::SVGLineElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPathElement,
+                ),
+            )) => LayoutElementType::SVGPathElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPolygonElement,
+                ),
+            )) => LayoutElementType::SVGPolygonElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPolylineElement,
+                ),
+            )) => LayoutElementType::SVGPolylineElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGRectElement,
+                ),
+            )) => LayoutElementType::SVGRectElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGDefsElement,
+            )) => LayoutElementType::SVGDefsElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGElement,
+            )) => LayoutElementType::SVGGElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGSymbolElement,
+            )) => LayoutElementType::SVGSymbolElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGTextContentElement(
+                    SVGTextContentElementTypeId::SVGTextPositioningElement(
+                        SVGTextPositioningElementTypeId::SVGTextElement,
+                    ),
+                ),
+            )) => LayoutElementType::SVGTextElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGTextContentElement(
+                    SVGTextContentElementTypeId::SVGTextPositioningElement(
+                        SVGTextPositioningElementTypeId::SVGTSpanElement,
+                    ),
+                ),
+            )) => LayoutElementType::SVGTSpanElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGUseElement,
+            )) => LayoutElementType::SVGUseElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGClipPathElement) => {
+                LayoutElementType::SVGClipPathElement
+            },
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGMaskElement) => {
+                LayoutElementType::SVGMaskElement
+            },
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGradientElement(
+                SVGGradientElementTypeId::SVGLinearGradientElement,
+            )) => LayoutElementType::SVGLinearGradientElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGradientElement(
+                SVGGradientElementTypeId::SVGRadialGradientElement,
+            )) => LayoutElementType::SVGRadialGradientElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGStopElement) => {
+                LayoutElementType::SVGStopElement
+            },
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGPatternElement) => {
+                LayoutElementType::SVGPatternElement
+            },
             _ => LayoutElementType::Element,
         }
     }
