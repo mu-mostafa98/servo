@@ -22,11 +22,6 @@ mod marker;
 mod path;
 mod text;
 
-use self::group::{build_group, build_svg, build_use};
-use self::image::build_image;
-use self::path::build_shape;
-pub(crate) use self::text::build_text;
-
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -38,12 +33,15 @@ use servo_arc::Arc as ServoArc;
 use style::dom::TNode;
 use style::properties::ComputedValues;
 
+use self::group::{build_group, build_svg, build_use};
+use self::image::build_image;
+use self::path::build_shape;
+pub(crate) use self::text::build_text;
 use crate::context::LayoutContext;
-use crate::svg::effects::paint::build_pattern;
 use crate::svg::effects::Effects;
+use crate::svg::effects::paint::build_pattern;
 use crate::svg::primitives::attrs::{
-    element_id, element_layout_type, is_group_element, parse_transform,
-    resolve_size_and_view_box,
+    element_id, element_layout_type, is_group_element, parse_transform, resolve_size_and_view_box,
 };
 use crate::svg::primitives::geometry::normalized_diagonal;
 use crate::svg::primitives::paint::{Gradients, collect_paint_servers};

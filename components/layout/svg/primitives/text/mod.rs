@@ -12,12 +12,10 @@
 mod font;
 mod whitespace;
 
-pub(crate) use font::{SvgFonts, convert_font};
-pub(crate) use whitespace::{TrimmedTexts, trim_text_tree};
-
 use std::collections::HashMap;
 use std::sync::Arc;
 
+pub(crate) use font::{SvgFonts, convert_font};
 use html5ever::{LocalName, ns};
 use layout_api::{LayoutElement, LayoutElementType, LayoutNode};
 use resvg::usvg;
@@ -25,12 +23,13 @@ use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::dom::NodeInfo;
 use style::properties::ComputedValues;
 use svgtypes::LengthUnit;
+pub(crate) use whitespace::{TrimmedTexts, trim_text_tree};
 
 use crate::context::LayoutContext;
-use crate::svg::primitives::paint::{Gradients, build_fill, build_stroke};
 use crate::svg::primitives::attrs::{
     element_id, element_layout_type, length_attr_opt, parse_number_list, parse_transform,
 };
+use crate::svg::primitives::paint::{Gradients, build_fill, build_stroke};
 use crate::svg::primitives::shape::resolve_shape_path;
 
 /// A text character position. _Character_ is a Unicode codepoint, per SVG 2.

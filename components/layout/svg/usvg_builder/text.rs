@@ -11,14 +11,13 @@ use resvg::usvg;
 use script::layout_dom::ServoLayoutElement;
 use style::properties::ComputedValues;
 
+use super::{SvgContext, carry_group, needs_carry};
 use crate::svg::effects::resolve_effects;
 use crate::svg::primitives::attrs::element_id;
 use crate::svg::primitives::text::{
     collect_text_chunks, convert_direction, convert_writing_mode, resolve_positions_list,
     resolve_rotate_list, trim_text_tree,
 };
-
-use super::{SvgContext, carry_group, needs_carry};
 
 /// Builds a `<text>` element into a `Text` node, laying it out into glyph outlines
 /// via usvg's own text engine. Resolves clip-path/mask *and* filter (a `<text>`
@@ -85,7 +84,13 @@ pub(crate) fn build_text<'a, 'dom>(
 
     if needs_carry(&transform, element_opacity, &effects) {
         let mut group = usvg::Group::empty();
-        carry_group(&mut group, transform, abs_transform, element_opacity, effects);
+        carry_group(
+            &mut group,
+            transform,
+            abs_transform,
+            element_opacity,
+            effects,
+        );
         group.push_child(text_node);
         Some(usvg::Node::Group(Box::new(group)))
     } else {

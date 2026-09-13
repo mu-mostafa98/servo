@@ -31,11 +31,11 @@ use crate::dom::element::attributes::storage::AttrRef;
 use crate::dom::element::{AttributeMutation, Element};
 #[cfg(feature = "dom-to-usvg")]
 use crate::dom::iterators::ShadowIncluding;
+#[cfg(feature = "dom-to-usvg")]
+use crate::dom::node::ChildrenMutation;
 use crate::dom::node::focus::FocusTrigger;
 use crate::dom::node::virtualmethods::VirtualMethods;
 use crate::dom::node::{Node, NodeTraits};
-#[cfg(feature = "dom-to-usvg")]
-use crate::dom::node::ChildrenMutation;
 use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;

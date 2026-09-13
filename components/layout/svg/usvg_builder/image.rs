@@ -9,11 +9,10 @@ use resvg::usvg;
 use script::layout_dom::ServoLayoutElement;
 use style::properties::ComputedValues;
 
+use super::{SvgContext, carry_group, needs_carry};
 use crate::svg::effects::resolve_effects;
 use crate::svg::primitives::attrs::element_id;
 use crate::svg::primitives::image::{decode_image, image_geometry};
-
-use super::{SvgContext, carry_group, needs_carry};
 
 /// Builds an `<image>` element into an `Image` node (always wrapped in an inner
 /// align group, plus an outer effect group when the element carries

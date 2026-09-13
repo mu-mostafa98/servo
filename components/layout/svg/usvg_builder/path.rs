@@ -15,14 +15,13 @@ use style::values::computed::Length;
 use style::values::generics::svg::SVGLength;
 
 use super::marker::build_markers;
+use super::{SvgContext, carry_group, needs_carry};
 use crate::svg::effects::{Effects, resolve_effects};
 use crate::svg::primitives::attrs::{
     element_has_explicit_fill, element_has_explicit_stroke, element_id,
 };
 use crate::svg::primitives::paint::{build_fill, build_stroke};
 use crate::svg::primitives::shape::resolve_shape_path;
-
-use super::{SvgContext, carry_group, needs_carry};
 
 /// Builds the path geometry + paint + markers for a basic shape element.
 ///
@@ -119,7 +118,13 @@ pub(super) fn build_shape<'a, 'dom>(
 
     if needs_carry(&transform, element_opacity, &effects) {
         let mut group = usvg::Group::empty();
-        carry_group(&mut group, transform, abs_transform, element_opacity, effects);
+        carry_group(
+            &mut group,
+            transform,
+            abs_transform,
+            element_opacity,
+            effects,
+        );
         for node in nodes {
             group.push_child(node);
         }

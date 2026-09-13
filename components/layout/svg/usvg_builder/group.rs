@@ -17,13 +17,12 @@ use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::dom::TNode;
 use style::properties::ComputedValues;
 
+use super::{SvgContext, build_usvg_node, carry_group};
 use crate::svg::effects::clip::rect_clip_path;
 use crate::svg::effects::resolve_effects;
 use crate::svg::primitives::attrs::{
     element_id, element_layout_type, length_attr_opt, parse_view_box,
 };
-
-use super::{SvgContext, build_usvg_node, carry_group};
 
 /// Builds a group-like element (`g`/`a`/`clipPath`/`mask`) into a `Group`. Unlike a
 /// basic shape, a group's `transform`/`opacity`/`clip`/`mask`/`filter` live *on* the
@@ -54,7 +53,10 @@ pub(super) fn build_group<'a, 'dom>(
     let object_bbox = group.compute_object_bbox();
     let effects = resolve_effects(&element, ctx, object_bbox)?;
 
-    let opacity = computed.as_deref().map(|c| c.get_effects().opacity).unwrap_or(1.0);
+    let opacity = computed
+        .as_deref()
+        .map(|c| c.get_effects().opacity)
+        .unwrap_or(1.0);
     carry_group(&mut group, transform, abs_transform, opacity, effects);
 
     Some(usvg::Node::Group(Box::new(group)))
@@ -162,7 +164,13 @@ pub(super) fn build_use<'a, 'dom>(
     // A `<use>` referencing a `<symbol>` establishes a new viewport (the symbol's
     // `viewBox` mapped onto the `<use>`'s `width`×`height`), handled separately.
     if element_layout_type(referenced) == LayoutElementType::SVGSymbolElement {
-        return build_use_symbol(node, referenced, computed.as_deref(), ctx, parent_abs_transform);
+        return build_use_symbol(
+            node,
+            referenced,
+            computed.as_deref(),
+            ctx,
+            parent_abs_transform,
+        );
     }
 
     let mut group = usvg::Group::empty();

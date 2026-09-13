@@ -19,9 +19,8 @@ use layout_api::{LayoutElement, LayoutNode};
 use resvg::usvg::{self, ApproxEqUlps, ApproxZeroUlps, tiny_skia_path};
 use script::layout_dom::ServoLayoutElement;
 
-use crate::svg::primitives::attrs::{length_attr, parse_view_box};
-
 use super::{SvgContext, build_usvg_node};
+use crate::svg::primitives::attrs::{length_attr, parse_view_box};
 
 /// A marker path segment. `QuadTo` is resolved to `CubicTo` up front (mirroring
 /// usvg's `parser::marker::Segment`), since the vertex-tangent math only handles

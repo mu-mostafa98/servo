@@ -12,11 +12,11 @@ use layout_api::{LayoutElement, LayoutNode};
 use resvg::usvg::{self, ApproxZeroUlps, filter};
 use script::layout_dom::ServoLayoutElement;
 
-use crate::svg::usvg_builder::SvgContext;
 use crate::svg::primitives::attrs::{
     element_id, length_attr, length_attr_opt, length_or_percentage_attr, number_attr,
     parse_number_list,
 };
+use crate::svg::usvg_builder::SvgContext;
 
 /// Returns the `id` referenced by an element's `filter="url(#id)"` attribute,
 /// or `None` when the element has no filter (or `filter="none"`).
