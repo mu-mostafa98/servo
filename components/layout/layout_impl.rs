@@ -119,7 +119,7 @@ static SERVO_CSS: &[u8] = include_bytes!("./stylesheets/servo.css");
 /// the usvg builder can read their post-cascade computed styles. This override
 /// is appended *after* `servo.css`, so its `svg > *` rule wins the cascade.
 #[cfg(feature = "dom-to-usvg")]
-static SERVO_SVG_CSS: &[u8] = include_bytes!("./stylesheets/servo-svg.css");
+static SERVO_SVG_CSS: &[u8] = b"svg > * { display: inline; }";
 
 /// A CSS file to style the presentational hints.
 static PRESENTATIONAL_HINTS_CSS: &[u8] = include_bytes!("./stylesheets/presentational-hints.css");
@@ -1738,7 +1738,7 @@ fn get_ua_stylesheets(shared_lock: &SharedRwLock) -> Rc<UserAgentStylesheets> {
                 #[cfg(feature = "dom-to-usvg")]
                 user_agent_stylesheets.push(parse_ua_stylesheet(
                     shared_lock,
-                    "servo-svg.css",
+                    "servo-svg-override",
                     SERVO_SVG_CSS,
                 ));
 
