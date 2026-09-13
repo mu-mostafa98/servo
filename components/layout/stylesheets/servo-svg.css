@@ -1,0 +1,14 @@
+/* This Source Code Form is subject to the terms of the Mozilla Public
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+
+/*
+ * With the `dom-to-usvg` feature enabled, SVG children must remain visible so
+ * the usvg builder can read their post-cascade computed styles (Servo skips
+ * style computation for the descendants of a `display: none` subtree). This
+ * overrides the `svg > * { display: none }` rule in servo.css, which is kept
+ * for the default (non-usvg) build.
+ */
+svg > * {
+  display: inline;
+}

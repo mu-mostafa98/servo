@@ -29,10 +29,13 @@ use crate::dom::document::Document;
 use crate::dom::document::focus::FocusableArea;
 use crate::dom::element::attributes::storage::AttrRef;
 use crate::dom::element::{AttributeMutation, Element};
+#[cfg(feature = "dom-to-usvg")]
 use crate::dom::iterators::ShadowIncluding;
 use crate::dom::node::focus::FocusTrigger;
 use crate::dom::node::virtualmethods::VirtualMethods;
-use crate::dom::node::{ChildrenMutation, Node, NodeTraits};
+use crate::dom::node::{Node, NodeTraits};
+#[cfg(feature = "dom-to-usvg")]
+use crate::dom::node::ChildrenMutation;
 use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
@@ -96,6 +99,7 @@ impl SVGElement {
     /// character data). Without this walk, such nested mutations would leave a
     /// stale raster. This mirrors the DOM ancestor walk that the existing hooks
     /// lack.
+    #[cfg(feature = "dom-to-usvg")]
     fn invalidate_nearest_svg_ancestor(&self, cx: &mut js::context::JSContext) {
         let node = self.upcast::<Node>();
         for ancestor in node.inclusive_ancestors_unrooted(cx.no_gc(), ShadowIncluding::No) {
@@ -134,9 +138,11 @@ impl VirtualMethods for SVGElement {
             }
         }
 
+        #[cfg(feature = "dom-to-usvg")]
         self.invalidate_nearest_svg_ancestor(cx);
     }
 
+    #[cfg(feature = "dom-to-usvg")]
     fn children_changed(&self, cx: &mut js::context::JSContext, mutation: &ChildrenMutation) {
         self.super_type().unwrap().children_changed(cx, mutation);
 

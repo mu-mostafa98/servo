@@ -518,6 +518,7 @@ struct ImageCacheStore {
 
     /// [`WebRenderImageKey`]s created for raw pixel data uploaded via
     /// [`ImageCache::upload_raw_pixels`], keyed by the caller-provided hash.
+    #[cfg(feature = "dom-to-usvg")]
     raw_pixel_keys: FxHashMap<u64, WebRenderImageKey>,
 }
 
@@ -849,6 +850,7 @@ impl ImageCacheFactory for ImageCacheFactoryImpl {
                 webview_id,
                 key_cache: KeyCache::new(),
                 svg_rasterization_task_store: SvgRasterizationTaskStore::default(),
+                #[cfg(feature = "dom-to-usvg")]
                 raw_pixel_keys: FxHashMap::default(),
             })),
             svg_id_image_id_map: Arc::new(Mutex::new(FxHashMap::default())),
@@ -934,6 +936,7 @@ impl ImageCache for ImageCacheImpl {
             .generate_image_key_blocking(store.webview_id)
     }
 
+    #[cfg(feature = "dom-to-usvg")]
     fn upload_raw_pixels(&self, hash: u64, data: Vec<u8>, width: u32, height: u32) {
         let mut store = self.store.lock();
 
@@ -976,6 +979,7 @@ impl ImageCache for ImageCacheImpl {
         }
     }
 
+    #[cfg(feature = "dom-to-usvg")]
     fn raw_pixel_image_key(&self, hash: u64) -> Option<WebRenderImageKey> {
         self.store.lock().raw_pixel_keys.get(&hash).copied()
     }

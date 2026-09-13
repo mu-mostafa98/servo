@@ -208,10 +208,12 @@ pub trait ImageCache: Sync + Send {
     /// This is used to rasterize SVG content synchronously on the layout thread and
     /// hand the resulting pixels directly to WebRender, bypassing the vector-image
     /// cache and its asynchronous rasterization path.
+    #[cfg(feature = "dom-to-usvg")]
     fn upload_raw_pixels(&self, hash: u64, data: Vec<u8>, width: u32, height: u32);
 
     /// Returns the [`ImageKey`] previously created for `hash` by
     /// [`Self::upload_raw_pixels`], if any.
+    #[cfg(feature = "dom-to-usvg")]
     fn raw_pixel_image_key(&self, hash: u64) -> Option<ImageKey>;
 
     /// Definitively check whether there is a cached, fully loaded image available.
