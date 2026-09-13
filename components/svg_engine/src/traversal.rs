@@ -516,12 +516,6 @@ fn emit_geometry(
 
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, node_clip_chain, wr);
 
-    let effective_clip = params
-        .mask_clips
-        .as_ref()
-        .and_then(|c| c.first().copied())
-        .unwrap_or(node_clip_chain);
-
     if let Some(clips) = params.mask_clips {
         for &mask_chain in clips {
             emit_shape(
@@ -548,7 +542,7 @@ fn emit_geometry(
             &style,
             cur_origin,
             cur_spatial_id,
-            effective_clip,
+            node_clip_chain,
             accumulated_scale,
             params.paints,
             params.markers,
