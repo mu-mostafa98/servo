@@ -23,6 +23,29 @@ const FALLBACK_HEIGHT: f32 = 16.0;
 /// clipped by the text bounds rect.
 const DESCENT: f32 = 4.0;
 
+/// Approximate ascent (baseline → top of the em box) for a glyph run. The
+/// fixed estimate (16px) matches the default 16px font size but clips the top
+/// of tall glyphs when the font is larger, so scale it by the resolved font
+/// size. A full em box above the baseline safely covers every font's ascent.
+fn ascent(font_size: f32) -> f32 {
+    if font_size > 0.0 {
+        font_size
+    } else {
+        FALLBACK_HEIGHT
+    }
+}
+
+/// Approximate descent (baseline → bottom of the em box) for a glyph run. The
+/// fixed estimate (4px = 0.25 × 16px) scales with the font size so descenders
+/// stay covered.
+fn descent(font_size: f32) -> f32 {
+    if font_size > 0.0 {
+        0.25 * font_size
+    } else {
+        DESCENT
+    }
+}
+
 impl Render for TextSpan {
     fn render(&self, ctx: &mut RenderContext) {
         let total_advance = self.total_advance();
@@ -94,11 +117,13 @@ impl TextSpan {
         // glyph y range (WebRender clips to this rect).
         let min_y = self.glyphs.iter().map(|g| g.y).fold(0.0f32, f32::min);
         let max_y = self.glyphs.iter().map(|g| g.y).fold(0.0f32, f32::max);
+        let ascent = ascent(self.font_size);
+        let descent = descent(self.font_size);
         let bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(base_x, base_y + min_y - FALLBACK_HEIGHT),
+            LayoutPoint::new(base_x, base_y + min_y - ascent),
             LayoutSize::new(
                 total_w.max(1.0),
-                (max_y - min_y + FALLBACK_HEIGHT + DESCENT).max(1.0),
+                (max_y - min_y + ascent + descent).max(1.0),
             ),
         );
 
@@ -164,6 +189,7 @@ impl TextSpan {
                     angle,
                     ctx.spatial_id,
                     ctx.clip_chain_id,
+                    self.font_size,
                     color,
                 );
             }
@@ -177,6 +203,7 @@ impl TextSpan {
                     angle,
                     ctx.spatial_id,
                     ctx.clip_chain_id,
+                    self.font_size,
                     color,
                 );
             }
@@ -231,10 +258,13 @@ fn push_glyph(
     angle: f32,
     spatial_id: webrender_api::SpatialId,
     clip_chain_id: webrender_api::ClipChainId,
+    font_size: f32,
     color: ColorF,
 ) {
     let glyph_x = base_x + g.x;
     let glyph_y = base_y + g.y;
+    let ascent = ascent(font_size);
+    let descent = descent(font_size);
 
     let (glyph_spatial_id, point, bounds) = if angle != 0.0 {
         let frame_id = wr.push_reference_frame(
@@ -254,14 +284,14 @@ fn push_glyph(
             },
         );
         let b = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(0.0, -FALLBACK_HEIGHT),
-            LayoutSize::new(g.advance.max(1.0), FALLBACK_HEIGHT + DESCENT),
+            LayoutPoint::new(0.0, -ascent),
+            LayoutSize::new(g.advance.max(1.0), ascent + descent),
         );
         (frame_id, LayoutPoint::zero(), b)
     } else {
         let b = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(glyph_x, glyph_y - FALLBACK_HEIGHT),
-            LayoutSize::new(g.advance.max(1.0), FALLBACK_HEIGHT + DESCENT),
+            LayoutPoint::new(glyph_x, glyph_y - ascent),
+            LayoutSize::new(g.advance.max(1.0), ascent + descent),
         );
         (spatial_id, LayoutPoint::new(glyph_x, glyph_y), b)
     };

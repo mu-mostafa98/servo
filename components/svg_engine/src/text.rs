@@ -58,6 +58,10 @@ pub struct TextSpan {
     /// the previous run ended. For a standalone `<text>` (no tspans) this is
     /// `0.0`; for the first run it carries the whole-line `text-anchor` shift.
     pub advance_offset: f32,
+    /// Resolved font size in CSS pixels, captured during shaping. Used by the
+    /// renderer to size the glyph clip rect's ascent/descent so glyphs are not
+    /// clipped when the font is larger than the fallback height estimate.
+    pub font_size: f32,
 }
 
 impl TextSpan {

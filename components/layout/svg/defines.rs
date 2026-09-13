@@ -374,17 +374,43 @@ impl DefinitionParser for FilterParser {
                         .and_then(|v| v.parse::<f32>().ok())
                         .unwrap_or(default)
                 };
+                // Parse a `<number-optional-number>` attribute (e.g. stdDeviation
+                // "8,0" or "8 6"). Returns (x, y); when only one number is given,
+                // y defaults to x. Returns (default, default) when absent/unparsable.
+                let prim_get_float_pair = |attr: &str, default: f32| -> (f32, f32) {
+                    prim_get(attr)
+                        .map(|v| {
+                            let mut vals = v
+                                .split(|c: char| c == ',' || c.is_ascii_whitespace())
+                                .filter_map(|s| {
+                                    let t = s.trim();
+                                    if t.is_empty() {
+                                        None
+                                    } else {
+                                        t.parse::<f32>().ok()
+                                    }
+                                });
+                            let x = vals.next().unwrap_or(default);
+                            let y = vals.next().unwrap_or(x);
+                            (x, y)
+                        })
+                        .unwrap_or((default, default))
+                };
                 match pname.as_str() {
                     "feGaussianBlur" => {
-                        let std_dev = prim_get_float("stdDeviation", 0.0);
-                        primitives.push(FilterPrimitive::GaussianBlur(std_dev, std_dev));
+                        let (sdx, sdy) = prim_get_float_pair("stdDeviation", 0.0);
+                        primitives.push(FilterPrimitive::GaussianBlur(sdx, sdy));
                     },
                     "feDropShadow" => {
                         let dx = prim_get_float("dx", 2.0);
                         let dy = prim_get_float("dy", 2.0);
                         let std_dev = prim_get_float("stdDeviation", 2.0);
+                        let flood_color_str =
+                            prim_get("flood-color").unwrap_or_else(|| "black".to_owned());
+                        let (r, g, b, a) = parse_color(&flood_color_str);
+                        let flood_opacity = prim_get_float("flood-opacity", 1.0);
                         primitives.push(FilterPrimitive::DropShadow(
-                            dx, dy, std_dev, 0.0, 0.0, 0.0, 0.5,
+                            dx, dy, std_dev, r, g, b, a * flood_opacity,
                         ));
                     },
                     "feColorMatrix" => {
@@ -395,10 +421,34 @@ impl DefinitionParser for FilterParser {
                                 primitives.push(FilterPrimitive::Saturate(s));
                             },
                             "hueRotate" => {
-                                // hueRotate not yet supported — fall through to identity
+                                // SVG hueRotate matrix (filter-effects-1 §feColorMatrix),
+                                // with the standard luma coefficients.
+                                let angle = prim_get_float("values", 0.0).to_radians();
+                                let (sin, cos) = angle.sin_cos();
+                                let lum_r = 0.213;
+                                let lum_g = 0.715;
+                                let lum_b = 0.072;
                                 primitives.push(FilterPrimitive::ColorMatrix([
-                                    1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 0.0, 0.0, 0.0,
-                                    1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0,
+                                    lum_r + cos * (1.0 - lum_r) - sin * lum_r,
+                                    lum_g - cos * lum_g - sin * lum_g,
+                                    lum_b - cos * lum_b + sin * (1.0 - lum_b),
+                                    0.0,
+                                    0.0,
+                                    lum_r - cos * lum_r + sin * 0.143,
+                                    lum_g + cos * (1.0 - lum_g) + sin * 0.140,
+                                    lum_b - cos * lum_b - sin * 0.283,
+                                    0.0,
+                                    0.0,
+                                    lum_r - cos * lum_r - sin * (1.0 - lum_r),
+                                    lum_g - cos * lum_g + sin * lum_g,
+                                    lum_b + cos * (1.0 - lum_b) + sin * lum_b,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    0.0,
+                                    1.0,
+                                    0.0,
                                 ]));
                             },
                             "luminanceToAlpha" => {

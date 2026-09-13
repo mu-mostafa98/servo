@@ -89,6 +89,7 @@ pub(crate) fn build_text(
         glyphs: vec![],
         font_instance_key: None,
         advance_offset: 0.0,
+        font_size: fs,
     })
 }
 
@@ -121,6 +122,7 @@ pub(crate) fn build_text_run(
         glyphs: vec![],
         font_instance_key: None,
         advance_offset: 0.0,
+        font_size: fs,
     })
 }
 

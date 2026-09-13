@@ -367,6 +367,11 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         return;
     };
 
+    // Record the resolved font size on the span so the renderer can size the
+    // glyph clip rect's ascent/descent (the fallback estimate is too small for
+    // large font sizes, clipping the top of tall glyphs).
+    span.font_size = font_size;
+
     // Approximate vertical offset for `dominant-baseline` (relative to the
     // alphabetic baseline at `y`).
     let baseline_shift = match span.dominant_baseline {
