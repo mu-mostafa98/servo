@@ -228,14 +228,17 @@ fn render_node(
     // viewBox is present, push the viewBox → viewport reference frame (native
     // shapes) and fold its translation into `raster_offset` (CPU-rasterized
     // shapes, which bypass reference frames).
-    let cur_clip_chain = clip_chain_id;
+    let mut cur_clip_chain = clip_chain_id;
     let mut cur_viewbox_scale = viewbox_scale;
     if let Some(vp) = &node.viewport {
+        let vp_origin = LayoutPoint::new(cur_origin.x + vp.x, cur_origin.y + vp.y);
+
         // Sub-viewport clip: a nested `<svg>` clips its content to its own
-        // viewport (unless `overflow: visible`). The clip rect is expressed in
-        // the SVG-local space tracked by `raster_offset`/`cur_viewbox_scale`,
-        // so it can be intersected with any inherited clip and later applied
-        // to the CPU-rasterized shapes.
+        // viewport (unless `overflow: visible`). It is enforced two ways so
+        // both rendering paths respect it:
+        //  - `clip_rect` (raster space) crops the CPU-rasterized pixmap;
+        //  - a WebRender clip chain (parent spatial node) clips the native
+        //    primitives to the same viewport rect.
         if !vp.overflow_visible {
             let clip_origin = LayoutPoint::new(
                 raster_offset.x + cur_viewbox_scale.0 * vp.x,
@@ -253,9 +256,15 @@ fn render_node(
                 })),
                 None => Some(sub_clip),
             };
-        }
 
-        let vp_origin = LayoutPoint::new(cur_origin.x + vp.x, cur_origin.y + vp.y);
+            // Native clip chain: confine rendering to the viewport rect in the
+            // parent spatial node (before the viewBox reference frame is pushed
+            // below), mirroring how the root viewport clip is built.
+            let vp_bounds =
+                LayoutRect::from_origin_and_size(vp_origin, LayoutSize::new(vp.width, vp.height));
+            let vp_clip_id = wr.define_clip_rect(cur_spatial_id, vp_bounds);
+            cur_clip_chain = wr.define_clip_chain(clip_chain_option(cur_clip_chain), [vp_clip_id]);
+        }
 
         if let Some(vb) = &vp.view_box {
             let (sx, sy, ox, oy) = compute_viewbox_transform(
@@ -579,12 +588,12 @@ fn emit_shape(
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
 ) {
-    // All painted shapes are rasterized via vello_cpu into one ordered list.
-    // Keeping every shape in that single list preserves z-order between
-    // transformed and untransformed shapes (native WebRender primitives are
-    // emitted inline, so mixing them with the deferred rasterized images would
-    // break paint order), and gives fill/stroke/dash and gradient support
-    // uniformly — the native primitives don't handle dashed strokes.
+    // Shapes render through one of two paths: a native path that pushes
+    // WebRender primitives inline (`push_rect`, `push_border`, `push_gradient`),
+    // and a vello_cpu raster path for the cases WebRender can't express
+    // (arbitrary paths/polygons/polylines, dashed rect borders, unsupported
+    // gradients). Native items are emitted in document order, so mixing them
+    // with the inline rasters preserves paint order.
     let has_paint = style.fill.is_some() || style.stroke.is_some();
     // Pattern fills/strokes can't be rasterized by vello_cpu (it only handles
     // solid colors and gradients), so route them through the native renderer,
@@ -592,9 +601,11 @@ fn emit_shape(
     let has_pattern = style_has_pattern(style);
 
     if has_paint && !has_pattern {
-        // Top-level gradient shapes (rect/circle/ellipse whose fill and stroke
-        // are both native-eligible gradients) render as deferred native
-        // gradients; everything else stays on the vello raster path.
+        // Rect/circle/ellipse whose fill and stroke are both native-eligible
+        // gradients render natively via `emit_native_gradients`. Solid-painted
+        // basic shapes (rect/circle/ellipse/line) also render natively. Only
+        // the remainder — paths, polygons, polylines, dashed rect borders, and
+        // gradients the native renderer can't express — is rasterized by vello.
         let handled = emit_native_gradients(
             shape,
             style,
@@ -606,7 +617,27 @@ fn emit_shape(
             wr,
             sink,
         );
-        if !handled {
+        if !handled && is_native_solid_shape(shape, style) {
+            // Solid paint on the four basic shapes renders as native WebRender
+            // primitives in paint order (rect/circle/ellipse → `push_rect` /
+            // `push_border`; line → `stroke_line_segment`), so they stay
+            // correctly ordered against surrounding rasters and native items.
+            let mut ctx = RenderContext {
+                style,
+                svg_origin: *svg_origin,
+                spatial_id,
+                clip_chain_id,
+                wr: &mut *wr,
+                paints,
+                accumulated_scale,
+                viewbox_scale,
+                device_scale,
+                raster_offset,
+                native_rendering: false,
+                sink,
+            };
+            shape.render(&mut ctx);
+        } else if !handled {
             if let Some(bez) = shape.to_bez_path() {
                 // The node transform (translate/scale/rotate/…) is applied to the
                 // path inside `rasterize_bez`; `raster_offset` carries only the
@@ -787,6 +818,41 @@ fn style_has_pattern(style: &crate::style::NodeStyle) -> bool {
         .and_then(|s| s.paint_server.as_ref())
         .is_some_and(|p| matches!(p, PaintServer::Pattern(_)));
     fill_pattern || stroke_pattern
+}
+
+/// Whether the shape's paint (fill and stroke) is fully solid and the shape is
+/// one of the four "basic" shapes the native renderer can express directly:
+/// rect/circle/ellipse via `push_rect`/`push_border`, and line via
+/// `stroke_line_segment`. A dashed stroke on rect/circle/ellipse stays on vello
+/// (the native border can't emit dashes), but line strokes handle dashes
+/// natively.
+fn is_native_solid_shape(shape: &crate::shapes::Shape, style: &crate::style::NodeStyle) -> bool {
+    use crate::shapes::Shape;
+    use crate::style::gradient::PaintServer;
+
+    let fill_is_solid = style
+        .fill
+        .as_ref()
+        .map_or(true, |f| matches!(f.paint_server, None | Some(PaintServer::Solid(_))));
+    let stroke_is_solid = style
+        .stroke
+        .as_ref()
+        .map_or(true, |s| matches!(s.paint_server, None | Some(PaintServer::Solid(_))));
+    if !fill_is_solid || !stroke_is_solid {
+        return false;
+    }
+
+    let has_dash = style
+        .stroke
+        .as_ref()
+        .and_then(|s| s.dash_array.as_ref())
+        .is_some_and(|d| !d.is_empty());
+
+    match shape {
+        Shape::Line(_) => true,
+        Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => !has_dash,
+        _ => false,
+    }
 }
 
 // ======================= Marker Rendering =======================
