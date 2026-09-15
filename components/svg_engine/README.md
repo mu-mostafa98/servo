@@ -1,13 +1,13 @@
 # `svg_engine` — Software SVG Render Engine
 
-## General description (one sentence)
+## 1. General description (one sentence)
 
-Servo's SVG rendering pipeline: converts `<svg>` embedded in HTML into
+The SVG rendering pipeline: converts `<svg>` embedded in HTML into
 WebRender display-list commands.
 
-## General description of the design
+## 2. General description of the design
 
-Rendering SVG in Servo is split into two stages with a single, well-defined
+Rendering SVG is split into two stages with a single, well-defined
 boundary: the document is converted into a data structure first, and that data
 structure is then turned into drawing commands. The first stage lives in
 `layout`; the second is this crate.
@@ -34,7 +34,7 @@ software path that rasterizes the shape with `vello_cpu` into a
 WebRender cannot natively express arbitrary paths and certain border and
 gradient cases, so those fall back to CPU rasterization.
 
-## Input, process, output
+## 3. Input, process, output
 
 At the top level the engine takes an `SvgRenderTree` (built from the DOM by
 `layout::svg::build_svg_render_tree`), walks it recursively, and emits WebRender
@@ -57,7 +57,7 @@ SVG element.
 | `<text>` | Applies `text-anchor`/RTL alignment and fill/stroke, then emits glyphs grouped by font | `push_text` |
 | `<tspan>` | Applies fill/stroke and emits its glyphs inline within the `<text>` line | `push_text` |
 
-## Scope
+## 4. Scope
 
 `svg_engine` renders embedded `<svg>` content directly into the WebRender
 display list — geometric shapes, paint (fills, strokes, gradients, patterns),
@@ -119,13 +119,13 @@ display list instead adds features that approach could not provide:
   image.
 - **Animation — not implemented (SMIL).** There are no `<animate>` /
   `<animateTransform>` elements and no live `SVGAnimated*` attributes (the IDL
-  is stubbed out). Animatable CSS properties change through Servo's normal
+  is stubbed out). Animatable CSS properties change through the normal
   style pipeline upstream of this crate; SVG-native SMIL animation is out of
   scope for now.
 
-## Implementation design
+## 5. Implementation design
 
-### System boundaries
+### 5.1 System boundaries
 
 `svg_engine` exposes a single interface — `render_svg_tree` — which takes an
 `SvgRenderTree` and emits a WebRender display list.
@@ -148,7 +148,7 @@ flowchart LR
     RST -->|"display-list commands"| DL
 ```
 
-### Architecture
+### 5.2 Architecture
 
 One traversal fans out into two rendering paths: simple shapes are pushed to
 WebRender natively, and complex shapes are rasterized through `vello_cpu` and
@@ -160,7 +160,7 @@ flowchart TB
     classDef native fill:#e3f2fd,stroke:#0288d1,color:#014361
     classDef vello fill:#fce4ec,stroke:#c2185b,color:#880e4f
 
-    IL["layout::DisplayListBuilder::visit_image()"]:::entry
+    IL["layout — SVG image fragment traversal"]:::entry
 
     subgraph ENG["SVG Engine — components/svg_engine/"]
         direction TB
@@ -188,7 +188,7 @@ flowchart TB
 
     WR["WebRender / Paint_engine"]:::native
     VELLO["Vello CPU<br/>rasterization scene"]:::vello
-    UPLOAD["layout — ImageCacheUploader"]:::vello
+    UPLOAD["layout — image cache uploader"]:::vello
 
     IL -->|"SvgRenderTree"| TRAV
     SIMPLE -->|"push_rect / push_text / … / push_image"| WR
@@ -199,28 +199,26 @@ flowchart TB
     COMPLEX -->|"push_image"| WR
 ```
 
-### Module map
+### 5.3 Module map
 
 | Module | Responsibility |
 |--------|----------------|
-| [`render_tree`](src/render_tree.rs) | `SvgRenderTree`/`SvgRenderNode`, `SvgTag`, definition types, `viewBox`/`preserveAspectRatio` parsing |
-| [`shapes`](src/shapes/mod.rs) | `Shape` enum + the 7 geometric shape structs; `to_bez_path`, `clip_info` |
-| [`style`](src/style/mod.rs) | `NodeStyle`, fill/stroke params, gradient types, hints, transforms, visibility |
-| [`text`](src/text.rs) / [`image`](src/image.rs) | `TextSpan`/`ShapedGlyph` and `SvgImage` leaf types |
-| [`traversal`](src/traversal.rs) | `render_svg_tree` + recursive `render_node`; transform/effect resolution |
-| [`renderer`](src/renderer/mod.rs) | `Render` trait, `RenderContext`, per-shape impls, gradient/pattern pipelines |
-| [`tessellator`](src/tessellator.rs) | lyon polygon triangulation + scanline fill |
-| [`effects`](src/effects/mod.rs) | clip-path/mask chain building (`clip`) and filter-op resolution (`filter`) |
-| [`visitor`](src/visitor.rs) | post-construction tree mutations (e.g. `PaintServerFixupVisitor`) |
-| [`error`](src/error.rs) | `SvgEngineError` / `SvgResult` |
+| [`render_tree`](src/render_tree.rs) | Data model — tree and node types |
+| [`shapes`](src/shapes/mod.rs) | Data model — shape types |
+| [`style`](src/style/mod.rs) | Data model — paint and style parameters |
+| [`text`](src/text.rs) | Data model — text |
+| [`image`](src/image.rs) | Data model — image |
+| [`traversal`](src/traversal.rs) | recursive walk |
+| [`renderer`](src/renderer/mod.rs) | shape rendering |
+| [`effects`](src/effects/mod.rs) | clip-path, mask, filter |
 
-### Data flow
+### 5.4 Data flow
 
 Rendering is a single recursive pass: `render_svg_tree` sets up the root
 viewport, walks every node, and each shape's paint is pushed natively or
 rasterized through `vello_cpu`.
 
-#### Viewport setup
+#### 5.4.1 Viewport setup
 
 `render_svg_tree` first clips the root viewport and maps `viewBox` into a
 reference frame, then starts the walk at the root node.
@@ -232,7 +230,7 @@ flowchart LR
     C --> D["render_node(root)"]
 ```
 
-#### The node walk
+#### 5.4.2 The node walk
 
 `render_node` applies transforms and effects, then dispatches on the node tag:
 `Shape` → `emit_geometry`, `Text` / `Image` → `emit_leaf`, and `Container` →
@@ -253,7 +251,7 @@ flowchart TD
     L -- "each child" --> A
 ```
 
-#### Shapes
+#### 5.4.3 Shapes
 
 The node walk hands `Shape` to `emit_geometry`, which wraps the paint in
 clip-path / mask / filter effects and delegates to `emit_shape`. `emit_shape`
@@ -271,7 +269,7 @@ flowchart TD
     G --> F
 ```
 
-#### Text
+#### 5.4.4 Text
 
 The node walk hands `Text` to `emit_leaf`, which builds a `RenderContext` and
 calls `TextSpan::render`. Real glyphs are drawn with `push_text` when a
@@ -290,7 +288,7 @@ flowchart TD
     G --> H
 ```
 
-#### Image
+#### 5.4.5 Image
 
 The node walk hands `Image` to `emit_leaf`, which builds a `RenderContext` and
 calls `SvgImage::render`. A loaded image is drawn with `push_image` (fitted via
@@ -308,7 +306,7 @@ flowchart TD
     G --> H
 ```
 
-### Key design decisions
+### 5.5 Key design decisions
 
 - **`Render` trait dispatch** ([render_trait.rs](src/renderer/render_trait.rs)) —
   every shape implements `Render`, so traversal calls `shape.render(ctx)` with no
@@ -338,7 +336,7 @@ flowchart TD
   union/OR semantics); filters become a `Vec<FilterOp>` pushed as a stacking
   context.
 
-## Third-party dependencies and build-system impact
+## 6. Third-party dependencies and build-system impact
 
 Dependencies declared in [Cargo.toml](Cargo.toml):
 
@@ -350,70 +348,22 @@ Dependencies declared in [Cargo.toml](Cargo.toml):
 | `svgtypes` | Spec-compliant SVG parsing: `Length`/`LengthUnit`, `PointsParser`, `ViewBox`, `Color`, and `TransformListParser` — backing `attr_parsers`, `render_tree`, `transform_ops` |
 | `vello_cpu` | Software rasterization — takes a `BezPath` and produces an RGBA `Pixmap` |
 
-`euclid`, `kurbo`, and `vello_cpu` are already dependencies of existing Servo
+`euclid`, `kurbo`, and `vello_cpu` are already dependencies of existing
 components (the canvas and layout crates); the engine introduces only two new
 third-party crates — `lyon` (polygon tessellation) and `svgtypes` (SVG value
 parsing).
 
 **Build-system impact**
 
-- `svg_engine` is a **workspace member** (root `Cargo.toml` line 5), published
-  as `svg_engine = { version = "=0.6.0", path = "components/svg_engine" }`.
+- `svg_engine` is a **workspace member** (listed in the root `Cargo.toml`),
+  published at `components/svg_engine`.
 - No build bootstrap, feature-unification, or build-script changes are
   introduced — the added crates are pure Rust libraries.
 - `vello_cpu` is enabled with the `multithreading` feature in the workspace pin.
 
-## New public API
+## 7. New public API
 
-The crate's public surface (re-exported from [`lib.rs`](src/lib.rs)).
-
-### Entry point
-
-| API | Description | Parameters | Returns |
-|-----|-------------|------------|---------|
-| `render_svg_tree` | Renders an entire `SvgRenderTree` into a WebRender display list. | `tree: &SvgRenderTree`, `svg_origin: &LayoutPoint`, `svg_size: LayoutSize`, `device_scale: f32`, `spatial_id: SpatialId`, `clip_chain_id: ClipChainId`, `sink: &RasterSink`, `wr: &mut DisplayListBuilder` | `()` |
-
-### Core data types
-
-| API | Description | Key fields / variants |
-|-----|-------------|----------------------|
-| `SvgRenderTree` | Root of the render tree plus viewport info and all `<defs>` resource maps. | `root: SvgRenderNode`, `viewport: ViewportInfo`, `gradients`, `clip_paths`, `patterns`, `masks`, `filters`, `markers` (all `HashMap<String, …>`) |
-| `SvgRenderNode` | One tree node. | `id: Option<String>`, `tag: SvgTag`, `style: NodeStyle`, `transforms: Vec<TransformOp>`, `viewport: Option<SvgViewport>`, `children: Vec<SvgRenderNode>` |
-| `SvgTag` | Discriminates node content. | `Shape(Shape)`, `Text(TextSpan)`, `Image(SvgImage)`, `Container(Container)` |
-| `Shape` | Geometric shape enum. | `Rect`, `Circle`, `Ellipse`, `Line`, `Polyline`, `Polygon`, `Path` |
-| `Container` | Container kind. | `Group`, `Svg`, `Defs`, `Use`, `Symbol`, `Text` |
-| `NodeStyle` | Paint-level styling. | `visibility`, `display`, `fill: Option<FillParams>`, `stroke: Option<StrokeParams>`, `render_hints`, `effects`, `opacity`, `markers` |
-| `GradientKind` | Resolved native WebRender gradient. | `Linear { start, end, stops, extend_mode }` \| `Radial { center, radius, stops, extend_mode }` |
-| `RasterizedImage` | CPU-rasterized RGBA image ready to upload. | `x`, `y`, `width`, `height`, `scale`, `data: Vec<u8>`, `content_hash: u64` |
-
-### Upload / sink traits
-
-| API | Description | Parameters | Returns |
-|-----|-------------|------------|---------|
-| `RasterImageUploader::upload` | Uploads RGBA pixels into the WebRender image cache (implemented by layout's image cache). | `hash: u64`, `data: Vec<u8>`, `width: u32`, `height: u32` | `Option<ImageKey>` |
-| `RasterSink` | Inline raster sink holding the outer SVG element's spatial/clip context. | (struct fields: `uploader`, `spatial_id`, `clip_chain_id`, `clip_rect`, `flags`, `origin`) | — |
-
-### Text and image
-
-| API | Description |
-|-----|-------------|
-| `TextSpan` | A text run with `text`, `x`/`y`, `dx`/`dy`/`rotate`, shaped `glyphs`, `text_anchor`, `rtl`, `dominant_baseline`, `font_instance_key`, `advance_offset`, `font_size`. |
-| `ShapedGlyph` | Pre-shaped glyph: `x`, `y`, `advance`, `glyph_id: u32`, `character`, `font_instance_key`. |
-| `TextAnchor` | `Start` \| `Middle` \| `End` (with `alignment_offset() -> f32`). |
-| `DominantBaseline` | `Auto` \| `Hanging` \| `Middle` \| `Central`. |
-| `SvgImage` | `<image>` leaf: `x`, `y`, `width`, `height`, `href`, `image_key`, `natural_width/height`, `preserve_aspect_ratio`. |
-
-### Errors, parsing, and visitors
-
-| API | Description | Parameters | Returns |
-|-----|-------------|------------|---------|
-| `SvgEngineError` | SVG parse/extraction error. | (variants) `MissingAttribute(String)`, `ParseError(String)`, `UnsupportedFeature(String)` | — |
-| `SvgResult<T>` | Result alias. | — | `Result<T, SvgEngineError>` |
-| `parse_aspect_ratio` | Parses a `preserveAspectRatio` string. | `value: &str` | `AspectRatio` |
-| `extract_viewbox` | Parses a `viewBox` string via `svgtypes`. | `value: &str` | `Option<ViewBox>` |
-| `PaintServer::from_attr` | Parses a paint value (`"red"`, `"#fff"`, `"url(#id)"`). | `val: &str` | `Option<PaintServer>` |
-| `parse_gradient_element` | Parses `<linearGradient>`/`<radialGradient>` attributes + stops. | `element_name: &str`, `get_attr: &dyn Fn(&str) -> Option<String>`, `stop_attrs: &[Vec<(String, String)>]` | `SvgResult<GradientDef>` |
-| `color_at_t_with_space` | Evaluates a gradient stop list at parametric position `t`. | `stops: &[GradientStop]`, `t: f32`, `space: ColorInterpolation` | `ColorF` |
-| `SvgRenderTreeVisitor::visit_node` | Read-only pre-order visitor. | `node: &SvgRenderNode` | `VisitDecision` |
-| `SvgRenderTreeVisitorMut::visit_node_mut` | Mutable pre-order visitor. | `node: &mut SvgRenderNode` | `VisitDecision` |
-| `VisitDecision` | Traversal control. | (variants) `Continue`, `SkipChildren`, `Stop` | — |
+| API | Description | Input parameters | Return type |
+|-----|-------------|------------------|-------------|
+| `build_svg_render_tree` (components/layout/svg) | Builds the `SvgRenderTree` from the DOM subtree and resolved CSS values. | `node: ServoLayoutNode<'dom>`, `context: &LayoutContext` | `Option<Arc<SvgRenderTree>>` |
+| `render_svg_tree` (components/svg_engine) | Renders an entire `SvgRenderTree` into a WebRender display list. | `tree: &SvgRenderTree`, `svg_origin: &LayoutPoint`, `svg_size: LayoutSize`, `device_scale: f32`, `spatial_id: SpatialId`, `clip_chain_id: ClipChainId`, `sink: &RasterSink`, `wr: &mut DisplayListBuilder` | No return — pushes display commands directly into `wr` (`&mut DisplayListBuilder`) |
