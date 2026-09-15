@@ -47,9 +47,9 @@ SVG element.
 | Input | Processing | Output |
 |-------|------------|--------|
 | `<rect>` | Fill / stroke / gradient painted into its bounds; `rx`/`ry` corner radii become a rounded-rect clip chain | `push_rect` / `push_border` / `push_gradient` |
-| `<circle>` | Delegates to `<rect>`: converted to a rect with `rx = ry = r` | `push_rect` / `push_border` / `push_gradient` |
+| `<circle>` | Delegates to `<ellipse>` (→ `<rect>`): converted to a rect with `rx = ry = r` | `push_rect` / `push_border` / `push_gradient` |
 | `<ellipse>` | Delegates to `<rect>`: converted to a rect with `rx`/`ry` radii | `push_rect` / `push_border` / `push_gradient` |
-| `<line>` | Solid/gradient stroke drawn as a rotated rect | `push_rect` |
+| `<line>` | Solid/gradient stroke emitted as a rotated segment | `stroke_line_segment` |
 | `<path>` | Converted to a `BezPath`, then `vello_cpu` rasterizes it into an RGBA pixmap | `RasterizedImage` → `push_image` |
 | `<polyline>` | Converted to an open `BezPath`, then `vello_cpu` rasterizes it into an RGBA pixmap | `RasterizedImage` → `push_image` |
 | `<polygon>` | Converted to a closed `BezPath`, then `vello_cpu` rasterizes it into an RGBA pixmap | `RasterizedImage` → `push_image` |
@@ -216,62 +216,96 @@ flowchart TB
 
 ### Data flow
 
-#### Main data flow
+Rendering is a single recursive pass: `render_svg_tree` sets up the root
+viewport, walks every node, and each shape's paint is pushed natively or
+rasterized through `vello_cpu`.
 
-One pass from DOM to display list: layout builds the tree, the traversal
-dispatches each shape, and every shape reaches WebRender either as a native
-primitive or as a `vello_cpu`-rasterized image.
+#### Viewport setup
+
+`render_svg_tree` first clips the root viewport and maps `viewBox` into a
+reference frame, then starts the walk at the root node.
 
 ```mermaid
-flowchart TB
-    A["build_svg_render_tree<br/>(DOM → SvgRenderTree)"] --> B["visit_image<br/>(DisplayListBuilder)"]
-    B --> C["render_svg_tree<br/>(walk the tree)"]
-    C --> D["dispatch per shape"]
-    D -- "simple shapes" --> S["Rectangle::render / Circle::render / Ellipse::render<br/>Line::render / TextSpan::render / SvgImage::render"]
-    D -- "complex shapes" --> CX["Path::render / Polygon::render / Polyline::render"]
-    S --> F["push_rect / push_border / push_gradient / push_text / push_image"]
-    CX --> G["rasterize_bez (vello_cpu)"]
-    G --> H["RasterizedImage → push_image"]
-    F --> I["WebRender display list"]
-    H --> I
+flowchart LR
+    A["render_svg_tree"] --> B["build_viewport_clip<br/>(unless overflow:visible)"]
+    B --> C["push_viewbox_frame<br/>(viewBox → reference frame)"]
+    C --> D["render_node(root)"]
 ```
 
-#### Per-node rendering
+#### The node walk
+
+`render_node` applies transforms and effects, then dispatches on the node tag:
+`Shape` → `emit_geometry`, `Text` / `Image` → `emit_leaf`, and `Container` →
+`recurse_children` (which walks each child back through `render_node`). A nested
+`<svg>` also pushes a sub-viewport clip and `viewBox` frame before recursing.
 
 ```mermaid
 flowchart TD
-    A["render_svg_tree(tree, origin, size, ...)"] --> B["build_viewport_clip<br/>(unless overflow:visible)"]
-    B --> C["push_viewbox_frame<br/>(viewBox → viewport reference frame)"]
-    C --> D["render_node(root)"]
+    A["render_node(node)"] --> B{"display: none?"}
+    B -- "yes" --> END["skip subtree"]
+    B -- "no" --> C["apply_node_transforms"]
+    C --> E["resolve_node_effects<br/>(clip-path / mask / filter)"]
+    E --> G{"node.tag?"}
+    G -- "Shape" --> H["emit_geometry(shape)"]
+    G -- "Text" --> I["emit_leaf(TextSpan)"]
+    G -- "Image" --> J["emit_leaf(SvgImage)"]
+    G -- "Container::{Group | Svg | Defs | Use | Symbol | Text}" --> L["recurse_children"]
+    L -- "each child" --> A
+```
 
-    D --> E{"display: none?"}
-    E -- "yes" --> END["return"]
-    E -- "no" --> F["apply_node_transforms<br/>(push reference frames)"]
-    F --> G{"nested &lt;svg&gt;?"}
-    G -- "yes" --> G2["push sub-viewport clip + viewBox frame"]
-    G -- "no" --> H
-    G2 --> H["resolve_node_effects<br/>(clip-path / mask / filter)"]
+#### Shapes
 
-    H --> I{"node.tag?"}
-    I -- "Shape" --> J["emit_geometry"]
-    I -- "Text / Image" --> K["emit_leaf"]
-    I -- "Container" --> M
+The node walk hands `Shape` to `emit_geometry`, which wraps the paint in
+clip-path / mask / filter effects and delegates to `emit_shape`. `emit_shape`
+resolves the paint to a native primitive or a `vello_cpu` raster; markers
+(`emit_markers`) are emitted afterward on line/polyline/polygon shapes.
 
-    J --> J0{"fill or stroke present?"}
-    J0 -- "pattern paint" --> J1["native render (tile pattern)"]
-    J0 -- "rect/circle/ellipse, gradient only" --> J2["native push_gradient"]
-    J0 -- "rect/circle/ellipse/line, solid" --> J2b["native push_rect / push_border / stroke_line_segment"]
-    J0 -- "other (path, dashed, unsupported gradient, complex clip)" --> J3["rasterize_bez via vello_cpu"]
-    J3 --> J4["RasterizedImage → RasterSink.emit → push_image"]
-    J1 --> J5["emit_markers (start/mid/end)"]
-    J2 --> J5
-    J2b --> J5
-    J3 --> J5
+```mermaid
+flowchart TD
+    A["emit_geometry(shape)"] --> B["emit_shape(shape)"]
+    B --> C{"fill or stroke?"}
+    C -- "pattern / gradient / solid<br/>on basic shapes" --> D["native render<br/>push_gradient / push_rect / push_border / stroke_line_segment"]
+    C -- "paths, dashed,<br/>unsupported gradients" --> E["rasterize_bez (vello_cpu)"]
+    D --> F["WebRender display list"]
+    E --> G["RasterizedImage → push_image"]
+    G --> F
+```
 
-    J5 --> M["recurse_children (skip &lt;defs&gt;/&lt;symbol&gt;)"]
-    K --> M
-    M --> D
-    END --> Z["pop reference frames"]
+#### Text
+
+The node walk hands `Text` to `emit_leaf`, which builds a `RenderContext` and
+calls `TextSpan::render`. Real glyphs are drawn with `push_text` when a
+`FontInstanceKey` is available; otherwise estimated rectangles are drawn as a
+fallback.
+
+```mermaid
+flowchart TD
+    A["emit_leaf(TextSpan)"] --> B["build RenderContext"]
+    B --> C["TextSpan::render"]
+    C --> D["stroke? then fill<br/>(paint-order)"]
+    D --> E{"font_instance_key?"}
+    E -- "yes" --> F["emit_glyphs → push_text<br/>(grouped by font)"]
+    E -- "no" --> G["emit_rects → push_rect<br/>(estimated boxes)"]
+    F --> H["WebRender display list"]
+    G --> H
+```
+
+#### Image
+
+The node walk hands `Image` to `emit_leaf`, which builds a `RenderContext` and
+calls `SvgImage::render`. A loaded image is drawn with `push_image` (fitted via
+`preserveAspectRatio`); otherwise a placeholder (gray rect with an X) is drawn.
+
+```mermaid
+flowchart TD
+    A["emit_leaf(SvgImage)"] --> B["build RenderContext"]
+    B --> C["SvgImage::render"]
+    C --> D["compute_viewbox_transform<br/>(preserveAspectRatio fit)"]
+    D --> E{"image_key?"}
+    E -- "loaded" --> F["push_image"]
+    E -- "pending / failed / vector" --> G["placeholder<br/>push_rect + X"]
+    F --> H["WebRender display list"]
+    G --> H
 ```
 
 ### Key design decisions
