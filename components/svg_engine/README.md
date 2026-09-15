@@ -1,11 +1,11 @@
-# `svg_engine` — Software SVG Render Engine
+# SVG Rendering Pipeline — `svg_engine`
 
-## 1. General description (one sentence)
+## 1. Overview
 
 The SVG rendering pipeline: converts `<svg>` embedded in HTML into
 WebRender display-list commands.
 
-## 2. General description of the design
+## 2. Design
 
 Rendering SVG is split into two stages with a single, well-defined
 boundary: the document is converted into a data structure first, and that data
@@ -17,7 +17,7 @@ structure is then turned into drawing commands. The first stage lives in
 The `layout` crate owns the boundary between the document and the renderer. Its
 `build_svg_render_tree` entry point walks the SVG subtree, resolves CSS
 computed values, and collects the `<defs>` resources (gradients, patterns,
-clip-paths, masks, filters, and markers) into a pure-data `SvgRenderTree`. The
+and markers) into a pure-data `SvgRenderTree`. The
 result is a tree of `SvgRenderNode`s carrying only the geometry and paint
 information the renderer needs — no DOM or layout types leak through.
 
@@ -60,70 +60,23 @@ SVG element.
 ## 4. Scope
 
 `svg_engine` renders embedded `<svg>` content directly into the WebRender
-display list — geometric shapes, paint (fills, strokes, gradients, patterns),
-text, images, and a subset of effects — all resolved through the same CSS
-cascade as the rest of the page. Its scope, and the constraints it operates
-under:
+display list, resolved through the same CSS cascade as the rest of the page.
 
-**Features added**
+**Biggest feature — CSS cascade and external styles.** Styles are resolved
+through Stylo's `ComputedValues`, so external stylesheets, inheritance, and the full cascade apply to SVG exactly as they do to HTML. The
+old pipeline serialized the `<svg>` subtree to a string and rasterized it into a
+single bitmap, so it could only preserve inline presentation attributes.
 
-- **Shapes** — `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polyline>`,
-  `<polygon>`, and `<path>` (see `src/shapes/`).
-- **Paint** — solid fills/strokes, `<linearGradient>`/`<radialGradient>`
-  (objectBoundingBox and userSpaceOnUse units, `gradientTransform`,
-  `spreadMethod`, `stop-color`/`stop-opacity`), and `<pattern>` tiling.
-- **Text & image** — `<text>`/`<tspan>` with per-glyph shaping, `text-anchor`,
-  `dominant-baseline`, `dx`/`dy`/`rotate`, RTL; `<image>` with
-  `preserveAspectRatio`.
-- **Effects** — `clip-path` (rect, rounded-rect, and polygon/path), `<mask>`, and a subset
-  of `<filter>` primitives (`feGaussianBlur`, `feDropShadow`, `feColorMatrix`,
-  `feComponentTransfer`-style saturate, `feFlood`, `feOffset`).
-- **Transforms & viewports** — `transform` attributes (translate/scale/rotate/
-  skew/matrix), `vector-effect: non-scaling-stroke`, nested `<svg>`, `viewBox`
-  + `preserveAspectRatio`, `overflow: visible`.
-- **Markers** — `marker-start`/`marker-mid`/`marker-end` with `markerUnits`,
-  `orient`, and marker `viewBox`.
+**Supported elements**
 
-**Constraints**
+- **Shapes** — `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polyline>`, `<polygon>`, `<path>`
+- **Structure** — `<g>`, `<defs>`, `<use>`, `<symbol>`
+- **Paint** — fill and stroke; `<linearGradient>`, `<radialGradient>`, `<stop>`, `<pattern>`
+- **Text** — `<text>`, `<tspan>` (`text-anchor`, `dominant-baseline`, `dx`/`dy`/`rotate`, RTL)
+- **Image** — `<image>`
+- **Markers** — `<marker>`
 
-- **Software rendering only** — there is no GPU scene; shapes are either native
-  WebRender items or CPU-rasterized via `vello_cpu`.
-- **No full SVG filter graph** — `feComposite`, `feTile`, and `feImage` are
-  recognized but pushed as `FilterOp::Identity` placeholders; multi-input
-  filter chains are not supported.
-- **Transforms inside clip definitions are ignored** — a `clipPath`/`<mask>`
-  shape nested in a transformed `<g>` clips with the shape but not the inner
-  transform, since clip-shape geometry doesn't carry its own transform.
-- **Radial gradients with an offset focal point (`fx`/`fy`) or focal radius
-  (`fr`)** and `linearRGB` interpolation fall back to software rendering.
-- **`<defs>`/`<symbol>` children render only when referenced** via `<use>`;
-  they are skipped during normal traversal.
-
-**New relative to the old pipeline**
-
-The previous implementation serialized the `<svg>` subtree to a string and
-rasterized it into a single cached `VectorImage` bitmap. Rendering through the
-display list instead adds features that approach could not provide:
-
-- **CSS cascade and external styles** — styles are resolved through Stylo's
-  `ComputedValues`, so external stylesheets, inheritance, `!important`, and the
-  full cascade apply to SVG exactly as they do to HTML. The old pipeline only
-  preserved inline presentation attributes, because the serialized string
-  carried no computed style.
-- **Incremental updates — possible, not yet implemented.** The engine is
-  currently stateless: `render_svg_tree` re-emits the full display list and
-  re-rasterizes complex paths on every paint, with no SVG-specific invalidation
-  or raster cache. Because the input is a structured `SvgRenderTree` rather
-  than one opaque bitmap, per-shape raster caching and subtree invalidation can
-  be added later; the old pipeline could only ever re-rasterize the entire
-  image.
-- **Animation — not implemented (SMIL).** There are no `<animate>` /
-  `<animateTransform>` elements and no live `SVGAnimated*` attributes (the IDL
-  is stubbed out). Animatable CSS properties change through the normal
-  style pipeline upstream of this crate; SVG-native SMIL animation is out of
-  scope for now.
-
-## 5. Implementation design
+## 5. Implementation
 
 ### 5.1 System boundaries
 
@@ -164,7 +117,7 @@ flowchart TB
 
     subgraph ENG["SVG Engine — components/svg_engine/"]
         direction TB
-        TRAV["Traversal — tree walk & state<br/>(transforms, clips, masks)"]
+        TRAV["Traversal — tree walk & state<br/>(transforms, clips)"]
 
         subgraph COMPLEX["Complex Shapes Group"]
             direction LR
@@ -210,7 +163,6 @@ flowchart TB
 | [`image`](src/image.rs) | Data model — image |
 | [`traversal`](src/traversal.rs) | recursive walk |
 | [`renderer`](src/renderer/mod.rs) | shape rendering |
-| [`effects`](src/effects/mod.rs) | clip-path, mask, filter |
 
 ### 5.4 Data flow
 
@@ -242,7 +194,7 @@ flowchart TD
     A["render_node(node)"] --> B{"display: none?"}
     B -- "yes" --> END["skip subtree"]
     B -- "no" --> C["apply_node_transforms"]
-    C --> E["resolve_node_effects<br/>(clip-path / mask / filter)"]
+    C --> E["resolve_node_effects"]
     E --> G{"node.tag?"}
     G -- "Shape" --> H["emit_geometry(shape)"]
     G -- "Text" --> I["emit_leaf(TextSpan)"]
@@ -253,8 +205,7 @@ flowchart TD
 
 #### 5.4.3 Shapes
 
-The node walk hands `Shape` to `emit_geometry`, which wraps the paint in
-clip-path / mask / filter effects and delegates to `emit_shape`. `emit_shape`
+The node walk hands `Shape` to `emit_geometry`, which wraps the paint in effects and delegates to `emit_shape`. `emit_shape`
 resolves the paint to a native primitive or a `vello_cpu` raster; markers
 (`emit_markers`) are emitted afterward on line/polyline/polygon shapes.
 
@@ -306,44 +257,14 @@ flowchart TD
     G --> H
 ```
 
-### 5.5 Key design decisions
-
-- **`Render` trait dispatch** ([render_trait.rs](src/renderer/render_trait.rs)) —
-  every shape implements `Render`, so traversal calls `shape.render(ctx)` with no
-  central match. `RenderContext` bundles `DisplayListBuilder`, spatial/clip ids,
-  scale factors, and the `RasterSink`.
-- **Two rendering paths** ([traversal.rs](src/traversal.rs), `emit_shape`) — a
-  shape is pushed natively when its full paint (fill **and** stroke) can be
-  expressed natively: solid rect/circle/ellipse/line (`push_rect`/`push_border`/
-  `stroke_line_segment`) and gradient rect/circle/ellipse (`push_gradient`).
-  Everything else — paths, polygons, polylines, dashed rect/circle/ellipse
-  borders, unsupported gradients, and polygon/path clips — goes through
-  `vello_cpu` into a `RasterizedImage`, which is uploaded and pushed inline in
-  document order so z-order stays correct against native primitives. (Pattern
-  content and the software gradient fallback use a third, in-between mechanism —
-  the `tessellator` — which emits `push_rect` scanline bands rather than a
-  raster image.)
-- **`RasterSink` + `RasterImageUploader`** ([lib.rs](src/lib.rs)) — the crate
-  never depends on `net_traits`; layout adapts its image cache to the
-  `RasterImageUploader` trait, and `RasterSink` pushes each raster as an image
-  item carrying the outer SVG element's spatial id, clip chain, and flags.
-- **Resource providers** ([providers.rs](src/renderer/providers.rs)) —
-  `PaintResourceProvider`, `ClipMaskProvider`, `FilterProvider`, and
-  `MarkerProvider` abstract where `<defs>` resources live (normally the
-  `SvgRenderTree` itself), keeping the traversal decoupled from the tree layout.
-- **Effects are resolved before painting** — clip-path and mask shapes become
-  WebRender clip chains (mask shapes render the element once per chain for
-  union/OR semantics); filters become a `Vec<FilterOp>` pushed as a stacking
-  context.
-
-## 6. Third-party dependencies and build-system impact
+## 6. Dependencies and build impact
 
 Dependencies declared in [Cargo.toml](Cargo.toml):
 
 | Library | Usage |
 |---------|-------|
 | `euclid` | Affine transforms (`Transform2D`) for node/viewBox/gradient/pattern/marker matrices, plus the `Point2D`/`Rect`/`Size`/`Vector2D` primitives behind layout coordinates |
-| `kurbo` | Path representation: `BezPath` (every shape via `to_bez_path`), `Stroke` + dash handling, `Affine`, and `PathEl` — the format handed to `vello_cpu` and the basis of clip-path/mask `ComplexClip` geometry |
+| `kurbo` | Path representation: `BezPath` (every shape via `to_bez_path`), `Stroke` + dash handling, `Affine`, and `PathEl` — the format handed to `vello_cpu` and the basis of `ComplexClip` geometry |
 | `lyon` | Polygon tessellation: `FillTessellator` triangulates polygons into triangles emitted as per-scanline `push_rect` bands, used to fill shapes inside `<pattern>` content |
 | `svgtypes` | Spec-compliant SVG parsing: `Length`/`LengthUnit`, `PointsParser`, `ViewBox`, `Color`, and `TransformListParser` — backing `attr_parsers`, `render_tree`, `transform_ops` |
 | `vello_cpu` | Software rasterization — takes a `BezPath` and produces an RGBA `Pixmap` |
@@ -361,7 +282,7 @@ parsing).
   introduced — the added crates are pure Rust libraries.
 - `vello_cpu` is enabled with the `multithreading` feature in the workspace pin.
 
-## 7. New public API
+## 7. Public API
 
 | API | Description | Input parameters | Return type |
 |-----|-------------|------------------|-------------|
