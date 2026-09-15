@@ -181,6 +181,13 @@ flowchart TB
         direction TB
         TRAV["Traversal — tree walk & state<br/>(transforms, clips, masks)"]
 
+        subgraph COMPLEX["Complex Shapes Group"]
+            direction LR
+            POLYLINE["polyline"]:::vello
+            POLYGON["polygon"]:::vello
+            PATH["path"]:::vello
+        end
+
         subgraph SIMPLE["Simple Shapes Group"]
             direction LR
             RECT["rect"]:::native
@@ -190,22 +197,15 @@ flowchart TB
             IMG["image"]:::native
         end
 
-        subgraph COMPLEX["Complex Shapes Group"]
-            direction LR
-            POLYLINE["polyline"]:::vello
-            POLYGON["polygon"]:::vello
-            PATH["path"]:::vello
-        end
-
-        TRAV -->|"simple shapes"| SIMPLE
         TRAV -->|"complex shapes"| COMPLEX
+        TRAV -->|"simple shapes"| SIMPLE
     end
 
     WR["WebRender / Paint_engine"]:::native
     VELLO["Vello CPU<br/>rasterization scene"]:::vello
     UPLOAD["layout — ImageCacheUploader"]:::vello
 
-    IL -->|"pure data (SvgRenderTree)"| ENG
+    IL -->|"SvgRenderTree"| TRAV
     SIMPLE -->|"push_rect / push_text / … / push_image"| WR
     COMPLEX -->|"BezPath"| VELLO
     VELLO -->|"Pixmap"| COMPLEX
