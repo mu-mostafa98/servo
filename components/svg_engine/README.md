@@ -25,7 +25,7 @@ information the renderer needs — no DOM or layout types leak through.
 
 This crate's core is `render_svg_tree`, which walks the `SvgRenderTree`
 recursively and emits a WebRender display list. At each node it resolves the
-inherited transforms, clips, and paint, then produces the matching primitive.
+inherited transforms, effects, and paint, then produces the matching primitive.
 Shapes are emitted through one of two paths: a native path that pushes
 WebRender items directly (`push_rect`, `push_border`, `push_gradient`,
 `push_text`, `push_image`) for shapes WebRender can express natively, and a
@@ -63,9 +63,10 @@ SVG element.
 display list, resolved through the same CSS cascade as the rest of the page.
 
 **Biggest feature — CSS cascade and external styles.** Styles are resolved
-through Stylo's `ComputedValues`, so external stylesheets, inheritance, and the full cascade apply to SVG exactly as they do to HTML. The
-old pipeline serialized the `<svg>` subtree to a string and rasterized it into a
-single bitmap, so it could only preserve inline presentation attributes.
+through Stylo's `ComputedValues`, so external stylesheets, inheritance, and the
+full cascade apply to SVG exactly as they do to HTML. The old pipeline
+serialized the `<svg>` subtree to a string and rasterized it into a single
+bitmap, so it could only preserve inline presentation attributes.
 
 **Supported elements**
 
@@ -194,7 +195,8 @@ flowchart TD
     A["render_node(node)"] --> B{"display: none?"}
     B -- "yes" --> END["skip subtree"]
     B -- "no" --> C["apply_node_transforms"]
-    C --> E["resolve_node_effects"]
+    C --> C2["nested svg<br/>(sub-viewport clip + viewBox frame)"]
+    C2 --> E["resolve_node_effects"]
     E --> G{"node.tag?"}
     G -- "Shape" --> H["emit_geometry(shape)"]
     G -- "Text" --> I["emit_leaf(TextSpan)"]
@@ -205,9 +207,10 @@ flowchart TD
 
 #### 5.4.3 Shapes
 
-The node walk hands `Shape` to `emit_geometry`, which wraps the paint in effects and delegates to `emit_shape`. `emit_shape`
-resolves the paint to a native primitive or a `vello_cpu` raster; markers
-(`emit_markers`) are emitted afterward on line/polyline/polygon shapes.
+The node walk hands `Shape` to `emit_geometry`, which wraps the paint in
+effects and delegates to `emit_shape`. `emit_shape` resolves the paint to a
+native primitive or a `vello_cpu` raster; markers (`emit_markers`) are emitted
+afterward on line/polyline/polygon shapes.
 
 ```mermaid
 flowchart TD
@@ -215,9 +218,10 @@ flowchart TD
     B --> C{"fill or stroke?"}
     C -- "pattern / gradient / solid<br/>on basic shapes" --> D["native render<br/>push_gradient / push_rect / push_border / stroke_line_segment"]
     C -- "paths, dashed,<br/>unsupported gradients" --> E["rasterize_bez (vello_cpu)"]
-    D --> F["WebRender display list"]
+    D --> M["emit_markers<br/>(line / polyline / polygon)"]
     E --> G["RasterizedImage → push_image"]
-    G --> F
+    G --> M
+    M --> F["WebRender display list"]
 ```
 
 #### 5.4.4 Text
