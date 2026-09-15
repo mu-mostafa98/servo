@@ -148,21 +148,6 @@ flowchart LR
     RST -->|"display-list commands"| DL
 ```
 
-### Module map
-
-| Module | Responsibility |
-|--------|----------------|
-| [`render_tree`](src/render_tree.rs) | `SvgRenderTree`/`SvgRenderNode`, `SvgTag`, definition types, `viewBox`/`preserveAspectRatio` parsing |
-| [`shapes`](src/shapes/mod.rs) | `Shape` enum + the 7 geometric shape structs; `to_bez_path`, `clip_info` |
-| [`style`](src/style/mod.rs) | `NodeStyle`, fill/stroke params, gradient types, hints, transforms, visibility |
-| [`text`](src/text.rs) / [`image`](src/image.rs) | `TextSpan`/`ShapedGlyph` and `SvgImage` leaf types |
-| [`traversal`](src/traversal.rs) | `render_svg_tree` + recursive `render_node`; transform/effect resolution |
-| [`renderer`](src/renderer/mod.rs) | `Render` trait, `RenderContext`, per-shape impls, gradient/pattern pipelines |
-| [`tessellator`](src/tessellator.rs) | lyon polygon triangulation + scanline fill |
-| [`effects`](src/effects/mod.rs) | clip-path/mask chain building (`clip`) and filter-op resolution (`filter`) |
-| [`visitor`](src/visitor.rs) | post-construction tree mutations (e.g. `PaintServerFixupVisitor`) |
-| [`error`](src/error.rs) | `SvgEngineError` / `SvgResult` |
-
 ### Architecture
 
 One traversal fans out into two rendering paths: simple shapes are pushed to
@@ -214,7 +199,44 @@ flowchart TB
     COMPLEX -->|"push_image"| WR
 ```
 
-### Render pipeline flow
+### Module map
+
+| Module | Responsibility |
+|--------|----------------|
+| [`render_tree`](src/render_tree.rs) | `SvgRenderTree`/`SvgRenderNode`, `SvgTag`, definition types, `viewBox`/`preserveAspectRatio` parsing |
+| [`shapes`](src/shapes/mod.rs) | `Shape` enum + the 7 geometric shape structs; `to_bez_path`, `clip_info` |
+| [`style`](src/style/mod.rs) | `NodeStyle`, fill/stroke params, gradient types, hints, transforms, visibility |
+| [`text`](src/text.rs) / [`image`](src/image.rs) | `TextSpan`/`ShapedGlyph` and `SvgImage` leaf types |
+| [`traversal`](src/traversal.rs) | `render_svg_tree` + recursive `render_node`; transform/effect resolution |
+| [`renderer`](src/renderer/mod.rs) | `Render` trait, `RenderContext`, per-shape impls, gradient/pattern pipelines |
+| [`tessellator`](src/tessellator.rs) | lyon polygon triangulation + scanline fill |
+| [`effects`](src/effects/mod.rs) | clip-path/mask chain building (`clip`) and filter-op resolution (`filter`) |
+| [`visitor`](src/visitor.rs) | post-construction tree mutations (e.g. `PaintServerFixupVisitor`) |
+| [`error`](src/error.rs) | `SvgEngineError` / `SvgResult` |
+
+### Data flow
+
+#### Main data flow
+
+One pass from DOM to display list: layout builds the tree, the traversal
+dispatches each shape, and every shape reaches WebRender either as a native
+primitive or as a `vello_cpu`-rasterized image.
+
+```mermaid
+flowchart TB
+    A["build_svg_render_tree<br/>(DOM → SvgRenderTree)"] --> B["visit_image<br/>(DisplayListBuilder)"]
+    B --> C["render_svg_tree<br/>(walk the tree)"]
+    C --> D["dispatch per shape"]
+    D -- "simple shapes" --> S["Rectangle::render / Circle::render / Ellipse::render<br/>Line::render / TextSpan::render / SvgImage::render"]
+    D -- "complex shapes" --> CX["Path::render / Polygon::render / Polyline::render"]
+    S --> F["push_rect / push_border / push_gradient / push_text / push_image"]
+    CX --> G["rasterize_bez (vello_cpu)"]
+    G --> H["RasterizedImage → push_image"]
+    F --> I["WebRender display list"]
+    H --> I
+```
+
+#### Per-node rendering
 
 ```mermaid
 flowchart TD
