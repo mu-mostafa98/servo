@@ -56,6 +56,8 @@ SVG element.
 | `<image>` | `href` resolved to an `ImageKey` at build time; `preserveAspectRatio` fits the natural size into the viewport, then drawn with `push_image` (gray placeholder if not loaded) | `push_image` |
 | `<text>` | Applies `text-anchor`/RTL alignment and fill/stroke, then emits glyphs grouped by font | `push_text` |
 | `<tspan>` | Applies fill/stroke and emits its glyphs inline within the `<text>` line | `push_text` |
+| `<pattern>` | Paint server (`fill`/`stroke`): content tiled across the host shape via `fill_rect_with_pattern_by_id`, shapes filled with `lyon` tessellation | native primitives (`push_rect` / `push_gradient`) |
+| `<marker>` | Referenced by `marker-start`/`marker-mid`/`marker-end` on `line`/`polyline`/`polygon`/`path`: content placed at each vertex, scaled by `markerWidth`/`markerHeight` and rotated along the tangent | `RasterizedImage` → `push_image` (`vello_cpu`) |
 
 ## 4. Scope
 
