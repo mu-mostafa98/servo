@@ -31,22 +31,47 @@ pub use self::polygon::Polygon;
 pub use self::polyline::Polyline;
 pub use self::rectangle::Rectangle;
 use crate::render_tree::ClipPathUnits;
+use crate::style::FillRule;
 
 /// Scale factor for objectBoundingBox clip-path coordinates (0..1 → 0..100).
 pub(crate) const OBJECT_BBOX_REF_SIZE: f32 = 100.0;
 
-/// Clip geometry result — either a rounded-rect clip (radii radius) or a
-/// polygon clip (polygon points).  The polygon variant pre-computes the
-/// bounding rect so callers can still size an image mask or bounding clip.
+/// Clip geometry result — the resolved shape a clip-path/mask applies.
+///
+/// * [`ClipGeometry::RoundedRect`] and [`ClipGeometry::Rect`] map directly to
+///   WebRender's native `define_clip_rounded_rect` / `define_clip_rect`.
+/// * [`ClipGeometry::Path`] carries the actual [`kurbo::BezPath`] (already in
+///   clip space) so the effect layer can rasterize it into an image-mask clip.
 #[derive(Debug, Clone)]
 pub(crate) enum ClipGeometry {
     RoundedRect {
         bounds: LayoutRect,
         radii: BorderRadius,
     },
-    Polygon {
+    Rect {
         bounds: LayoutRect,
     },
+    Path {
+        bounds: LayoutRect,
+        path: kurbo::BezPath,
+        fill_rule: FillRule,
+    },
+}
+
+/// A polygon/path clip that must be applied during vello_cpu rasterization.
+///
+/// WebRender 0.70's "quad" rendering path (used for `Rectangle`, `Image`, and
+/// gradient primitives) panics when a clip chain contains an image-mask clip
+/// (`bug: image-masks not expected on rect/quads`), so arbitrary polygon/path
+/// clips cannot be expressed as WebRender clip items. Instead the traversal
+/// carries the raw path geometry and applies it as a vello clip when the
+/// clipped shape is rasterized.
+#[derive(Debug, Clone)]
+pub(crate) struct ComplexClip {
+    /// The clip path in target user space (already translated by the node's
+    /// `cur_origin`/`svg_origin`).
+    pub path: kurbo::BezPath,
+    pub fill_rule: FillRule,
 }
 
 // ======================= An SVG geometric shape =======================
@@ -128,7 +153,7 @@ impl Shape {
 }
 
 /// Build an open or closed [`kurbo::BezPath`] from a list of points.
-fn points_to_bez(points: &[kurbo::Point], close: bool) -> kurbo::BezPath {
+pub(crate) fn points_to_bez(points: &[kurbo::Point], close: bool) -> kurbo::BezPath {
     let mut bez = kurbo::BezPath::new();
     for (i, p) in points.iter().enumerate() {
         if i == 0 {
@@ -141,6 +166,46 @@ fn points_to_bez(points: &[kurbo::Point], close: bool) -> kurbo::BezPath {
         bez.close_path();
     }
     bez
+}
+
+/// Translate a local-space [`kurbo::BezPath`] into clip space: scale by the
+/// objectBoundingBox reference size when `units == ObjectBoundingBox`, then
+/// translate by the shape's origin in the current coordinate system.
+pub(crate) fn transform_clip_path(
+    path: &kurbo::BezPath,
+    svg_origin: &LayoutPoint,
+    units: ClipPathUnits,
+) -> kurbo::BezPath {
+    let mut transformed = path.clone();
+    if units == ClipPathUnits::ObjectBoundingBox {
+        transformed.apply_affine(kurbo::Affine::scale(OBJECT_BBOX_REF_SIZE as f64));
+    }
+    transformed.apply_affine(kurbo::Affine::translate((
+        svg_origin.x as f64,
+        svg_origin.y as f64,
+    )));
+    transformed
+}
+
+/// Build a [`ClipGeometry::Path`] from a local-space [`kurbo::BezPath`]:
+/// transform it into clip space, derive its bounding box, and tag it with the
+/// default (non-zero) fill rule.
+pub(crate) fn clip_path_geometry(
+    path: &kurbo::BezPath,
+    svg_origin: &LayoutPoint,
+    units: ClipPathUnits,
+) -> ClipGeometry {
+    let transformed = transform_clip_path(path, svg_origin, units);
+    let bbox = transformed.bounding_box();
+    let bounds = LayoutRect::from_origin_and_size(
+        LayoutPoint::new(bbox.x0 as f32, bbox.y0 as f32),
+        LayoutSize::new((bbox.width() as f32).max(1.0), (bbox.height() as f32).max(1.0)),
+    );
+    ClipGeometry::Path {
+        bounds,
+        path: transformed,
+        fill_rule: FillRule::NonZero,
+    }
 }
 
 // ======================= Clip geometry helpers =======================

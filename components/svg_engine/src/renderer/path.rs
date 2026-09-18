@@ -9,7 +9,7 @@ use webrender_api::DisplayListBuilder;
 
 use crate::renderer::providers::PaintResourceProvider;
 use crate::renderer::{Render, RenderContext};
-use crate::shapes::Path;
+use crate::shapes::{ComplexClip, Path};
 use crate::style::gradient::{GradientDef, GradientUnits, SpreadMethod};
 use crate::style::{FillParams, FillRule, StrokeParams};
 use crate::{RasterSink, RasterizedImage};
@@ -101,6 +101,7 @@ impl Render for Path {
             ctx.device_scale,
             Transform2D::identity(),
             None,
+            &[],
             ctx.paints,
             ctx.wr,
             ctx.sink,
@@ -135,6 +136,7 @@ pub(crate) fn rasterize_bez(
     scale: f32,
     node_xform: Transform2D<f32, (), ()>,
     clip_rect: Option<LayoutRect>,
+    complex_clips: &[ComplexClip],
     paints: &dyn PaintResourceProvider,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
@@ -206,6 +208,33 @@ pub(crate) fn rasterize_bez(
         -bbox.x0 * scale as f64,
         -bbox.y0 * scale as f64,
     )));
+
+    // Apply polygon/path clip-paths (and complex mask shapes) as vello clip
+    // paths. Their geometry is already translated by `cur_origin` (the node's
+    // translation-only origin), which matches `node_xform`'s translation for
+    // translate-only transforms. They still need the viewBox scale, the device
+    // scale, and the bbox translation to land in pixmap space — the same
+    // transforms applied to `bez_local` after `node_xform`.
+    for clip in complex_clips {
+        let mut clip_local = clip.path.clone();
+        clip_local.apply_affine(vello_cpu::kurbo::Affine::scale_non_uniform(
+            viewbox_scale.0 as f64,
+            viewbox_scale.1 as f64,
+        ));
+        clip_local.apply_affine(vello_cpu::kurbo::Affine::scale_non_uniform(
+            scale as f64,
+            scale as f64,
+        ));
+        clip_local.apply_affine(vello_cpu::kurbo::Affine::translate((
+            -bbox.x0 * scale as f64,
+            -bbox.y0 * scale as f64,
+        )));
+        context.set_fill_rule(match clip.fill_rule {
+            FillRule::NonZero => vello_cpu::peniko::Fill::NonZero,
+            FillRule::EvenOdd => vello_cpu::peniko::Fill::EvenOdd,
+        });
+        context.push_clip_path(&clip_local);
+    }
 
     if let Some(f) = fill {
         if let Some(paint) = resolve_fill_paint(f, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity, paints) {

@@ -43,6 +43,7 @@ impl Render for Polygon {
             ctx.device_scale,
             Transform2D::identity(),
             None,
+            &[],
             ctx.paints,
             ctx.wr,
             ctx.sink,

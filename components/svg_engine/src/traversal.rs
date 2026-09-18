@@ -15,7 +15,7 @@ use webrender_api::{
     ReferenceFrameKind, SpatialId, StackingContextFlags, TransformStyle,
 };
 
-use crate::effects::clip::{build_mask_clips, resolve_node_clip_path};
+use crate::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::effects::filter::get_filter_ops;
 use crate::render_tree::*;
 use crate::renderer::{
@@ -23,6 +23,7 @@ use crate::renderer::{
     clip_chain_option, transform,
 };
 use crate::renderer::path::rasterize_bez;
+use crate::shapes::ComplexClip;
 use crate::RasterSink;
 
 // ======================= Public Entry Point =======================
@@ -180,7 +181,8 @@ struct ResourceProviders<'a> {
 
 /// Bundled effect parameters — reduces argument count for `emit_geometry`.
 struct EffectParams<'a> {
-    mask_clips: &'a Option<Vec<ClipChainId>>,
+    mask_clips: &'a Option<Vec<MaskClip>>,
+    complex_clips: &'a [ComplexClip],
     filter_ops: &'a Option<Vec<webrender_api::FilterOp>>,
     paints: &'a dyn PaintResourceProvider,
     markers: &'a dyn MarkerProvider,
@@ -320,6 +322,7 @@ fn render_node(
     // Step 4 — Render the element.
     let shape_params = EffectParams {
         mask_clips: &resolved.mask_clips,
+        complex_clips: &resolved.complex_clips,
         filter_ops: &resolved.filter_ops,
         paints: providers.paints,
         markers: providers.markers,
@@ -366,7 +369,8 @@ fn render_node(
 /// The resolved effects for a node — clip chain, mask clips, filter ops.
 struct ResolvedEffects {
     clip_chain: ClipChainId,
-    mask_clips: Option<Vec<ClipChainId>>,
+    mask_clips: Option<Vec<MaskClip>>,
+    complex_clips: Vec<ComplexClip>,
     filter_ops: Option<Vec<webrender_api::FilterOp>>,
 }
 
@@ -379,7 +383,7 @@ fn resolve_node_effects(
     parent_clip_chain: ClipChainId,
     wr: &mut DisplayListBuilder,
 ) -> ResolvedEffects {
-    let node_clip_chain = resolve_node_clip_path(
+    let (node_clip_chain, complex_clips) = resolve_node_clip_path(
         node,
         providers.clips,
         cur_origin,
@@ -404,6 +408,7 @@ fn resolve_node_effects(
             parent_clip_chain
         },
         mask_clips,
+        complex_clips,
         filter_ops,
     }
 }
@@ -526,16 +531,23 @@ fn emit_geometry(
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, node_clip_chain, wr);
 
     if let Some(clips) = params.mask_clips {
-        for &mask_chain in clips {
+        for mask_clip in clips {
+            // Each mask pass inherits the node's clip-path geometry plus the
+            // mask shape's own complex clip (if any).
+            let mut combined = params.complex_clips.to_vec();
+            if let Some(c) = &mask_clip.complex {
+                combined.push(c.clone());
+            }
             emit_shape(
                 shape,
                 &style,
                 cur_origin,
                 cur_spatial_id,
-                mask_chain,
+                mask_clip.chain,
                 accumulated_scale,
                 params.paints,
                 params.markers,
+                &combined,
                 wr,
                 viewbox_scale,
                 device_scale,
@@ -555,6 +567,7 @@ fn emit_geometry(
             accumulated_scale,
             params.paints,
             params.markers,
+            params.complex_clips,
             wr,
             viewbox_scale,
             device_scale,
@@ -580,6 +593,7 @@ fn emit_shape(
     accumulated_scale: f32,
     paints: &dyn PaintResourceProvider,
     markers: &dyn MarkerProvider,
+    complex_clips: &[ComplexClip],
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
     device_scale: f32,
@@ -606,38 +620,48 @@ fn emit_shape(
         // basic shapes (rect/circle/ellipse/line) also render natively. Only
         // the remainder — paths, polygons, polylines, dashed rect borders, and
         // gradients the native renderer can't express — is rasterized by vello.
-        let handled = emit_native_gradients(
-            shape,
-            style,
-            svg_origin,
-            spatial_id,
-            clip_chain_id,
-            accumulated_scale,
-            paints,
-            wr,
-            sink,
-        );
-        if !handled && is_native_solid_shape(shape, style) {
-            // Solid paint on the four basic shapes renders as native WebRender
-            // primitives in paint order (rect/circle/ellipse → `push_rect` /
-            // `push_border`; line → `stroke_line_segment`), so they stay
-            // correctly ordered against surrounding rasters and native items.
-            let mut ctx = RenderContext {
+        //
+        // Polygon/path clip-paths (and complex mask shapes) can't be expressed
+        // as WebRender clip items (image-mask clips panic WebRender's quad
+        // path), so shapes carrying complex clips always rasterize and clip via
+        // vello `push_clip_path`.
+        let mut handled = false;
+        if complex_clips.is_empty() {
+            handled = emit_native_gradients(
+                shape,
                 style,
-                svg_origin: *svg_origin,
+                svg_origin,
                 spatial_id,
                 clip_chain_id,
-                wr: &mut *wr,
-                paints,
                 accumulated_scale,
-                viewbox_scale,
-                device_scale,
-                raster_offset,
-                native_rendering: false,
+                paints,
+                wr,
                 sink,
-            };
-            shape.render(&mut ctx);
-        } else if !handled {
+            );
+            if !handled && is_native_solid_shape(shape, style) {
+                // Solid paint on the four basic shapes renders as native WebRender
+                // primitives in paint order (rect/circle/ellipse → `push_rect` /
+                // `push_border`; line → `stroke_line_segment`), so they stay
+                // correctly ordered against surrounding rasters and native items.
+                let mut ctx = RenderContext {
+                    style,
+                    svg_origin: *svg_origin,
+                    spatial_id,
+                    clip_chain_id,
+                    wr: &mut *wr,
+                    paints,
+                    accumulated_scale,
+                    viewbox_scale,
+                    device_scale,
+                    raster_offset,
+                    native_rendering: false,
+                    sink,
+                };
+                shape.render(&mut ctx);
+                handled = true;
+            }
+        }
+        if !handled {
             if let Some(bez) = shape.to_bez_path() {
                 // The node transform (translate/scale/rotate/…) is applied to the
                 // path inside `rasterize_bez`; `raster_offset` carries only the
@@ -654,6 +678,7 @@ fn emit_shape(
                     device_scale,
                     node_xform,
                     clip_rect,
+                    complex_clips,
                     paints,
                     wr,
                     sink,
@@ -1010,6 +1035,7 @@ fn emit_marker(
             device_scale,
             full_xform,
             clip_rect,
+            &[],
             paints,
             wr,
             sink,
@@ -1077,7 +1103,8 @@ fn emit_leaf<T: crate::renderer::Render>(
     let effective_clip = params
         .mask_clips
         .as_ref()
-        .and_then(|c| c.first().copied())
+        .and_then(|c| c.first())
+        .map(|m| m.chain)
         .unwrap_or(clip_chain_id);
 
     let mut ctx = RenderContext {

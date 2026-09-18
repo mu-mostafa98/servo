@@ -55,7 +55,7 @@ impl Rectangle {
         };
         Some(match radii {
             Some(r) => ClipGeometry::RoundedRect { bounds, radii: r },
-            None => ClipGeometry::Polygon { bounds },
+            None => ClipGeometry::Rect { bounds },
         })
     }
 }

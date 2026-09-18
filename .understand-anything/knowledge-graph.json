@@ -1920,7 +1920,7 @@
       "type": "file",
       "name": "traversal.rs",
       "filePath": "components/svg_engine/src/traversal.rs",
-      "summary": "Recursive SVG render-tree walker: renders the tree by resolving viewBox transforms, clip/mask/filter effects, and dispatching each node/leaf to shape renderers or CPU rasterization, with native-gradient gating.",
+      "summary": "Recursive SVG render-tree walker: resolves viewBox transforms, clip/mask/filter effects, and dispatches each node/leaf to native shape renderers or CPU rasterization, gating on native gradients and native solid basic shapes.",
       "tags": [
         "traversal",
         "entry-point",
@@ -2313,7 +2313,7 @@
         565,
         670
       ],
-      "summary": "Emits a shape: prefers native gradients, else CPU-rasterizes the Bezier path, and emits markers.",
+      "summary": "Emits a shape: prefers native gradients, then native solid basic shapes (rect/circle/ellipse/line), else CPU-rasterizes the Bezier path, and emits markers.",
       "tags": [
         "shape",
         "rasterization",
@@ -5207,6 +5207,23 @@
       ],
       "complexity": "moderate",
       "languageNotes": "Uses mermaid flowcharts to document module architecture and the rendering flow, plus tables enumerating the public API surface."
+    },
+    {
+      "id": "function:components/svg_engine/src/traversal.rs:is_native_solid_shape",
+      "type": "function",
+      "name": "is_native_solid_shape",
+      "filePath": "components/svg_engine/src/traversal.rs",
+      "lineRange": [
+        854,
+        881
+      ],
+      "summary": "Decides whether a shape's paint is fully solid and the shape is one of the four native-expressible basic shapes (rect/circle/ellipse via push_rect/push_border, line via stroke_line_segment); dashed rect/circle/ellipse strokes fall back to vello.",
+      "tags": [
+        "shape",
+        "native",
+        "dispatch"
+      ],
+      "complexity": "simple"
     }
   ],
   "edges": [
@@ -9605,6 +9622,20 @@
       "type": "documents",
       "direction": "forward",
       "weight": 0.5
+    },
+    {
+      "source": "file:components/svg_engine/src/traversal.rs",
+      "target": "function:components/svg_engine/src/traversal.rs:is_native_solid_shape",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1
+    },
+    {
+      "source": "function:components/svg_engine/src/traversal.rs:emit_shape",
+      "target": "function:components/svg_engine/src/traversal.rs:is_native_solid_shape",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
     }
   ],
   "layers": [

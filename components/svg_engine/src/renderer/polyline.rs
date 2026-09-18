@@ -41,6 +41,7 @@ impl Render for Polyline {
             ctx.device_scale,
             Transform2D::identity(),
             None,
+            &[],
             ctx.paints,
             ctx.wr,
             ctx.sink,
