@@ -59,8 +59,9 @@ SVG element.
 
 ## 4. Scope
 
-`svg_engine` renders embedded `<svg>` content directly into the rendering backend
-display list, resolved through the same CSS cascade as the rest of the page.
+**Scope in one line:** v0 renders a fixed whitelist of trusted, static SVG
+elements for pre-validated, author-controlled input. Adversarial and malicious
+SVG are explicitly out of scope; the engine is not a security boundary.
 
 **Biggest feature — CSS cascade and external styles.** Styles are resolved
 through Stylo's `ComputedValues`, so external stylesheets, inheritance, and the
@@ -68,14 +69,78 @@ full cascade apply to SVG exactly as they do to HTML. The old pipeline
 serialized the `<svg>` subtree to a string and rasterized it into a single
 bitmap, so it could only preserve inline presentation attributes.
 
-**Supported elements**
+**Supported elements — attribute whitelist.** The table below is the v0
+whitelist: an element is in scope only if it appears here, and only the
+attributes listed for it are guaranteed to work. Use it as the checklist for
+testing.
 
-- **Shapes** — `<rect>`, `<circle>`, `<ellipse>`, `<line>`, `<polyline>`, `<polygon>`, `<path>`
-- **Structure** — `<g>`, `<defs>`, `<use>`, `<symbol>`
-- **Paint** — fill and stroke; `<linearGradient>`, `<radialGradient>`, `<stop>`, `<pattern>`
-- **Text** — `<text>`, `<tspan>` (`text-anchor`, `dominant-baseline`, `dx`/`dy`/`rotate`, RTL)
-- **Image** — `<image>`
-- **Markers** — `<marker>`
+All shape, text, and image elements also accept the common presentation
+attributes: `fill`, `fill-opacity`, `fill-rule`, `stroke`, `stroke-width`,
+`stroke-opacity`, `stroke-linecap`, `stroke-linejoin`, `stroke-miterlimit`,
+`stroke-dasharray`, `stroke-dashoffset`, `opacity`, `visibility`, `display`,
+`transform` (attribute and CSS `transform`), `filter`, `clip-path`, `mask`,
+`marker-start`, `marker-mid`, `marker-end`, and `vector-effect`
+(`non-scaling-stroke`).
+
+| Category | Element | Working attributes |
+|----------|---------|--------------------|
+| Shape | `<rect>` | `x`, `y`, `width`, `height`, `rx`, `ry` |
+| Shape | `<circle>` | `cx`, `cy`, `r` |
+| Shape | `<ellipse>` | `cx`, `cy`, `rx`, `ry` |
+| Shape | `<line>` | `x1`, `y1`, `x2`, `y2` |
+| Shape | `<polyline>` | `points` |
+| Shape | `<polygon>` | `points` |
+| Shape | `<path>` | `d` |
+| Structure | `<svg>` (nested) | `x`, `y`, `width`, `height`, `viewBox`, `preserveAspectRatio`, `overflow` (root `<svg>` is sized by CSS/layout) |
+| Structure | `<g>` | — (groups children) |
+| Structure | `<defs>` | — (children referenced, not rendered directly) |
+| Structure | `<use>` | `href` / `xlink:href`, `x`, `y`, `width` / `height` (for `<symbol>` targets) |
+| Structure | `<symbol>` | `viewBox`, `preserveAspectRatio`, `width`, `height` |
+| Paint | `<linearGradient>` | `x1`, `y1`, `x2`, `y2`, `gradientUnits`, `gradientTransform`, `spreadMethod` |
+| Paint | `<radialGradient>` | `cx`, `cy`, `r`, `fx`, `fy`, `gradientUnits`, `gradientTransform`, `spreadMethod` |
+| Paint | `<stop>` | `offset`, `stop-color`, `stop-opacity` |
+| Paint | `<pattern>` | `x`, `y`, `width`, `height`, `patternUnits`, `patternContentUnits`, `patternTransform`, `viewBox`, `preserveAspectRatio` |
+| Effect | `<clipPath>` | `clipPathUnits` |
+| Effect | `<mask>` | — (masking shapes are its children) |
+| Effect | `<filter>` | `x`, `y`, `width`, `height` |
+| Effect | `<feGaussianBlur>` | `stdDeviation` |
+| Effect | `<feDropShadow>` | `dx`, `dy`, `stdDeviation`, `flood-color`, `flood-opacity` |
+| Effect | `<feColorMatrix>` | `type`, `values` |
+| Effect | `<feOffset>` | `dx`, `dy` |
+| Effect | `<feFlood>` | `flood-color`, `flood-opacity` |
+| Effect | `<feComposite>` | `operator`, `k1`–`k4` *(recognized, renders as no-op)* |
+| Effect | `<feTile>` | — *(recognized, renders as no-op)* |
+| Effect | `<feImage>` | `href` / `xlink:href` *(recognized, renders as no-op)* |
+| Text | `<text>` | `x`, `y`, `dx`, `dy`, `rotate`, `text-anchor`, `dominant-baseline`, `direction` |
+| Text | `<tspan>` | `x`, `y`, `dx`, `dy`, `rotate`, `text-anchor`, `dominant-baseline`, `direction` |
+| Image | `<image>` | `x`, `y`, `width`, `height`, `href` / `xlink:href`, `preserveAspectRatio` |
+| Marker | `<marker>` | `viewBox`, `refX`, `refY`, `markerWidth`, `markerHeight`, `markerUnits`, `orient`, `preserveAspectRatio` |
+
+**Out of scope — adversarial and malicious SVG.** The whitelist above applies
+to trusted, author-controlled, pre-validated documents. Adversarial or
+malicious SVG — anything crafted to exploit, overload, crash, hang, exhaust,
+bypass, or abuse the engine or its host process — is out of scope, including:
+
+- **Resource exhaustion** — huge canvas/`viewBox`, excessive path data or point
+  counts, deep nesting, recursive or exponential `<use>`/`<defs>` expansion,
+  billion-laughs / XML entity expansion.
+- **Parser attacks** — DTDs, external entities, malformed XML, oversized
+  attributes.
+- **Active content** — scripts, event handlers, `javascript:` URLs, animation.
+- **External resource access** — remote images, fonts, CSS, external entities,
+  network fetches, local file inclusion.
+- **Rendering bombs** — recursive patterns/gradients/markers, extreme
+  stroke/dash values, excessive element counts.
+- **Data exfiltration** — external references or URLs embedded in attributes.
+
+The v0 engine is **not a security boundary**: it is not designed, tested, or
+warranted to be safe against adversarial input, and it makes no guarantees that
+it will terminate, stay within memory or CPU bounds, avoid panics, stack
+overflow, OOM, or process termination, or preserve host integrity. Excluding
+such input is the caller's responsibility (via an upstream
+validation/sanitization stage), and the engine **must not** be exposed to
+untrusted input — user uploads, multi-tenant, or network-facing contexts —
+unless the deploying product independently provides that exclusion.
 
 **Constraints**
 
