@@ -116,31 +116,25 @@ attributes: `fill`, `fill-opacity`, `fill-rule`, `stroke`, `stroke-width`,
 | Image | `<image>` | `x`, `y`, `width`, `height`, `href` / `xlink:href`, `preserveAspectRatio` |
 | Marker | `<marker>` | `viewBox`, `refX`, `refY`, `markerWidth`, `markerHeight`, `markerUnits`, `orient`, `preserveAspectRatio` |
 
-**Out of scope — adversarial and malicious SVG.** The whitelist above applies
-to trusted, author-controlled, pre-validated documents. Adversarial or
-malicious SVG — anything crafted to exploit, overload, crash, hang, exhaust,
-bypass, or abuse the engine or its host process — is out of scope, including:
+**Out of scope — adversarial and malicious SVG.** The whitelist applies to
+trusted, author-controlled, pre-validated input only. Adversarial SVG — crafted
+to exploit, overload, crash, hang, exhaust, bypass, or abuse the engine or its
+host — is out of scope:
 
-- **Resource exhaustion** — huge canvas/`viewBox`, excessive path data or point
-  counts, deep nesting, recursive or exponential `<use>`/`<defs>` expansion,
-  billion-laughs / XML entity expansion.
-- **Parser attacks** — DTDs, external entities, malformed XML, oversized
-  attributes.
+- **Resource exhaustion** — huge canvas/`viewBox`, deep nesting, `<use>`/`<defs>`
+  amplification, billion-laughs.
+- **Parser attacks** — DTDs, external entities, malformed/oversized input.
 - **Active content** — scripts, event handlers, `javascript:` URLs, animation.
-- **External resource access** — remote images, fonts, CSS, external entities,
-  network fetches, local file inclusion.
-- **Rendering bombs** — recursive patterns/gradients/markers, extreme
-  stroke/dash values, excessive element counts.
-- **Data exfiltration** — external references or URLs embedded in attributes.
+- **External resource access / data exfiltration** — remote images/fonts/CSS,
+  network fetches, external URLs, local file inclusion.
+- **Rendering bombs** — recursive paint servers/markers, extreme stroke/dash
+  values, excessive element counts.
 
-The v0 engine is **not a security boundary**: it is not designed, tested, or
-warranted to be safe against adversarial input, and it makes no guarantees that
-it will terminate, stay within memory or CPU bounds, avoid panics, stack
-overflow, OOM, or process termination, or preserve host integrity. Excluding
-such input is the caller's responsibility (via an upstream
-validation/sanitization stage), and the engine **must not** be exposed to
-untrusted input — user uploads, multi-tenant, or network-facing contexts —
-unless the deploying product independently provides that exclusion.
+The engine is **not a security boundary**: no guarantee it terminates, stays
+within memory/CPU bounds, avoids panics/stack-overflow/OOM, or preserves host
+integrity. Excluding adversarial input is the caller's responsibility; the
+engine **must not** be exposed to untrusted input (user uploads, multi-tenant,
+network-facing) unless the deployer provides that exclusion.
 
 **Constraints**
 
