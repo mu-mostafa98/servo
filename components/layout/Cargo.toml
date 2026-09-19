@@ -17,6 +17,17 @@ doctest = false
 
 [features]
 tracing = ["dep:tracing"]
+# Build the usvg tree directly from the SVG DOM (post-cascade) and rasterize it
+# with resvg, instead of serializing back to XML and using the vector-image cache.
+dom-to-usvg = [
+    "dep:resvg",
+    "dep:svgtypes",
+    "dep:html5ever",
+    "dep:image",
+    "script/dom-to-usvg",
+    "net_traits/dom-to-usvg",
+    "malloc_size_of/dom-to-usvg",
+]
 
 [dependencies]
 accesskit = { workspace = true }
@@ -29,9 +40,11 @@ embedder_traits = { workspace = true }
 euclid = { workspace = true }
 fonts = { workspace = true }
 fonts_traits = { workspace = true }
+html5ever = { workspace = true, optional = true }
 icu_locale_core = { workspace = true }
 icu_properties = { workspace = true, features = ["compiled_data"] }
 icu_segmenter = { workspace = true }
+image = { workspace = true, optional = true }
 itertools = { workspace = true }
 kurbo = { workspace = true }
 layout_api = { workspace = true }
@@ -48,6 +61,7 @@ phf = { workspace = true }
 pixels = { workspace = true }
 profile_traits = { workspace = true }
 rayon = { workspace = true }
+resvg = { workspace = true, optional = true }
 rustc-hash = { workspace = true }
 script = { workspace = true }
 script_traits = { workspace = true }
@@ -62,6 +76,7 @@ servo_arc = { workspace = true }
 smallvec = { workspace = true }
 strum = { workspace = true }
 stylo = { workspace = true }
+svgtypes = { workspace = true, optional = true }
 stylo_atoms = { workspace = true }
 stylo_traits = { workspace = true }
 taffy = { workspace = true }
