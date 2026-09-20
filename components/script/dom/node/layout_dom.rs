@@ -14,6 +14,8 @@ use pixels::ImageMetadata;
 use script_bindings::codegen::InheritTypes::{
     ElementTypeId, HTMLElementTypeId, SVGElementTypeId, SVGGraphicsElementTypeId,
 };
+#[cfg(feature = "dom-to-usvg")]
+use script_bindings::codegen::InheritTypes::SVGGeometryElementTypeId;
 use servo_base::id::{BrowsingContextId, PipelineId};
 use servo_base::text::{RangeAny, Utf16CodeUnits, Utf32CodeUnits};
 use servo_url::ServoUrl;
@@ -464,6 +466,52 @@ impl From<ElementTypeIdWrapper> for LayoutElementType {
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
                 SVGGraphicsElementTypeId::SVGSVGElement,
             )) => LayoutElementType::SVGSVGElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGCircleElement,
+                ),
+            )) => LayoutElementType::SVGCircleElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGEllipseElement,
+                ),
+            )) => LayoutElementType::SVGEllipseElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGLineElement,
+                ),
+            )) => LayoutElementType::SVGLineElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPathElement,
+                ),
+            )) => LayoutElementType::SVGPathElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPolygonElement,
+                ),
+            )) => LayoutElementType::SVGPolygonElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPolylineElement,
+                ),
+            )) => LayoutElementType::SVGPolylineElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGRectElement,
+                ),
+            )) => LayoutElementType::SVGRectElement,
+            #[cfg(feature = "dom-to-usvg")]
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGElement,
+            )) => LayoutElementType::SVGGElement,
             _ => LayoutElementType::Element,
         }
     }

@@ -137,6 +137,14 @@ pub enum LayoutElementType {
     HTMLTableSectionElement,
     HTMLTextAreaElement,
     SVGImageElement,
+    SVGCircleElement,
+    SVGEllipseElement,
+    SVGGElement,
+    SVGLineElement,
+    SVGPathElement,
+    SVGPolygonElement,
+    SVGPolylineElement,
+    SVGRectElement,
     SVGSVGElement,
 }
 
