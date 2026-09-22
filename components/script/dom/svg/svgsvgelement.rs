@@ -163,11 +163,16 @@ impl SVGSVGElement {
         let _ = root_node.AppendChild(cx, &cloned_node);
     }
 
-    fn invalidate_cached_serialized_subtree_and_rasterization_result(&self, no_gc: &NoGC) {
+    pub(crate) fn invalidate_cached_serialized_subtree_and_rasterization_result(
+        &self,
+        no_gc: &NoGC,
+    ) {
         let owner_window = self.owner_window();
         owner_window
             .image_cache()
             .evict_rasterized_image(&self.uuid);
+        #[cfg(feature = "dom-to-usvg")]
+        owner_window.image_cache().evict_raw_pixels(&self.uuid);
         if let Some(Ok(url)) = &*self.cached_serialized_data_url.borrow() {
             owner_window.layout_mut().remove_cached_image(url);
             owner_window.image_cache().evict_completed_image(

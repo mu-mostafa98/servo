@@ -29,9 +29,13 @@ use crate::dom::document::Document;
 use crate::dom::document::focus::FocusableArea;
 use crate::dom::element::attributes::storage::AttrRef;
 use crate::dom::element::{AttributeMutation, Element};
+#[cfg(feature = "dom-to-usvg")]
+use crate::dom::iterators::ShadowIncluding;
 use crate::dom::node::focus::FocusTrigger;
 use crate::dom::node::virtualmethods::VirtualMethods;
 use crate::dom::node::{Node, NodeTraits};
+#[cfg(feature = "dom-to-usvg")]
+use crate::dom::node::ChildrenMutation;
 use crate::dom::svg::svgcircleelement::SVGCircleElement;
 use crate::dom::svg::svgellipseelement::SVGEllipseElement;
 use crate::dom::svg::svgimageelement::SVGImageElement;
@@ -85,6 +89,24 @@ impl SVGElement {
     fn as_element(&self) -> &Element {
         self.upcast::<Element>()
     }
+
+    /// Invalidates the nearest enclosing [`SVGSVGElement`] after a mutation on
+    /// this element or one of its descendants.
+    ///
+    /// The `<svg>` element's own `attribute_mutated`/`children_changed` hooks
+    /// only fire for mutations on the `<svg>` element itself, not for changes to
+    /// nested descendants (a `<path>`'s `d`, a `<g>`'s children). Without this
+    /// walk, such nested mutations would leave a stale raster.
+    #[cfg(feature = "dom-to-usvg")]
+    fn invalidate_nearest_svg_ancestor(&self, cx: &mut js::context::JSContext) {
+        let node = self.upcast::<Node>();
+        for ancestor in node.inclusive_ancestors_unrooted(cx.no_gc(), ShadowIncluding::No) {
+            if let Some(svg) = ancestor.downcast::<SVGSVGElement>() {
+                svg.invalidate_cached_serialized_subtree_and_rasterization_result(cx.no_gc());
+                return;
+            }
+        }
+    }
 }
 
 impl VirtualMethods for SVGElement {
@@ -113,6 +135,16 @@ impl VirtualMethods for SVGElement {
                 },
             }
         }
+
+        #[cfg(feature = "dom-to-usvg")]
+        self.invalidate_nearest_svg_ancestor(cx);
+    }
+
+    #[cfg(feature = "dom-to-usvg")]
+    fn children_changed(&self, cx: &mut js::context::JSContext, mutation: &ChildrenMutation) {
+        self.super_type().unwrap().children_changed(cx, mutation);
+
+        self.invalidate_nearest_svg_ancestor(cx);
     }
 
     fn attribute_affects_presentational_hints(&self, attr: AttrRef<'_>) -> bool {

@@ -14,6 +14,7 @@ use pixels::ImageMetadata;
 use script_bindings::codegen::InheritTypes::{
     ElementTypeId, HTMLElementTypeId, SVGElementTypeId, SVGGraphicsElementTypeId,
 };
+use script_bindings::codegen::InheritTypes::SVGGeometryElementTypeId;
 use servo_base::id::{BrowsingContextId, PipelineId};
 use servo_base::text::{RangeAny, Utf16CodeUnits, Utf32CodeUnits};
 use servo_url::ServoUrl;
@@ -470,6 +471,14 @@ impl From<ElementTypeIdWrapper> for LayoutElementType {
             ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
                 SVGGraphicsElementTypeId::SVGSVGElement,
             )) => LayoutElementType::SVGSVGElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGeometryElement(
+                    SVGGeometryElementTypeId::SVGPathElement,
+                ),
+            )) => LayoutElementType::SVGPathElement,
+            ElementTypeId::SVGElement(SVGElementTypeId::SVGGraphicsElement(
+                SVGGraphicsElementTypeId::SVGGElement,
+            )) => LayoutElementType::SVGGElement,
             _ => LayoutElementType::Element,
         }
     }

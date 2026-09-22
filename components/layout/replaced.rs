@@ -13,6 +13,10 @@ use layout_api::{IFrameSize, LayoutElement, LayoutImageDestination, LayoutNode, 
 use malloc_size_of_derive::MallocSizeOf;
 use net_traits::image_cache::{Image, ImageOrMetadataAvailable, VectorImage};
 use net_traits::request::InternalRequest;
+#[cfg(feature = "dom-to-usvg")]
+use resvg::usvg;
+#[cfg(feature = "dom-to-usvg")]
+use uuid::Uuid;
 use script::layout_dom::ServoLayoutNode;
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
@@ -159,6 +163,11 @@ pub(crate) enum ReplacedContentKind {
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
+        #[cfg(feature = "dom-to-usvg")]
+        svg_id: Uuid,
+        #[cfg(feature = "dom-to-usvg")]
+        #[conditional_malloc_size_of]
+        svg_tree: Option<Arc<usvg::Tree>>,
     },
     Audio,
 }
@@ -293,44 +302,63 @@ impl ReplacedContents {
             ratio,
         };
 
-        let svg_source = match svg_data.source {
-            None => {
-                // The SVGSVGElement is not yet serialized, so we add it to a list
-                // and hand it over to script to peform the serialization.
+        // The legacy pipeline serializes the `<svg>` subtree to a data URL and
+        // rasterizes it through the image cache. It is superseded by the DOM→usvg
+        // build, so it is compiled out entirely when the feature is enabled.
+        #[cfg(not(feature = "dom-to-usvg"))]
+        let vector_image = {
+            let svg_source = match svg_data.source {
+                None => {
+                    // The SVGSVGElement is not yet serialized, so we add it to a list
+                    // and hand it over to script to peform the serialization.
+                    context
+                        .image_resolver
+                        .queue_svg_element_for_serialization(node);
+                    None
+                },
+                // If `svg_source_result` is `Err()`, it means that the previous attempt
+                // had errored, then don't attempt to serialize again.
+                Some(svg_source_result) => svg_source_result.ok(),
+            };
+
+            let cached_image = svg_source.and_then(|svg_source| {
                 context
                     .image_resolver
-                    .queue_svg_element_for_serialization(node);
-                None
-            },
-            // If `svg_source_result` is `Err()`, it means that the previous attempt
-            // had errored, then don't attempt to serialize again.
-            Some(svg_source_result) => svg_source_result.ok(),
+                    .get_cached_image_for_url(
+                        node.opaque(),
+                        svg_source,
+                        LayoutImageDestination::BoxTreeConstruction,
+                        InternalRequest::Yes,
+                    )
+                    .ok()
+            });
+
+            cached_image.map(|image| match image {
+                Image::Vector(mut vector_image) => {
+                    vector_image.svg_id = Some(svg_data.svg_id);
+                    vector_image
+                },
+                _ => unreachable!("SVG element can't contain a raster image."),
+            })
         };
 
-        let cached_image = svg_source.and_then(|svg_source| {
-            context
-                .image_resolver
-                .get_cached_image_for_url(
-                    node.opaque(),
-                    svg_source,
-                    LayoutImageDestination::BoxTreeConstruction,
-                    InternalRequest::Yes,
-                )
-                .ok()
-        });
+        #[cfg(feature = "dom-to-usvg")]
+        let vector_image = None;
 
-        let vector_image = cached_image.map(|image| match image {
-            Image::Vector(mut vector_image) => {
-                vector_image.svg_id = Some(svg_data.svg_id);
-                vector_image
-            },
-            _ => unreachable!("SVG element can't contain a raster image."),
-        });
+        #[cfg(feature = "dom-to-usvg")]
+        let svg_tree = match crate::svg::build_usvg_tree(node, context) {
+            Some(tree) => Some(Arc::new(tree)),
+            None => None,
+        };
 
         (
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox: svg_data.view_box.is_some(),
+                #[cfg(feature = "dom-to-usvg")]
+                svg_id: svg_data.svg_id,
+                #[cfg(feature = "dom-to-usvg")]
+                svg_tree,
             },
             natural_size,
         )
@@ -619,7 +647,50 @@ impl ReplacedContents {
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
+                #[cfg(feature = "dom-to-usvg")]
+                svg_id,
+                #[cfg(feature = "dom-to-usvg")]
+                svg_tree,
             } => {
+                let scale = layout_context.style_context.device_pixel_ratio();
+                let content_size = base.rect().size;
+                let raster_size = Size2D::new(
+                    content_size.width.scale_by(scale.0).to_px(),
+                    content_size.height.scale_by(scale.0).to_px(),
+                );
+
+                let tag = self.base_fragment_info.tag.unwrap();
+
+                // Preferred path: rasterize the programmatically-built tree synchronously
+                // on the layout thread and upload the raw pixels to WebRender directly.
+                #[cfg(feature = "dom-to-usvg")]
+                if let Some(svg_tree) = svg_tree {
+                    let image_key = crate::svg::rasterize_svg_tree(
+                        layout_context.image_resolver.image_cache.as_ref(),
+                        svg_tree,
+                        *svg_id,
+                        raster_size,
+                    );
+
+                    return image_key
+                        .map(|image_key| {
+                            Fragment::Image(Arc::new(ImageFragment {
+                                base,
+                                style: style.clone().into(),
+                                clip,
+                                image_key: Some(image_key),
+                                showing_broken_image_icon: false,
+                                url: None,
+                                natural_width: self.natural_size.width,
+                                natural_height: self.natural_size.height,
+                            }))
+                        })
+                        .into_iter()
+                        .collect();
+                }
+
+                // Fallback: legacy vector-image cache path (used when the DOM->usvg build
+                // produced no tree, e.g. for non-`<svg>` nodes).
                 let Some(vector_image) = vector_image else {
                     return vec![];
                 };
@@ -642,14 +713,6 @@ impl ReplacedContents {
                     );
                 }
 
-                let scale = layout_context.style_context.device_pixel_ratio();
-                let content_size = base.rect().size;
-                let raster_size = Size2D::new(
-                    content_size.width.scale_by(scale.0).to_px(),
-                    content_size.height.scale_by(scale.0).to_px(),
-                );
-
-                let tag = self.base_fragment_info.tag.unwrap();
                 layout_context
                     .image_resolver
                     .rasterize_vector_image(

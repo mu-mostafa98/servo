@@ -20,6 +20,8 @@ use net_traits::image_cache::{
     ImageCacheResponseMessage, ImageCacheResult, ImageLoadListener, ImageOrMetadataAvailable,
     ImageResponse, PendingImageId, RasterizationCompleteResponse, VectorImage,
 };
+#[cfg(feature = "dom-to-usvg")]
+use net_traits::image_cache::RawPixelKey;
 use net_traits::request::CorsSettings;
 use net_traits::{FetchMetadata, FetchResponseMsg, FilteredMetadata, NetworkError};
 use paint_api::{CrossProcessPaintApi, ImageUpdate, SerializableImageData};
@@ -523,6 +525,9 @@ struct ImageCacheStore {
     /// Main struct to handle the cache of `WebRenderImageKey` and
     /// images that do not have a key yet.
     key_cache: KeyCache,
+
+    #[cfg(feature = "dom-to-usvg")]
+    raw_pixel_keys: FxHashMap<RawPixelKey, WebRenderImageKey>,
 }
 
 impl ImageCacheStore {
@@ -858,6 +863,8 @@ impl ImageCacheFactory for ImageCacheFactoryImpl {
                 webview_id,
                 key_cache: KeyCache::new(),
                 svg_rasterization_task_store: SvgRasterizationTaskStore::default(),
+                #[cfg(feature = "dom-to-usvg")]
+                raw_pixel_keys: FxHashMap::default(),
             })),
             svg_id_image_id_map: Arc::new(Mutex::new(FxHashMap::default())),
             broken_image_icon_data: self.broken_image_icon_data.clone(),
@@ -940,6 +947,56 @@ impl ImageCache for ImageCacheImpl {
         store
             .paint_api
             .generate_image_key_blocking(store.webview_id)
+    }
+
+    #[cfg(feature = "dom-to-usvg")]
+    fn upload_raw_pixels(&self, key: RawPixelKey, data: Vec<u8>) {
+        let mut store = self.store.lock();
+
+        let frame = ImageFrame {
+            delay: None,
+            byte_range: 0..data.len(),
+            width: key.width,
+            height: key.height,
+        };
+        let mut image = RasterImage {
+            metadata: ImageMetadata {
+                width: key.width,
+                height: key.height,
+            },
+            format: PixelFormat::RGBA8,
+            frames: vec![frame],
+            bytes: Arc::new(data),
+            id: None,
+            cors_status: CorsStatus::Unsafe,
+            is_opaque: false,
+            loop_count: None,
+        };
+
+        // A single SVG element has at most one live raster, so drop any stale
+        // raster left over from a previous size before storing the new one.
+        store.raw_pixel_keys.retain(|k, _| k.svg_id != key.svg_id);
+
+        if let Some(image_key) = store
+            .paint_api
+            .generate_image_key_blocking(store.webview_id)
+        {
+            set_webrender_image_key(&store.paint_api, &mut image, image_key);
+            store.raw_pixel_keys.insert(key, image_key);
+        }
+    }
+
+    #[cfg(feature = "dom-to-usvg")]
+    fn raw_pixel_image_key(&self, key: RawPixelKey) -> Option<WebRenderImageKey> {
+        self.store.lock().raw_pixel_keys.get(&key).copied()
+    }
+
+    #[cfg(feature = "dom-to-usvg")]
+    fn evict_raw_pixels(&self, svg_id: &Uuid) {
+        self.store
+            .lock()
+            .raw_pixel_keys
+            .retain(|key, _| &key.svg_id != svg_id);
     }
 
     fn get_image(

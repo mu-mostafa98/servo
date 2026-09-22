@@ -187,6 +187,26 @@ pub trait ImageCacheFactory: Sync + Send {
     ) -> Arc<dyn ImageCache>;
 }
 
+/// A cache key for raw pixels uploaded directly from the layout thread for an
+/// SVG element rasterized via `resvg` (the `dom-to-usvg` path).
+#[cfg(feature = "dom-to-usvg")]
+#[derive(Clone, Copy, PartialEq, Eq, Hash)]
+pub struct RawPixelKey {
+    /// The stable id of the `<svg>` element that produced these pixels.
+    pub svg_id: Uuid,
+    /// The rasterized size in physical pixels.
+    pub width: u32,
+    pub height: u32,
+}
+
+#[cfg(feature = "dom-to-usvg")]
+impl MallocSizeOf for RawPixelKey {
+    fn size_of(&self, _ops: &mut MallocSizeOfOps) -> usize {
+        // `Uuid` and the two `u32`s are fixed-size with no heap allocation.
+        0
+    }
+}
+
 /// An [`ImageCache`] manages fetching and decoding images for a single `Pipeline` for its
 /// `Document` and all of its associated `Worker`s.
 pub trait ImageCache: Sync + Send {
@@ -200,6 +220,17 @@ pub trait ImageCache: Sync + Send {
     /// things like canvas rendering. Returns `None` when an [`ImageKey`] cannot
     /// be generated properly.
     fn get_image_key(&self) -> Option<ImageKey>;
+
+    #[cfg(feature = "dom-to-usvg")]
+    fn upload_raw_pixels(&self, key: RawPixelKey, data: Vec<u8>);
+
+    #[cfg(feature = "dom-to-usvg")]
+    fn raw_pixel_image_key(&self, key: RawPixelKey) -> Option<ImageKey>;
+
+    /// Drops all cached raw pixels for the given `<svg>` element, forcing them to
+    /// be re-rasterized on the next layout.
+    #[cfg(feature = "dom-to-usvg")]
+    fn evict_raw_pixels(&self, svg_id: &Uuid);
 
     /// Definitively check whether there is a cached, fully loaded image available.
     fn get_image(

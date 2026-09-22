@@ -114,6 +114,9 @@ static HTML_MODE_CSS: &[u8] = include_bytes!("./stylesheets/html-mode.css");
 /// A CSS file to style the Servo browser.
 static SERVO_CSS: &[u8] = include_bytes!("./stylesheets/servo.css");
 
+#[cfg(feature = "dom-to-usvg")]
+static SERVO_SVG_CSS: &[u8] = b"svg > * { display: inline; }";
+
 /// A CSS file to style the presentational hints.
 static PRESENTATIONAL_HINTS_CSS: &[u8] = include_bytes!("./stylesheets/presentational-hints.css");
 
@@ -1712,7 +1715,8 @@ fn get_ua_stylesheets(shared_lock: &SharedRwLock) -> Rc<UserAgentStylesheets> {
             .get_or_init(|| {
                 // FIXME: presentational-hints.css should be at author origin with zero specificity.
                 //        (Does it make a difference?)
-                let user_agent_stylesheets = vec![
+                #[cfg_attr(not(feature = "dom-to-usvg"), allow(unused_mut))]
+                let mut user_agent_stylesheets = vec![
                     parse_ua_stylesheet(shared_lock, "user-agent.css", USER_AGENT_CSS),
                     parse_ua_stylesheet(shared_lock, "servo.css", SERVO_CSS),
                     parse_ua_stylesheet(
@@ -1721,6 +1725,12 @@ fn get_ua_stylesheets(shared_lock: &SharedRwLock) -> Rc<UserAgentStylesheets> {
                         PRESENTATIONAL_HINTS_CSS,
                     ),
                 ];
+                #[cfg(feature = "dom-to-usvg")]
+                user_agent_stylesheets.push(parse_ua_stylesheet(
+                    shared_lock,
+                    "servo-svg-override",
+                    SERVO_SVG_CSS,
+                ));
 
                 let html_mode_stylesheet =
                     parse_ua_stylesheet(shared_lock, "html-mode.css", HTML_MODE_CSS);
