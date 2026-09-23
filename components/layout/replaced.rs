@@ -677,12 +677,14 @@ impl ReplacedContents {
                             Fragment::Image(Arc::new(ImageFragment {
                                 base,
                                 style: style.clone().into(),
+                                selected_style: self.selected_style.clone(),
                                 clip,
                                 image_key: Some(image_key),
                                 showing_broken_image_icon: false,
                                 url: None,
                                 natural_width: self.natural_size.width,
                                 natural_height: self.natural_size.height,
+                                selected: self.selected.clone(),
                             }))
                         })
                         .into_iter()
