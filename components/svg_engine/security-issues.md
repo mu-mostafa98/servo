@@ -48,42 +48,44 @@ claim that the engine defends against it.
 
 The SVG engine is a six-stage pipeline; each stage consumes the previous
 stage's output and produces the next. Stages are numbered 1–6 in pipeline order.
-Stages 1–5 each have a **security layer** (a rectangle) that sits between the
-stage and the next one: `yes` forwards the data on, `no` drops it into a warning
-box.
+Stages 1–5 each have a **security layer** (a rectangle) that validates the
+stage's *input* before the stage runs: `yes` lets the data through to the stage,
+`no` drops it into a warning box.
 
 ```mermaid
 flowchart TD
-    IN(["SVG document"]) -->|"SVG text (XML)"| PARSE
+    IN(["SVG document"]) -->|"SVG text (XML)"| SEC1["<b>XML input validation</b>"]
+    SEC1 -->|"no"| WARN1["⚠ block & log"]
+    SEC1 -->|"yes"| PARSE
 
     PARSE["<b>1. Parse</b> — script thread<br/>xml5ever — text → DOM tree"]
-    PARSE -->|"DOM tree"| SEC1["validate XML, entity & depth"]
-    SEC1 -->|"no"| WARN1["⚠ block & log"]
-    SEC1 -->|"yes"| STYLE
+    PARSE -->|"DOM tree"| SEC2["<b>CSS injection guard</b>"]
+    SEC2 -->|"no"| WARN2["⚠ block & log"]
+    SEC2 -->|"yes"| STYLE
 
     STYLE["<b>2. Style</b> — layout thread<br/>Stylo — CSS cascade → computed styles"]
-    STYLE -->|"styled elements"| SEC2["block external @import / url()"]
-    SEC2 -->|"no"| WARN2["⚠ block & log"]
-    SEC2 -->|"yes"| BUILD
-
-    BUILD["<b>4. Build</b> — layout thread<br/>layout::svg — resolve use, geometry, paints"]
-    BUILD -->|"SVG render tree"| SEC4["cap use, geometry & count"]
-    SEC4 -->|"yes"| RENDER
+    STYLE -->|"styled elements"| SEC4["<b>Expansion & geometry limits</b>"]
     SEC4 -->|"no"| WARN4["⚠ block & log"]
+    SEC4 -->|"yes"| BUILD
 
-    RENDER["<b>5. Render</b> — layout thread<br/>svg_engine — native primitives or CPU rasterize"]
-    RENDER -->|"display list commands"| SEC5["audit FFI & recursion"]
-    SEC5 -->|"yes"| BACKEND
+    BUILD["<b>4. Build</b> — layout thread<br/>layout::svg — build svgRenderTree"]
+    BUILD -->|"SVG render tree"| SEC5["<b>Render safety guard</b>"]
     SEC5 -->|"no"| WARN5["⚠ block & log"]
+    SEC5 -->|"yes"| RENDER
 
-    BACKEND["<b>6. Render Service Backend</b> — render backend thread<br/>WebRender — draw display list to screen"]
-    BACKEND -->|"pixels (frames)"| OUT(["screen output"])
+    RENDER["<b>5. Render</b> — layout thread<br/>svg_engine"]
+    RENDER -->|"display list commands"| BACKEND
+
+    BACKEND["<b>6. Render Service Backend</b>"]
+
+    STYLE -->|"font / CSS request"| SEC3["<b>URL allowlist</b>"]
+    BUILD -->|"image request"| SEC3
+    SEC3 -->|"yes"| FETCH
+    SEC3 -->|"no"| WARN3["⚠ block & log"]
 
     FETCH["<b>3. Fetch</b> — net thread<br/>net — load images, fonts, stylesheets"]
-    FETCH -->|"resources"| SEC3["block untrusted URLs"]
-    SEC3 -->|"yes"| STYLE
-    SEC3 -->|"yes"| BUILD
-    SEC3 -->|"no"| WARN3["⚠ block & log"]
+    FETCH -->|"stylesheets, fonts"| STYLE
+    FETCH -->|"decoded images"| BUILD
 
     classDef stage fill:#dbeafe,stroke:#93c5fd,color:#1e3a8a;
     classDef guard fill:#93c5fd,stroke:#2563eb,color:#172554;
@@ -104,8 +106,21 @@ flowchart TD
   display-list commands — native WebRender primitives, or CPU-rasterized images.
 - **6. Render Service Backend** — `webrender`, render backend thread — draws the
   display-list commands to the screen.
-- **Security layers** (rectangles) gate stages 1–5: `yes` forwards the data on,
-  `no` blocks it and logs the attack.
+- **Security layers** (rectangles) validate the *input* to stages 1–5: `yes`
+  forwards the data on, `no` blocks it and logs the attack:
+  - **XML input validation** (Stage 1 — Parse) — blocks XXE and entity-expansion
+    bombs, and limits nesting depth and element count during tokenization.
+  - **CSS injection guard** (Stage 2 — Style) — blocks injected SVG `<style>`
+    from reading host-document data via attribute selectors + `url()` (5.1).
+  - **URL allowlist** (Stage 3 — Fetch) — rejects untrusted schemes/origins
+    (SSRF via `<image>`/`@import`/`@font-face`, `file://`, tracking) before any
+    request leaves the process; audits the image-decode FFI.
+  - **Expansion & geometry limits** (Stage 4 — Build) — limits `<use>` fan-out
+    and extreme `viewBox`, blur, path, and stroke values before the render tree
+    is built.
+  - **Render safety guard** (Stage 5 — Render) — validates geometry and text and
+    limits self-referencing patterns before drawing, so crafted input can't
+    crash the renderer or execute code.
 
 ---
 
