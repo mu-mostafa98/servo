@@ -17,8 +17,8 @@ pub(super) fn build_group<'a, 'dom>(
     let computed = ctx.computed_style(&element);
 
     let mut group = usvg::Group::empty();
-    group.id = element_id(&element).unwrap_or_default();
-    group.opacity = ctx.opacity(computed.as_deref());
+    group.set_id(element_id(&element).unwrap_or_default());
+    group.set_opacity(ctx.opacity(computed.as_deref()));
 
     for child in node.dom_children() {
         if let Some(child_node) = build_usvg_node(child, ctx) {
