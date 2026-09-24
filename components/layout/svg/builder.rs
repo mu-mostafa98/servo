@@ -670,8 +670,10 @@ fn collect_definitions<'dom, 'a>(
     node: ServoLayoutNode<'dom>,
     builder: &SvgRenderTreeBuilder<'dom, 'a>,
 ) -> DefinitionMaps {
+    let mut gradients = DefinitionCollector::collect::<GradientParser>(node, builder);
+    svg_engine::style::gradient::resolve_gradient_hrefs(&mut gradients);
     DefinitionMaps {
-        gradients: DefinitionCollector::collect::<GradientParser>(node, builder),
+        gradients,
         clip_paths: DefinitionCollector::collect::<ClipPathParser>(node, builder),
         patterns: DefinitionCollector::collect::<PatternParser>(node, builder),
         masks: DefinitionCollector::collect::<MaskParser>(node, builder),

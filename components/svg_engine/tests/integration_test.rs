@@ -738,6 +738,7 @@ fn linear_gradient_default_x2() {
     // When x2 not specified in objectBoundingBox, defaults to 100%
     let lg = LinearGradient {
         id: "g".into(),
+        href: None,
         x1: GradientLength::Number(0.0),
         y1: GradientLength::Number(0.0),
         x2: GradientLength::Percentage(100.0),
@@ -754,6 +755,7 @@ fn linear_gradient_default_x2() {
 fn radial_gradient_default_center() {
     let rg = RadialGradient {
         id: "g".into(),
+        href: None,
         cx: GradientLength::Percentage(50.0),
         cy: GradientLength::Percentage(50.0),
         r: GradientLength::Percentage(50.0),
@@ -1290,6 +1292,7 @@ fn render_tree_with_gradient_def() {
     let mut tree = make_empty_tree();
     let grad = GradientDef::Linear(LinearGradient {
         id: "g1".into(),
+        href: None,
         x1: GradientLength::Number(0.0),
         y1: GradientLength::Number(0.0),
         x2: GradientLength::Percentage(100.0),
@@ -1308,6 +1311,7 @@ fn render_tree_gradient_insert_and_check() {
     let mut tree = make_empty_tree();
     let grad = GradientDef::Linear(LinearGradient {
         id: "g1".into(),
+        href: None,
         x1: GradientLength::Number(0.0),
         y1: GradientLength::Number(0.0),
         x2: GradientLength::Percentage(100.0),

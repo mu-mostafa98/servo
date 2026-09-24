@@ -22,6 +22,7 @@ use crate::renderer::{PaintResourceProvider, Render, RenderContext, clip_chain_o
 use crate::renderer::path::rasterize_bez;
 use crate::shapes::ComplexClip;
 use crate::RasterSink;
+use kurbo::BezPath;
 
 // ======================= Public Entry Point =======================
 
@@ -594,6 +595,13 @@ fn emit_shape(
     // which tiles the pattern via `fill_rect_with_pattern`.
     let has_pattern = style_has_pattern(style);
 
+    // Convert the shape to a bez path once and reuse it between the raster pass
+    // and marker placement (both would otherwise re-derive it from `Shape`).
+    // Only the vello raster path computes it eagerly; marker placement falls
+    // back to `shape_vertices`'s own conversion when rasterization was handled
+    // natively, so native shapes never pay for the conversion.
+    let mut bez: Option<BezPath> = None;
+
     if has_paint && !has_pattern {
         // Rect/circle/ellipse whose fill and stroke are both native-eligible
         // gradients render natively via `emit_native_gradients`. Solid-painted
@@ -642,14 +650,15 @@ fn emit_shape(
             }
         }
         if !handled {
-            if let Some(bez) = shape.to_bez_path() {
+            bez = shape.to_bez_path();
+            if let Some(bez) = bez.as_ref() {
                 // The node transform (translate/scale/rotate/…) is applied to the
                 // path inside `rasterize_bez`; `raster_offset` carries only the
                 // viewBox translation, and the document-space origin is added back
                 // when the rasters are finalized in `render_svg_tree`.
                 let raster_origin = raster_offset;
                 rasterize_bez(
-                    &bez,
+                    bez,
                     style.fill.as_ref(),
                     style.stroke.as_ref(),
                     style.opacity.get(),
@@ -671,6 +680,7 @@ fn emit_shape(
     // → markers).
     emit_markers(
         shape,
+        bez.as_ref(),
         style,
         node_xform,
         viewbox_scale,
@@ -858,12 +868,15 @@ fn is_native_solid_shape(shape: &crate::shapes::Shape, style: &crate::style::Nod
 /// Compute the vertices of a marker-bearing shape (`line`/`polyline`/`polygon`/
 /// `path`), in the shape's local coordinate space. Returns `None` for shapes
 /// that don't carry markers (rect/circle/ellipse).
-fn shape_vertices(shape: &crate::shapes::Shape) -> Option<Vec<(f32, f32)>> {
+fn shape_vertices(
+    shape: &crate::shapes::Shape,
+    bez: Option<&BezPath>,
+) -> Option<Vec<(f32, f32)>> {
     use crate::shapes::Shape;
     match shape {
         Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => None,
         _ => {
-            let bez = shape.to_bez_path()?;
+            let bez = bez?;
             let mut vertices = Vec::new();
             for el in bez.elements() {
                 match el {
@@ -888,6 +901,7 @@ fn shape_vertices(shape: &crate::shapes::Shape) -> Option<Vec<(f32, f32)>> {
 #[allow(clippy::too_many_arguments)]
 fn emit_markers(
     shape: &crate::shapes::Shape,
+    bez: Option<&BezPath>,
     style: &crate::style::NodeStyle,
     node_xform: Transform2D<f32, (), ()>,
     viewbox_scale: (f32, f32),
@@ -899,7 +913,7 @@ fn emit_markers(
     sink: &RasterSink,
 ) {
     let Some(refs) = &style.markers else { return };
-    let Some(vertices) = shape_vertices(shape) else { return };
+    let Some(vertices) = shape_vertices(shape, bez) else { return };
     let n = vertices.len();
 
     let stroke_width = style.stroke.as_ref().map(|s| s.width.get()).unwrap_or(1.0);

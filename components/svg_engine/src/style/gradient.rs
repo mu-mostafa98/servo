@@ -10,6 +10,7 @@
 //!
 //! **No WebRender dependency** — pure SVG data types via `svgtypes::Color`.
 
+use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
 
 use svgtypes::{Color as SvgColor, Length as SvgLength};
@@ -97,6 +98,9 @@ impl GradientLength {
 #[derive(Debug, Clone)]
 pub struct LinearGradient {
     pub id: String,
+    /// Referenced gradient id (via `href`/`xlink:href`), without the `#` prefix.
+    /// Stops are inherited from the referenced gradient when this one has none.
+    pub href: Option<String>,
     pub x1: GradientLength,
     pub y1: GradientLength,
     pub x2: GradientLength,
@@ -113,6 +117,9 @@ pub struct LinearGradient {
 #[derive(Debug, Clone)]
 pub struct RadialGradient {
     pub id: String,
+    /// Referenced gradient id (via `href`/`xlink:href`), without the `#` prefix.
+    /// Stops are inherited from the referenced gradient when this one has none.
+    pub href: Option<String>,
     pub cx: GradientLength,
     pub cy: GradientLength,
     pub r: GradientLength,
@@ -164,6 +171,7 @@ pub fn parse_gradient_element(
     element_name: &str,
     get_attr: &dyn Fn(&str) -> Option<String>,
     stop_attrs: &[Vec<(String, String)>], // list of stop attributes: [(("offset","0"),("stop-color","red")), ...]
+    href: Option<String>,
 ) -> SvgResult<GradientDef> {
     let id = get_attr("id").unwrap_or_default();
     if id.is_empty() {
@@ -235,6 +243,7 @@ pub fn parse_gradient_element(
             });
             Ok(GradientDef::Linear(LinearGradient {
                 id,
+                href: href.clone(),
                 x1,
                 y1,
                 x2,
@@ -254,6 +263,7 @@ pub fn parse_gradient_element(
             let fr = parse_length_attr("fr", get_attr).unwrap_or(GradientLength::Number(0.0));
             Ok(GradientDef::Radial(RadialGradient {
                 id,
+                href,
                 cx,
                 cy,
                 r,
@@ -270,6 +280,69 @@ pub fn parse_gradient_element(
             "unknown gradient: {element_name}"
         ))),
     }
+}
+
+/// Resolve `href` inheritance between gradients.
+///
+/// A gradient that references another gradient via `href`/`xlink:href` and has
+/// no `<stop>` children of its own inherits the referenced gradient's stops,
+/// following the reference chain transitively and cycle-safely. This is the
+/// common pattern of a radial gradient reusing a linear gradient's color stops.
+///
+/// Geometry/units/transform/spread attribute inheritance is not implemented;
+/// only stop reuse is handled here.
+pub fn resolve_gradient_hrefs(map: &mut HashMap<String, Arc<GradientDef>>) {
+    let ids: Vec<String> = map.keys().cloned().collect();
+    for id in ids {
+        // Only gradients that reference another and carry no stops of their
+        // own need resolution.
+        let (empty, has_href) = match map.get(&id) {
+            Some(def) => match def.as_ref() {
+                GradientDef::Linear(lg) => (lg.stops.is_empty(), lg.href.is_some()),
+                GradientDef::Radial(rg) => (rg.stops.is_empty(), rg.href.is_some()),
+            },
+            None => continue,
+        };
+        if !empty || !has_href {
+            continue;
+        }
+        let mut visiting = HashSet::new();
+        if let Some(stops) = resolved_stops(&id, map, &mut visiting) {
+            if let Some(def) = map.get_mut(&id) {
+                let def = Arc::make_mut(def);
+                match def {
+                    GradientDef::Linear(lg) => lg.stops = stops,
+                    GradientDef::Radial(rg) => rg.stops = stops,
+                }
+            }
+        }
+    }
+}
+
+/// Follow a gradient's `href` chain to its effective stops.
+///
+/// Returns the gradient's own stops when present, otherwise the nearest
+/// ancestor's stops. Returns `None` when the reference is missing or cyclic.
+fn resolved_stops(
+    id: &str,
+    map: &HashMap<String, Arc<GradientDef>>,
+    visiting: &mut HashSet<String>,
+) -> Option<Vec<GradientStop>> {
+    let def = map.get(id)?;
+    let (stops, href) = match def.as_ref() {
+        GradientDef::Linear(lg) => (&lg.stops, lg.href.as_deref()),
+        GradientDef::Radial(rg) => (&rg.stops, rg.href.as_deref()),
+    };
+    if !stops.is_empty() {
+        return Some(stops.clone());
+    }
+    let href = href?;
+    if !visiting.insert(href.to_owned()) {
+        return None; // reference cycle
+    }
+    let inherited = resolved_stops(href, map, visiting);
+    visiting.remove(href);
+    inherited
 }
 
 /// Parse a length attribute from a gradient coordinate.

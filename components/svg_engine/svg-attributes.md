@@ -798,10 +798,12 @@ spine.
 | `stop-color` | ❌ | ❌ | ✅ | ❌ | CSS property per spec, but Servo reads the attribute only; default black |
 | `stop-opacity` | ❌ | ❌ | ✅ | ❌ | CSS property per spec, but Servo reads the attribute only; multiplies stop alpha |
 
-> **Gradient inheritance not supported:** per spec a gradient can chain to
-> another via `href`/`xlink:href` and inherit its missing attributes. Servo's
-> `parse_gradient_element` does not read `href`, so each gradient must declare
-> every attribute it needs directly.
+> **Gradient `href` inheritance — stop reuse only:** per spec a gradient can
+> chain to another via `href`/`xlink:href` and inherit its missing attributes.
+> Servo reads `href`/`xlink:href` and, when a gradient has no `<stop>` children
+> of its own, inherits the referenced gradient's stops (transitively, with cycle
+> detection). Geometry/units/transform/spread attribute inheritance is **not**
+> implemented — each gradient must still declare those attributes directly.
 
 ### `<linearGradient>` — geometry
 

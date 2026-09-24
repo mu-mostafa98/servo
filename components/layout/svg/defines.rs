@@ -50,14 +50,10 @@ impl DefinitionCollector {
     ) -> HashMap<String, Arc<T::Definition>> {
         let mut result = HashMap::new();
         let mut candidates = Vec::new();
-        for defs_child in node.dom_children() {
-            if let Some(defs_elem) = defs_child.as_element() {
-                if defs_elem.local_name() == &local_name!("defs") {
-                    for tag in T::tag_names() {
-                        find_elements_by_tag(defs_child, tag, &mut candidates);
-                    }
-                }
-            }
+        // SVG definitions (gradients, clip paths, patterns, masks, filters,
+        // markers) may appear anywhere in the document, not only inside `<defs>`.
+        for tag in T::tag_names() {
+            find_elements_by_tag(node, tag, &mut candidates);
         }
         for candidate_node in candidates {
             if candidate_node.as_element().is_some() {
@@ -82,7 +78,17 @@ fn find_elements_by_tag<'dom>(
                 result.push(child);
             }
             let name = elem.local_name().as_ref();
-            if name == "g" || name == "defs" || name == "svg" || name == "a" || name == "switch" {
+            if name == "g"
+                || name == "defs"
+                || name == "svg"
+                || name == "a"
+                || name == "switch"
+                || name == "symbol"
+                || name == "marker"
+                || name == "clipPath"
+                || name == "mask"
+                || name == "pattern"
+            {
                 find_elements_by_tag(child, tag, result);
             }
         }
@@ -162,7 +168,14 @@ impl DefinitionParser for GradientParser {
                 .attribute_as_str(&ns!(), &LocalName::from(attr))
                 .map(|s| s.to_string())
         };
-        if let Ok(def) = parse_gradient_element(&grad_name, &grad_get, &stop_attrs) {
+        // `href`/`xlink:href` references another gradient whose stops are
+        // inherited when this gradient has none of its own. The id is stored
+        // without the `#` prefix.
+        let href = element
+            .attribute_as_str(&ns!(xlink), &local_name!("href"))
+            .or_else(|| element.attribute_as_str(&ns!(), &local_name!("href")))
+            .map(|s| s.trim().trim_start_matches('#').to_string());
+        if let Ok(def) = parse_gradient_element(&grad_name, &grad_get, &stop_attrs, href) {
             match &def {
                 GradientDef::Linear(lg) => return Some((lg.id.clone(), def)),
                 GradientDef::Radial(rg) => return Some((rg.id.clone(), def)),
