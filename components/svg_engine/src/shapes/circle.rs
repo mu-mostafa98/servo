@@ -6,13 +6,14 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
 use crate::render_tree::ClipPathUnits;
 use crate::shapes::{ClipGeometry, OBJECT_BBOX_REF_SIZE, all_equal_radius};
+use crate::units::Length;
 
 /// SVG `<circle>` element.
 #[derive(Debug, Clone, Copy)]
 pub struct Circle {
-    pub cx: f32,
-    pub cy: f32,
-    pub r: f32,
+    pub cx: Length,
+    pub cy: Length,
+    pub r: Length,
 }
 
 impl Circle {
@@ -24,12 +25,12 @@ impl Circle {
     ) -> Option<ClipGeometry> {
         let (cx, cy, r) = if units == ClipPathUnits::ObjectBoundingBox {
             (
-                self.cx * OBJECT_BBOX_REF_SIZE,
-                self.cy * OBJECT_BBOX_REF_SIZE,
-                self.r * OBJECT_BBOX_REF_SIZE,
+                self.cx.get() * OBJECT_BBOX_REF_SIZE,
+                self.cy.get() * OBJECT_BBOX_REF_SIZE,
+                self.r.get() * OBJECT_BBOX_REF_SIZE,
             )
         } else {
-            (self.cx, self.cy, self.r)
+            (self.cx.get(), self.cy.get(), self.r.get())
         };
         let bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(svg_origin.x + cx - r, svg_origin.y + cy - r),

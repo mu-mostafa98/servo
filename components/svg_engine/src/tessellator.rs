@@ -21,12 +21,12 @@ use lyon::tessellation::{
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
 
+use crate::render_tree::SvgRenderNode;
 use crate::renderer::gradient::{color_at_t_with_spread, gradient_projection};
 use crate::renderer::{Render, RenderContext, clip_chain_option, shape_rendering_value};
-use crate::shapes::Shape;
 use crate::style::gradient::{GradientStop, SpreadMethod};
 use crate::style::hints::ColorInterpolation;
-use crate::style::{FillRule, NodeStyle};
+use crate::style::FillRule;
 
 // ======================= Fill Style =======================
 
@@ -65,8 +65,8 @@ pub(crate) enum FillStyle<'a> {
     },
     /// Pattern evaluated per pixel (shape hit-testing in tile-local coords).
     Pattern {
-        /// The pattern's child shapes and their styles.
-        shapes: &'a [(Shape, NodeStyle)],
+        /// The pattern's child subtree.
+        root: &'a SvgRenderNode,
         /// Tile dimensions in absolute space.
         tile_w: f32,
         tile_h: f32,
@@ -331,7 +331,7 @@ fn scanline_fill_triangle(
                 }
             },
             FillStyle::Pattern {
-                shapes,
+                root,
                 tile_w,
                 tile_h,
                 ox,
@@ -371,9 +371,9 @@ fn scanline_fill_triangle(
                         .wr
                         .define_clip_chain(clip_chain_option(ctx.clip_chain_id), [clip_id]);
 
-                    for (shape, shape_style) in shapes.iter() {
+                    root.for_each_shape_leaf(&mut |shape, shape_style| {
                         if !shape_style.is_visible() {
-                            continue;
+                            return;
                         }
                         let mut shape_ctx = RenderContext {
                             style: shape_style,
@@ -390,7 +390,7 @@ fn scanline_fill_triangle(
                             sink: ctx.sink,
                         };
                         shape.render(&mut shape_ctx);
-                    }
+                    });
                 }
             },
         }

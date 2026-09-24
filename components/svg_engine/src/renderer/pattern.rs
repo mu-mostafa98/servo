@@ -8,26 +8,18 @@ use euclid::Transform2D;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutTransform};
 use webrender_api::{PropertyBinding, ReferenceFrameKind, TransformStyle};
 
-use crate::render_tree::{PatternContentUnits, PatternUnits};
+use crate::render_tree::{PatternContentUnits, PatternDef, PatternUnits};
 use crate::renderer::{Render, RenderContext, clip_chain_option, transform};
 use crate::traversal::compute_viewbox_transform;
 
 /// Fill a rectangle with a repeating pattern.
-pub(crate) fn fill_rect_with_pattern_by_id(
-    pattern_id: &str,
+pub(crate) fn fill_rect_with_pattern(
+    def: &PatternDef,
     bounds: LayoutRect,
     ctx: &mut RenderContext,
     _opacity: f32,
 ) {
-    let def = match ctx.paints.pattern(pattern_id) {
-        Some(d) => d,
-        None => {
-            log::warn!("SVG pattern \"{}\" not found in definitions", pattern_id);
-            return;
-        },
-    };
-
-    if def.shapes.is_empty() {
+    if def.root.children.is_empty() {
         return;
     }
 
@@ -126,13 +118,13 @@ pub(crate) fn fill_rect_with_pattern_by_id(
             let mut pushed_frames: u32 = 0;
             if let Some(vb) = &def.view_box {
                 let (sx, sy, ox, oy) = compute_viewbox_transform(
-                    vb.width,
-                    vb.height,
+                    vb.width.get(),
+                    vb.height.get(),
                     tile_w,
                     tile_h,
                     def.aspect_ratio.as_ref(),
                 );
-                let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x, -vb.min_y);
+                let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x.get(), -vb.min_y.get());
                 let s = Transform2D::<f32, (), ()>::scale(sx, sy);
                 let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
                 let combined = t1.then(&s).then(&t2);
@@ -174,9 +166,9 @@ pub(crate) fn fill_rect_with_pattern_by_id(
                 (t_origin, t_spatial, false)
             };
 
-            for (shape, shape_style) in &def.shapes {
+            def.root.for_each_shape_leaf(&mut |shape, shape_style| {
                 if !shape_style.is_visible() {
-                    continue;
+                    return;
                 }
                 let mut shape_ctx = RenderContext {
                     style: shape_style,
@@ -193,7 +185,7 @@ pub(crate) fn fill_rect_with_pattern_by_id(
                     sink: ctx.sink,
                 };
                 shape.render(&mut shape_ctx);
-            }
+            });
 
             if pushed {
                 ctx.wr.pop_reference_frame();

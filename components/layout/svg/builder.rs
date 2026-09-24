@@ -18,7 +18,7 @@ use svg_engine::render_tree::*;
 use svg_engine::style::NodeStyle;
 use svg_engine::style::gradient::GradientDef;
 use svg_engine::text::TextAnchor;
-use svg_engine::visitor::PaintServerFixupVisitor;
+use svg_engine::units::{Id, Length};
 use web_atoms::ns;
 
 use super::css::collect_svg_css_rules;
@@ -38,16 +38,21 @@ pub(crate) struct SvgRenderTreeBuilder<'dom, 'a> {
     root_node: ServoLayoutNode<'dom>,
     context: &'a LayoutContext<'a>,
     css_rules: HashMap<String, HashMap<String, String>>,
+    /// Document-wide `id → DOM node` map, built once so `<use href="#id">`
+    /// references resolve in O(1) instead of re-walking the document.
+    element_ids: HashMap<String, ServoLayoutNode<'dom>>,
 }
 
 impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
     /// Start building from an SVG DOM element node.
     pub(crate) fn new(node: ServoLayoutNode<'dom>, context: &'a LayoutContext<'a>) -> Self {
         let css_rules = collect_svg_css_rules(node);
+        let element_ids = build_element_id_map(node);
         SvgRenderTreeBuilder {
             root_node: node,
             context,
             css_rules,
+            element_ids,
         }
     }
 
@@ -55,7 +60,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
     pub(crate) fn build(self) -> Option<Arc<SvgRenderTree>> {
         let root = self.build_render_node(self.root_node, self.root_node, &mut HashSet::new(), None)?;
         let viewport = extract_viewport_info(self.root_node);
-        let definitions = collect_definitions(self.root_node, self.context);
+        let definitions = collect_definitions(self.root_node, &self);
 
         let mut tree = SvgRenderTree {
             root,
@@ -68,13 +73,9 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
             markers: definitions.markers,
         };
 
-        // Post-process: convert PaintServer::Gradient → PaintServer::Pattern
-        // when the referenced ID is actually a pattern definition.
-        let patterns = tree.patterns.clone();
-        let mut visitor = PaintServerFixupVisitor {
-            pattern_ids: &patterns,
-        };
-        tree.visit_mut(&mut visitor);
+        // Resolve transient `PaintServer::Ref(id)` / `DefRef::Ref(id)` values
+        // into typed `Arc` handles now that the definition maps are collected.
+        tree.resolve_references();
 
         Some(Arc::new(tree))
     }
@@ -128,6 +129,17 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
             viewport,
             children,
         })
+    }
+
+    /// Build a single definition-content node, used by the definition parsers
+    /// to build clip-path / pattern / mask / marker children into full render
+    /// nodes (recursively handling `<g>`, `<use>`, `<text>`, nested `<defs>`)
+    /// instead of flattening them to a flat list of shapes.
+    pub(crate) fn build_def_content(
+        &self,
+        node: ServoLayoutNode<'dom>,
+    ) -> Option<SvgRenderNode> {
+        self.build_render_node(node, self.root_node, &mut HashSet::new(), None)
     }
 }
 
@@ -559,7 +571,7 @@ fn resolve_use_children<'dom>(
     let offset = (parse_coord("x"), parse_coord("y"));
 
     // Build target and clone with optional translation.
-    let target = find_element_by_id(root_node, &ref_id);
+    let target = builder.element_ids.get(&ref_id).copied();
     let target_element = target.as_ref().and_then(|n| n.as_element());
 
     // The referenced element's viewport attributes, used when the target is a
@@ -601,18 +613,18 @@ fn resolve_use_children<'dom>(
             // viewBox → viewport machinery used for nested <svg> elements).
             if let SvgTag::Container(Container::Symbol) = &target_node.tag {
                 if let Some(vb) = sym_view_box {
-                    let width = parse_coord("width").or(sym_width).unwrap_or(vb.width);
-                    let height = parse_coord("height").or(sym_height).unwrap_or(vb.height);
+                    let width = parse_coord("width").or(sym_width).unwrap_or(vb.width.get());
+                    let height = parse_coord("height").or(sym_height).unwrap_or(vb.height.get());
                     let wrapper = SvgRenderNode {
                         id: target_node.id,
                         tag: SvgTag::Container(Container::Group),
                         style: target_node.style,
                         transforms: Vec::new(),
                         viewport: Some(SvgViewport {
-                            x: offset.0.unwrap_or(0.0),
-                            y: offset.1.unwrap_or(0.0),
-                            width,
-                            height,
+                            x: Length::new(offset.0.unwrap_or(0.0)),
+                            y: Length::new(offset.1.unwrap_or(0.0)),
+                            width: Length::new(width),
+                            height: Length::new(height),
                             view_box: Some(vb),
                             aspect_ratio: sym_aspect_ratio,
                             overflow_visible: false,
@@ -644,27 +656,27 @@ fn resolve_use_children<'dom>(
 
 /// Collected definition maps from `<defs>`.
 struct DefinitionMaps {
-    gradients: HashMap<String, GradientDef>,
-    clip_paths: HashMap<String, ClipPathDef>,
-    patterns: HashMap<String, PatternDef>,
-    masks: HashMap<String, MaskDef>,
-    filters: HashMap<String, FilterDef>,
-    markers: HashMap<String, MarkerDef>,
+    gradients: HashMap<String, Arc<GradientDef>>,
+    clip_paths: HashMap<String, Arc<ClipPathDef>>,
+    patterns: HashMap<String, Arc<PatternDef>>,
+    masks: HashMap<String, Arc<MaskDef>>,
+    filters: HashMap<String, Arc<FilterDef>>,
+    markers: HashMap<String, Arc<MarkerDef>>,
 }
 
 /// Collect all definition types (gradients, clip-paths, patterns, masks,
 /// filters, markers) from `<defs>` containers in the SVG subtree.
-fn collect_definitions<'dom>(
+fn collect_definitions<'dom, 'a>(
     node: ServoLayoutNode<'dom>,
-    context: &LayoutContext,
+    builder: &SvgRenderTreeBuilder<'dom, 'a>,
 ) -> DefinitionMaps {
     DefinitionMaps {
-        gradients: DefinitionCollector::collect::<GradientParser>(node, context),
-        clip_paths: DefinitionCollector::collect::<ClipPathParser>(node, context),
-        patterns: DefinitionCollector::collect::<PatternParser>(node, context),
-        masks: DefinitionCollector::collect::<MaskParser>(node, context),
-        filters: DefinitionCollector::collect::<FilterParser>(node, context),
-        markers: DefinitionCollector::collect::<MarkerParser>(node, context),
+        gradients: DefinitionCollector::collect::<GradientParser>(node, builder),
+        clip_paths: DefinitionCollector::collect::<ClipPathParser>(node, builder),
+        patterns: DefinitionCollector::collect::<PatternParser>(node, builder),
+        masks: DefinitionCollector::collect::<MaskParser>(node, builder),
+        filters: DefinitionCollector::collect::<FilterParser>(node, builder),
+        markers: DefinitionCollector::collect::<MarkerParser>(node, builder),
     }
 }
 
@@ -770,24 +782,37 @@ fn build_image_tag(
 // ======================= Helpers =======================
 
 /// Extract the `id` attribute from an SVG DOM element.
-fn extract_id(element: &ServoLayoutElement) -> Option<String> {
+fn extract_id(element: &ServoLayoutElement) -> Option<Id> {
     element
         .attribute_as_str(&ns!(), &local_name!("id"))
-        .map(|s| s.to_string())
+        .map(|s| Id::new(s))
 }
 
-/// Recursively search the SVG DOM subtree for an element by its `id`.
-/// Find an element by its `id` attribute anywhere in the document.
-///
-/// `<use href="#id">` references resolve against the whole document, not just
-/// the current `<svg>` subtree, so we walk up to the document root first. This
-/// lets a `<use>` in one `<svg>` reference an element (e.g. a `<g>` inside
-/// `<defs>`) defined in a sibling `<svg>`.
-fn find_element_by_id<'dom>(
+/// Build a document-wide `id → DOM node` map once, so `<use href="#id">`
+/// references resolve in O(1) instead of re-walking the whole document per
+/// `<use>`. References resolve against the whole document (not just the current
+/// `<svg>` subtree), so we index from the document root.
+fn build_element_id_map<'dom>(
     node: ServoLayoutNode<'dom>,
-    target_id: &str,
-) -> Option<ServoLayoutNode<'dom>> {
-    find_element_by_id_in_subtree(document_root(node), target_id)
+) -> HashMap<String, ServoLayoutNode<'dom>> {
+    let mut map = HashMap::new();
+    collect_ids(document_root(node), &mut map);
+    map
+}
+
+/// Recursively collect `id → node` entries into `map`; first occurrence wins.
+fn collect_ids<'dom>(
+    node: ServoLayoutNode<'dom>,
+    map: &mut HashMap<String, ServoLayoutNode<'dom>>,
+) {
+    if let Some(element) = node.as_element() {
+        if let Some(id) = element.attribute_as_str(&ns!(), &local_name!("id")) {
+            map.entry(id.to_owned()).or_insert(node);
+        }
+    }
+    for child in node.dom_children() {
+        collect_ids(child, map);
+    }
 }
 
 /// Walk up to the topmost DOM ancestor (the document node).
@@ -804,24 +829,4 @@ fn document_root<'dom>(node: ServoLayoutNode<'dom>) -> ServoLayoutNode<'dom> {
         root = parent;
     }
     root
-}
-
-/// Recursively search `node`'s subtree for an element with the given `id`.
-fn find_element_by_id_in_subtree<'dom>(
-    node: ServoLayoutNode<'dom>,
-    target_id: &str,
-) -> Option<ServoLayoutNode<'dom>> {
-    if let Some(element) = node.as_element() {
-        if let Some(id) = element.attribute_as_str(&ns!(), &local_name!("id")) {
-            if id == target_id {
-                return Some(node);
-            }
-        }
-    }
-    for child in node.dom_children() {
-        if let Some(found) = find_element_by_id_in_subtree(child, target_id) {
-            return Some(found);
-        }
-    }
-    None
 }

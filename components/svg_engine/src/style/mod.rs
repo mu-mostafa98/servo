@@ -30,13 +30,17 @@ pub use self::node_effects::NodeEffects;
 pub use self::stroke::{LineCap, LineJoin, StrokeParams};
 pub use self::visibility::{Display, Visibility};
 
+use crate::render_tree::{DefRef, MarkerDef};
+use crate::units::Opacity;
+
 /// Marker references attached to a shape (`marker-start`, `marker-mid`,
-/// `marker-end`), each holding the referenced `id` (without the `#` prefix).
+/// `marker-end`), each holding a [`DefRef`] to a [`MarkerDef`] — a raw `#id`
+/// during tree building, a typed `Arc` handle after the resolve pass.
 #[derive(Debug, Clone, Default)]
 pub struct MarkerRefs {
-    pub start: Option<String>,
-    pub mid: Option<String>,
-    pub end: Option<String>,
+    pub start: Option<DefRef<MarkerDef>>,
+    pub mid: Option<DefRef<MarkerDef>>,
+    pub end: Option<DefRef<MarkerDef>>,
 }
 
 /// Combined fill + stroke styling for an SVG render node.
@@ -53,7 +57,7 @@ pub struct NodeStyle {
     pub effects: Option<NodeEffects>,
     /// Element-level opacity (the CSS `opacity` property).
     /// Applied as a multiplier on top of fill-/stroke-opacity.
-    pub opacity: f32,
+    pub opacity: Opacity,
     /// Marker references (start/mid/end).
     pub markers: Option<MarkerRefs>,
 }
@@ -67,7 +71,7 @@ impl Default for NodeStyle {
             stroke: None,
             render_hints: None,
             effects: None,
-            opacity: 1.0,
+            opacity: Opacity::ONE,
             markers: None,
         }
     }

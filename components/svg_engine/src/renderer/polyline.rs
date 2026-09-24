@@ -35,7 +35,7 @@ impl Render for Polyline {
             &bez,
             ctx.style.fill.as_ref(),
             ctx.style.stroke.as_ref(),
-            ctx.style.opacity,
+            ctx.style.opacity.get(),
             &ctx.svg_origin,
             ctx.viewbox_scale,
             ctx.device_scale,

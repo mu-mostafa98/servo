@@ -4,6 +4,7 @@
 
 use crate::renderer::{Render, RenderContext};
 use crate::shapes::{Ellipse, Rectangle};
+use crate::units::Length;
 
 /// Renders an SVG `<ellipse>`.
 ///
@@ -12,16 +13,16 @@ use crate::shapes::{Ellipse, Rectangle};
 /// - All LSP invariants are preserved through the delegation chain.
 impl Render for Ellipse {
     fn render(&self, ctx: &mut RenderContext) {
-        if self.rx <= 0.0 || self.ry <= 0.0 {
+        if self.rx.get() <= 0.0 || self.ry.get() <= 0.0 {
             return;
         }
 
         // An ellipse is rendered as a rounded rectangle with 100% corner radii.
         let rect = Rectangle {
-            x: self.cx - self.rx,
-            y: self.cy - self.ry,
-            width: self.rx * 2.0,
-            height: self.ry * 2.0,
+            x: Length::new(self.cx.get() - self.rx.get()),
+            y: Length::new(self.cy.get() - self.ry.get()),
+            width: Length::new(self.rx.get() * 2.0),
+            height: Length::new(self.ry.get() * 2.0),
             rx: Some(self.rx),
             ry: Some(self.ry),
         };

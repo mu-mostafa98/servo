@@ -9,6 +9,7 @@ use crate::renderer::{
     Render, RenderContext, clip_chain_option, fill, paint_order_stroke_before_fill, stroke,
 };
 use crate::shapes::{Ellipse, Rectangle, Shape};
+use crate::units::Length;
 
 /// Compute the layout-space bounds and corner radii for an axis-aligned
 /// rect/circle/ellipse. Returns `None` for shapes that are not one of those
@@ -24,11 +25,21 @@ pub(crate) fn rect_bounds_and_radii(
     match shape {
         Shape::Rect(r) => {
             let bounds = LayoutRect::from_origin_and_size(
-                LayoutPoint::new(svg_origin.x + r.x, svg_origin.y + r.y),
-                LayoutSize::new(r.width, r.height),
+                LayoutPoint::new(svg_origin.x + r.x.get(), svg_origin.y + r.y.get()),
+                LayoutSize::new(r.width.get(), r.height.get()),
             );
-            let rx = r.rx.or(r.ry).unwrap_or(0.0).clamp(0.0, r.width / 2.0);
-            let ry = r.ry.or(r.rx).unwrap_or(0.0).clamp(0.0, r.height / 2.0);
+            let rx = r
+                .rx
+                .or(r.ry)
+                .map(|v| v.get())
+                .unwrap_or(0.0)
+                .clamp(0.0, r.width.get() / 2.0);
+            let ry = r
+                .ry
+                .or(r.rx)
+                .map(|v| v.get())
+                .unwrap_or(0.0)
+                .clamp(0.0, r.height.get() / 2.0);
             let has_radius = rx > 0.0 || ry > 0.0;
             let radii = has_radius.then(|| BorderRadius {
                 top_left: LayoutSize::new(rx, ry),
@@ -48,15 +59,15 @@ pub(crate) fn rect_bounds_and_radii(
             svg_origin,
         ),
         Shape::Ellipse(e) => {
-            if e.rx <= 0.0 || e.ry <= 0.0 {
+            if e.rx.get() <= 0.0 || e.ry.get() <= 0.0 {
                 return None;
             }
             rect_bounds_and_radii(
                 &Shape::Rect(Rectangle {
-                    x: e.cx - e.rx,
-                    y: e.cy - e.ry,
-                    width: e.rx * 2.0,
-                    height: e.ry * 2.0,
+                    x: Length::new(e.cx.get() - e.rx.get()),
+                    y: Length::new(e.cy.get() - e.ry.get()),
+                    width: Length::new(e.rx.get() * 2.0),
+                    height: Length::new(e.ry.get() * 2.0),
                     rx: Some(e.rx),
                     ry: Some(e.ry),
                 }),

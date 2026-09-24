@@ -10,6 +10,8 @@
 //! produce the display-list commands for that stroke.  Every shape renderer
 //! delegates its stroke work here.
 
+use std::sync::Arc;
+
 use euclid::Angle;
 use lyon::math::Point as LyonPoint;
 use webrender_api::units::{
@@ -26,6 +28,7 @@ use crate::renderer::{
 };
 use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
 use crate::style::{Display, LineCap, NodeStyle, StrokeParams, Visibility};
+use crate::units::Length;
 
 // ======================= Dash Interval Decomposition =======================
 
@@ -108,7 +111,7 @@ pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut 
     let Some(stroke) = &ctx.style.stroke else {
         return;
     };
-    let stroke_width = effective_stroke_width(ctx, stroke.width);
+    let stroke_width = effective_stroke_width(ctx, stroke.width.get());
     if stroke_width <= 0.0 {
         return;
     }
@@ -142,9 +145,10 @@ pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut 
 
     if let Some(svg_color) = stroke.color {
         let mut color = to_colorf(&svg_color);
-        color.a *= stroke.opacity * ctx.style.opacity;
+        color.a *= stroke.opacity.get() * ctx.style.opacity.get();
         emit_rotated_rects_for_segment(len, half_w, color, stroke, line_spatial_id, ctx);
-    } else if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
+    } else if let Some(PaintServer::Gradient(def)) = &stroke.paint_server {
+        let def = Arc::clone(def);
         if let Some(dash_array) = &stroke.dash_array &&
             !dash_array.is_empty()
         {
@@ -155,7 +159,7 @@ pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut 
                 let dash_start = -len / 2.0 + t0 * len;
                 let dash_len = (t1 - t0) * len;
                 fill_gradient_stroke(
-                    id,
+                    def.as_ref(),
                     dash_start,
                     dash_len,
                     stroke_width,
@@ -170,7 +174,7 @@ pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut 
         }
         // Gradient stroke (no dashes) — fill full rotated rect.
         fill_gradient_stroke(
-            id,
+            def.as_ref(),
             -len / 2.0,
             len,
             stroke_width,
@@ -187,7 +191,7 @@ pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut 
 /// Fill a gradient stroke segment with bounds expansion for non-butt caps
 /// and rounded-rect clip for round caps.
 fn fill_gradient_stroke(
-    gradient_id: &str,
+    def: &GradientDef,
     start_x: f32,
     rect_len: f32,
     stroke_width: f32,
@@ -246,11 +250,11 @@ fn fill_gradient_stroke(
         native_rendering: ctx.native_rendering,
         sink: ctx.sink,
     };
-    gradient::fill_rect_with_gradient_by_id(
-        gradient_id,
+    gradient::fill_rect_with_gradient(
+        def,
         grad_bounds,
         &mut grad_ctx,
-        stroke.opacity * ctx.style.opacity,
+        stroke.opacity.get() * ctx.style.opacity.get(),
     );
 }
 
@@ -375,8 +379,8 @@ pub(crate) fn stroke_rect(
 
     if let Some(svg_color) = stroke.color {
         let mut color = to_colorf(&svg_color);
-        color.a *= stroke.opacity * ctx.style.opacity;
-        let stroke_width = effective_stroke_width(ctx, stroke.width);
+        color.a *= stroke.opacity.get() * ctx.style.opacity.get();
+        let stroke_width = effective_stroke_width(ctx, stroke.width.get());
         let widths = LayoutSideOffsets::new_all_same(stroke_width);
         let details = BorderDetails::Normal(NormalBorder {
             left: BorderSide {
@@ -405,12 +409,13 @@ pub(crate) fn stroke_rect(
         });
         let common = make_common_props(bounds, ctx.spatial_id, ctx.clip_chain_id);
         ctx.wr.push_border(&common, bounds, widths, details);
-    } else if let Some(PaintServer::Gradient(id)) = &stroke.paint_server {
+    } else if let Some(PaintServer::Gradient(def)) = &stroke.paint_server {
+        let def = Arc::clone(def);
         // Gradient border: clip a full-rect gradient fill to a band between the
         // outer shape outline (with radii for circles/ellipses) and the inset
         // inner outline, using a Clip/ClipOut clip chain. This works on any
         // background, unlike the previous white interior "punch-out".
-        let stroke_width = effective_stroke_width(ctx, stroke.width);
+        let stroke_width = effective_stroke_width(ctx, stroke.width.get());
         let inset = stroke_width;
         let inner_bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(bounds.min.x + inset, bounds.min.y + inset),
@@ -490,7 +495,7 @@ pub(crate) fn stroke_rect(
 
         let saved_clip = ctx.clip_chain_id;
         ctx.clip_chain_id = band_clip;
-        gradient::fill_rect_with_gradient_by_id(id, bounds, ctx, stroke.opacity);
+        gradient::fill_rect_with_gradient(def.as_ref(), bounds, ctx, stroke.opacity.get());
         ctx.clip_chain_id = saved_clip;
     }
 }
@@ -511,7 +516,7 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
     let Some(stroke) = &ctx.style.stroke else {
         return;
     };
-    let adjusted_width = effective_stroke_width(ctx, stroke.width);
+    let adjusted_width = effective_stroke_width(ctx, stroke.width.get());
     if (stroke.color.is_none() && stroke.paint_server.is_none()) || adjusted_width <= 0.0 {
         return;
     }
@@ -519,9 +524,10 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
     // Gradient stroke: evaluate at each segment's midpoint so the gradient
     // spans the whole shape, not each segment independently.
     if stroke.color.is_none() &&
-        let Some(PaintServer::Gradient(id)) = &stroke.paint_server
+        let Some(PaintServer::Gradient(def)) = &stroke.paint_server
     {
-        return stroke_polyline_gradient(pts, ctx, adjusted_width, id);
+        let def = Arc::clone(def);
+        return stroke_polyline_gradient(pts, ctx, adjusted_width, def.as_ref());
     }
 
     // Solid color stroke — original per-segment approach.
@@ -537,7 +543,7 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
             color: stroke.color,
             paint_server: None,
             opacity: stroke.opacity,
-            width: adjusted_width,
+            width: Length::new(adjusted_width),
             line_cap: stroke.line_cap,
             line_join: stroke.line_join,
             miter_limit: stroke.miter_limit,
@@ -587,13 +593,9 @@ fn stroke_polyline_gradient(
     pts: &[LyonPoint],
     ctx: &mut RenderContext,
     adjusted_width: f32,
-    grad_id: &str,
+    grad_def: &GradientDef,
 ) {
     let Some(stroke) = &ctx.style.stroke else {
-        return;
-    };
-    let Some(grad_def) = ctx.paints.gradient(grad_id) else {
-        log::warn!("SVG gradient \"{}\" not found for stroke", grad_id);
         return;
     };
 
@@ -677,7 +679,7 @@ fn stroke_polyline_gradient(
         GradientDef::Linear(_) => None,
     };
 
-    let opacity = stroke.opacity * ctx.style.opacity;
+    let opacity = stroke.opacity.get() * ctx.style.opacity.get();
     // Clamp subdivision size so extremely short segments still split at least once.
     let subdiv = STROKE_GRADIENT_SUBDIVISION_PX.max(adjusted_width * 0.25);
 

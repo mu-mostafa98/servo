@@ -10,17 +10,17 @@
 //! common recursion and collection logic.
 
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
 use svg_engine::render_tree::*;
+use svg_engine::style::NodeStyle;
 use svg_engine::style::gradient::{GradientDef, parse_gradient_element};
 use web_atoms::ns;
 
-use super::geometry::build_shape;
-use super::style::build_style_from_attrs;
-use crate::context::LayoutContext;
+use super::builder::SvgRenderTreeBuilder;
 
 // ======================= Strategy Pattern =======================
 
@@ -33,7 +33,10 @@ pub(crate) trait DefinitionParser {
     /// The SVG tag names to search for (e.g. `{"linearGradient", "radialGradient"}`).
     fn tag_names() -> &'static [&'static str];
     /// Parse a definition from a DOM element node. Returns `(id_attr_value, definition)`.
-    fn parse(node: ServoLayoutNode, context: &LayoutContext) -> Option<(String, Self::Definition)>;
+    fn parse<'dom, 'a>(
+        node: ServoLayoutNode<'dom>,
+        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+    ) -> Option<(String, Self::Definition)>;
 }
 
 /// Generic collector that walks `<defs>` containers and collects definitions
@@ -41,10 +44,10 @@ pub(crate) trait DefinitionParser {
 pub(crate) struct DefinitionCollector;
 
 impl DefinitionCollector {
-    pub(crate) fn collect<T: DefinitionParser>(
-        node: ServoLayoutNode,
-        context: &LayoutContext,
-    ) -> HashMap<String, T::Definition> {
+    pub(crate) fn collect<'dom, 'a, T: DefinitionParser>(
+        node: ServoLayoutNode<'dom>,
+        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+    ) -> HashMap<String, Arc<T::Definition>> {
         let mut result = HashMap::new();
         let mut candidates = Vec::new();
         for defs_child in node.dom_children() {
@@ -58,8 +61,8 @@ impl DefinitionCollector {
         }
         for candidate_node in candidates {
             if candidate_node.as_element().is_some() {
-                if let Some((id, def)) = T::parse(candidate_node, context) {
-                    result.insert(id, def);
+                if let Some((id, def)) = T::parse(candidate_node, builder) {
+                    result.insert(id, Arc::new(def));
                 }
             }
         }
@@ -86,6 +89,30 @@ fn find_elements_by_tag<'dom>(
     }
 }
 
+/// Build the child elements of a definition container (clip-path, pattern,
+/// mask, marker) into full render nodes, recursively handling `<g>`, `<use>`,
+/// `<text>` and nested `<defs>` content instead of flattening to shapes.
+fn collect_def_content<'dom, 'a>(
+    node: ServoLayoutNode<'dom>,
+    builder: &SvgRenderTreeBuilder<'dom, 'a>,
+) -> Vec<SvgRenderNode> {
+    node.dom_children()
+        .filter_map(|child| builder.build_def_content(child))
+        .collect()
+}
+
+/// Wrap definition children in a synthetic `<g>` root node.
+fn def_content_root(children: Vec<SvgRenderNode>) -> SvgRenderNode {
+    SvgRenderNode {
+        id: None,
+        tag: SvgTag::Container(Container::Group),
+        style: NodeStyle::default(),
+        transforms: Vec::new(),
+        viewport: None,
+        children,
+    }
+}
+
 // ======================= Gradient Parser =======================
 
 pub(crate) struct GradientParser;
@@ -96,9 +123,9 @@ impl DefinitionParser for GradientParser {
         &["linearGradient", "radialGradient"]
     }
 
-    fn parse(
-        node: ServoLayoutNode,
-        _context: &LayoutContext,
+    fn parse<'dom, 'a>(
+        node: ServoLayoutNode<'dom>,
+        _builder: &SvgRenderTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let grad_name = element.local_name().as_ref().to_owned();
@@ -155,7 +182,10 @@ impl DefinitionParser for ClipPathParser {
         &["clipPath"]
     }
 
-    fn parse(node: ServoLayoutNode, context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse<'dom, 'a>(
+        node: ServoLayoutNode<'dom>,
+        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
             .attribute_as_str(&ns!(), &local_name!("id"))
@@ -167,32 +197,17 @@ impl DefinitionParser for ClipPathParser {
                 _ => None,
             })
             .unwrap_or(ClipPathUnits::UserSpaceOnUse);
-        let mut shapes = Vec::new();
-        for child_node in node.dom_children() {
-            if let Some(child_elem) = child_node.as_element() {
-                let tag_name = child_elem.local_name().as_ref().to_owned();
-                let computed = child_elem
-                    .style_data()
-                    .is_some()
-                    .then(|| child_node.style(&context.style_context));
-                if let Some(shape) =
-                    build_shape(&child_elem, &tag_name, computed.as_ref().map(|v| &**v))
-                {
-                    shapes.push(shape);
-                }
-            }
+        let children = collect_def_content(node, builder);
+        if children.is_empty() {
+            return None;
         }
-        if !shapes.is_empty() {
-            Some((
-                id,
-                ClipPathDef {
-                    shapes,
-                    clip_path_units: units,
-                },
-            ))
-        } else {
-            None
-        }
+        Some((
+            id,
+            ClipPathDef {
+                root: def_content_root(children),
+                clip_path_units: units,
+            },
+        ))
     }
 }
 
@@ -206,7 +221,10 @@ impl DefinitionParser for PatternParser {
         &["pattern"]
     }
 
-    fn parse(node: ServoLayoutNode, context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse<'dom, 'a>(
+        node: ServoLayoutNode<'dom>,
+        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
             .attribute_as_str(&ns!(), &local_name!("id"))
@@ -250,41 +268,25 @@ impl DefinitionParser for PatternParser {
             .attribute_as_str(&ns!(), &local_name!("preserveAspectRatio"))
             .as_deref()
             .map(svg_engine::render_tree::parse_aspect_ratio);
-        let mut shapes = Vec::new();
-        for child_node in node.dom_children() {
-            if let Some(child_elem) = child_node.as_element() {
-                let tag_name = child_elem.local_name().as_ref().to_owned();
-                let computed = child_elem
-                    .style_data()
-                    .is_some()
-                    .then(|| child_node.style(&context.style_context));
-                if let Some(shape) =
-                    build_shape(&child_elem, &tag_name, computed.as_ref().map(|v| &**v))
-                {
-                    let style = build_style_from_attrs(child_node, context);
-                    shapes.push((shape, style));
-                }
-            }
+        let children = collect_def_content(node, builder);
+        if children.is_empty() {
+            return None;
         }
-        if !shapes.is_empty() {
-            Some((
-                id,
-                PatternDef {
-                    width,
-                    height,
-                    x,
-                    y,
-                    pattern_units,
-                    pattern_content_units,
-                    transform,
-                    view_box,
-                    aspect_ratio,
-                    shapes,
-                },
-            ))
-        } else {
-            None
-        }
+        Some((
+            id,
+            PatternDef {
+                width,
+                height,
+                x,
+                y,
+                pattern_units,
+                pattern_content_units,
+                transform,
+                view_box,
+                aspect_ratio,
+                root: def_content_root(children),
+            },
+        ))
     }
 }
 
@@ -298,32 +300,19 @@ impl DefinitionParser for MaskParser {
         &["mask"]
     }
 
-    fn parse(node: ServoLayoutNode, context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse<'dom, 'a>(
+        node: ServoLayoutNode<'dom>,
+        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
             .attribute_as_str(&ns!(), &local_name!("id"))
             .map(|s| s.to_string())?;
-        let mut shapes = Vec::new();
-        for child_node in node.dom_children() {
-            if let Some(child_elem) = child_node.as_element() {
-                let tag_name = child_elem.local_name().as_ref().to_owned();
-                let computed = child_elem
-                    .style_data()
-                    .is_some()
-                    .then(|| child_node.style(&context.style_context));
-                if let Some(shape) =
-                    build_shape(&child_elem, &tag_name, computed.as_ref().map(|v| &**v))
-                {
-                    let style = build_style_from_attrs(child_node, context);
-                    shapes.push((shape, style));
-                }
-            }
+        let children = collect_def_content(node, builder);
+        if children.is_empty() {
+            return None;
         }
-        if !shapes.is_empty() {
-            Some((id, MaskDef { shapes }))
-        } else {
-            None
-        }
+        Some((id, MaskDef { root: def_content_root(children) }))
     }
 }
 
@@ -337,9 +326,9 @@ impl DefinitionParser for FilterParser {
         &["filter"]
     }
 
-    fn parse(
-        node: ServoLayoutNode,
-        _context: &LayoutContext,
+    fn parse<'dom, 'a>(
+        node: ServoLayoutNode<'dom>,
+        _builder: &SvgRenderTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
@@ -664,7 +653,10 @@ impl DefinitionParser for MarkerParser {
         &["marker"]
     }
 
-    fn parse(node: ServoLayoutNode, context: &LayoutContext) -> Option<(String, Self::Definition)> {
+    fn parse<'dom, 'a>(
+        node: ServoLayoutNode<'dom>,
+        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+    ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
             .attribute_as_str(&ns!(), &local_name!("id"))
@@ -695,27 +687,12 @@ impl DefinitionParser for MarkerParser {
             .map(|s| parse_orient(s.trim()))
             .unwrap_or_default();
 
-        let mut shapes = Vec::new();
-        for child_node in node.dom_children() {
-            if let Some(child_elem) = child_node.as_element() {
-                let tag_name = child_elem.local_name().as_ref().to_owned();
-                let computed = child_elem
-                    .style_data()
-                    .is_some()
-                    .then(|| child_node.style(&context.style_context));
-                if let Some(shape) =
-                    build_shape(&child_elem, &tag_name, computed.as_ref().map(|v| &**v))
-                {
-                    let style = build_style_from_attrs(child_node, context);
-                    shapes.push((shape, style));
-                }
-            }
-        }
+        let children = collect_def_content(node, builder);
 
         Some((
             id,
             MarkerDef {
-                shapes,
+                root: def_content_root(children),
                 view_box,
                 ref_x: parse_attr("refX", 0.0),
                 ref_y: parse_attr("refY", 0.0),

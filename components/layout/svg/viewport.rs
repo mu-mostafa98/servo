@@ -8,6 +8,7 @@ use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
 use svg_engine::render_tree::{SvgViewport, ViewportInfo, extract_viewbox, parse_aspect_ratio};
+use svg_engine::units::Length;
 use web_atoms::ns;
 
 use super::style::parse_inline_style_prop;
@@ -41,8 +42,8 @@ pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>) -> Viewpo
         .map(parse_aspect_ratio);
 
     ViewportInfo {
-        width: svg_width,
-        height: svg_height,
+        width: Length::new(svg_width),
+        height: Length::new(svg_height),
         view_box,
         overflow_visible,
         aspect_ratio,
@@ -76,10 +77,10 @@ pub(crate) fn extract_nested_viewport<'dom>(node: ServoLayoutNode<'dom>) -> Opti
         .map_or(false, |v| v.trim().eq_ignore_ascii_case("visible"));
 
     Some(SvgViewport {
-        x: parse_len("x", 0.0),
-        y: parse_len("y", 0.0),
-        width: parse_len("width", 300.0),
-        height: parse_len("height", 150.0),
+        x: Length::new(parse_len("x", 0.0)),
+        y: Length::new(parse_len("y", 0.0)),
+        width: Length::new(parse_len("width", 300.0)),
+        height: Length::new(parse_len("height", 150.0)),
         view_box: get("viewBox").as_deref().and_then(extract_viewbox),
         aspect_ratio: get("preserveAspectRatio").as_deref().map(parse_aspect_ratio),
         overflow_visible,

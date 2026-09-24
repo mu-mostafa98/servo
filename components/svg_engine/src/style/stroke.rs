@@ -7,6 +7,7 @@
 use svgtypes::Color as SvgColor;
 
 use super::gradient::PaintServer;
+use crate::units::{Length, Opacity};
 
 /// SVG stroke properties.
 #[derive(Debug, Clone)]
@@ -14,8 +15,8 @@ pub struct StrokeParams {
     pub color: Option<SvgColor>,
     /// Paint server reference (gradient url). When set, takes priority over `color`.
     pub paint_server: Option<PaintServer>,
-    pub opacity: f32,
-    pub width: f32,
+    pub opacity: Opacity,
+    pub width: Length,
     pub line_cap: LineCap,
     pub line_join: LineJoin,
     pub miter_limit: f32,

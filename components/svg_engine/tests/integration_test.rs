@@ -16,6 +16,7 @@ use svg_engine::shapes::*;
 use svg_engine::style::gradient::{SpreadMethod, *};
 use svg_engine::style::transform_ops::TransformOp;
 use svg_engine::style::*;
+use svg_engine::units::{Id, Length, Opacity};
 use svg_engine::{DominantBaseline, SvgImage, SvgTag, TextAnchor, TextSpan};
 
 // ============================================================
@@ -25,91 +26,91 @@ use svg_engine::{DominantBaseline, SvgImage, SvgTag, TextAnchor, TextSpan};
 #[test]
 fn rect_data() {
     let r = Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 100.0,
-        height: 50.0,
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(50.0),
         rx: None,
         ry: None,
     };
-    assert_eq!(r.width, 100.0);
-    assert_eq!(r.height, 50.0);
-    assert_eq!(r.x, 0.0);
-    assert_eq!(r.y, 0.0);
+    assert_eq!(r.width.get(), 100.0);
+    assert_eq!(r.height.get(), 50.0);
+    assert_eq!(r.x.get(), 0.0);
+    assert_eq!(r.y.get(), 0.0);
 }
 
 #[test]
 fn rect_with_radius() {
     let r = Rectangle {
-        x: 10.0,
-        y: 20.0,
-        width: 200.0,
-        height: 100.0,
-        rx: Some(10.0),
-        ry: Some(5.0),
+        x: Length::new(10.0),
+        y: Length::new(20.0),
+        width: Length::new(200.0),
+        height: Length::new(100.0),
+        rx: Some(Length::new(10.0)),
+        ry: Some(Length::new(5.0)),
     };
-    assert_eq!(r.rx, Some(10.0));
-    assert_eq!(r.ry, Some(5.0));
+    assert_eq!(r.rx, Some(Length::new(10.0)));
+    assert_eq!(r.ry, Some(Length::new(5.0)));
 }
 
 #[test]
 fn rect_rx_inherits_ry_and_vice_versa() {
     // rx only: ry = rx
     let r = Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 100.0,
-        height: 100.0,
-        rx: Some(10.0),
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(100.0),
+        rx: Some(Length::new(10.0)),
         ry: None,
     };
-    assert_eq!(r.rx, Some(10.0));
+    assert_eq!(r.rx, Some(Length::new(10.0)));
     // ry only: rx = ry
     let r2 = Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 100.0,
-        height: 100.0,
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(100.0),
         rx: None,
-        ry: Some(15.0),
+        ry: Some(Length::new(15.0)),
     };
-    assert_eq!(r2.ry, Some(15.0));
+    assert_eq!(r2.ry, Some(Length::new(15.0)));
 }
 
 #[test]
 fn circle_data() {
     let c = Circle {
-        cx: 50.0,
-        cy: 50.0,
-        r: 30.0,
+        cx: Length::new(50.0),
+        cy: Length::new(50.0),
+        r: Length::new(30.0),
     };
-    assert_eq!(c.cx, 50.0);
-    assert_eq!(c.cy, 50.0);
-    assert_eq!(c.r, 30.0);
+    assert_eq!(c.cx.get(), 50.0);
+    assert_eq!(c.cy.get(), 50.0);
+    assert_eq!(c.r.get(), 30.0);
 }
 
 #[test]
 fn ellipse_data() {
     let e = Ellipse {
-        cx: 100.0,
-        cy: 80.0,
-        rx: 60.0,
-        ry: 40.0,
+        cx: Length::new(100.0),
+        cy: Length::new(80.0),
+        rx: Length::new(60.0),
+        ry: Length::new(40.0),
     };
-    assert_eq!(e.rx, 60.0);
-    assert_eq!(e.ry, 40.0);
+    assert_eq!(e.rx.get(), 60.0);
+    assert_eq!(e.ry.get(), 40.0);
 }
 
 #[test]
 fn line_data() {
     let l = Line {
-        x1: 0.0,
-        y1: 0.0,
-        x2: 100.0,
-        y2: 100.0,
+        x1: Length::new(0.0),
+        y1: Length::new(0.0),
+        x2: Length::new(100.0),
+        y2: Length::new(100.0),
     };
-    assert_eq!(l.x2, 100.0);
-    assert_eq!(l.y2, 100.0);
+    assert_eq!(l.x2.get(), 100.0);
+    assert_eq!(l.y2.get(), 100.0);
 }
 
 #[test]
@@ -149,29 +150,29 @@ fn path_data_invalid_rejected() {
 #[test]
 fn shape_enum_all_variants_constructible() {
     let _rect = Shape::Rect(Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 10.0,
-        height: 10.0,
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
         rx: None,
         ry: None,
     });
     let _circle = Shape::Circle(Circle {
-        cx: 5.0,
-        cy: 5.0,
-        r: 5.0,
+        cx: Length::new(5.0),
+        cy: Length::new(5.0),
+        r: Length::new(5.0),
     });
     let _ellipse = Shape::Ellipse(Ellipse {
-        cx: 5.0,
-        cy: 5.0,
-        rx: 5.0,
-        ry: 3.0,
+        cx: Length::new(5.0),
+        cy: Length::new(5.0),
+        rx: Length::new(5.0),
+        ry: Length::new(3.0),
     });
     let _line = Shape::Line(Line {
-        x1: 0.0,
-        y1: 0.0,
-        x2: 10.0,
-        y2: 10.0,
+        x1: Length::new(0.0),
+        y1: Length::new(0.0),
+        x2: Length::new(10.0),
+        y2: Length::new(10.0),
     });
     // Text and Image are in SvgTag, not Shape
     let _text_tag = SvgTag::Text(TextSpan {
@@ -334,10 +335,10 @@ fn line_no_fill_geometry_by_spec() {
     // Per SVG spec, <line> has no fill geometry — only stroke renders.
     // This is verified at the Render trait level (line.rs).
     let line = Shape::Line(Line {
-        x1: 0.0,
-        y1: 0.0,
-        x2: 10.0,
-        y2: 10.0,
+        x1: Length::new(0.0),
+        y1: Length::new(0.0),
+        x2: Length::new(10.0),
+        y2: Length::new(10.0),
     });
     assert!(matches!(line, Shape::Line(_)));
 }
@@ -345,10 +346,10 @@ fn line_no_fill_geometry_by_spec() {
 #[test]
 fn rect_has_fill_and_stroke_geometry() {
     let rect = Shape::Rect(Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 100.0,
-        height: 100.0,
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(100.0),
         rx: None,
         ry: None,
     });
@@ -366,7 +367,7 @@ fn node_style_defaults() {
     assert!(s.is_displayed());
     assert!(s.fill.is_none());
     assert!(s.stroke.is_none());
-    assert_eq!(s.opacity, 1.0);
+    assert_eq!(s.opacity.get(), 1.0);
 }
 
 #[test]
@@ -389,23 +390,23 @@ fn fill_params_solid_color() {
     let f = FillParams {
         color: Some(svgtypes::Color::new_rgb(255, 0, 0)),
         paint_server: None,
-        opacity: 0.8,
+        opacity: Opacity::new(0.8),
         fill_rule: FillRule::NonZero,
     };
-    assert_eq!(f.opacity, 0.8);
+    assert_eq!(f.opacity.get(), 0.8);
     assert!(matches!(f.fill_rule, FillRule::NonZero));
     assert!(f.paint_server.is_none());
 }
 
 #[test]
-fn fill_params_gradient_paint_server() {
+fn fill_params_ref_paint_server() {
     let f = FillParams {
         color: None,
-        paint_server: Some(PaintServer::Gradient("myGrad".to_owned())),
-        opacity: 1.0,
+        paint_server: Some(PaintServer::Ref(Id::new("myGrad"))),
+        opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     };
-    assert!(matches!(f.paint_server, Some(PaintServer::Gradient(ref id)) if id == "myGrad"));
+    assert!(matches!(f.paint_server, Some(PaintServer::Ref(ref id)) if id.as_str() == "myGrad"));
 }
 
 #[test]
@@ -413,7 +414,7 @@ fn fill_params_evenodd() {
     let f = FillParams {
         color: None,
         paint_server: None,
-        opacity: 1.0,
+        opacity: Opacity::ONE,
         fill_rule: FillRule::EvenOdd,
     };
     assert!(matches!(f.fill_rule, FillRule::EvenOdd));
@@ -424,15 +425,15 @@ fn stroke_params_all_fields() {
     let s = StrokeParams {
         color: Some(svgtypes::Color::new_rgb(0, 0, 0)),
         paint_server: None,
-        opacity: 0.5,
-        width: 3.0,
+        opacity: Opacity::new(0.5),
+        width: Length::new(3.0),
         line_cap: LineCap::Round,
         line_join: LineJoin::Bevel,
         miter_limit: 10.0,
         dash_array: Some(vec![5.0, 3.0]),
         dash_offset: 2.0,
     };
-    assert_eq!(s.width, 3.0);
+    assert_eq!(s.width.get(), 3.0);
     assert!(matches!(s.line_cap, LineCap::Round));
     assert!(matches!(s.line_join, LineJoin::Bevel));
     assert_eq!(s.miter_limit, 10.0);
@@ -469,7 +470,7 @@ fn node_effects_default_empty() {
 #[test]
 fn node_effects_with_clip_path() {
     let effects = NodeEffects {
-        clip_path: Some("c1".into()),
+        clip_path: Some(DefRef::Ref(Id::new("c1"))),
         mask: None,
         filter: None,
     };
@@ -483,10 +484,10 @@ fn node_effects_with_clip_path() {
 #[test]
 fn svg_tag_shape_and_container() {
     let shape_tag = SvgTag::Shape(Shape::Rect(Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 10.0,
-        height: 10.0,
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
         rx: None,
         ry: None,
     }));
@@ -507,30 +508,30 @@ fn container_all_variants() {
 #[test]
 fn viewport_info_defaults() {
     let vp = ViewportInfo {
-        width: 300.0,
-        height: 150.0,
+        width: Length::new(300.0),
+        height: Length::new(150.0),
         view_box: None,
         overflow_visible: false,
         aspect_ratio: None,
     };
-    assert_eq!(vp.width, 300.0);
+    assert_eq!(vp.width.get(), 300.0);
 }
 
 #[test]
 fn viewport_with_viewbox() {
     let vp = ViewportInfo {
-        width: 200.0,
-        height: 200.0,
+        width: Length::new(200.0),
+        height: Length::new(200.0),
         view_box: Some(ViewBox {
-            min_x: 0.0,
-            min_y: 0.0,
-            width: 100.0,
-            height: 100.0,
+            min_x: Length::new(0.0),
+            min_y: Length::new(0.0),
+            width: Length::new(100.0),
+            height: Length::new(100.0),
         }),
         overflow_visible: false,
         aspect_ratio: None,
     };
-    assert_eq!(vp.view_box.unwrap().width, 100.0);
+    assert_eq!(vp.view_box.unwrap().width.get(), 100.0);
 }
 
 #[test]
@@ -604,7 +605,7 @@ fn parse_aspect_ratio_unknown_defaults_xmidymid() {
 fn viewbox_valid() {
     let vb = extract_viewbox("0 0 200 200").unwrap();
     assert_eq!(
-        (vb.min_x, vb.min_y, vb.width, vb.height),
+        (vb.min_x.get(), vb.min_y.get(), vb.width.get(), vb.height.get()),
         (0.0, 0.0, 200.0, 200.0)
     );
 }
@@ -612,15 +613,15 @@ fn viewbox_valid() {
 #[test]
 fn viewbox_with_commas() {
     let vb = extract_viewbox("10,20 300,400").unwrap();
-    assert_eq!(vb.width, 300.0);
-    assert_eq!(vb.height, 400.0);
+    assert_eq!(vb.width.get(), 300.0);
+    assert_eq!(vb.height.get(), 400.0);
 }
 
 #[test]
 fn viewbox_negative_coords() {
     let vb = extract_viewbox("-100 -100 200 200").unwrap();
-    assert_eq!(vb.min_x, -100.0);
-    assert_eq!(vb.min_y, -100.0);
+    assert_eq!(vb.min_x.get(), -100.0);
+    assert_eq!(vb.min_y.get(), -100.0);
 }
 
 #[test]
@@ -667,7 +668,7 @@ fn paint_server_rgb_function() {
 #[test]
 fn paint_server_url_gradient() {
     let ps = PaintServer::from_attr("url(#myGradient)").unwrap();
-    assert!(matches!(ps, PaintServer::Gradient(ref id) if id == "myGradient"));
+    assert!(matches!(ps, PaintServer::Ref(ref id) if id.as_str() == "myGradient"));
 }
 
 #[test]
@@ -785,34 +786,49 @@ fn clip_path_units_both_variants() {
 
 #[test]
 fn clip_path_def_non_empty_shapes() {
-    let shapes = vec![Shape::Rect(Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 100.0,
-        height: 100.0,
+    let rect = Shape::Rect(Rectangle {
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(100.0),
+        height: Length::new(100.0),
         rx: None,
         ry: None,
-    })];
+    });
+    let root = SvgRenderNode {
+        id: None,
+        tag: SvgTag::Shape(rect),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
     let def = ClipPathDef {
-        shapes,
+        root,
         clip_path_units: ClipPathUnits::UserSpaceOnUse,
     };
-    assert_eq!(def.shapes.len(), 1);
+    assert!(matches!(def.root.tag, SvgTag::Shape(_)));
 }
 
 #[test]
 fn mask_def_with_shapes_and_styles() {
     let rect = Shape::Rect(Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 10.0,
-        height: 10.0,
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
         rx: None,
         ry: None,
     });
-    let shapes = vec![(rect, NodeStyle::default())];
-    let def = MaskDef { shapes };
-    assert_eq!(def.shapes.len(), 1);
+    let root = SvgRenderNode {
+        id: None,
+        tag: SvgTag::Shape(rect),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
+    let def = MaskDef { root };
+    assert!(matches!(def.root.tag, SvgTag::Shape(_)));
 }
 
 #[test]
@@ -848,14 +864,21 @@ fn filter_def_all_primitive_variants() {
 #[test]
 fn pattern_def_basic() {
     let rect = Shape::Rect(Rectangle {
-        x: 0.0,
-        y: 0.0,
-        width: 10.0,
-        height: 10.0,
+        x: Length::new(0.0),
+        y: Length::new(0.0),
+        width: Length::new(10.0),
+        height: Length::new(10.0),
         rx: None,
         ry: None,
     });
-    let shapes = vec![(rect, NodeStyle::default())];
+    let root = SvgRenderNode {
+        id: None,
+        tag: SvgTag::Shape(rect),
+        style: NodeStyle::default(),
+        transforms: vec![],
+        viewport: None,
+        children: vec![],
+    };
     let def = PatternDef {
         width: 20.0,
         height: 20.0,
@@ -866,7 +889,7 @@ fn pattern_def_basic() {
         transform: vec![],
         view_box: None,
         aspect_ratio: None,
-        shapes,
+        root,
     };
     assert_eq!(def.width, 20.0);
     assert_eq!(def.height, 20.0);
@@ -1118,7 +1141,7 @@ fn visitor_skip_children() {
     struct SkipRoot(bool);
     impl SvgRenderTreeVisitor for SkipRoot {
         fn visit_node(&mut self, node: &SvgRenderNode) -> VisitDecision {
-            if node.id == Some("root".to_owned()) {
+            if node.id.as_ref().map(|i| i.as_str()) == Some("root") {
                 VisitDecision::SkipChildren
             } else {
                 self.0 = true;
@@ -1149,74 +1172,12 @@ fn mutable_visitor_modifies_nodes() {
     struct OpacityBump;
     impl SvgRenderTreeVisitorMut for OpacityBump {
         fn visit_node_mut(&mut self, node: &mut SvgRenderNode) -> VisitDecision {
-            node.style.opacity *= 0.5;
+            node.style.opacity = Opacity::new(node.style.opacity.get() * 0.5);
             VisitDecision::Continue
         }
     }
     tree.visit_mut(&mut OpacityBump);
-    assert_eq!(tree.root.style.opacity, 0.5);
-}
-
-#[test]
-fn paintserver_fixup_converts_gradient_to_pattern() {
-    use svg_engine::style::gradient::PaintServer;
-    use svg_engine::visitor::PaintServerFixupVisitor;
-
-    let mut node = make_svg_node();
-    node.style.fill = Some(FillParams {
-        color: None,
-        paint_server: Some(PaintServer::Gradient("myPat".to_owned())),
-        opacity: 1.0,
-        fill_rule: FillRule::NonZero,
-    });
-
-    let mut patterns = HashMap::new();
-    patterns.insert(
-        "myPat".to_owned(),
-        PatternDef {
-            width: 10.0,
-            height: 10.0,
-            x: 0.0,
-            y: 0.0,
-            pattern_units: PatternUnits::UserSpaceOnUse,
-            pattern_content_units: PatternContentUnits::UserSpaceOnUse,
-            transform: vec![],
-            view_box: None,
-            aspect_ratio: None,
-            shapes: vec![],
-        },
-    );
-
-    let mut visitor = PaintServerFixupVisitor {
-        pattern_ids: &patterns,
-    };
-    node.accept_mut(&mut visitor);
-
-    let fill = node.style.fill.unwrap();
-    assert!(matches!(fill.paint_server, Some(PaintServer::Pattern(ref id)) if id == "myPat"));
-}
-
-#[test]
-fn paintserver_fixup_does_not_affect_real_gradient() {
-    use svg_engine::style::gradient::PaintServer;
-    use svg_engine::visitor::PaintServerFixupVisitor;
-
-    let mut node = make_svg_node();
-    node.style.fill = Some(FillParams {
-        color: None,
-        paint_server: Some(PaintServer::Gradient("realGrad".to_owned())),
-        opacity: 1.0,
-        fill_rule: FillRule::NonZero,
-    });
-
-    let patterns: HashMap<String, PatternDef> = HashMap::new();
-    let mut visitor = PaintServerFixupVisitor {
-        pattern_ids: &patterns,
-    };
-    node.accept_mut(&mut visitor);
-
-    let fill = node.style.fill.unwrap();
-    assert!(matches!(fill.paint_server, Some(PaintServer::Gradient(ref id)) if id == "realGrad"));
+    assert_eq!(tree.root.style.opacity.get(), 0.5);
 }
 
 // ============================================================
@@ -1261,7 +1222,7 @@ fn defs_container_in_tree() {
 fn svg_render_node_with_transforms() {
     use svg_engine::style::transform_ops::TransformOp;
     let node = SvgRenderNode {
-        id: Some("t".into()),
+        id: Some(Id::new("t")),
         tag: SvgTag::Container(Container::Group),
         style: NodeStyle::default(),
         transforms: vec![TransformOp::Translate(50.0, 50.0)],
@@ -1422,24 +1383,13 @@ fn shape_rendering_all_variants() {
 // HELPER FUNCTIONS
 // ============================================================
 
-fn make_svg_node() -> SvgRenderNode {
-    SvgRenderNode {
-        id: None,
-        tag: SvgTag::Container(Container::Svg),
-        style: NodeStyle::default(),
-        transforms: vec![],
-        viewport: None,
-        children: vec![],
-    }
-}
-
 fn make_simple_tree() -> SvgRenderTree {
     let child1 = SvgRenderNode {
-        id: Some("child1".to_owned()),
+        id: Some(Id::new("child1")),
         tag: SvgTag::Shape(Shape::Circle(Circle {
-            cx: 10.0,
-            cy: 10.0,
-            r: 5.0,
+            cx: Length::new(10.0),
+            cy: Length::new(10.0),
+            r: Length::new(5.0),
         })),
         style: NodeStyle::default(),
         transforms: vec![],
@@ -1447,12 +1397,12 @@ fn make_simple_tree() -> SvgRenderTree {
         children: vec![],
     };
     let child2 = SvgRenderNode {
-        id: Some("child2".to_owned()),
+        id: Some(Id::new("child2")),
         tag: SvgTag::Shape(Shape::Rect(Rectangle {
-            x: 0.0,
-            y: 0.0,
-            width: 20.0,
-            height: 20.0,
+            x: Length::new(0.0),
+            y: Length::new(0.0),
+            width: Length::new(20.0),
+            height: Length::new(20.0),
             rx: None,
             ry: None,
         })),
@@ -1462,7 +1412,7 @@ fn make_simple_tree() -> SvgRenderTree {
         children: vec![],
     };
     let root = SvgRenderNode {
-        id: Some("root".to_owned()),
+        id: Some(Id::new("root")),
         tag: SvgTag::Container(Container::Svg),
         style: NodeStyle::default(),
         transforms: vec![],
@@ -1472,8 +1422,8 @@ fn make_simple_tree() -> SvgRenderTree {
     SvgRenderTree {
         root,
         viewport: ViewportInfo {
-            width: 100.0,
-            height: 100.0,
+            width: Length::new(100.0),
+            height: Length::new(100.0),
             view_box: None,
             overflow_visible: false,
             aspect_ratio: None,
@@ -1492,7 +1442,7 @@ fn make_simple_tree_with_fill() -> SvgRenderTree {
     tree.root.style.fill = Some(FillParams {
         color: Some(svgtypes::Color::new_rgb(255, 0, 0)),
         paint_server: None,
-        opacity: 1.0,
+        opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     });
     tree
@@ -1510,8 +1460,8 @@ fn make_empty_tree() -> SvgRenderTree {
     SvgRenderTree {
         root,
         viewport: ViewportInfo {
-            width: 100.0,
-            height: 100.0,
+            width: Length::new(100.0),
+            height: Length::new(100.0),
             view_box: None,
             overflow_visible: false,
             aspect_ratio: None,

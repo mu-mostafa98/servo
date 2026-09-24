@@ -18,10 +18,7 @@ use webrender_api::{
 use crate::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::effects::filter::get_filter_ops;
 use crate::render_tree::*;
-use crate::renderer::{
-    ClipMaskProvider, FilterProvider, MarkerProvider, PaintResourceProvider, Render, RenderContext,
-    clip_chain_option, transform,
-};
+use crate::renderer::{PaintResourceProvider, Render, RenderContext, clip_chain_option, transform};
 use crate::renderer::path::rasterize_bez;
 use crate::shapes::ComplexClip;
 use crate::RasterSink;
@@ -49,12 +46,7 @@ pub fn render_svg_tree(
     let (root_origin, root_spatial_id, pop_frame, viewbox) =
         push_viewbox_frame(tree, svg_origin, svg_size, spatial_id, wr);
 
-    let providers = ResourceProviders {
-        paints: tree,
-        clips: tree,
-        filters: tree,
-        markers: tree,
-    };
+    let providers = ResourceProviders { paints: tree };
     let viewbox_scale = viewbox
         .as_ref()
         .map(|v| (v.sx, v.sy))
@@ -132,13 +124,13 @@ fn push_viewbox_frame(
         return (*svg_origin, spatial_id, false, None);
     };
     let (sx, sy, ox, oy) = compute_viewbox_transform(
-        vb.width,
-        vb.height,
+        vb.width.get(),
+        vb.height.get(),
         svg_size.width,
         svg_size.height,
         tree.viewport.aspect_ratio.as_ref(),
     );
-    let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x, -vb.min_y);
+    let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x.get(), -vb.min_y.get());
     let s = Transform2D::<f32, (), ()>::scale(sx, sy);
     let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
     let combined = t1.then(&s).then(&t2);
@@ -163,8 +155,8 @@ fn push_viewbox_frame(
             sy,
             ox,
             oy,
-            min_x: vb.min_x,
-            min_y: vb.min_y,
+            min_x: vb.min_x.get(),
+            min_y: vb.min_y.get(),
         }),
     )
 }
@@ -174,9 +166,6 @@ fn push_viewbox_frame(
 /// Bundled resource providers — reduces argument count for recursive functions.
 struct ResourceProviders<'a> {
     paints: &'a dyn PaintResourceProvider,
-    clips: &'a dyn ClipMaskProvider,
-    filters: &'a dyn FilterProvider,
-    markers: &'a dyn MarkerProvider,
 }
 
 /// Bundled effect parameters — reduces argument count for `emit_geometry`.
@@ -185,7 +174,6 @@ struct EffectParams<'a> {
     complex_clips: &'a [ComplexClip],
     filter_ops: &'a Option<Vec<webrender_api::FilterOp>>,
     paints: &'a dyn PaintResourceProvider,
-    markers: &'a dyn MarkerProvider,
 }
 
 // ======================= Tree Traversal =======================
@@ -233,7 +221,7 @@ fn render_node(
     let mut cur_clip_chain = clip_chain_id;
     let mut cur_viewbox_scale = viewbox_scale;
     if let Some(vp) = &node.viewport {
-        let vp_origin = LayoutPoint::new(cur_origin.x + vp.x, cur_origin.y + vp.y);
+        let vp_origin = LayoutPoint::new(cur_origin.x + vp.x.get(), cur_origin.y + vp.y.get());
 
         // Sub-viewport clip: a nested `<svg>` clips its content to its own
         // viewport (unless `overflow: visible`). It is enforced two ways so
@@ -243,12 +231,12 @@ fn render_node(
         //    primitives to the same viewport rect.
         if !vp.overflow_visible {
             let clip_origin = LayoutPoint::new(
-                raster_offset.x + cur_viewbox_scale.0 * vp.x,
-                raster_offset.y + cur_viewbox_scale.1 * vp.y,
+                raster_offset.x + cur_viewbox_scale.0 * vp.x.get(),
+                raster_offset.y + cur_viewbox_scale.1 * vp.y.get(),
             );
             let clip_size = LayoutSize::new(
-                cur_viewbox_scale.0 * vp.width,
-                cur_viewbox_scale.1 * vp.height,
+                cur_viewbox_scale.0 * vp.width.get(),
+                cur_viewbox_scale.1 * vp.height.get(),
             );
             let sub_clip = LayoutRect::from_origin_and_size(clip_origin, clip_size);
             clip_rect = match clip_rect {
@@ -263,31 +251,31 @@ fn render_node(
             // parent spatial node (before the viewBox reference frame is pushed
             // below), mirroring how the root viewport clip is built.
             let vp_bounds =
-                LayoutRect::from_origin_and_size(vp_origin, LayoutSize::new(vp.width, vp.height));
+                LayoutRect::from_origin_and_size(vp_origin, LayoutSize::new(vp.width.get(), vp.height.get()));
             let vp_clip_id = wr.define_clip_rect(cur_spatial_id, vp_bounds);
             cur_clip_chain = wr.define_clip_chain(clip_chain_option(cur_clip_chain), [vp_clip_id]);
         }
 
         if let Some(vb) = &vp.view_box {
             let (sx, sy, ox, oy) = compute_viewbox_transform(
-                vb.width,
-                vb.height,
-                vp.width,
-                vp.height,
+                vb.width.get(),
+                vb.height.get(),
+                vp.width.get(),
+                vp.height.get(),
                 vp.aspect_ratio.as_ref(),
             );
 
             // Translation that maps viewBox space → parent space:
             //   p -> scale(p - min) + offset, then + (x, y)
             //   = scale*p + (x + offset - scale*min)
-            let tx = vp.x + ox - vb.min_x * sx;
-            let ty = vp.y + oy - vb.min_y * sy;
+            let tx = vp.x.get() + ox - vb.min_x.get() * sx;
+            let ty = vp.y.get() + oy - vb.min_y.get() * sy;
             raster_offset = LayoutPoint::new(
                 raster_offset.x + cur_viewbox_scale.0 * tx,
                 raster_offset.y + cur_viewbox_scale.1 * ty,
             );
 
-            let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x, -vb.min_y);
+            let t1 = Transform2D::<f32, (), ()>::translation(-vb.min_x.get(), -vb.min_y.get());
             let s = Transform2D::<f32, (), ()>::scale(sx, sy);
             let t2 = Transform2D::<f32, (), ()>::translation(ox, oy);
             let combined = t1.then(&s).then(&t2);
@@ -312,7 +300,6 @@ fn render_node(
     // Step 3 — Resolve effects (clip-path, mask, filter).
     let resolved = resolve_node_effects(
         node,
-        providers,
         &cur_origin,
         cur_spatial_id,
         cur_clip_chain,
@@ -325,7 +312,6 @@ fn render_node(
         complex_clips: &resolved.complex_clips,
         filter_ops: &resolved.filter_ops,
         paints: providers.paints,
-        markers: providers.markers,
     };
     emit_element(
         node,
@@ -377,7 +363,6 @@ struct ResolvedEffects {
 /// Resolve clip-path, mask, and filter effects for a node.
 fn resolve_node_effects(
     node: &SvgRenderNode,
-    providers: &ResourceProviders,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
@@ -385,7 +370,6 @@ fn resolve_node_effects(
 ) -> ResolvedEffects {
     let (node_clip_chain, complex_clips) = resolve_node_clip_path(
         node,
-        providers.clips,
         cur_origin,
         cur_spatial_id,
         parent_clip_chain,
@@ -393,13 +377,12 @@ fn resolve_node_effects(
     );
     let mask_clips = build_mask_clips(
         node,
-        providers.clips,
         cur_origin,
         cur_spatial_id,
         node_clip_chain,
         wr,
     );
-    let filter_ops = get_filter_ops(node, providers.filters);
+    let filter_ops = get_filter_ops(node);
 
     ResolvedEffects {
         clip_chain: if node_clip_chain != parent_clip_chain {
@@ -546,7 +529,6 @@ fn emit_geometry(
                 mask_clip.chain,
                 accumulated_scale,
                 params.paints,
-                params.markers,
                 &combined,
                 wr,
                 viewbox_scale,
@@ -566,7 +548,6 @@ fn emit_geometry(
             node_clip_chain,
             accumulated_scale,
             params.paints,
-            params.markers,
             params.complex_clips,
             wr,
             viewbox_scale,
@@ -592,7 +573,6 @@ fn emit_shape(
     clip_chain_id: ClipChainId,
     accumulated_scale: f32,
     paints: &dyn PaintResourceProvider,
-    markers: &dyn MarkerProvider,
     complex_clips: &[ComplexClip],
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
@@ -611,7 +591,7 @@ fn emit_shape(
     let has_paint = style.fill.is_some() || style.stroke.is_some();
     // Pattern fills/strokes can't be rasterized by vello_cpu (it only handles
     // solid colors and gradients), so route them through the native renderer,
-    // which tiles the pattern via `fill_rect_with_pattern_by_id`.
+    // which tiles the pattern via `fill_rect_with_pattern`.
     let has_pattern = style_has_pattern(style);
 
     if has_paint && !has_pattern {
@@ -672,7 +652,7 @@ fn emit_shape(
                     &bez,
                     style.fill.as_ref(),
                     style.stroke.as_ref(),
-                    style.opacity,
+                    style.opacity.get(),
                     &raster_origin,
                     viewbox_scale,
                     device_scale,
@@ -692,7 +672,6 @@ fn emit_shape(
     emit_markers(
         shape,
         style,
-        markers,
         node_xform,
         viewbox_scale,
         device_scale,
@@ -773,15 +752,12 @@ fn emit_native_gradients(
 
     if let Some(fill) = &style.fill {
         match &fill.paint_server {
-            Some(PaintServer::Gradient(id)) => {
-                let Some(def) = paints.gradient(id) else {
-                    return false;
-                };
+            Some(PaintServer::Gradient(def)) => {
                 if crate::renderer::gradient::resolve_gradient(
-                    def,
+                    def.as_ref(),
                     bounds,
                     &ctx,
-                    fill.opacity * style.opacity,
+                    fill.opacity.get() * style.opacity.get(),
                 )
                 .is_none()
                 {
@@ -799,15 +775,12 @@ fn emit_native_gradients(
             return false;
         }
         match &stroke.paint_server {
-            Some(PaintServer::Gradient(id)) => {
-                let Some(def) = paints.gradient(id) else {
-                    return false;
-                };
+            Some(PaintServer::Gradient(def)) => {
                 if crate::renderer::gradient::resolve_gradient(
-                    def,
+                    def.as_ref(),
                     bounds,
                     &ctx,
-                    stroke.opacity * style.opacity,
+                    stroke.opacity.get() * style.opacity.get(),
                 )
                 .is_none()
                 {
@@ -916,7 +889,6 @@ fn shape_vertices(shape: &crate::shapes::Shape) -> Option<Vec<(f32, f32)>> {
 fn emit_markers(
     shape: &crate::shapes::Shape,
     style: &crate::style::NodeStyle,
-    markers: &dyn MarkerProvider,
     node_xform: Transform2D<f32, (), ()>,
     viewbox_scale: (f32, f32),
     device_scale: f32,
@@ -930,31 +902,31 @@ fn emit_markers(
     let Some(vertices) = shape_vertices(shape) else { return };
     let n = vertices.len();
 
-    let stroke_width = style.stroke.as_ref().map(|s| s.width).unwrap_or(1.0);
+    let stroke_width = style.stroke.as_ref().map(|s| s.width.get()).unwrap_or(1.0);
 
-    if let Some(id) = &refs.start {
+    if let Some(def) = refs.start.as_ref().and_then(DefRef::resolved) {
         let (x, y) = vertices[0];
         let (nx, ny) = vertices[1];
         emit_marker(
-            id, x, y, nx - x, ny - y, true, markers, stroke_width,
+            def, x, y, nx - x, ny - y, true, stroke_width,
             node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, wr, sink,
         );
     }
-    if let Some(id) = &refs.mid {
+    if let Some(def) = refs.mid.as_ref().and_then(DefRef::resolved) {
         for i in 1..n - 1 {
             let (x, y) = vertices[i];
             let (nx, ny) = vertices[i + 1];
             emit_marker(
-                id, x, y, nx - x, ny - y, false, markers, stroke_width,
+                def, x, y, nx - x, ny - y, false, stroke_width,
                 node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, wr, sink,
             );
         }
     }
-    if let Some(id) = &refs.end {
+    if let Some(def) = refs.end.as_ref().and_then(DefRef::resolved) {
         let (x, y) = vertices[n - 1];
         let (px, py) = vertices[n - 2];
         emit_marker(
-            id, x, y, x - px, y - py, false, markers, stroke_width,
+            def, x, y, x - px, y - py, false, stroke_width,
             node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, wr, sink,
         );
     }
@@ -963,13 +935,12 @@ fn emit_markers(
 /// Place a single marker at `(x, y)`, oriented along `(tangent_x, tangent_y)`.
 #[allow(clippy::too_many_arguments)]
 fn emit_marker(
-    id: &str,
+    def: &MarkerDef,
     x: f32,
     y: f32,
     tangent_x: f32,
     tangent_y: f32,
     is_start: bool,
-    markers: &dyn MarkerProvider,
     stroke_width: f32,
     node_xform: Transform2D<f32, (), ()>,
     viewbox_scale: (f32, f32),
@@ -980,14 +951,12 @@ fn emit_marker(
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
 ) {
-    let Some(def) = markers.marker(id) else { return };
-
     let unit_factor = match def.marker_units {
         MarkerUnits::StrokeWidth => stroke_width,
         MarkerUnits::UserSpaceOnUse => 1.0,
     };
     let (vb_w, vb_h) = match &def.view_box {
-        Some(vb) => (vb.width, vb.height),
+        Some(vb) => (vb.width.get(), vb.height.get()),
         None => (def.marker_width, def.marker_height),
     };
     if vb_w <= 0.0 || vb_h <= 0.0 {
@@ -1020,16 +989,16 @@ fn emit_marker(
     // Compose with the shape's accumulated node transform.
     let full_xform = marker_local.then(&node_xform);
 
-    for (m_shape, m_style) in &def.shapes {
+    def.root.for_each_shape_leaf(&mut |m_shape, m_style| {
         if !m_style.is_visible() {
-            continue;
+            return;
         }
-        let Some(bez) = m_shape.to_bez_path() else { continue };
+        let Some(bez) = m_shape.to_bez_path() else { return };
         rasterize_bez(
             &bez,
             m_style.fill.as_ref(),
             m_style.stroke.as_ref(),
-            m_style.opacity,
+            m_style.opacity.get(),
             &raster_offset,
             viewbox_scale,
             device_scale,
@@ -1040,7 +1009,7 @@ fn emit_marker(
             wr,
             sink,
         );
-    }
+    });
 }
 
 /// Angle (degrees) of a direction vector, falling back to 0 for a zero vector.

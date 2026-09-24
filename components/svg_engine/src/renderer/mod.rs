@@ -14,7 +14,7 @@
 //! | Module | Role |
 //! |--------|------|
 //! | [`render_trait`] | [`Render`] trait, [`RenderContext`], Shape dispatch |
-//! | [`providers`] | [`PaintResourceProvider`], [`ClipMaskProvider`], [`FilterProvider`] |
+//! | [`providers`] | [`PaintResourceProvider`] |
 //! | [`helpers`] | Color conversion, clip chain utilities, hint resolution |
 //! | `circle`, `ellipse`, … | Per-shape [`Render`] implementations |
 
@@ -41,5 +41,5 @@ pub(crate) use helpers::{
     ZERO_LENGTH_EPSILON, clip_chain_option, effective_stroke_width, make_common_props,
     paint_order_stroke_before_fill, shape_rendering_value, to_colorf,
 };
-pub(crate) use providers::{ClipMaskProvider, FilterProvider, MarkerProvider, PaintResourceProvider};
+pub(crate) use providers::PaintResourceProvider;
 pub(crate) use render_trait::{Render, RenderContext};

@@ -10,20 +10,32 @@
 //!
 //! **No WebRender dependency** — pure SVG data types via `svgtypes::Color`.
 
+use std::sync::Arc;
+
 use svgtypes::{Color as SvgColor, Length as SvgLength};
 
 use crate::error::{SvgEngineError, SvgResult};
+use crate::render_tree::PatternDef;
 use crate::style::transform_ops::{TransformOp, parse_transform_str};
+use crate::units::Id;
 
-/// A paint server reference — either a solid color, gradient ID, or pattern ID.
+/// A paint server reference — a solid color, a gradient, or a pattern.
+///
+/// [`PaintServer::Ref`] is a transient build-time state: the layout layer emits
+/// it while only the string `url(#id)` is known, then
+/// [`crate::render_tree::SvgRenderTree::resolve_references`] rewrites it into
+/// a typed [`PaintServer::Gradient`]/[`PaintServer::Pattern`] `Arc` handle once
+/// the definition maps are collected. No `Ref` value survives past build time.
 #[derive(Debug, Clone)]
 pub enum PaintServer {
     /// Solid color fill/stroke.
     Solid(SvgColor),
-    /// Reference to a gradient defined elsewhere (e.g. `url(#myGrad)`).
-    Gradient(String),
-    /// Reference to a pattern defined elsewhere (e.g. `url(#myPattern)`).
-    Pattern(String),
+    /// A resolved gradient definition (`url(#myGrad)`).
+    Gradient(Arc<GradientDef>),
+    /// A resolved pattern definition (`url(#myPattern)`).
+    Pattern(Arc<PatternDef>),
+    /// Transient id reference, resolved to `Gradient`/`Pattern` after build.
+    Ref(Id),
 }
 
 /// Definitions collected from `<defs>` during render tree construction.
@@ -130,12 +142,15 @@ pub struct GradientStop {
 impl PaintServer {
     /// Try to parse a paint server value from an attribute string.
     /// Supports: `"red"`, `"#ff0000"`, `"url(#myGrad)"`.
+    ///
+    /// URL references yield a transient [`PaintServer::Ref`], which is resolved
+    /// to a typed handle later (see [`PaintServer`]).
     pub fn from_attr(val: &str) -> Option<Self> {
         let val = val.trim();
         if val.starts_with("url(#") && val.ends_with(')') {
             let id = &val[5..val.len() - 1];
             if !id.is_empty() {
-                return Some(PaintServer::Gradient(id.to_owned()));
+                return Some(PaintServer::Ref(Id::new(id)));
             }
         }
         crate::style::color::parse_css_color(val).map(PaintServer::Solid)

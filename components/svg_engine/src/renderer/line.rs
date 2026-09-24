@@ -20,16 +20,16 @@ impl Render for Line {
         let Some(stroke) = &ctx.style.stroke else {
             return;
         };
-        if (stroke.color.is_none() && stroke.paint_server.is_none()) || stroke.width <= 0.0 {
+        if (stroke.color.is_none() && stroke.paint_server.is_none()) || stroke.width.get() <= 0.0 {
             return;
         }
 
         // Delegate to the shared line-segment helper with absolute coordinates.
         stroke::stroke_line_segment(
-            ctx.svg_origin.x + self.x1,
-            ctx.svg_origin.y + self.y1,
-            ctx.svg_origin.x + self.x2,
-            ctx.svg_origin.y + self.y2,
+            ctx.svg_origin.x + self.x1.get(),
+            ctx.svg_origin.y + self.y1.get(),
+            ctx.svg_origin.x + self.x2.get(),
+            ctx.svg_origin.y + self.y2.get(),
             ctx,
         );
     }

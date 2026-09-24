@@ -14,6 +14,7 @@ use layout_api::{LayoutElement, LayoutNode, LayoutNodeType};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::style::gradient::PaintServer;
 use svg_engine::style::*;
+use svg_engine::units::{Length, Opacity};
 
 use super::style::get_attr;
 
@@ -134,7 +135,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                         style.fill = Some(FillParams {
                             color: Some(c),
                             paint_server: None,
-                            opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(1.0),
+                            opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(Opacity::ONE),
                             fill_rule: style
                                 .fill
                                 .as_ref()
@@ -142,11 +143,11 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                                 .unwrap_or(FillRule::NonZero),
                         });
                     },
-                    PaintServer::Gradient(id) => {
+                    PaintServer::Ref(id) => {
                         style.fill = Some(FillParams {
                             color: None,
-                            paint_server: Some(PaintServer::Gradient(id)),
-                            opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(1.0),
+                            paint_server: Some(PaintServer::Ref(id)),
+                            opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(Opacity::ONE),
                             fill_rule: style
                                 .fill
                                 .as_ref()
@@ -154,7 +155,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                                 .unwrap_or(FillRule::NonZero),
                         });
                     },
-                    PaintServer::Pattern(_) => {},
+                    _ => {},
                 }
             } else if value.eq_ignore_ascii_case("none") {
                 style.fill = None;
@@ -163,7 +164,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
         "fill-opacity" => {
             if let Ok(op) = value.parse::<f32>() {
                 if let Some(ref mut fill) = style.fill {
-                    fill.opacity = op.clamp(0.0, 1.0);
+                    fill.opacity = Opacity::new(op);
                 }
             }
         },
@@ -174,8 +175,8 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                         style.stroke = Some(StrokeParams {
                             color: Some(c),
                             paint_server: None,
-                            opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(1.0),
-                            width: style.stroke.as_ref().map(|s| s.width).unwrap_or(1.0),
+                            opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(Opacity::ONE),
+                            width: style.stroke.as_ref().map(|s| s.width).unwrap_or(Length::new(1.0)),
                             line_cap: style
                                 .stroke
                                 .as_ref()
@@ -199,12 +200,12 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                                 .unwrap_or(0.0),
                         });
                     },
-                    PaintServer::Gradient(id) => {
+                    PaintServer::Ref(id) => {
                         style.stroke = Some(StrokeParams {
                             color: None,
-                            paint_server: Some(PaintServer::Gradient(id)),
-                            opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(1.0),
-                            width: style.stroke.as_ref().map(|s| s.width).unwrap_or(1.0),
+                            paint_server: Some(PaintServer::Ref(id)),
+                            opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(Opacity::ONE),
+                            width: style.stroke.as_ref().map(|s| s.width).unwrap_or(Length::new(1.0)),
                             line_cap: style
                                 .stroke
                                 .as_ref()
@@ -228,7 +229,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                                 .unwrap_or(0.0),
                         });
                     },
-                    PaintServer::Pattern(_) => {},
+                    _ => {},
                 }
             } else if value.eq_ignore_ascii_case("none") {
                 style.stroke = None;
@@ -237,14 +238,14 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
         "stroke-width" => {
             if let Ok(w) = value.trim_end_matches("px").parse::<f32>() {
                 if let Some(ref mut s) = style.stroke {
-                    s.width = w.max(0.0);
+                    s.width = Length::new(w.max(0.0));
                 }
             }
         },
         "stroke-opacity" => {
             if let Ok(op) = value.parse::<f32>() {
                 if let Some(ref mut s) = style.stroke {
-                    s.opacity = op.clamp(0.0, 1.0);
+                    s.opacity = Opacity::new(op);
                 }
             }
         },
@@ -292,7 +293,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
         },
         "opacity" => {
             if let Ok(op) = value.parse::<f32>() {
-                style.opacity = op.clamp(0.0, 1.0);
+                style.opacity = Opacity::new(op);
             }
         },
         "visibility" => {

@@ -21,9 +21,11 @@ use style::values::computed::svg::{
 };
 use style::values::generics::svg::SVGLength;
 use style::values::specified::box_ as stylo_box;
+use svg_engine::render_tree::DefRef;
 use svg_engine::style::gradient::PaintServer;
 use svg_engine::style::transform_ops::{TransformOp, parse_transform_str};
 use svg_engine::style::*;
+use svg_engine::units::{Id, Length, Opacity};
 use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
@@ -90,8 +92,8 @@ impl FromComputedValues for FillParams {
         let inherited_svg = values.get_inherited_svg();
         let paint = resolve_svg_paint(&inherited_svg.fill, values);
         let opacity = match inherited_svg.fill_opacity {
-            SVGOpacity::Opacity(opacity) => opacity,
-            _ => 1.0,
+            SVGOpacity::Opacity(opacity) => Opacity::new(opacity),
+            _ => Opacity::ONE,
         };
         let fill_rule = match inherited_svg.fill_rule {
             style::computed_values::fill_rule::T::Nonzero => FillRule::NonZero,
@@ -108,7 +110,7 @@ impl FromComputedValues for FillParams {
                 // Fall back to black (SVG default) if the paint server
                 // reference is invalid / not found at render time.
                 color: Some(SvgColor::new_rgb(0, 0, 0)),
-                paint_server: Some(PaintServer::Gradient(id)),
+                paint_server: Some(PaintServer::Ref(Id::new(id))),
                 opacity,
                 fill_rule,
             }),
@@ -140,8 +142,8 @@ impl FromComputedValues for StrokeParams {
         let inherited_svg = values.get_inherited_svg();
         let paint = resolve_svg_paint(&inherited_svg.stroke, values);
         let opacity = match inherited_svg.stroke_opacity {
-            SVGOpacity::Opacity(opacity) => opacity,
-            _ => 1.0,
+            SVGOpacity::Opacity(opacity) => Opacity::new(opacity),
+            _ => Opacity::ONE,
         };
         let width = match &inherited_svg.stroke_width {
             SVGLength::LengthPercentage(nn_lp) => {
@@ -186,7 +188,7 @@ impl FromComputedValues for StrokeParams {
                 color: Some(color),
                 paint_server: None,
                 opacity,
-                width,
+                width: Length::new(width),
                 line_cap,
                 line_join,
                 miter_limit,
@@ -197,9 +199,9 @@ impl FromComputedValues for StrokeParams {
                 // Fall back to black (SVG default) if the paint server
                 // reference is invalid / not found at render time.
                 color: Some(SvgColor::new_rgb(0, 0, 0)),
-                paint_server: Some(PaintServer::Gradient(id)),
+                paint_server: Some(PaintServer::Ref(Id::new(id))),
                 opacity,
-                width,
+                width: Length::new(width),
                 line_cap,
                 line_join,
                 miter_limit,
@@ -268,8 +270,8 @@ impl FromComputedValues for NodeStyle {
         let effects = match (clip_path_ref, mask_ref) {
             (None, None) => None,
             (clip, mask) => Some(NodeEffects {
-                clip_path: clip,
-                mask,
+                clip_path: clip.map(|id| DefRef::Ref(Id::new(id))),
+                mask: mask.map(|id| DefRef::Ref(Id::new(id))),
                 filter: None,
             }),
         };
@@ -302,7 +304,7 @@ impl FromComputedValues for NodeStyle {
                 image_rendering: None,
             }),
             effects,
-            opacity: values.get_effects().opacity,
+            opacity: Opacity::new(values.get_effects().opacity),
             markers: None,
         })
     }
@@ -363,8 +365,8 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
     let stroke = style.stroke.get_or_insert_with(|| StrokeParams {
         color: None,
         paint_server: None,
-        opacity: 1.0,
-        width: 1.0,
+        opacity: Opacity::ONE,
+        width: Length::new(1.0),
         line_cap: LineCap::Butt,
         line_join: LineJoin::Miter,
         miter_limit: 4.0,
@@ -377,28 +379,28 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
             stroke.color = Some(c);
             stroke.paint_server = None;
         },
-        Some(PaintServer::Gradient(id)) => {
+        Some(PaintServer::Ref(id)) => {
             stroke.color = Some(SvgColor::new_rgb(0, 0, 0));
-            stroke.paint_server = Some(PaintServer::Gradient(id));
-        },
-        Some(PaintServer::Pattern(_)) => {
-            stroke.color = Some(SvgColor::new_rgb(0, 0, 0));
-            stroke.paint_server = None;
+            stroke.paint_server = Some(PaintServer::Ref(id));
         },
         None => {
             stroke.color = None;
             stroke.paint_server = None;
         },
+        // Gradient/Pattern variants are only produced by the post-build
+        // resolve pass, never by `from_attr`.
+        _ => {},
     }
     if let Some(v) = read_attr("stroke-width") {
-        stroke.width = v
-            .trim_end_matches("px")
-            .parse::<f32>()
-            .unwrap_or(1.0)
-            .max(0.0);
+        stroke.width = Length::new(
+            v.trim_end_matches("px")
+                .parse::<f32>()
+                .unwrap_or(1.0)
+                .max(0.0),
+        );
     }
     if let Some(v) = read_attr("stroke-opacity") {
-        stroke.opacity = v.parse::<f32>().unwrap_or(1.0).clamp(0.0, 1.0);
+        stroke.opacity = Opacity::new(v.parse::<f32>().unwrap_or(1.0));
     }
     if let Some(v) = read_attr("stroke-linecap") {
         stroke.line_cap = match v.trim() {
@@ -468,7 +470,7 @@ fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeS
     let fill = style.fill.get_or_insert_with(|| FillParams {
         color: None,
         paint_server: None,
-        opacity: 1.0,
+        opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     });
     match PaintServer::from_attr(&fill_value) {
@@ -476,21 +478,20 @@ fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeS
             fill.color = Some(c);
             fill.paint_server = None;
         },
-        Some(PaintServer::Gradient(id)) => {
+        Some(PaintServer::Ref(id)) => {
             fill.color = Some(SvgColor::new_rgb(0, 0, 0));
-            fill.paint_server = Some(PaintServer::Gradient(id));
-        },
-        Some(PaintServer::Pattern(id)) => {
-            fill.color = Some(SvgColor::new_rgb(0, 0, 0));
-            fill.paint_server = Some(PaintServer::Pattern(id));
+            fill.paint_server = Some(PaintServer::Ref(id));
         },
         None => {
             fill.color = None;
             fill.paint_server = None;
         },
+        // Gradient/Pattern variants are only produced by the post-build
+        // resolve pass, never by `from_attr`.
+        _ => {},
     }
     if let Some(v) = read_attr("fill-opacity") {
-        fill.opacity = v.parse::<f32>().unwrap_or(1.0).clamp(0.0, 1.0);
+        fill.opacity = Opacity::new(v.parse::<f32>().unwrap_or(1.0));
     }
     if let Some(v) = read_attr("fill-rule") {
         fill.fill_rule = match v.trim() {
@@ -552,7 +553,11 @@ fn apply_marker_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
     let end = read_attr("marker-end").as_deref().and_then(extract_url_fragment);
 
     if start.is_some() || mid.is_some() || end.is_some() {
-        style.markers = Some(MarkerRefs { start, mid, end });
+        style.markers = Some(MarkerRefs {
+            start: start.map(|id| DefRef::Ref(Id::new(id))),
+            mid: mid.map(|id| DefRef::Ref(Id::new(id))),
+            end: end.map(|id| DefRef::Ref(Id::new(id))),
+        });
     }
 }
 
@@ -678,7 +683,7 @@ fn apply_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle)
     // opacity
     if let Some(v) = read_attr_or_inline("opacity") {
         if let Ok(op) = v.parse::<f32>() {
-            style.opacity = op.clamp(0.0, 1.0);
+            style.opacity = Opacity::new(op);
         }
     }
     // display
@@ -711,7 +716,7 @@ fn apply_filter_attribute(element: &ServoLayoutElement, style: &mut NodeStyle) {
         style.effects = Some(NodeEffects {
             clip_path: existing.clip_path,
             mask: existing.mask,
-            filter: Some(filter_id),
+            filter: Some(DefRef::Ref(Id::new(filter_id))),
         });
     }
 }
@@ -739,7 +744,7 @@ pub(crate) fn build_style_from_attrs(node: ServoLayoutNode, context: &LayoutCont
         }
         if let Some(v) = read_attr_or_inline("opacity") {
             if let Ok(op) = v.parse::<f32>() {
-                style.opacity = op.clamp(0.0, 1.0);
+                style.opacity = Opacity::new(op);
             }
         }
         if let Some(v) = read_attr_or_inline("display") {

@@ -2,17 +2,20 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! SVG node effects — clip-path and mask.
-//!
-//! These types are future SVG spec stubs and are not yet wired into
-//! the rendering pipeline.
+//! SVG node effects — clip-path, mask, and filter.
+
+use crate::render_tree::{ClipPathDef, DefRef, FilterDef, MaskDef};
 
 /// SVG node effects — clip-path, mask, filter.
-#[allow(dead_code)]
+///
+/// Each reference is a [`DefRef`]: a raw `#id` string during tree building,
+/// rewritten to a typed `Arc` handle by [`SvgRenderTree::resolve_references`].
+///
+/// [`SvgRenderTree::resolve_references`]: crate::render_tree::SvgRenderTree::resolve_references
 #[derive(Debug, Clone)]
 pub struct NodeEffects {
-    pub clip_path: Option<String>,
-    pub mask: Option<String>,
+    pub clip_path: Option<DefRef<ClipPathDef>>,
+    pub mask: Option<DefRef<MaskDef>>,
     /// Reference to a `<filter>` element (e.g., `url(#myBlur)`).
-    pub filter: Option<String>,
+    pub filter: Option<DefRef<FilterDef>>,
 }

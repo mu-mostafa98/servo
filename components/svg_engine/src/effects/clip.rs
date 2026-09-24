@@ -15,8 +15,8 @@ use webrender_api::{
     ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId,
 };
 
-use crate::render_tree::{ClipPathUnits, SvgRenderNode};
-use crate::renderer::{ClipMaskProvider, clip_chain_option};
+use crate::render_tree::{ClipPathUnits, DefRef, SvgRenderNode};
+use crate::renderer::clip_chain_option;
 use crate::shapes::{ClipGeometry, ComplexClip};
 
 // ======================= Clip Path Resolution =======================
@@ -37,7 +37,6 @@ pub(crate) struct MaskClip {
 /// are returned unchanged (`parent_clip_chain` and an empty list).
 pub(crate) fn resolve_node_clip_path(
     node: &SvgRenderNode,
-    clips: &dyn ClipMaskProvider,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
@@ -46,19 +45,15 @@ pub(crate) fn resolve_node_clip_path(
     let Some(ref effects) = node.style.effects else {
         return (parent_clip_chain, Vec::new());
     };
-    let Some(ref clip_path_id) = effects.clip_path else {
-        return (parent_clip_chain, Vec::new());
-    };
-    let Some(clip_def) = clips.clip_path(clip_path_id) else {
-        log::warn!("clip-path \"{}\" not found in definitions", clip_path_id);
+    let Some(clip_def) = effects.clip_path.as_ref().and_then(DefRef::resolved) else {
         return (parent_clip_chain, Vec::new());
     };
 
     let mut current_chain = parent_clip_chain;
     let mut complex = Vec::new();
-    for shape in &clip_def.shapes {
+    clip_def.root.for_each_shape_leaf(&mut |shape, _style| {
         let Some(geometry) = shape.clip_info(svg_origin, clip_def.clip_path_units) else {
-            continue;
+            return;
         };
 
         match geometry {
@@ -95,7 +90,7 @@ pub(crate) fn resolve_node_clip_path(
                 complex.push(ComplexClip { path, fill_rule });
             },
         }
-    }
+    });
 
     (current_chain, complex)
 }
@@ -111,26 +106,18 @@ pub(crate) fn resolve_node_clip_path(
 /// shape once per mask clip achieves union (OR) behavior.
 pub(crate) fn build_mask_clips(
     node: &SvgRenderNode,
-    clips: &dyn ClipMaskProvider,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
     wr: &mut DisplayListBuilder,
 ) -> Option<Vec<MaskClip>> {
     let effects = node.style.effects.as_ref()?;
-    let mask_id = effects.mask.as_ref()?;
-    let mask_def = match clips.mask(mask_id) {
-        Some(d) => d,
-        None => {
-            log::warn!("mask \"{}\" not found in definitions", mask_id);
-            return None;
-        },
-    };
+    let mask_def = effects.mask.as_ref().and_then(DefRef::resolved)?;
 
-    let mut masks = Vec::with_capacity(mask_def.shapes.len());
-    for (shape, _style) in &mask_def.shapes {
+    let mut masks = Vec::new();
+    mask_def.root.for_each_shape_leaf(&mut |shape, _style| {
         let Some(geometry) = shape.clip_info(svg_origin, ClipPathUnits::UserSpaceOnUse) else {
-            continue;
+            return;
         };
 
         let (chain, complex) = match geometry {
@@ -171,7 +158,7 @@ pub(crate) fn build_mask_clips(
         };
 
         masks.push(MaskClip { chain, complex });
-    }
+    });
 
     if masks.is_empty() { None } else { Some(masks) }
 }

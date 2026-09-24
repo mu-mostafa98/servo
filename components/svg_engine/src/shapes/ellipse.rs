@@ -6,14 +6,15 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
 use crate::render_tree::ClipPathUnits;
 use crate::shapes::{ClipGeometry, OBJECT_BBOX_REF_SIZE, all_equal_radius};
+use crate::units::Length;
 
 /// SVG `<ellipse>` element.
 #[derive(Debug, Clone, Copy)]
 pub struct Ellipse {
-    pub cx: f32,
-    pub cy: f32,
-    pub rx: f32,
-    pub ry: f32,
+    pub cx: Length,
+    pub cy: Length,
+    pub rx: Length,
+    pub ry: Length,
 }
 
 impl Ellipse {
@@ -25,13 +26,13 @@ impl Ellipse {
     ) -> Option<ClipGeometry> {
         let (cx, cy, rx, ry) = if units == ClipPathUnits::ObjectBoundingBox {
             (
-                self.cx * OBJECT_BBOX_REF_SIZE,
-                self.cy * OBJECT_BBOX_REF_SIZE,
-                self.rx * OBJECT_BBOX_REF_SIZE,
-                self.ry * OBJECT_BBOX_REF_SIZE,
+                self.cx.get() * OBJECT_BBOX_REF_SIZE,
+                self.cy.get() * OBJECT_BBOX_REF_SIZE,
+                self.rx.get() * OBJECT_BBOX_REF_SIZE,
+                self.ry.get() * OBJECT_BBOX_REF_SIZE,
             )
         } else {
-            (self.cx, self.cy, self.rx, self.ry)
+            (self.cx.get(), self.cy.get(), self.rx.get(), self.ry.get())
         };
         let bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(svg_origin.x + cx - rx, svg_origin.y + cy - ry),

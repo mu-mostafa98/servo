@@ -20,6 +20,7 @@ use style::values::computed::LengthPercentage;
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use svg_engine::shapes::*;
 use svg_engine::text::{DominantBaseline, TextAnchor, TextSpan};
+use svg_engine::units::Length;
 
 use super::style::get_attr;
 
@@ -258,12 +259,12 @@ fn parse_rect(
         return None;
     }
     Some(Shape::Rect(Rectangle {
-        x,
-        y,
-        width: w,
-        height: h,
-        rx,
-        ry,
+        x: Length::new(x),
+        y: Length::new(y),
+        width: Length::new(w),
+        height: Length::new(h),
+        rx: rx.map(Length::new),
+        ry: ry.map(Length::new),
     }))
 }
 
@@ -294,7 +295,7 @@ fn parse_circle(
         },
         None => (dom_length("cx", get, fs), dom_length("cy", get, fs)),
     };
-    Some(Shape::Circle(Circle { cx, cy, r }))
+    Some(Shape::Circle(Circle { cx: Length::new(cx), cy: Length::new(cy), r: Length::new(r) }))
 }
 
 fn parse_ellipse(
@@ -333,15 +334,15 @@ fn parse_ellipse(
         },
         None => (dom_length("cx", get, fs), dom_length("cy", get, fs)),
     };
-    Some(Shape::Ellipse(Ellipse { cx, cy, rx, ry }))
+    Some(Shape::Ellipse(Ellipse { cx: Length::new(cx), cy: Length::new(cy), rx: Length::new(rx), ry: Length::new(ry) }))
 }
 
 fn parse_line(get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Option<Shape> {
     Some(Shape::Line(Line {
-        x1: parse_length("x1", get, fs).unwrap_or(0.0),
-        y1: parse_length("y1", get, fs).unwrap_or(0.0),
-        x2: parse_length("x2", get, fs).unwrap_or(0.0),
-        y2: parse_length("y2", get, fs).unwrap_or(0.0),
+        x1: Length::new(parse_length("x1", get, fs).unwrap_or(0.0)),
+        y1: Length::new(parse_length("y1", get, fs).unwrap_or(0.0)),
+        x2: Length::new(parse_length("x2", get, fs).unwrap_or(0.0)),
+        y2: Length::new(parse_length("y2", get, fs).unwrap_or(0.0)),
     }))
 }
 

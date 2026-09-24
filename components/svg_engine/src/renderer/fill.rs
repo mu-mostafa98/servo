@@ -11,6 +11,7 @@
 //! pattern that previously lived in each shape's `Render` impl.
 
 use lyon::math::Point as LyonPoint;
+use std::sync::Arc;
 use webrender_api::units::LayoutRect;
 use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 
@@ -29,7 +30,7 @@ use crate::tessellator::FillStyle;
 /// when the caller has a rounded-rect clip for corner radii).
 pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderContext) {
     let Some(fill) = &ctx.style.fill else { return };
-    let opacity = fill.opacity * ctx.style.opacity;
+    let opacity = fill.opacity.get() * ctx.style.opacity.get();
 
     // Use the shape's clip chain so gradient/pattern fills respect
     // rounded-rect clips (needed for circles/ellipses with corners).
@@ -37,19 +38,17 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
     ctx.clip_chain_id = clip;
 
     match &fill.paint_server {
-        Some(PaintServer::Gradient(id)) => {
-            // Guard: sometimes a pattern ID overlaps a gradient ID in the maps.
-            if ctx.paints.has_pattern(id) {
-                pattern::fill_rect_with_pattern_by_id(id, bounds, ctx, opacity);
-            } else {
-                gradient::fill_rect_with_gradient_by_id(id, bounds, ctx, opacity);
-            }
+        Some(PaintServer::Gradient(def)) => {
+            let def = Arc::clone(def);
+            gradient::fill_rect_with_gradient(def.as_ref(), bounds, ctx, opacity);
         },
-        Some(PaintServer::Pattern(id)) => {
-            pattern::fill_rect_with_pattern_by_id(id, bounds, ctx, opacity);
+        Some(PaintServer::Pattern(def)) => {
+            let def = Arc::clone(def);
+            pattern::fill_rect_with_pattern(def.as_ref(), bounds, ctx, opacity);
         },
-        Some(PaintServer::Solid(_)) => {
-            // Solid paint server — handled via fill.color below.
+        Some(PaintServer::Solid(_) | PaintServer::Ref(_)) => {
+            // Solid paint server (or a transient `Ref` that should already have
+            // been resolved) — handled via fill.color below.
         },
         None => {
             if let Some(svg_color) = fill.color {
@@ -86,37 +85,32 @@ pub(crate) fn fill_polygon(
     ctx: &mut RenderContext,
 ) {
     let Some(fill) = &ctx.style.fill else { return };
-    let opacity = fill.opacity * ctx.style.opacity;
+    let opacity = fill.opacity.get() * ctx.style.opacity.get();
     let bx = bounds.min.x;
     let by = bounds.min.y;
     let bw = bounds.size().width.max(1.0);
     let bh = bounds.size().height.max(1.0);
 
     match &fill.paint_server {
-        Some(PaintServer::Gradient(id)) => {
-            if ctx.paints.has_pattern(id) {
-                handle_pattern_fill(id, pts, bounds, fill_rule, ctx, opacity);
-                return;
-            }
-            if let Some(grad_def) = ctx.paints.gradient(id) {
-                match grad_def {
-                    GradientDef::Linear(lg) => {
-                        let (gx1, gy1, gx2, gy2) =
-                            resolve_linear_gradient_coords(lg, bx, by, bw, bh, ctx);
-                        let fill_style =
-                            build_linear_fill_style(lg, gx1, gy1, gx2, gy2, opacity, ctx);
-                        tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
-                    },
-                    GradientDef::Radial(rg) => {
-                        let (fx, fy, r2) = resolve_radial_gradient_coords(rg, bx, by, bw, bh, ctx);
-                        let fill_style = build_radial_fill_style(rg, fx, fy, r2, opacity, ctx);
-                        tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
-                    },
-                }
+        Some(PaintServer::Gradient(def)) => {
+            let def = Arc::clone(def);
+            match def.as_ref() {
+                GradientDef::Linear(lg) => {
+                    let (gx1, gy1, gx2, gy2) =
+                        resolve_linear_gradient_coords(lg, bx, by, bw, bh, ctx);
+                    let fill_style = build_linear_fill_style(lg, gx1, gy1, gx2, gy2, opacity, ctx);
+                    tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
+                },
+                GradientDef::Radial(rg) => {
+                    let (fx, fy, r2) = resolve_radial_gradient_coords(rg, bx, by, bw, bh, ctx);
+                    let fill_style = build_radial_fill_style(rg, fx, fy, r2, opacity, ctx);
+                    tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
+                },
             }
         },
-        Some(PaintServer::Pattern(id)) => {
-            handle_pattern_fill(id, pts, bounds, fill_rule, ctx, opacity);
+        Some(PaintServer::Pattern(def)) => {
+            let def = Arc::clone(def);
+            handle_pattern_fill(def.as_ref(), pts, bounds, fill_rule, ctx, opacity);
         },
         _ => {
             if let Some(svg_color) = fill.color {
@@ -234,22 +228,14 @@ fn build_radial_fill_style<'a>(
 
 /// Helper: fill a polygon with a pattern paint server.
 fn handle_pattern_fill(
-    id: &str,
+    def: &crate::render_tree::PatternDef,
     pts: &[LyonPoint],
     bounds: LayoutRect,
     fill_rule: crate::style::FillRule,
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
-    let def = match ctx.paints.pattern(id) {
-        Some(d) => d,
-        None => {
-            log::warn!("SVG pattern \"{}\" not found in definitions", id);
-            return;
-        },
-    };
-
-    if def.shapes.is_empty() {
+    if def.root.children.is_empty() {
         return;
     }
 
@@ -279,7 +265,7 @@ fn handle_pattern_fill(
     };
 
     let fill_style = FillStyle::Pattern {
-        shapes: &def.shapes,
+        root: &def.root,
         tile_w,
         tile_h,
         ox,

@@ -12,26 +12,15 @@
 
 use webrender_api::FilterOp;
 
-use crate::render_tree::{FilterPrimitive, SvgRenderNode};
-use crate::renderer::FilterProvider;
+use crate::render_tree::{DefRef, FilterPrimitive, SvgRenderNode};
 
 /// If the node references a filter, return the list of WebRender
 /// [`FilterOp`]s.  Returns `None` when no filter is present, the
 /// referenced filter definition is missing, or the filter resolves
 /// to an empty op list.
-pub(crate) fn get_filter_ops(
-    node: &SvgRenderNode,
-    filters: &dyn FilterProvider,
-) -> Option<Vec<FilterOp>> {
+pub(crate) fn get_filter_ops(node: &SvgRenderNode) -> Option<Vec<FilterOp>> {
     let effects = node.style.effects.as_ref()?;
-    let filter_id = effects.filter.as_ref()?;
-    let filter_def = match filters.filter(filter_id) {
-        Some(d) => d,
-        None => {
-            log::warn!("filter \"{}\" not found in definitions", filter_id);
-            return None;
-        },
-    };
+    let filter_def = effects.filter.as_ref().and_then(DefRef::resolved)?;
 
     let mut ops = Vec::new();
     for prim in &filter_def.primitives {

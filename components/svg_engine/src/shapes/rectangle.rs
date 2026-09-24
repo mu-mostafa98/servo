@@ -6,16 +6,17 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
 use crate::render_tree::ClipPathUnits;
 use crate::shapes::{ClipGeometry, OBJECT_BBOX_REF_SIZE, all_equal_radius};
+use crate::units::Length;
 
 /// SVG `<rect>` element.
 #[derive(Debug, Clone, Copy)]
 pub struct Rectangle {
-    pub x: f32,
-    pub y: f32,
-    pub width: f32,
-    pub height: f32,
-    pub rx: Option<f32>,
-    pub ry: Option<f32>,
+    pub x: Length,
+    pub y: Length,
+    pub width: Length,
+    pub height: Length,
+    pub rx: Option<Length>,
+    pub ry: Option<Length>,
 }
 
 impl Rectangle {
@@ -27,29 +28,34 @@ impl Rectangle {
     ) -> Option<ClipGeometry> {
         let (x, y, w, h) = if units == ClipPathUnits::ObjectBoundingBox {
             (
-                self.x * OBJECT_BBOX_REF_SIZE,
-                self.y * OBJECT_BBOX_REF_SIZE,
-                self.width * OBJECT_BBOX_REF_SIZE,
-                self.height * OBJECT_BBOX_REF_SIZE,
+                self.x.get() * OBJECT_BBOX_REF_SIZE,
+                self.y.get() * OBJECT_BBOX_REF_SIZE,
+                self.width.get() * OBJECT_BBOX_REF_SIZE,
+                self.height.get() * OBJECT_BBOX_REF_SIZE,
             )
         } else {
-            (self.x, self.y, self.width, self.height)
+            (
+                self.x.get(),
+                self.y.get(),
+                self.width.get(),
+                self.height.get(),
+            )
         };
         let bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(svg_origin.x + x, svg_origin.y + y),
             LayoutSize::new(w, h),
         );
         let radii = match (self.rx, self.ry) {
-            (Some(rx), _) if rx > 0.0 => {
+            (Some(rx), _) if rx.get() > 0.0 => {
                 let ry = self.ry.unwrap_or(rx);
                 Some(all_equal_radius(
-                    rx.clamp(0.0, w / 2.0),
-                    ry.clamp(0.0, h / 2.0),
+                    rx.get().clamp(0.0, w / 2.0),
+                    ry.get().clamp(0.0, h / 2.0),
                 ))
             },
-            (_, Some(ry)) if ry > 0.0 => Some(all_equal_radius(
-                ry.clamp(0.0, h / 2.0),
-                ry.clamp(0.0, h / 2.0),
+            (_, Some(ry)) if ry.get() > 0.0 => Some(all_equal_radius(
+                ry.get().clamp(0.0, h / 2.0),
+                ry.get().clamp(0.0, h / 2.0),
             )),
             _ => None,
         };

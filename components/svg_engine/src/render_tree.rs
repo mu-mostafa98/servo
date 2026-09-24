@@ -3,15 +3,17 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use svgtypes::ViewBox as SvgViewBox;
 
 pub use crate::image::SvgImage;
-use crate::renderer::{ClipMaskProvider, FilterProvider, MarkerProvider, PaintResourceProvider};
+use crate::renderer::PaintResourceProvider;
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
-use crate::style::gradient::GradientDef;
+use crate::style::gradient::{GradientDef, PaintServer};
 use crate::style::transform_ops::TransformOp;
+use crate::units::{Id, Length};
 pub use crate::text::TextSpan;
 
 // ======================= PreserveAspectRatio =======================
@@ -62,52 +64,31 @@ pub struct SvgRenderTree {
     pub root: SvgRenderNode,
     pub viewport: ViewportInfo,
     /// Gradient definitions keyed by their `id` (without the `#` prefix).
-    pub gradients: HashMap<String, GradientDef>,
+    pub gradients: HashMap<String, Arc<GradientDef>>,
     /// Clip path definitions keyed by their `id` (without the `#` prefix).
-    pub clip_paths: HashMap<String, ClipPathDef>,
+    pub clip_paths: HashMap<String, Arc<ClipPathDef>>,
     /// Pattern definitions keyed by their `id` (without the `#` prefix).
-    pub patterns: HashMap<String, PatternDef>,
+    pub patterns: HashMap<String, Arc<PatternDef>>,
     /// Mask definitions keyed by their `id` (without the `#` prefix).
-    pub masks: HashMap<String, MaskDef>,
+    pub masks: HashMap<String, Arc<MaskDef>>,
     /// Filter definitions keyed by their `id` (without the `#` prefix).
-    pub filters: HashMap<String, FilterDef>,
+    pub filters: HashMap<String, Arc<FilterDef>>,
     /// Marker definitions keyed by their `id` (without the `#` prefix).
-    pub markers: HashMap<String, MarkerDef>,
+    pub markers: HashMap<String, Arc<MarkerDef>>,
 }
 
 impl PaintResourceProvider for SvgRenderTree {
     fn gradient(&self, id: &str) -> Option<&GradientDef> {
-        self.gradients.get(id)
+        self.gradients.get(id).map(|def| def.as_ref())
     }
     fn pattern(&self, id: &str) -> Option<&PatternDef> {
-        self.patterns.get(id)
-    }
-}
-
-impl ClipMaskProvider for SvgRenderTree {
-    fn clip_path(&self, id: &str) -> Option<&ClipPathDef> {
-        self.clip_paths.get(id)
-    }
-    fn mask(&self, id: &str) -> Option<&MaskDef> {
-        self.masks.get(id)
-    }
-}
-
-impl FilterProvider for SvgRenderTree {
-    fn filter(&self, id: &str) -> Option<&FilterDef> {
-        self.filters.get(id)
-    }
-}
-
-impl MarkerProvider for SvgRenderTree {
-    fn marker(&self, id: &str) -> Option<&MarkerDef> {
-        self.markers.get(id)
+        self.patterns.get(id).map(|def| def.as_ref())
     }
 }
 
 #[derive(Debug)]
 pub struct SvgRenderNode {
-    pub id: Option<String>,
+    pub id: Option<Id>,
     pub tag: SvgTag,
     pub style: NodeStyle,
     /// SVG transforms applied to this node (CSS transform + `transform` attribute).
@@ -159,16 +140,16 @@ pub enum Container {
 
 #[derive(Debug, Clone, Copy)]
 pub struct ViewBox {
-    pub min_x: f32,
-    pub min_y: f32,
-    pub width: f32,
-    pub height: f32,
+    pub min_x: Length,
+    pub min_y: Length,
+    pub width: Length,
+    pub height: Length,
 }
 
 #[derive(Debug, Clone)]
 pub struct ViewportInfo {
-    pub width: f32,
-    pub height: f32,
+    pub width: Length,
+    pub height: Length,
     pub view_box: Option<ViewBox>,
     /// When true, the viewport clip is omitted (CSS `overflow: visible`).
     pub overflow_visible: bool,
@@ -185,11 +166,11 @@ pub struct ViewportInfo {
 #[derive(Debug, Clone)]
 pub struct SvgViewport {
     /// Position of the viewport in the parent user coordinate system.
-    pub x: f32,
-    pub y: f32,
+    pub x: Length,
+    pub y: Length,
     /// Size of the viewport (from the `width`/`height` attributes).
-    pub width: f32,
-    pub height: f32,
+    pub width: Length,
+    pub height: Length,
     pub view_box: Option<ViewBox>,
     /// Parsed preserveAspectRatio (defaults to xMidYMid meet via the renderer).
     pub aspect_ratio: Option<AspectRatio>,
@@ -200,8 +181,9 @@ pub struct SvgViewport {
 /// A clip path definition collected from `<clipPath>`.
 #[derive(Debug)]
 pub struct ClipPathDef {
-    /// The shapes that make up the clipping region.
-    pub shapes: Vec<Shape>,
+    /// The clipping region, stored as a nested node subtree so that `<g>`,
+    /// `<use>`, `<text>` and nested-`<defs>` children are not silently dropped.
+    pub root: SvgRenderNode,
     /// Coordinate system for the clip path.
     pub clip_path_units: ClipPathUnits,
 }
@@ -225,8 +207,8 @@ pub enum PatternUnits {
 /// A mask definition collected from `<mask>`.
 #[derive(Debug)]
 pub struct MaskDef {
-    /// The content shapes and their styles.
-    pub shapes: Vec<(Shape, NodeStyle)>,
+    /// The mask content, stored as a nested node subtree (see [`ClipPathDef::root`]).
+    pub root: SvgRenderNode,
 }
 
 /// A single SVG filter primitive operation.
@@ -303,7 +285,7 @@ pub enum PatternContentUnits {
 }
 
 /// A pattern definition collected from `<pattern>`.
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 pub struct PatternDef {
     pub width: f32,
     pub height: f32,
@@ -317,8 +299,9 @@ pub struct PatternDef {
     /// `preserveAspectRatio`.
     pub view_box: Option<ViewBox>,
     pub aspect_ratio: Option<AspectRatio>,
-    /// The content shapes and their styles that form the pattern tile.
-    pub shapes: Vec<(Shape, NodeStyle)>,
+    /// The pattern tile content, stored as a nested node subtree (see
+    /// [`ClipPathDef::root`]).
+    pub root: SvgRenderNode,
 }
 
 /// Coordinate system for marker sizing.
@@ -350,8 +333,8 @@ impl Default for MarkerOrient {
 /// A marker definition collected from `<marker>`.
 #[derive(Debug)]
 pub struct MarkerDef {
-    /// Marker content shapes and their styles.
-    pub shapes: Vec<(Shape, NodeStyle)>,
+    /// Marker content, stored as a nested node subtree (see [`ClipPathDef::root`]).
+    pub root: SvgRenderNode,
     /// Optional `viewBox` establishing the marker's coordinate system.
     pub view_box: Option<ViewBox>,
     /// Reference point (in viewBox coords) aligned with the path vertex.
@@ -362,6 +345,48 @@ pub struct MarkerDef {
     pub marker_height: f32,
     pub marker_units: MarkerUnits,
     pub orient: MarkerOrient,
+}
+
+/// A reference to a definition (clip-path, mask, filter, or marker) that
+/// starts as a raw `#id` string during tree building and is rewritten to a
+/// typed [`Arc`] handle once the definition maps are collected (see
+/// [`SvgRenderTree::resolve_references`]).
+///
+/// This mirrors [`PaintServer`]'s transient `Ref` variant: the build layer
+/// emits [`DefRef::Ref`] and the post-build resolve pass rewrites it to
+/// [`DefRef::Resolved`], so render-time consumers only ever see a resolved
+/// handle.
+#[derive(Debug)]
+pub enum DefRef<T> {
+    /// Raw `#id` (without the `#` prefix), not yet resolved.
+    Ref(Id),
+    /// Typed definition handle, resolved after build.
+    Resolved(Arc<T>),
+}
+
+// Manual `Clone` rather than a derived one: both variants clone without
+// cloning `T` itself (`Arc<T>` clones the handle, `String` clones the id),
+// so `DefRef<T>` is `Clone` for *any* `T` — including definitions like
+// `ClipPathDef`/`MaskDef`/`FilterDef`/`MarkerDef` that embed a non-`Clone`
+// `SvgRenderNode`.
+impl<T> Clone for DefRef<T> {
+    fn clone(&self) -> Self {
+        match self {
+            DefRef::Ref(id) => DefRef::Ref(id.clone()),
+            DefRef::Resolved(def) => DefRef::Resolved(Arc::clone(def)),
+        }
+    }
+}
+
+impl<T> DefRef<T> {
+    /// The resolved definition, or `None` if this reference is still
+    /// unresolved (which should not happen after the resolve pass).
+    pub fn resolved(&self) -> Option<&T> {
+        match self {
+            DefRef::Resolved(def) => Some(def.as_ref()),
+            DefRef::Ref(_) => None,
+        }
+    }
 }
 
 // ======================= AspectRatio Parsing =======================
@@ -419,10 +444,10 @@ pub fn parse_aspect_ratio(value: &str) -> AspectRatio {
 /// Handles formats: `"0 0 200 200"`, `"0,0 200,200"`, etc.
 pub fn extract_viewbox(value: &str) -> Option<ViewBox> {
     value.parse::<SvgViewBox>().ok().map(|vb| ViewBox {
-        min_x: vb.x as f32,
-        min_y: vb.y as f32,
-        width: vb.w as f32,
-        height: vb.h as f32,
+        min_x: Length::new(vb.x as f32),
+        min_y: Length::new(vb.y as f32),
+        width: Length::new(vb.w as f32),
+        height: Length::new(vb.h as f32),
     })
 }
 
@@ -479,6 +504,28 @@ impl SvgRenderNode {
             VisitDecision::Stop => (),
         }
     }
+
+    /// Flatten container groups and invoke `f(shape, style)` for every shape
+    /// leaf under this node. Non-shape leaves (text, image, …) are skipped.
+    ///
+    /// Used by clip/mask collection and pattern/marker content rendering so
+    /// that nested `<g>`/`<use>`/`<symbol>` wrappers inside a definition are
+    /// honoured instead of being silently dropped.
+    pub(crate) fn for_each_shape_leaf<F>(&self, f: &mut F)
+    where
+        F: FnMut(&Shape, &NodeStyle),
+    {
+        match &self.tag {
+            SvgTag::Shape(shape) => f(shape, &self.style),
+            // `<defs>` content is never rendered directly — skip it.
+            SvgTag::Container(Container::Defs) => {},
+            _ => {
+                for child in &self.children {
+                    child.for_each_shape_leaf(f);
+                }
+            },
+        }
+    }
 }
 
 impl SvgRenderTree {
@@ -491,6 +538,119 @@ impl SvgRenderTree {
     pub fn visit_mut(&mut self, visitor: &mut dyn SvgRenderTreeVisitorMut) {
         self.root.accept_mut(visitor);
     }
+
+    /// Rewrite every transient reference in the tree — [`PaintServer::Ref`]
+    /// paint servers and [`DefRef::Ref`] clip-path/mask/filter/marker handles —
+    /// into typed `Arc` handles using the collected definition maps.
+    ///
+    /// A paint-server reference that resolves to neither a gradient nor a
+    /// pattern falls back to opaque black. A clip-path/mask/filter/marker
+    /// reference that does not resolve is dropped (the effect/marker is
+    /// omitted), matching SVG's ignore-broken-references behavior.
+    pub fn resolve_references(&mut self) {
+        let Self {
+            root,
+            gradients,
+            patterns,
+            clip_paths,
+            masks,
+            filters,
+            markers: marker_defs,
+            ..
+        } = self;
+        resolve_references_in(
+            root,
+            gradients,
+            patterns,
+            clip_paths,
+            masks,
+            filters,
+            marker_defs,
+        );
+    }
+}
+
+fn resolve_references_in(
+    node: &mut SvgRenderNode,
+    gradients: &HashMap<String, Arc<GradientDef>>,
+    patterns: &HashMap<String, Arc<PatternDef>>,
+    clip_paths: &HashMap<String, Arc<ClipPathDef>>,
+    masks: &HashMap<String, Arc<MaskDef>>,
+    filters: &HashMap<String, Arc<FilterDef>>,
+    marker_defs: &HashMap<String, Arc<MarkerDef>>,
+) {
+    if let Some(fill) = node.style.fill.as_mut() {
+        if let Some(paint) = fill.paint_server.as_mut() {
+            resolve_paint_server(paint, gradients, patterns);
+        }
+    }
+    if let Some(stroke) = node.style.stroke.as_mut() {
+        if let Some(paint) = stroke.paint_server.as_mut() {
+            resolve_paint_server(paint, gradients, patterns);
+        }
+    }
+
+    if let Some(effects) = node.style.effects.as_mut() {
+        effects.clip_path = resolve_ref(effects.clip_path.take(), clip_paths);
+        effects.mask = resolve_ref(effects.mask.take(), masks);
+        effects.filter = resolve_ref(effects.filter.take(), filters);
+    }
+    if let Some(effects) = node.style.effects.as_ref() {
+        if effects.clip_path.is_none() && effects.mask.is_none() && effects.filter.is_none() {
+            node.style.effects = None;
+        }
+    }
+
+    if let Some(refs) = node.style.markers.as_mut() {
+        refs.start = resolve_ref(refs.start.take(), marker_defs);
+        refs.mid = resolve_ref(refs.mid.take(), marker_defs);
+        refs.end = resolve_ref(refs.end.take(), marker_defs);
+    }
+    if let Some(refs) = node.style.markers.as_ref() {
+        if refs.start.is_none() && refs.mid.is_none() && refs.end.is_none() {
+            node.style.markers = None;
+        }
+    }
+
+    for child in &mut node.children {
+        resolve_references_in(
+            child,
+            gradients,
+            patterns,
+            clip_paths,
+            masks,
+            filters,
+            marker_defs,
+        );
+    }
+}
+
+fn resolve_paint_server(
+    paint: &mut PaintServer,
+    gradients: &HashMap<String, Arc<GradientDef>>,
+    patterns: &HashMap<String, Arc<PatternDef>>,
+) {
+    let id = match paint {
+        PaintServer::Ref(id) => id.clone(),
+        _ => return,
+    };
+    *paint = if let Some(def) = gradients.get(id.as_str()) {
+        PaintServer::Gradient(def.clone())
+    } else if let Some(def) = patterns.get(id.as_str()) {
+        PaintServer::Pattern(def.clone())
+    } else {
+        PaintServer::Solid(svgtypes::Color::new_rgb(0, 0, 0))
+    };
+}
+
+/// Resolve a transient [`DefRef::Ref`] into a typed handle using `map`.
+/// An unresolved reference is dropped (returned as `None`); an already-resolved
+/// handle is passed through unchanged.
+fn resolve_ref<T>(reference: Option<DefRef<T>>, map: &HashMap<String, Arc<T>>) -> Option<DefRef<T>> {
+    match reference {
+        Some(DefRef::Ref(id)) => map.get(id.as_str()).cloned().map(DefRef::Resolved),
+        other => other,
+    }
 }
 
 // ======================= Tests =======================
@@ -502,19 +662,19 @@ mod tests {
     #[test]
     fn viewbox_valid() {
         let vb = extract_viewbox("0 0 200 200").unwrap();
-        assert_eq!(vb.min_x, 0.0);
-        assert_eq!(vb.min_y, 0.0);
-        assert_eq!(vb.width, 200.0);
-        assert_eq!(vb.height, 200.0);
+        assert_eq!(vb.min_x.get(), 0.0);
+        assert_eq!(vb.min_y.get(), 0.0);
+        assert_eq!(vb.width.get(), 200.0);
+        assert_eq!(vb.height.get(), 200.0);
     }
 
     #[test]
     fn viewbox_with_commas() {
         let vb = extract_viewbox("10,20 300,400").unwrap();
-        assert_eq!(vb.min_x, 10.0);
-        assert_eq!(vb.min_y, 20.0);
-        assert_eq!(vb.width, 300.0);
-        assert_eq!(vb.height, 400.0);
+        assert_eq!(vb.min_x.get(), 10.0);
+        assert_eq!(vb.min_y.get(), 20.0);
+        assert_eq!(vb.width.get(), 300.0);
+        assert_eq!(vb.height.get(), 400.0);
     }
 
     #[test]
@@ -542,8 +702,8 @@ mod tests {
     #[test]
     fn viewbox_negative_coords() {
         let vb = extract_viewbox("-100 -100 200 200").unwrap();
-        assert_eq!(vb.min_x, -100.0);
-        assert_eq!(vb.min_y, -100.0);
+        assert_eq!(vb.min_x.get(), -100.0);
+        assert_eq!(vb.min_y.get(), -100.0);
     }
 
     #[test]

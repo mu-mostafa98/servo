@@ -37,7 +37,7 @@ impl Render for Polygon {
             &bez,
             ctx.style.fill.as_ref(),
             ctx.style.stroke.as_ref(),
-            ctx.style.opacity,
+            ctx.style.opacity.get(),
             &raster_origin,
             ctx.viewbox_scale,
             ctx.device_scale,

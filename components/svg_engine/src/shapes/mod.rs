@@ -116,12 +116,12 @@ impl Shape {
 
         match self {
             Shape::Rect(r) => {
-                let x0 = r.x as f64;
-                let y0 = r.y as f64;
-                let x1 = (r.x + r.width) as f64;
-                let y1 = (r.y + r.height) as f64;
-                let rx = r.rx.unwrap_or(0.0) as f64;
-                let ry = r.ry.unwrap_or(rx as f32) as f64;
+                let x0 = r.x.get() as f64;
+                let y0 = r.y.get() as f64;
+                let x1 = (r.x.get() + r.width.get()) as f64;
+                let y1 = (r.y.get() + r.height.get()) as f64;
+                let rx = r.rx.map(|v| v.get()).unwrap_or(0.0) as f64;
+                let ry = r.ry.map(|v| v.get()).unwrap_or(rx as f32) as f64;
                 if rx > 0.0 || ry > 0.0 {
                     let radius = (rx + ry) / 2.0;
                     Some(RoundedRect::new(x0, y0, x1, y1, RoundedRectRadii::from(radius)).to_path(0.1))
@@ -130,19 +130,19 @@ impl Shape {
                 }
             },
             Shape::Circle(c) => {
-                Some(Circle::new((c.cx as f64, c.cy as f64), c.r as f64).to_path(0.1))
+                Some(Circle::new((c.cx.get() as f64, c.cy.get() as f64), c.r.get() as f64).to_path(0.1))
             },
             Shape::Ellipse(e) => {
                 Some(Ellipse::new(
-                    (e.cx as f64, e.cy as f64),
-                    Vec2::new(e.rx as f64, e.ry as f64),
+                    (e.cx.get() as f64, e.cy.get() as f64),
+                    Vec2::new(e.rx.get() as f64, e.ry.get() as f64),
                     0.0,
                 ).to_path(0.1))
             },
             Shape::Line(l) => {
                 let mut bez = BezPath::new();
-                bez.move_to((l.x1 as f64, l.y1 as f64));
-                bez.line_to((l.x2 as f64, l.y2 as f64));
+                bez.move_to((l.x1.get() as f64, l.y1.get() as f64));
+                bez.line_to((l.x2.get() as f64, l.y2.get() as f64));
                 Some(bez)
             },
             Shape::Polyline(p) => Some(points_to_bez(&p.points, false)),

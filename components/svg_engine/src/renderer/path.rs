@@ -95,7 +95,7 @@ impl Render for Path {
             &self.path,
             ctx.style.fill.as_ref(),
             ctx.style.stroke.as_ref(),
-            ctx.style.opacity,
+            ctx.style.opacity.get(),
             &raster_origin,
             ctx.viewbox_scale,
             ctx.device_scale,
@@ -168,7 +168,7 @@ pub(crate) fn rasterize_bez(
     // Expand the pixmap to include the stroke, which is centered on the path
     // outline and would otherwise be clipped at the fill's bounding box.
     if let Some(s) = stroke {
-        let inset = s.width as f64 * css_scale as f64 / 2.0;
+        let inset = s.width.get() as f64 * css_scale as f64 / 2.0;
         bbox = kurbo::Rect::new(
             bbox.x0 - inset,
             bbox.y0 - inset,
@@ -251,7 +251,7 @@ pub(crate) fn rasterize_bez(
         if let Some(paint) = resolve_stroke_paint(s, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity, paints) {
             apply_paint(&mut context, scale_paint(paint, scale as f64));
             let mut vello_stroke =
-                vello_cpu::kurbo::Stroke::new(s.width as f64 * total_scale as f64);
+                vello_cpu::kurbo::Stroke::new(s.width.get() as f64 * total_scale as f64);
             // Dash lengths/offset are in user units, so scale them by the
             // same factor as the path (viewBox scale × node-transform scale
             // × device scale) before handing them to kurbo, which implements
@@ -382,15 +382,19 @@ fn resolve_fill_paint(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     node_opacity: f32,
-    paints: &dyn PaintResourceProvider,
+    _paints: &dyn PaintResourceProvider,
 ) -> Option<ResolvedPaint> {
-    if let Some(crate::style::gradient::PaintServer::Gradient(id)) = &fill.paint_server {
-        if let Some(def) = paints.gradient(id) {
-            return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(def, w, h, viewbox_scale, bbox)));
-        }
+    if let Some(crate::style::gradient::PaintServer::Gradient(def)) = &fill.paint_server {
+        return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
+            def.as_ref(),
+            w,
+            h,
+            viewbox_scale,
+            bbox,
+        )));
     }
     if let Some(color) = &fill.color {
-        return Some(ResolvedPaint::Solid(vello_color(color, fill.opacity * node_opacity)));
+        return Some(ResolvedPaint::Solid(vello_color(color, fill.opacity.get() * node_opacity)));
     }
     None
 }
@@ -403,15 +407,19 @@ fn resolve_stroke_paint(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     node_opacity: f32,
-    paints: &dyn PaintResourceProvider,
+    _paints: &dyn PaintResourceProvider,
 ) -> Option<ResolvedPaint> {
-    if let Some(crate::style::gradient::PaintServer::Gradient(id)) = &stroke.paint_server {
-        if let Some(def) = paints.gradient(id) {
-            return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(def, w, h, viewbox_scale, bbox)));
-        }
+    if let Some(crate::style::gradient::PaintServer::Gradient(def)) = &stroke.paint_server {
+        return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
+            def.as_ref(),
+            w,
+            h,
+            viewbox_scale,
+            bbox,
+        )));
     }
     if let Some(color) = &stroke.color {
-        return Some(ResolvedPaint::Solid(vello_color(color, stroke.opacity * node_opacity)));
+        return Some(ResolvedPaint::Solid(vello_color(color, stroke.opacity.get() * node_opacity)));
     }
     None
 }

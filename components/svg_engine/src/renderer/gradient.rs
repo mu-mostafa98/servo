@@ -329,19 +329,12 @@ fn apply_grad_transform(gx: &mut f32, gy: &mut f32, ops: &[TransformOp]) {
     *gy = p.y;
 }
 
-pub(crate) fn fill_rect_with_gradient_by_id(
-    id: &str,
+pub(crate) fn fill_rect_with_gradient(
+    def: &GradientDef,
     bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
-    let def = match ctx.paints.gradient(id) {
-        Some(d) => d,
-        None => {
-            log::warn!("SVG gradient \"{} not found in definitions", id);
-            return;
-        },
-    };
     match def {
         GradientDef::Linear(lg) => {
             if !push_linear_native(lg, bounds, ctx, opacity) {

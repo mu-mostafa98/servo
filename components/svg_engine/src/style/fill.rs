@@ -7,6 +7,7 @@
 use svgtypes::Color as SvgColor;
 
 use super::gradient::PaintServer;
+use crate::units::Opacity;
 
 /// SVG fill properties.
 #[derive(Debug, Clone)]
@@ -14,7 +15,7 @@ pub struct FillParams {
     pub color: Option<SvgColor>,
     /// Paint server reference (gradient url). When set, takes priority over `color`.
     pub paint_server: Option<PaintServer>,
-    pub opacity: f32,
+    pub opacity: Opacity,
     pub fill_rule: FillRule,
 }
 

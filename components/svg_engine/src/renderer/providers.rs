@@ -4,11 +4,13 @@
 
 //! Resource provider traits for the SVG rendering pipeline.
 //!
-//! These traits abstract over where paint resources (gradients, patterns),
-//! clip masks, and filters are stored — typically the [`SvgRenderTree`]
-//! itself, but mock providers exist for non-geometric elements.
+//! The [`PaintResourceProvider`] trait abstracts over where paint resources
+//! (gradients, patterns) are stored — typically the [`SvgRenderTree`] itself,
+//! but mock providers exist for non-geometric elements. Clip-path, mask,
+//! filter, and marker references are now typed `Arc` handles resolved at
+//! build time, so they no longer go through a provider trait.
 
-use crate::render_tree::{ClipPathDef, FilterDef, MarkerDef, MaskDef, PatternDef};
+use crate::render_tree::PatternDef;
 use crate::style::gradient::GradientDef;
 
 /// Provider for paint-server resources (gradients and patterns).
@@ -18,20 +20,4 @@ pub(crate) trait PaintResourceProvider {
     fn has_pattern(&self, id: &str) -> bool {
         self.pattern(id).is_some()
     }
-}
-
-/// Provider for clip-path and mask resources.
-pub(crate) trait ClipMaskProvider {
-    fn clip_path(&self, id: &str) -> Option<&ClipPathDef>;
-    fn mask(&self, id: &str) -> Option<&MaskDef>;
-}
-
-/// Provider for filter-effect resources.
-pub(crate) trait FilterProvider {
-    fn filter(&self, id: &str) -> Option<&FilterDef>;
-}
-
-/// Provider for marker definitions.
-pub(crate) trait MarkerProvider {
-    fn marker(&self, id: &str) -> Option<&MarkerDef>;
 }
