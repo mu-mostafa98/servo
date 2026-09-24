@@ -105,12 +105,13 @@ impl Render for Path {
             ctx.paints,
             ctx.wr,
             ctx.sink,
+            None,
         );
     }
 }
 
 /// Convert an euclid `Transform2D` to a kurbo `Affine`.
-fn transform_to_affine(xform: &Transform2D<f32, (), ()>) -> vello_cpu::kurbo::Affine {
+pub(crate) fn transform_to_affine(xform: &Transform2D<f32, (), ()>) -> vello_cpu::kurbo::Affine {
     // euclid (column-vector):  x' = m11·x + m21·y + m31, y' = m12·x + m22·y + m32
     // kurbo Affine (augmented): | a c e |   x' = a·x + c·y + e
     //                           | b d f |   y' = b·x + d·y + f
@@ -140,6 +141,7 @@ pub(crate) fn rasterize_bez(
     paints: &dyn PaintResourceProvider,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
+    alpha_mask: Option<&crate::effects::mask::MaskRaster>,
 ) {
     // Approximate scalar scale of the accumulated node transform, used to keep
     // stroke widths/dashes proportional. `sqrt(|det|)` is exact for uniform
@@ -318,6 +320,32 @@ pub(crate) fn rasterize_bez(
         raster_h = ch;
     }
 
+    // Multiply the content's alpha by a rasterized luminance/alpha mask. The
+    // mask raster lives in the same layout space as `svg_origin`, so each
+    // content pixel is mapped through the shared layout coordinate system into
+    // the mask's device-resolution pixmap. Pixels outside the mask's bounding
+    // region are fully hidden (alpha 0).
+    if let Some(mask) = alpha_mask {
+        let mask_w = mask.width as usize;
+        for row in 0..raster_h {
+            for col in 0..raster_w {
+                let idx = ((row * raster_w + col) * 4) as usize;
+                let lx = raster_x + (col as f32 + 0.5) / scale;
+                let ly = raster_y + (row as f32 + 0.5) / scale;
+                let mx = (lx - mask.x) * mask.scale;
+                let my = (ly - mask.y) * mask.scale;
+                let mask_alpha: f32 = if mx < 0.0 || my < 0.0 || mx >= mask.width as f32 || my >= mask.height as f32 {
+                    0.0
+                } else {
+                    let mxi = mx as usize;
+                    let myi = my as usize;
+                    mask.data[((myi * mask_w + mxi) * 4) + 3] as f32 / 255.0
+                };
+                rgba[idx + 3] = (rgba[idx + 3] as f32 * mask_alpha).round() as u8;
+            }
+        }
+    }
+
     let mut hasher = std::collections::hash_map::DefaultHasher::new();
     rgba.hash(&mut hasher);
     let hash = hasher.finish();
@@ -337,7 +365,7 @@ pub(crate) fn rasterize_bez(
 }
 
 /// Set the resolved paint on the render context.
-fn apply_paint(context: &mut vello_cpu::RenderContext, paint: ResolvedPaint) {
+pub(crate) fn apply_paint(context: &mut vello_cpu::RenderContext, paint: ResolvedPaint) {
     match paint {
         ResolvedPaint::Solid(c) => context.set_paint(c),
         ResolvedPaint::Gradient(g) => context.set_paint(g),
@@ -345,7 +373,7 @@ fn apply_paint(context: &mut vello_cpu::RenderContext, paint: ResolvedPaint) {
 }
 
 /// Scale a resolved paint's gradient geometry into device space.
-fn scale_paint(mut paint: ResolvedPaint, scale: f64) -> ResolvedPaint {
+pub(crate) fn scale_paint(mut paint: ResolvedPaint, scale: f64) -> ResolvedPaint {
     if let ResolvedPaint::Gradient(g) = &mut paint {
         scale_gradient(g, scale);
     }
@@ -375,7 +403,7 @@ fn scale_gradient(gradient: &mut Gradient, scale: f64) {
 }
 
 /// Resolve a fill to a concrete paint (solid color or gradient).
-fn resolve_fill_paint(
+pub(crate) fn resolve_fill_paint(
     fill: &FillParams,
     w: f32,
     h: f32,

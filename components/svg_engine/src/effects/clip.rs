@@ -23,6 +23,7 @@ use crate::shapes::{ClipGeometry, ComplexClip};
 
 /// A single mask shape resolved to either a WebRender clip chain (rect /
 /// rounded-rect) or a [`ComplexClip`] applied during rasterization.
+#[derive(Clone)]
 pub(crate) struct MaskClip {
     /// WebRender clip chain for rect/rounded-rect mask shapes (native shapes).
     pub chain: ClipChainId,

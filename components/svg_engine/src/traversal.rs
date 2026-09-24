@@ -8,6 +8,8 @@
 //! masks, and filters at each node, then dispatching to shape/text/image
 //! renderers that emit WebRender display list commands.
 
+use std::rc::Rc;
+
 use euclid::Transform2D;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{
@@ -17,6 +19,7 @@ use webrender_api::{
 
 use crate::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::effects::filter::get_filter_ops;
+use crate::effects::mask::{MaskRaster, rasterize_mask};
 use crate::render_tree::*;
 use crate::renderer::{PaintResourceProvider, Render, RenderContext, clip_chain_option, transform};
 use crate::renderer::path::rasterize_bez;
@@ -75,6 +78,7 @@ pub fn render_svg_tree(
         None,
         Transform2D::<f32, (), ()>::identity(),
         sink,
+        None,
     );
 
     if pop_frame {
@@ -171,10 +175,20 @@ struct ResourceProviders<'a> {
 
 /// Bundled effect parameters — reduces argument count for `emit_geometry`.
 struct EffectParams<'a> {
-    mask_clips: &'a Option<Vec<MaskClip>>,
+    mask: &'a Option<ResolvedMask>,
     complex_clips: &'a [ComplexClip],
     filter_ops: &'a Option<Vec<webrender_api::FilterOp>>,
     paints: &'a dyn PaintResourceProvider,
+}
+
+/// A resolved mask: either a CPU-rasterized luminance/alpha pixmap (real mask
+/// semantics — see [`crate::effects::mask`]) or a set of geometric clips (the
+/// legacy approximation, kept for `objectBoundingBox` masks and non-rasterizable
+/// content such as text-only masks).
+#[derive(Clone)]
+enum ResolvedMask {
+    Raster(Rc<MaskRaster>),
+    Clips(Vec<MaskClip>),
 }
 
 // ======================= Tree Traversal =======================
@@ -201,6 +215,7 @@ fn render_node(
     mut clip_rect: Option<LayoutRect>,
     mut node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
+    inherited_mask: Option<ResolvedMask>,
 ) {
     if !node.style.is_displayed() {
         return;
@@ -305,11 +320,17 @@ fn render_node(
         cur_spatial_id,
         cur_clip_chain,
         wr,
+        node_xform,
+        raster_offset,
+        cur_viewbox_scale,
+        device_scale,
+        providers.paints,
+        inherited_mask.as_ref(),
     );
 
     // Step 4 — Render the element.
     let shape_params = EffectParams {
-        mask_clips: &resolved.mask_clips,
+        mask: &resolved.mask,
         complex_clips: &resolved.complex_clips,
         filter_ops: &resolved.filter_ops,
         paints: providers.paints,
@@ -345,6 +366,7 @@ fn render_node(
         clip_rect,
         node_xform,
         sink,
+        resolved.mask,
     );
 
     // Step 6 — Pop transform reference frames.
@@ -353,21 +375,28 @@ fn render_node(
     }
 }
 
-/// The resolved effects for a node — clip chain, mask clips, filter ops.
+/// The resolved effects for a node — clip chain, mask, filter ops.
 struct ResolvedEffects {
     clip_chain: ClipChainId,
-    mask_clips: Option<Vec<MaskClip>>,
+    mask: Option<ResolvedMask>,
     complex_clips: Vec<ComplexClip>,
     filter_ops: Option<Vec<webrender_api::FilterOp>>,
 }
 
 /// Resolve clip-path, mask, and filter effects for a node.
+#[allow(clippy::too_many_arguments)]
 fn resolve_node_effects(
     node: &SvgRenderNode,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
     wr: &mut DisplayListBuilder,
+    node_xform: Transform2D<f32, (), ()>,
+    raster_offset: LayoutPoint,
+    viewbox_scale: (f32, f32),
+    device_scale: f32,
+    paints: &dyn PaintResourceProvider,
+    inherited_mask: Option<&ResolvedMask>,
 ) -> ResolvedEffects {
     let (node_clip_chain, complex_clips) = resolve_node_clip_path(
         node,
@@ -376,12 +405,18 @@ fn resolve_node_effects(
         parent_clip_chain,
         wr,
     );
-    let mask_clips = build_mask_clips(
+    let mask = resolve_node_mask(
         node,
         cur_origin,
         cur_spatial_id,
         node_clip_chain,
         wr,
+        node_xform,
+        raster_offset,
+        viewbox_scale,
+        device_scale,
+        paints,
+        inherited_mask,
     );
     let filter_ops = get_filter_ops(node);
 
@@ -391,10 +426,55 @@ fn resolve_node_effects(
         } else {
             parent_clip_chain
         },
-        mask_clips,
+        mask,
         complex_clips,
         filter_ops,
     }
+}
+
+/// Resolve a node's `mask` reference into a [`ResolvedMask`].
+///
+/// `maskContentUnits="userSpaceOnUse"` masks are CPU-rasterized into a
+/// luminance/alpha pixmap (real mask semantics). `objectBoundingBox` masks and
+/// content that can't be rasterized (e.g. text-only masks) keep the legacy
+/// geometric-clip approximation. A node with no mask of its own inherits the
+/// enclosing group's mask.
+#[allow(clippy::too_many_arguments)]
+fn resolve_node_mask(
+    node: &SvgRenderNode,
+    cur_origin: &LayoutPoint,
+    cur_spatial_id: SpatialId,
+    parent_clip_chain: ClipChainId,
+    wr: &mut DisplayListBuilder,
+    node_xform: Transform2D<f32, (), ()>,
+    raster_offset: LayoutPoint,
+    viewbox_scale: (f32, f32),
+    device_scale: f32,
+    paints: &dyn PaintResourceProvider,
+    inherited_mask: Option<&ResolvedMask>,
+) -> Option<ResolvedMask> {
+    let Some(mask_def) = node
+        .style
+        .effects
+        .as_ref()
+        .and_then(|e| e.mask.as_ref())
+        .and_then(DefRef::resolved)
+    else {
+        return inherited_mask.cloned();
+    };
+
+    if mask_def.content_units == MaskContentUnits::UserSpaceOnUse {
+        if let Some(raster) =
+            rasterize_mask(mask_def, &raster_offset, node_xform, viewbox_scale, device_scale, paints)
+        {
+            return Some(ResolvedMask::Raster(Rc::new(raster)));
+        }
+    }
+
+    // Fall back to geometric clips (objectBoundingBox masks and non-rasterizable
+    // mask content).
+    build_mask_clips(node, cur_origin, cur_spatial_id, parent_clip_chain, wr)
+        .map(ResolvedMask::Clips)
 }
 
 // ======================= Transforms =======================
@@ -514,23 +594,19 @@ fn emit_geometry(
 
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, node_clip_chain, wr);
 
-    if let Some(clips) = params.mask_clips {
-        for mask_clip in clips {
-            // Each mask pass inherits the node's clip-path geometry plus the
-            // mask shape's own complex clip (if any).
-            let mut combined = params.complex_clips.to_vec();
-            if let Some(c) = &mask_clip.complex {
-                combined.push(c.clone());
-            }
+    match &params.mask {
+        Some(ResolvedMask::Raster(raster)) => {
+            // Real luminance/alpha mask: force CPU rasterization and multiply
+            // the content's alpha by the mask value.
             emit_shape(
                 shape,
                 &style,
                 cur_origin,
                 cur_spatial_id,
-                mask_clip.chain,
+                node_clip_chain,
                 accumulated_scale,
                 params.paints,
-                &combined,
+                params.complex_clips,
                 wr,
                 viewbox_scale,
                 device_scale,
@@ -538,26 +614,57 @@ fn emit_geometry(
                 clip_rect,
                 node_xform,
                 sink,
+                Some(raster.as_ref()),
             );
-        }
-    } else {
-        emit_shape(
-            shape,
-            &style,
-            cur_origin,
-            cur_spatial_id,
-            node_clip_chain,
-            accumulated_scale,
-            params.paints,
-            params.complex_clips,
-            wr,
-            viewbox_scale,
-            device_scale,
-            raster_offset,
-            clip_rect,
-            node_xform,
-            sink,
-        );
+        },
+        Some(ResolvedMask::Clips(clips)) => {
+            for mask_clip in clips {
+                // Each mask pass inherits the node's clip-path geometry plus the
+                // mask shape's own complex clip (if any).
+                let mut combined = params.complex_clips.to_vec();
+                if let Some(c) = &mask_clip.complex {
+                    combined.push(c.clone());
+                }
+                emit_shape(
+                    shape,
+                    &style,
+                    cur_origin,
+                    cur_spatial_id,
+                    mask_clip.chain,
+                    accumulated_scale,
+                    params.paints,
+                    &combined,
+                    wr,
+                    viewbox_scale,
+                    device_scale,
+                    raster_offset,
+                    clip_rect,
+                    node_xform,
+                    sink,
+                    None,
+                );
+            }
+        },
+        None => {
+            emit_shape(
+                shape,
+                &style,
+                cur_origin,
+                cur_spatial_id,
+                node_clip_chain,
+                accumulated_scale,
+                params.paints,
+                params.complex_clips,
+                wr,
+                viewbox_scale,
+                device_scale,
+                raster_offset,
+                clip_rect,
+                node_xform,
+                sink,
+                None,
+            );
+        },
     }
 
     if pushed_filter {
@@ -566,6 +673,7 @@ fn emit_geometry(
 }
 
 /// Emit a single render call for the shape (or one of its mask-clipped copies).
+#[allow(clippy::too_many_arguments)]
 fn emit_shape(
     shape: &crate::shapes::Shape,
     style: &crate::style::NodeStyle,
@@ -582,6 +690,7 @@ fn emit_shape(
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
+    alpha_mask: Option<&MaskRaster>,
 ) {
     // Shapes render through one of two paths: a native path that pushes
     // WebRender primitives inline (`push_rect`, `push_border`, `push_gradient`),
@@ -594,6 +703,9 @@ fn emit_shape(
     // solid colors and gradients), so route them through the native renderer,
     // which tiles the pattern via `fill_rect_with_pattern`.
     let has_pattern = style_has_pattern(style);
+    // A raster mask must be multiplied into the content's alpha at raster time,
+    // so it forces the vello path (WebRender can't express it as a clip).
+    let force_raster = alpha_mask.is_some();
 
     // Convert the shape to a bez path once and reuse it between the raster pass
     // and marker placement (both would otherwise re-derive it from `Shape`).
@@ -614,7 +726,7 @@ fn emit_shape(
         // path), so shapes carrying complex clips always rasterize and clip via
         // vello `push_clip_path`.
         let mut handled = false;
-        if complex_clips.is_empty() {
+        if !force_raster && complex_clips.is_empty() {
             handled = emit_native_gradients(
                 shape,
                 style,
@@ -671,6 +783,7 @@ fn emit_shape(
                     paints,
                     wr,
                     sink,
+                    alpha_mask,
                 );
             }
         }
@@ -1022,6 +1135,7 @@ fn emit_marker(
             paints,
             wr,
             sink,
+            None,
         );
     });
 }
@@ -1083,12 +1197,12 @@ fn emit_leaf<T: crate::renderer::Render>(
     // Apply filter stacking context if filter ops are present.
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, clip_chain_id, wr);
 
-    let effective_clip = params
-        .mask_clips
-        .as_ref()
-        .and_then(|c| c.first())
-        .map(|m| m.chain)
-        .unwrap_or(clip_chain_id);
+    let effective_clip = match &params.mask {
+        Some(ResolvedMask::Clips(clips)) => {
+            clips.first().map(|m| m.chain).unwrap_or(clip_chain_id)
+        },
+        _ => clip_chain_id,
+    };
 
     let mut ctx = RenderContext {
         style: &node.style,
@@ -1114,6 +1228,7 @@ fn emit_leaf<T: crate::renderer::Render>(
 // ======================= Child Traversal =======================
 
 /// Recurse into a node's children, skipping `<defs>` containers.
+#[allow(clippy::too_many_arguments)]
 fn recurse_children(
     node: &SvgRenderNode,
     cur_origin: &LayoutPoint,
@@ -1128,6 +1243,7 @@ fn recurse_children(
     clip_rect: Option<LayoutRect>,
     node_xform: Transform2D<f32, (), ()>,
     sink: &RasterSink,
+    inherited_mask: Option<ResolvedMask>,
 ) {
     // <defs> and <symbol> children are only rendered when referenced
     // via <use>, never directly during tree traversal.
@@ -1149,6 +1265,7 @@ fn recurse_children(
             clip_rect,
             node_xform,
             sink,
+            inherited_mask.clone(),
         );
     }
 }

@@ -10,6 +10,7 @@
 //! `<defs>` collection, visitor pattern, and edge cases.
 
 use std::collections::HashMap;
+use std::sync::Arc;
 
 use svg_engine::render_tree::*;
 use svg_engine::shapes::*;
@@ -761,6 +762,7 @@ fn radial_gradient_default_center() {
         r: GradientLength::Percentage(50.0),
         fx: GradientLength::Percentage(50.0),
         fy: GradientLength::Percentage(50.0),
+        fr: GradientLength::Number(0.0),
         units: GradientUnits::ObjectBoundingBox,
         stops: vec![],
         transform: vec![],
@@ -829,7 +831,11 @@ fn mask_def_with_shapes_and_styles() {
         viewport: None,
         children: vec![],
     };
-    let def = MaskDef { root };
+    let def = MaskDef {
+        root,
+        mask_type: MaskType::Luminance,
+        content_units: MaskContentUnits::UserSpaceOnUse,
+    };
     assert!(matches!(def.root.tag, SvgTag::Shape(_)));
 }
 
@@ -1290,7 +1296,7 @@ fn render_tree_initializes_with_empty_def_maps() {
 #[test]
 fn render_tree_with_gradient_def() {
     let mut tree = make_empty_tree();
-    let grad = GradientDef::Linear(LinearGradient {
+    let grad = Arc::new(GradientDef::Linear(LinearGradient {
         id: "g1".into(),
         href: None,
         x1: GradientLength::Number(0.0),
@@ -1301,7 +1307,7 @@ fn render_tree_with_gradient_def() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
-    });
+    }));
     tree.gradients.insert("g1".into(), grad);
     assert_eq!(tree.gradients.len(), 1);
 }
@@ -1309,7 +1315,7 @@ fn render_tree_with_gradient_def() {
 #[test]
 fn render_tree_gradient_insert_and_check() {
     let mut tree = make_empty_tree();
-    let grad = GradientDef::Linear(LinearGradient {
+    let grad = Arc::new(GradientDef::Linear(LinearGradient {
         id: "g1".into(),
         href: None,
         x1: GradientLength::Number(0.0),
@@ -1320,7 +1326,7 @@ fn render_tree_gradient_insert_and_check() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
-    });
+    }));
     tree.gradients.insert("g1".into(), grad);
     assert_eq!(tree.gradients.len(), 1);
     assert!(!tree.gradients.contains_key("missing"));

@@ -45,6 +45,7 @@ impl Render for Polyline {
             ctx.paints,
             ctx.wr,
             ctx.sink,
+            None,
         );
     }
 }

@@ -321,11 +321,32 @@ impl DefinitionParser for MaskParser {
         let id = element
             .attribute_as_str(&ns!(), &local_name!("id"))
             .map(|s| s.to_string())?;
+        let mask_type = element
+            .attribute_as_str(&ns!(), &local_name!("mask-type"))
+            .and_then(|s| match s.trim() {
+                "alpha" => Some(MaskType::Alpha),
+                _ => None,
+            })
+            .unwrap_or(MaskType::Luminance);
+        let content_units = element
+            .attribute_as_str(&ns!(), &local_name!("maskContentUnits"))
+            .and_then(|s| match s.trim() {
+                "objectBoundingBox" => Some(MaskContentUnits::ObjectBoundingBox),
+                _ => None,
+            })
+            .unwrap_or(MaskContentUnits::UserSpaceOnUse);
         let children = collect_def_content(node, builder);
         if children.is_empty() {
             return None;
         }
-        Some((id, MaskDef { root: def_content_root(children) }))
+        Some((
+            id,
+            MaskDef {
+                root: def_content_root(children),
+                mask_type,
+                content_units,
+            },
+        ))
     }
 }
 

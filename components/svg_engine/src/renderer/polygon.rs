@@ -47,6 +47,7 @@ impl Render for Polygon {
             ctx.paints,
             ctx.wr,
             ctx.sink,
+            None,
         );
     }
 }
