@@ -44,17 +44,20 @@ flowchart TD
     class WARN1,WARN2,WARN3,WARN4,WARN5 warn;
 ```
 
-The five layers defend against two kinds of attack:
+The five layers defend against three kinds of attack:
 
 1. **Resource exhaustion** — wastes CPU, memory, or stack until the engine
    hangs or crashes (DoS). Elements: nested `<g>`/`<svg>`, `<use>`,
    `<pattern>`, entity expansion.
 2. **Data exfiltration** — steals readable data and leaks it to an attacker
-   server. Elements: `<style>`, `<image>`, `@import`, `@font-face`.
+   server. Element: `<style>` (CSS attribute-selector leak).
+3. **Unauthorized remote fetch** — loads a resource (`<image>`, `@import`,
+   `@font-face`) from an origin the document's Content Security Policy (CSP)
+   does not allow.
 
 The same category can appear at more than one stage: layers 1, 4 and 5 all
-defend against resource exhaustion, and layers 2 and 3 both defend against
-data exfiltration — each guards a different stage of the pipeline.
+defend against resource exhaustion, while data exfiltration is guarded at
+layer 2 and unauthorized remote fetch at layer 3.
 
 ### XML input validation (Stage 1 — Parse)
 **Category:** resource exhaustion — deep nesting
@@ -77,7 +80,7 @@ and element count during tokenization.
 attribute selectors + `url()`.
 
 ### Fetch allowlist (Stage 3 — Fetch)
-**Category:** data exfiltration — remote fetch
+**Category:** unauthorized remote fetch
 **Example:**
 ```svg
 <svg>
