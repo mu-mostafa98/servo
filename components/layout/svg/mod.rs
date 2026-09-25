@@ -12,25 +12,17 @@
 //! | Module | Role |
 //! |--------|------|
 //! | [`builder`] | Orchestrator — assembles the render tree (Builder pattern) |
-//! | [`geometry`] | Shape construction — DOM elements → [`Shape`] |
-//! | [`style`] | Style construction — [`ComputedValues`] → [`NodeStyle`] |
-//! | [`css`] | Inline `<style>` CSS rule parsing |
 //! | [`defines`] | Definition collection — gradients, clip-paths, etc. (Strategy pattern) |
-//! | [`viewport`] | Viewport/viewBox/aspectRatio extraction |
-//! | [`transforms`] | CSS/SVG transform conversion |
+//! | [`primitives`] | Leaf parsers — attributes, geometry, text, paint, CSS, viewport, transforms |
+//! | [`style`] | Style construction — [`ComputedValues`] → [`NodeStyle`] |
 //!
 //! The main entry point is [`build_svg_tree`], called from
 //! [`crate::replaced`].
 
-pub(crate) mod attr_parsers;
 pub(crate) mod builder;
-pub(crate) mod css;
 pub(crate) mod defines;
-pub(crate) mod geometry;
-pub(crate) mod paint;
+pub(crate) mod primitives;
 pub(crate) mod style;
-pub(crate) mod transforms;
-pub(crate) mod viewport;
 
 use std::sync::Arc;
 

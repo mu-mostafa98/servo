@@ -39,6 +39,23 @@ pub(crate) fn parse_paint_server(val: &str) -> Option<PaintServer> {
     parse_css_color(val).map(PaintServer::Solid)
 }
 
+/// Parse a CSS color string (named, hex, `rgb()`/`rgba()`) into `(r, g, b, a)`
+/// float components in `[0, 1]`.
+///
+/// Used by filter primitives (`flood-color`), which store colors as raw floats.
+/// Falls back to opaque black when the value is absent, `none`, or unparseable.
+pub(crate) fn parse_color_rgba(input: &str) -> (f32, f32, f32, f32) {
+    match parse_css_color(input) {
+        Some(c) => (
+            c.red as f32 / 255.0,
+            c.green as f32 / 255.0,
+            c.blue as f32 / 255.0,
+            c.alpha as f32 / 255.0,
+        ),
+        None => (0.0, 0.0, 0.0, 1.0),
+    }
+}
+
 // ======================= Tests =======================
 
 #[cfg(test)]
@@ -90,6 +107,17 @@ mod tests {
     fn parse_color_uppercase_named() {
         assert!(parse_css_color("RED").is_some());
         assert!(parse_css_color("CornflowerBlue").is_some());
+    }
+
+    #[test]
+    fn parse_color_rgba_named() {
+        assert_eq!(parse_color_rgba("red"), (1.0, 0.0, 0.0, 1.0));
+    }
+    #[test]
+    fn parse_color_rgba_default_black() {
+        assert_eq!(parse_color_rgba("none"), (0.0, 0.0, 0.0, 1.0));
+        assert_eq!(parse_color_rgba("transparent"), (0.0, 0.0, 0.0, 1.0));
+        assert_eq!(parse_color_rgba("notacolor"), (0.0, 0.0, 0.0, 1.0));
     }
 
     #[test]

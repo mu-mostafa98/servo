@@ -16,8 +16,8 @@ use svg_engine::style::gradient::PaintServer;
 use svg_engine::style::*;
 use svg_engine::units::{Length, Opacity};
 
-use super::paint::parse_paint_server;
-use super::style::get_attr;
+use crate::svg::primitives::attrs::get_attr;
+use crate::svg::primitives::paint::parse_paint_server;
 
 /// A simple mapping from class name to (property → value) parsed from
 /// `<style>` elements inside an SVG subtree.

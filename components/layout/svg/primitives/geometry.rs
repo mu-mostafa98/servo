@@ -14,16 +14,14 @@
 //! the DOM element and construct the corresponding shape struct.  There is
 //! no shared mutable state and no side effects.
 
-use layout_api::LayoutNode;
-use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
+use script::layout_dom::ServoLayoutElement;
 use style::values::computed::LengthPercentage;
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use svg_engine::geometry::{PathCommand, PathData, Point};
 use svg_engine::element::shape::*;
-use svg_engine::element::text::{DominantBaseline, TextAnchor, TextSpan};
 use svg_engine::units::Length;
 
-use super::style::get_attr;
+use crate::svg::primitives::attrs::get_attr;
 
 const SVG_DEFAULT_FONT_SIZE: f32 = 16.0;
 
@@ -53,170 +51,6 @@ pub(crate) fn build_shape(
         "path" => parse_path(&get),
         _ => None,
     }
-}
-
-/// Build a text span from a `<text>` or `<tspan>` DOM element.
-///
-/// Only the element's **own direct text** is collected — `<tspan>` children
-/// are *not* recursed into. The builder assembles `<text>` as an ordered list
-/// of runs (one per bare text node / `<tspan>`), so that each run keeps its
-/// own style and font. This preserves per-tspan `fill` and `font-size`.
-pub(crate) fn build_text(
-    node: ServoLayoutNode,
-    get: &dyn Fn(&str) -> Option<String>,
-    fs: f32,
-) -> Option<TextSpan> {
-    let x = parse_length("x", get, fs).unwrap_or(0.0);
-    let y = parse_length("y", get, fs).unwrap_or(0.0);
-    let mut dx = parse_length_list("dx", get, fs);
-    let mut dy = parse_length_list("dy", get, fs);
-    let mut rotate = parse_rotate_list(get);
-    let text_anchor = parse_text_anchor(get);
-    let dominant_baseline = parse_dominant_baseline(get);
-    let mut text = extract_direct_text(node);
-    if text.is_empty() {
-        return None;
-    }
-    let rtl = apply_rtl_direction(&mut text, &mut dx, &mut dy, &mut rotate, get);
-    Some(TextSpan {
-        text,
-        x,
-        y,
-        dx,
-        dy,
-        rotate,
-        text_anchor,
-        rtl,
-        dominant_baseline,
-        glyphs: vec![],
-        font_instance_key: None,
-        advance_offset: 0.0,
-        font_size: fs,
-    })
-}
-
-/// Build a text span from a raw string, for bare text-node runs inside a
-/// `<text>` that have no attributes of their own (they inherit the parent's
-/// x/y/anchor). The run's style is applied by the caller via the parent node.
-pub(crate) fn build_text_run(
-    text: String,
-    get: &dyn Fn(&str) -> Option<String>,
-    fs: f32,
-) -> Option<TextSpan> {
-    if text.is_empty() {
-        return None;
-    }
-    let mut text = text;
-    let mut dx = parse_length_list("dx", get, fs);
-    let mut dy = parse_length_list("dy", get, fs);
-    let mut rotate = parse_rotate_list(get);
-    let rtl = apply_rtl_direction(&mut text, &mut dx, &mut dy, &mut rotate, get);
-    Some(TextSpan {
-        text,
-        x: parse_length("x", get, fs).unwrap_or(0.0),
-        y: parse_length("y", get, fs).unwrap_or(0.0),
-        dx,
-        dy,
-        rotate,
-        text_anchor: parse_text_anchor(get),
-        rtl,
-        dominant_baseline: parse_dominant_baseline(get),
-        glyphs: vec![],
-        font_instance_key: None,
-        advance_offset: 0.0,
-        font_size: fs,
-    })
-}
-
-fn parse_text_anchor(get: &dyn Fn(&str) -> Option<String>) -> TextAnchor {
-    get("text-anchor")
-        .as_deref()
-        .map(|v| match v.trim() {
-            "middle" => TextAnchor::Middle,
-            "end" => TextAnchor::End,
-            _ => TextAnchor::Start,
-        })
-        .unwrap_or(TextAnchor::Start)
-}
-
-fn parse_dominant_baseline(get: &dyn Fn(&str) -> Option<String>) -> DominantBaseline {
-    get("dominant-baseline")
-        .as_deref()
-        .map(|v| match v.trim() {
-            "hanging" => DominantBaseline::Hanging,
-            "middle" => DominantBaseline::Middle,
-            "central" => DominantBaseline::Central,
-            _ => DominantBaseline::Auto,
-        })
-        .unwrap_or(DominantBaseline::Auto)
-}
-
-/// If the element is `direction="rtl"`, reverse the per-character offsets (so
-/// they line up with the visual glyph order produced by RTL shaping). The text
-/// itself is left in logical order — the shaper produces the reversed glyph
-/// order for RTL.
-fn apply_rtl_direction(
-    _text: &mut String,
-    dx: &mut Vec<f32>,
-    dy: &mut Vec<f32>,
-    rotate: &mut Vec<f32>,
-    get: &dyn Fn(&str) -> Option<String>,
-) -> bool {
-    let is_rtl = get("direction")
-        .as_deref()
-        .map(|d| d.trim().eq_ignore_ascii_case("rtl"))
-        .unwrap_or(false);
-    if is_rtl {
-        dx.reverse();
-        dy.reverse();
-        rotate.reverse();
-    }
-    is_rtl
-}
-
-/// Parse the `rotate` attribute into a list of per-character angles (degrees).
-fn parse_rotate_list(get: &dyn Fn(&str) -> Option<String>) -> Vec<f32> {
-    let Some(val) = get("rotate") else { return vec![] };
-    val.split(|c: char| c == ',' || c.is_ascii_whitespace())
-        .filter_map(|s| s.trim().parse::<f32>().ok())
-        .collect()
-}
-
-/// Parse a space/comma-separated list of lengths from an attribute.
-fn parse_length_list(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Vec<f32> {
-    let Some(val) = get(name) else { return vec![] };
-    val.split(|c: char| c == ',' || c.is_ascii_whitespace())
-        .filter_map(|s| {
-            let t = s.trim();
-            if t.is_empty() {
-                None
-            } else {
-                parse_length_simple(t, fs)
-            }
-        })
-        .collect()
-}
-
-/// Parse a single length value (number or number+unit).
-fn parse_length_simple(val: &str, _fs: f32) -> Option<f32> {
-    let val = val.trim();
-    val.trim_end_matches("px").parse::<f32>().ok()
-}
-
-/// Extract the **direct** text content of a DOM node — the concatenated
-/// text of its non-element children only. `<tspan>` (and other element)
-/// children are intentionally excluded: the builder treats each `<tspan>` as
-/// its own run with its own style. This prevents flattening tspans into a
-/// single string, which would lose per-tspan `fill`/`font-size` and would
-/// insert whitespace/newlines that render as missing-glyph boxes.
-fn extract_direct_text(node: ServoLayoutNode) -> String {
-    let mut text = String::new();
-    for child in node.dom_children() {
-        if child.as_element().is_none() {
-            text.push_str(&child.text_content());
-        }
-    }
-    text
 }
 
 // ======================= Shape Parsers =======================
@@ -348,14 +182,14 @@ fn parse_line(get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Option<Shape> {
 }
 
 fn parse_polyline(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
-    use super::attr_parsers::parse_points;
+    use crate::svg::primitives::attrs::parse_points;
     parse_points(get)
         .ok()
         .map(|pts| Shape::Polyline(Polyline { points: pts }))
 }
 
 fn parse_polygon(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
-    use super::attr_parsers::parse_points;
+    use crate::svg::primitives::attrs::parse_points;
     parse_points(get)
         .ok()
         .map(|pts| Shape::Polygon(Polygon { points: pts }))
@@ -406,13 +240,13 @@ fn lp_to_f32(lp: &LengthPercentage) -> f32 {
 /// Parse a DOM length attribute as a fallback (for attributes not available
 /// through the CSS cascade, like `width`, `height`, `x1`, `y1`).
 fn dom_length(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> f32 {
-    use super::attr_parsers::parse_length;
+    use crate::svg::primitives::attrs::parse_length;
     parse_length(name, get, fs).unwrap_or(0.0)
 }
 
-/// Parse a length value using [`svg_engine::attr_parsers::parse_length`].
+/// Parse a length value using [`crate::svg::primitives::attrs::parse_length`].
 fn parse_length(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Result<f32, ()> {
-    use super::attr_parsers::parse_length;
+    use crate::svg::primitives::attrs::parse_length;
 
     parse_length(name, get, fs).map_err(|_| ())
 }

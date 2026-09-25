@@ -10,7 +10,6 @@
 //! - Parsing SVG presentation attributes (fill, stroke, opacity, etc.)
 //! - Merging CSS transform with SVG `transform` attribute
 
-use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::color::ColorSpace;
@@ -27,12 +26,12 @@ use svg_engine::style::transform::TransformOp;
 use svg_engine::style::*;
 use svg_engine::units::{Id, Length, Opacity};
 use svgtypes::Color as SvgColor;
-use web_atoms::ns;
 
-use super::css::{CssClassRules, apply_css_class_rules};
-use super::paint::parse_paint_server;
-use super::transforms::{css_transform_from_computed, parse_transform_str};
 use crate::context::LayoutContext;
+use crate::svg::primitives::attrs::{extract_url_fragment, get_attr, parse_inline_style_prop};
+use crate::svg::primitives::css::{CssClassRules, apply_css_class_rules};
+use crate::svg::primitives::paint::parse_paint_server;
+use crate::svg::primitives::transforms::{css_transform_from_computed, parse_transform_str};
 
 // ======================= FromComputedValues Trait =======================
 
@@ -309,37 +308,6 @@ impl FromComputedValues for NodeStyle {
             markers: None,
         })
     }
-}
-
-// ======================= Element helpers =======================
-
-pub(crate) fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<String> {
-    element
-        .attribute_as_str(&ns!(), &LocalName::from(attr))
-        .map(|s| s.to_string())
-}
-
-/// Extract the fragment from a `url(#fragment)` CSS/SVG URL value.
-pub(crate) fn extract_url_fragment(value: &str) -> Option<String> {
-    let trimmed = value.trim();
-    if let Some(inner) = trimmed.strip_prefix("url(") {
-        let inner = inner.trim_end_matches(')').trim();
-        inner.strip_prefix('#').map(|s| s.to_owned())
-    } else {
-        trimmed.strip_prefix('#').map(|s| s.to_owned())
-    }
-}
-
-pub(crate) fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Option<String> {
-    for part in style_value.split(';') {
-        let mut parts = part.splitn(2, ':');
-        let key = parts.next()?.trim();
-        let val = parts.next()?.trim();
-        if key.eq_ignore_ascii_case(prop_name) && !val.is_empty() {
-            return Some(val.to_owned());
-        }
-    }
-    None
 }
 
 // ======================= Presentation Attribute Merge =======================

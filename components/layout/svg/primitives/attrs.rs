@@ -12,8 +12,47 @@
 //! Length parsing is backed by [`svgtypes::Length`] for spec‑compliant handling
 //! of all SVG length units (`px`, `em`, `ex`, `in`, `cm`, `mm`, `pt`, `pc`, `%`).
 
+use html5ever::LocalName;
+use layout_api::LayoutElement;
+use script::layout_dom::ServoLayoutElement;
 use svg_engine::geometry::Point;
 use svgtypes::{Length as SvgLength, PointsParser};
+use web_atoms::ns;
+
+// ======================= Attribute access =======================
+
+/// Read an attribute from an SVG DOM element as an owned string.
+pub(crate) fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<String> {
+    element
+        .attribute_as_str(&ns!(), &LocalName::from(attr))
+        .map(|s| s.to_string())
+}
+
+/// Extract the fragment from a `url(#fragment)` CSS/SVG URL value.
+pub(crate) fn extract_url_fragment(value: &str) -> Option<String> {
+    let trimmed = value.trim();
+    if let Some(inner) = trimmed.strip_prefix("url(") {
+        let inner = inner.trim_end_matches(')').trim();
+        inner.strip_prefix('#').map(|s| s.to_owned())
+    } else {
+        trimmed.strip_prefix('#').map(|s| s.to_owned())
+    }
+}
+
+/// Parse a single `prop: value` pair out of an inline `style` attribute value.
+pub(crate) fn parse_inline_style_prop(style_value: &str, prop_name: &str) -> Option<String> {
+    for part in style_value.split(';') {
+        let mut parts = part.splitn(2, ':');
+        let key = parts.next()?.trim();
+        let val = parts.next()?.trim();
+        if key.eq_ignore_ascii_case(prop_name) && !val.is_empty() {
+            return Some(val.to_owned());
+        }
+    }
+    None
+}
+
+// ======================= Length & points =======================
 
 /// Parse a named SVG length attribute (e.g. `x="10"`, `width="50%"`).
 ///
@@ -29,9 +68,7 @@ pub(crate) fn parse_length(
     font_size: f32,
 ) -> Result<f32, String> {
     let value = get_attr(attr).ok_or_else(|| format!("missing SVG attribute: {attr}"))?;
-    let len: SvgLength = value
-        .parse()
-        .map_err(|e| format!("{attr}: {e}"))?;
+    let len: SvgLength = value.parse().map_err(|e| format!("{attr}: {e}"))?;
     Ok(to_px(len, font_size))
 }
 

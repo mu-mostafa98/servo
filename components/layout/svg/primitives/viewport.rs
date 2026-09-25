@@ -12,7 +12,7 @@ use svg_engine::units::Length;
 use svgtypes::ViewBox as SvgViewBox;
 use web_atoms::ns;
 
-use super::style::parse_inline_style_prop;
+use crate::svg::primitives::attrs::parse_inline_style_prop;
 
 /// Extract viewport info from the root `<svg>` element.
 pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>) -> ViewportInfo {
