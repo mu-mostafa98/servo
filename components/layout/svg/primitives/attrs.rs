@@ -117,6 +117,25 @@ fn to_px_resolved(len: SvgLength, font_size: f32, reference: f32) -> f32 {
     }
 }
 
+/// Parse a raw SVG length string with full unit support (`px`, `in`, `cm`, `mm`,
+/// `pt`, `pc`, `em`, `ex`, `%`), resolving a `<percentage>` against
+/// `percent_reference` and font-relative units against `font_size`.
+///
+/// Returns `None` when the string is not a valid length (e.g. `auto`, garbage).
+/// Unlike [`parse_length`] (which leaves a percentage unresolved for the caller
+/// to resolve against a known reference), this is the single-stop helper used by
+/// the viewport-establishing elements — root/nested `<svg>`, `<use>`, `<symbol>`,
+/// `<image>`, `<pattern>`, `<marker>` — whose `x`/`y`/`width`/`height` may carry
+/// any unit or a percentage (§8.8/§8.9).
+pub(crate) fn parse_length_value(
+    value: &str,
+    font_size: f32,
+    percent_reference: f32,
+) -> Option<f32> {
+    let len: SvgLength = value.trim().parse().ok()?;
+    Some(to_px_resolved(len, font_size, percent_reference))
+}
+
 /// Parse an SVG `points` attribute value into a list of coordinate pairs.
 ///
 /// Used by both `<polyline>` and `<polygon>`.  Delegates to
@@ -255,5 +274,30 @@ mod tests {
     fn parse_points_comma_variants() {
         let pts = parse_points(&|_| Some("10,20 30,40  50,60".to_owned()));
         assert_eq!(pts.len(), 3);
+    }
+
+    #[test]
+    fn parse_length_value_px_and_bare() {
+        assert_eq!(parse_length_value("40", FS, 100.0), Some(40.0));
+        assert_eq!(parse_length_value("40px", FS, 100.0), Some(40.0));
+    }
+
+    #[test]
+    fn parse_length_value_percent_resolves() {
+        // 25% of a 200px reference = 50px.
+        assert_eq!(parse_length_value("25%", FS, 200.0), Some(50.0));
+    }
+
+    #[test]
+    fn parse_length_value_absolute_units() {
+        // 1in = 96px.
+        assert_eq!(parse_length_value("1in", FS, 0.0), Some(96.0));
+    }
+
+    #[test]
+    fn parse_length_value_invalid_is_none() {
+        // `auto` and garbage are not lengths.
+        assert_eq!(parse_length_value("auto", FS, 100.0), None);
+        assert_eq!(parse_length_value("nonsense", FS, 100.0), None);
     }
 }

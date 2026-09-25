@@ -32,9 +32,15 @@ use svg_engine::document::SvgTree;
 use crate::context::LayoutContext;
 
 /// Main entry point — builds a complete `SvgTree` from an SVG DOM element.
+///
+/// `viewport_width`/`viewport_height` are the resolved root viewport dimensions
+/// (user units) computed by CSS layout; they feed the root [`SvgTree::viewport`]
+/// and the percentage-resolution reference when no viewBox is present.
 pub(crate) fn build_svg_tree<'dom>(
     node: ServoLayoutNode<'dom>,
     context: &LayoutContext,
+    viewport_width: f32,
+    viewport_height: f32,
 ) -> Option<Arc<SvgTree>> {
-    builder::SvgTreeBuilder::new(node, context).build()
+    builder::SvgTreeBuilder::new(node, context, viewport_width, viewport_height).build()
 }

@@ -293,7 +293,15 @@ impl ReplacedContents {
 
         #[cfg(feature = "svg-engine")]
         {
-            let render_tree = crate::svg::build_svg_tree(node, context);
+            // Feed the resolved viewport dimensions (already computed from the
+            // `width`/`height` presentation attributes above) into the tree so
+            // percentage resolution uses the actual viewport, not re-parsed raw
+            // attributes. Fall back to the SVG initial viewport (300×150) when
+            // neither attribute resolves to a length.
+            let viewport_width = width.map(|w| w.px()).unwrap_or(300.0);
+            let viewport_height = height.map(|h| h.px()).unwrap_or(150.0);
+            let render_tree =
+                crate::svg::build_svg_tree(node, context, viewport_width, viewport_height);
             return (
                 ReplacedContentKind::SVGElement {
                     vector_image: None,

@@ -28,7 +28,7 @@ use svg_engine::units::Length;
 use web_atoms::ns;
 
 use super::SvgTreeBuilder;
-use crate::svg::primitives::attrs::get_attr;
+use crate::svg::primitives::attrs::{get_attr, parse_length_value};
 use crate::svg::primitives::viewport::{extract_viewbox, parse_aspect_ratio};
 
 // ======================= Children Resolution =======================
@@ -98,13 +98,14 @@ fn resolve_use_children<'dom>(
     }
     resolving.insert(ref_id.clone());
 
-    // Parse x/y offset.
-    let parse_coord = |attr: &str| -> Option<f32> {
+    // Parse x/y offset — percentages resolve against the current viewport
+    // (x against width, y against height).
+    let parse_coord = |attr: &str, reference: f32| -> Option<f32> {
         element
             .attribute_as_str(&ns!(), &LocalName::from(attr))
-            .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
+            .and_then(|v| parse_length_value(v, 16.0, reference))
     };
-    let offset = (parse_coord("x"), parse_coord("y"));
+    let offset = (parse_coord("x", vw), parse_coord("y", vh));
 
     // Build target and clone with optional translation.
     let target = builder.element_ids.get(&ref_id).copied();
@@ -113,9 +114,8 @@ fn resolve_use_children<'dom>(
     // The referenced element's viewport attributes, used when the target is a
     // <symbol> whose viewBox maps its internal coordinates onto the viewport
     // declared by the <use> (falling back to the symbol's own width/height).
-    let parse_len = |e: &ServoLayoutElement, name: &str| -> Option<f32> {
-        get_attr(e, name)
-            .and_then(|s| s.trim_end_matches("px").parse::<f32>().ok())
+    let parse_len = |e: &ServoLayoutElement, name: &str, reference: f32| -> Option<f32> {
+        get_attr(e, name).and_then(|s| parse_length_value(&s, 16.0, reference))
     };
     let sym_view_box = target_element
         .and_then(|e| get_attr(&e, "viewBox"))
@@ -125,8 +125,8 @@ fn resolve_use_children<'dom>(
         .and_then(|e| get_attr(&e, "preserveAspectRatio"))
         .as_deref()
         .map(parse_aspect_ratio);
-    let sym_width = target_element.and_then(|e| parse_len(&e, "width"));
-    let sym_height = target_element.and_then(|e| parse_len(&e, "height"));
+    let sym_width = target_element.and_then(|e| parse_len(&e, "width", vw));
+    let sym_height = target_element.and_then(|e| parse_len(&e, "height", vh));
 
     let result = target
         .and_then(|t| builder.build_render_node(t, root_node, resolving, Some(use_style), vw, vh))
@@ -147,8 +147,8 @@ fn resolve_use_children<'dom>(
             // viewBox → viewport machinery used for nested <svg> elements).
             if let SvgTag::Container(Container::Symbol) = &target_node.tag {
                 if let Some(vb) = sym_view_box {
-                    let width = parse_coord("width").or(sym_width).unwrap_or(vb.width.get());
-                    let height = parse_coord("height").or(sym_height).unwrap_or(vb.height.get());
+                    let width = parse_coord("width", vw).or(sym_width).unwrap_or(vb.width.get());
+                    let height = parse_coord("height", vh).or(sym_height).unwrap_or(vb.height.get());
                     let wrapper = SvgNode {
                         id: target_node.id,
                         tag: SvgTag::Container(Container::Group),

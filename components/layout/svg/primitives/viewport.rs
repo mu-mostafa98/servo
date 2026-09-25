@@ -12,22 +12,29 @@ use svg_engine::units::Length;
 use svgtypes::ViewBox as SvgViewBox;
 use web_atoms::ns;
 
-use crate::svg::primitives::attrs::parse_inline_style_prop;
+use crate::svg::primitives::attrs::{parse_inline_style_prop, parse_length_value};
+
+/// Default SVG font size used to resolve font-relative lengths (`em`/`ex`) on
+/// viewport-establishing elements (matches the geometry layer's convention).
+const SVG_DEFAULT_FONT_SIZE: f32 = 16.0;
 
 /// Extract viewport info from the root `<svg>` element.
-pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>) -> ViewportInfo {
+///
+/// `width`/`height` are the *resolved* viewport dimensions (in user units),
+/// computed by CSS layout from the `width`/`height` presentation attributes —
+/// not re-parsed here. This keeps percentage/unit resolution for the root's
+/// viewport size in the one place that knows the containing-block size.
+pub(crate) fn extract_viewport_info<'dom>(
+    node: ServoLayoutNode<'dom>,
+    width: f32,
+    height: f32,
+) -> ViewportInfo {
     let element = node.as_element().unwrap();
     let get = |attr: &str| {
         element
             .attribute_as_str(&ns!(), &LocalName::from(attr))
             .map(|s| s.to_string())
     };
-    let svg_width = get("width")
-        .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
-        .unwrap_or(300.0);
-    let svg_height = get("height")
-        .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
-        .unwrap_or(150.0);
     let view_box = get("viewBox").as_deref().and_then(extract_viewbox);
 
     let overflow_visible = get("overflow")
@@ -43,8 +50,8 @@ pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>) -> Viewpo
         .map(parse_aspect_ratio);
 
     ViewportInfo {
-        width: Length::new(svg_width),
-        height: Length::new(svg_height),
+        width: Length::new(width),
+        height: Length::new(height),
         view_box,
         overflow_visible,
         aspect_ratio,
@@ -56,16 +63,26 @@ pub(crate) fn extract_viewport_info<'dom>(node: ServoLayoutNode<'dom>) -> Viewpo
 /// Unlike the root (whose size is imposed by layout), a nested `<svg>` carries
 /// its own `x`/`y`/`width`/`height` attributes that position and size the
 /// sub-viewport, plus an optional `viewBox` and `preserveAspectRatio`.
-pub(crate) fn extract_nested_viewport<'dom>(node: ServoLayoutNode<'dom>) -> Option<SvgViewport> {
+///
+/// `parent_vw`/`parent_vh` are the current viewport's percentage-resolution
+/// reference dimensions: the nested element's `x`/`y`/`width`/`height`
+/// percentages resolve against them (§8.8).
+pub(crate) fn extract_nested_viewport<'dom>(
+    node: ServoLayoutNode<'dom>,
+    parent_vw: f32,
+    parent_vh: f32,
+) -> Option<SvgViewport> {
     let element = node.as_element()?;
     let get = |attr: &str| {
         element
             .attribute_as_str(&ns!(), &LocalName::from(attr))
             .map(|s| s.to_string())
     };
-    let parse_len = |attr: &str, default: f32| -> f32 {
+    // `x`/`width` percentages resolve against the parent viewport width;
+    // `y`/`height` percentages against the parent viewport height.
+    let parse_len = |attr: &str, default: f32, reference: f32| -> f32 {
         get(attr)
-            .and_then(|v| v.trim_end_matches("px").parse::<f32>().ok())
+            .and_then(|v| parse_length_value(&v, SVG_DEFAULT_FONT_SIZE, reference))
             .unwrap_or(default)
     };
 
@@ -78,10 +95,12 @@ pub(crate) fn extract_nested_viewport<'dom>(node: ServoLayoutNode<'dom>) -> Opti
         .map_or(false, |v| v.trim().eq_ignore_ascii_case("visible"));
 
     Some(SvgViewport {
-        x: Length::new(parse_len("x", 0.0)),
-        y: Length::new(parse_len("y", 0.0)),
-        width: Length::new(parse_len("width", 300.0)),
-        height: Length::new(parse_len("height", 150.0)),
+        x: Length::new(parse_len("x", 0.0, parent_vw)),
+        y: Length::new(parse_len("y", 0.0, parent_vh)),
+        // A nested `<svg>` defaults to 100% of the parent viewport (§8.8), so the
+        // fallback is the parent reference dimension itself.
+        width: Length::new(parse_len("width", parent_vw, parent_vw)),
+        height: Length::new(parse_len("height", parent_vh, parent_vh)),
         view_box: get("viewBox").as_deref().and_then(extract_viewbox),
         aspect_ratio: get("preserveAspectRatio").as_deref().map(parse_aspect_ratio),
         overflow_visible,

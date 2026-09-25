@@ -55,6 +55,9 @@ pub(crate) struct SvgTreeBuilder<'dom, 'a> {
     /// Document-wide `id → DOM node` map, built once so `<use href="#id">`
     /// references resolve in O(1) instead of re-walking the document.
     element_ids: HashMap<String, ServoLayoutNode<'dom>>,
+    /// The root viewport (resolved `width`/`height` + viewBox + aspect ratio),
+    /// computed once in [`new`](SvgTreeBuilder::new) and reused by [`build`](SvgTreeBuilder::build).
+    root_viewport: ViewportInfo,
     /// Root viewport percentage-resolution reference dimensions (viewBox extent
     /// when present, else the viewport `width`/`height` attributes).
     root_vw: f32,
@@ -63,16 +66,26 @@ pub(crate) struct SvgTreeBuilder<'dom, 'a> {
 
 impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
     /// Start building from an SVG DOM element node.
-    pub(crate) fn new(node: ServoLayoutNode<'dom>, context: &'a LayoutContext<'a>) -> Self {
+    ///
+    /// `root_width`/`root_height` are the resolved viewport dimensions (user
+    /// units) supplied by CSS layout; they feed the root [`ViewportInfo`] and,
+    /// when no viewBox is present, the percentage-resolution reference.
+    pub(crate) fn new(
+        node: ServoLayoutNode<'dom>,
+        context: &'a LayoutContext<'a>,
+        root_width: f32,
+        root_height: f32,
+    ) -> Self {
         let css_rules = collect_svg_css_rules(node);
         let element_ids = build_element_id_map(node);
-        let root_viewport = extract_viewport_info(node);
+        let root_viewport = extract_viewport_info(node, root_width, root_height);
         let (root_vw, root_vh) = viewport_reference(&root_viewport);
         SvgTreeBuilder {
             root_node: node,
             context,
             css_rules,
             element_ids,
+            root_viewport,
             root_vw,
             root_vh,
         }
@@ -88,7 +101,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             self.root_vw,
             self.root_vh,
         )?;
-        let viewport = extract_viewport_info(self.root_node);
+        let viewport = self.root_viewport.clone();
         let definitions = collect_definitions(self.root_node, &self);
 
         let mut tree = SvgTree {
@@ -132,7 +145,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         // against that viewport. The root's viewport is handled via
         // `SvgTree::viewport`.
         let viewport = if tag_name == "svg" && node != root_node {
-            extract_nested_viewport(node)
+            extract_nested_viewport(node, vw, vh)
         } else {
             None
         };
@@ -237,7 +250,7 @@ fn build_tag<'dom>(
         "defs" => Some(SvgTag::Container(Container::Defs)),
         "use" => Some(SvgTag::Container(Container::Use)),
         "symbol" => Some(SvgTag::Container(Container::Symbol)),
-        "image" => build_image_tag(element, node, context).map(SvgTag::Image),
+        "image" => build_image_tag(element, node, context, vw, vh).map(SvgTag::Image),
         _ => build_shape(element, tag, computed, vw, vh).map(SvgTag::Shape),
     }
 }
@@ -253,18 +266,27 @@ fn build_image_tag(
     element: &ServoLayoutElement,
     node: ServoLayoutNode,
     context: &LayoutContext,
+    vw: f32,
+    vh: f32,
 ) -> Option<SvgImage> {
     use layout_api::LayoutNode;
     use net_traits::request::InternalRequest;
     use net_traits::image_cache::Image;
     use layout_api::LayoutImageDestination;
-    use crate::svg::primitives::attrs::parse_length;
+    use crate::svg::primitives::attrs::parse_length_value;
     let fs = 16.0;
     let get = |name: &str| get_attr(element, name);
-    let x = parse_length("x", &get, fs).unwrap_or(0.0);
-    let y = parse_length("y", &get, fs).unwrap_or(0.0);
-    let w = parse_length("width", &get, fs).unwrap_or(0.0).max(0.0);
-    let h = parse_length("height", &get, fs).unwrap_or(0.0).max(0.0);
+    // `<image>` x/width percentages resolve against the viewport width, y/height
+    // against the viewport height (§8.8).
+    let read_len = |name: &str, reference: f32, default: f32| -> f32 {
+        get(name)
+            .and_then(|v| parse_length_value(&v, fs, reference))
+            .unwrap_or(default)
+    };
+    let x = read_len("x", vw, 0.0);
+    let y = read_len("y", vh, 0.0);
+    let w = read_len("width", vw, 0.0).max(0.0);
+    let h = read_len("height", vh, 0.0).max(0.0);
     if w <= 0.0 || h <= 0.0 {
         return None;
     }
