@@ -5,6 +5,7 @@
 //! SVG `<image>` element — external image rendering.
 //! Reference: https://svgwg.org/svg2-draft/embedded.html#ImageElement
 
+use crate::model::resource::ResourceKey;
 use crate::model::tree::AspectRatio;
 
 /// An SVG `<image>` element referencing an external raster or vector image.
@@ -20,11 +21,11 @@ pub struct SvgImage {
     pub height: f32,
     /// The `href` (or `xlink:href`) attribute value — may be a URL or data URI.
     pub href: Option<String>,
-    /// The WebRender image key for the decoded raster image, resolved by the
+    /// The opaque resource key for the decoded raster image, resolved by the
     /// layout layer's image cache during build. `None` when the image has not
     /// yet loaded (or failed to load) — in that case the renderer falls back to
     /// a placeholder. When the image loads, a reflow re-resolves this to `Some`.
-    pub image_key: Option<webrender_api::ImageKey>,
+    pub image_key: Option<ResourceKey>,
     /// Intrinsic pixel width of the loaded raster image. `None` if the image
     /// hasn't loaded yet or is a vector image (no raster metadata available).
     pub natural_width: Option<u32>,

@@ -19,18 +19,23 @@ use crate::model::style::FillRule;
 ///   shape respects reference frames and is tiled correctly.
 impl Render for Polyline {
     fn render(&self, ctx: &mut RenderContext) {
-        let points = &self.points;
+        // Model points are f32; the native/bez pipeline works in kurbo f64.
+        let points: Vec<KurboPoint> = self
+            .points
+            .iter()
+            .map(|p| KurboPoint::new(p.x as f64, p.y as f64))
+            .collect();
         if points.len() < 2 {
             return;
         }
 
         if ctx.native_rendering {
             // SVG polylines are implicitly closed for filling.
-            render_native_polyline(points, ctx, true);
+            render_native_polyline(&points, ctx, true);
             return;
         }
 
-        let bez = points_to_bez(points, false);
+        let bez = points_to_bez(&points, false);
         rasterize_bez(
             &bez,
             ctx.style.fill.as_ref(),

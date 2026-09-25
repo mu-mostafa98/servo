@@ -8,7 +8,8 @@ use webrender_api::units::{LayoutPoint, LayoutRect};
 use webrender_api::DisplayListBuilder;
 
 use crate::render::renderer::{Render, RenderContext};
-use crate::model::shapes::{ComplexClip, Path};
+use crate::render::geometry::{path_data_to_bez, ComplexClip};
+use crate::model::shapes::Path;
 use crate::model::style::gradient::{GradientDef, GradientUnits, SpreadMethod};
 use crate::model::style::{FillParams, FillRule, StrokeParams};
 use crate::{RasterSink, RasterizedImage};
@@ -32,12 +33,15 @@ pub(crate) enum ResolvedPaint {
 /// Renders an SVG `<path>` via vello_cpu (solid or gradient, preserving curves).
 impl Render for Path {
     fn render(&self, ctx: &mut RenderContext) {
+        // Round-trip the model path back into kurbo space for the native/bez
+        // pipeline.
+        let bez = path_data_to_bez(&self.path);
+
         if ctx.native_rendering {
             // Pattern content: render natively so reference frames apply.
             // Stroke each subpath independently (no connecting segments);
             // fill only closed paths.
-            let has_close = self
-                .path
+            let has_close = bez
                 .elements()
                 .iter()
                 .any(|e| matches!(e, PathEl::ClosePath));
@@ -47,7 +51,7 @@ impl Render for Path {
                 .as_ref()
                 .map(|f| f.fill_rule)
                 .unwrap_or(FillRule::NonZero);
-            let subpaths = flatten_subpaths(&self.path);
+            let subpaths = flatten_subpaths(&bez);
             let stroke_before_fill = crate::render::renderer::paint_order_stroke_before_fill(ctx);
             let has_stroke = ctx.style.stroke.is_some();
             let has_fill = has_close && ctx.style.fill.is_some();
@@ -91,7 +95,7 @@ impl Render for Path {
             ctx.svg_origin.y + ctx.raster_offset.y,
         );
         rasterize_bez(
-            &self.path,
+            &bez,
             ctx.style.fill.as_ref(),
             ctx.style.stroke.as_ref(),
             ctx.style.opacity.get(),

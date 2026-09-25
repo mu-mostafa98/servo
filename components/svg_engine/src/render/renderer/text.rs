@@ -15,6 +15,7 @@ use webrender_api::{
 };
 
 use crate::render::renderer::{Render, RenderContext, to_colorf};
+use crate::render::to_wr_font_key;
 use crate::model::text::TextSpan;
 
 const FALLBACK_ADVANCE: f32 = 8.0;
@@ -132,12 +133,13 @@ impl TextSpan {
         if !self.rotate.iter().any(|a| *a != 0.0) {
             let mut i = 0;
             while i < self.glyphs.len() {
-                let Some(font_key) = self.glyphs[i].font_instance_key else {
+                let Some(rk) = self.glyphs[i].font_instance_key else {
                     i += 1;
                     continue; // fallback glyph with no font — skip
                 };
+                let font_key = to_wr_font_key(rk);
                 let mut j = i + 1;
-                while j < self.glyphs.len() && self.glyphs[j].font_instance_key == Some(font_key)
+                while j < self.glyphs.len() && self.glyphs[j].font_instance_key == Some(rk)
                 {
                     j += 1;
                 }
@@ -177,7 +179,8 @@ impl TextSpan {
         // Per SVG, a shorter list applies its last value to remaining chars.
         let last_angle = self.rotate.last().copied().unwrap_or(0.0);
         for (i, g) in self.glyphs.iter().enumerate() {
-            let Some(font_key) = g.font_instance_key else { continue };
+            let Some(rk) = g.font_instance_key else { continue };
+            let font_key = to_wr_font_key(rk);
             let angle = self.rotate.get(i).copied().unwrap_or(last_angle);
             if let Some(color) = fill_color {
                 push_glyph(

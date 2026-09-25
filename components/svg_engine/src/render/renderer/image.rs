@@ -20,6 +20,7 @@ use webrender_api::{
 
 use crate::model::image::SvgImage;
 use crate::render::renderer::{Render, RenderContext};
+use crate::render::to_wr_image_key;
 use crate::render::traversal::compute_viewbox_transform;
 
 impl Render for SvgImage {
@@ -64,12 +65,13 @@ impl Render for SvgImage {
 
         if let Some(image_key) = self.image_key {
             // Image is loaded — draw the raster image, filling the fitted rect.
+            let key = to_wr_image_key(image_key);
             ctx.wr.push_image(
                 &common,
                 bounds,
                 ImageRendering::Auto,
                 AlphaType::PremultipliedAlpha,
-                image_key,
+                key,
                 ColorF::WHITE,
             );
             return;

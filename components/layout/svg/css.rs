@@ -16,6 +16,7 @@ use svg_engine::style::gradient::PaintServer;
 use svg_engine::style::*;
 use svg_engine::units::{Length, Opacity};
 
+use super::paint::parse_paint_server;
 use super::style::get_attr;
 
 /// A simple mapping from class name to (property → value) parsed from
@@ -129,7 +130,7 @@ pub(crate) fn apply_css_class_rules(
 fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
     match prop {
         "fill" | "fill-color" => {
-            if let Some(ps) = PaintServer::from_attr(value) {
+            if let Some(ps) = parse_paint_server(value) {
                 match ps {
                     PaintServer::Solid(c) => {
                         style.fill = Some(FillParams {
@@ -169,7 +170,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
             }
         },
         "stroke" | "stroke-color" => {
-            if let Some(ps) = PaintServer::from_attr(value) {
+            if let Some(ps) = parse_paint_server(value) {
                 match ps {
                     PaintServer::Solid(c) => {
                         style.stroke = Some(StrokeParams {

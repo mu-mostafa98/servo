@@ -8,9 +8,10 @@
 //! [`crate::render`] half — it only describes *what* an SVG is (shapes, style,
 //! tree structure, units), not *how* it is drawn.
 
-pub mod attr_parsers;
 pub mod error;
+pub mod geometry;
 pub mod image;
+pub mod resource;
 pub mod shapes;
 pub mod style;
 pub mod text;

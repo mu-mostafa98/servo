@@ -23,7 +23,7 @@ use crate::render::effects::mask::{MaskRaster, rasterize_mask};
 use crate::model::tree::*;
 use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
 use crate::render::renderer::path::rasterize_bez;
-use crate::model::shapes::ComplexClip;
+use crate::render::geometry::ComplexClip;
 use crate::RasterSink;
 use kurbo::BezPath;
 

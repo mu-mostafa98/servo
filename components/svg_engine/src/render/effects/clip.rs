@@ -17,7 +17,7 @@ use webrender_api::{
 
 use crate::model::tree::{ClipPathUnits, DefRef, SvgNode};
 use crate::render::renderer::clip_chain_option;
-use crate::model::shapes::{ClipGeometry, ComplexClip};
+use crate::render::geometry::{ClipGeometry, ComplexClip};
 
 // ======================= Clip Path Resolution =======================
 

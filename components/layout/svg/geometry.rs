@@ -18,6 +18,7 @@ use layout_api::LayoutNode;
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::values::computed::LengthPercentage;
 use style::values::generics::length::GenericLengthPercentageOrAuto;
+use svg_engine::geometry::{PathCommand, PathData, Point};
 use svg_engine::shapes::*;
 use svg_engine::text::{DominantBaseline, TextAnchor, TextSpan};
 use svg_engine::units::Length;
@@ -347,14 +348,14 @@ fn parse_line(get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Option<Shape> {
 }
 
 fn parse_polyline(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
-    use svg_engine::attr_parsers::parse_points;
+    use super::attr_parsers::parse_points;
     parse_points(get)
         .ok()
         .map(|pts| Shape::Polyline(Polyline { points: pts }))
 }
 
 fn parse_polygon(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
-    use svg_engine::attr_parsers::parse_points;
+    use super::attr_parsers::parse_points;
     parse_points(get)
         .ok()
         .map(|pts| Shape::Polygon(Polygon { points: pts }))
@@ -364,7 +365,35 @@ fn parse_path(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
     let d = get("d")?;
     kurbo::BezPath::from_svg(&d)
         .ok()
-        .map(|path| Shape::Path(Path { path }))
+        .map(|bez| Shape::Path(Path { path: bez_to_path_data(&bez) }))
+}
+
+/// Convert a parsed [`kurbo::BezPath`] into the model's pure [`PathData`].
+///
+/// The engine's model stores paths without any `kurbo` dependency, so this is
+/// the DOM → model boundary: `kurbo::BezPath::from_svg` parses the `d`
+/// attribute, and here we copy the flattened command list (coordinates as f32)
+/// into the model representation.
+fn bez_to_path_data(bez: &kurbo::BezPath) -> PathData {
+    let commands = bez
+        .elements()
+        .iter()
+        .map(|el| match el {
+            kurbo::PathEl::MoveTo(p) => PathCommand::MoveTo(Point::new(p.x as f32, p.y as f32)),
+            kurbo::PathEl::LineTo(p) => PathCommand::LineTo(Point::new(p.x as f32, p.y as f32)),
+            kurbo::PathEl::QuadTo(c, p) => PathCommand::QuadTo(
+                Point::new(c.x as f32, c.y as f32),
+                Point::new(p.x as f32, p.y as f32),
+            ),
+            kurbo::PathEl::CurveTo(c1, c2, p) => PathCommand::CurveTo(
+                Point::new(c1.x as f32, c1.y as f32),
+                Point::new(c2.x as f32, c2.y as f32),
+                Point::new(p.x as f32, p.y as f32),
+            ),
+            kurbo::PathEl::ClosePath => PathCommand::Close,
+        })
+        .collect();
+    PathData { commands }
 }
 
 // ======================= Helpers =======================
@@ -377,13 +406,13 @@ fn lp_to_f32(lp: &LengthPercentage) -> f32 {
 /// Parse a DOM length attribute as a fallback (for attributes not available
 /// through the CSS cascade, like `width`, `height`, `x1`, `y1`).
 fn dom_length(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> f32 {
-    use svg_engine::attr_parsers::parse_length;
+    use super::attr_parsers::parse_length;
     parse_length(name, get, fs).unwrap_or(0.0)
 }
 
 /// Parse a length value using [`svg_engine::attr_parsers::parse_length`].
 fn parse_length(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Result<f32, ()> {
-    use svg_engine::attr_parsers::parse_length;
+    use super::attr_parsers::parse_length;
 
     parse_length(name, get, fs).map_err(|_| ())
 }

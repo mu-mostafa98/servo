@@ -7,13 +7,12 @@
 //! This module defines style-related enums and structs based on the SVG 2 specification.
 //! Each style category has its own file — [`fill`] for fill properties, [`stroke`] for
 //! stroke properties, [`hints`] for rendering hints, [`effects`] for node effects,
-//! [`visibility`] for SVG visibility/display, [`transform_ops`] for SVG transform
-//! operations, and [`color`] for color parsing.
+//! [`visibility`] for SVG visibility/display, and [`transform_ops`] for SVG transform
+//! operations.
 //!
 //! Style construction (FromComputedValues, FromCssAttrs) lives in
 //! [`crate::layout::svg_builder`].
 
-pub mod color;
 pub(crate) mod fill;
 pub mod gradient;
 pub(crate) mod hints;

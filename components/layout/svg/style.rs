@@ -23,14 +23,15 @@ use style::values::generics::svg::SVGLength;
 use style::values::specified::box_ as stylo_box;
 use svg_engine::tree::DefRef;
 use svg_engine::style::gradient::PaintServer;
-use svg_engine::style::transform_ops::{TransformOp, parse_transform_str};
+use svg_engine::style::transform_ops::TransformOp;
 use svg_engine::style::*;
 use svg_engine::units::{Id, Length, Opacity};
 use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
 use super::css::{CssClassRules, apply_css_class_rules};
-use super::transforms::css_transform_from_computed;
+use super::paint::parse_paint_server;
+use super::transforms::{css_transform_from_computed, parse_transform_str};
 use crate::context::LayoutContext;
 
 // ======================= FromComputedValues Trait =======================
@@ -374,7 +375,7 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
         dash_offset: 0.0,
     });
 
-    match PaintServer::from_attr(&stroke_value) {
+    match parse_paint_server(&stroke_value) {
         Some(PaintServer::Solid(c)) => {
             stroke.color = Some(c);
             stroke.paint_server = None;
@@ -473,7 +474,7 @@ fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeS
         opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     });
-    match PaintServer::from_attr(&fill_value) {
+    match parse_paint_server(&fill_value) {
         Some(PaintServer::Solid(c)) => {
             fill.color = Some(c);
             fill.paint_server = None;

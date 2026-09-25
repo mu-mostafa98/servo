@@ -13,6 +13,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use svg_engine::tree::*;
+use svg_engine::geometry::{PathCommand, PathData, Point};
 use svg_engine::shapes::*;
 use svg_engine::style::gradient::{SpreadMethod, *};
 use svg_engine::style::transform_ops::TransformOp;
@@ -117,9 +118,9 @@ fn line_data() {
 #[test]
 fn polyline_data() {
     let pts = vec![
-        kurbo::Point::new(0.0, 0.0),
-        kurbo::Point::new(50.0, 100.0),
-        kurbo::Point::new(100.0, 0.0),
+        Point::new(0.0, 0.0),
+        Point::new(50.0, 100.0),
+        Point::new(100.0, 0.0),
     ];
     let p = Polyline { points: pts };
     assert_eq!(p.points.len(), 3);
@@ -128,9 +129,9 @@ fn polyline_data() {
 #[test]
 fn polygon_data() {
     let pts = vec![
-        kurbo::Point::new(0.0, 0.0),
-        kurbo::Point::new(100.0, 0.0),
-        kurbo::Point::new(50.0, 100.0),
+        Point::new(0.0, 0.0),
+        Point::new(100.0, 0.0),
+        Point::new(50.0, 100.0),
     ];
     let p = Polygon { points: pts };
     assert_eq!(p.points.len(), 3);
@@ -138,14 +139,32 @@ fn polygon_data() {
 
 #[test]
 fn path_data_parse() {
-    let path = kurbo::BezPath::from_svg("M10 10 L100 100").unwrap();
+    let path = PathData {
+        commands: vec![
+            PathCommand::MoveTo(Point::new(10.0, 10.0)),
+            PathCommand::LineTo(Point::new(100.0, 100.0)),
+        ],
+    };
     let p = Path { path };
-    assert_eq!(p.path.elements().len(), 2);
+    assert_eq!(p.path.commands.len(), 2);
 }
 
 #[test]
-fn path_data_invalid_rejected() {
-    assert!(kurbo::BezPath::from_svg("M invalid").is_err());
+fn path_data_curve_command() {
+    let path = PathData {
+        commands: vec![
+            PathCommand::MoveTo(Point::new(0.0, 0.0)),
+            PathCommand::CurveTo(
+                Point::new(10.0, 0.0),
+                Point::new(20.0, 10.0),
+                Point::new(30.0, 10.0),
+            ),
+            PathCommand::Close,
+        ],
+    };
+    let p = Path { path };
+    assert_eq!(p.path.commands.len(), 3);
+    assert!(matches!(p.path.commands[2], PathCommand::Close));
 }
 
 #[test]
@@ -559,127 +578,9 @@ fn aspect_align_all_10_variants_exist() {
     assert_eq!(aligns.len(), 10);
 }
 
-#[test]
-fn parse_aspect_ratio_none() {
-    let ar = parse_aspect_ratio("none");
-    assert!(matches!(ar.align, AspectAlign::None));
-}
-
-#[test]
-fn parse_aspect_ratio_xmidymid_slice() {
-    let ar = parse_aspect_ratio("xMidYMid slice");
-    assert!(matches!(ar.align, AspectAlign::XMidYMid));
-    assert!(matches!(ar.meet_or_slice, MeetOrSlice::Slice));
-}
-
-#[test]
-fn parse_aspect_ratio_defaults_meet() {
-    let ar = parse_aspect_ratio("xMinYMin");
-    assert!(matches!(ar.meet_or_slice, MeetOrSlice::Meet));
-}
-
-#[test]
-fn parse_aspect_ratio_all_valid_aligns() {
-    for align in [
-        "xMinYMin", "xMidYMin", "xMaxYMin", "xMinYMid", "xMidYMid", "xMaxYMid", "xMinYMax",
-        "xMidYMax", "xMaxYMax",
-    ] {
-        let ar = parse_aspect_ratio(align);
-        assert!(
-            !matches!(ar.align, AspectAlign::None),
-            "Align should not be None for {align}"
-        );
-    }
-}
-
-#[test]
-fn parse_aspect_ratio_unknown_defaults_xmidymid() {
-    let ar = parse_aspect_ratio("garbage");
-    assert!(matches!(ar.align, AspectAlign::XMidYMid));
-}
-
 // ============================================================
-// 4. VIEWBOX TESTS
+// 4. GRADIENT TESTS
 // ============================================================
-
-#[test]
-fn viewbox_valid() {
-    let vb = extract_viewbox("0 0 200 200").unwrap();
-    assert_eq!(
-        (vb.min_x.get(), vb.min_y.get(), vb.width.get(), vb.height.get()),
-        (0.0, 0.0, 200.0, 200.0)
-    );
-}
-
-#[test]
-fn viewbox_with_commas() {
-    let vb = extract_viewbox("10,20 300,400").unwrap();
-    assert_eq!(vb.width.get(), 300.0);
-    assert_eq!(vb.height.get(), 400.0);
-}
-
-#[test]
-fn viewbox_negative_coords() {
-    let vb = extract_viewbox("-100 -100 200 200").unwrap();
-    assert_eq!(vb.min_x.get(), -100.0);
-    assert_eq!(vb.min_y.get(), -100.0);
-}
-
-#[test]
-fn viewbox_zero_dimensions_rejected() {
-    assert!(extract_viewbox("0 0 0 200").is_none());
-    assert!(extract_viewbox("0 0 200 0").is_none());
-    assert!(extract_viewbox("0 0 -10 200").is_none());
-}
-
-#[test]
-fn viewbox_invalid_inputs() {
-    assert!(extract_viewbox("").is_none());
-    assert!(extract_viewbox("0 0 200").is_none());
-    assert!(extract_viewbox("abc def ghi jkl").is_none());
-}
-
-// ============================================================
-// 5. GRADIENT TESTS
-// ============================================================
-
-#[test]
-fn paint_server_solid_named_color() {
-    for color in [
-        "red", "blue", "green", "black", "white", "yellow", "purple", "orange",
-    ] {
-        let ps = PaintServer::from_attr(color);
-        assert!(ps.is_some(), "Failed to parse named color: {color}");
-        assert!(matches!(ps, Some(PaintServer::Solid(_))));
-    }
-}
-
-#[test]
-fn paint_server_hex_color() {
-    let ps = PaintServer::from_attr("#ff0000").unwrap();
-    assert!(matches!(ps, PaintServer::Solid(c) if c.red == 255 && c.green == 0 && c.blue == 0));
-}
-
-#[test]
-fn paint_server_rgb_function() {
-    let ps = PaintServer::from_attr("rgb(0, 128, 255)");
-    assert!(ps.is_some());
-}
-
-#[test]
-fn paint_server_url_gradient() {
-    let ps = PaintServer::from_attr("url(#myGradient)").unwrap();
-    assert!(matches!(ps, PaintServer::Ref(ref id) if id.as_str() == "myGradient"));
-}
-
-#[test]
-fn paint_server_none_is_not_a_color() {
-    // "none" is an SVG keyword, not a paint server value.
-    // It's handled at the FillParams/StrokeParams level (None variant).
-    let ps = PaintServer::from_attr("none");
-    // "none" is not a CSS color name, so parsing fails
-    assert!(ps.is_none());
-}
 
 #[test]
 fn gradient_stop_ordering_by_offset() {
@@ -773,106 +674,6 @@ fn radial_gradient_default_center() {
     assert_eq!(rg.cx.to_object_bbox(), 0.5);
     assert_eq!(rg.r.to_object_bbox(), 0.5);
 }
-
-#[test]
-fn gradient_href_inherits_stops_units_and_spread() {
-    // Base linear gradient with explicit stops, units, and spread method.
-    let base_stops = vec![
-        vec![
-            ("offset".to_owned(), "0".to_owned()),
-            ("stop-color".to_owned(), "#ff0000".to_owned()),
-        ],
-        vec![
-            ("offset".to_owned(), "1".to_owned()),
-            ("stop-color".to_owned(), "#0000ff".to_owned()),
-        ],
-    ];
-    let base = |attr: &str| -> Option<String> {
-        match attr {
-            "id" => Some("base".to_owned()),
-            "gradientUnits" => Some("userSpaceOnUse".to_owned()),
-            "spreadMethod" => Some("reflect".to_owned()),
-            _ => None,
-        }
-    };
-    let base_def = parse_gradient_element("linearGradient", &base, &base_stops, None).unwrap();
-
-    // Derived radial gradient references `base` with no attributes of its own.
-    let derived = |attr: &str| -> Option<String> {
-        if attr == "id" {
-            Some("derived".to_owned())
-        } else {
-            None
-        }
-    };
-    let derived_def =
-        parse_gradient_element("radialGradient", &derived, &[], Some("base".to_owned())).unwrap();
-
-    let mut map = HashMap::new();
-    map.insert("base".to_owned(), Arc::new(base_def));
-    map.insert("derived".to_owned(), Arc::new(derived_def));
-
-    resolve_gradient_hrefs(&mut map);
-
-    match map.get("derived").unwrap().as_ref() {
-        GradientDef::Radial(rg) => {
-            // Stops, units, and spread are inherited from `base`.
-            assert_eq!(rg.stops.len(), 2);
-            assert_eq!(rg.stops[0].offset, 0.0);
-            assert_eq!(rg.stops[1].offset, 1.0);
-            assert_eq!(rg.units, GradientUnits::UserSpaceOnUse);
-            assert_eq!(rg.spread_method, SpreadMethod::Reflect);
-            // Geometry was not specified and has no radial ancestor, so it
-            // falls back to the default center.
-            assert_eq!(rg.cx.to_object_bbox(), 0.5);
-        },
-        _ => panic!("derived gradient must remain radial"),
-    }
-}
-
-#[test]
-fn gradient_href_inherits_linear_geometry() {
-    // Base linear gradient with an explicit x2 and userSpaceOnUse units.
-    let base = |attr: &str| -> Option<String> {
-        match attr {
-            "id" => Some("base".to_owned()),
-            "gradientUnits" => Some("userSpaceOnUse".to_owned()),
-            "x2" => Some("300".to_owned()),
-            _ => None,
-        }
-    };
-    let base_def = parse_gradient_element("linearGradient", &base, &[], None).unwrap();
-
-    // Derived linear gradient references `base` with no geometry/units.
-    let derived = |attr: &str| -> Option<String> {
-        if attr == "id" {
-            Some("derived".to_owned())
-        } else {
-            None
-        }
-    };
-    let derived_def =
-        parse_gradient_element("linearGradient", &derived, &[], Some("base".to_owned())).unwrap();
-
-    let mut map = HashMap::new();
-    map.insert("base".to_owned(), Arc::new(base_def));
-    map.insert("derived".to_owned(), Arc::new(derived_def));
-
-    resolve_gradient_hrefs(&mut map);
-
-    match map.get("derived").unwrap().as_ref() {
-        GradientDef::Linear(lg) => {
-            // x2 and units are inherited from `base`.
-            assert_eq!(lg.units, GradientUnits::UserSpaceOnUse);
-            assert!(matches!(lg.x2, GradientLength::Number(300.0)));
-        },
-        _ => panic!("derived gradient must remain linear"),
-    }
-}
-
-// ============================================================
-// 6. CLIP PATH / MASK / FILTER DEFINITION TESTS
-// ============================================================
 
 #[test]
 fn clip_path_units_both_variants() {
@@ -1060,39 +861,6 @@ fn transform_op_matrix() {
         op,
         TransformOp::Matrix([1.0, 0.0, 0.0, 1.0, 50.0, 50.0])
     ));
-}
-
-#[test]
-fn parse_transform_str_translate() {
-    let ops = svg_engine::style::transform_ops::parse_transform_str("translate(10, 20)");
-    assert!(!ops.is_empty());
-    assert!(matches!(ops[0], TransformOp::Translate(10.0, 20.0)));
-}
-
-#[test]
-fn parse_transform_str_multiple_ops() {
-    let ops = svg_engine::style::transform_ops::parse_transform_str("translate(10,0) rotate(45)");
-    assert_eq!(ops.len(), 2);
-}
-
-#[test]
-fn parse_transform_str_empty() {
-    let ops = svg_engine::style::transform_ops::parse_transform_str("");
-    assert!(ops.is_empty());
-}
-
-#[test]
-fn parse_transform_str_scale() {
-    let ops = svg_engine::style::transform_ops::parse_transform_str("scale(2)");
-    assert!(!ops.is_empty());
-    assert!(matches!(ops[0], TransformOp::Scale(2.0, 2.0)));
-}
-
-#[test]
-fn parse_transform_str_matrix() {
-    let ops = svg_engine::style::transform_ops::parse_transform_str("matrix(1,0,0,1,50,50)");
-    assert!(!ops.is_empty());
-    assert!(matches!(ops[0], TransformOp::Matrix(_)));
 }
 
 // ============================================================

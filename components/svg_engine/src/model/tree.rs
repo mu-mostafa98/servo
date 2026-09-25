@@ -5,12 +5,10 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use svgtypes::ViewBox as SvgViewBox;
-
 pub use crate::model::image::SvgImage;
 use crate::model::shapes::Shape;
 use crate::model::style::NodeStyle;
-use crate::model::style::gradient::{GradientDef, PaintServer};
+use crate::model::style::gradient::GradientDef;
 use crate::model::style::transform_ops::TransformOp;
 use crate::model::units::{Id, Length};
 pub use crate::model::text::TextSpan;
@@ -361,11 +359,11 @@ pub struct MarkerDef {
 
 /// A reference to a definition (clip-path, mask, filter, or marker) that
 /// starts as a raw `#id` string during tree building and is rewritten to a
-/// typed [`Arc`] handle once the definition maps are collected (see
-/// [`SvgTree::resolve_references`]).
+/// typed [`Arc`] handle once the definition maps are collected, during the
+/// post-build resolve pass.
 ///
-/// This mirrors [`PaintServer`]'s transient `Ref` variant: the build layer
-/// emits [`DefRef::Ref`] and the post-build resolve pass rewrites it to
+/// This mirrors the transient `PaintServer::Ref` variant: the build layer
+/// emits [`DefRef::Ref`] and the resolve pass rewrites it to
 /// [`DefRef::Resolved`], so render-time consumers only ever see a resolved
 /// handle.
 #[derive(Debug)]
@@ -399,68 +397,6 @@ impl<T> DefRef<T> {
             DefRef::Ref(_) => None,
         }
     }
-}
-
-// ======================= AspectRatio Parsing =======================
-
-/// Parse a `preserveAspectRatio` attribute value.
-///
-/// SVG spec: `<align> <meetOrSlice>?`
-/// Defaults to `xMidYMid meet`.
-pub fn parse_aspect_ratio(value: &str) -> AspectRatio {
-    let value = value.trim();
-    if value.is_empty() || value.eq_ignore_ascii_case("none") {
-        return AspectRatio {
-            align: AspectAlign::None,
-            meet_or_slice: MeetOrSlice::Meet,
-        };
-    }
-
-    let parts: Vec<&str> = value.split_whitespace().collect();
-    let align = match parts.first().copied().unwrap_or("xMidYMid") {
-        "none" => AspectAlign::None,
-        "xMinYMin" => AspectAlign::XMinYMin,
-        "xMidYMin" => AspectAlign::XMidYMin,
-        "xMaxYMin" => AspectAlign::XMaxYMin,
-        "xMinYMid" => AspectAlign::XMinYMid,
-        "xMidYMid" => AspectAlign::XMidYMid,
-        "xMaxYMid" => AspectAlign::XMaxYMid,
-        "xMinYMax" => AspectAlign::XMinYMax,
-        "xMidYMax" => AspectAlign::XMidYMax,
-        "xMaxYMax" => AspectAlign::XMaxYMax,
-        _ => AspectAlign::XMidYMid,
-    };
-    let meet_or_slice = parts
-        .get(1)
-        .copied()
-        .and_then(|s| {
-            if s.eq_ignore_ascii_case("slice") {
-                Some(MeetOrSlice::Slice)
-            } else {
-                None
-            }
-        })
-        .unwrap_or(MeetOrSlice::Meet);
-
-    AspectRatio {
-        align,
-        meet_or_slice,
-    }
-}
-
-// ======================= ViewBox Parsing =======================
-
-/// Parse the `viewBox` attribute value into a [`ViewBox`].
-///
-/// Delegates to [`svgtypes::ViewBox`] for spec-compliant parsing.
-/// Handles formats: `"0 0 200 200"`, `"0,0 200,200"`, etc.
-pub fn extract_viewbox(value: &str) -> Option<ViewBox> {
-    value.parse::<SvgViewBox>().ok().map(|vb| ViewBox {
-        min_x: Length::new(vb.x as f32),
-        min_y: Length::new(vb.y as f32),
-        width: Length::new(vb.w as f32),
-        height: Length::new(vb.h as f32),
-    })
 }
 
 // ======================= Visitor Pattern =======================
@@ -517,27 +453,6 @@ impl SvgNode {
         }
     }
 
-    /// Flatten container groups and invoke `f(shape, style)` for every shape
-    /// leaf under this node. Non-shape leaves (text, image, …) are skipped.
-    ///
-    /// Used by clip/mask collection and pattern/marker content rendering so
-    /// that nested `<g>`/`<use>`/`<symbol>` wrappers inside a definition are
-    /// honoured instead of being silently dropped.
-    pub(crate) fn for_each_shape_leaf<F>(&self, f: &mut F)
-    where
-        F: FnMut(&Shape, &NodeStyle),
-    {
-        match &self.tag {
-            SvgTag::Shape(shape) => f(shape, &self.style),
-            // `<defs>` content is never rendered directly — skip it.
-            SvgTag::Container(Container::Defs) => {},
-            _ => {
-                for child in &self.children {
-                    child.for_each_shape_leaf(f);
-                }
-            },
-        }
-    }
 }
 
 impl SvgTree {
@@ -549,182 +464,5 @@ impl SvgTree {
     /// Visit every node in the tree with a mutable visitor.
     pub fn visit_mut(&mut self, visitor: &mut dyn SvgTreeVisitorMut) {
         self.root.accept_mut(visitor);
-    }
-
-    /// Rewrite every transient reference in the tree — [`PaintServer::Ref`]
-    /// paint servers and [`DefRef::Ref`] clip-path/mask/filter/marker handles —
-    /// into typed `Arc` handles using the collected definition maps.
-    ///
-    /// A paint-server reference that resolves to neither a gradient nor a
-    /// pattern falls back to opaque black. A clip-path/mask/filter/marker
-    /// reference that does not resolve is dropped (the effect/marker is
-    /// omitted), matching SVG's ignore-broken-references behavior.
-    pub fn resolve_references(&mut self) {
-        let Self {
-            root,
-            gradients,
-            patterns,
-            clip_paths,
-            masks,
-            filters,
-            markers: marker_defs,
-            ..
-        } = self;
-        resolve_references_in(
-            root,
-            gradients,
-            patterns,
-            clip_paths,
-            masks,
-            filters,
-            marker_defs,
-        );
-    }
-}
-
-fn resolve_references_in(
-    node: &mut SvgNode,
-    gradients: &HashMap<String, Arc<GradientDef>>,
-    patterns: &HashMap<String, Arc<PatternDef>>,
-    clip_paths: &HashMap<String, Arc<ClipPathDef>>,
-    masks: &HashMap<String, Arc<MaskDef>>,
-    filters: &HashMap<String, Arc<FilterDef>>,
-    marker_defs: &HashMap<String, Arc<MarkerDef>>,
-) {
-    if let Some(fill) = node.style.fill.as_mut() {
-        if let Some(paint) = fill.paint_server.as_mut() {
-            resolve_paint_server(paint, gradients, patterns);
-        }
-    }
-    if let Some(stroke) = node.style.stroke.as_mut() {
-        if let Some(paint) = stroke.paint_server.as_mut() {
-            resolve_paint_server(paint, gradients, patterns);
-        }
-    }
-
-    if let Some(effects) = node.style.effects.as_mut() {
-        effects.clip_path = resolve_ref(effects.clip_path.take(), clip_paths);
-        effects.mask = resolve_ref(effects.mask.take(), masks);
-        effects.filter = resolve_ref(effects.filter.take(), filters);
-    }
-    if let Some(effects) = node.style.effects.as_ref() {
-        if effects.clip_path.is_none() && effects.mask.is_none() && effects.filter.is_none() {
-            node.style.effects = None;
-        }
-    }
-
-    if let Some(refs) = node.style.markers.as_mut() {
-        refs.start = resolve_ref(refs.start.take(), marker_defs);
-        refs.mid = resolve_ref(refs.mid.take(), marker_defs);
-        refs.end = resolve_ref(refs.end.take(), marker_defs);
-    }
-    if let Some(refs) = node.style.markers.as_ref() {
-        if refs.start.is_none() && refs.mid.is_none() && refs.end.is_none() {
-            node.style.markers = None;
-        }
-    }
-
-    for child in &mut node.children {
-        resolve_references_in(
-            child,
-            gradients,
-            patterns,
-            clip_paths,
-            masks,
-            filters,
-            marker_defs,
-        );
-    }
-}
-
-fn resolve_paint_server(
-    paint: &mut PaintServer,
-    gradients: &HashMap<String, Arc<GradientDef>>,
-    patterns: &HashMap<String, Arc<PatternDef>>,
-) {
-    let id = match paint {
-        PaintServer::Ref(id) => id.clone(),
-        _ => return,
-    };
-    *paint = if let Some(def) = gradients.get(id.as_str()) {
-        PaintServer::Gradient(def.clone())
-    } else if let Some(def) = patterns.get(id.as_str()) {
-        PaintServer::Pattern(def.clone())
-    } else {
-        PaintServer::Solid(svgtypes::Color::new_rgb(0, 0, 0))
-    };
-}
-
-/// Resolve a transient [`DefRef::Ref`] into a typed handle using `map`.
-/// An unresolved reference is dropped (returned as `None`); an already-resolved
-/// handle is passed through unchanged.
-fn resolve_ref<T>(reference: Option<DefRef<T>>, map: &HashMap<String, Arc<T>>) -> Option<DefRef<T>> {
-    match reference {
-        Some(DefRef::Ref(id)) => map.get(id.as_str()).cloned().map(DefRef::Resolved),
-        other => other,
-    }
-}
-
-// ======================= Tests =======================
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn viewbox_valid() {
-        let vb = extract_viewbox("0 0 200 200").unwrap();
-        assert_eq!(vb.min_x.get(), 0.0);
-        assert_eq!(vb.min_y.get(), 0.0);
-        assert_eq!(vb.width.get(), 200.0);
-        assert_eq!(vb.height.get(), 200.0);
-    }
-
-    #[test]
-    fn viewbox_with_commas() {
-        let vb = extract_viewbox("10,20 300,400").unwrap();
-        assert_eq!(vb.min_x.get(), 10.0);
-        assert_eq!(vb.min_y.get(), 20.0);
-        assert_eq!(vb.width.get(), 300.0);
-        assert_eq!(vb.height.get(), 400.0);
-    }
-
-    #[test]
-    fn viewbox_invalid_too_few() {
-        assert!(extract_viewbox("0 0 200").is_none());
-    }
-
-    #[test]
-    fn viewbox_invalid_too_many() {
-        // svgtypes::ViewBox tolerates trailing data by spec (it stops at the 4th number).
-        // If there are at least 4 valid numbers, it parses OK.
-        assert!(extract_viewbox("0 0 200 200 100").is_some());
-    }
-
-    #[test]
-    fn viewbox_zero_width() {
-        assert!(extract_viewbox("0 0 0 200").is_none());
-    }
-
-    #[test]
-    fn viewbox_negative_width() {
-        assert!(extract_viewbox("0 0 -100 200").is_none());
-    }
-
-    #[test]
-    fn viewbox_negative_coords() {
-        let vb = extract_viewbox("-100 -100 200 200").unwrap();
-        assert_eq!(vb.min_x.get(), -100.0);
-        assert_eq!(vb.min_y.get(), -100.0);
-    }
-
-    #[test]
-    fn viewbox_empty() {
-        assert!(extract_viewbox("").is_none());
-    }
-
-    #[test]
-    fn viewbox_garbage() {
-        assert!(extract_viewbox("abc def ghi jkl").is_none());
     }
 }

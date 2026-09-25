@@ -3,6 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use euclid::Transform2D;
+use kurbo::Point as KurboPoint;
 use webrender_api::units::LayoutPoint;
 
 use crate::render::renderer::path::rasterize_bez;
@@ -16,17 +17,24 @@ use crate::model::shapes::Polygon;
 /// - `native_rendering` (pattern content): WebRender primitives.
 impl Render for Polygon {
     fn render(&self, ctx: &mut RenderContext) {
+        // Model points are f32; the native/bez pipeline works in kurbo f64.
+        let points: Vec<KurboPoint> = self
+            .points
+            .iter()
+            .map(|p| KurboPoint::new(p.x as f64, p.y as f64))
+            .collect();
+
         if ctx.native_rendering {
             // Close the point list and delegate to Polyline's native path.
-            let mut closed_points = self.points.clone();
-            if let Some(first) = self.points.first() {
+            let mut closed_points = points.clone();
+            if let Some(first) = points.first() {
                 closed_points.push(*first);
             }
             crate::render::renderer::polyline::render_native_polyline(&closed_points, ctx, true);
             return;
         }
 
-        let bez = points_to_bez(&self.points, true);
+        let bez = points_to_bez(&points, true);
         // CPU-rasterized shapes bypass reference frames, so fold the nested
         // viewBox translation into the raster position explicitly.
         let raster_origin = LayoutPoint::new(

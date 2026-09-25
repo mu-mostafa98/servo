@@ -4,17 +4,16 @@
 
 //! SVG attribute parsing utilities.
 //!
-//! These functions parse raw SVG attribute strings into typed values.
-//! They are shared by multiple shape or element types and live in their
-//! own file to keep each shape file focused on its own `Build` impl.
+//! These functions parse raw SVG attribute strings into typed values. They
+//! live in layout (not the engine's `model`) because they are build-time
+//! converters: the DOM → [`svg_engine::model`] boundary. The engine never
+//! parses attribute strings itself.
 //!
 //! Length parsing is backed by [`svgtypes::Length`] for spec‑compliant handling
 //! of all SVG length units (`px`, `em`, `ex`, `in`, `cm`, `mm`, `pt`, `pc`, `%`).
 
-use kurbo::Point;
+use svg_engine::geometry::Point;
 use svgtypes::{Length as SvgLength, PointsParser};
-
-use crate::model::error::{SvgEngineError, SvgResult};
 
 /// Parse a named SVG length attribute (e.g. `x="10"`, `width="50%"`).
 ///
@@ -24,15 +23,15 @@ use crate::model::error::{SvgEngineError, SvgResult};
 ///
 /// Percent values are returned as-is (caller must resolve against
 /// the appropriate reference dimension).
-pub fn parse_length(
+pub(crate) fn parse_length(
     attr: &str,
     get_attr: &dyn Fn(&str) -> Option<String>,
     font_size: f32,
-) -> SvgResult<f32> {
-    let value = get_attr(attr).ok_or_else(|| SvgEngineError::MissingAttribute(attr.to_owned()))?;
+) -> Result<f32, String> {
+    let value = get_attr(attr).ok_or_else(|| format!("missing SVG attribute: {attr}"))?;
     let len: SvgLength = value
         .parse()
-        .map_err(|e| SvgEngineError::ParseError(format!("{attr}: {e}")))?;
+        .map_err(|e| format!("{attr}: {e}"))?;
     Ok(to_px(len, font_size))
 }
 
@@ -59,17 +58,17 @@ fn to_px(len: SvgLength, font_size: f32) -> f32 {
 ///
 /// Used by both `<polyline>` and `<polygon>`.  Delegates to
 /// [`svgtypes::PointsParser`] for SVG-spec-compliant parsing.
-pub fn parse_points(get_attr: &dyn Fn(&str) -> Option<String>) -> SvgResult<Vec<Point>> {
+pub(crate) fn parse_points(
+    get_attr: &dyn Fn(&str) -> Option<String>,
+) -> Result<Vec<Point>, String> {
     let value =
-        get_attr("points").ok_or_else(|| SvgEngineError::MissingAttribute("points".to_owned()))?;
+        get_attr("points").ok_or_else(|| "missing SVG attribute: points".to_owned())?;
     let points: Vec<Point> = PointsParser::from(value.as_str())
-        .map(|(x, y)| Point::new(x, y))
+        .map(|(x, y)| Point::new(x as f32, y as f32))
         .collect();
 
     if points.len() < 2 {
-        return Err(SvgEngineError::ParseError(
-            "points attribute requires at least 2 coordinate pairs".to_owned(),
-        ));
+        return Err("points attribute requires at least 2 coordinate pairs".to_owned());
     }
     Ok(points)
 }
@@ -86,12 +85,9 @@ mod tests {
     fn parse_length_missing_attr() {
         let result = parse_length("width", &|_| None, FS);
         assert!(result.is_err());
-        assert!(
-            result
-                .unwrap_err()
-                .to_string()
-                .contains("missing SVG attribute: width")
-        );
+        assert!(result
+            .unwrap_err()
+            .contains("missing SVG attribute: width"));
     }
 
     #[test]

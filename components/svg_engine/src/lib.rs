@@ -34,9 +34,10 @@
 pub mod model;
 mod render;
 
-pub use model::attr_parsers;
 pub use model::error;
+pub use model::geometry;
 pub use model::image;
+pub use model::resource;
 pub use model::shapes;
 pub use model::style;
 pub use model::text;

@@ -2,32 +2,10 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use kurbo::Point;
-use webrender_api::units::LayoutPoint;
-
-use crate::model::tree::ClipPathUnits;
-use crate::model::shapes::{ClipGeometry, clip_path_geometry, points_to_bez};
+use crate::model::geometry::Point;
 
 /// SVG `<polygon>` element — a closed shape formed by connected line segments.
 #[derive(Debug, Clone)]
 pub struct Polygon {
     pub points: Vec<Point>,
-}
-
-impl Polygon {
-    /// Clip geometry for this polygon (closed fill path around all points).
-    pub(crate) fn clip_info(
-        &self,
-        svg_origin: &LayoutPoint,
-        units: ClipPathUnits,
-    ) -> Option<ClipGeometry> {
-        if self.points.len() < 3 {
-            return None;
-        }
-        Some(clip_path_geometry(
-            &points_to_bez(&self.points, true),
-            svg_origin,
-            units,
-        ))
-    }
 }

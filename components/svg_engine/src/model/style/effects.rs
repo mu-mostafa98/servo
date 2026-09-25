@@ -9,9 +9,7 @@ use crate::model::tree::{ClipPathDef, DefRef, FilterDef, MaskDef};
 /// SVG node effects — clip-path, mask, filter.
 ///
 /// Each reference is a [`DefRef`]: a raw `#id` string during tree building,
-/// rewritten to a typed `Arc` handle by [`SvgTree::resolve_references`].
-///
-/// [`SvgTree::resolve_references`]: crate::model::tree::SvgTree::resolve_references
+/// rewritten to a typed `Arc` handle during the post-build resolve pass.
 #[derive(Debug, Clone)]
 pub struct NodeEffects {
     pub clip_path: Option<DefRef<ClipPathDef>>,

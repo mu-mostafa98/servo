@@ -16,19 +16,20 @@ use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::tree::*;
 use svg_engine::style::NodeStyle;
-use svg_engine::style::gradient::GradientDef;
+use svg_engine::style::gradient::{GradientDef, PaintServer};
 use svg_engine::text::TextAnchor;
 use svg_engine::units::{Id, Length};
+use svg_engine::resource::ResourceKey;
 use web_atoms::ns;
 
 use super::css::collect_svg_css_rules;
 use super::defines::{
     ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MarkerParser, MaskParser,
-    PatternParser,
+    PatternParser, resolve_gradient_hrefs,
 };
 use super::geometry::{build_shape, build_text};
 use super::style::build_style;
-use super::viewport::{extract_nested_viewport, extract_viewport_info};
+use super::viewport::{extract_nested_viewport, extract_viewport_info, extract_viewbox, parse_aspect_ratio};
 use crate::context::LayoutContext;
 
 // ======================= Builder =======================
@@ -75,7 +76,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
 
         // Resolve transient `PaintServer::Ref(id)` / `DefRef::Ref(id)` values
         // into typed `Arc` handles now that the definition maps are collected.
-        tree.resolve_references();
+        resolve_references(&mut tree);
 
         Some(Arc::new(tree))
     }
@@ -464,7 +465,7 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
             },
         };
 
-        let key = font.key(context.painter_id, &*context.font_context);
+        let key = font_key_to_resource(font.key(context.painter_id, &*context.font_context));
         if font_instance_key.is_none() {
             font_instance_key = Some(key);
         }
@@ -671,7 +672,7 @@ fn collect_definitions<'dom, 'a>(
     builder: &SvgTreeBuilder<'dom, 'a>,
 ) -> DefinitionMaps {
     let mut gradients = DefinitionCollector::collect::<GradientParser>(node, builder);
-    svg_engine::style::gradient::resolve_gradient_hrefs(&mut gradients);
+    resolve_gradient_hrefs(&mut gradients);
     DefinitionMaps {
         gradients,
         clip_paths: DefinitionCollector::collect::<ClipPathParser>(node, builder),
@@ -719,7 +720,7 @@ fn build_image_tag(
     use net_traits::request::InternalRequest;
     use net_traits::image_cache::Image;
     use layout_api::LayoutImageDestination;
-    use svg_engine::attr_parsers::parse_length;
+    use super::attr_parsers::parse_length;
     let fs = 16.0;
     let get = |name: &str| super::style::get_attr(element, name);
     let x = parse_length("x", &get, fs).unwrap_or(0.0);
@@ -759,7 +760,7 @@ fn build_image_tag(
                 })
         });
     let (image_key, natural_width, natural_height) = match raster_data {
-        Some((id, w, h)) => (id, Some(w), Some(h)),
+        Some((id, w, h)) => (id.map(image_key_to_resource), Some(w), Some(h)),
         None => (None, None, None),
     };
 
@@ -788,6 +789,22 @@ fn extract_id(element: &ServoLayoutElement) -> Option<Id> {
     element
         .attribute_as_str(&ns!(), &local_name!("id"))
         .map(|s| Id::new(s))
+}
+
+/// Convert a WebRender font-instance key into the opaque model resource key.
+fn font_key_to_resource(key: webrender_api::FontInstanceKey) -> ResourceKey {
+    ResourceKey {
+        namespace: key.0.0,
+        id: key.1,
+    }
+}
+
+/// Convert a WebRender image key into the opaque model resource key.
+fn image_key_to_resource(key: webrender_api::ImageKey) -> ResourceKey {
+    ResourceKey {
+        namespace: key.0.0,
+        id: key.1,
+    }
 }
 
 /// Build a document-wide `id → DOM node` map once, so `<use href="#id">`
@@ -831,4 +848,122 @@ fn document_root<'dom>(node: ServoLayoutNode<'dom>) -> ServoLayoutNode<'dom> {
         root = parent;
     }
     root
+}
+
+// ======================= Reference Resolution =======================
+
+/// Rewrite every transient reference in the tree — [`PaintServer::Ref`] paint
+/// servers and [`DefRef::Ref`] clip-path/mask/filter/marker handles — into typed
+/// `Arc` handles using the collected definition maps.
+///
+/// A paint-server reference that resolves to neither a gradient nor a pattern
+/// falls back to opaque black. A clip-path/mask/filter/marker reference that
+/// does not resolve is dropped (the effect/marker is omitted), matching SVG's
+/// ignore-broken-references behavior.
+fn resolve_references(tree: &mut SvgTree) {
+    let SvgTree {
+        root,
+        gradients,
+        patterns,
+        clip_paths,
+        masks,
+        filters,
+        markers: marker_defs,
+        ..
+    } = tree;
+    resolve_references_in(
+        root,
+        gradients,
+        patterns,
+        clip_paths,
+        masks,
+        filters,
+        marker_defs,
+    );
+}
+
+fn resolve_references_in(
+    node: &mut SvgNode,
+    gradients: &HashMap<String, Arc<GradientDef>>,
+    patterns: &HashMap<String, Arc<PatternDef>>,
+    clip_paths: &HashMap<String, Arc<ClipPathDef>>,
+    masks: &HashMap<String, Arc<MaskDef>>,
+    filters: &HashMap<String, Arc<FilterDef>>,
+    marker_defs: &HashMap<String, Arc<MarkerDef>>,
+) {
+    if let Some(fill) = node.style.fill.as_mut() {
+        if let Some(paint) = fill.paint_server.as_mut() {
+            resolve_paint_server(paint, gradients, patterns);
+        }
+    }
+    if let Some(stroke) = node.style.stroke.as_mut() {
+        if let Some(paint) = stroke.paint_server.as_mut() {
+            resolve_paint_server(paint, gradients, patterns);
+        }
+    }
+
+    if let Some(effects) = node.style.effects.as_mut() {
+        effects.clip_path = resolve_ref(effects.clip_path.take(), clip_paths);
+        effects.mask = resolve_ref(effects.mask.take(), masks);
+        effects.filter = resolve_ref(effects.filter.take(), filters);
+    }
+    if let Some(effects) = node.style.effects.as_ref() {
+        if effects.clip_path.is_none() && effects.mask.is_none() && effects.filter.is_none() {
+            node.style.effects = None;
+        }
+    }
+
+    if let Some(refs) = node.style.markers.as_mut() {
+        refs.start = resolve_ref(refs.start.take(), marker_defs);
+        refs.mid = resolve_ref(refs.mid.take(), marker_defs);
+        refs.end = resolve_ref(refs.end.take(), marker_defs);
+    }
+    if let Some(refs) = node.style.markers.as_ref() {
+        if refs.start.is_none() && refs.mid.is_none() && refs.end.is_none() {
+            node.style.markers = None;
+        }
+    }
+
+    for child in &mut node.children {
+        resolve_references_in(
+            child,
+            gradients,
+            patterns,
+            clip_paths,
+            masks,
+            filters,
+            marker_defs,
+        );
+    }
+}
+
+fn resolve_paint_server(
+    paint: &mut PaintServer,
+    gradients: &HashMap<String, Arc<GradientDef>>,
+    patterns: &HashMap<String, Arc<PatternDef>>,
+) {
+    let id = match paint {
+        PaintServer::Ref(id) => id.clone(),
+        _ => return,
+    };
+    *paint = if let Some(def) = gradients.get(id.as_str()) {
+        PaintServer::Gradient(def.clone())
+    } else if let Some(def) = patterns.get(id.as_str()) {
+        PaintServer::Pattern(def.clone())
+    } else {
+        PaintServer::Solid(svgtypes::Color::new_rgb(0, 0, 0))
+    };
+}
+
+/// Resolve a transient [`DefRef::Ref`] into a typed handle using `map`.
+/// An unresolved reference is dropped (returned as `None`); an already-resolved
+/// handle is passed through unchanged.
+fn resolve_ref<T>(
+    reference: Option<DefRef<T>>,
+    map: &HashMap<String, Arc<T>>,
+) -> Option<DefRef<T>> {
+    match reference {
+        Some(DefRef::Ref(id)) => map.get(id.as_str()).cloned().map(DefRef::Resolved),
+        other => other,
+    }
 }

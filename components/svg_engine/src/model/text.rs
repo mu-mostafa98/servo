@@ -5,6 +5,8 @@
 //! SVG `<text>` element — text content with positioning.
 //! Reference: https://svgwg.org/svg2-draft/text.html
 
+use crate::model::resource::ResourceKey;
+
 /// A pre-shaped glyph with position and advance.
 #[derive(Debug, Clone, Copy)]
 pub struct ShapedGlyph {
@@ -22,7 +24,7 @@ pub struct ShapedGlyph {
     /// have no resolved font (they are skipped during rendering). Mixed-script
     /// runs shape different characters with different fonts, so the key is
     /// stored per-glyph rather than once per span.
-    pub font_instance_key: Option<webrender_api::FontInstanceKey>,
+    pub font_instance_key: Option<ResourceKey>,
 }
 
 /// A single text span within an SVG `<text>` or `<tspan>` element.
@@ -50,9 +52,9 @@ pub struct TextSpan {
     pub rtl: bool,
     /// Vertical baseline alignment (SVG `dominant-baseline`).
     pub dominant_baseline: DominantBaseline,
-    /// WebRender font instance key for glyph rendering.
+    /// Opaque font instance key for glyph rendering.
     /// When `Some`, the renderer uses `push_text` for real glyph shapes.
-    pub font_instance_key: Option<webrender_api::FontInstanceKey>,
+    pub font_instance_key: Option<ResourceKey>,
     /// Horizontal pen offset accumulated from preceding sibling runs in the
     /// same `<text>` inline flow. Set by the builder so that a run begins where
     /// the previous run ended. For a standalone `<text>` (no tspans) this is
