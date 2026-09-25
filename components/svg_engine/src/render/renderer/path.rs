@@ -7,7 +7,6 @@ use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
 use webrender_api::units::{LayoutPoint, LayoutRect};
 use webrender_api::DisplayListBuilder;
 
-use crate::renderer::providers::PaintResourceProvider;
 use crate::renderer::{Render, RenderContext};
 use crate::shapes::{ComplexClip, Path};
 use crate::style::gradient::{GradientDef, GradientUnits, SpreadMethod};
@@ -102,7 +101,6 @@ impl Render for Path {
             Transform2D::identity(),
             None,
             &[],
-            ctx.paints,
             ctx.wr,
             ctx.sink,
             None,
@@ -138,7 +136,6 @@ pub(crate) fn rasterize_bez(
     node_xform: Transform2D<f32, (), ()>,
     clip_rect: Option<LayoutRect>,
     complex_clips: &[ComplexClip],
-    paints: &dyn PaintResourceProvider,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
     alpha_mask: Option<&crate::effects::mask::MaskRaster>,
@@ -239,7 +236,7 @@ pub(crate) fn rasterize_bez(
     }
 
     if let Some(f) = fill {
-        if let Some(paint) = resolve_fill_paint(f, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity, paints) {
+        if let Some(paint) = resolve_fill_paint(f, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity) {
             context.set_fill_rule(match f.fill_rule {
                 FillRule::NonZero => vello_cpu::peniko::Fill::NonZero,
                 FillRule::EvenOdd => vello_cpu::peniko::Fill::EvenOdd,
@@ -250,7 +247,7 @@ pub(crate) fn rasterize_bez(
     }
 
     if let Some(s) = stroke {
-        if let Some(paint) = resolve_stroke_paint(s, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity, paints) {
+        if let Some(paint) = resolve_stroke_paint(s, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity) {
             apply_paint(&mut context, scale_paint(paint, scale as f64));
             let mut vello_stroke =
                 vello_cpu::kurbo::Stroke::new(s.width.get() as f64 * total_scale as f64);
@@ -410,7 +407,6 @@ pub(crate) fn resolve_fill_paint(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     node_opacity: f32,
-    _paints: &dyn PaintResourceProvider,
 ) -> Option<ResolvedPaint> {
     if let Some(crate::style::gradient::PaintServer::Gradient(def)) = &fill.paint_server {
         return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
@@ -435,7 +431,6 @@ fn resolve_stroke_paint(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
     node_opacity: f32,
-    _paints: &dyn PaintResourceProvider,
 ) -> Option<ResolvedPaint> {
     if let Some(crate::style::gradient::PaintServer::Gradient(def)) = &stroke.paint_server {
         return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(

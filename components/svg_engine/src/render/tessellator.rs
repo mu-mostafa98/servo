@@ -381,7 +381,6 @@ fn scanline_fill_triangle(
                             spatial_id: ctx.spatial_id,
                             clip_chain_id: tile_chain,
                             wr: &mut *ctx.wr,
-                            paints: ctx.paints,
                             accumulated_scale: ctx.accumulated_scale,
                             viewbox_scale: ctx.viewbox_scale,
                             device_scale: ctx.device_scale,

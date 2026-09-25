@@ -8,7 +8,6 @@
 use webrender_api::units::LayoutPoint;
 use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 
-use crate::renderer::providers::PaintResourceProvider;
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
 use crate::RasterSink;
@@ -20,11 +19,6 @@ pub(crate) struct RenderContext<'a> {
     pub spatial_id: SpatialId,
     pub clip_chain_id: ClipChainId,
     pub wr: &'a mut DisplayListBuilder,
-    /// Paint resource provider, used internally by fill/stroke helpers.
-    /// Shape `Render` impls should NOT access this field directly.
-    /// Instead, call `fill::fill_rect(…)` or `stroke::stroke_rect(…)`
-    /// which internally use this field to look up paint servers.
-    pub paints: &'a dyn PaintResourceProvider,
     /// Accumulated transform scale from all ancestor transforms.
     /// Used by `vector-effect: non-scaling-stroke` to compensate stroke width.
     pub accumulated_scale: f32,

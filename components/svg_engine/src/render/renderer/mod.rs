@@ -14,7 +14,6 @@
 //! | Module | Role |
 //! |--------|------|
 //! | [`render_trait`] | [`Render`] trait, [`RenderContext`], Shape dispatch |
-//! | [`providers`] | [`PaintResourceProvider`] |
 //! | [`helpers`] | Color conversion, clip chain utilities, hint resolution |
 //! | `circle`, `ellipse`, … | Per-shape [`Render`] implementations |
 
@@ -29,7 +28,6 @@ pub(crate) mod path;
 pub(crate) mod pattern;
 pub(crate) mod polygon;
 pub(crate) mod polyline;
-pub(crate) mod providers;
 pub(crate) mod rect;
 pub(crate) mod render_trait;
 pub(crate) mod stroke;
@@ -41,5 +39,4 @@ pub(crate) use helpers::{
     ZERO_LENGTH_EPSILON, clip_chain_option, effective_stroke_width, make_common_props,
     paint_order_stroke_before_fill, shape_rendering_value, to_colorf,
 };
-pub(crate) use providers::PaintResourceProvider;
 pub(crate) use render_trait::{Render, RenderContext};

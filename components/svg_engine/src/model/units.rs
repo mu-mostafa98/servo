@@ -64,6 +64,13 @@ impl fmt::Display for Id {
 /// A length in the current user coordinate system (a `f32` scalar, but typed so
 /// it can't be confused with an opacity, ratio, angle, or id).
 ///
+/// Units are **erased** at this boundary: by the time a [`Length`] is built,
+/// its raw value is already resolved to user space — `px`, `em`, `ex`, `%`,
+/// etc. have been resolved against the appropriate viewport/bbox by the layout
+/// layer. Consequently, relative lengths that depend on a containing context
+/// (percentages, font-relative units) must be resolved *before* reaching this
+/// type; the render engine cannot recover the original unit.
+///
 /// Note: SVG lengths may be negative (e.g. `x`/`y` coordinates), so unlike
 /// [`Opacity`] this newtype does not clamp.
 #[derive(Debug, Clone, Copy, PartialEq, PartialOrd)]

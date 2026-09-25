@@ -176,7 +176,6 @@ pub(crate) fn fill_rect_with_pattern(
                     spatial_id: spatial,
                     clip_chain_id: tile_clip,
                     wr: &mut *ctx.wr,
-                    paints: ctx.paints,
                     accumulated_scale: ctx.accumulated_scale,
                     viewbox_scale: ctx.viewbox_scale,
                     device_scale: ctx.device_scale,

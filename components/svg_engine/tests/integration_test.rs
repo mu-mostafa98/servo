@@ -748,6 +748,7 @@ fn linear_gradient_default_x2() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        explicit: GradientExplicit::default(),
     };
     assert_eq!(lg.x2.to_object_bbox(), 1.0);
 }
@@ -767,9 +768,106 @@ fn radial_gradient_default_center() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        explicit: GradientExplicit::default(),
     };
     assert_eq!(rg.cx.to_object_bbox(), 0.5);
     assert_eq!(rg.r.to_object_bbox(), 0.5);
+}
+
+#[test]
+fn gradient_href_inherits_stops_units_and_spread() {
+    // Base linear gradient with explicit stops, units, and spread method.
+    let base_stops = vec![
+        vec![
+            ("offset".to_owned(), "0".to_owned()),
+            ("stop-color".to_owned(), "#ff0000".to_owned()),
+        ],
+        vec![
+            ("offset".to_owned(), "1".to_owned()),
+            ("stop-color".to_owned(), "#0000ff".to_owned()),
+        ],
+    ];
+    let base = |attr: &str| -> Option<String> {
+        match attr {
+            "id" => Some("base".to_owned()),
+            "gradientUnits" => Some("userSpaceOnUse".to_owned()),
+            "spreadMethod" => Some("reflect".to_owned()),
+            _ => None,
+        }
+    };
+    let base_def = parse_gradient_element("linearGradient", &base, &base_stops, None).unwrap();
+
+    // Derived radial gradient references `base` with no attributes of its own.
+    let derived = |attr: &str| -> Option<String> {
+        if attr == "id" {
+            Some("derived".to_owned())
+        } else {
+            None
+        }
+    };
+    let derived_def =
+        parse_gradient_element("radialGradient", &derived, &[], Some("base".to_owned())).unwrap();
+
+    let mut map = HashMap::new();
+    map.insert("base".to_owned(), Arc::new(base_def));
+    map.insert("derived".to_owned(), Arc::new(derived_def));
+
+    resolve_gradient_hrefs(&mut map);
+
+    match map.get("derived").unwrap().as_ref() {
+        GradientDef::Radial(rg) => {
+            // Stops, units, and spread are inherited from `base`.
+            assert_eq!(rg.stops.len(), 2);
+            assert_eq!(rg.stops[0].offset, 0.0);
+            assert_eq!(rg.stops[1].offset, 1.0);
+            assert_eq!(rg.units, GradientUnits::UserSpaceOnUse);
+            assert_eq!(rg.spread_method, SpreadMethod::Reflect);
+            // Geometry was not specified and has no radial ancestor, so it
+            // falls back to the default center.
+            assert_eq!(rg.cx.to_object_bbox(), 0.5);
+        },
+        _ => panic!("derived gradient must remain radial"),
+    }
+}
+
+#[test]
+fn gradient_href_inherits_linear_geometry() {
+    // Base linear gradient with an explicit x2 and userSpaceOnUse units.
+    let base = |attr: &str| -> Option<String> {
+        match attr {
+            "id" => Some("base".to_owned()),
+            "gradientUnits" => Some("userSpaceOnUse".to_owned()),
+            "x2" => Some("300".to_owned()),
+            _ => None,
+        }
+    };
+    let base_def = parse_gradient_element("linearGradient", &base, &[], None).unwrap();
+
+    // Derived linear gradient references `base` with no geometry/units.
+    let derived = |attr: &str| -> Option<String> {
+        if attr == "id" {
+            Some("derived".to_owned())
+        } else {
+            None
+        }
+    };
+    let derived_def =
+        parse_gradient_element("linearGradient", &derived, &[], Some("base".to_owned())).unwrap();
+
+    let mut map = HashMap::new();
+    map.insert("base".to_owned(), Arc::new(base_def));
+    map.insert("derived".to_owned(), Arc::new(derived_def));
+
+    resolve_gradient_hrefs(&mut map);
+
+    match map.get("derived").unwrap().as_ref() {
+        GradientDef::Linear(lg) => {
+            // x2 and units are inherited from `base`.
+            assert_eq!(lg.units, GradientUnits::UserSpaceOnUse);
+            assert!(matches!(lg.x2, GradientLength::Number(300.0)));
+        },
+        _ => panic!("derived gradient must remain linear"),
+    }
 }
 
 // ============================================================
@@ -1307,6 +1405,7 @@ fn render_tree_with_gradient_def() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        explicit: GradientExplicit::default(),
     }));
     tree.gradients.insert("g1".into(), grad);
     assert_eq!(tree.gradients.len(), 1);
@@ -1326,6 +1425,7 @@ fn render_tree_gradient_insert_and_check() {
         stops: vec![],
         transform: vec![],
         spread_method: SpreadMethod::Pad,
+        explicit: GradientExplicit::default(),
     }));
     tree.gradients.insert("g1".into(), grad);
     assert_eq!(tree.gradients.len(), 1);

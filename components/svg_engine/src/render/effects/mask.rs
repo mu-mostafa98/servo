@@ -20,7 +20,6 @@ use vello_cpu::kurbo::Affine;
 use vello_cpu::peniko::{Fill, Gradient, GradientKind};
 
 use crate::render_tree::{MaskContentUnits, MaskDef, MaskType};
-use crate::renderer::providers::PaintResourceProvider;
 use crate::renderer::path::{
     apply_paint, resolve_fill_paint, scale_paint, transform_to_affine,
 };
@@ -55,7 +54,6 @@ pub(crate) fn rasterize_mask(
     node_xform: Transform2D<f32, (), ()>,
     viewbox_scale: (f32, f32),
     device_scale: f32,
-    paints: &dyn PaintResourceProvider,
 ) -> Option<MaskRaster> {
     if mask.content_units != MaskContentUnits::UserSpaceOnUse {
         return None;
@@ -153,7 +151,6 @@ pub(crate) fn rasterize_mask(
             viewbox_scale,
             &s.bbox,
             s.node_opacity,
-            paints,
         ) else {
             continue;
         };

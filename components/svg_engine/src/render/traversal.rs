@@ -21,7 +21,7 @@ use crate::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::effects::filter::get_filter_ops;
 use crate::effects::mask::{MaskRaster, rasterize_mask};
 use crate::render_tree::*;
-use crate::renderer::{PaintResourceProvider, Render, RenderContext, clip_chain_option, transform};
+use crate::renderer::{Render, RenderContext, clip_chain_option, transform};
 use crate::renderer::path::rasterize_bez;
 use crate::shapes::ComplexClip;
 use crate::RasterSink;
@@ -50,7 +50,6 @@ pub fn render_svg_tree(
     let (root_origin, root_spatial_id, pop_frame, viewbox) =
         push_viewbox_frame(tree, svg_origin, svg_size, spatial_id, wr);
 
-    let providers = ResourceProviders { paints: tree };
     let viewbox_scale = viewbox
         .as_ref()
         .map(|v| (v.sx, v.sy))
@@ -70,7 +69,6 @@ pub fn render_svg_tree(
         root_spatial_id,
         svg_clip_chain,
         wr,
-        &providers,
         1.0,
         viewbox_scale,
         device_scale,
@@ -168,17 +166,11 @@ fn push_viewbox_frame(
 
 // ======================= Bundled Parameter Structs =======================
 
-/// Bundled resource providers — reduces argument count for recursive functions.
-struct ResourceProviders<'a> {
-    paints: &'a dyn PaintResourceProvider,
-}
-
 /// Bundled effect parameters — reduces argument count for `emit_geometry`.
 struct EffectParams<'a> {
     mask: &'a Option<ResolvedMask>,
     complex_clips: &'a [ComplexClip],
     filter_ops: &'a Option<Vec<webrender_api::FilterOp>>,
-    paints: &'a dyn PaintResourceProvider,
 }
 
 /// A resolved mask: either a CPU-rasterized luminance/alpha pixmap (real mask
@@ -207,7 +199,6 @@ fn render_node(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     wr: &mut DisplayListBuilder,
-    providers: &ResourceProviders,
     parent_scale: f32,
     viewbox_scale: (f32, f32),
     device_scale: f32,
@@ -324,7 +315,6 @@ fn render_node(
         raster_offset,
         cur_viewbox_scale,
         device_scale,
-        providers.paints,
         inherited_mask.as_ref(),
     );
 
@@ -333,7 +323,6 @@ fn render_node(
         mask: &resolved.mask,
         complex_clips: &resolved.complex_clips,
         filter_ops: &resolved.filter_ops,
-        paints: providers.paints,
     };
     emit_element(
         node,
@@ -357,7 +346,6 @@ fn render_node(
         &cur_origin,
         cur_spatial_id,
         resolved.clip_chain,
-        providers,
         accumulated_scale,
         wr,
         cur_viewbox_scale,
@@ -395,7 +383,6 @@ fn resolve_node_effects(
     raster_offset: LayoutPoint,
     viewbox_scale: (f32, f32),
     device_scale: f32,
-    paints: &dyn PaintResourceProvider,
     inherited_mask: Option<&ResolvedMask>,
 ) -> ResolvedEffects {
     let (node_clip_chain, complex_clips) = resolve_node_clip_path(
@@ -415,7 +402,6 @@ fn resolve_node_effects(
         raster_offset,
         viewbox_scale,
         device_scale,
-        paints,
         inherited_mask,
     );
     let filter_ops = get_filter_ops(node);
@@ -450,7 +436,6 @@ fn resolve_node_mask(
     raster_offset: LayoutPoint,
     viewbox_scale: (f32, f32),
     device_scale: f32,
-    paints: &dyn PaintResourceProvider,
     inherited_mask: Option<&ResolvedMask>,
 ) -> Option<ResolvedMask> {
     let Some(mask_def) = node
@@ -465,7 +450,7 @@ fn resolve_node_mask(
 
     if mask_def.content_units == MaskContentUnits::UserSpaceOnUse {
         if let Some(raster) =
-            rasterize_mask(mask_def, &raster_offset, node_xform, viewbox_scale, device_scale, paints)
+            rasterize_mask(mask_def, &raster_offset, node_xform, viewbox_scale, device_scale)
         {
             return Some(ResolvedMask::Raster(Rc::new(raster)));
         }
@@ -605,7 +590,6 @@ fn emit_geometry(
                 cur_spatial_id,
                 node_clip_chain,
                 accumulated_scale,
-                params.paints,
                 params.complex_clips,
                 wr,
                 viewbox_scale,
@@ -632,7 +616,6 @@ fn emit_geometry(
                     cur_spatial_id,
                     mask_clip.chain,
                     accumulated_scale,
-                    params.paints,
                     &combined,
                     wr,
                     viewbox_scale,
@@ -653,7 +636,6 @@ fn emit_geometry(
                 cur_spatial_id,
                 node_clip_chain,
                 accumulated_scale,
-                params.paints,
                 params.complex_clips,
                 wr,
                 viewbox_scale,
@@ -681,7 +663,6 @@ fn emit_shape(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     accumulated_scale: f32,
-    paints: &dyn PaintResourceProvider,
     complex_clips: &[ComplexClip],
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
@@ -734,7 +715,6 @@ fn emit_shape(
                 spatial_id,
                 clip_chain_id,
                 accumulated_scale,
-                paints,
                 wr,
                 sink,
             );
@@ -749,7 +729,6 @@ fn emit_shape(
                     spatial_id,
                     clip_chain_id,
                     wr: &mut *wr,
-                    paints,
                     accumulated_scale,
                     viewbox_scale,
                     device_scale,
@@ -780,7 +759,6 @@ fn emit_shape(
                     node_xform,
                     clip_rect,
                     complex_clips,
-                    paints,
                     wr,
                     sink,
                     alpha_mask,
@@ -800,7 +778,6 @@ fn emit_shape(
         device_scale,
         raster_offset,
         clip_rect,
-        paints,
         wr,
         sink,
     );
@@ -815,7 +792,6 @@ fn emit_shape(
             spatial_id,
             clip_chain_id,
             wr: &mut *wr,
-            paints,
             accumulated_scale,
             viewbox_scale,
             device_scale,
@@ -840,7 +816,6 @@ fn emit_native_gradients(
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
     accumulated_scale: f32,
-    paints: &dyn PaintResourceProvider,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
 ) -> bool {
@@ -859,7 +834,6 @@ fn emit_native_gradients(
         spatial_id,
         clip_chain_id,
         wr: &mut *wr,
-        paints,
         accumulated_scale,
         viewbox_scale: (1.0, 1.0),
         device_scale: 1.0,
@@ -1021,7 +995,6 @@ fn emit_markers(
     device_scale: f32,
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
-    paints: &dyn PaintResourceProvider,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
 ) {
@@ -1036,7 +1009,7 @@ fn emit_markers(
         let (nx, ny) = vertices[1];
         emit_marker(
             def, x, y, nx - x, ny - y, true, stroke_width,
-            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, wr, sink,
+            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, wr, sink,
         );
     }
     if let Some(def) = refs.mid.as_ref().and_then(DefRef::resolved) {
@@ -1045,7 +1018,7 @@ fn emit_markers(
             let (nx, ny) = vertices[i + 1];
             emit_marker(
                 def, x, y, nx - x, ny - y, false, stroke_width,
-                node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, wr, sink,
+                node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, wr, sink,
             );
         }
     }
@@ -1054,7 +1027,7 @@ fn emit_markers(
         let (px, py) = vertices[n - 2];
         emit_marker(
             def, x, y, x - px, y - py, false, stroke_width,
-            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, paints, wr, sink,
+            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, wr, sink,
         );
     }
 }
@@ -1074,7 +1047,6 @@ fn emit_marker(
     device_scale: f32,
     raster_offset: LayoutPoint,
     clip_rect: Option<LayoutRect>,
-    paints: &dyn PaintResourceProvider,
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
 ) {
@@ -1132,7 +1104,6 @@ fn emit_marker(
             full_xform,
             clip_rect,
             &[],
-            paints,
             wr,
             sink,
             None,
@@ -1210,7 +1181,6 @@ fn emit_leaf<T: crate::renderer::Render>(
         spatial_id: cur_spatial_id,
         clip_chain_id: effective_clip,
         wr: &mut *wr,
-        paints: params.paints,
         accumulated_scale: 1.0,
         viewbox_scale,
         device_scale,
@@ -1234,7 +1204,6 @@ fn recurse_children(
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     clip_chain: ClipChainId,
-    providers: &ResourceProviders,
     accumulated_scale: f32,
     wr: &mut DisplayListBuilder,
     viewbox_scale: (f32, f32),
@@ -1257,7 +1226,6 @@ fn recurse_children(
             cur_spatial_id,
             clip_chain,
             wr,
-            providers,
             accumulated_scale,
             viewbox_scale,
             device_scale,

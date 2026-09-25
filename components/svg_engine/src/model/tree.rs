@@ -8,7 +8,6 @@ use std::sync::Arc;
 use svgtypes::ViewBox as SvgViewBox;
 
 pub use crate::image::SvgImage;
-use crate::renderer::PaintResourceProvider;
 use crate::shapes::Shape;
 use crate::style::NodeStyle;
 use crate::style::gradient::{GradientDef, PaintServer};
@@ -75,15 +74,6 @@ pub struct SvgRenderTree {
     pub filters: HashMap<String, Arc<FilterDef>>,
     /// Marker definitions keyed by their `id` (without the `#` prefix).
     pub markers: HashMap<String, Arc<MarkerDef>>,
-}
-
-impl PaintResourceProvider for SvgRenderTree {
-    fn gradient(&self, id: &str) -> Option<&GradientDef> {
-        self.gradients.get(id).map(|def| def.as_ref())
-    }
-    fn pattern(&self, id: &str) -> Option<&PatternDef> {
-        self.patterns.get(id).map(|def| def.as_ref())
-    }
 }
 
 #[derive(Debug)]
