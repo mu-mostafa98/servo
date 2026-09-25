@@ -101,15 +101,13 @@ impl FromComputedValues for FillParams {
         };
         match paint {
             ResolvedPaint::Color(color) => Some(FillParams {
-                color: Some(color),
-                paint_server: None,
+                paint_server: Some(PaintServer::Solid(color)),
                 opacity,
                 fill_rule,
             }),
             ResolvedPaint::PaintServer(id) => Some(FillParams {
-                // Fall back to black (SVG default) if the paint server
-                // reference is invalid / not found at render time.
-                color: Some(SvgColor::new_rgb(0, 0, 0)),
+                // An invalid/missing reference falls back to black at resolve
+                // time (see `resolve_paint_server`).
                 paint_server: Some(PaintServer::Ref(Id::new(id))),
                 opacity,
                 fill_rule,
@@ -121,13 +119,12 @@ impl FromComputedValues for FillParams {
                     let current_color = values.clone_color();
                     let srgb = current_color.to_color_space(ColorSpace::Srgb);
                     Some(FillParams {
-                        color: Some(SvgColor::new_rgba(
+                        paint_server: Some(PaintServer::Solid(SvgColor::new_rgba(
                             (srgb.components.0.clamp(0.0, 1.0) * 255.0) as u8,
                             (srgb.components.1.clamp(0.0, 1.0) * 255.0) as u8,
                             (srgb.components.2.clamp(0.0, 1.0) * 255.0) as u8,
                             (srgb.alpha.clamp(0.0, 1.0) * 255.0) as u8,
-                        )),
-                        paint_server: None,
+                        ))),
                         opacity,
                         fill_rule,
                     })
@@ -185,8 +182,7 @@ impl FromComputedValues for StrokeParams {
         }
         match paint {
             ResolvedPaint::Color(color) => Some(StrokeParams {
-                color: Some(color),
-                paint_server: None,
+                paint_server: Some(PaintServer::Solid(color)),
                 opacity,
                 width: Length::new(width),
                 line_cap,
@@ -196,9 +192,8 @@ impl FromComputedValues for StrokeParams {
                 dash_offset,
             }),
             ResolvedPaint::PaintServer(id) => Some(StrokeParams {
-                // Fall back to black (SVG default) if the paint server
-                // reference is invalid / not found at render time.
-                color: Some(SvgColor::new_rgb(0, 0, 0)),
+                // An invalid/missing reference falls back to black at resolve
+                // time (see `resolve_paint_server`).
                 paint_server: Some(PaintServer::Ref(Id::new(id))),
                 opacity,
                 width: Length::new(width),
@@ -332,7 +327,6 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
     }
 
     let stroke = style.stroke.get_or_insert_with(|| StrokeParams {
-        color: None,
         paint_server: None,
         opacity: Opacity::ONE,
         width: Length::new(1.0),
@@ -345,15 +339,12 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
 
     match parse_paint_server(&stroke_value) {
         Some(PaintServer::Solid(c)) => {
-            stroke.color = Some(c);
-            stroke.paint_server = None;
+            stroke.paint_server = Some(PaintServer::Solid(c));
         },
         Some(PaintServer::Ref(id)) => {
-            stroke.color = Some(SvgColor::new_rgb(0, 0, 0));
             stroke.paint_server = Some(PaintServer::Ref(id));
         },
         None => {
-            stroke.color = None;
             stroke.paint_server = None;
         },
         // Gradient/Pattern variants are only produced by the post-build
@@ -437,22 +428,18 @@ fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeS
     }
 
     let fill = style.fill.get_or_insert_with(|| FillParams {
-        color: None,
         paint_server: None,
         opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     });
     match parse_paint_server(&fill_value) {
         Some(PaintServer::Solid(c)) => {
-            fill.color = Some(c);
-            fill.paint_server = None;
+            fill.paint_server = Some(PaintServer::Solid(c));
         },
         Some(PaintServer::Ref(id)) => {
-            fill.color = Some(SvgColor::new_rgb(0, 0, 0));
             fill.paint_server = Some(PaintServer::Ref(id));
         },
         None => {
-            fill.color = None;
             fill.paint_server = None;
         },
         // Gradient/Pattern variants are only produced by the post-build

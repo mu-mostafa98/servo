@@ -4,16 +4,40 @@
 
 //! SVG fill and stroke properties — pure data types, no WebRender dependency.
 
+use std::sync::Arc;
+
 use svgtypes::Color as SvgColor;
 
-use super::gradient::PaintServer;
-use crate::model::units::{Length, Opacity};
+use super::gradient::GradientDef;
+use crate::model::document::PatternDef;
+use crate::model::units::{Id, Length, Opacity};
+
+/// A paint server reference — a solid color, a gradient, or a pattern.
+///
+/// [`PaintServer::Ref`] is a transient build-time state: the layout layer emits
+/// it while only the string `url(#id)` is known, then the resolve pass rewrites
+/// it into a typed [`PaintServer::Gradient`]/[`PaintServer::Pattern`] `Arc`
+/// handle once the definition maps are collected. No `Ref` value survives past
+/// build time.
+#[derive(Debug, Clone)]
+pub enum PaintServer {
+    /// Solid color fill/stroke.
+    Solid(SvgColor),
+    /// A resolved gradient definition (`url(#myGrad)`).
+    Gradient(Arc<GradientDef>),
+    /// A resolved pattern definition (`url(#myPattern)`).
+    Pattern(Arc<PatternDef>),
+    /// Transient id reference, resolved to `Gradient`/`Pattern` after build.
+    Ref(Id),
+}
 
 /// SVG fill properties.
 #[derive(Debug, Clone)]
 pub struct FillParams {
-    pub color: Option<SvgColor>,
-    /// Paint server reference (gradient url). When set, takes priority over `color`.
+    /// The paint applied to the interior — a solid color, gradient, or pattern.
+    /// `None` means "no paint" (reached only transiently during building, e.g.
+    /// for `transparent`/unparseable values); `fill: none` is represented by
+    /// [`NodeStyle::fill`] being `None`.
     pub paint_server: Option<PaintServer>,
     pub opacity: Opacity,
     pub fill_rule: FillRule,
@@ -29,8 +53,8 @@ pub enum FillRule {
 /// SVG stroke properties.
 #[derive(Debug, Clone)]
 pub struct StrokeParams {
-    pub color: Option<SvgColor>,
-    /// Paint server reference (gradient url). When set, takes priority over `color`.
+    /// The paint applied to the stroke — a solid color, gradient, or pattern.
+    /// `None` means "no paint"; see [`FillParams::paint_server`].
     pub paint_server: Option<PaintServer>,
     pub opacity: Opacity,
     pub width: Length,

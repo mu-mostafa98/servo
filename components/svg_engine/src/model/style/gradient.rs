@@ -12,32 +12,14 @@
 //! Parsing and `href` resolution live in the layout layer
 //! (`components/layout/svg/defines.rs`).
 
-use std::sync::Arc;
-
 use svgtypes::Color as SvgColor;
 
-use crate::model::document::PatternDef;
 use super::transform::TransformOp;
-use crate::model::units::Id;
 
-/// A paint server reference — a solid color, a gradient, or a pattern.
-///
-/// [`PaintServer::Ref`] is a transient build-time state: the layout layer emits
-/// it while only the string `url(#id)` is known, then the resolve pass rewrites
-/// it into a typed [`PaintServer::Gradient`]/[`PaintServer::Pattern`] `Arc`
-/// handle once the definition maps are collected. No `Ref` value survives past
-/// build time.
-#[derive(Debug, Clone)]
-pub enum PaintServer {
-    /// Solid color fill/stroke.
-    Solid(SvgColor),
-    /// A resolved gradient definition (`url(#myGrad)`).
-    Gradient(Arc<GradientDef>),
-    /// A resolved pattern definition (`url(#myPattern)`).
-    Pattern(Arc<PatternDef>),
-    /// Transient id reference, resolved to `Gradient`/`Pattern` after build.
-    Ref(Id),
-}
+// `PaintServer` is the paint abstraction shared by fill and stroke, so its
+// canonical home is `style::paint`. It is re-exported here for backward
+// compatibility with the `svg_engine::style::gradient::PaintServer` path.
+pub use super::paint::PaintServer;
 
 /// Definitions collected from `<defs>` during render tree construction.
 #[derive(Debug, Clone)]

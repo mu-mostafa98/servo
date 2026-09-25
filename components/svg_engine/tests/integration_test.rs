@@ -409,20 +409,18 @@ fn node_style_display_none() {
 #[test]
 fn fill_params_solid_color() {
     let f = FillParams {
-        color: Some(svgtypes::Color::new_rgb(255, 0, 0)),
-        paint_server: None,
+        paint_server: Some(PaintServer::Solid(svgtypes::Color::new_rgb(255, 0, 0))),
         opacity: Opacity::new(0.8),
         fill_rule: FillRule::NonZero,
     };
     assert_eq!(f.opacity.get(), 0.8);
     assert!(matches!(f.fill_rule, FillRule::NonZero));
-    assert!(f.paint_server.is_none());
+    assert!(matches!(f.paint_server, Some(PaintServer::Solid(_))));
 }
 
 #[test]
 fn fill_params_ref_paint_server() {
     let f = FillParams {
-        color: None,
         paint_server: Some(PaintServer::Ref(Id::new("myGrad"))),
         opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
@@ -433,7 +431,6 @@ fn fill_params_ref_paint_server() {
 #[test]
 fn fill_params_evenodd() {
     let f = FillParams {
-        color: None,
         paint_server: None,
         opacity: Opacity::ONE,
         fill_rule: FillRule::EvenOdd,
@@ -444,8 +441,7 @@ fn fill_params_evenodd() {
 #[test]
 fn stroke_params_all_fields() {
     let s = StrokeParams {
-        color: Some(svgtypes::Color::new_rgb(0, 0, 0)),
-        paint_server: None,
+        paint_server: Some(PaintServer::Solid(svgtypes::Color::new_rgb(0, 0, 0))),
         opacity: Opacity::new(0.5),
         width: Length::new(3.0),
         line_cap: LineCap::Round,
@@ -1319,8 +1315,7 @@ fn make_simple_tree() -> SvgTree {
 fn make_simple_tree_with_fill() -> SvgTree {
     let mut tree = make_simple_tree();
     tree.root.style.fill = Some(FillParams {
-        color: Some(svgtypes::Color::new_rgb(255, 0, 0)),
-        paint_server: None,
+        paint_server: Some(PaintServer::Solid(svgtypes::Color::new_rgb(255, 0, 0))),
         opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     });

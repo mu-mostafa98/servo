@@ -143,8 +143,8 @@ pub(crate) fn stroke_line_segment(x1: f32, y1: f32, x2: f32, y2: f32, ctx: &mut 
         },
     );
 
-    if let Some(svg_color) = stroke.color {
-        let mut color = to_colorf(&svg_color);
+    if let Some(PaintServer::Solid(svg_color)) = &stroke.paint_server {
+        let mut color = to_colorf(svg_color);
         color.a *= stroke.opacity.get() * ctx.style.opacity.get();
         emit_rotated_rects_for_segment(len, half_w, color, stroke, line_spatial_id, ctx);
     } else if let Some(PaintServer::Gradient(def)) = &stroke.paint_server {
@@ -376,8 +376,8 @@ pub(crate) fn stroke_rect(
         return;
     };
 
-    if let Some(svg_color) = stroke.color {
-        let mut color = to_colorf(&svg_color);
+    if let Some(PaintServer::Solid(svg_color)) = &stroke.paint_server {
+        let mut color = to_colorf(svg_color);
         color.a *= stroke.opacity.get() * ctx.style.opacity.get();
         let stroke_width = effective_stroke_width(ctx, stroke.width.get());
         let widths = LayoutSideOffsets::new_all_same(stroke_width);
@@ -516,15 +516,13 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         return;
     };
     let adjusted_width = effective_stroke_width(ctx, stroke.width.get());
-    if (stroke.color.is_none() && stroke.paint_server.is_none()) || adjusted_width <= 0.0 {
+    if stroke.paint_server.is_none() || adjusted_width <= 0.0 {
         return;
     }
 
     // Gradient stroke: evaluate at each segment's midpoint so the gradient
     // spans the whole shape, not each segment independently.
-    if stroke.color.is_none() &&
-        let Some(PaintServer::Gradient(def)) = &stroke.paint_server
-    {
+    if let Some(PaintServer::Gradient(def)) = &stroke.paint_server {
         let def = Arc::clone(def);
         return stroke_polyline_gradient(pts, ctx, adjusted_width, def.as_ref());
     }
@@ -539,8 +537,7 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         opacity: ctx.style.opacity,
         markers: None,
         stroke: Some(StrokeParams {
-            color: stroke.color,
-            paint_server: None,
+            paint_server: stroke.paint_server.clone(),
             opacity: stroke.opacity,
             width: Length::new(adjusted_width),
             line_cap: stroke.line_cap,

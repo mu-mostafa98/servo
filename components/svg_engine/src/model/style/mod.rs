@@ -18,7 +18,7 @@ pub mod paint;
 pub mod transform;
 
 pub use self::effects::NodeEffects;
-pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, StrokeParams};
+pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, PaintServer, StrokeParams};
 
 use crate::model::document::{DefRef, MarkerDef};
 use crate::model::units::Opacity;

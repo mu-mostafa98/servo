@@ -134,8 +134,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                 match ps {
                     PaintServer::Solid(c) => {
                         style.fill = Some(FillParams {
-                            color: Some(c),
-                            paint_server: None,
+                            paint_server: Some(PaintServer::Solid(c)),
                             opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(Opacity::ONE),
                             fill_rule: style
                                 .fill
@@ -146,7 +145,6 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                     },
                     PaintServer::Ref(id) => {
                         style.fill = Some(FillParams {
-                            color: None,
                             paint_server: Some(PaintServer::Ref(id)),
                             opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(Opacity::ONE),
                             fill_rule: style
@@ -174,8 +172,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                 match ps {
                     PaintServer::Solid(c) => {
                         style.stroke = Some(StrokeParams {
-                            color: Some(c),
-                            paint_server: None,
+                            paint_server: Some(PaintServer::Solid(c)),
                             opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(Opacity::ONE),
                             width: style.stroke.as_ref().map(|s| s.width).unwrap_or(Length::new(1.0)),
                             line_cap: style
@@ -203,7 +200,6 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
                     },
                     PaintServer::Ref(id) => {
                         style.stroke = Some(StrokeParams {
-                            color: None,
                             paint_server: Some(PaintServer::Ref(id)),
                             opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(Opacity::ONE),
                             width: style.stroke.as_ref().map(|s| s.width).unwrap_or(Length::new(1.0)),

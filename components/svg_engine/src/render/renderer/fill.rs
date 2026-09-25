@@ -46,24 +46,20 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
             let def = Arc::clone(def);
             pattern::fill_rect_with_pattern(def.as_ref(), bounds, ctx, opacity);
         },
-        Some(PaintServer::Solid(_) | PaintServer::Ref(_)) => {
-            // Solid paint server (or a transient `Ref` that should already have
-            // been resolved) — handled via fill.color below.
+        Some(PaintServer::Solid(svg_color)) => {
+            let mut color = to_colorf(svg_color);
+            color.a *= opacity;
+            let common = CommonItemProperties::new(
+                bounds,
+                SpaceAndClipInfo {
+                    spatial_id: ctx.spatial_id,
+                    clip_chain_id: clip,
+                },
+            );
+            ctx.wr.push_rect(&common, bounds, color);
         },
-        None => {
-            if let Some(svg_color) = fill.color {
-                let mut color = to_colorf(&svg_color);
-                color.a *= opacity;
-                let common = CommonItemProperties::new(
-                    bounds,
-                    SpaceAndClipInfo {
-                        spatial_id: ctx.spatial_id,
-                        clip_chain_id: clip,
-                    },
-                );
-                ctx.wr.push_rect(&common, bounds, color);
-            }
-        },
+        // A transient `Ref` should already have been resolved before render.
+        Some(PaintServer::Ref(_)) | None => {},
     }
 
     ctx.clip_chain_id = orig_clip;
@@ -112,14 +108,13 @@ pub(crate) fn fill_polygon(
             let def = Arc::clone(def);
             handle_pattern_fill(def.as_ref(), pts, bounds, fill_rule, ctx, opacity);
         },
-        _ => {
-            if let Some(svg_color) = fill.color {
-                let mut color = to_colorf(&svg_color);
-                color.a *= opacity;
-                let fill_style = FillStyle::Solid(color);
-                tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
-            }
+        Some(PaintServer::Solid(svg_color)) => {
+            let mut color = to_colorf(svg_color);
+            color.a *= opacity;
+            let fill_style = FillStyle::Solid(color);
+            tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
         },
+        Some(PaintServer::Ref(_)) | None => {},
     }
 }
 

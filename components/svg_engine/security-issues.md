@@ -154,7 +154,7 @@ of whatever is running the engine.
 ```
 
 - **Fix:**
-  - **Where (Stage 4 — Build):** path parser `layout::svg::geometry::parse_path` ([geometry.rs:362](components/layout/svg/geometry.rs#L362)).
+  - **Where (Stage 4 — Build):** path parser `layout::svg::primitives::geometry::parse_path` ([geometry.rs:198](components/layout/svg/primitives/geometry.rs#L198)).
   - **Describe the fix:** fuzz the path parser with malformed `d` strings (cargo-fuzz / OSS-Fuzz) and audit any `unsafe` there; treat a panic as a bug to fix, not a crash to swallow.
 
 **1.2 — Malformed shape geometry** *(tessellator + rasterizer)*
@@ -600,7 +600,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg><path d="M0,0 L1,1 L2,2 L3,3 <!-- …1,000,000 segments… -->"/></svg>
 ```
 - **Fix:**
-  - **Where (Stage 4 — Build):** `layout::svg::geometry::parse_path` ([geometry.rs:362](components/layout/svg/geometry.rs#L362)).
+  - **Where (Stage 4 — Build):** `layout::svg::primitives::geometry::parse_path` ([geometry.rs:198](components/layout/svg/primitives/geometry.rs#L198)).
   - **Describe the fix:** cap the `d` command/segment count (e.g. max 100,000).
 
 **6.11 — Excessive element count**

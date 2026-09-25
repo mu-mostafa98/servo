@@ -20,7 +20,7 @@ impl Render for Line {
         let Some(stroke) = &ctx.style.stroke else {
             return;
         };
-        if (stroke.color.is_none() && stroke.paint_server.is_none()) || stroke.width.get() <= 0.0 {
+        if stroke.paint_server.is_none() || stroke.width.get() <= 0.0 {
             return;
         }
 

@@ -421,7 +421,7 @@ pub(crate) fn resolve_fill_paint(
             bbox,
         )));
     }
-    if let Some(color) = &fill.color {
+    if let Some(crate::model::style::gradient::PaintServer::Solid(color)) = &fill.paint_server {
         return Some(ResolvedPaint::Solid(vello_color(color, fill.opacity.get() * node_opacity)));
     }
     None
@@ -445,7 +445,7 @@ fn resolve_stroke_paint(
             bbox,
         )));
     }
-    if let Some(color) = &stroke.color {
+    if let Some(crate::model::style::gradient::PaintServer::Solid(color)) = &stroke.paint_server {
         return Some(ResolvedPaint::Solid(vello_color(color, stroke.opacity.get() * node_opacity)));
     }
     None
