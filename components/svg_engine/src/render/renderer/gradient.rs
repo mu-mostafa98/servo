@@ -15,8 +15,8 @@ use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
 
 use crate::render::renderer::{RenderContext, ZERO_LENGTH_EPSILON, shape_rendering_value, to_colorf};
 use crate::model::style::gradient::{GradientDef, GradientStop, GradientUnits, SpreadMethod};
-use crate::model::style::hints::{ColorInterpolation, ColorRendering};
-use crate::model::style::transform_ops::TransformOp;
+use crate::model::style::{ColorInterpolation, ColorRendering};
+use crate::model::style::transform::TransformOp;
 
 // ======================= Shared color math =======================
 

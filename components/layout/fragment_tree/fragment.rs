@@ -20,7 +20,7 @@ use style::Zero;
 use style::properties::ComputedValues;
 use style_traits::CSSPixel;
 #[cfg(feature = "svg-engine")]
-use svg_engine::tree::SvgTree;
+use svg_engine::document::SvgTree;
 use webrender_api::{FontInstanceKey, ImageKey};
 
 use super::{

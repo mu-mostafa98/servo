@@ -15,10 +15,10 @@ use std::sync::Arc;
 use webrender_api::units::LayoutRect;
 use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 
-use crate::model::tree::PatternUnits;
+use crate::model::document::PatternUnits;
 use crate::render::renderer::{RenderContext, gradient, pattern, to_colorf};
 use crate::model::style::gradient::{GradientDef, GradientUnits, PaintServer};
-use crate::model::style::hints::ColorInterpolation;
+use crate::model::style::ColorInterpolation;
 use crate::render::tessellator;
 use crate::render::tessellator::FillStyle;
 
@@ -228,7 +228,7 @@ fn build_radial_fill_style<'a>(
 
 /// Helper: fill a polygon with a pattern paint server.
 fn handle_pattern_fill(
-    def: &crate::model::tree::PatternDef,
+    def: &crate::model::document::PatternDef,
     pts: &[LyonPoint],
     bounds: LayoutRect,
     fill_rule: crate::model::style::FillRule,

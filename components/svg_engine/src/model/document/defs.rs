@@ -2,169 +2,15 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use std::collections::HashMap;
+//! SVG definitions collected from `<defs>` — clip paths, masks, filters,
+//! patterns, and markers — plus the [`DefRef`] indirection used to resolve them.
+
 use std::sync::Arc;
 
-pub use crate::model::image::SvgImage;
-use crate::model::shapes::Shape;
-use crate::model::style::NodeStyle;
-use crate::model::style::gradient::GradientDef;
-use crate::model::style::transform_ops::TransformOp;
-use crate::model::units::{Id, Length};
-pub use crate::model::text::TextSpan;
-
-// ======================= PreserveAspectRatio =======================
-
-/// SVG `preserveAspectRatio` alignment type.
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub enum AspectAlign {
-    None,
-    XMinYMin,
-    XMidYMin,
-    XMaxYMin,
-    XMinYMid,
-    XMidYMid,
-    XMaxYMid,
-    XMinYMax,
-    XMidYMax,
-    XMaxYMax,
-}
-
-/// SVG `preserveAspectRatio` meet-or-slice.
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub enum MeetOrSlice {
-    Meet,
-    Slice,
-}
-
-/// Parsed `preserveAspectRatio` value.
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub struct AspectRatio {
-    pub align: AspectAlign,
-    pub meet_or_slice: MeetOrSlice,
-}
-
-impl Default for AspectRatio {
-    fn default() -> Self {
-        // SVG spec: viewBox alone implies preserveAspectRatio="xMidYMid meet".
-        AspectRatio {
-            align: AspectAlign::XMidYMid,
-            meet_or_slice: MeetOrSlice::Meet,
-        }
-    }
-}
-
-/// The SVG render tree — a tree of [`SvgNode`]s plus viewport info
-/// and gradient/clip-path/pattern/mask/filter definitions collected from `<defs>`.
-#[derive(Debug)]
-pub struct SvgTree {
-    pub root: SvgNode,
-    pub viewport: ViewportInfo,
-    /// Gradient definitions keyed by their `id` (without the `#` prefix).
-    pub gradients: HashMap<String, Arc<GradientDef>>,
-    /// Clip path definitions keyed by their `id` (without the `#` prefix).
-    pub clip_paths: HashMap<String, Arc<ClipPathDef>>,
-    /// Pattern definitions keyed by their `id` (without the `#` prefix).
-    pub patterns: HashMap<String, Arc<PatternDef>>,
-    /// Mask definitions keyed by their `id` (without the `#` prefix).
-    pub masks: HashMap<String, Arc<MaskDef>>,
-    /// Filter definitions keyed by their `id` (without the `#` prefix).
-    pub filters: HashMap<String, Arc<FilterDef>>,
-    /// Marker definitions keyed by their `id` (without the `#` prefix).
-    pub markers: HashMap<String, Arc<MarkerDef>>,
-}
-
-#[derive(Debug)]
-pub struct SvgNode {
-    pub id: Option<Id>,
-    pub tag: SvgTag,
-    pub style: NodeStyle,
-    /// SVG transforms applied to this node (CSS transform + `transform` attribute).
-    /// These are structural (affect coordinate system), not paint-level style.
-    pub transforms: Vec<TransformOp>,
-    /// Nested `<svg>` viewport (viewBox + x/y/width/height + preserveAspectRatio).
-    /// `None` for the root `<svg>` (handled via [`SvgTree::viewport`]) and
-    /// for every non-`<svg>` node.
-    pub viewport: Option<SvgViewport>,
-    pub children: Vec<SvgNode>,
-}
-
-#[derive(Debug)]
-pub enum SvgTag {
-    Shape(Shape),
-    Text(TextSpan),
-    Image(SvgImage),
-    Container(Container),
-}
-
-impl From<Shape> for SvgTag {
-    fn from(shape: Shape) -> Self {
-        SvgTag::Shape(shape)
-    }
-}
-
-impl From<Container> for SvgTag {
-    fn from(container: Container) -> Self {
-        SvgTag::Container(container)
-    }
-}
-
-#[derive(Debug)]
-pub enum Container {
-    Group,
-    Svg,
-    /// `<defs>` — definitions container whose children are not rendered directly.
-    Defs,
-    /// `<use>` — references another element by its `#id`.
-    Use,
-    /// `<symbol>` — a re-usable viewBox'd container referenced by `<use>`.
-    Symbol,
-    /// `<text>` — a logical text element whose children are the inline
-    /// `<tspan>`/bare-text runs of the line. Unlike `<g>`, the children are
-    /// ordered text runs laid out on a single baseline with cumulative
-    /// advance (each `TextSpan` carries its own `advance_offset`).
-    Text,
-}
-
-#[derive(Debug, Clone, Copy)]
-pub struct ViewBox {
-    pub min_x: Length,
-    pub min_y: Length,
-    pub width: Length,
-    pub height: Length,
-}
-
-#[derive(Debug, Clone)]
-pub struct ViewportInfo {
-    pub width: Length,
-    pub height: Length,
-    pub view_box: Option<ViewBox>,
-    /// When true, the viewport clip is omitted (CSS `overflow: visible`).
-    pub overflow_visible: bool,
-    /// Parsed preserveAspectRatio (defaults to xMidYMid meet).
-    pub aspect_ratio: Option<AspectRatio>,
-}
-
-/// Viewport established by a nested `<svg>` element.
-///
-/// Unlike the root [`ViewportInfo`] (whose size is imposed by layout), a nested
-/// `<svg>` carries its own `x`/`y`/`width`/`height` attributes that position and
-/// size the sub-viewport in the parent user coordinate system, plus an optional
-/// `viewBox` and `preserveAspectRatio` that map content into it.
-#[derive(Debug, Clone)]
-pub struct SvgViewport {
-    /// Position of the viewport in the parent user coordinate system.
-    pub x: Length,
-    pub y: Length,
-    /// Size of the viewport (from the `width`/`height` attributes).
-    pub width: Length,
-    pub height: Length,
-    pub view_box: Option<ViewBox>,
-    /// Parsed preserveAspectRatio (defaults to xMidYMid meet via the renderer).
-    pub aspect_ratio: Option<AspectRatio>,
-    /// When true, the sub-viewport clip is omitted (`overflow: visible`).
-    pub overflow_visible: bool,
-}
+use crate::model::document::viewport::{AspectRatio, ViewBox};
+use crate::model::element::SvgNode;
+use crate::model::style::transform::TransformOp;
+use crate::model::units::Id;
 
 /// A clip path definition collected from `<clipPath>`.
 #[derive(Debug)]
@@ -304,7 +150,7 @@ pub struct PatternDef {
     pub pattern_units: PatternUnits,
     pub pattern_content_units: PatternContentUnits,
     /// The `patternTransform` attribute, applied to the tile coordinate system.
-    pub transform: Vec<crate::model::style::transform_ops::TransformOp>,
+    pub transform: Vec<TransformOp>,
     /// Optional `viewBox` on the pattern, mapped into the tile via
     /// `preserveAspectRatio`.
     pub view_box: Option<ViewBox>,
@@ -396,73 +242,5 @@ impl<T> DefRef<T> {
             DefRef::Resolved(def) => Some(def.as_ref()),
             DefRef::Ref(_) => None,
         }
-    }
-}
-
-// ======================= Visitor Pattern =======================
-
-/// Traversal decision for the visitor pattern.
-#[derive(Debug, Clone, Copy, PartialEq)]
-pub enum VisitDecision {
-    /// Continue traversal into children.
-    Continue,
-    /// Skip children but continue traversal at the parent's next sibling.
-    SkipChildren,
-    /// Stop all traversal entirely.
-    Stop,
-}
-
-/// Visitor for read-only operations on the render tree.
-pub trait SvgTreeVisitor {
-    /// Called for each node. Return `VisitDecision` to control traversal.
-    fn visit_node(&mut self, node: &SvgNode) -> VisitDecision;
-}
-
-/// Visitor for mutation operations on the render tree.
-pub trait SvgTreeVisitorMut {
-    /// Called for each node with mutable access. Return `VisitDecision` to control traversal.
-    fn visit_node_mut(&mut self, node: &mut SvgNode) -> VisitDecision;
-}
-
-impl SvgNode {
-    /// Accept a read-only visitor, traversing the tree in pre-order.
-    pub fn accept(&self, visitor: &mut dyn SvgTreeVisitor) {
-        let decision = visitor.visit_node(self);
-        match decision {
-            VisitDecision::Continue => {
-                for child in &self.children {
-                    child.accept(visitor);
-                }
-            },
-            VisitDecision::SkipChildren => {},
-            VisitDecision::Stop => (),
-        }
-    }
-
-    /// Accept a mutable visitor, traversing the tree in pre-order.
-    pub fn accept_mut(&mut self, visitor: &mut dyn SvgTreeVisitorMut) {
-        let decision = visitor.visit_node_mut(self);
-        match decision {
-            VisitDecision::Continue => {
-                for child in &mut self.children {
-                    child.accept_mut(visitor);
-                }
-            },
-            VisitDecision::SkipChildren => {},
-            VisitDecision::Stop => (),
-        }
-    }
-
-}
-
-impl SvgTree {
-    /// Visit every node in the tree with a read-only visitor.
-    pub fn visit(&self, visitor: &mut dyn SvgTreeVisitor) {
-        self.root.accept(visitor);
-    }
-
-    /// Visit every node in the tree with a mutable visitor.
-    pub fn visit_mut(&mut self, visitor: &mut dyn SvgTreeVisitorMut) {
-        self.root.accept_mut(visitor);
     }
 }

@@ -8,7 +8,7 @@ use euclid::Transform2D;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutTransform};
 use webrender_api::{PropertyBinding, ReferenceFrameKind, TransformStyle};
 
-use crate::model::tree::{PatternContentUnits, PatternDef, PatternUnits};
+use crate::model::document::{PatternContentUnits, PatternDef, PatternUnits};
 use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
 use crate::render::traversal::compute_viewbox_transform;
 

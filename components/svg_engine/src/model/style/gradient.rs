@@ -16,8 +16,8 @@ use std::sync::Arc;
 
 use svgtypes::Color as SvgColor;
 
-use crate::model::tree::PatternDef;
-use crate::model::style::transform_ops::TransformOp;
+use crate::model::document::PatternDef;
+use super::transform::TransformOp;
 use crate::model::units::Id;
 
 /// A paint server reference — a solid color, a gradient, or a pattern.

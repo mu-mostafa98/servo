@@ -5,7 +5,7 @@
 //! SVG shape geometry construction from DOM elements.
 //!
 //! Each function takes a DOM element, its tag name, and optional computed
-//! values, and returns an [`svg_engine::shapes::Shape`] or `None` if the
+//! values, and returns an [`svg_engine::element::shape::Shape`] or `None` if the
 //! element does not represent a valid shape.
 //!
 //! # Design
@@ -19,8 +19,8 @@ use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use style::values::computed::LengthPercentage;
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use svg_engine::geometry::{PathCommand, PathData, Point};
-use svg_engine::shapes::*;
-use svg_engine::text::{DominantBaseline, TextAnchor, TextSpan};
+use svg_engine::element::shape::*;
+use svg_engine::element::text::{DominantBaseline, TextAnchor, TextSpan};
 use svg_engine::units::Length;
 
 use super::style::get_attr;

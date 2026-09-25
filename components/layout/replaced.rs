@@ -34,7 +34,7 @@ use style::values::computed::image::Image as ComputedImage;
 use style::values::computed::{Content, Context, ToComputedValue};
 use style::values::generics::counters::{GenericContentItem, GenericContentItems};
 #[cfg(feature = "svg-engine")]
-use svg_engine::tree::SvgTree;
+use svg_engine::document::SvgTree;
 use url::Url;
 use web_atoms::local_name;
 use webrender_api::ImageKey;

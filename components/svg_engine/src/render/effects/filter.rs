@@ -12,7 +12,8 @@
 
 use webrender_api::FilterOp;
 
-use crate::model::tree::{DefRef, FilterPrimitive, SvgNode};
+use crate::model::document::{DefRef, FilterPrimitive};
+use crate::model::element::SvgNode;
 
 /// If the node references a filter, return the list of WebRender
 /// [`FilterOp`]s.  Returns `None` when no filter is present, the
@@ -110,8 +111,8 @@ pub(crate) fn get_filter_ops(node: &SvgNode) -> Option<Vec<FilterOp>> {
                 // Proper support requires the SVG filter graph and image loading.
                 // For now, keep the filter recognized with a placeholder.
                 let img_id = match img_kind {
-                    crate::model::tree::FeImageKind::FragmentRef(id) => format!("#{}", id),
-                    crate::model::tree::FeImageKind::ExternalUrl(url) => url.clone(),
+                    crate::model::document::FeImageKind::FragmentRef(id) => format!("#{}", id),
+                    crate::model::document::FeImageKind::ExternalUrl(url) => url.clone(),
                 };
                 log::debug!("feImage ({}) not yet fully supported in SVG engine", img_id);
                 ops.push(FilterOp::Identity);

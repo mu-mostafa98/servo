@@ -2,12 +2,29 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! SVG stroke properties — pure data types, no WebRender dependency.
+//! SVG fill and stroke properties — pure data types, no WebRender dependency.
 
 use svgtypes::Color as SvgColor;
 
 use super::gradient::PaintServer;
 use crate::model::units::{Length, Opacity};
+
+/// SVG fill properties.
+#[derive(Debug, Clone)]
+pub struct FillParams {
+    pub color: Option<SvgColor>,
+    /// Paint server reference (gradient url). When set, takes priority over `color`.
+    pub paint_server: Option<PaintServer>,
+    pub opacity: Opacity,
+    pub fill_rule: FillRule,
+}
+
+/// SVG fill rule: determines how overlapping regions are filled.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum FillRule {
+    NonZero,
+    EvenOdd,
+}
 
 /// SVG stroke properties.
 #[derive(Debug, Clone)]

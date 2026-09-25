@@ -11,16 +11,16 @@
 //!
 //! The crate is split into two halves:
 //!
-//! * [`model`] — the pure SVG data model (shapes, style, tree, units), with no
+//! * [`model`] — the pure SVG data model (elements, style, document, units), with no
 //!   dependency on WebRender or the renderer.
 //! * `render` — the rendering half (traversal, per-shape `Render` impls,
 //!   effects), which consumes the model and emits display-list commands.
 //!
 //! | Module | Role |
 //! |--------|------|
-//! | [`model::shapes`] | Pure data structs for SVG geometric shapes (rect, circle, etc.) |
+//! | [`model::element`] | SVG element types (shapes, image, text, nodes) |
 //! | [`model::style`] | SVG property data types (fill, stroke, gradient, transform, …) |
-//! | [`model::tree`] | `SvgTree` node tree and definition types |
+//! | [`model::document`] | `SvgTree` document, viewport, and definition types |
 //! | [`model::error`] | Error types for SVG parsing failures |
 //! | `render::traversal` | Recursive tree walk that produces the display list |
 //! | `render::renderer` | Per-shape `Render` trait impls + fill/stroke/gradient pipelines |
@@ -34,22 +34,20 @@
 pub mod model;
 mod render;
 
+pub use model::document;
+pub use model::element;
 pub use model::error;
 pub use model::geometry;
-pub use model::image;
 pub use model::resource;
-pub use model::shapes;
 pub use model::style;
-pub use model::text;
-pub use model::tree;
 pub use model::units;
 
-pub use model::tree::SvgTag;
+pub use model::element::SvgTag;
 pub use render::renderer::gradient::color_at_t_with_space;
 pub use render::traversal::render_svg_tree;
 
-pub use model::image::SvgImage;
-pub use model::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
+pub use model::element::image::SvgImage;
+pub use model::element::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
 
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{

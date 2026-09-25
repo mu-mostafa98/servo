@@ -14,9 +14,9 @@ use webrender_api::BorderRadius;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
 use crate::model::geometry::{PathCommand, PathData, Point};
-use crate::model::shapes::{Circle, Ellipse, Path, Polygon, Polyline, Rectangle, Shape};
+use crate::model::element::shape::{Circle, Ellipse, Path, Polygon, Polyline, Rectangle, Shape};
 use crate::model::style::FillRule;
-use crate::model::tree::ClipPathUnits;
+use crate::model::document::ClipPathUnits;
 
 /// Scale factor for objectBoundingBox clip-path coordinates (0..1 → 0..100).
 pub(crate) const OBJECT_BBOX_REF_SIZE: f32 = 100.0;

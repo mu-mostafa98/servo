@@ -5,8 +5,8 @@
 //! SVG `<image>` element — external image rendering.
 //! Reference: https://svgwg.org/svg2-draft/embedded.html#ImageElement
 
+use crate::model::document::viewport::AspectRatio;
 use crate::model::resource::ResourceKey;
-use crate::model::tree::AspectRatio;
 
 /// An SVG `<image>` element referencing an external raster or vector image.
 #[derive(Debug, Clone)]

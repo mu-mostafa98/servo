@@ -8,7 +8,7 @@
 use webrender_api::units::LayoutPoint;
 use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 
-use crate::model::shapes::Shape;
+use crate::model::element::shape::Shape;
 use crate::model::style::NodeStyle;
 use crate::RasterSink;
 

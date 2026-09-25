@@ -12,11 +12,12 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use svg_engine::tree::*;
+use svg_engine::document::*;
+use svg_engine::element::*;
 use svg_engine::geometry::{PathCommand, PathData, Point};
-use svg_engine::shapes::*;
+use svg_engine::element::shape::*;
 use svg_engine::style::gradient::{SpreadMethod, *};
-use svg_engine::style::transform_ops::TransformOp;
+use svg_engine::style::transform::TransformOp;
 use svg_engine::style::*;
 use svg_engine::units::{Id, Length, Opacity};
 use svg_engine::{DominantBaseline, SvgImage, SvgTag, TextAnchor, TextSpan};
@@ -1094,7 +1095,7 @@ fn defs_container_in_tree() {
 
 #[test]
 fn svg_node_with_transforms() {
-    use svg_engine::style::transform_ops::TransformOp;
+    use svg_engine::style::transform::TransformOp;
     let node = SvgNode {
         id: Some(Id::new("t")),
         tag: SvgTag::Container(Container::Group),

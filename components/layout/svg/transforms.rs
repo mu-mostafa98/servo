@@ -5,7 +5,7 @@
 //! Conversion of Stylo/CSS transform operations into the SVG engine's
 //! [`TransformOp`] type, plus parsing of the raw SVG `transform` attribute.
 
-use svg_engine::style::transform_ops::TransformOp;
+use svg_engine::style::transform::TransformOp;
 use svgtypes::{TransformListParser, TransformListToken};
 
 /// Convert a CSS `transform` property from Stylo's [`ComputedValues`] into

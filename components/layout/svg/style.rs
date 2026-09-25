@@ -21,9 +21,9 @@ use style::values::computed::svg::{
 };
 use style::values::generics::svg::SVGLength;
 use style::values::specified::box_ as stylo_box;
-use svg_engine::tree::DefRef;
+use svg_engine::document::DefRef;
 use svg_engine::style::gradient::PaintServer;
-use svg_engine::style::transform_ops::TransformOp;
+use svg_engine::style::transform::TransformOp;
 use svg_engine::style::*;
 use svg_engine::units::{Id, Length, Opacity};
 use svgtypes::Color as SvgColor;

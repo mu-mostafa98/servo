@@ -7,7 +7,7 @@
 use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::tree::{AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo};
+use svg_engine::document::{AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo};
 use svg_engine::units::Length;
 use svgtypes::ViewBox as SvgViewBox;
 use web_atoms::ns;

@@ -19,11 +19,11 @@ use kurbo::{BezPath, Rect, Shape as _};
 use vello_cpu::kurbo::Affine;
 use vello_cpu::peniko::{Fill, Gradient, GradientKind};
 
-use crate::model::tree::{MaskContentUnits, MaskDef, MaskType};
+use crate::model::document::{MaskContentUnits, MaskDef, MaskType};
 use crate::render::renderer::path::{
     apply_paint, resolve_fill_paint, scale_paint, transform_to_affine,
 };
-use crate::model::style::fill::FillParams;
+use crate::model::style::paint::FillParams;
 use crate::model::style::FillRule;
 
 /// A CPU-rasterized mask: grayscale pixels whose alpha channel holds the mask

@@ -14,10 +14,11 @@ use std::sync::Arc;
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-use svg_engine::tree::*;
+use svg_engine::document::*;
+use svg_engine::element::*;
 use svg_engine::style::NodeStyle;
 use svg_engine::style::gradient::{GradientDef, PaintServer};
-use svg_engine::text::TextAnchor;
+use svg_engine::element::text::TextAnchor;
 use svg_engine::units::{Id, Length};
 use svg_engine::resource::ResourceKey;
 use web_atoms::ns;
@@ -355,7 +356,7 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
     use style::values::computed::{
         FontFeatureSettings, FontVariantEastAsian, FontVariantLigatures, FontVariantNumeric,
     };
-    use svg_engine::text::{DominantBaseline, ShapedGlyph};
+    use svg_engine::element::text::{DominantBaseline, ShapedGlyph};
     use unicode_script::Script;
 
     if span.text.is_empty() {
@@ -602,7 +603,7 @@ fn resolve_use_children<'dom>(
                     if dx != 0.0 || dy != 0.0 {
                         node.transforms.insert(
                             0,
-                            svg_engine::style::transform_ops::TransformOp::Translate(dx, dy),
+                            svg_engine::style::transform::TransformOp::Translate(dx, dy),
                         );
                     }
                 }

@@ -18,7 +18,7 @@ use webrender_api::{
     AlphaType, ColorF, CommonItemProperties, ImageRendering, SpaceAndClipInfo,
 };
 
-use crate::model::image::SvgImage;
+use crate::model::element::image::SvgImage;
 use crate::render::renderer::{Render, RenderContext};
 use crate::render::to_wr_image_key;
 use crate::render::traversal::compute_viewbox_transform;

@@ -1,36 +1,137 @@
 /* This Source Code Form is subject to the terms of the Mozilla Public
-* License, v. 2.0. If a copy of the MPL was not distributed with this
-* file, You can obtain one at https://mozilla.org/MPL/2.0/. */
+ * License, v. 2.0. If a copy of the MPL was not distributed with this
+ * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
+//! SVG properties — style and presentation attributes.
+//!
 //! SVG Property Reference: https://www.w3.org/TR/SVG2/propidx.html
 //!
-//! This module defines style-related enums and structs based on the SVG 2 specification.
-//! Each style category has its own file — [`fill`] for fill properties, [`stroke`] for
-//! stroke properties, [`hints`] for rendering hints, [`effects`] for node effects,
-//! [`visibility`] for SVG visibility/display, and [`transform_ops`] for SVG transform
-//! operations.
-//!
-//! Style construction (FromComputedValues, FromCssAttrs) lives in
-//! [`crate::layout::svg_builder`].
+//! This module holds everything that can appear as a style or presentation
+//! attribute: fill/stroke ([`paint`]), gradients ([`gradient`]), transforms
+//! ([`transform`]), node effects ([`effects`]), plus rendering hints and the
+//! combined [`NodeStyle`]. Style construction (FromComputedValues,
+//! FromCssAttrs) lives in `components/layout/svg`.
 
-pub(crate) mod fill;
+pub mod effects;
 pub mod gradient;
-pub(crate) mod hints;
-pub(crate) mod effects;
-pub(crate) mod stroke;
-pub mod transform_ops;
-pub(crate) mod visibility;
+pub mod paint;
+pub mod transform;
 
-pub use self::fill::{FillParams, FillRule};
-pub use self::hints::{
-    ColorInterpolation, ColorRendering, PaintOrder, RenderHints, ShapeRendering, VectorEffect,
-};
 pub use self::effects::NodeEffects;
-pub use self::stroke::{LineCap, LineJoin, StrokeParams};
-pub use self::visibility::{Display, Visibility};
+pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, StrokeParams};
 
-use crate::model::tree::{DefRef, MarkerDef};
+use crate::model::document::{DefRef, MarkerDef};
 use crate::model::units::Opacity;
+
+// ======================= Visibility & Display =======================
+
+/// Element visibility.
+#[allow(dead_code)]
+#[derive(Debug, Clone, Copy)]
+pub enum Visibility {
+    Visible,
+    Hidden,
+}
+
+/// Element display type.
+#[allow(dead_code)]
+#[derive(Debug, Clone, Copy)]
+pub enum Display {
+    Inline,
+    Block,
+    None,
+}
+
+// ======================= Rendering Hints =======================
+
+/// Rendering hints for SVG elements.
+#[derive(Debug, Clone)]
+pub struct RenderHints {
+    pub vector_effect: Option<VectorEffect>,
+    pub color_rendering: Option<ColorRendering>,
+    pub color_interpolation: Option<ColorInterpolation>,
+    pub shape_rendering: Option<ShapeRendering>,
+    pub paint_order: Option<PaintOrder>,
+    // --- Spec stubs (blocked on new features) ---
+    #[allow(dead_code)]
+    pub text_rendering: Option<TextRendering>,
+    #[allow(dead_code)]
+    pub image_rendering: Option<ImageRendering>,
+}
+
+/// Controls how strokes scale under transforms.
+#[derive(Debug, Clone, Copy)]
+pub enum VectorEffect {
+    None,
+    NonScalingStroke,
+}
+
+/// Color rendering quality hint.
+#[derive(Debug, Clone, Copy)]
+pub enum ColorRendering {
+    Auto,
+    OptimizeSpeed,
+    OptimizeQuality,
+}
+
+/// Color interpolation method.
+#[derive(Debug, Clone, Copy)]
+pub enum ColorInterpolation {
+    Auto,
+    Srgb,
+    LinearRGB,
+}
+
+/// Shape rendering quality hint.
+#[derive(Debug, Clone, Copy)]
+pub enum ShapeRendering {
+    Auto,
+    OptimizeSpeed,
+    CrispEdges,
+    GeometricPrecision,
+}
+
+/// Fill/stroke/marker rendering order.
+///
+/// Per SVG 2 §5.10, `paint-order` controls the stacking order of fill, stroke,
+/// and markers.  The default (Normal) draws fill → stroke → markers.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum PaintOrder {
+    /// Default: fill first, then stroke.
+    Normal,
+    /// Stroke then fill.
+    StrokeFill,
+    /// Fill then stroke (same as Normal, but explicit).
+    FillStroke,
+}
+
+impl PaintOrder {
+    /// Whether stroke should be drawn before fill.
+    pub fn stroke_before_fill(&self) -> bool {
+        matches!(self, PaintOrder::StrokeFill)
+    }
+}
+
+/// Text rendering quality hint.
+#[allow(dead_code)]
+#[derive(Debug, Clone, Copy)]
+pub enum TextRendering {
+    Auto,
+    OptimizeSpeed,
+    OptimizeLegibility,
+    GeometricPrecision,
+}
+
+/// Image rendering quality hint.
+#[allow(dead_code)]
+#[derive(Debug, Clone, Copy)]
+pub enum ImageRendering {
+    Auto,
+    OptimizeSpeed,
+    OptimizeQuality,
+}
+
+// ======================= Node Style =======================
 
 /// Marker references attached to a shape (`marker-start`, `marker-mid`,
 /// `marker-end`), each holding a [`DefRef`] to a [`MarkerDef`] — a raw `#id`

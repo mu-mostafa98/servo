@@ -35,7 +35,7 @@ pub(crate) mod viewport;
 use std::sync::Arc;
 
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::tree::SvgTree;
+use svg_engine::document::SvgTree;
 
 use crate::context::LayoutContext;
 

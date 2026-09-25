@@ -15,7 +15,8 @@ use webrender_api::{
     ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId,
 };
 
-use crate::model::tree::{ClipPathUnits, DefRef, SvgNode};
+use crate::model::document::{ClipPathUnits, DefRef};
+use crate::model::element::SvgNode;
 use crate::render::renderer::clip_chain_option;
 use crate::render::geometry::{ClipGeometry, ComplexClip};
 

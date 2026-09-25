@@ -10,7 +10,7 @@ use webrender_api::units::LayoutRect;
 use webrender_api::{ClipChainId, ColorF, CommonItemProperties, SpaceAndClipInfo, SpatialId};
 
 use crate::render::renderer::render_trait::RenderContext;
-use crate::model::style::hints::{ShapeRendering, VectorEffect};
+use crate::model::style::{ShapeRendering, VectorEffect};
 
 /// Epsilon threshold for treating a vector length as zero.
 /// Used to guard against division-by-zero in gradient projection

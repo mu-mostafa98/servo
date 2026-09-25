@@ -21,8 +21,9 @@ use svg_engine::style::gradient::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     RadialGradient, SpreadMethod,
 };
-use svg_engine::style::transform_ops::TransformOp;
-use svg_engine::tree::*;
+use svg_engine::style::transform::TransformOp;
+use svg_engine::document::*;
+use svg_engine::element::*;
 use svgtypes::{Color as SvgColor, Length as SvgLength};
 use web_atoms::ns;
 

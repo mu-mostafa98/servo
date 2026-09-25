@@ -4,7 +4,7 @@
 
 //! SVG node effects — clip-path, mask, and filter.
 
-use crate::model::tree::{ClipPathDef, DefRef, FilterDef, MaskDef};
+use crate::model::document::{ClipPathDef, DefRef, FilterDef, MaskDef};
 
 /// SVG node effects — clip-path, mask, filter.
 ///
