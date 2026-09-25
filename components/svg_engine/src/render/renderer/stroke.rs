@@ -653,7 +653,7 @@ fn stroke_polyline_gradient(
         GradientDef::Radial(rg) => {
             let (fx, fy, r2) = match rg.units {
                 GradientUnits::ObjectBoundingBox => {
-                    let scale = bbox_w.max(bbox_h);
+                    let scale = gradient::normalized_diagonal(bbox_w, bbox_h);
                     (
                         ctx.svg_origin.x + min_x + rg.fx.to_object_bbox() * bbox_w,
                         ctx.svg_origin.y + min_y + rg.fy.to_object_bbox() * bbox_h,
@@ -661,7 +661,7 @@ fn stroke_polyline_gradient(
                     )
                 },
                 GradientUnits::UserSpaceOnUse => {
-                    let scale = bbox_w.max(bbox_h);
+                    let scale = gradient::normalized_diagonal(bbox_w, bbox_h);
                     (
                         ctx.svg_origin.x + rg.fx.to_user_space(bbox_w),
                         ctx.svg_origin.y + rg.fy.to_user_space(bbox_h),

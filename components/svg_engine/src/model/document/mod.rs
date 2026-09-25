@@ -11,7 +11,7 @@ pub mod viewport;
 pub use self::defs::{
     ClipPathDef, ClipPathUnits, DefRef, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,
     MarkerDef, MarkerOrient, MarkerUnits, MaskContentUnits, MaskDef, MaskType, PatternContentUnits,
-    PatternDef, PatternUnits,
+    PatternDef, PatternLength, PatternUnits,
 };
 pub use self::viewport::{AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo};
 

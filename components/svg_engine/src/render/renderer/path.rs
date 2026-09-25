@@ -516,7 +516,7 @@ fn radial_to_peniko(
     viewbox_scale: (f32, f32),
     bbox: &kurbo::Rect,
 ) -> Gradient {
-    let scale = w.max(h);
+    let scale = crate::render::renderer::gradient::normalized_diagonal(w, h);
     let (cx, cy, r, fx, fy, fr) = match rg.units {
         GradientUnits::ObjectBoundingBox => (
             rg.cx.to_object_bbox() * w,

@@ -25,10 +25,13 @@ pub(crate) fn fill_rect_with_pattern(
 
     let (tile_w, tile_h) = match def.pattern_units {
         PatternUnits::ObjectBoundingBox => (
-            def.width * bounds.size().width,
-            def.height * bounds.size().height,
+            def.width.to_object_bbox() * bounds.size().width,
+            def.height.to_object_bbox() * bounds.size().height,
         ),
-        PatternUnits::UserSpaceOnUse => (def.width, def.height),
+        PatternUnits::UserSpaceOnUse => (
+            def.width.to_user_space(bounds.size().width),
+            def.height.to_user_space(bounds.size().height),
+        ),
     };
 
     if tile_w <= 0.0 || tile_h <= 0.0 {
@@ -37,15 +40,18 @@ pub(crate) fn fill_rect_with_pattern(
 
     let (ox, oy) = match def.pattern_units {
         PatternUnits::ObjectBoundingBox => (
-            bounds.min.x + def.x * bounds.size().width,
-            bounds.min.y + def.y * bounds.size().height,
+            bounds.min.x + def.x.to_object_bbox() * bounds.size().width,
+            bounds.min.y + def.y.to_object_bbox() * bounds.size().height,
         ),
         PatternUnits::UserSpaceOnUse => {
             // Per SVG spec, pattern x/y are in user space (the SVG viewport
             // coordinate system), not relative to the element being filled.
             // Convert from SVG user space to document layout space by adding
             // the SVG viewport origin.
-            (ctx.svg_origin.x + def.x, ctx.svg_origin.y + def.y)
+            (
+                ctx.svg_origin.x + def.x.to_user_space(bounds.size().width),
+                ctx.svg_origin.y + def.y.to_user_space(bounds.size().height),
+            )
         },
     };
 

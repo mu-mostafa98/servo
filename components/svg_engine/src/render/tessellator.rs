@@ -55,8 +55,10 @@ pub(crate) enum FillStyle<'a> {
         /// Focal point (absolute coordinates in the same space as pixel positions).
         fx: f32,
         fy: f32,
-        /// Radius squared (absolute space).
-        r2: f32,
+        /// Outer radius (absolute space).
+        r: f32,
+        /// Focal radius (`fr`), already clamped to `r`.
+        fr: f32,
         opacity: f32,
         /// Color interpolation space hint.
         color_interpolation: ColorInterpolation,
@@ -292,7 +294,8 @@ fn scanline_fill_triangle(
                 stops,
                 fx,
                 fy,
-                r2,
+                r,
+                fr,
                 opacity,
                 color_interpolation,
                 spread_method,
@@ -305,8 +308,17 @@ fn scanline_fill_triangle(
                     let rx = cx + cw / 2.0;
                     let dx = rx - fx;
                     let dy = center - fy;
-                    let dist_sq = (dx * dx + dy * dy) / r2.max(1.0);
-                    let t = dist_sq.sqrt().min(1.0);
+                    let d = (dx * dx + dy * dy).sqrt();
+                    // `t` maps distance through the focal radius: points inside
+                    // the focal circle (`d <= fr`) get the first stop color.
+                    let denom = r - fr;
+                    let t = if d <= *fr {
+                        0.0
+                    } else if denom <= 0.0 {
+                        1.0
+                    } else {
+                        ((d - fr) / denom).min(1.0)
+                    };
                     let mut c =
                         color_at_t_with_spread(stops, t, *color_interpolation, *spread_method);
                     c.a *= opacity;

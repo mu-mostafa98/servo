@@ -803,10 +803,10 @@ fn pattern_def_basic() {
         children: vec![],
     };
     let def = PatternDef {
-        width: 20.0,
-        height: 20.0,
-        x: 0.0,
-        y: 0.0,
+        width: PatternLength::Number(20.0),
+        height: PatternLength::Number(20.0),
+        x: PatternLength::Number(0.0),
+        y: PatternLength::Number(0.0),
         pattern_units: PatternUnits::UserSpaceOnUse,
         pattern_content_units: PatternContentUnits::UserSpaceOnUse,
         transform: vec![],
@@ -814,8 +814,8 @@ fn pattern_def_basic() {
         aspect_ratio: None,
         root,
     };
-    assert_eq!(def.width, 20.0);
-    assert_eq!(def.height, 20.0);
+    assert!(matches!(def.width, PatternLength::Number(20.0)));
+    assert!(matches!(def.height, PatternLength::Number(20.0)));
 }
 
 #[test]

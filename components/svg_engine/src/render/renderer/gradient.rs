@@ -153,6 +153,16 @@ pub(crate) fn gradient_projection(x: f32, y: f32, gx1: f32, gy1: f32, gx2: f32, 
     }
 }
 
+/// The SVG "normalized diagonal" of a reference box: `sqrt((w² + h²) / 2)`.
+///
+/// Radial-gradient percentages on `r` (and `fr`) resolve against this value,
+/// *not* the width, height, or their max (§13.2.2). For a square box it equals
+/// the side length; for a non-square box it is the geometric mean of the axes,
+/// so `r="50%"` yields a circle rather than an ellipse.
+pub(crate) fn normalized_diagonal(w: f32, h: f32) -> f32 {
+    ((w * w + h * h) / 2.0).sqrt()
+}
+
 // ======================= Strategy trait =======================
 
 /// Strategy for computing the parametric position `t` at a pixel `(x, y)`
@@ -256,7 +266,11 @@ struct RadialStrategy<'a> {
     stops: &'a [GradientStop],
     fx: f32,
     fy: f32,
-    r2: f32, // radius squared
+    /// Outer radius (absolute) of the end circle.
+    r: f32,
+    /// Focal radius (`fr`): points within this distance of the focal point
+    /// render the first stop color as a solid disk (§13.2.2).
+    fr: f32,
     /// Offset to add to (x, y) pixel positions before computing distance
     /// from the focal point.  Converts relative coords to absolute.
     offset_x: f32,
@@ -276,8 +290,15 @@ impl GradientStrategy for RadialStrategy<'_> {
     fn compute_t(&self, x: f32, y: f32, _bw: f32, _bh: f32) -> f32 {
         let dx = (x + self.offset_x) - self.fx;
         let dy = (y + self.offset_y) - self.fy;
-        let dist_sq = (dx * dx + dy * dy) / self.r2.max(1.0);
-        dist_sq.sqrt().min(1.0)
+        let d = (dx * dx + dy * dy).sqrt();
+        let denom = self.r - self.fr;
+        if d <= self.fr {
+            0.0
+        } else if denom <= 0.0 {
+            1.0
+        } else {
+            ((d - self.fr) / denom).min(1.0)
+        }
     }
 }
 // ======================= Public API =======================
@@ -468,6 +489,10 @@ fn resolve_radial_center_radius(
     // Center and radius in the gradient's own coordinate space, after applying
     // gradientTransform (which may turn the circle into an ellipse).
     let m = gradient_transform_matrix(&rg.transform);
+    // `r` is a radial distance, so its percentage resolves against the
+    // normalized diagonal (a circle), unlike `cx`/`cy` which are positional
+    // (x against width, y against height).
+    let nd = normalized_diagonal(bw, bh);
     let (cx, cy, r) = match rg.units {
         GradientUnits::ObjectBoundingBox => (
             rg.cx.to_object_bbox(),
@@ -477,7 +502,7 @@ fn resolve_radial_center_radius(
         GradientUnits::UserSpaceOnUse => (
             rg.cx.to_user_space(bw),
             rg.cy.to_user_space(bh),
-            rg.r.to_user_space(bw.max(bh)),
+            rg.r.to_user_space(nd),
         ),
     };
     let center = m.transform_point(euclid::Point2D::new(cx, cy));
@@ -488,8 +513,8 @@ fn resolve_radial_center_radius(
         GradientUnits::ObjectBoundingBox => (
             bx + center.x * bw,
             by + center.y * bh,
-            rx * bw,
-            ry * bh,
+            rx * nd,
+            ry * nd,
         ),
         GradientUnits::UserSpaceOnUse => (
             ctx.svg_origin.x + center.x,
@@ -698,11 +723,22 @@ fn render_radial(
     // collapse an elliptical radius to its larger axis.
     let r = radius.width.max(radius.height);
 
+    // Resolve the focal radius (`fr`) to the same absolute space as `r`. It is
+    // a radial distance, so its percentage resolves against the normalized
+    // diagonal. (gradientTransform scaling of `fr` is not modelled here; it is
+    // kept as a scalar, matching the circle-collapse approximation above.)
+    let nd = normalized_diagonal(bounds.size().width, bounds.size().height);
+    let fr = match rg.units {
+        GradientUnits::ObjectBoundingBox => rg.fr.to_object_bbox().max(0.0) * nd,
+        GradientUnits::UserSpaceOnUse => rg.fr.to_user_space(nd).max(0.0),
+    };
+
     let strategy = RadialStrategy {
         stops: &rg.stops,
         fx: focal.x,
         fy: focal.y,
-        r2: r * r,
+        r,
+        fr,
         offset_x: bounds.min.x,
         offset_y: bounds.min.y,
     };

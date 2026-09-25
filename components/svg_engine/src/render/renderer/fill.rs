@@ -102,8 +102,8 @@ pub(crate) fn fill_polygon(
                     tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
                 },
                 GradientDef::Radial(rg) => {
-                    let (fx, fy, r2) = resolve_radial_gradient_coords(rg, bx, by, bw, bh, ctx);
-                    let fill_style = build_radial_fill_style(rg, fx, fy, r2, opacity, ctx);
+                    let (fx, fy, radius, fr) = resolve_radial_gradient_coords(rg, bx, by, bw, bh, ctx);
+                    let fill_style = build_radial_fill_style(rg, fx, fy, radius, fr, opacity, ctx);
                     tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
                 },
             }
@@ -152,8 +152,9 @@ fn resolve_linear_gradient_coords(
     }
 }
 
-/// Convert a radial gradient's focal point and radius to absolute layout coordinates.
-/// Returns `(fx, fy, radius)`.  The caller must square the radius for the tessellator.
+/// Convert a radial gradient's focal point, radius, and focal radius to absolute
+/// layout coordinates.  Returns `(fx, fy, radius, fr)` — the radius resolves
+/// against the normalized diagonal (§13.2.2), not the box width/height.
 fn resolve_radial_gradient_coords(
     rg: &crate::model::style::gradient::RadialGradient,
     bx: f32,
@@ -161,18 +162,20 @@ fn resolve_radial_gradient_coords(
     bw: f32,
     bh: f32,
     ctx: &RenderContext,
-) -> (f32, f32, f32) {
-    let scale = bw.max(bh);
+) -> (f32, f32, f32, f32) {
+    let nd = gradient::normalized_diagonal(bw, bh);
     match rg.units {
         GradientUnits::ObjectBoundingBox => (
             bx + rg.fx.to_object_bbox() * bw,
             by + rg.fy.to_object_bbox() * bh,
-            (rg.r.to_object_bbox() * scale).max(1.0),
+            (rg.r.to_object_bbox() * nd).max(1.0),
+            (rg.fr.to_object_bbox() * nd).max(0.0),
         ),
         GradientUnits::UserSpaceOnUse => (
             ctx.svg_origin.x + rg.fx.to_user_space(bw),
             ctx.svg_origin.y + rg.fy.to_user_space(bh),
-            rg.r.to_user_space(scale).max(1.0),
+            rg.r.to_user_space(nd).max(1.0),
+            rg.fr.to_user_space(nd).max(0.0),
         ),
     }
 }
@@ -214,6 +217,7 @@ fn build_radial_fill_style<'a>(
     fx: f32,
     fy: f32,
     radius: f32,
+    fr: f32,
     opacity: f32,
     ctx: &RenderContext,
 ) -> FillStyle<'a> {
@@ -221,7 +225,10 @@ fn build_radial_fill_style<'a>(
         stops: &rg.stops,
         fx,
         fy,
-        r2: radius * radius,
+        r: radius,
+        // `fr` is clamped to `r` per §13.2.2 ("if fr is greater than r, then fr
+        // is clamped to the value of r").
+        fr: fr.min(radius),
         opacity,
         color_interpolation: color_interpolation_hint(ctx),
         spread_method: rg.spread_method,
@@ -247,8 +254,14 @@ fn handle_pattern_fill(
     let by = bounds.min.y;
 
     let (tile_w, tile_h) = match def.pattern_units {
-        PatternUnits::ObjectBoundingBox => (def.width * bw, def.height * bh),
-        PatternUnits::UserSpaceOnUse => (def.width, def.height),
+        PatternUnits::ObjectBoundingBox => (
+            def.width.to_object_bbox() * bw,
+            def.height.to_object_bbox() * bh,
+        ),
+        PatternUnits::UserSpaceOnUse => (
+            def.width.to_user_space(bw),
+            def.height.to_user_space(bh),
+        ),
     };
 
     if tile_w <= 0.0 || tile_h <= 0.0 {
@@ -256,13 +269,19 @@ fn handle_pattern_fill(
     }
 
     let (ox, oy) = match def.pattern_units {
-        PatternUnits::ObjectBoundingBox => (bx + def.x * bw, by + def.y * bh),
+        PatternUnits::ObjectBoundingBox => (
+            bx + def.x.to_object_bbox() * bw,
+            by + def.y.to_object_bbox() * bh,
+        ),
         PatternUnits::UserSpaceOnUse => {
             // Per SVG spec, pattern x/y are in user space (the SVG viewport
             // coordinate system), not relative to the element being filled.
             // Convert from SVG user space to document layout space by adding
             // the SVG viewport origin.
-            (ctx.svg_origin.x + def.x, ctx.svg_origin.y + def.y)
+            (
+                ctx.svg_origin.x + def.x.to_user_space(bw),
+                ctx.svg_origin.y + def.y.to_user_space(bh),
+            )
         },
     };
 
