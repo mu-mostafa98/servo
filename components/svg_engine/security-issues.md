@@ -571,7 +571,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg width="100000" height="100000"><rect width="100000" height="100000"/></svg>
 ```
 - **Fix:**
-  - **Where (Stage 4 — Build):** `layout::svg::build_svg_render_tree` ([mod.rs:41](components/layout/svg/mod.rs#L41)) — viewport/viewBox setup.
+  - **Where (Stage 4 — Build):** `layout::svg::build_svg_tree` ([mod.rs:41](components/layout/svg/mod.rs#L41)) — viewport/viewBox setup.
   - **Describe the fix:** keep the `u16` side cap, and add a pixel-area cap (e.g. max 2²⁸ ≈ 268 M px); reject larger viewports up front.
 
 **6.9 — Unclamped blur `stdDeviation`**

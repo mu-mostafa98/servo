@@ -6,7 +6,7 @@
 //!
 //! This module defines style-related enums and structs based on the SVG 2 specification.
 //! Each style category has its own file — [`fill`] for fill properties, [`stroke`] for
-//! stroke properties, [`hints`] for rendering hints, [`node_effects`] for node effects,
+//! stroke properties, [`hints`] for rendering hints, [`effects`] for node effects,
 //! [`visibility`] for SVG visibility/display, [`transform_ops`] for SVG transform
 //! operations, and [`color`] for color parsing.
 //!
@@ -17,7 +17,7 @@ pub mod color;
 pub(crate) mod fill;
 pub mod gradient;
 pub(crate) mod hints;
-pub(crate) mod node_effects;
+pub(crate) mod effects;
 pub(crate) mod stroke;
 pub mod transform_ops;
 pub(crate) mod visibility;
@@ -26,12 +26,12 @@ pub use self::fill::{FillParams, FillRule};
 pub use self::hints::{
     ColorInterpolation, ColorRendering, PaintOrder, RenderHints, ShapeRendering, VectorEffect,
 };
-pub use self::node_effects::NodeEffects;
+pub use self::effects::NodeEffects;
 pub use self::stroke::{LineCap, LineJoin, StrokeParams};
 pub use self::visibility::{Display, Visibility};
 
-use crate::render_tree::{DefRef, MarkerDef};
-use crate::units::Opacity;
+use crate::model::tree::{DefRef, MarkerDef};
+use crate::model::units::Opacity;
 
 /// Marker references attached to a shape (`marker-start`, `marker-mid`,
 /// `marker-end`), each holding a [`DefRef`] to a [`MarkerDef`] — a raw `#id`
@@ -45,7 +45,7 @@ pub struct MarkerRefs {
 
 /// Combined fill + stroke styling for an SVG render node.
 ///
-/// Layout-affecting properties (transforms) live on [`SvgRenderNode`],
+/// Layout-affecting properties (transforms) live on [`SvgNode`],
 /// not here — this struct only holds paint-level styling.
 #[derive(Debug, Clone)]
 pub struct NodeStyle {

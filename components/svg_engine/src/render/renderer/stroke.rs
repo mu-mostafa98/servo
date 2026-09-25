@@ -22,13 +22,13 @@ use webrender_api::{
     NormalBorder, PropertyBinding, ReferenceFrameKind, TransformStyle,
 };
 
-use crate::renderer::{
+use crate::render::renderer::{
     RenderContext, ZERO_LENGTH_EPSILON, clip_chain_option, effective_stroke_width, gradient,
     make_common_props, to_colorf,
 };
-use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
-use crate::style::{Display, LineCap, NodeStyle, StrokeParams, Visibility};
-use crate::units::Length;
+use crate::model::style::gradient::{GradientDef, GradientUnits, PaintServer};
+use crate::model::style::{Display, LineCap, NodeStyle, StrokeParams, Visibility};
+use crate::model::units::Length;
 
 // ======================= Dash Interval Decomposition =======================
 
@@ -196,7 +196,7 @@ fn fill_gradient_stroke(
     rect_len: f32,
     stroke_width: f32,
     half_w: f32,
-    stroke: &crate::style::StrokeParams,
+    stroke: &crate::model::style::StrokeParams,
     line_spatial_id: webrender_api::SpatialId,
     ctx: &mut RenderContext,
 ) {

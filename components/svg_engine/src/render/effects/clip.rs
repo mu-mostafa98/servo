@@ -15,9 +15,9 @@ use webrender_api::{
     ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId,
 };
 
-use crate::render_tree::{ClipPathUnits, DefRef, SvgRenderNode};
-use crate::renderer::clip_chain_option;
-use crate::shapes::{ClipGeometry, ComplexClip};
+use crate::model::tree::{ClipPathUnits, DefRef, SvgNode};
+use crate::render::renderer::clip_chain_option;
+use crate::model::shapes::{ClipGeometry, ComplexClip};
 
 // ======================= Clip Path Resolution =======================
 
@@ -37,7 +37,7 @@ pub(crate) struct MaskClip {
 /// Returns `(clip_chain, complex_clips)`. When no clip-path is present, both
 /// are returned unchanged (`parent_clip_chain` and an empty list).
 pub(crate) fn resolve_node_clip_path(
-    node: &SvgRenderNode,
+    node: &SvgNode,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
@@ -106,7 +106,7 @@ pub(crate) fn resolve_node_clip_path(
 /// Each clip chain combines the parent clip AND one mask shape. Rendering the
 /// shape once per mask clip achieves union (OR) behavior.
 pub(crate) fn build_mask_clips(
-    node: &SvgRenderNode,
+    node: &SvgNode,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,

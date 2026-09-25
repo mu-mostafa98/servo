@@ -7,10 +7,10 @@ use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
 use webrender_api::units::{LayoutPoint, LayoutRect};
 use webrender_api::DisplayListBuilder;
 
-use crate::renderer::{Render, RenderContext};
-use crate::shapes::{ComplexClip, Path};
-use crate::style::gradient::{GradientDef, GradientUnits, SpreadMethod};
-use crate::style::{FillParams, FillRule, StrokeParams};
+use crate::render::renderer::{Render, RenderContext};
+use crate::model::shapes::{ComplexClip, Path};
+use crate::model::style::gradient::{GradientDef, GradientUnits, SpreadMethod};
+use crate::model::style::{FillParams, FillRule, StrokeParams};
 use crate::{RasterSink, RasterizedImage};
 
 use std::hash::{Hash, Hasher};
@@ -48,7 +48,7 @@ impl Render for Path {
                 .map(|f| f.fill_rule)
                 .unwrap_or(FillRule::NonZero);
             let subpaths = flatten_subpaths(&self.path);
-            let stroke_before_fill = crate::renderer::paint_order_stroke_before_fill(ctx);
+            let stroke_before_fill = crate::render::renderer::paint_order_stroke_before_fill(ctx);
             let has_stroke = ctx.style.stroke.is_some();
             let has_fill = has_close && ctx.style.fill.is_some();
 
@@ -56,27 +56,27 @@ impl Render for Path {
                 if has_stroke {
                     for subpath in &subpaths {
                         if subpath.len() >= 2 {
-                            crate::renderer::polyline::render_native_stroke(subpath, ctx);
+                            crate::render::renderer::polyline::render_native_stroke(subpath, ctx);
                         }
                     }
                 }
                 if has_fill {
                     let all: Vec<KurboPoint> = subpaths.iter().flatten().copied().collect();
                     if all.len() >= 3 {
-                        crate::renderer::polyline::render_native_fill(&all, ctx, fill_rule);
+                        crate::render::renderer::polyline::render_native_fill(&all, ctx, fill_rule);
                     }
                 }
             } else {
                 if has_fill {
                     let all: Vec<KurboPoint> = subpaths.iter().flatten().copied().collect();
                     if all.len() >= 3 {
-                        crate::renderer::polyline::render_native_fill(&all, ctx, fill_rule);
+                        crate::render::renderer::polyline::render_native_fill(&all, ctx, fill_rule);
                     }
                 }
                 if has_stroke {
                     for subpath in &subpaths {
                         if subpath.len() >= 2 {
-                            crate::renderer::polyline::render_native_stroke(subpath, ctx);
+                            crate::render::renderer::polyline::render_native_stroke(subpath, ctx);
                         }
                     }
                 }
@@ -138,7 +138,7 @@ pub(crate) fn rasterize_bez(
     complex_clips: &[ComplexClip],
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
-    alpha_mask: Option<&crate::effects::mask::MaskRaster>,
+    alpha_mask: Option<&crate::render::effects::mask::MaskRaster>,
 ) {
     // Approximate scalar scale of the accumulated node transform, used to keep
     // stroke widths/dashes proportional. `sqrt(|det|)` is exact for uniform
@@ -408,7 +408,7 @@ pub(crate) fn resolve_fill_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
 ) -> Option<ResolvedPaint> {
-    if let Some(crate::style::gradient::PaintServer::Gradient(def)) = &fill.paint_server {
+    if let Some(crate::model::style::gradient::PaintServer::Gradient(def)) = &fill.paint_server {
         return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
             def.as_ref(),
             w,
@@ -432,7 +432,7 @@ fn resolve_stroke_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
 ) -> Option<ResolvedPaint> {
-    if let Some(crate::style::gradient::PaintServer::Gradient(def)) = &stroke.paint_server {
+    if let Some(crate::model::style::gradient::PaintServer::Gradient(def)) = &stroke.paint_server {
         return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
             def.as_ref(),
             w,
@@ -463,7 +463,7 @@ fn gradient_def_to_peniko(
 
 /// Convert a linear gradient to a [`Gradient`] in pixmap-local coordinates.
 fn linear_to_peniko(
-    lg: &crate::style::gradient::LinearGradient,
+    lg: &crate::model::style::gradient::LinearGradient,
     w: f32,
     h: f32,
     viewbox_scale: (f32, f32),
@@ -494,7 +494,7 @@ fn linear_to_peniko(
 
 /// Convert a radial gradient to a [`Gradient`] in pixmap-local coordinates.
 fn radial_to_peniko(
-    rg: &crate::style::gradient::RadialGradient,
+    rg: &crate::model::style::gradient::RadialGradient,
     w: f32,
     h: f32,
     viewbox_scale: (f32, f32),
@@ -531,7 +531,7 @@ fn radial_to_peniko(
 }
 
 /// Convert svg-text gradient stops to peniko [`ColorStops`].
-fn stops_to_colorstops(stops: &[crate::style::gradient::GradientStop]) -> ColorStops {
+fn stops_to_colorstops(stops: &[crate::model::style::gradient::GradientStop]) -> ColorStops {
     let items: Vec<ColorStop> = stops
         .iter()
         .map(|s| ColorStop {

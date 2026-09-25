@@ -15,16 +15,16 @@ use std::sync::Arc;
 
 use svgtypes::{Color as SvgColor, Length as SvgLength};
 
-use crate::error::{SvgEngineError, SvgResult};
-use crate::render_tree::PatternDef;
-use crate::style::transform_ops::{TransformOp, parse_transform_str};
-use crate::units::Id;
+use crate::model::error::{SvgEngineError, SvgResult};
+use crate::model::tree::PatternDef;
+use crate::model::style::transform_ops::{TransformOp, parse_transform_str};
+use crate::model::units::Id;
 
 /// A paint server reference — a solid color, a gradient, or a pattern.
 ///
 /// [`PaintServer::Ref`] is a transient build-time state: the layout layer emits
 /// it while only the string `url(#id)` is known, then
-/// [`crate::render_tree::SvgRenderTree::resolve_references`] rewrites it into
+/// [`crate::model::tree::SvgTree::resolve_references`] rewrites it into
 /// a typed [`PaintServer::Gradient`]/[`PaintServer::Pattern`] `Arc` handle once
 /// the definition maps are collected. No `Ref` value survives past build time.
 #[derive(Debug, Clone)]
@@ -192,7 +192,7 @@ impl PaintServer {
                 return Some(PaintServer::Ref(Id::new(id)));
             }
         }
-        crate::style::color::parse_css_color(val).map(PaintServer::Solid)
+        crate::model::style::color::parse_css_color(val).map(PaintServer::Solid)
     }
 }
 
@@ -221,7 +221,7 @@ pub fn parse_gradient_element(
         let mut color = attrs
             .iter()
             .find(|(k, _)| k == "stop-color")
-            .and_then(|(_, v)| crate::style::color::parse_css_color(v))
+            .and_then(|(_, v)| crate::model::style::color::parse_css_color(v))
             .unwrap_or(SvgColor::new_rgb(0, 0, 0));
         if let Some(stop_opacity) = attrs
             .iter()

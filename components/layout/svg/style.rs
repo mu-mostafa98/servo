@@ -21,7 +21,7 @@ use style::values::computed::svg::{
 };
 use style::values::generics::svg::SVGLength;
 use style::values::specified::box_ as stylo_box;
-use svg_engine::render_tree::DefRef;
+use svg_engine::tree::DefRef;
 use svg_engine::style::gradient::PaintServer;
 use svg_engine::style::transform_ops::{TransformOp, parse_transform_str};
 use svg_engine::style::*;

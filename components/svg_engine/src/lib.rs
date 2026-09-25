@@ -4,46 +4,51 @@
 
 //! Software SVG render engine for Servo.
 //!
-//! Converts an [`SvgRenderTree`] (built from DOM in `layout::svg_builder`) into
-//! WebRender display list commands via [`render_svg_tree`].
+//! Converts an `SvgTree` (built from DOM in `layout::svg`) into WebRender
+//! display list commands via [`render_svg_tree`].
 //!
 //! # Architecture
 //!
+//! The crate is split into two halves:
+//!
+//! * [`model`] — the pure SVG data model (shapes, style, tree, units), with no
+//!   dependency on WebRender or the renderer.
+//! * `render` — the rendering half (traversal, per-shape `Render` impls,
+//!   effects), which consumes the model and emits display-list commands.
+//!
 //! | Module | Role |
 //! |--------|------|
-//! | [`shapes`] | Pure data structs for SVG geometric shapes (rect, circle, etc.) |
-//! | [`style`] | SVG property data types (fill, stroke, gradient, transform, …) |
-//! | [`render_tree`] | [`SvgRenderTree`] node tree and definition types |
-//! | [`error`] | Error types for SVG parsing failures |
-//! | [`traversal`] | Recursive tree walk that produces the display list |
-//! | [`renderer`] | Per-shape [`Render`] trait impls + fill/stroke/gradient pipelines |
-//! | [`tessellator`] | Polygon triangulation + scanline rasterization |
-//! | [`effects`] | Clip-path, mask, and filter resolution |
+//! | [`model::shapes`] | Pure data structs for SVG geometric shapes (rect, circle, etc.) |
+//! | [`model::style`] | SVG property data types (fill, stroke, gradient, transform, …) |
+//! | [`model::tree`] | `SvgTree` node tree and definition types |
+//! | [`model::error`] | Error types for SVG parsing failures |
+//! | `render::traversal` | Recursive tree walk that produces the display list |
+//! | `render::renderer` | Per-shape `Render` trait impls + fill/stroke/gradient pipelines |
+//! | `render::tessellator` | Polygon triangulation + scanline rasterization |
+//! | `render::effects` | Clip-path, mask, and filter resolution |
 //!
 //! The entry point is [`render_svg_tree`], called from
 //! `layout::display_list::mod.rs`.  Shape construction happens in
 //! `layout::svg_builder.rs`.
 
-pub mod attr_parsers;
-pub mod error;
-pub mod image;
-pub mod render_tree;
-pub mod shapes;
-pub mod style;
-pub mod text;
-pub mod units;
+pub mod model;
+mod render;
 
-mod effects;
-mod renderer;
-mod tessellator;
-mod traversal;
+pub use model::attr_parsers;
+pub use model::error;
+pub use model::image;
+pub use model::shapes;
+pub use model::style;
+pub use model::text;
+pub use model::tree;
+pub use model::units;
 
-pub use render_tree::SvgTag;
-pub use renderer::gradient::color_at_t_with_space;
-pub use traversal::render_svg_tree;
+pub use model::tree::SvgTag;
+pub use render::renderer::gradient::color_at_t_with_space;
+pub use render::traversal::render_svg_tree;
 
-pub use self::image::SvgImage;
-pub use self::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
+pub use model::image::SvgImage;
+pub use model::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
 
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{

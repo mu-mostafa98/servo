@@ -4,9 +4,9 @@
 
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
-use crate::render_tree::ClipPathUnits;
-use crate::shapes::{ClipGeometry, OBJECT_BBOX_REF_SIZE, all_equal_radius};
-use crate::units::Length;
+use crate::model::tree::ClipPathUnits;
+use crate::model::shapes::{ClipGeometry, OBJECT_BBOX_REF_SIZE, all_equal_radius};
+use crate::model::units::Length;
 
 /// SVG `<ellipse>` element.
 #[derive(Debug, Clone, Copy)]

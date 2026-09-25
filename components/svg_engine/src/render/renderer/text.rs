@@ -14,8 +14,8 @@ use webrender_api::{
     TransformStyle,
 };
 
-use crate::renderer::{Render, RenderContext, to_colorf};
-use crate::text::TextSpan;
+use crate::render::renderer::{Render, RenderContext, to_colorf};
+use crate::model::text::TextSpan;
 
 const FALLBACK_ADVANCE: f32 = 8.0;
 const FALLBACK_HEIGHT: f32 = 16.0;
@@ -252,7 +252,7 @@ impl TextSpan {
 fn push_glyph(
     wr: &mut webrender_api::DisplayListBuilder,
     font_key: webrender_api::FontInstanceKey,
-    g: &crate::text::ShapedGlyph,
+    g: &crate::model::text::ShapedGlyph,
     base_x: f32,
     base_y: f32,
     angle: f32,

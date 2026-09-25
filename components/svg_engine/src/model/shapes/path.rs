@@ -5,8 +5,8 @@
 use kurbo::BezPath;
 use webrender_api::units::LayoutPoint;
 
-use crate::render_tree::ClipPathUnits;
-use crate::shapes::{ClipGeometry, clip_path_geometry};
+use crate::model::tree::ClipPathUnits;
+use crate::model::shapes::{ClipGeometry, clip_path_geometry};
 
 /// SVG `<path>` element with its `d` attribute parsed into a [`BezPath`].
 #[derive(Debug, Clone)]

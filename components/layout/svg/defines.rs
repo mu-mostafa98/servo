@@ -15,12 +15,12 @@ use std::sync::Arc;
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::render_tree::*;
+use svg_engine::tree::*;
 use svg_engine::style::NodeStyle;
 use svg_engine::style::gradient::{GradientDef, parse_gradient_element};
 use web_atoms::ns;
 
-use super::builder::SvgRenderTreeBuilder;
+use super::builder::SvgTreeBuilder;
 
 // ======================= Strategy Pattern =======================
 
@@ -35,7 +35,7 @@ pub(crate) trait DefinitionParser {
     /// Parse a definition from a DOM element node. Returns `(id_attr_value, definition)`.
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+        builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)>;
 }
 
@@ -46,7 +46,7 @@ pub(crate) struct DefinitionCollector;
 impl DefinitionCollector {
     pub(crate) fn collect<'dom, 'a, T: DefinitionParser>(
         node: ServoLayoutNode<'dom>,
-        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+        builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> HashMap<String, Arc<T::Definition>> {
         let mut result = HashMap::new();
         let mut candidates = Vec::new();
@@ -100,16 +100,16 @@ fn find_elements_by_tag<'dom>(
 /// `<text>` and nested `<defs>` content instead of flattening to shapes.
 fn collect_def_content<'dom, 'a>(
     node: ServoLayoutNode<'dom>,
-    builder: &SvgRenderTreeBuilder<'dom, 'a>,
-) -> Vec<SvgRenderNode> {
+    builder: &SvgTreeBuilder<'dom, 'a>,
+) -> Vec<SvgNode> {
     node.dom_children()
         .filter_map(|child| builder.build_def_content(child))
         .collect()
 }
 
 /// Wrap definition children in a synthetic `<g>` root node.
-fn def_content_root(children: Vec<SvgRenderNode>) -> SvgRenderNode {
-    SvgRenderNode {
+fn def_content_root(children: Vec<SvgNode>) -> SvgNode {
+    SvgNode {
         id: None,
         tag: SvgTag::Container(Container::Group),
         style: NodeStyle::default(),
@@ -131,7 +131,7 @@ impl DefinitionParser for GradientParser {
 
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        _builder: &SvgRenderTreeBuilder<'dom, 'a>,
+        _builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let grad_name = element.local_name().as_ref().to_owned();
@@ -197,7 +197,7 @@ impl DefinitionParser for ClipPathParser {
 
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+        builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
@@ -236,7 +236,7 @@ impl DefinitionParser for PatternParser {
 
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+        builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
@@ -276,11 +276,11 @@ impl DefinitionParser for PatternParser {
         let view_box = element
             .attribute_as_str(&ns!(), &local_name!("viewBox"))
             .as_deref()
-            .and_then(svg_engine::render_tree::extract_viewbox);
+            .and_then(svg_engine::tree::extract_viewbox);
         let aspect_ratio = element
             .attribute_as_str(&ns!(), &local_name!("preserveAspectRatio"))
             .as_deref()
-            .map(svg_engine::render_tree::parse_aspect_ratio);
+            .map(svg_engine::tree::parse_aspect_ratio);
         let children = collect_def_content(node, builder);
         if children.is_empty() {
             return None;
@@ -315,7 +315,7 @@ impl DefinitionParser for MaskParser {
 
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+        builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
@@ -362,7 +362,7 @@ impl DefinitionParser for FilterParser {
 
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        _builder: &SvgRenderTreeBuilder<'dom, 'a>,
+        _builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element
@@ -689,7 +689,7 @@ impl DefinitionParser for MarkerParser {
 
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        builder: &SvgRenderTreeBuilder<'dom, 'a>,
+        builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let id = element

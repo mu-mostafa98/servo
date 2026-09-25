@@ -7,7 +7,7 @@
 use svgtypes::Color as SvgColor;
 
 use super::gradient::PaintServer;
-use crate::units::{Length, Opacity};
+use crate::model::units::{Length, Opacity};
 
 /// SVG stroke properties.
 #[derive(Debug, Clone)]

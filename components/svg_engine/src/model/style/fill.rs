@@ -7,7 +7,7 @@
 use svgtypes::Color as SvgColor;
 
 use super::gradient::PaintServer;
-use crate::units::Opacity;
+use crate::model::units::Opacity;
 
 /// SVG fill properties.
 #[derive(Debug, Clone)]

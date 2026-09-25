@@ -30,8 +30,8 @@ pub use self::path::Path;
 pub use self::polygon::Polygon;
 pub use self::polyline::Polyline;
 pub use self::rectangle::Rectangle;
-use crate::render_tree::ClipPathUnits;
-use crate::style::FillRule;
+use crate::model::tree::ClipPathUnits;
+use crate::model::style::FillRule;
 
 /// Scale factor for objectBoundingBox clip-path coordinates (0..1 → 0..100).
 pub(crate) const OBJECT_BBOX_REF_SIZE: f32 = 100.0;

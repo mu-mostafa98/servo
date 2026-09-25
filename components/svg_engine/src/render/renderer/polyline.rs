@@ -7,10 +7,10 @@ use kurbo::{BezPath, Point as KurboPoint};
 use lyon::math::Point as LyonPoint;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
-use crate::renderer::{Render, RenderContext, fill, paint_order_stroke_before_fill, stroke};
-use crate::renderer::path::rasterize_bez;
-use crate::shapes::Polyline;
-use crate::style::FillRule;
+use crate::render::renderer::{Render, RenderContext, fill, paint_order_stroke_before_fill, stroke};
+use crate::render::renderer::path::rasterize_bez;
+use crate::model::shapes::Polyline;
+use crate::model::style::FillRule;
 
 /// Renders an SVG `<polyline>`.
 ///

@@ -20,7 +20,7 @@ use style::Zero;
 use style::properties::ComputedValues;
 use style_traits::CSSPixel;
 #[cfg(feature = "svg-engine")]
-use svg_engine::render_tree::SvgRenderTree;
+use svg_engine::tree::SvgTree;
 use webrender_api::{FontInstanceKey, ImageKey};
 
 use super::{
@@ -127,7 +127,7 @@ pub(crate) struct ImageFragment {
     pub natural_height: Option<Au>,
     #[cfg(feature = "svg-engine")]
     #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
-    pub svg_render_tree: Option<Arc<SvgRenderTree>>,
+    pub svg_render_tree: Option<Arc<SvgTree>>,
 }
 
 #[derive(MallocSizeOf)]

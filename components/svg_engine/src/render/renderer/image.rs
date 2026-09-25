@@ -18,9 +18,9 @@ use webrender_api::{
     AlphaType, ColorF, CommonItemProperties, ImageRendering, SpaceAndClipInfo,
 };
 
-use crate::image::SvgImage;
-use crate::renderer::{Render, RenderContext};
-use crate::traversal::compute_viewbox_transform;
+use crate::model::image::SvgImage;
+use crate::render::renderer::{Render, RenderContext};
+use crate::render::traversal::compute_viewbox_transform;
 
 impl Render for SvgImage {
     fn render(&self, ctx: &mut RenderContext) {

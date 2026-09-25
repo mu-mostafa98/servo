@@ -5,11 +5,11 @@
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{BorderRadius, ClipMode, ComplexClipRegion};
 
-use crate::renderer::{
+use crate::render::renderer::{
     Render, RenderContext, clip_chain_option, fill, paint_order_stroke_before_fill, stroke,
 };
-use crate::shapes::{Ellipse, Rectangle, Shape};
-use crate::units::Length;
+use crate::model::shapes::{Ellipse, Rectangle, Shape};
+use crate::model::units::Length;
 
 /// Compute the layout-space bounds and corner radii for an axis-aligned
 /// rect/circle/ellipse. Returns `None` for shapes that are not one of those

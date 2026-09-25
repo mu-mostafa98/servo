@@ -12,13 +12,13 @@
 
 use webrender_api::FilterOp;
 
-use crate::render_tree::{DefRef, FilterPrimitive, SvgRenderNode};
+use crate::model::tree::{DefRef, FilterPrimitive, SvgNode};
 
 /// If the node references a filter, return the list of WebRender
 /// [`FilterOp`]s.  Returns `None` when no filter is present, the
 /// referenced filter definition is missing, or the filter resolves
 /// to an empty op list.
-pub(crate) fn get_filter_ops(node: &SvgRenderNode) -> Option<Vec<FilterOp>> {
+pub(crate) fn get_filter_ops(node: &SvgNode) -> Option<Vec<FilterOp>> {
     let effects = node.style.effects.as_ref()?;
     let filter_def = effects.filter.as_ref().and_then(DefRef::resolved)?;
 
@@ -110,8 +110,8 @@ pub(crate) fn get_filter_ops(node: &SvgRenderNode) -> Option<Vec<FilterOp>> {
                 // Proper support requires the SVG filter graph and image loading.
                 // For now, keep the filter recognized with a placeholder.
                 let img_id = match img_kind {
-                    crate::render_tree::FeImageKind::FragmentRef(id) => format!("#{}", id),
-                    crate::render_tree::FeImageKind::ExternalUrl(url) => url.clone(),
+                    crate::model::tree::FeImageKind::FragmentRef(id) => format!("#{}", id),
+                    crate::model::tree::FeImageKind::ExternalUrl(url) => url.clone(),
                 };
                 log::debug!("feImage ({}) not yet fully supported in SVG engine", img_id);
                 ops.push(FilterOp::Identity);

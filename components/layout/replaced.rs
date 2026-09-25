@@ -34,7 +34,7 @@ use style::values::computed::image::Image as ComputedImage;
 use style::values::computed::{Content, Context, ToComputedValue};
 use style::values::generics::counters::{GenericContentItem, GenericContentItems};
 #[cfg(feature = "svg-engine")]
-use svg_engine::render_tree::SvgRenderTree;
+use svg_engine::tree::SvgTree;
 use url::Url;
 use web_atoms::local_name;
 use webrender_api::ImageKey;
@@ -158,7 +158,7 @@ pub(crate) enum ReplacedContentKind {
         has_viewbox: bool,
         #[cfg(feature = "svg-engine")]
         #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
-        render_tree: Option<Arc<SvgRenderTree>>,
+        render_tree: Option<Arc<SvgTree>>,
     },
     Audio,
 }
@@ -293,7 +293,7 @@ impl ReplacedContents {
 
         #[cfg(feature = "svg-engine")]
         {
-            let render_tree = crate::svg::build_svg_render_tree(node, context);
+            let render_tree = crate::svg::build_svg_tree(node, context);
             return (
                 ReplacedContentKind::SVGElement {
                     vector_image: None,

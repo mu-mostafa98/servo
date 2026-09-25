@@ -19,12 +19,12 @@ use kurbo::{BezPath, Rect, Shape as _};
 use vello_cpu::kurbo::Affine;
 use vello_cpu::peniko::{Fill, Gradient, GradientKind};
 
-use crate::render_tree::{MaskContentUnits, MaskDef, MaskType};
-use crate::renderer::path::{
+use crate::model::tree::{MaskContentUnits, MaskDef, MaskType};
+use crate::render::renderer::path::{
     apply_paint, resolve_fill_paint, scale_paint, transform_to_affine,
 };
-use crate::style::fill::FillParams;
-use crate::style::FillRule;
+use crate::model::style::fill::FillParams;
+use crate::model::style::FillRule;
 
 /// A CPU-rasterized mask: grayscale pixels whose alpha channel holds the mask
 /// value (luminance or alpha of the mask content). Positioned in the same
@@ -157,7 +157,7 @@ pub(crate) fn rasterize_mask(
 
         // Gradients are resolved in the shape's own bbox-local space; shift
         // them into union-local space before scaling to device resolution.
-        if let crate::renderer::path::ResolvedPaint::Gradient(g) = &mut paint {
+        if let crate::render::renderer::path::ResolvedPaint::Gradient(g) = &mut paint {
             translate_gradient(
                 g,
                 (s.bbox.x0 - union.x0) as f64,

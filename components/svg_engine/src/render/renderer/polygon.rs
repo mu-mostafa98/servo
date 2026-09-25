@@ -5,10 +5,10 @@
 use euclid::Transform2D;
 use webrender_api::units::LayoutPoint;
 
-use crate::renderer::path::rasterize_bez;
-use crate::renderer::polyline::points_to_bez;
-use crate::renderer::{Render, RenderContext};
-use crate::shapes::Polygon;
+use crate::render::renderer::path::rasterize_bez;
+use crate::render::renderer::polyline::points_to_bez;
+use crate::render::renderer::{Render, RenderContext};
+use crate::model::shapes::Polygon;
 
 /// Renders an SVG `<polygon>` as a closed path.
 ///
@@ -22,7 +22,7 @@ impl Render for Polygon {
             if let Some(first) = self.points.first() {
                 closed_points.push(*first);
             }
-            crate::renderer::polyline::render_native_polyline(&closed_points, ctx, true);
+            crate::render::renderer::polyline::render_native_polyline(&closed_points, ctx, true);
             return;
         }
 

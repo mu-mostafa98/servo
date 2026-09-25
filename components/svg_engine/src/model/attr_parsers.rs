@@ -14,7 +14,7 @@
 use kurbo::Point;
 use svgtypes::{Length as SvgLength, PointsParser};
 
-use crate::error::{SvgEngineError, SvgResult};
+use crate::model::error::{SvgEngineError, SvgResult};
 
 /// Parse a named SVG length attribute (e.g. `x="10"`, `width="50%"`).
 ///

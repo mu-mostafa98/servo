@@ -8,9 +8,9 @@ use euclid::Transform2D;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutTransform};
 use webrender_api::{PropertyBinding, ReferenceFrameKind, TransformStyle};
 
-use crate::render_tree::{PatternContentUnits, PatternDef, PatternUnits};
-use crate::renderer::{Render, RenderContext, clip_chain_option, transform};
-use crate::traversal::compute_viewbox_transform;
+use crate::model::tree::{PatternContentUnits, PatternDef, PatternUnits};
+use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
+use crate::render::traversal::compute_viewbox_transform;
 
 /// Fill a rectangle with a repeating pattern.
 pub(crate) fn fill_rect_with_pattern(

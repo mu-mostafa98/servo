@@ -5,8 +5,8 @@
 use kurbo::Point;
 use webrender_api::units::LayoutPoint;
 
-use crate::render_tree::ClipPathUnits;
-use crate::shapes::{ClipGeometry, clip_path_geometry, points_to_bez};
+use crate::model::tree::ClipPathUnits;
+use crate::model::shapes::{ClipGeometry, clip_path_geometry, points_to_bez};
 
 /// SVG `<polyline>` element — an open sequence of connected line segments.
 #[derive(Debug, Clone)]

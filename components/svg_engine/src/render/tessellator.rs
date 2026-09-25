@@ -21,12 +21,12 @@ use lyon::tessellation::{
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
 
-use crate::render_tree::SvgRenderNode;
-use crate::renderer::gradient::{color_at_t_with_spread, gradient_projection};
-use crate::renderer::{Render, RenderContext, clip_chain_option, shape_rendering_value};
-use crate::style::gradient::{GradientStop, SpreadMethod};
-use crate::style::hints::ColorInterpolation;
-use crate::style::FillRule;
+use crate::model::tree::SvgNode;
+use crate::render::renderer::gradient::{color_at_t_with_spread, gradient_projection};
+use crate::render::renderer::{Render, RenderContext, clip_chain_option, shape_rendering_value};
+use crate::model::style::gradient::{GradientStop, SpreadMethod};
+use crate::model::style::hints::ColorInterpolation;
+use crate::model::style::FillRule;
 
 // ======================= Fill Style =======================
 
@@ -66,7 +66,7 @@ pub(crate) enum FillStyle<'a> {
     /// Pattern evaluated per pixel (shape hit-testing in tile-local coords).
     Pattern {
         /// The pattern's child subtree.
-        root: &'a SvgRenderNode,
+        root: &'a SvgNode,
         /// Tile dimensions in absolute space.
         tile_w: f32,
         tile_h: f32,

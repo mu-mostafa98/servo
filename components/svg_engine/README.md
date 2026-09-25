@@ -12,18 +12,18 @@ boundary: the document is converted into a data structure first, and that data
 structure is then turned into drawing commands. The first stage lives in
 `layout`; the second is this crate.
 
-**1. Integration layer — `DOM` → `SvgRenderTree` (in `layout`)**
+**1. Integration layer — `DOM` → `SvgTree` (in `layout`)**
 
 The `layout` crate owns the boundary between the document and the renderer. Its
-`build_svg_render_tree` entry point walks the SVG subtree, resolves CSS
+`build_svg_tree` entry point walks the SVG subtree, resolves CSS
 computed values, and collects the `<defs>` resources (gradients, patterns,
-and markers) into a pure-data `SvgRenderTree`. The
-result is a tree of `SvgRenderNode`s carrying only the geometry and paint
+and markers) into a pure-data `SvgTree`. The
+result is a tree of `SvgNode`s carrying only the geometry and paint
 information the renderer needs — no DOM or layout types leak through.
 
-**2. The engine — `SvgRenderTree` → display commands (in `svg_engine`)**
+**2. The engine — `SvgTree` → display commands (in `svg_engine`)**
 
-This crate's core is `render_svg_tree`, which walks the `SvgRenderTree`
+This crate's core is `render_svg_tree`, which walks the `SvgTree`
 recursively and emits a rendering backend display list. At each node it resolves the
 inherited transforms, effects, and paint, then produces the matching primitive.
 Shapes are emitted through one of two paths: a native path that pushes
@@ -36,8 +36,8 @@ gradient cases, so those fall back to CPU rasterization.
 
 ## 3. Input, process, output
 
-At the top level the engine takes an `SvgRenderTree` (built from the DOM by
-`layout::svg::build_svg_render_tree`), walks it recursively, and emits rendering backend
+At the top level the engine takes an `SvgTree` (built from the DOM by
+`layout::svg::build_svg_tree`), walks it recursively, and emits rendering backend
 display-list commands — native primitives (`push_rect`, `push_border`,
 `push_gradient`, `push_text`, `push_image`) for shapes the rendering backend can express
 directly, or a `push_image` of a `RasterizedImage` rasterized by `vello_cpu`
@@ -144,7 +144,7 @@ network-facing) unless the deployer provides that exclusion.
   natively through the rendering backend; cases the backend cannot express yet
   (arbitrary paths, and some border/gradient cases) fall back to CPU
   rasterization via `vello_cpu`.
-- **No incremental updates or animation yet.** The `SvgRenderTree` and its display
+- **No incremental updates or animation yet.** The `SvgTree` and its display
   list are rebuilt only when the SVG fragment is dirtied — that is, when some element
   inside the SVG (or a style affecting it) changes — not on every page reflow. When a
   rebuild does happen it is a full rebuild: incremental updates and animation are not
@@ -156,7 +156,7 @@ network-facing) unless the deployer provides that exclusion.
 ### 5.1 System boundaries
 
 `svg_engine` exposes a single interface — `render_svg_tree` — which takes an
-`SvgRenderTree` and emits a rendering backend display list.
+`SvgTree` and emits a rendering backend display list.
 
 ```mermaid
 flowchart LR
@@ -172,7 +172,7 @@ flowchart LR
         DL["display list"]
     end
 
-    DOM -->|"SvgRenderTree"| RST
+    DOM -->|"SvgTree"| RST
     RST -->|"display-list commands"| DL
 ```
 
@@ -218,7 +218,7 @@ flowchart TB
     VELLO["Vello CPU<br/>rasterization scene"]:::vello
     UPLOAD["layout — image cache uploader"]:::vello
 
-    IL -->|"SvgRenderTree"| TRAV
+    IL -->|"SvgTree"| TRAV
     SIMPLE -->|"push_rect / push_text / … / push_image"| WR
     COMPLEX -->|"BezPath"| VELLO
     VELLO -->|"Pixmap"| COMPLEX
@@ -231,7 +231,7 @@ flowchart TB
 
 | Module | Responsibility |
 |--------|----------------|
-| [`render_tree`](src/render_tree.rs) | Data model — tree and node types |
+| [`tree`](src/model/tree.rs) | Data model — tree and node types |
 | [`shapes`](src/shapes/mod.rs) | Data model — shape types |
 | [`style`](src/style/mod.rs) | Data model — paint and style parameters |
 | [`text`](src/text.rs) | Data model — text |
@@ -344,7 +344,7 @@ Dependencies declared in [Cargo.toml](Cargo.toml):
 | `euclid` | Affine transforms (`Transform2D`) for node/viewBox/gradient/pattern/marker matrices, plus the `Point2D`/`Rect`/`Size`/`Vector2D` primitives behind layout coordinates |
 | `kurbo` | Path representation: `BezPath` (every shape via `to_bez_path`), `Stroke` + dash handling, `Affine`, and `PathEl` — the format handed to `vello_cpu` and the basis of `ComplexClip` geometry |
 | `lyon` | Polygon tessellation: `FillTessellator` triangulates polygons into triangles emitted as per-scanline `push_rect` bands, used to fill shapes inside `<pattern>` content |
-| `svgtypes` | Spec-compliant SVG parsing: `Length`/`LengthUnit`, `PointsParser`, `ViewBox`, `Color`, and `TransformListParser` — backing `attr_parsers`, `render_tree`, `transform_ops` |
+| `svgtypes` | Spec-compliant SVG parsing: `Length`/`LengthUnit`, `PointsParser`, `ViewBox`, `Color`, and `TransformListParser` — backing `attr_parsers`, `tree`, `transform_ops` |
 | `vello_cpu` | Software rasterization — takes a `BezPath` and produces an RGBA `Pixmap` |
 
 `euclid`, `kurbo`, and `vello_cpu` are already dependencies of existing
@@ -364,29 +364,29 @@ parsing).
 
 | API | Description | Input parameters | Return type |
 |-----|-------------|------------------|-------------|
-| `build_svg_render_tree` (components/layout/svg) | Builds the `SvgRenderTree` from the DOM subtree and resolved CSS values. | `node: ServoLayoutNode<'dom>`, `context: &LayoutContext` | `Option<Arc<SvgRenderTree>>` |
-| `render_svg_tree` (components/svg_engine) | Renders an entire `SvgRenderTree` into a rendering backend display list. | `tree: &SvgRenderTree`, `svg_origin: &LayoutPoint`, `svg_size: LayoutSize`, `device_scale: f32`, `spatial_id: SpatialId`, `clip_chain_id: ClipChainId`, `sink: &RasterSink`, `wr: &mut DisplayListBuilder` | No return — pushes display commands directly into `wr` (`&mut DisplayListBuilder`) |
+| `build_svg_tree` (components/layout/svg) | Builds the `SvgTree` from the DOM subtree and resolved CSS values. | `node: ServoLayoutNode<'dom>`, `context: &LayoutContext` | `Option<Arc<SvgTree>>` |
+| `render_svg_tree` (components/svg_engine) | Renders an entire `SvgTree` into a rendering backend display list. | `tree: &SvgTree`, `svg_origin: &LayoutPoint`, `svg_size: LayoutSize`, `device_scale: f32`, `spatial_id: SpatialId`, `clip_chain_id: ClipChainId`, `sink: &RasterSink`, `wr: &mut DisplayListBuilder` | No return — pushes display commands directly into `wr` (`&mut DisplayListBuilder`) |
 
 ## 8. Complexity and resource usage
 
 The pipeline is linear in node count (`n` = SVG nodes); the only non-linear
 factor is the area of shapes rendered through the software (`vello_cpu`) path.
 
-### 8.1 Build tree — `build_svg_render_tree` (in `layout`)
+### 8.1 Build tree — `build_svg_tree` (in `layout`)
 
 | Sub-step | Time complexity | Memory |
 |----------|----------------|--------|
 | Walk the SVG DOM subtree | O(n) | O(1) |
 | Resolve computed style per node (Stylo) | O(1) amortized / node | O(1) |
 | Collect `<defs>` resources (gradients / patterns / markers) | O(defs) | O(defs) |
-| Construct the `SvgRenderNode` tree | O(n) | O(n) |
+| Construct the `SvgNode` tree | O(n) | O(n) |
 | **Total** | **O(n)** | **O(n)** |
 
 ### 8.2 Traversal — `render_svg_tree` → `render_node`
 
 | Sub-step | Time complexity | Memory |
 |----------|----------------|--------|
-| Recursive walk over `SvgRenderNode`s | O(n) | O(depth) |
+| Recursive walk over `SvgNode`s | O(n) | O(depth) |
 | Apply transforms / resolve effects per node | O(1) | O(1) |
 | Tag dispatch (`Shape` / `Text` / `Image` / `Container`) | O(1) | O(1) |
 | Container recursion | O(children) → O(n) total | O(1) |
@@ -443,7 +443,7 @@ path-set to break cycles, then resolves the target via `find_element_by_id`
 and calls `build_render_node(target)` to **build a full fresh copy** of the
 target subtree. The `<use>`'s `x`/`y` is applied as a leading `Translate`
 transform, and `<symbol>` targets are wrapped in a viewport-carrying group. The
-result is a `SvgRenderNode` `Group` whose children are a **materialized copy**
+result is a `SvgNode` `Group` whose children are a **materialized copy**
 of the referenced content.
 
 **Render time (in `svg_engine`).** The traversal treats `Container::Use` like a

@@ -19,7 +19,7 @@
 //! | [`viewport`] | Viewport/viewBox/aspectRatio extraction |
 //! | [`transforms`] | CSS/SVG transform conversion |
 //!
-//! The main entry point is [`build_svg_render_tree`], called from
+//! The main entry point is [`build_svg_tree`], called from
 //! [`crate::replaced`].
 
 pub(crate) mod builder;
@@ -33,14 +33,14 @@ pub(crate) mod viewport;
 use std::sync::Arc;
 
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::render_tree::SvgRenderTree;
+use svg_engine::tree::SvgTree;
 
 use crate::context::LayoutContext;
 
-/// Main entry point — builds a complete `SvgRenderTree` from an SVG DOM element.
-pub(crate) fn build_svg_render_tree<'dom>(
+/// Main entry point — builds a complete `SvgTree` from an SVG DOM element.
+pub(crate) fn build_svg_tree<'dom>(
     node: ServoLayoutNode<'dom>,
     context: &LayoutContext,
-) -> Option<Arc<SvgRenderTree>> {
-    builder::SvgRenderTreeBuilder::new(node, context).build()
+) -> Option<Arc<SvgTree>> {
+    builder::SvgTreeBuilder::new(node, context).build()
 }

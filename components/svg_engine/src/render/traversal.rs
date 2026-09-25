@@ -4,7 +4,7 @@
 
 //! SVG render tree traversal.
 //!
-//! Walks the [`SvgRenderTree`] recursively, applying transforms, clip-paths,
+//! Walks the [`SvgTree`] recursively, applying transforms, clip-paths,
 //! masks, and filters at each node, then dispatching to shape/text/image
 //! renderers that emit WebRender display list commands.
 
@@ -17,13 +17,13 @@ use webrender_api::{
     ReferenceFrameKind, SpatialId, StackingContextFlags, TransformStyle,
 };
 
-use crate::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
-use crate::effects::filter::get_filter_ops;
-use crate::effects::mask::{MaskRaster, rasterize_mask};
-use crate::render_tree::*;
-use crate::renderer::{Render, RenderContext, clip_chain_option, transform};
-use crate::renderer::path::rasterize_bez;
-use crate::shapes::ComplexClip;
+use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
+use crate::render::effects::filter::get_filter_ops;
+use crate::render::effects::mask::{MaskRaster, rasterize_mask};
+use crate::model::tree::*;
+use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
+use crate::render::renderer::path::rasterize_bez;
+use crate::model::shapes::ComplexClip;
 use crate::RasterSink;
 use kurbo::BezPath;
 
@@ -35,7 +35,7 @@ use kurbo::BezPath;
 /// 2. Push a viewBox reference frame (if a viewBox is defined).
 /// 3. Walk the tree starting from the root node.
 pub fn render_svg_tree(
-    tree: &SvgRenderTree,
+    tree: &SvgTree,
     svg_origin: &LayoutPoint,
     svg_size: LayoutSize,
     device_scale: f32,
@@ -99,7 +99,7 @@ struct ViewboxTransform {
 /// Build a clip chain that confines rendering to the SVG viewport bounds.
 /// Skipped when the SVG element has `overflow: visible`.
 fn build_viewport_clip(
-    tree: &SvgRenderTree,
+    tree: &SvgTree,
     svg_origin: &LayoutPoint,
     svg_size: LayoutSize,
     spatial_id: SpatialId,
@@ -117,7 +117,7 @@ fn build_viewport_clip(
 /// Push a reference frame that implements the viewBox → viewport transform.
 /// Returns `(new_origin, new_spatial_id, should_pop, viewbox_transform)`.
 fn push_viewbox_frame(
-    tree: &SvgRenderTree,
+    tree: &SvgTree,
     svg_origin: &LayoutPoint,
     svg_size: LayoutSize,
     spatial_id: SpatialId,
@@ -174,7 +174,7 @@ struct EffectParams<'a> {
 }
 
 /// A resolved mask: either a CPU-rasterized luminance/alpha pixmap (real mask
-/// semantics — see [`crate::effects::mask`]) or a set of geometric clips (the
+/// semantics — see [`crate::render::effects::mask`]) or a set of geometric clips (the
 /// legacy approximation, kept for `objectBoundingBox` masks and non-rasterizable
 /// content such as text-only masks).
 #[derive(Clone)]
@@ -194,7 +194,7 @@ enum ResolvedMask {
 /// 4. Render the shape/text/image.
 /// 5. Recurse into children with the updated clip chain.
 fn render_node(
-    node: &SvgRenderNode,
+    node: &SvgNode,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
@@ -374,7 +374,7 @@ struct ResolvedEffects {
 /// Resolve clip-path, mask, and filter effects for a node.
 #[allow(clippy::too_many_arguments)]
 fn resolve_node_effects(
-    node: &SvgRenderNode,
+    node: &SvgNode,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
@@ -427,7 +427,7 @@ fn resolve_node_effects(
 /// enclosing group's mask.
 #[allow(clippy::too_many_arguments)]
 fn resolve_node_mask(
-    node: &SvgRenderNode,
+    node: &SvgNode,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     parent_clip_chain: ClipChainId,
@@ -469,7 +469,7 @@ fn resolve_node_mask(
 /// Returns the new origin, spatial ID, number of pushed frames (for later popping),
 /// and the accumulated scale (for `vector-effect: non-scaling-stroke`).
 fn apply_node_transforms(
-    node: &SvgRenderNode,
+    node: &SvgNode,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     parent_scale: f32,
@@ -495,7 +495,7 @@ fn apply_node_transforms(
 
 /// Dispatch rendering to the correct path based on the node's [`SvgTag`].
 fn emit_element(
-    node: &SvgRenderNode,
+    node: &SvgNode,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     node_clip_chain: ClipChainId,
@@ -558,8 +558,8 @@ fn emit_element(
 
 /// Render a geometric shape with full clip-path, mask, and filter support.
 fn emit_geometry(
-    shape: &crate::shapes::Shape,
-    style: crate::style::NodeStyle,
+    shape: &crate::model::shapes::Shape,
+    style: crate::model::style::NodeStyle,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     node_clip_chain: ClipChainId,
@@ -657,8 +657,8 @@ fn emit_geometry(
 /// Emit a single render call for the shape (or one of its mask-clipped copies).
 #[allow(clippy::too_many_arguments)]
 fn emit_shape(
-    shape: &crate::shapes::Shape,
-    style: &crate::style::NodeStyle,
+    shape: &crate::model::shapes::Shape,
+    style: &crate::model::style::NodeStyle,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
@@ -810,8 +810,8 @@ fn emit_shape(
 /// should fall back to vello rasterization.
 #[allow(clippy::too_many_arguments)]
 fn emit_native_gradients(
-    shape: &crate::shapes::Shape,
-    style: &crate::style::NodeStyle,
+    shape: &crate::model::shapes::Shape,
+    style: &crate::model::style::NodeStyle,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
@@ -819,11 +819,11 @@ fn emit_native_gradients(
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
 ) -> bool {
-    use crate::style::gradient::PaintServer;
+    use crate::model::style::gradient::PaintServer;
 
     // Only bounded shapes (rect/circle/ellipse) can be clipped natively.
     let Some((bounds, _)) =
-        crate::renderer::rect::rect_bounds_and_radii(shape, *svg_origin)
+        crate::render::renderer::rect::rect_bounds_and_radii(shape, *svg_origin)
     else {
         return false;
     };
@@ -850,7 +850,7 @@ fn emit_native_gradients(
     if let Some(fill) = &style.fill {
         match &fill.paint_server {
             Some(PaintServer::Gradient(def)) => {
-                if crate::renderer::gradient::resolve_gradient(
+                if crate::render::renderer::gradient::resolve_gradient(
                     def.as_ref(),
                     bounds,
                     &ctx,
@@ -873,7 +873,7 @@ fn emit_native_gradients(
         }
         match &stroke.paint_server {
             Some(PaintServer::Gradient(def)) => {
-                if crate::renderer::gradient::resolve_gradient(
+                if crate::render::renderer::gradient::resolve_gradient(
                     def.as_ref(),
                     bounds,
                     &ctx,
@@ -900,8 +900,8 @@ fn emit_native_gradients(
 }
 
 /// Whether the style uses a `<pattern>` paint server for its fill or stroke.
-fn style_has_pattern(style: &crate::style::NodeStyle) -> bool {
-    use crate::style::gradient::PaintServer;
+fn style_has_pattern(style: &crate::model::style::NodeStyle) -> bool {
+    use crate::model::style::gradient::PaintServer;
     let fill_pattern = style
         .fill
         .as_ref()
@@ -921,9 +921,9 @@ fn style_has_pattern(style: &crate::style::NodeStyle) -> bool {
 /// `stroke_line_segment`. A dashed stroke on rect/circle/ellipse stays on vello
 /// (the native border can't emit dashes), but line strokes handle dashes
 /// natively.
-fn is_native_solid_shape(shape: &crate::shapes::Shape, style: &crate::style::NodeStyle) -> bool {
-    use crate::shapes::Shape;
-    use crate::style::gradient::PaintServer;
+fn is_native_solid_shape(shape: &crate::model::shapes::Shape, style: &crate::model::style::NodeStyle) -> bool {
+    use crate::model::shapes::Shape;
+    use crate::model::style::gradient::PaintServer;
 
     let fill_is_solid = style
         .fill
@@ -956,10 +956,10 @@ fn is_native_solid_shape(shape: &crate::shapes::Shape, style: &crate::style::Nod
 /// `path`), in the shape's local coordinate space. Returns `None` for shapes
 /// that don't carry markers (rect/circle/ellipse).
 fn shape_vertices(
-    shape: &crate::shapes::Shape,
+    shape: &crate::model::shapes::Shape,
     bez: Option<&BezPath>,
 ) -> Option<Vec<(f32, f32)>> {
-    use crate::shapes::Shape;
+    use crate::model::shapes::Shape;
     match shape {
         Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => None,
         _ => {
@@ -987,9 +987,9 @@ fn shape_vertices(
 /// Render the start/mid/end markers for a shape (on top of its fill/stroke).
 #[allow(clippy::too_many_arguments)]
 fn emit_markers(
-    shape: &crate::shapes::Shape,
+    shape: &crate::model::shapes::Shape,
     bez: Option<&BezPath>,
-    style: &crate::style::NodeStyle,
+    style: &crate::model::style::NodeStyle,
     node_xform: Transform2D<f32, (), ()>,
     viewbox_scale: (f32, f32),
     device_scale: f32,
@@ -1148,9 +1148,9 @@ fn push_filter_context(
 // ======================= Non-Geometric Rendering =======================
 
 /// Emit a leaf element (text, image) with filter and mask support.
-fn emit_leaf<T: crate::renderer::Render>(
+fn emit_leaf<T: crate::render::renderer::Render>(
     item: &T,
-    node: &SvgRenderNode,
+    node: &SvgNode,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     clip_chain_id: ClipChainId,
@@ -1200,7 +1200,7 @@ fn emit_leaf<T: crate::renderer::Render>(
 /// Recurse into a node's children, skipping `<defs>` containers.
 #[allow(clippy::too_many_arguments)]
 fn recurse_children(
-    node: &SvgRenderNode,
+    node: &SvgNode,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
     clip_chain: ClipChainId,

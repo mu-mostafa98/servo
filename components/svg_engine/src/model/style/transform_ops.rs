@@ -7,7 +7,7 @@
 //! SVG spec: <https://www.w3.org/TR/SVG2/coords.html#InterfaceSVGTransform>
 //!
 //! **No WebRender dependency** — pure data types and string parsing only.
-//! WebRender integration lives in [`crate::renderer::transform`].
+//! WebRender integration lives in [`crate::render::renderer::transform`].
 
 use svgtypes::{TransformListParser, TransformListToken};
 

@@ -7,13 +7,13 @@ use std::sync::Arc;
 
 use svgtypes::ViewBox as SvgViewBox;
 
-pub use crate::image::SvgImage;
-use crate::shapes::Shape;
-use crate::style::NodeStyle;
-use crate::style::gradient::{GradientDef, PaintServer};
-use crate::style::transform_ops::TransformOp;
-use crate::units::{Id, Length};
-pub use crate::text::TextSpan;
+pub use crate::model::image::SvgImage;
+use crate::model::shapes::Shape;
+use crate::model::style::NodeStyle;
+use crate::model::style::gradient::{GradientDef, PaintServer};
+use crate::model::style::transform_ops::TransformOp;
+use crate::model::units::{Id, Length};
+pub use crate::model::text::TextSpan;
 
 // ======================= PreserveAspectRatio =======================
 
@@ -56,11 +56,11 @@ impl Default for AspectRatio {
     }
 }
 
-/// The SVG render tree — a tree of [`SvgRenderNode`]s plus viewport info
+/// The SVG render tree — a tree of [`SvgNode`]s plus viewport info
 /// and gradient/clip-path/pattern/mask/filter definitions collected from `<defs>`.
 #[derive(Debug)]
-pub struct SvgRenderTree {
-    pub root: SvgRenderNode,
+pub struct SvgTree {
+    pub root: SvgNode,
     pub viewport: ViewportInfo,
     /// Gradient definitions keyed by their `id` (without the `#` prefix).
     pub gradients: HashMap<String, Arc<GradientDef>>,
@@ -77,7 +77,7 @@ pub struct SvgRenderTree {
 }
 
 #[derive(Debug)]
-pub struct SvgRenderNode {
+pub struct SvgNode {
     pub id: Option<Id>,
     pub tag: SvgTag,
     pub style: NodeStyle,
@@ -85,10 +85,10 @@ pub struct SvgRenderNode {
     /// These are structural (affect coordinate system), not paint-level style.
     pub transforms: Vec<TransformOp>,
     /// Nested `<svg>` viewport (viewBox + x/y/width/height + preserveAspectRatio).
-    /// `None` for the root `<svg>` (handled via [`SvgRenderTree::viewport`]) and
+    /// `None` for the root `<svg>` (handled via [`SvgTree::viewport`]) and
     /// for every non-`<svg>` node.
     pub viewport: Option<SvgViewport>,
-    pub children: Vec<SvgRenderNode>,
+    pub children: Vec<SvgNode>,
 }
 
 #[derive(Debug)]
@@ -173,7 +173,7 @@ pub struct SvgViewport {
 pub struct ClipPathDef {
     /// The clipping region, stored as a nested node subtree so that `<g>`,
     /// `<use>`, `<text>` and nested-`<defs>` children are not silently dropped.
-    pub root: SvgRenderNode,
+    pub root: SvgNode,
     /// Coordinate system for the clip path.
     pub clip_path_units: ClipPathUnits,
 }
@@ -216,7 +216,7 @@ pub enum MaskContentUnits {
 #[derive(Debug)]
 pub struct MaskDef {
     /// The mask content, stored as a nested node subtree (see [`ClipPathDef::root`]).
-    pub root: SvgRenderNode,
+    pub root: SvgNode,
     /// Whether the mask value is luminance- or alpha-derived (`mask-type`).
     pub mask_type: MaskType,
     /// Coordinate system for the mask content (`maskContentUnits`).
@@ -306,14 +306,14 @@ pub struct PatternDef {
     pub pattern_units: PatternUnits,
     pub pattern_content_units: PatternContentUnits,
     /// The `patternTransform` attribute, applied to the tile coordinate system.
-    pub transform: Vec<crate::style::transform_ops::TransformOp>,
+    pub transform: Vec<crate::model::style::transform_ops::TransformOp>,
     /// Optional `viewBox` on the pattern, mapped into the tile via
     /// `preserveAspectRatio`.
     pub view_box: Option<ViewBox>,
     pub aspect_ratio: Option<AspectRatio>,
     /// The pattern tile content, stored as a nested node subtree (see
     /// [`ClipPathDef::root`]).
-    pub root: SvgRenderNode,
+    pub root: SvgNode,
 }
 
 /// Coordinate system for marker sizing.
@@ -346,7 +346,7 @@ impl Default for MarkerOrient {
 #[derive(Debug)]
 pub struct MarkerDef {
     /// Marker content, stored as a nested node subtree (see [`ClipPathDef::root`]).
-    pub root: SvgRenderNode,
+    pub root: SvgNode,
     /// Optional `viewBox` establishing the marker's coordinate system.
     pub view_box: Option<ViewBox>,
     /// Reference point (in viewBox coords) aligned with the path vertex.
@@ -362,7 +362,7 @@ pub struct MarkerDef {
 /// A reference to a definition (clip-path, mask, filter, or marker) that
 /// starts as a raw `#id` string during tree building and is rewritten to a
 /// typed [`Arc`] handle once the definition maps are collected (see
-/// [`SvgRenderTree::resolve_references`]).
+/// [`SvgTree::resolve_references`]).
 ///
 /// This mirrors [`PaintServer`]'s transient `Ref` variant: the build layer
 /// emits [`DefRef::Ref`] and the post-build resolve pass rewrites it to
@@ -380,7 +380,7 @@ pub enum DefRef<T> {
 // cloning `T` itself (`Arc<T>` clones the handle, `String` clones the id),
 // so `DefRef<T>` is `Clone` for *any* `T` — including definitions like
 // `ClipPathDef`/`MaskDef`/`FilterDef`/`MarkerDef` that embed a non-`Clone`
-// `SvgRenderNode`.
+// `SvgNode`.
 impl<T> Clone for DefRef<T> {
     fn clone(&self) -> Self {
         match self {
@@ -477,20 +477,20 @@ pub enum VisitDecision {
 }
 
 /// Visitor for read-only operations on the render tree.
-pub trait SvgRenderTreeVisitor {
+pub trait SvgTreeVisitor {
     /// Called for each node. Return `VisitDecision` to control traversal.
-    fn visit_node(&mut self, node: &SvgRenderNode) -> VisitDecision;
+    fn visit_node(&mut self, node: &SvgNode) -> VisitDecision;
 }
 
 /// Visitor for mutation operations on the render tree.
-pub trait SvgRenderTreeVisitorMut {
+pub trait SvgTreeVisitorMut {
     /// Called for each node with mutable access. Return `VisitDecision` to control traversal.
-    fn visit_node_mut(&mut self, node: &mut SvgRenderNode) -> VisitDecision;
+    fn visit_node_mut(&mut self, node: &mut SvgNode) -> VisitDecision;
 }
 
-impl SvgRenderNode {
+impl SvgNode {
     /// Accept a read-only visitor, traversing the tree in pre-order.
-    pub fn accept(&self, visitor: &mut dyn SvgRenderTreeVisitor) {
+    pub fn accept(&self, visitor: &mut dyn SvgTreeVisitor) {
         let decision = visitor.visit_node(self);
         match decision {
             VisitDecision::Continue => {
@@ -504,7 +504,7 @@ impl SvgRenderNode {
     }
 
     /// Accept a mutable visitor, traversing the tree in pre-order.
-    pub fn accept_mut(&mut self, visitor: &mut dyn SvgRenderTreeVisitorMut) {
+    pub fn accept_mut(&mut self, visitor: &mut dyn SvgTreeVisitorMut) {
         let decision = visitor.visit_node_mut(self);
         match decision {
             VisitDecision::Continue => {
@@ -540,14 +540,14 @@ impl SvgRenderNode {
     }
 }
 
-impl SvgRenderTree {
+impl SvgTree {
     /// Visit every node in the tree with a read-only visitor.
-    pub fn visit(&self, visitor: &mut dyn SvgRenderTreeVisitor) {
+    pub fn visit(&self, visitor: &mut dyn SvgTreeVisitor) {
         self.root.accept(visitor);
     }
 
     /// Visit every node in the tree with a mutable visitor.
-    pub fn visit_mut(&mut self, visitor: &mut dyn SvgRenderTreeVisitorMut) {
+    pub fn visit_mut(&mut self, visitor: &mut dyn SvgTreeVisitorMut) {
         self.root.accept_mut(visitor);
     }
 
@@ -583,7 +583,7 @@ impl SvgRenderTree {
 }
 
 fn resolve_references_in(
-    node: &mut SvgRenderNode,
+    node: &mut SvgNode,
     gradients: &HashMap<String, Arc<GradientDef>>,
     patterns: &HashMap<String, Arc<PatternDef>>,
     clip_paths: &HashMap<String, Arc<ClipPathDef>>,

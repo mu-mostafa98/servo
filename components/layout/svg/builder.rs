@@ -2,11 +2,11 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! SVG render tree construction — assembles an [`SvgRenderTree`] from DOM nodes.
+//! SVG render tree construction — assembles an [`SvgTree`] from DOM nodes.
 //!
-//! Uses the **Builder pattern**: [`SvgRenderTreeBuilder`] accumulates state
+//! Uses the **Builder pattern**: [`SvgTreeBuilder`] accumulates state
 //! (CSS rules, definition maps) through chained methods, then produces the
-//! final tree via [`build`](SvgRenderTreeBuilder::build).
+//! final tree via [`build`](SvgTreeBuilder::build).
 
 use std::collections::{HashMap, HashSet};
 use std::sync::Arc;
@@ -14,7 +14,7 @@ use std::sync::Arc;
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-use svg_engine::render_tree::*;
+use svg_engine::tree::*;
 use svg_engine::style::NodeStyle;
 use svg_engine::style::gradient::GradientDef;
 use svg_engine::text::TextAnchor;
@@ -33,8 +33,8 @@ use crate::context::LayoutContext;
 
 // ======================= Builder =======================
 
-/// Builds an [`SvgRenderTree`] from a DOM SVG element.
-pub(crate) struct SvgRenderTreeBuilder<'dom, 'a> {
+/// Builds an [`SvgTree`] from a DOM SVG element.
+pub(crate) struct SvgTreeBuilder<'dom, 'a> {
     root_node: ServoLayoutNode<'dom>,
     context: &'a LayoutContext<'a>,
     css_rules: HashMap<String, HashMap<String, String>>,
@@ -43,12 +43,12 @@ pub(crate) struct SvgRenderTreeBuilder<'dom, 'a> {
     element_ids: HashMap<String, ServoLayoutNode<'dom>>,
 }
 
-impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
+impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
     /// Start building from an SVG DOM element node.
     pub(crate) fn new(node: ServoLayoutNode<'dom>, context: &'a LayoutContext<'a>) -> Self {
         let css_rules = collect_svg_css_rules(node);
         let element_ids = build_element_id_map(node);
-        SvgRenderTreeBuilder {
+        SvgTreeBuilder {
             root_node: node,
             context,
             css_rules,
@@ -56,13 +56,13 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
         }
     }
 
-    /// Build the complete [`SvgRenderTree`].
-    pub(crate) fn build(self) -> Option<Arc<SvgRenderTree>> {
+    /// Build the complete [`SvgTree`].
+    pub(crate) fn build(self) -> Option<Arc<SvgTree>> {
         let root = self.build_render_node(self.root_node, self.root_node, &mut HashSet::new(), None)?;
         let viewport = extract_viewport_info(self.root_node);
         let definitions = collect_definitions(self.root_node, &self);
 
-        let mut tree = SvgRenderTree {
+        let mut tree = SvgTree {
             root,
             viewport,
             gradients: definitions.gradients,
@@ -87,7 +87,7 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
         root_node: ServoLayoutNode<'dom>,
         resolving: &mut HashSet<String>,
         inherited: Option<&NodeStyle>,
-    ) -> Option<SvgRenderNode> {
+    ) -> Option<SvgNode> {
         let element = node.as_element()?;
         let tag_name = element.local_name().as_ref().to_owned();
 
@@ -114,14 +114,14 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
         );
 
         // A nested `<svg>` (any `<svg>` except the root) establishes its own
-        // viewport. The root's viewport is handled via `SvgRenderTree::viewport`.
+        // viewport. The root's viewport is handled via `SvgTree::viewport`.
         let viewport = if tag_name == "svg" && node != root_node {
             extract_nested_viewport(node)
         } else {
             None
         };
 
-        Some(SvgRenderNode {
+        Some(SvgNode {
             id,
             tag,
             style,
@@ -138,14 +138,14 @@ impl<'dom, 'a> SvgRenderTreeBuilder<'dom, 'a> {
     pub(crate) fn build_def_content(
         &self,
         node: ServoLayoutNode<'dom>,
-    ) -> Option<SvgRenderNode> {
+    ) -> Option<SvgNode> {
         self.build_render_node(node, self.root_node, &mut HashSet::new(), None)
     }
 }
 
 // ======================= Text / Tspan Node =======================
 
-/// Build a [`SvgRenderNode`] for `<text>` or `<tspan>`.
+/// Build a [`SvgNode`] for `<text>` or `<tspan>`.
 ///
 /// For `<tspan>` (or a standalone `<text>` with no element children), the
 /// node is a single [`SvgTag::Text`] span shaped with the node's own font.
@@ -159,7 +159,7 @@ fn build_text_node(
     node: ServoLayoutNode,
     context: &LayoutContext,
     css_rules: &HashMap<String, HashMap<String, String>>,
-) -> Option<SvgRenderNode> {
+) -> Option<SvgNode> {
     let element = node.as_element()?;
     let fs: f32 = 16.0;
     let get = |name: &str| super::style::get_attr(&element, name);
@@ -175,7 +175,7 @@ fn build_text_node(
         shape_text_span(&mut span, node, context);
         let (style, transforms) = build_style(node, context, css_rules, None);
         let id = extract_id(&element);
-        return Some(SvgRenderNode {
+        return Some(SvgNode {
             id,
             tag: SvgTag::Text(span),
             style,
@@ -193,7 +193,7 @@ fn build_text_node(
         shape_text_span(&mut span, run_node, context);
         let (style, transforms) = build_style(node, context, css_rules, None);
         let id = extract_id(&element);
-        return Some(SvgRenderNode {
+        return Some(SvgNode {
             id,
             tag: SvgTag::Text(span),
             style,
@@ -241,7 +241,7 @@ fn build_text_node(
         pen += span.total_advance();
         let (run_style, run_transforms) = build_style(run_node, context, css_rules, None);
         let run_id = extract_id(&run_node.as_element()?);
-        children.push(SvgRenderNode {
+        children.push(SvgNode {
             id: run_id,
             tag: SvgTag::Text(span),
             style: run_style,
@@ -253,7 +253,7 @@ fn build_text_node(
 
     let (style, transforms) = build_style(node, context, css_rules, None);
     let id = extract_id(&element);
-    Some(SvgRenderNode {
+    Some(SvgNode {
         id,
         tag: SvgTag::Container(Container::Text),
         style,
@@ -508,11 +508,11 @@ fn resolve_children<'dom>(
     node: ServoLayoutNode<'dom>,
     tag: &SvgTag,
     root_node: ServoLayoutNode<'dom>,
-    builder: &SvgRenderTreeBuilder<'dom, '_>,
+    builder: &SvgTreeBuilder<'dom, '_>,
     resolving: &mut HashSet<String>,
     node_style: &NodeStyle,
     in_shadow: bool,
-) -> Vec<SvgRenderNode> {
+) -> Vec<SvgNode> {
     if let SvgTag::Container(Container::Use) = tag {
         resolve_use_children(node, root_node, builder, resolving, node_style)
     } else {
@@ -537,10 +537,10 @@ fn resolve_children<'dom>(
 fn resolve_use_children<'dom>(
     node: ServoLayoutNode<'dom>,
     root_node: ServoLayoutNode<'dom>,
-    builder: &SvgRenderTreeBuilder<'dom, '_>,
+    builder: &SvgTreeBuilder<'dom, '_>,
     resolving: &mut HashSet<String>,
     use_style: &NodeStyle,
-) -> Vec<SvgRenderNode> {
+) -> Vec<SvgNode> {
     let element = node.as_element().unwrap();
 
     // Extract href reference.
@@ -596,7 +596,7 @@ fn resolve_use_children<'dom>(
         .and_then(|t| builder.build_render_node(t, root_node, resolving, Some(use_style)))
         .map(|target_node| {
             // Shared helper: apply <use> x/y offset as a translate transform.
-            let apply_offset = |node: &mut SvgRenderNode| {
+            let apply_offset = |node: &mut SvgNode| {
                 if let (Some(dx), Some(dy)) = offset {
                     if dx != 0.0 || dy != 0.0 {
                         node.transforms.insert(
@@ -615,7 +615,7 @@ fn resolve_use_children<'dom>(
                 if let Some(vb) = sym_view_box {
                     let width = parse_coord("width").or(sym_width).unwrap_or(vb.width.get());
                     let height = parse_coord("height").or(sym_height).unwrap_or(vb.height.get());
-                    let wrapper = SvgRenderNode {
+                    let wrapper = SvgNode {
                         id: target_node.id,
                         tag: SvgTag::Container(Container::Group),
                         style: target_node.style,
@@ -668,7 +668,7 @@ struct DefinitionMaps {
 /// filters, markers) from `<defs>` containers in the SVG subtree.
 fn collect_definitions<'dom, 'a>(
     node: ServoLayoutNode<'dom>,
-    builder: &SvgRenderTreeBuilder<'dom, 'a>,
+    builder: &SvgTreeBuilder<'dom, 'a>,
 ) -> DefinitionMaps {
     let mut gradients = DefinitionCollector::collect::<GradientParser>(node, builder);
     svg_engine::style::gradient::resolve_gradient_hrefs(&mut gradients);

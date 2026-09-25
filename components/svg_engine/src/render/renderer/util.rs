@@ -9,8 +9,8 @@ use svgtypes::Color as SvgColor;
 use webrender_api::units::LayoutRect;
 use webrender_api::{ClipChainId, ColorF, CommonItemProperties, SpaceAndClipInfo, SpatialId};
 
-use crate::renderer::render_trait::RenderContext;
-use crate::style::hints::{ShapeRendering, VectorEffect};
+use crate::render::renderer::render_trait::RenderContext;
+use crate::model::style::hints::{ShapeRendering, VectorEffect};
 
 /// Epsilon threshold for treating a vector length as zero.
 /// Used to guard against division-by-zero in gradient projection

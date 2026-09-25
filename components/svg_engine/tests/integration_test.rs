@@ -12,7 +12,7 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use svg_engine::render_tree::*;
+use svg_engine::tree::*;
 use svg_engine::shapes::*;
 use svg_engine::style::gradient::{SpreadMethod, *};
 use svg_engine::style::transform_ops::TransformOp;
@@ -896,7 +896,7 @@ fn clip_path_def_non_empty_shapes() {
         rx: None,
         ry: None,
     });
-    let root = SvgRenderNode {
+    let root = SvgNode {
         id: None,
         tag: SvgTag::Shape(rect),
         style: NodeStyle::default(),
@@ -921,7 +921,7 @@ fn mask_def_with_shapes_and_styles() {
         rx: None,
         ry: None,
     });
-    let root = SvgRenderNode {
+    let root = SvgNode {
         id: None,
         tag: SvgTag::Shape(rect),
         style: NodeStyle::default(),
@@ -977,7 +977,7 @@ fn pattern_def_basic() {
         rx: None,
         ry: None,
     });
-    let root = SvgRenderNode {
+    let root = SvgNode {
         id: None,
         tag: SvgTag::Shape(rect),
         style: NodeStyle::default(),
@@ -1230,8 +1230,8 @@ fn render_hints_with_paint_order_stroke_fill() {
 fn visitor_visits_all_nodes() {
     let tree = make_simple_tree();
     struct Counter(usize);
-    impl SvgRenderTreeVisitor for Counter {
-        fn visit_node(&mut self, _node: &SvgRenderNode) -> VisitDecision {
+    impl SvgTreeVisitor for Counter {
+        fn visit_node(&mut self, _node: &SvgNode) -> VisitDecision {
             self.0 += 1;
             VisitDecision::Continue
         }
@@ -1245,8 +1245,8 @@ fn visitor_visits_all_nodes() {
 fn visitor_skip_children() {
     let tree = make_simple_tree();
     struct SkipRoot(bool);
-    impl SvgRenderTreeVisitor for SkipRoot {
-        fn visit_node(&mut self, node: &SvgRenderNode) -> VisitDecision {
+    impl SvgTreeVisitor for SkipRoot {
+        fn visit_node(&mut self, node: &SvgNode) -> VisitDecision {
             if node.id.as_ref().map(|i| i.as_str()) == Some("root") {
                 VisitDecision::SkipChildren
             } else {
@@ -1264,8 +1264,8 @@ fn visitor_skip_children() {
 fn visitor_stop_does_not_panic() {
     let tree = make_simple_tree();
     struct StopAfterRoot;
-    impl SvgRenderTreeVisitor for StopAfterRoot {
-        fn visit_node(&mut self, _node: &SvgRenderNode) -> VisitDecision {
+    impl SvgTreeVisitor for StopAfterRoot {
+        fn visit_node(&mut self, _node: &SvgNode) -> VisitDecision {
             VisitDecision::Stop
         }
     }
@@ -1276,8 +1276,8 @@ fn visitor_stop_does_not_panic() {
 fn mutable_visitor_modifies_nodes() {
     let mut tree = make_simple_tree_with_fill();
     struct OpacityBump;
-    impl SvgRenderTreeVisitorMut for OpacityBump {
-        fn visit_node_mut(&mut self, node: &mut SvgRenderNode) -> VisitDecision {
+    impl SvgTreeVisitorMut for OpacityBump {
+        fn visit_node_mut(&mut self, node: &mut SvgNode) -> VisitDecision {
             node.style.opacity = Opacity::new(node.style.opacity.get() * 0.5);
             VisitDecision::Continue
         }
@@ -1294,8 +1294,8 @@ fn mutable_visitor_modifies_nodes() {
 fn empty_tree_does_not_panic_on_visit() {
     let tree = make_empty_tree();
     struct CountingVisitor<'a>(&'a mut usize);
-    impl<'a> SvgRenderTreeVisitor for CountingVisitor<'a> {
-        fn visit_node(&mut self, _node: &SvgRenderNode) -> VisitDecision {
+    impl<'a> SvgTreeVisitor for CountingVisitor<'a> {
+        fn visit_node(&mut self, _node: &SvgNode) -> VisitDecision {
             *self.0 += 1;
             VisitDecision::Continue
         }
@@ -1313,7 +1313,7 @@ fn tree_with_nested_groups() {
 
 #[test]
 fn defs_container_in_tree() {
-    let defs = SvgRenderNode {
+    let defs = SvgNode {
         id: None,
         tag: SvgTag::Container(Container::Defs),
         style: NodeStyle::default(),
@@ -1325,9 +1325,9 @@ fn defs_container_in_tree() {
 }
 
 #[test]
-fn svg_render_node_with_transforms() {
+fn svg_node_with_transforms() {
     use svg_engine::style::transform_ops::TransformOp;
-    let node = SvgRenderNode {
+    let node = SvgNode {
         id: Some(Id::new("t")),
         tag: SvgTag::Container(Container::Group),
         style: NodeStyle::default(),
@@ -1378,11 +1378,11 @@ fn svg_engine_error_debug_differs_from_display() {
 }
 
 // ============================================================
-// 12. SvgRenderTree DEFINITION COLLECTION TESTS
+// 12. SvgTree DEFINITION COLLECTION TESTS
 // ============================================================
 
 #[test]
-fn render_tree_initializes_with_empty_def_maps() {
+fn tree_initializes_with_empty_def_maps() {
     let tree = make_empty_tree();
     assert!(tree.gradients.is_empty());
     assert!(tree.clip_paths.is_empty());
@@ -1392,7 +1392,7 @@ fn render_tree_initializes_with_empty_def_maps() {
 }
 
 #[test]
-fn render_tree_with_gradient_def() {
+fn tree_with_gradient_def() {
     let mut tree = make_empty_tree();
     let grad = Arc::new(GradientDef::Linear(LinearGradient {
         id: "g1".into(),
@@ -1412,7 +1412,7 @@ fn render_tree_with_gradient_def() {
 }
 
 #[test]
-fn render_tree_gradient_insert_and_check() {
+fn tree_gradient_insert_and_check() {
     let mut tree = make_empty_tree();
     let grad = Arc::new(GradientDef::Linear(LinearGradient {
         id: "g1".into(),
@@ -1493,8 +1493,8 @@ fn shape_rendering_all_variants() {
 // HELPER FUNCTIONS
 // ============================================================
 
-fn make_simple_tree() -> SvgRenderTree {
-    let child1 = SvgRenderNode {
+fn make_simple_tree() -> SvgTree {
+    let child1 = SvgNode {
         id: Some(Id::new("child1")),
         tag: SvgTag::Shape(Shape::Circle(Circle {
             cx: Length::new(10.0),
@@ -1506,7 +1506,7 @@ fn make_simple_tree() -> SvgRenderTree {
         viewport: None,
         children: vec![],
     };
-    let child2 = SvgRenderNode {
+    let child2 = SvgNode {
         id: Some(Id::new("child2")),
         tag: SvgTag::Shape(Shape::Rect(Rectangle {
             x: Length::new(0.0),
@@ -1521,7 +1521,7 @@ fn make_simple_tree() -> SvgRenderTree {
         viewport: None,
         children: vec![],
     };
-    let root = SvgRenderNode {
+    let root = SvgNode {
         id: Some(Id::new("root")),
         tag: SvgTag::Container(Container::Svg),
         style: NodeStyle::default(),
@@ -1529,7 +1529,7 @@ fn make_simple_tree() -> SvgRenderTree {
         viewport: None,
         children: vec![child1, child2],
     };
-    SvgRenderTree {
+    SvgTree {
         root,
         viewport: ViewportInfo {
             width: Length::new(100.0),
@@ -1547,7 +1547,7 @@ fn make_simple_tree() -> SvgRenderTree {
     }
 }
 
-fn make_simple_tree_with_fill() -> SvgRenderTree {
+fn make_simple_tree_with_fill() -> SvgTree {
     let mut tree = make_simple_tree();
     tree.root.style.fill = Some(FillParams {
         color: Some(svgtypes::Color::new_rgb(255, 0, 0)),
@@ -1558,8 +1558,8 @@ fn make_simple_tree_with_fill() -> SvgRenderTree {
     tree
 }
 
-fn make_empty_tree() -> SvgRenderTree {
-    let root = SvgRenderNode {
+fn make_empty_tree() -> SvgTree {
+    let root = SvgNode {
         id: None,
         tag: SvgTag::Container(Container::Svg),
         style: NodeStyle::default(),
@@ -1567,7 +1567,7 @@ fn make_empty_tree() -> SvgRenderTree {
         viewport: None,
         children: vec![],
     };
-    SvgRenderTree {
+    SvgTree {
         root,
         viewport: ViewportInfo {
             width: Length::new(100.0),

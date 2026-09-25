@@ -2,9 +2,9 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-use crate::renderer::{Render, RenderContext};
-use crate::shapes::{Ellipse, Rectangle};
-use crate::units::Length;
+use crate::render::renderer::{Render, RenderContext};
+use crate::model::shapes::{Ellipse, Rectangle};
+use crate::model::units::Length;
 
 /// Renders an SVG `<ellipse>`.
 ///

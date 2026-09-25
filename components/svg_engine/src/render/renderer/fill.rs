@@ -15,12 +15,12 @@ use std::sync::Arc;
 use webrender_api::units::LayoutRect;
 use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 
-use crate::render_tree::PatternUnits;
-use crate::renderer::{RenderContext, gradient, pattern, to_colorf};
-use crate::style::gradient::{GradientDef, GradientUnits, PaintServer};
-use crate::style::hints::ColorInterpolation;
-use crate::tessellator;
-use crate::tessellator::FillStyle;
+use crate::model::tree::PatternUnits;
+use crate::render::renderer::{RenderContext, gradient, pattern, to_colorf};
+use crate::model::style::gradient::{GradientDef, GradientUnits, PaintServer};
+use crate::model::style::hints::ColorInterpolation;
+use crate::render::tessellator;
+use crate::render::tessellator::FillStyle;
 
 // ======================= Rect fill =======================
 
@@ -81,7 +81,7 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
 pub(crate) fn fill_polygon(
     pts: &[LyonPoint],
     bounds: LayoutRect,
-    fill_rule: crate::style::FillRule,
+    fill_rule: crate::model::style::FillRule,
     ctx: &mut RenderContext,
 ) {
     let Some(fill) = &ctx.style.fill else { return };
@@ -127,7 +127,7 @@ pub(crate) fn fill_polygon(
 
 /// Convert a linear gradient's endpoints to absolute layout coordinates.
 fn resolve_linear_gradient_coords(
-    lg: &crate::style::gradient::LinearGradient,
+    lg: &crate::model::style::gradient::LinearGradient,
     bx: f32,
     by: f32,
     bw: f32,
@@ -153,7 +153,7 @@ fn resolve_linear_gradient_coords(
 /// Convert a radial gradient's focal point and radius to absolute layout coordinates.
 /// Returns `(fx, fy, radius)`.  The caller must square the radius for the tessellator.
 fn resolve_radial_gradient_coords(
-    rg: &crate::style::gradient::RadialGradient,
+    rg: &crate::model::style::gradient::RadialGradient,
     bx: f32,
     by: f32,
     bw: f32,
@@ -186,7 +186,7 @@ fn color_interpolation_hint(ctx: &RenderContext) -> ColorInterpolation {
 
 /// Build a [`FillStyle::LinearGradient`] from resolved coordinates.
 fn build_linear_fill_style<'a>(
-    lg: &'a crate::style::gradient::LinearGradient,
+    lg: &'a crate::model::style::gradient::LinearGradient,
     gx1: f32,
     gy1: f32,
     gx2: f32,
@@ -208,7 +208,7 @@ fn build_linear_fill_style<'a>(
 
 /// Build a [`FillStyle::RadialGradient`] from resolved coordinates.
 fn build_radial_fill_style<'a>(
-    rg: &'a crate::style::gradient::RadialGradient,
+    rg: &'a crate::model::style::gradient::RadialGradient,
     fx: f32,
     fy: f32,
     radius: f32,
@@ -228,10 +228,10 @@ fn build_radial_fill_style<'a>(
 
 /// Helper: fill a polygon with a pattern paint server.
 fn handle_pattern_fill(
-    def: &crate::render_tree::PatternDef,
+    def: &crate::model::tree::PatternDef,
     pts: &[LyonPoint],
     bounds: LayoutRect,
-    fill_rule: crate::style::FillRule,
+    fill_rule: crate::model::style::FillRule,
     ctx: &mut RenderContext,
     opacity: f32,
 ) {
