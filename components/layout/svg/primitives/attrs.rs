@@ -91,23 +91,43 @@ fn to_px(len: SvgLength, font_size: f32) -> f32 {
     }
 }
 
+/// Parse a named SVG length attribute, resolving `<percentage>` values against
+/// the given `reference` dimension (e.g. the current viewport width/height).
+///
+/// Non-percentage units are converted exactly like [`parse_length`]; a
+/// percentage is returned as `number * reference / 100`.
+pub(crate) fn parse_length_resolved(
+    attr: &str,
+    get_attr: &dyn Fn(&str) -> Option<String>,
+    font_size: f32,
+    reference: f32,
+) -> Result<f32, String> {
+    let value = get_attr(attr).ok_or_else(|| format!("missing SVG attribute: {attr}"))?;
+    let len: SvgLength = value.parse().map_err(|e| format!("{attr}: {e}"))?;
+    Ok(to_px_resolved(len, font_size, reference))
+}
+
+/// Convert an [`svgtypes::Length`] to pixels, resolving a `<percentage>` against
+/// `reference`. Absolute and font-relative units delegate to [`to_px`].
+fn to_px_resolved(len: SvgLength, font_size: f32, reference: f32) -> f32 {
+    if len.unit == svgtypes::LengthUnit::Percent {
+        (len.number as f32) * reference / 100.0
+    } else {
+        to_px(len, font_size)
+    }
+}
+
 /// Parse an SVG `points` attribute value into a list of coordinate pairs.
 ///
 /// Used by both `<polyline>` and `<polygon>`.  Delegates to
-/// [`svgtypes::PointsParser`] for SVG-spec-compliant parsing.
-pub(crate) fn parse_points(
-    get_attr: &dyn Fn(&str) -> Option<String>,
-) -> Result<Vec<Point>, String> {
-    let value =
-        get_attr("points").ok_or_else(|| "missing SVG attribute: points".to_owned())?;
-    let points: Vec<Point> = PointsParser::from(value.as_str())
+/// [`svgtypes::PointsParser`] for SVG-spec-compliant parsing. A missing, empty,
+/// or single-coordinate `points` value yields an empty/short list that is valid
+/// but renders nothing (SVG 2: the attribute's initial value is `none`).
+pub(crate) fn parse_points(get_attr: &dyn Fn(&str) -> Option<String>) -> Vec<Point> {
+    let value = get_attr("points").unwrap_or_default();
+    PointsParser::from(value.as_str())
         .map(|(x, y)| Point::new(x as f32, y as f32))
-        .collect();
-
-    if points.len() < 2 {
-        return Err("points attribute requires at least 2 coordinate pairs".to_owned());
-    }
-    Ok(points)
+        .collect()
 }
 
 // ======================= Tests =======================
@@ -202,8 +222,7 @@ mod tests {
 
     #[test]
     fn parse_points_two_pairs() {
-        let result = parse_points(&|_| Some("10,20 30,40".to_owned()));
-        let pts = result.unwrap();
+        let pts = parse_points(&|_| Some("10,20 30,40".to_owned()));
         assert_eq!(pts.len(), 2);
         assert!((pts[0].x - 10.0).abs() < 0.001);
         assert!((pts[0].y - 20.0).abs() < 0.001);
@@ -213,25 +232,28 @@ mod tests {
 
     #[test]
     fn parse_points_three_pairs() {
-        let result = parse_points(&|_| Some("0,0 50,100 100,0".to_owned()));
-        assert_eq!(result.unwrap().len(), 3);
+        let pts = parse_points(&|_| Some("0,0 50,100 100,0".to_owned()));
+        assert_eq!(pts.len(), 3);
     }
 
     #[test]
     fn parse_points_missing() {
-        let result = parse_points(&|_| None);
-        assert!(result.is_err());
+        // A missing `points` attribute is the initial value `none`: valid but
+        // empty (renders nothing).
+        let pts = parse_points(&|_| None);
+        assert!(pts.is_empty());
     }
 
     #[test]
-    fn parse_points_too_few() {
-        let result = parse_points(&|_| Some("10,20".to_owned()));
-        assert!(result.is_err());
+    fn parse_points_single_pair() {
+        // A single coordinate pair is valid but renders nothing (SVG 2).
+        let pts = parse_points(&|_| Some("10,20".to_owned()));
+        assert_eq!(pts.len(), 1);
     }
 
     #[test]
     fn parse_points_comma_variants() {
-        let result = parse_points(&|_| Some("10,20 30,40  50,60".to_owned()));
-        assert_eq!(result.unwrap().len(), 3);
+        let pts = parse_points(&|_| Some("10,20 30,40  50,60".to_owned()));
+        assert_eq!(pts.len(), 3);
     }
 }

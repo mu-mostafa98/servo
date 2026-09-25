@@ -15,13 +15,13 @@
 //! no shared mutable state and no side effects.
 
 use script::layout_dom::ServoLayoutElement;
-use style::values::computed::LengthPercentage;
+use style::values::computed::{Length as CssLength, LengthPercentage};
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use svg_engine::geometry::{PathCommand, PathData, Point};
 use svg_engine::element::shape::*;
 use svg_engine::units::Length;
 
-use crate::svg::primitives::attrs::get_attr;
+use crate::svg::primitives::attrs::{get_attr, parse_length_resolved, parse_points};
 
 const SVG_DEFAULT_FONT_SIZE: f32 = 16.0;
 
@@ -32,20 +32,26 @@ const SVG_DEFAULT_FONT_SIZE: f32 = 16.0;
 /// Geometry attributes that are CSS properties (`x`, `y`, `cx`, `cy`, `r`,
 /// `rx`, `ry`) are read from the cascade via `computed.get_svg()`.
 /// Attributes without CSS properties (`width`, `height`, `x1`, `y1`, `x2`,
-/// `y2`, `points`, `d`) fall back to DOM attribute parsing.
+/// `y2`, `points`, `d`, `pathLength`) fall back to DOM attribute parsing.
+///
+/// `vw`/`vh` are the current viewport's percentage-resolution reference
+/// dimensions (the `viewBox` extent when present, otherwise the viewport
+/// `width`/`height` attributes).
 pub(crate) fn build_shape(
     element: &ServoLayoutElement,
     tag_name: &str,
     computed: Option<&style::properties::ComputedValues>,
+    vw: f32,
+    vh: f32,
 ) -> Option<Shape> {
     let fs = SVG_DEFAULT_FONT_SIZE;
     let get = |name: &str| get_attr(element, name);
 
     match tag_name {
-        "rect" => parse_rect(element, &get, fs, computed),
-        "circle" => parse_circle(element, &get, fs, computed),
-        "ellipse" => parse_ellipse(element, &get, fs, computed),
-        "line" => parse_line(&get, fs),
+        "rect" => parse_rect(element, &get, fs, computed, vw, vh),
+        "circle" => parse_circle(element, &get, fs, computed, vw, vh),
+        "ellipse" => parse_ellipse(element, &get, fs, computed, vw, vh),
+        "line" => parse_line(&get, fs, vw, vh),
         "polyline" => parse_polyline(&get),
         "polygon" => parse_polygon(&get),
         "path" => parse_path(&get),
@@ -60,39 +66,41 @@ fn parse_rect(
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
     computed: Option<&style::properties::ComputedValues>,
+    vw: f32,
+    vh: f32,
 ) -> Option<Shape> {
+    let w = dom_length("width", get, fs);
+    let h = dom_length("height", get, fs);
+    if w < 0.0 || h < 0.0 {
+        return None;
+    }
     let (x, y, rx, ry) = match computed {
         Some(cv) => {
             let svg = cv.get_svg();
             (
-                lp_to_f32(&svg.clone_x()),
-                lp_to_f32(&svg.clone_y()),
+                lp_to_f32(&svg.clone_x(), vw),
+                lp_to_f32(&svg.clone_y(), vh),
                 match svg.clone_rx() {
                     GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
-                        Some(nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0))
+                        resolve_radius(&nn_lp.0, w)
                     },
                     _ => None,
                 },
                 match svg.clone_ry() {
                     GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
-                        Some(nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0))
+                        resolve_radius(&nn_lp.0, h)
                     },
                     _ => None,
                 },
             )
         },
         None => (
-            parse_length("x", get, fs).unwrap_or(0.0),
-            parse_length("y", get, fs).unwrap_or(0.0),
-            parse_length("rx", get, fs).ok(),
-            parse_length("ry", get, fs).ok(),
+            dom_length_resolved("x", get, fs, vw),
+            dom_length_resolved("y", get, fs, vh),
+            parse_radius("rx", get, fs, w),
+            parse_radius("ry", get, fs, h),
         ),
     };
-    let w = dom_length("width", get, fs);
-    let h = dom_length("height", get, fs);
-    if w < 0.0 || h < 0.0 {
-        return None;
-    }
     Some(Shape::Rect(Rectangle {
         x: Length::new(x),
         y: Length::new(y),
@@ -100,6 +108,7 @@ fn parse_rect(
         height: Length::new(h),
         rx: rx.map(Length::new),
         ry: ry.map(Length::new),
+        path_length: parse_path_length(get),
     }))
 }
 
@@ -108,6 +117,8 @@ fn parse_circle(
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
     computed: Option<&style::properties::ComputedValues>,
+    vw: f32,
+    vh: f32,
 ) -> Option<Shape> {
     let r = match computed {
         Some(cv) => cv
@@ -126,11 +137,19 @@ fn parse_circle(
     let (cx, cy) = match computed {
         Some(cv) => {
             let svg = cv.get_svg();
-            (lp_to_f32(&svg.clone_cx()), lp_to_f32(&svg.clone_cy()))
+            (lp_to_f32(&svg.clone_cx(), vw), lp_to_f32(&svg.clone_cy(), vh))
         },
-        None => (dom_length("cx", get, fs), dom_length("cy", get, fs)),
+        None => (
+            dom_length_resolved("cx", get, fs, vw),
+            dom_length_resolved("cy", get, fs, vh),
+        ),
     };
-    Some(Shape::Circle(Circle { cx: Length::new(cx), cy: Length::new(cy), r: Length::new(r) }))
+    Some(Shape::Circle(Circle {
+        cx: Length::new(cx),
+        cy: Length::new(cy),
+        r: Length::new(r),
+        path_length: parse_path_length(get),
+    }))
 }
 
 fn parse_ellipse(
@@ -138,68 +157,86 @@ fn parse_ellipse(
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
     computed: Option<&style::properties::ComputedValues>,
+    vw: f32,
+    vh: f32,
 ) -> Option<Shape> {
-    let rx = if let Some(cv) = computed {
-        match cv.get_svg().clone_rx() {
+    // SVG 2: `rx`/`ry` accept `auto`. Both `auto` disables rendering, a single
+    // `auto` derives from the other. `None` carries the `auto`/negative case to
+    // the renderer, which performs the derivation.
+    let rx = match computed {
+        Some(cv) => match cv.get_svg().clone_rx() {
             GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
-                Some(nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0))
+                resolve_radius(&nn_lp.0, vw)
             },
             _ => None,
-        }
-    } else {
-        Some(dom_length("rx", get, fs))
-    }?;
-    let ry = if let Some(cv) = computed {
-        match cv.get_svg().clone_ry() {
+        },
+        None => parse_radius("rx", get, fs, vw),
+    };
+    let ry = match computed {
+        Some(cv) => match cv.get_svg().clone_ry() {
             GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
-                Some(nn_lp.0.to_length().map(|l| l.px()).unwrap_or(0.0).max(0.0))
+                resolve_radius(&nn_lp.0, vh)
             },
             _ => None,
-        }
-    } else {
-        Some(dom_length("ry", get, fs))
-    }?;
-    if rx <= 0.0 || ry <= 0.0 {
-        return None;
-    }
+        },
+        None => parse_radius("ry", get, fs, vh),
+    };
     let (cx, cy) = match computed {
         Some(cv) => {
             let svg = cv.get_svg();
-            (lp_to_f32(&svg.clone_cx()), lp_to_f32(&svg.clone_cy()))
+            (lp_to_f32(&svg.clone_cx(), vw), lp_to_f32(&svg.clone_cy(), vh))
         },
-        None => (dom_length("cx", get, fs), dom_length("cy", get, fs)),
+        None => (
+            dom_length_resolved("cx", get, fs, vw),
+            dom_length_resolved("cy", get, fs, vh),
+        ),
     };
-    Some(Shape::Ellipse(Ellipse { cx: Length::new(cx), cy: Length::new(cy), rx: Length::new(rx), ry: Length::new(ry) }))
+    Some(Shape::Ellipse(Ellipse {
+        cx: Length::new(cx),
+        cy: Length::new(cy),
+        rx: rx.map(Length::new),
+        ry: ry.map(Length::new),
+        path_length: parse_path_length(get),
+    }))
 }
 
-fn parse_line(get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Option<Shape> {
+fn parse_line(
+    get: &dyn Fn(&str) -> Option<String>,
+    fs: f32,
+    vw: f32,
+    vh: f32,
+) -> Option<Shape> {
     Some(Shape::Line(Line {
-        x1: Length::new(parse_length("x1", get, fs).unwrap_or(0.0)),
-        y1: Length::new(parse_length("y1", get, fs).unwrap_or(0.0)),
-        x2: Length::new(parse_length("x2", get, fs).unwrap_or(0.0)),
-        y2: Length::new(parse_length("y2", get, fs).unwrap_or(0.0)),
+        x1: Length::new(dom_length_resolved("x1", get, fs, vw)),
+        y1: Length::new(dom_length_resolved("y1", get, fs, vh)),
+        x2: Length::new(dom_length_resolved("x2", get, fs, vw)),
+        y2: Length::new(dom_length_resolved("y2", get, fs, vh)),
+        path_length: parse_path_length(get),
     }))
 }
 
 fn parse_polyline(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
-    use crate::svg::primitives::attrs::parse_points;
-    parse_points(get)
-        .ok()
-        .map(|pts| Shape::Polyline(Polyline { points: pts }))
+    Some(Shape::Polyline(Polyline {
+        points: parse_points(get),
+        path_length: parse_path_length(get),
+    }))
 }
 
 fn parse_polygon(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
-    use crate::svg::primitives::attrs::parse_points;
-    parse_points(get)
-        .ok()
-        .map(|pts| Shape::Polygon(Polygon { points: pts }))
+    Some(Shape::Polygon(Polygon {
+        points: parse_points(get),
+        path_length: parse_path_length(get),
+    }))
 }
 
 fn parse_path(get: &dyn Fn(&str) -> Option<String>) -> Option<Shape> {
     let d = get("d")?;
-    kurbo::BezPath::from_svg(&d)
-        .ok()
-        .map(|bez| Shape::Path(Path { path: bez_to_path_data(&bez) }))
+    kurbo::BezPath::from_svg(&d).ok().map(|bez| {
+        Shape::Path(Path {
+            path: bez_to_path_data(&bez),
+            path_length: parse_path_length(get),
+        })
+    })
 }
 
 /// Convert a parsed [`kurbo::BezPath`] into the model's pure [`PathData`].
@@ -232,21 +269,53 @@ fn bez_to_path_data(bez: &kurbo::BezPath) -> PathData {
 
 // ======================= Helpers =======================
 
-/// Convert a [`LengthPercentage`] to a pixel value.
-fn lp_to_f32(lp: &LengthPercentage) -> f32 {
-    lp.to_length().map(|l| l.px()).unwrap_or(0.0)
+/// Convert a [`LengthPercentage`] to a pixel value, resolving percentages
+/// against `reference`.
+fn lp_to_f32(lp: &LengthPercentage, reference: f32) -> f32 {
+    lp.resolve(CssLength::new(reference)).px()
 }
 
-/// Parse a DOM length attribute as a fallback (for attributes not available
-/// through the CSS cascade, like `width`, `height`, `x1`, `y1`).
+/// Resolve a radius [`LengthPercentage`] against `reference`, mapping a
+/// negative result to `None` (SVG 2 treats a negative radius as `auto`).
+fn resolve_radius(lp: &LengthPercentage, reference: f32) -> Option<f32> {
+    let v = lp_to_f32(lp, reference);
+    (v >= 0.0).then_some(v)
+}
+
+/// Parse a DOM length attribute with no percentage resolution (used for
+/// `width`/`height`/`r`, whose percentage references differ or are out of
+/// scope for this layer).
 fn dom_length(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> f32 {
     use crate::svg::primitives::attrs::parse_length;
     parse_length(name, get, fs).unwrap_or(0.0)
 }
 
-/// Parse a length value using [`crate::svg::primitives::attrs::parse_length`].
-fn parse_length(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Result<f32, ()> {
-    use crate::svg::primitives::attrs::parse_length;
+/// Parse a DOM length attribute, resolving percentages against `reference`.
+fn dom_length_resolved(
+    name: &str,
+    get: &dyn Fn(&str) -> Option<String>,
+    fs: f32,
+    reference: f32,
+) -> f32 {
+    parse_length_resolved(name, get, fs, reference).unwrap_or(0.0)
+}
 
-    parse_length(name, get, fs).map_err(|_| ())
+/// Parse a DOM radius attribute (`rx`/`ry`), resolving percentages against
+/// `reference` and mapping a negative value to `None` (SVG 2: `auto`).
+fn parse_radius(
+    name: &str,
+    get: &dyn Fn(&str) -> Option<String>,
+    fs: f32,
+    reference: f32,
+) -> Option<f32> {
+    parse_length_resolved(name, get, fs, reference)
+        .ok()
+        .and_then(|v| (v >= 0.0).then_some(v))
+}
+
+/// Parse the `pathLength` presentation attribute (a positive number).
+fn parse_path_length(get: &dyn Fn(&str) -> Option<String>) -> Option<f32> {
+    get("pathLength")
+        .and_then(|v| v.trim().parse::<f32>().ok())
+        .filter(|&n| n.is_finite() && n > 0.0)
 }

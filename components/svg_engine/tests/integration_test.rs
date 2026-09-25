@@ -35,6 +35,7 @@ fn rect_data() {
         height: Length::new(50.0),
         rx: None,
         ry: None,
+        path_length: None,
     };
     assert_eq!(r.width.get(), 100.0);
     assert_eq!(r.height.get(), 50.0);
@@ -51,6 +52,7 @@ fn rect_with_radius() {
         height: Length::new(100.0),
         rx: Some(Length::new(10.0)),
         ry: Some(Length::new(5.0)),
+        path_length: None,
     };
     assert_eq!(r.rx, Some(Length::new(10.0)));
     assert_eq!(r.ry, Some(Length::new(5.0)));
@@ -66,6 +68,7 @@ fn rect_rx_inherits_ry_and_vice_versa() {
         height: Length::new(100.0),
         rx: Some(Length::new(10.0)),
         ry: None,
+        path_length: None,
     };
     assert_eq!(r.rx, Some(Length::new(10.0)));
     // ry only: rx = ry
@@ -76,6 +79,7 @@ fn rect_rx_inherits_ry_and_vice_versa() {
         height: Length::new(100.0),
         rx: None,
         ry: Some(Length::new(15.0)),
+        path_length: None,
     };
     assert_eq!(r2.ry, Some(Length::new(15.0)));
 }
@@ -86,6 +90,7 @@ fn circle_data() {
         cx: Length::new(50.0),
         cy: Length::new(50.0),
         r: Length::new(30.0),
+        path_length: None,
     };
     assert_eq!(c.cx.get(), 50.0);
     assert_eq!(c.cy.get(), 50.0);
@@ -97,11 +102,12 @@ fn ellipse_data() {
     let e = Ellipse {
         cx: Length::new(100.0),
         cy: Length::new(80.0),
-        rx: Length::new(60.0),
-        ry: Length::new(40.0),
+        rx: Some(Length::new(60.0)),
+        ry: Some(Length::new(40.0)),
+        path_length: None,
     };
-    assert_eq!(e.rx.get(), 60.0);
-    assert_eq!(e.ry.get(), 40.0);
+    assert_eq!(e.rx.unwrap().get(), 60.0);
+    assert_eq!(e.ry.unwrap().get(), 40.0);
 }
 
 #[test]
@@ -111,6 +117,7 @@ fn line_data() {
         y1: Length::new(0.0),
         x2: Length::new(100.0),
         y2: Length::new(100.0),
+        path_length: None,
     };
     assert_eq!(l.x2.get(), 100.0);
     assert_eq!(l.y2.get(), 100.0);
@@ -123,7 +130,7 @@ fn polyline_data() {
         Point::new(50.0, 100.0),
         Point::new(100.0, 0.0),
     ];
-    let p = Polyline { points: pts };
+    let p = Polyline { points: pts, path_length: None };
     assert_eq!(p.points.len(), 3);
 }
 
@@ -134,7 +141,7 @@ fn polygon_data() {
         Point::new(100.0, 0.0),
         Point::new(50.0, 100.0),
     ];
-    let p = Polygon { points: pts };
+    let p = Polygon { points: pts, path_length: None };
     assert_eq!(p.points.len(), 3);
 }
 
@@ -146,7 +153,7 @@ fn path_data_parse() {
             PathCommand::LineTo(Point::new(100.0, 100.0)),
         ],
     };
-    let p = Path { path };
+    let p = Path { path, path_length: None };
     assert_eq!(p.path.commands.len(), 2);
 }
 
@@ -163,7 +170,7 @@ fn path_data_curve_command() {
             PathCommand::Close,
         ],
     };
-    let p = Path { path };
+    let p = Path { path, path_length: None };
     assert_eq!(p.path.commands.len(), 3);
     assert!(matches!(p.path.commands[2], PathCommand::Close));
 }
@@ -177,23 +184,27 @@ fn shape_enum_all_variants_constructible() {
         height: Length::new(10.0),
         rx: None,
         ry: None,
+        path_length: None,
     });
     let _circle = Shape::Circle(Circle {
         cx: Length::new(5.0),
         cy: Length::new(5.0),
         r: Length::new(5.0),
+        path_length: None,
     });
     let _ellipse = Shape::Ellipse(Ellipse {
         cx: Length::new(5.0),
         cy: Length::new(5.0),
-        rx: Length::new(5.0),
-        ry: Length::new(3.0),
+        rx: Some(Length::new(5.0)),
+        ry: Some(Length::new(3.0)),
+        path_length: None,
     });
     let _line = Shape::Line(Line {
         x1: Length::new(0.0),
         y1: Length::new(0.0),
         x2: Length::new(10.0),
         y2: Length::new(10.0),
+        path_length: None,
     });
     // Text and Image are in SvgTag, not Shape
     let _text_tag = SvgTag::Text(TextSpan {
@@ -360,6 +371,7 @@ fn line_no_fill_geometry_by_spec() {
         y1: Length::new(0.0),
         x2: Length::new(10.0),
         y2: Length::new(10.0),
+        path_length: None,
     });
     assert!(matches!(line, Shape::Line(_)));
 }
@@ -373,6 +385,7 @@ fn rect_has_fill_and_stroke_geometry() {
         height: Length::new(100.0),
         rx: None,
         ry: None,
+        path_length: None,
     });
     assert!(matches!(rect, Shape::Rect(_)));
 }
@@ -509,6 +522,7 @@ fn svg_tag_shape_and_container() {
         height: Length::new(10.0),
         rx: None,
         ry: None,
+        path_length: None,
     }));
     let group_tag = SvgTag::Container(Container::Group);
     assert!(matches!(shape_tag, SvgTag::Shape(_)));
@@ -695,6 +709,7 @@ fn clip_path_def_non_empty_shapes() {
         height: Length::new(100.0),
         rx: None,
         ry: None,
+        path_length: None,
     });
     let root = SvgNode {
         id: None,
@@ -720,6 +735,7 @@ fn mask_def_with_shapes_and_styles() {
         height: Length::new(10.0),
         rx: None,
         ry: None,
+        path_length: None,
     });
     let root = SvgNode {
         id: None,
@@ -776,6 +792,7 @@ fn pattern_def_basic() {
         height: Length::new(10.0),
         rx: None,
         ry: None,
+        path_length: None,
     });
     let root = SvgNode {
         id: None,
@@ -1293,6 +1310,7 @@ fn make_simple_tree() -> SvgTree {
             cx: Length::new(10.0),
             cy: Length::new(10.0),
             r: Length::new(5.0),
+            path_length: None,
         })),
         style: NodeStyle::default(),
         transforms: vec![],
@@ -1308,6 +1326,7 @@ fn make_simple_tree() -> SvgTree {
             height: Length::new(20.0),
             rx: None,
             ry: None,
+            path_length: None,
         })),
         style: NodeStyle::default(),
         transforms: vec![],

@@ -108,6 +108,7 @@ impl Render for Path {
             ctx.wr,
             ctx.sink,
             None,
+            self.path_length,
         );
     }
 }
@@ -143,6 +144,7 @@ pub(crate) fn rasterize_bez(
     wr: &mut DisplayListBuilder,
     sink: &RasterSink,
     alpha_mask: Option<&crate::render::effects::mask::MaskRaster>,
+    path_length: Option<f32>,
 ) {
     // Approximate scalar scale of the accumulated node transform, used to keep
     // stroke widths/dashes proportional. `sqrt(|det|)` is exact for uniform
@@ -260,7 +262,17 @@ pub(crate) fn rasterize_bez(
             // × device scale) before handing them to kurbo, which implements
             // SVG's odd-length-doubling rule.
             if let Some(dashes) = &s.dash_array {
-                let dash_scale = total_scale as f64;
+                // SVG 2 `pathLength`: calibrate dash lengths/offset by the ratio
+                // of the actual path length to the author-specified length, so
+                // the dash pattern spans the path as the author intended
+                // regardless of the real geometry.
+                let calibration = match path_length {
+                    Some(pl) if pl > 0.0 && pl.is_finite() => {
+                        (bez.perimeter(FLATTEN_TOLERANCE) / pl as f64).max(1e-6)
+                    },
+                    _ => 1.0,
+                };
+                let dash_scale = total_scale as f64 * calibration;
                 let pattern: Vec<f64> = dashes.iter().map(|d| *d as f64 * dash_scale).collect();
                 vello_stroke =
                     vello_stroke.with_dashes(s.dash_offset as f64 * dash_scale, &pattern);

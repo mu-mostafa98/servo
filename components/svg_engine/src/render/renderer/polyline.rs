@@ -50,6 +50,7 @@ impl Render for Polyline {
             ctx.wr,
             ctx.sink,
             None,
+            self.path_length,
         );
     }
 }
@@ -130,7 +131,8 @@ pub(crate) fn points_to_bez(points: &[KurboPoint], close: bool) -> BezPath {
             bez.line_to((p.x, p.y));
         }
     }
-    if close {
+    // Closing an empty path (no preceding `MoveTo`) panics in kurbo.
+    if close && !points.is_empty() {
         bez.close_path();
     }
     bez

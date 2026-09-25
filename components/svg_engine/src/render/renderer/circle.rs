@@ -16,8 +16,9 @@ impl Render for Circle {
         let ellipse = Ellipse {
             cx: self.cx,
             cy: self.cy,
-            rx: self.r,
-            ry: self.r,
+            rx: Some(self.r),
+            ry: Some(self.r),
+            path_length: self.path_length,
         };
         ellipse.render(ctx);
     }

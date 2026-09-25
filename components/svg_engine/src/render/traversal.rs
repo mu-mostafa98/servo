@@ -763,6 +763,7 @@ fn emit_shape(
                     wr,
                     sink,
                     alpha_mask,
+                    shape.path_length(),
                 );
             }
         }
@@ -1108,6 +1109,7 @@ fn emit_marker(
             wr,
             sink,
             None,
+            m_shape.path_length(),
         );
     });
 }

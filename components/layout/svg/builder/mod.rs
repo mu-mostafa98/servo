@@ -37,7 +37,8 @@ use crate::svg::primitives::attrs::get_attr;
 use crate::svg::primitives::css::collect_svg_css_rules;
 use crate::svg::primitives::geometry::build_shape;
 use crate::svg::primitives::viewport::{
-    extract_nested_viewport, extract_viewport_info, parse_aspect_ratio,
+    extract_nested_viewport, extract_viewport_info, parse_aspect_ratio, svg_viewport_reference,
+    viewport_reference,
 };
 use crate::svg::style::build_style;
 
@@ -54,6 +55,10 @@ pub(crate) struct SvgTreeBuilder<'dom, 'a> {
     /// Document-wide `id → DOM node` map, built once so `<use href="#id">`
     /// references resolve in O(1) instead of re-walking the document.
     element_ids: HashMap<String, ServoLayoutNode<'dom>>,
+    /// Root viewport percentage-resolution reference dimensions (viewBox extent
+    /// when present, else the viewport `width`/`height` attributes).
+    root_vw: f32,
+    root_vh: f32,
 }
 
 impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
@@ -61,17 +66,28 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
     pub(crate) fn new(node: ServoLayoutNode<'dom>, context: &'a LayoutContext<'a>) -> Self {
         let css_rules = collect_svg_css_rules(node);
         let element_ids = build_element_id_map(node);
+        let root_viewport = extract_viewport_info(node);
+        let (root_vw, root_vh) = viewport_reference(&root_viewport);
         SvgTreeBuilder {
             root_node: node,
             context,
             css_rules,
             element_ids,
+            root_vw,
+            root_vh,
         }
     }
 
     /// Build the complete [`SvgTree`].
     pub(crate) fn build(self) -> Option<Arc<SvgTree>> {
-        let root = self.build_render_node(self.root_node, self.root_node, &mut HashSet::new(), None)?;
+        let root = self.build_render_node(
+            self.root_node,
+            self.root_node,
+            &mut HashSet::new(),
+            None,
+            self.root_vw,
+            self.root_vh,
+        )?;
         let viewport = extract_viewport_info(self.root_node);
         let definitions = collect_definitions(self.root_node, &self);
 
@@ -100,6 +116,8 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         root_node: ServoLayoutNode<'dom>,
         resolving: &mut HashSet<String>,
         inherited: Option<&NodeStyle>,
+        vw: f32,
+        vh: f32,
     ) -> Option<SvgNode> {
         let element = node.as_element()?;
         let tag_name = element.local_name().as_ref().to_owned();
@@ -109,11 +127,25 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             return text::build_text_node(node, self.context, &self.css_rules);
         }
 
+        // A nested `<svg>` (any `<svg>` except the root) establishes its own
+        // viewport; its own geometry and its children resolve percentages
+        // against that viewport. The root's viewport is handled via
+        // `SvgTree::viewport`.
+        let viewport = if tag_name == "svg" && node != root_node {
+            extract_nested_viewport(node)
+        } else {
+            None
+        };
+        let (vw, vh) = match viewport.as_ref() {
+            Some(vp) => svg_viewport_reference(vp),
+            None => (vw, vh),
+        };
+
         let computed = element
             .style_data()
             .is_some()
             .then(|| node.style(&self.context.style_context));
-        let tag = build_tag(&element, computed.as_ref().map(|v| &**v), node, self.context)?;
+        let tag = build_tag(&element, computed.as_ref().map(|v| &**v), node, self.context, vw, vh)?;
         let (style, transforms) = build_style(node, self.context, &self.css_rules, inherited);
         let id = extract_id(&element);
         let children = resolve::resolve_children(
@@ -124,15 +156,9 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             resolving,
             &style,
             inherited.is_some(),
+            vw,
+            vh,
         );
-
-        // A nested `<svg>` (any `<svg>` except the root) establishes its own
-        // viewport. The root's viewport is handled via `SvgTree::viewport`.
-        let viewport = if tag_name == "svg" && node != root_node {
-            extract_nested_viewport(node)
-        } else {
-            None
-        };
 
         Some(SvgNode {
             id,
@@ -152,7 +178,14 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         &self,
         node: ServoLayoutNode<'dom>,
     ) -> Option<SvgNode> {
-        self.build_render_node(node, self.root_node, &mut HashSet::new(), None)
+        self.build_render_node(
+            node,
+            self.root_node,
+            &mut HashSet::new(),
+            None,
+            self.root_vw,
+            self.root_vh,
+        )
     }
 }
 
@@ -194,6 +227,8 @@ fn build_tag<'dom>(
     computed: Option<&style::properties::ComputedValues>,
     node: ServoLayoutNode<'dom>,
     context: &LayoutContext,
+    vw: f32,
+    vh: f32,
 ) -> Option<SvgTag> {
     let tag = element.local_name().as_ref();
     match tag {
@@ -203,7 +238,7 @@ fn build_tag<'dom>(
         "use" => Some(SvgTag::Container(Container::Use)),
         "symbol" => Some(SvgTag::Container(Container::Symbol)),
         "image" => build_image_tag(element, node, context).map(SvgTag::Image),
-        _ => build_shape(element, tag, computed).map(SvgTag::Shape),
+        _ => build_shape(element, tag, computed, vw, vh).map(SvgTag::Shape),
     }
 }
 

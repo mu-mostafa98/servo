@@ -93,8 +93,9 @@ impl Shape {
                 let y0 = r.y.get() as f64;
                 let x1 = (r.x.get() + r.width.get()) as f64;
                 let y1 = (r.y.get() + r.height.get()) as f64;
-                let rx = r.rx.map(|v| v.get()).unwrap_or(0.0) as f64;
-                let ry = r.ry.map(|v| v.get()).unwrap_or(rx as f32) as f64;
+                let (rx_len, ry_len) = r.resolved_radii();
+                let rx = rx_len.get() as f64;
+                let ry = ry_len.get() as f64;
                 if rx > 0.0 || ry > 0.0 {
                     let radius = (rx + ry) / 2.0;
                     Some(RoundedRect::new(x0, y0, x1, y1, RoundedRectRadii::from(radius)).to_path(0.1))
@@ -106,9 +107,13 @@ impl Shape {
                 Some(Circle::new((c.cx.get() as f64, c.cy.get() as f64), c.r.get() as f64).to_path(0.1))
             },
             Shape::Ellipse(e) => {
+                let (rx, ry) = e.resolved_radii()?;
+                if rx.get() <= 0.0 || ry.get() <= 0.0 {
+                    return None;
+                }
                 Some(Ellipse::new(
                     (e.cx.get() as f64, e.cy.get() as f64),
-                    Vec2::new(e.rx.get() as f64, e.ry.get() as f64),
+                    Vec2::new(rx.get() as f64, ry.get() as f64),
                     0.0,
                 ).to_path(0.1))
             },
@@ -118,8 +123,8 @@ impl Shape {
                 bez.line_to((l.x2.get() as f64, l.y2.get() as f64));
                 Some(bez)
             },
-            Shape::Polyline(p) => Some(points_to_bez(&p.points, false)),
-            Shape::Polygon(p) => Some(points_to_bez(&p.points, true)),
+            Shape::Polyline(p) => (p.points.len() >= 2).then(|| points_to_bez(&p.points, false)),
+            Shape::Polygon(p) => (p.points.len() >= 3).then(|| points_to_bez(&p.points, true)),
             Shape::Path(p) => Some(path_data_to_bez(&p.path)),
         }
     }
@@ -206,15 +211,16 @@ impl Ellipse {
         svg_origin: &LayoutPoint,
         units: ClipPathUnits,
     ) -> Option<ClipGeometry> {
+        let (rx_len, ry_len) = self.resolved_radii()?;
         let (cx, cy, rx, ry) = if units == ClipPathUnits::ObjectBoundingBox {
             (
                 self.cx.get() * OBJECT_BBOX_REF_SIZE,
                 self.cy.get() * OBJECT_BBOX_REF_SIZE,
-                self.rx.get() * OBJECT_BBOX_REF_SIZE,
-                self.ry.get() * OBJECT_BBOX_REF_SIZE,
+                rx_len.get() * OBJECT_BBOX_REF_SIZE,
+                ry_len.get() * OBJECT_BBOX_REF_SIZE,
             )
         } else {
-            (self.cx.get(), self.cy.get(), self.rx.get(), self.ry.get())
+            (self.cx.get(), self.cy.get(), rx_len.get(), ry_len.get())
         };
         let bounds = LayoutRect::from_origin_and_size(
             LayoutPoint::new(svg_origin.x + cx - rx, svg_origin.y + cy - ry),
@@ -294,7 +300,9 @@ pub(crate) fn points_to_bez(points: &[Point], close: bool) -> kurbo::BezPath {
             bez.line_to((p.x as f64, p.y as f64));
         }
     }
-    if close {
+    // Closing an empty path (no preceding `MoveTo`) panics in kurbo. An empty
+    // point list is valid SVG that renders nothing, so skip the close.
+    if close && !points.is_empty() {
         bez.close_path();
     }
     bez

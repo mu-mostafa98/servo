@@ -88,6 +88,26 @@ pub(crate) fn extract_nested_viewport<'dom>(node: ServoLayoutNode<'dom>) -> Opti
     })
 }
 
+/// Compute the percentage-resolution reference dimensions for the root viewport.
+///
+/// SVG percentages resolve against the `viewBox` extent when one is present,
+/// otherwise against the viewport `width`/`height` attributes.
+pub(crate) fn viewport_reference(vp: &ViewportInfo) -> (f32, f32) {
+    match vp.view_box.as_ref() {
+        Some(vb) => (vb.width.get(), vb.height.get()),
+        None => (vp.width.get(), vp.height.get()),
+    }
+}
+
+/// Compute the percentage-resolution reference dimensions for a nested `<svg>`
+/// viewport.
+pub(crate) fn svg_viewport_reference(vp: &SvgViewport) -> (f32, f32) {
+    match vp.view_box.as_ref() {
+        Some(vb) => (vb.width.get(), vb.height.get()),
+        None => (vp.width.get(), vp.height.get()),
+    }
+}
+
 // ======================= AspectRatio Parsing =======================
 
 /// Parse a `preserveAspectRatio` attribute value.

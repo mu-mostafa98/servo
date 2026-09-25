@@ -44,9 +44,11 @@ pub(crate) fn resolve_children<'dom>(
     resolving: &mut HashSet<String>,
     node_style: &NodeStyle,
     in_shadow: bool,
+    vw: f32,
+    vh: f32,
 ) -> Vec<SvgNode> {
     if let SvgTag::Container(Container::Use) = tag {
-        resolve_use_children(node, root_node, builder, resolving, node_style)
+        resolve_use_children(node, root_node, builder, resolving, node_style, vw, vh)
     } else {
         // Manual inheritance only applies inside a `<use>` shadow tree; for
         // normal content Stylo already resolves inherited properties along the
@@ -57,7 +59,7 @@ pub(crate) fn resolve_children<'dom>(
             None
         };
         node.dom_children()
-            .filter_map(|child| builder.build_render_node(child, root_node, resolving, child_inherited))
+            .filter_map(|child| builder.build_render_node(child, root_node, resolving, child_inherited, vw, vh))
             .collect()
     }
 }
@@ -72,6 +74,8 @@ fn resolve_use_children<'dom>(
     builder: &SvgTreeBuilder<'dom, '_>,
     resolving: &mut HashSet<String>,
     use_style: &NodeStyle,
+    vw: f32,
+    vh: f32,
 ) -> Vec<SvgNode> {
     let element = node.as_element().unwrap();
 
@@ -125,7 +129,7 @@ fn resolve_use_children<'dom>(
     let sym_height = target_element.and_then(|e| parse_len(&e, "height"));
 
     let result = target
-        .and_then(|t| builder.build_render_node(t, root_node, resolving, Some(use_style)))
+        .and_then(|t| builder.build_render_node(t, root_node, resolving, Some(use_style), vw, vh))
         .map(|target_node| {
             // Shared helper: apply <use> x/y offset as a translate transform.
             let apply_offset = |node: &mut SvgNode| {

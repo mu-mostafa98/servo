@@ -53,23 +53,26 @@ pub(crate) fn rect_bounds_and_radii(
             &Shape::Ellipse(Ellipse {
                 cx: c.cx,
                 cy: c.cy,
-                rx: c.r,
-                ry: c.r,
+                rx: Some(c.r),
+                ry: Some(c.r),
+                path_length: c.path_length,
             }),
             svg_origin,
         ),
         Shape::Ellipse(e) => {
-            if e.rx.get() <= 0.0 || e.ry.get() <= 0.0 {
+            let (rx, ry) = e.resolved_radii()?;
+            if rx.get() <= 0.0 || ry.get() <= 0.0 {
                 return None;
             }
             rect_bounds_and_radii(
                 &Shape::Rect(Rectangle {
-                    x: Length::new(e.cx.get() - e.rx.get()),
-                    y: Length::new(e.cy.get() - e.ry.get()),
-                    width: Length::new(e.rx.get() * 2.0),
-                    height: Length::new(e.ry.get() * 2.0),
-                    rx: Some(e.rx),
-                    ry: Some(e.ry),
+                    x: Length::new(e.cx.get() - rx.get()),
+                    y: Length::new(e.cy.get() - ry.get()),
+                    width: Length::new(rx.get() * 2.0),
+                    height: Length::new(ry.get() * 2.0),
+                    rx: Some(rx),
+                    ry: Some(ry),
+                    path_length: None,
                 }),
                 svg_origin,
             )

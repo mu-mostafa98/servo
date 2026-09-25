@@ -24,6 +24,10 @@ impl Render for Polygon {
             .map(|p| KurboPoint::new(p.x as f64, p.y as f64))
             .collect();
 
+        if points.len() < 2 {
+            return;
+        }
+
         if ctx.native_rendering {
             // Close the point list and delegate to Polyline's native path.
             let mut closed_points = points.clone();
@@ -55,6 +59,7 @@ impl Render for Polygon {
             ctx.wr,
             ctx.sink,
             None,
+            self.path_length,
         );
     }
 }

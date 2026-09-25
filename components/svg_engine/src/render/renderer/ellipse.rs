@@ -13,18 +13,22 @@ use crate::model::units::Length;
 /// - All LSP invariants are preserved through the delegation chain.
 impl Render for Ellipse {
     fn render(&self, ctx: &mut RenderContext) {
-        if self.rx.get() <= 0.0 || self.ry.get() <= 0.0 {
+        let Some((rx, ry)) = self.resolved_radii() else {
+            return;
+        };
+        if rx.get() <= 0.0 || ry.get() <= 0.0 {
             return;
         }
 
         // An ellipse is rendered as a rounded rectangle with 100% corner radii.
         let rect = Rectangle {
-            x: Length::new(self.cx.get() - self.rx.get()),
-            y: Length::new(self.cy.get() - self.ry.get()),
-            width: Length::new(self.rx.get() * 2.0),
-            height: Length::new(self.ry.get() * 2.0),
-            rx: Some(self.rx),
-            ry: Some(self.ry),
+            x: Length::new(self.cx.get() - rx.get()),
+            y: Length::new(self.cy.get() - ry.get()),
+            width: Length::new(rx.get() * 2.0),
+            height: Length::new(ry.get() * 2.0),
+            rx: Some(rx),
+            ry: Some(ry),
+            path_length: self.path_length,
         };
         rect.render(ctx);
     }
