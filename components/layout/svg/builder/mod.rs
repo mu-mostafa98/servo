@@ -86,8 +86,8 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             markers: definitions.markers,
         };
 
-        // Resolve transient `PaintServer::Ref(id)` / `DefRef::Ref(id)` values
-        // into typed `Arc` handles now that the definition maps are collected.
+        // Resolve transient `PaintServer::Ref { id, .. }` / `DefRef::Ref(id)`
+        // values into typed `Arc` handles now that the definition maps are collected.
         resolve::resolve_references(&mut tree);
 
         Some(Arc::new(tree))

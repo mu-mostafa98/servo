@@ -12,13 +12,14 @@ use super::gradient::GradientDef;
 use crate::model::document::PatternDef;
 use crate::model::units::{Id, Length, Opacity};
 
-/// A paint server reference — a solid color, a gradient, or a pattern.
+/// A paint server reference — a solid color, a gradient, a pattern, a
+/// `url(#id)` reference, or a `context-fill`/`context-stroke` keyword.
 ///
 /// [`PaintServer::Ref`] is a transient build-time state: the layout layer emits
 /// it while only the string `url(#id)` is known, then the resolve pass rewrites
 /// it into a typed [`PaintServer::Gradient`]/[`PaintServer::Pattern`] `Arc`
-/// handle once the definition maps are collected. No `Ref` value survives past
-/// build time.
+/// handle (or its fallback color) once the definition maps are collected. No
+/// `Ref` value survives past build time.
 #[derive(Debug, Clone)]
 pub enum PaintServer {
     /// Solid color fill/stroke.
@@ -27,8 +28,16 @@ pub enum PaintServer {
     Gradient(Arc<GradientDef>),
     /// A resolved pattern definition (`url(#myPattern)`).
     Pattern(Arc<PatternDef>),
-    /// Transient id reference, resolved to `Gradient`/`Pattern` after build.
-    Ref(Id),
+    /// Transient `url(#id)` reference, with an optional fallback color used if
+    /// the reference cannot be resolved. `fallback: None` means "no paint" for
+    /// a broken reference (SVG 2 behavior).
+    Ref { id: Id, fallback: Option<SvgColor> },
+    /// `context-fill`: inherit the fill paint from the referencing element's
+    /// context (used by `<marker>`/`<use>`). Renders as no paint when there is
+    /// no context element providing the value.
+    ContextFill,
+    /// `context-stroke`: like [`PaintServer::ContextFill`], but for the stroke.
+    ContextStroke,
 }
 
 /// SVG fill properties.
@@ -77,6 +86,8 @@ pub enum LineCap {
 #[derive(Debug, Clone, Copy, PartialEq)]
 pub enum LineJoin {
     Miter,
+    MiterClip,
     Round,
     Bevel,
+    Arcs,
 }

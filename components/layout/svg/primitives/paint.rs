@@ -9,6 +9,7 @@
 //! (not the engine's `model`), which never parses attribute strings itself.
 
 use svg_engine::style::gradient::PaintServer;
+use svg_engine::style::{PaintOperation, PaintOrder};
 use svg_engine::units::Id;
 use svgtypes::Color as SvgColor;
 
@@ -24,19 +25,91 @@ pub(crate) fn parse_css_color(val: &str) -> Option<SvgColor> {
 }
 
 /// Try to parse a paint server value from an attribute string.
-/// Supports: `"red"`, `"#ff0000"`, `"url(#myGrad)"`.
+///
+/// Supports the SVG 2 `<paint>` grammar:
+/// `none | <color> | <url> [none | <color>]? | context-fill | context-stroke`.
+///
+/// - `"red"`, `"#ff0000"` → [`PaintServer::Solid`].
+/// - `"url(#myGrad)"` → [`PaintServer::Ref`] with no fallback.
+/// - `"url(#myGrad) red"` → [`PaintServer::Ref`] with a red fallback.
+/// - `"context-fill"` / `"context-stroke"` → the corresponding keyword.
 ///
 /// URL references yield a transient [`PaintServer::Ref`], which is resolved
-/// to a typed handle later by the build layer's reference-resolution pass.
+/// to a typed handle (or its fallback color) later by the build layer's
+/// reference-resolution pass.
 pub(crate) fn parse_paint_server(val: &str) -> Option<PaintServer> {
     let val = val.trim();
-    if val.starts_with("url(#") && val.ends_with(')') {
-        let id = &val[5..val.len() - 1];
-        if !id.is_empty() {
-            return Some(PaintServer::Ref(Id::new(id)));
+    if val.eq_ignore_ascii_case("context-fill") {
+        return Some(PaintServer::ContextFill);
+    }
+    if val.eq_ignore_ascii_case("context-stroke") {
+        return Some(PaintServer::ContextStroke);
+    }
+    if val.starts_with("url(") {
+        if let Some(close) = val.find(')') {
+            let url_part = &val[..close + 1];
+            let rest = val[close + 1..].trim();
+            // Strip `url(` / `)`, any quotes, and an optional leading `#`.
+            let inner = url_part[4..url_part.len() - 1]
+                .trim()
+                .trim_matches('"')
+                .trim_matches('\'')
+                .trim()
+                .trim_start_matches('#')
+                .trim();
+            if inner.is_empty() {
+                return parse_css_color(val).map(PaintServer::Solid);
+            }
+            let fallback = if rest.is_empty() || rest.eq_ignore_ascii_case("none") {
+                None
+            } else {
+                parse_css_color(rest)
+            };
+            return Some(PaintServer::Ref {
+                id: Id::new(inner),
+                fallback,
+            });
         }
     }
     parse_css_color(val).map(PaintServer::Solid)
+}
+
+/// Parse a `paint-order` value into an ordered triple of painting operations.
+///
+/// SVG 2 grammar: `normal | [fill || stroke || markers]`.  Omitted operations
+/// are appended in the default order (fill, stroke, markers).
+pub(crate) fn parse_paint_order(val: &str) -> Option<PaintOrder> {
+    let val = val.trim();
+    if val.eq_ignore_ascii_case("normal") {
+        return Some(PaintOrder::default());
+    }
+    let mut listed: Vec<PaintOperation> = Vec::new();
+    for token in val.split_whitespace() {
+        let op = match token {
+            "fill" => PaintOperation::Fill,
+            "stroke" => PaintOperation::Stroke,
+            "markers" => PaintOperation::Markers,
+            _ => return None,
+        };
+        if !listed.contains(&op) {
+            listed.push(op);
+        }
+    }
+    if listed.is_empty() {
+        return None;
+    }
+    for op in [
+        PaintOperation::Fill,
+        PaintOperation::Stroke,
+        PaintOperation::Markers,
+    ] {
+        if !listed.contains(&op) {
+            listed.push(op);
+        }
+    }
+    Some(PaintOrder {
+        order: [listed[0], listed[1], listed[2]],
+    })
 }
 
 /// Parse a CSS color string (named, hex, `rgb()`/`rgba()`) into `(r, g, b, a)`
@@ -131,9 +204,74 @@ mod tests {
     #[test]
     fn paint_server_url_ref() {
         match parse_paint_server("url(#myGrad)").unwrap() {
-            PaintServer::Ref(id) => assert_eq!(id.as_str(), "myGrad"),
+            PaintServer::Ref { id, fallback } => {
+                assert_eq!(id.as_str(), "myGrad");
+                assert!(fallback.is_none());
+            },
             _ => panic!("expected Ref"),
         }
+    }
+
+    #[test]
+    fn paint_server_url_ref_with_color_fallback() {
+        match parse_paint_server("url(#myGrad) red").unwrap() {
+            PaintServer::Ref { id, fallback } => {
+                assert_eq!(id.as_str(), "myGrad");
+                assert_eq!(fallback, Some(SvgColor::red()));
+            },
+            _ => panic!("expected Ref with fallback"),
+        }
+    }
+
+    #[test]
+    fn paint_server_url_ref_with_none_fallback() {
+        match parse_paint_server("url(#myGrad) none").unwrap() {
+            PaintServer::Ref { id, fallback } => {
+                assert_eq!(id.as_str(), "myGrad");
+                assert!(fallback.is_none());
+            },
+            _ => panic!("expected Ref with none fallback"),
+        }
+    }
+
+    #[test]
+    fn paint_server_context_keywords() {
+        assert!(matches!(
+            parse_paint_server("context-fill"),
+            Some(PaintServer::ContextFill)
+        ));
+        assert!(matches!(
+            parse_paint_server("context-stroke"),
+            Some(PaintServer::ContextStroke)
+        ));
+    }
+
+    #[test]
+    fn paint_order_parsing() {
+        let po = parse_paint_order("normal").unwrap();
+        assert_eq!(po.order[0], PaintOperation::Fill);
+        assert_eq!(po.order[1], PaintOperation::Stroke);
+        assert_eq!(po.order[2], PaintOperation::Markers);
+
+        let po = parse_paint_order("stroke").unwrap();
+        assert!(po.stroke_before_fill());
+        assert_eq!(po.order[0], PaintOperation::Stroke);
+
+        let po = parse_paint_order("stroke markers").unwrap();
+        assert_eq!(po.order, [
+            PaintOperation::Stroke,
+            PaintOperation::Markers,
+            PaintOperation::Fill,
+        ]);
+
+        let po = parse_paint_order("markers stroke fill").unwrap();
+        assert_eq!(po.order, [
+            PaintOperation::Markers,
+            PaintOperation::Stroke,
+            PaintOperation::Fill,
+        ]);
+
+        assert!(parse_paint_order("bogus").is_none());
     }
 
     #[test]

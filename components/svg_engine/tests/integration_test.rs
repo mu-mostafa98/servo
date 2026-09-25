@@ -421,11 +421,11 @@ fn fill_params_solid_color() {
 #[test]
 fn fill_params_ref_paint_server() {
     let f = FillParams {
-        paint_server: Some(PaintServer::Ref(Id::new("myGrad"))),
+        paint_server: Some(PaintServer::Ref { id: Id::new("myGrad"), fallback: None }),
         opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     };
-    assert!(matches!(f.paint_server, Some(PaintServer::Ref(ref id)) if id.as_str() == "myGrad"));
+    assert!(matches!(f.paint_server, Some(PaintServer::Ref { ref id, .. }) if id.as_str() == "myGrad"));
 }
 
 #[test]
@@ -468,8 +468,10 @@ fn stroke_line_cap_all_variants() {
 #[test]
 fn stroke_line_join_all_variants() {
     assert!(matches!(LineJoin::Miter, LineJoin::Miter));
+    assert!(matches!(LineJoin::MiterClip, LineJoin::MiterClip));
     assert!(matches!(LineJoin::Round, LineJoin::Round));
     assert!(matches!(LineJoin::Bevel, LineJoin::Bevel));
+    assert!(matches!(LineJoin::Arcs, LineJoin::Arcs));
 }
 
 #[test]
@@ -922,20 +924,40 @@ fn color_interpolation_linear_rgb_gradient_math() {
 }
 
 #[test]
-fn paint_order_normal() {
-    let po = PaintOrder::Normal;
+fn paint_order_default() {
+    let po = PaintOrder::default();
     assert!(!po.stroke_before_fill());
+    assert_eq!(
+        po.order,
+        [
+            PaintOperation::Fill,
+            PaintOperation::Stroke,
+            PaintOperation::Markers
+        ]
+    );
 }
 
 #[test]
-fn paint_order_stroke_fill() {
-    let po = PaintOrder::StrokeFill;
+fn paint_order_stroke_before_fill() {
+    let po = PaintOrder {
+        order: [
+            PaintOperation::Stroke,
+            PaintOperation::Fill,
+            PaintOperation::Markers,
+        ],
+    };
     assert!(po.stroke_before_fill());
 }
 
 #[test]
-fn paint_order_fill_stroke() {
-    let po = PaintOrder::FillStroke;
+fn paint_order_fill_before_stroke() {
+    let po = PaintOrder {
+        order: [
+            PaintOperation::Fill,
+            PaintOperation::Stroke,
+            PaintOperation::Markers,
+        ],
+    };
     assert!(!po.stroke_before_fill());
 }
 
@@ -980,7 +1002,13 @@ fn render_hints_with_paint_order_stroke_fill() {
         shape_rendering: None,
         color_rendering: None,
         color_interpolation: None,
-        paint_order: Some(PaintOrder::StrokeFill),
+        paint_order: Some(PaintOrder {
+            order: [
+                PaintOperation::Stroke,
+                PaintOperation::Fill,
+                PaintOperation::Markers,
+            ],
+        }),
         text_rendering: None,
         image_rendering: None,
     };

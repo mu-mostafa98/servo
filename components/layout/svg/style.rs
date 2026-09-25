@@ -30,7 +30,7 @@ use svgtypes::Color as SvgColor;
 use crate::context::LayoutContext;
 use crate::svg::primitives::attrs::{extract_url_fragment, get_attr, parse_inline_style_prop};
 use crate::svg::primitives::css::{CssClassRules, apply_css_class_rules};
-use crate::svg::primitives::paint::parse_paint_server;
+use crate::svg::primitives::paint::{parse_paint_order, parse_paint_server};
 use crate::svg::primitives::transforms::{css_transform_from_computed, parse_transform_str};
 
 // ======================= FromComputedValues Trait =======================
@@ -108,7 +108,7 @@ impl FromComputedValues for FillParams {
             ResolvedPaint::PaintServer(id) => Some(FillParams {
                 // An invalid/missing reference falls back to black at resolve
                 // time (see `resolve_paint_server`).
-                paint_server: Some(PaintServer::Ref(Id::new(id))),
+                paint_server: Some(PaintServer::Ref { id: Id::new(id), fallback: None }),
                 opacity,
                 fill_rule,
             }),
@@ -194,7 +194,7 @@ impl FromComputedValues for StrokeParams {
             ResolvedPaint::PaintServer(id) => Some(StrokeParams {
                 // An invalid/missing reference falls back to black at resolve
                 // time (see `resolve_paint_server`).
-                paint_server: Some(PaintServer::Ref(Id::new(id))),
+                paint_server: Some(PaintServer::Ref { id: Id::new(id), fallback: None }),
                 opacity,
                 width: Length::new(width),
                 line_cap,
@@ -337,20 +337,7 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
         dash_offset: 0.0,
     });
 
-    match parse_paint_server(&stroke_value) {
-        Some(PaintServer::Solid(c)) => {
-            stroke.paint_server = Some(PaintServer::Solid(c));
-        },
-        Some(PaintServer::Ref(id)) => {
-            stroke.paint_server = Some(PaintServer::Ref(id));
-        },
-        None => {
-            stroke.paint_server = None;
-        },
-        // Gradient/Pattern variants are only produced by the post-build
-        // resolve pass, never by `from_attr`.
-        _ => {},
-    }
+    stroke.paint_server = parse_paint_server(&stroke_value);
     if let Some(v) = read_attr("stroke-width") {
         stroke.width = Length::new(
             v.trim_end_matches("px")
@@ -371,8 +358,10 @@ fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut Nod
     }
     if let Some(v) = read_attr("stroke-linejoin") {
         stroke.line_join = match v.trim() {
+            "miter-clip" => LineJoin::MiterClip,
             "round" => LineJoin::Round,
             "bevel" => LineJoin::Bevel,
+            "arcs" => LineJoin::Arcs,
             _ => LineJoin::Miter,
         };
     }
@@ -432,20 +421,7 @@ fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeS
         opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     });
-    match parse_paint_server(&fill_value) {
-        Some(PaintServer::Solid(c)) => {
-            fill.paint_server = Some(PaintServer::Solid(c));
-        },
-        Some(PaintServer::Ref(id)) => {
-            fill.paint_server = Some(PaintServer::Ref(id));
-        },
-        None => {
-            fill.paint_server = None;
-        },
-        // Gradient/Pattern variants are only produced by the post-build
-        // resolve pass, never by `from_attr`.
-        _ => {},
-    }
+    fill.paint_server = parse_paint_server(&fill_value);
     if let Some(v) = read_attr("fill-opacity") {
         fill.opacity = Opacity::new(v.parse::<f32>().unwrap_or(1.0));
     }
@@ -484,11 +460,7 @@ fn apply_render_hints_from_attrs(element: &ServoLayoutElement, style: &mut NodeS
         };
     }
     if let Some(val) = get_attr(element, "paint-order") {
-        hints.paint_order = match val.trim() {
-            "stroke fill" | "stroke" => Some(PaintOrder::StrokeFill),
-            "fill stroke" | "fill" | "normal" => Some(PaintOrder::FillStroke),
-            _ => None,
-        };
+        hints.paint_order = parse_paint_order(val.trim());
     }
 }
 

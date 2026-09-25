@@ -172,7 +172,7 @@ pub enum MarkerUnits {
 /// Orientation of a marker relative to the path.
 #[derive(Debug, Clone, PartialEq)]
 pub enum MarkerOrient {
-    /// Rotate to align with the path tangent (default).
+    /// Rotate to align with the path tangent.
     Auto,
     /// Like `Auto`, but the marker at the path *start* is flipped 180°.
     AutoStartReverse,
@@ -182,7 +182,8 @@ pub enum MarkerOrient {
 
 impl Default for MarkerOrient {
     fn default() -> Self {
-        MarkerOrient::Auto
+        // SVG 2: the initial value of `orient` is `0` (a fixed angle), not `auto`.
+        MarkerOrient::Angle(0.0)
     }
 }
 

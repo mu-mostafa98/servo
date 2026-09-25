@@ -12,7 +12,6 @@ use std::collections::HashMap;
 
 use layout_api::{LayoutElement, LayoutNode, LayoutNodeType};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-use svg_engine::style::gradient::PaintServer;
 use svg_engine::style::*;
 use svg_engine::units::{Length, Opacity};
 
@@ -131,31 +130,12 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
     match prop {
         "fill" | "fill-color" => {
             if let Some(ps) = parse_paint_server(value) {
-                match ps {
-                    PaintServer::Solid(c) => {
-                        style.fill = Some(FillParams {
-                            paint_server: Some(PaintServer::Solid(c)),
-                            opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(Opacity::ONE),
-                            fill_rule: style
-                                .fill
-                                .as_ref()
-                                .map(|f| f.fill_rule)
-                                .unwrap_or(FillRule::NonZero),
-                        });
-                    },
-                    PaintServer::Ref(id) => {
-                        style.fill = Some(FillParams {
-                            paint_server: Some(PaintServer::Ref(id)),
-                            opacity: style.fill.as_ref().map(|f| f.opacity).unwrap_or(Opacity::ONE),
-                            fill_rule: style
-                                .fill
-                                .as_ref()
-                                .map(|f| f.fill_rule)
-                                .unwrap_or(FillRule::NonZero),
-                        });
-                    },
-                    _ => {},
-                }
+                let fill = style.fill.get_or_insert_with(|| FillParams {
+                    paint_server: None,
+                    opacity: Opacity::ONE,
+                    fill_rule: FillRule::NonZero,
+                });
+                fill.paint_server = Some(ps);
             } else if value.eq_ignore_ascii_case("none") {
                 style.fill = None;
             }
@@ -169,65 +149,17 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
         },
         "stroke" | "stroke-color" => {
             if let Some(ps) = parse_paint_server(value) {
-                match ps {
-                    PaintServer::Solid(c) => {
-                        style.stroke = Some(StrokeParams {
-                            paint_server: Some(PaintServer::Solid(c)),
-                            opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(Opacity::ONE),
-                            width: style.stroke.as_ref().map(|s| s.width).unwrap_or(Length::new(1.0)),
-                            line_cap: style
-                                .stroke
-                                .as_ref()
-                                .map(|s| s.line_cap)
-                                .unwrap_or(LineCap::Butt),
-                            line_join: style
-                                .stroke
-                                .as_ref()
-                                .map(|s| s.line_join)
-                                .unwrap_or(LineJoin::Miter),
-                            miter_limit: style
-                                .stroke
-                                .as_ref()
-                                .map(|s| s.miter_limit)
-                                .unwrap_or(4.0),
-                            dash_array: style.stroke.as_ref().and_then(|s| s.dash_array.clone()),
-                            dash_offset: style
-                                .stroke
-                                .as_ref()
-                                .map(|s| s.dash_offset)
-                                .unwrap_or(0.0),
-                        });
-                    },
-                    PaintServer::Ref(id) => {
-                        style.stroke = Some(StrokeParams {
-                            paint_server: Some(PaintServer::Ref(id)),
-                            opacity: style.stroke.as_ref().map(|s| s.opacity).unwrap_or(Opacity::ONE),
-                            width: style.stroke.as_ref().map(|s| s.width).unwrap_or(Length::new(1.0)),
-                            line_cap: style
-                                .stroke
-                                .as_ref()
-                                .map(|s| s.line_cap)
-                                .unwrap_or(LineCap::Butt),
-                            line_join: style
-                                .stroke
-                                .as_ref()
-                                .map(|s| s.line_join)
-                                .unwrap_or(LineJoin::Miter),
-                            miter_limit: style
-                                .stroke
-                                .as_ref()
-                                .map(|s| s.miter_limit)
-                                .unwrap_or(4.0),
-                            dash_array: style.stroke.as_ref().and_then(|s| s.dash_array.clone()),
-                            dash_offset: style
-                                .stroke
-                                .as_ref()
-                                .map(|s| s.dash_offset)
-                                .unwrap_or(0.0),
-                        });
-                    },
-                    _ => {},
-                }
+                let stroke = style.stroke.get_or_insert_with(|| StrokeParams {
+                    paint_server: None,
+                    opacity: Opacity::ONE,
+                    width: Length::new(1.0),
+                    line_cap: LineCap::Butt,
+                    line_join: LineJoin::Miter,
+                    miter_limit: 4.0,
+                    dash_array: None,
+                    dash_offset: 0.0,
+                });
+                stroke.paint_server = Some(ps);
             } else if value.eq_ignore_ascii_case("none") {
                 style.stroke = None;
             }
@@ -258,8 +190,10 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
         },
         "stroke-linejoin" => {
             let lj = match value {
+                "miter-clip" => LineJoin::MiterClip,
                 "round" => LineJoin::Round,
                 "bevel" => LineJoin::Bevel,
+                "arcs" => LineJoin::Arcs,
                 _ => LineJoin::Miter,
             };
             if let Some(ref mut s) = style.stroke {

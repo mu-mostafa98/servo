@@ -91,24 +91,52 @@ pub enum ShapeRendering {
     GeometricPrecision,
 }
 
+/// A single painting operation in the [`PaintOrder`] sequence.
+#[derive(Debug, Clone, Copy, PartialEq)]
+pub enum PaintOperation {
+    Fill,
+    Stroke,
+    Markers,
+}
+
 /// Fill/stroke/marker rendering order.
 ///
-/// Per SVG 2 §5.10, `paint-order` controls the stacking order of fill, stroke,
-/// and markers.  The default (Normal) draws fill → stroke → markers.
+/// Per SVG 2, `paint-order` is `normal | [fill || stroke || markers]` — an
+/// arbitrary ordering of the three painting operations.  The default order
+/// (and the order any omitted operations fall back to) is fill → stroke →
+/// markers, represented here as `[Fill, Stroke, Markers]`.
 #[derive(Debug, Clone, Copy, PartialEq)]
-pub enum PaintOrder {
-    /// Default: fill first, then stroke.
-    Normal,
-    /// Stroke then fill.
-    StrokeFill,
-    /// Fill then stroke (same as Normal, but explicit).
-    FillStroke,
+pub struct PaintOrder {
+    /// The three painting operations in the order they are rendered.
+    pub order: [PaintOperation; 3],
+}
+
+impl Default for PaintOrder {
+    fn default() -> Self {
+        PaintOrder {
+            order: [
+                PaintOperation::Fill,
+                PaintOperation::Stroke,
+                PaintOperation::Markers,
+            ],
+        }
+    }
 }
 
 impl PaintOrder {
     /// Whether stroke should be drawn before fill.
     pub fn stroke_before_fill(&self) -> bool {
-        matches!(self, PaintOrder::StrokeFill)
+        let stroke = self
+            .order
+            .iter()
+            .position(|o| *o == PaintOperation::Stroke)
+            .unwrap();
+        let fill = self
+            .order
+            .iter()
+            .position(|o| *o == PaintOperation::Fill)
+            .unwrap();
+        stroke < fill
     }
 }
 

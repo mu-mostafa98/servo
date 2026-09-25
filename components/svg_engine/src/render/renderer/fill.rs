@@ -58,8 +58,12 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
             );
             ctx.wr.push_rect(&common, bounds, color);
         },
-        // A transient `Ref` should already have been resolved before render.
-        Some(PaintServer::Ref(_)) | None => {},
+        // A transient `Ref` should already have been resolved before render;
+        // `context-fill`/`context-stroke` render as no paint (no context element).
+        Some(PaintServer::Ref { .. })
+        | Some(PaintServer::ContextFill)
+        | Some(PaintServer::ContextStroke)
+        | None => {},
     }
 
     ctx.clip_chain_id = orig_clip;
@@ -114,7 +118,10 @@ pub(crate) fn fill_polygon(
             let fill_style = FillStyle::Solid(color);
             tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
         },
-        Some(PaintServer::Ref(_)) | None => {},
+        Some(PaintServer::Ref { .. })
+        | Some(PaintServer::ContextFill)
+        | Some(PaintServer::ContextStroke)
+        | None => {},
     }
 }
 

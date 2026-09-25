@@ -189,7 +189,8 @@ fn resolve_use_children<'dom>(
 /// `Arc` handles using the collected definition maps.
 ///
 /// A paint-server reference that resolves to neither a gradient nor a pattern
-/// falls back to opaque black. A clip-path/mask/filter/marker reference that
+/// uses its fallback color, or — with no fallback — drops the paint layer
+/// entirely (SVG 2 behavior). A clip-path/mask/filter/marker reference that
 /// does not resolve is dropped (the effect/marker is omitted), matching SVG's
 /// ignore-broken-references behavior.
 pub(crate) fn resolve_references(tree: &mut SvgTree) {
@@ -223,15 +224,19 @@ fn resolve_references_in(
     filters: &HashMap<String, Arc<FilterDef>>,
     marker_defs: &HashMap<String, Arc<MarkerDef>>,
 ) {
-    if let Some(fill) = node.style.fill.as_mut() {
-        if let Some(paint) = fill.paint_server.as_mut() {
-            resolve_paint_server(paint, gradients, patterns);
-        }
+    let fill_keep = match node.style.fill.as_mut().and_then(|f| f.paint_server.as_mut()) {
+        Some(paint) => resolve_paint_server(paint, gradients, patterns),
+        None => true,
+    };
+    if !fill_keep {
+        node.style.fill = None;
     }
-    if let Some(stroke) = node.style.stroke.as_mut() {
-        if let Some(paint) = stroke.paint_server.as_mut() {
-            resolve_paint_server(paint, gradients, patterns);
-        }
+    let stroke_keep = match node.style.stroke.as_mut().and_then(|s| s.paint_server.as_mut()) {
+        Some(paint) => resolve_paint_server(paint, gradients, patterns),
+        None => true,
+    };
+    if !stroke_keep {
+        node.style.stroke = None;
     }
 
     if let Some(effects) = node.style.effects.as_mut() {
@@ -269,22 +274,30 @@ fn resolve_references_in(
     }
 }
 
+/// Resolve a transient [`PaintServer::Ref`] in place.
+///
+/// Returns `false` when the reference is broken *and* has no fallback, in which
+/// case the caller must drop the whole paint layer (SVG 2: "no paint is
+/// rendered"). A non-`Ref` paint server is already resolved and returns `true`.
 fn resolve_paint_server(
     paint: &mut PaintServer,
     gradients: &HashMap<String, Arc<GradientDef>>,
     patterns: &HashMap<String, Arc<PatternDef>>,
-) {
-    let id = match paint {
-        PaintServer::Ref(id) => id.clone(),
-        _ => return,
+) -> bool {
+    let (id, fallback) = match paint {
+        PaintServer::Ref { id, fallback } => (id.clone(), fallback.take()),
+        _ => return true,
     };
-    *paint = if let Some(def) = gradients.get(id.as_str()) {
-        PaintServer::Gradient(def.clone())
+    if let Some(def) = gradients.get(id.as_str()) {
+        *paint = PaintServer::Gradient(def.clone());
     } else if let Some(def) = patterns.get(id.as_str()) {
-        PaintServer::Pattern(def.clone())
+        *paint = PaintServer::Pattern(def.clone());
+    } else if let Some(color) = fallback {
+        *paint = PaintServer::Solid(color);
     } else {
-        PaintServer::Solid(svgtypes::Color::new_rgb(0, 0, 0))
-    };
+        return false;
+    }
+    true
 }
 
 /// Resolve a transient [`DefRef::Ref`] into a typed handle using `map`.
