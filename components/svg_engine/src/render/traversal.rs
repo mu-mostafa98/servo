@@ -559,7 +559,7 @@ fn emit_element(
 
 /// Render a geometric shape with full clip-path, mask, and filter support.
 fn emit_geometry(
-    shape: &crate::model::shapes::Shape,
+    shape: &crate::model::element::shape::Shape,
     style: crate::model::style::NodeStyle,
     cur_origin: &LayoutPoint,
     cur_spatial_id: SpatialId,
@@ -658,7 +658,7 @@ fn emit_geometry(
 /// Emit a single render call for the shape (or one of its mask-clipped copies).
 #[allow(clippy::too_many_arguments)]
 fn emit_shape(
-    shape: &crate::model::shapes::Shape,
+    shape: &crate::model::element::shape::Shape,
     style: &crate::model::style::NodeStyle,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
@@ -812,7 +812,7 @@ fn emit_shape(
 /// should fall back to vello rasterization.
 #[allow(clippy::too_many_arguments)]
 fn emit_native_gradients(
-    shape: &crate::model::shapes::Shape,
+    shape: &crate::model::element::shape::Shape,
     style: &crate::model::style::NodeStyle,
     svg_origin: &LayoutPoint,
     spatial_id: SpatialId,
@@ -923,8 +923,8 @@ fn style_has_pattern(style: &crate::model::style::NodeStyle) -> bool {
 /// `stroke_line_segment`. A dashed stroke on rect/circle/ellipse stays on vello
 /// (the native border can't emit dashes), but line strokes handle dashes
 /// natively.
-fn is_native_solid_shape(shape: &crate::model::shapes::Shape, style: &crate::model::style::NodeStyle) -> bool {
-    use crate::model::shapes::Shape;
+fn is_native_solid_shape(shape: &crate::model::element::shape::Shape, style: &crate::model::style::NodeStyle) -> bool {
+    use crate::model::element::shape::Shape;
     use crate::model::style::paint_servers::PaintServer;
 
     let fill_is_solid = style
@@ -958,10 +958,10 @@ fn is_native_solid_shape(shape: &crate::model::shapes::Shape, style: &crate::mod
 /// `path`), in the shape's local coordinate space. Returns `None` for shapes
 /// that don't carry markers (rect/circle/ellipse).
 fn shape_vertices(
-    shape: &crate::model::shapes::Shape,
+    shape: &crate::model::element::shape::Shape,
     bez: Option<&BezPath>,
 ) -> Option<Vec<(f32, f32)>> {
-    use crate::model::shapes::Shape;
+    use crate::model::element::shape::Shape;
     match shape {
         Shape::Rect(_) | Shape::Circle(_) | Shape::Ellipse(_) => None,
         _ => {
@@ -989,7 +989,7 @@ fn shape_vertices(
 /// Render the start/mid/end markers for a shape (on top of its fill/stroke).
 #[allow(clippy::too_many_arguments)]
 fn emit_markers(
-    shape: &crate::model::shapes::Shape,
+    shape: &crate::model::element::shape::Shape,
     bez: Option<&BezPath>,
     style: &crate::model::style::NodeStyle,
     node_xform: Transform2D<f32, (), ()>,

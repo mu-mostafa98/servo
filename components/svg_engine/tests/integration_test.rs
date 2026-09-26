@@ -15,7 +15,6 @@ use std::sync::Arc;
 use svg_engine::document::*;
 use svg_engine::element::*;
 use svg_engine::geometry::{PathCommand, PathData, Point};
-use svg_engine::shapes::*;
 use svg_engine::style::paint_servers::{SpreadMethod, *};
 use svg_engine::style::transform::TransformOp;
 use svg_engine::style::*;

@@ -12,10 +12,11 @@
 //! that ties them into a tree. It is pure data — no WebRender/vello dependency.
 
 pub mod image;
+pub mod shape;
 pub mod text;
 
 pub use self::image::SvgImage;
-pub use crate::model::shapes::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
+pub use self::shape::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
 pub use self::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
 
 use crate::model::document::viewport::SvgViewport;

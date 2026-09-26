@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::render::renderer::{Render, RenderContext, stroke};
-use crate::model::shapes::Line;
+use crate::model::element::shape::Line;
 
 /// Renders an SVG `<line>`.
 ///

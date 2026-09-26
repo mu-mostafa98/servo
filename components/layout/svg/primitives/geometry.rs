@@ -5,7 +5,7 @@
 //! SVG shape geometry construction from DOM elements.
 //!
 //! Each function takes a DOM element, its tag name, and optional computed
-//! values, and returns an [`svg_engine::shapes::Shape`] or `None` if the
+//! values, and returns an [`svg_engine::element::Shape`] or `None` if the
 //! element does not represent a valid shape.
 //!
 //! # Design
@@ -18,7 +18,7 @@ use script::layout_dom::ServoLayoutElement;
 use style::values::computed::{Length as CssLength, LengthPercentage};
 use style::values::generics::length::GenericLengthPercentageOrAuto;
 use svg_engine::geometry::{PathCommand, PathData, Point};
-use svg_engine::shapes::*;
+use svg_engine::element::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
 use svg_engine::units::Length;
 
 use crate::svg::primitives::attrs::{get_attr, parse_length_resolved, parse_points};

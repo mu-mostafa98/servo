@@ -3,7 +3,7 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 use crate::render::renderer::{Render, RenderContext};
-use crate::model::shapes::{Ellipse, Rectangle};
+use crate::model::element::shape::{Ellipse, Rectangle};
 use crate::model::units::Length;
 
 /// Renders an SVG `<ellipse>`.

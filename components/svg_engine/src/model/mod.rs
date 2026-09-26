@@ -14,6 +14,5 @@ pub mod element;
 pub mod error;
 pub mod geometry;
 pub mod resource;
-pub mod shapes;
 pub mod style;
 pub mod units;

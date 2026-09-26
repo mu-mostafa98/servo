@@ -14,7 +14,7 @@ pub(crate) mod tessellator;
 pub(crate) mod traversal;
 
 use crate::model::resource::ResourceKey;
-use crate::model::shapes::Shape;
+use crate::model::element::shape::Shape;
 use crate::model::style::NodeStyle;
 use crate::model::element::{Container, SvgNode, SvgTag};
 

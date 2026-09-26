@@ -9,7 +9,7 @@ use webrender_api::DisplayListBuilder;
 
 use crate::render::renderer::{Render, RenderContext};
 use crate::render::geometry::{path_data_to_bez, ComplexClip};
-use crate::model::shapes::Path;
+use crate::model::element::shape::Path;
 use crate::model::style::paint_servers::{GradientDef, GradientUnits, SpreadMethod};
 use crate::model::style::{FillParams, FillRule, StrokeParams};
 use crate::{RasterSink, RasterizedImage};
