@@ -496,7 +496,7 @@ classDiagram
         Solid(Color)
         Gradient(Arc~GradientDef~)
         Pattern(Arc~PatternDef~)
-        Ref { id : Id, fallback : Option~Color~ }
+        Ref(Id, Option~Color~)
         ContextFill
         ContextStroke
     }
@@ -589,8 +589,9 @@ classDiagram
     GradientStop *-- Color
 ```
 
-- `PaintServer` mirrors `DefRef`: `Solid`/`Gradient`/`Pattern` are resolved forms, `Ref(id)`
-  is the transient build-time state that the resolve pass rewrites to an `Arc` handle.
+- `PaintServer` mirrors `DefRef`: `Solid`/`Gradient`/`Pattern` are resolved forms, `Ref`
+  (a struct variant with named `id`/`fallback` fields, drawn tuple-style above) is the
+  transient build-time state that the resolve pass rewrites to an `Arc` handle.
   No `Ref` value survives past build. `ContextFill`/`ContextStroke` carry the
   `context-fill`/`context-stroke` keywords through `<marker>`/`<use>` (they render as no
   paint when no context element supplies the value).
@@ -670,7 +671,7 @@ classDiagram
 
     class FeCompositeKind {
         <<enum>>
-        Arithmetic { k1, k2, k3, k4 }
+        Arithmetic(f32, f32, f32, f32)
         Over
         In
         Out
@@ -753,7 +754,9 @@ classDiagram
   newtype (like `GradientLength`) that keeps the unit until the reference box is known at
   render time.
 - `FilterPrimitive` carries typed payloads: `Composite(FeCompositeKind)` (arithmetic or a
-  Porter-Duff operator) and `Image(FeImageKind)` (a `#fragment` or external URL).
+  Porter-Duff operator) and `Image(FeImageKind)` (a `#fragment` or external URL). The
+  `Arithmetic` composite is a struct variant with named `k1`–`k4` coefficients
+  (drawn tuple-style above: `result = k1·i1·i2 + k2·i1 + k3·i2 + k4`).
 
 ---
 
