@@ -14,7 +14,7 @@ use svg_engine::element::{Container, SvgNode, SvgTag};
 use super::{extract_id, font_key_to_resource};
 use crate::context::LayoutContext;
 use crate::svg::primitives::attrs::get_attr;
-use crate::svg::primitives::text::{build_text, build_text_run};
+use crate::svg::primitives::text::{build_text, build_text_run, parse_length_list};
 use crate::svg::style::build_style;
 
 /// Build a [`SvgNode`] for `<text>` or `<tspan>`.
@@ -108,7 +108,15 @@ pub(crate) fn build_text_node(
         // so clear each run's own text-anchor to avoid double-applying it.
         span.text_anchor = TextAnchor::Start;
         // Offset this run by the accumulated vertical shift from preceding runs.
-        span.y += dy_pen;
+        if span.y.is_empty() {
+            // No explicit y — make the accumulated dy the run's origin so the
+            // vertical shift is not lost (matches the old single-value default).
+            span.y.push(dy_pen);
+        } else {
+            for yv in &mut span.y {
+                *yv += dy_pen;
+            }
+        }
         dy_pen += span.dy.iter().sum::<f32>();
         pen += span.total_advance();
         let (run_style, run_transforms) = build_style(run_node, context, css_rules, None);
@@ -154,12 +162,8 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
     // position; a <tspan> may override x/y explicitly. Horizontal flow between
     // runs is handled separately by advance_offset (cumulative advance +
     // anchor shift), so all runs share the same x/y base.
-    let parent_x = get_attr(&parent_elem, "x")
-        .and_then(|s| s.trim_end_matches("px").parse::<f32>().ok())
-        .unwrap_or(0.0);
-    let parent_y = get_attr(&parent_elem, "y")
-        .and_then(|s| s.trim_end_matches("px").parse::<f32>().ok())
-        .unwrap_or(0.0);
+    let parent_x = parse_length_list("x", &|n: &str| get_attr(&parent_elem, n), fs);
+    let parent_y = parse_length_list("y", &|n: &str| get_attr(&parent_elem, n), fs);
     let children: Vec<_> = node.dom_children().collect();
     let mut runs = Vec::new();
     for (i, child) in children.iter().enumerate() {
@@ -170,10 +174,10 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
                     // Inherit the <text>'s baseline/origin for any axis the
                     // <tspan> does not set explicitly.
                     if get_attr(&child_elem, "x").is_none() {
-                        span.x = parent_x;
+                        span.x = parent_x.clone();
                     }
                     if get_attr(&child_elem, "y").is_none() {
-                        span.y = parent_y;
+                        span.y = parent_y.clone();
                     }
                     runs.push((span, *child));
                 }
@@ -258,18 +262,27 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
     // Approximate vertical offset for `dominant-baseline` (relative to the
     // alphabetic baseline at `y`).
     let baseline_shift = match span.dominant_baseline {
-        DominantBaseline::Auto => 0.0,
-        DominantBaseline::Hanging => 0.8 * font_size,
-        // `middle` = alphabetic + x-height/2; `central` = center of the em box
-        // (= (ascent - descent) / 2), which sits a little lower than `middle`.
+        DominantBaseline::Auto | DominantBaseline::Alphabetic => 0.0,
+        // Top of the em box (`text-before-edge` / `hanging`).
+        DominantBaseline::TextBeforeEdge | DominantBaseline::Hanging => 0.8 * font_size,
+        // Bottom of the em box (`text-after-edge` / `ideographic`).
+        DominantBaseline::TextAfterEdge | DominantBaseline::Ideographic => -0.2 * font_size,
+        // `middle` = alphabetic + x-height/2; `central`/`mathematical` = center
+        // of the em box (= (ascent - descent) / 2), a little lower than `middle`.
         DominantBaseline::Middle => 0.35 * font_size,
-        DominantBaseline::Central => 0.45 * font_size,
+        DominantBaseline::Central | DominantBaseline::Mathematical => 0.45 * font_size,
     };
 
     let language: icu_locid::subtags::Language = "und".parse().unwrap();
     let mut glyphs = Vec::with_capacity(span.text.len());
-    let mut pen_x = 0.0f32;
-    let mut pen_y = 0.0f32;
+    // The current text position, tracked in *absolute* coordinates: it starts
+    // at the span origin (`x[0]`/`y[0]`) and each per-character `x[i]`/`y[i]`
+    // resets it (§11.5.2). Glyphs are stored relative to the origin so the
+    // renderer can offset them by `origin_x`/`origin_y` once.
+    let origin_x = span.origin_x();
+    let origin_y = span.origin_y();
+    let mut cur_x = origin_x;
+    let mut cur_y = origin_y;
     let chars: Vec<char> = span.text.chars().collect();
     let mut font_instance_key = None;
 
@@ -283,20 +296,26 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         ) else {
             // No font for this character — fallback. Whitespace is skipped.
             let ch = chars[ci];
-            pen_x += span.dx.get(ci).copied().unwrap_or(0.0);
-            pen_y += span.dy.get(ci).copied().unwrap_or(0.0);
+            if ci < span.x.len() {
+                cur_x = span.x[ci];
+            }
+            if ci < span.y.len() {
+                cur_y = span.y[ci];
+            }
+            cur_x += span.dx.get(ci).copied().unwrap_or(0.0);
+            cur_y += span.dy.get(ci).copied().unwrap_or(0.0);
             let advance = if ch.is_whitespace() { 4.0f32 } else { 8.0f32 };
             if !ch.is_whitespace() {
                 glyphs.push(ShapedGlyph {
-                    x: pen_x,
-                    y: pen_y + baseline_shift,
+                    x: cur_x - origin_x,
+                    y: cur_y - origin_y + baseline_shift,
                     advance,
                     glyph_id: 0,
                     character: ch,
                     font_instance_key: None,
                 });
             }
-            pen_x += advance;
+            cur_x += advance;
             ci += 1;
             continue;
         };
@@ -347,19 +366,25 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         let mut run_char_index = 0;
         for glyph_info in shaped.glyphs() {
             let char_idx = (ci + run_char_index).min(chars.len() - 1);
-            pen_x += span.dx.get(char_idx).copied().unwrap_or(0.0);
-            pen_y += span.dy.get(char_idx).copied().unwrap_or(0.0);
+            if char_idx < span.x.len() {
+                cur_x = span.x[char_idx];
+            }
+            if char_idx < span.y.len() {
+                cur_y = span.y[char_idx];
+            }
+            cur_x += span.dx.get(char_idx).copied().unwrap_or(0.0);
+            cur_y += span.dy.get(char_idx).copied().unwrap_or(0.0);
             let advance = glyph_info.advance().to_f32_px();
 
             glyphs.push(ShapedGlyph {
-                x: pen_x,
-                y: pen_y + baseline_shift,
+                x: cur_x - origin_x,
+                y: cur_y - origin_y + baseline_shift,
                 advance,
                 glyph_id: glyph_info.id() as u32,
                 character: chars[char_idx],
                 font_instance_key: Some(key),
             });
-            pen_x += advance;
+            cur_x += advance;
             run_char_index += glyph_info.character_count().max(1);
         }
 

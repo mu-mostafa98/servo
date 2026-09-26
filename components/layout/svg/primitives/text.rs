@@ -24,8 +24,8 @@ pub(crate) fn build_text(
     get: &dyn Fn(&str) -> Option<String>,
     fs: f32,
 ) -> Option<TextSpan> {
-    let x = parse_length("x", get, fs).unwrap_or(0.0);
-    let y = parse_length("y", get, fs).unwrap_or(0.0);
+    let mut x = parse_length_list("x", get, fs);
+    let mut y = parse_length_list("y", get, fs);
     let mut dx = parse_length_list("dx", get, fs);
     let mut dy = parse_length_list("dy", get, fs);
     let mut rotate = parse_rotate_list(get);
@@ -35,7 +35,7 @@ pub(crate) fn build_text(
     if text.is_empty() {
         return None;
     }
-    let rtl = apply_rtl_direction(&mut text, &mut dx, &mut dy, &mut rotate, get);
+    let rtl = apply_rtl_direction(&mut text, &mut x, &mut y, &mut dx, &mut dy, &mut rotate, get);
     Some(TextSpan {
         text,
         x,
@@ -65,14 +65,16 @@ pub(crate) fn build_text_run(
         return None;
     }
     let mut text = text;
+    let mut x = parse_length_list("x", get, fs);
+    let mut y = parse_length_list("y", get, fs);
     let mut dx = parse_length_list("dx", get, fs);
     let mut dy = parse_length_list("dy", get, fs);
     let mut rotate = parse_rotate_list(get);
-    let rtl = apply_rtl_direction(&mut text, &mut dx, &mut dy, &mut rotate, get);
+    let rtl = apply_rtl_direction(&mut text, &mut x, &mut y, &mut dx, &mut dy, &mut rotate, get);
     Some(TextSpan {
         text,
-        x: parse_length("x", get, fs).unwrap_or(0.0),
-        y: parse_length("y", get, fs).unwrap_or(0.0),
+        x,
+        y,
         dx,
         dy,
         rotate,
@@ -101,20 +103,27 @@ fn parse_dominant_baseline(get: &dyn Fn(&str) -> Option<String>) -> DominantBase
     get("dominant-baseline")
         .as_deref()
         .map(|v| match v.trim() {
+            "text-before-edge" => DominantBaseline::TextBeforeEdge,
+            "text-after-edge" => DominantBaseline::TextAfterEdge,
             "hanging" => DominantBaseline::Hanging,
             "middle" => DominantBaseline::Middle,
             "central" => DominantBaseline::Central,
+            "ideographic" => DominantBaseline::Ideographic,
+            "alphabetic" => DominantBaseline::Alphabetic,
+            "mathematical" => DominantBaseline::Mathematical,
             _ => DominantBaseline::Auto,
         })
         .unwrap_or(DominantBaseline::Auto)
 }
 
-/// If the element is `direction="rtl"`, reverse the per-character offsets (so
-/// they line up with the visual glyph order produced by RTL shaping). The text
-/// itself is left in logical order — the shaper produces the reversed glyph
-/// order for RTL.
+/// If the element is `direction="rtl"`, reverse the per-character position lists
+/// (`x`/`y`/`dx`/`dy`/`rotate`) so they line up with the visual glyph order
+/// produced by RTL shaping. The text itself is left in logical order — the
+/// shaper produces the reversed glyph order for RTL.
 fn apply_rtl_direction(
     _text: &mut String,
+    x: &mut Vec<f32>,
+    y: &mut Vec<f32>,
     dx: &mut Vec<f32>,
     dy: &mut Vec<f32>,
     rotate: &mut Vec<f32>,
@@ -125,6 +134,8 @@ fn apply_rtl_direction(
         .map(|d| d.trim().eq_ignore_ascii_case("rtl"))
         .unwrap_or(false);
     if is_rtl {
+        x.reverse();
+        y.reverse();
         dx.reverse();
         dy.reverse();
         rotate.reverse();
@@ -141,7 +152,7 @@ fn parse_rotate_list(get: &dyn Fn(&str) -> Option<String>) -> Vec<f32> {
 }
 
 /// Parse a space/comma-separated list of lengths from an attribute.
-fn parse_length_list(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Vec<f32> {
+pub(crate) fn parse_length_list(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Vec<f32> {
     let Some(val) = get(name) else { return vec![] };
     val.split(|c: char| c == ',' || c.is_ascii_whitespace())
         .filter_map(|s| {
@@ -155,10 +166,9 @@ fn parse_length_list(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) 
         .collect()
 }
 
-/// Parse a single length value (number or number+unit).
-fn parse_length_simple(val: &str, _fs: f32) -> Option<f32> {
-    let val = val.trim();
-    val.trim_end_matches("px").parse::<f32>().ok()
+/// Parse a single length value (number or number + any SVG/CSS unit).
+fn parse_length_simple(val: &str, fs: f32) -> Option<f32> {
+    crate::svg::primitives::attrs::parse_length_token(val, fs)
 }
 
 /// Extract the **direct** text content of a DOM node — the concatenated
@@ -175,11 +185,4 @@ fn extract_direct_text(node: ServoLayoutNode) -> String {
         }
     }
     text
-}
-
-/// Parse a length value using [`crate::svg::primitives::attrs::parse_length`].
-fn parse_length(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Result<f32, ()> {
-    use crate::svg::primitives::attrs::parse_length;
-
-    parse_length(name, get, fs).map_err(|_| ())
 }

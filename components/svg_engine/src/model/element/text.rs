@@ -33,10 +33,13 @@ pub struct ShapedGlyph {
 pub struct TextSpan {
     /// The text content.
     pub text: String,
-    /// X coordinate of the text anchor point.
-    pub x: f32,
-    /// Y coordinate (baseline position).
-    pub y: f32,
+    /// Per-character absolute X coordinates (SVG `x`, §11.5.2). An empty list
+    /// means "no explicit X": the text flows from the current position. Each
+    /// listed value repositions the current text position for the matching
+    /// character; characters beyond the list keep accumulating normally.
+    pub x: Vec<f32>,
+    /// Per-character absolute Y coordinates (SVG `y`), like [`Self::x`].
+    pub y: Vec<f32>,
     /// Per-character X offsets (SVG `dx` attribute).
     pub dx: Vec<f32>,
     /// Per-character Y offsets (SVG `dy` attribute).
@@ -68,6 +71,16 @@ pub struct TextSpan {
 }
 
 impl TextSpan {
+    /// The span's X origin — the first `x` value, or `0.0` when no explicit X.
+    pub fn origin_x(&self) -> f32 {
+        self.x.first().copied().unwrap_or(0.0)
+    }
+
+    /// The span's Y origin — the first `y` value, or `0.0` when no explicit Y.
+    pub fn origin_y(&self) -> f32 {
+        self.y.first().copied().unwrap_or(0.0)
+    }
+
     /// Total advance width of all glyphs in this span (or estimated text
     /// width when no glyphs are shaped yet).
     pub fn total_advance(&self) -> f32 {
@@ -96,12 +109,22 @@ pub enum DominantBaseline {
     /// Alphabetic baseline (the default).
     #[default]
     Auto,
-    /// Hanging baseline (top of the em box).
+    /// Top of the em box (`text-before-edge`).
+    TextBeforeEdge,
+    /// Bottom of the em box (`text-after-edge`).
+    TextAfterEdge,
+    /// Hanging baseline (top of the em box, for scripts such as Devanagari).
     Hanging,
-    /// Middle of the em box.
+    /// Middle of the x-height (a little above `Central`).
     Middle,
-    /// Central baseline (middle of the em box, similar to `Middle`).
+    /// Center of the em box.
     Central,
+    /// Ideographic baseline (bottom of the ideographic em box).
+    Ideographic,
+    /// Alphabetic baseline (explicit `alphabetic`, same as the default).
+    Alphabetic,
+    /// Mathematical baseline (center of the math em box).
+    Mathematical,
 }
 
 /// Text alignment anchor point.

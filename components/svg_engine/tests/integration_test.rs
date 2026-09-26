@@ -209,8 +209,8 @@ fn shape_enum_all_variants_constructible() {
     // Text and Image are in SvgTag, not Shape
     let _text_tag = SvgTag::Text(TextSpan {
         text: "Hi".into(),
-        x: 10.0,
-        y: 20.0,
+        x: vec![10.0],
+        y: vec![20.0],
         dx: vec![],
         dy: vec![],
         rotate: vec![],
@@ -240,8 +240,8 @@ fn shape_enum_all_variants_constructible() {
 fn text_span_data() {
     let t = TextSpan {
         text: "Hello SVG".into(),
-        x: 10.0,
-        y: 30.0,
+        x: vec![10.0],
+        y: vec![30.0],
         dx: vec![],
         dy: vec![],
         rotate: vec![],
@@ -254,8 +254,8 @@ fn text_span_data() {
         font_size: 16.0,
     };
     assert_eq!(t.text, "Hello SVG");
-    assert_eq!(t.x, 10.0);
-    assert_eq!(t.y, 30.0);
+    assert_eq!(t.x, vec![10.0]);
+    assert_eq!(t.y, vec![30.0]);
     assert_eq!(t.advance_offset, 0.0);
 }
 
@@ -263,8 +263,8 @@ fn text_span_data() {
 fn text_span_with_dx_dy() {
     let t = TextSpan {
         text: "AB".into(),
-        x: 0.0,
-        y: 0.0,
+        x: vec![0.0],
+        y: vec![0.0],
         dx: vec![5.0, 10.0],
         dy: vec![0.0, 3.0],
         rotate: vec![],
@@ -286,8 +286,8 @@ fn text_span_advance_offset_positions_runs() {
     // With no glyphs shaped, total_advance falls back to 8px/char.
     let first = TextSpan {
         text: "Red".into(), // 3 chars → 24px fallback advance
-        x: 10.0,
-        y: 80.0,
+        x: vec![10.0],
+        y: vec![80.0],
         dx: vec![],
         dy: vec![],
         rotate: vec![],
@@ -301,8 +301,8 @@ fn text_span_advance_offset_positions_runs() {
     };
     let second = TextSpan {
         text: " Blue".into(), // 5 chars
-        x: 10.0,
-        y: 80.0,
+        x: vec![10.0],
+        y: vec![80.0],
         dx: vec![],
         dy: vec![],
         rotate: vec![],

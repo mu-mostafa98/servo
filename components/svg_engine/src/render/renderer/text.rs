@@ -109,8 +109,8 @@ impl TextSpan {
         if self.glyphs.is_empty() {
             return;
         }
-        let base_x = ctx.svg_origin.x + self.x + self.advance_offset + anchor_offset;
-        let base_y = ctx.svg_origin.y + self.y;
+        let base_x = ctx.svg_origin.x + self.origin_x() + self.advance_offset + anchor_offset;
+        let base_y = ctx.svg_origin.y + self.origin_y();
 
         let last = self.glyphs.last().unwrap();
         let total_w = last.x + last.advance;
@@ -221,8 +221,8 @@ impl TextSpan {
         _stroke_color: Option<ColorF>,
         fill_color: Option<ColorF>,
     ) {
-        let x = ctx.svg_origin.x + self.x + self.advance_offset + anchor_offset;
-        let y = ctx.svg_origin.y + self.y;
+        let x = ctx.svg_origin.x + self.origin_x() + self.advance_offset + anchor_offset;
+        let y = ctx.svg_origin.y + self.origin_y();
         let gap = 1.0f32;
 
         for (i, _ch) in self.text.chars().enumerate() {

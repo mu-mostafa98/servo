@@ -256,6 +256,15 @@ pub(crate) fn parse_length_value(
     Some(to_px_resolved(len, font_size, percent_reference))
 }
 
+/// Parse a single length token (for list-valued attributes such as text
+/// `x`/`y`/`dx`/`dy`) with the same full unit support as [`parse_length`]: a
+/// `<percentage>` is returned as the raw number (the caller resolves it against
+/// the appropriate reference when it has one).
+pub(crate) fn parse_length_token(value: &str, font_size: f32) -> Option<f32> {
+    let len: SvgLength = value.trim().parse().ok()?;
+    Some(to_px(len, font_size))
+}
+
 /// Parse an SVG `points` attribute value into a list of coordinate pairs.
 ///
 /// Used by both `<polyline>` and `<polygon>`.  Delegates to
