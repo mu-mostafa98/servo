@@ -34,11 +34,13 @@
 pub mod model;
 mod render;
 
+pub use model::coords;
 pub use model::document;
 pub use model::element;
 pub use model::error;
 pub use model::geometry;
 pub use model::resource;
+pub use model::shapes;
 pub use model::style;
 pub use model::units;
 

@@ -14,7 +14,7 @@ use webrender_api::BorderRadius;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
 use crate::model::geometry::{PathCommand, PathData, Point};
-use crate::model::element::shape::{Circle, Ellipse, Path, Polygon, Polyline, Rectangle, Shape};
+use crate::model::shapes::{Circle, Ellipse, Path, Polygon, Polyline, Rectangle, Shape};
 use crate::model::style::FillRule;
 use crate::model::document::ClipPathUnits;
 

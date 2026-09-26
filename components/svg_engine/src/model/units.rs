@@ -5,6 +5,8 @@
 //! Strict scalar newtypes that turn unit and id-vs-url mix-ups into
 //! compile-time errors instead of silent runtime bugs.
 //!
+//! Basic Data Types spec: <https://www.w3.org/TR/SVG2/types.html>
+//!
 //! * [`Opacity`] is a unitless `[0, 1]` value, distinct from a length — so an
 //!   opacity can never be passed where a length is expected, and vice versa.
 //! * [`Id`] is an element id (a fragment identifier without the leading `#`),

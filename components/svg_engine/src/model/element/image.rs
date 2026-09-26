@@ -3,7 +3,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 //! SVG `<image>` element — external image rendering.
-//! Reference: https://svgwg.org/svg2-draft/embedded.html#ImageElement
+//!
+//! Embedded Content spec: <https://www.w3.org/TR/SVG2/embedded.html>
 
 use crate::model::document::viewport::AspectRatio;
 use crate::model::resource::ResourceKey;

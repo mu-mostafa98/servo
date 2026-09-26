@@ -456,9 +456,12 @@ instance.
 ### 9.2 `<use>` security issues
 
 `<use>` can amplify a small document into a huge command stream because each
-`<use>` **copies** the referenced subtree instead of **sharing** it. The planned
-fix is a shared `defs` map (`id` → resolved subtree) that each `<use>` just
-references.
+`<use>` **copies** the referenced subtree instead of **sharing** it. This is
+bounded by two guards in the builder (`ResolveState` in
+`components/layout/svg/builder/resolve.rs`): a `<use>` reference-**depth** limit
+and a total **node budget**. A future optimization (not yet implemented) is a
+shared `defs` map (`id` → resolved subtree) that each `<use>` just references,
+which would remove the per-instance copy rather than merely capping it.
 
 **Known issues**
 
@@ -466,12 +469,15 @@ references.
 |---|-------|---------------------|--------|
 | 1 | Direct self-cycle (infinite recursion) | `<g id="a"><use href="#a"/></g>` | ✅ cycle detection |
 | 2 | Indirect cycle (any length, loops back) | `<g id="l1"><use href="#l2"/></g>`<br>`<g id="l2"><use href="#l3"/></g>`<br>…<br>`<g id="lN"><use href="#l1"/></g>` | ✅ cycle detection |
-| 3 | Deep acyclic chain → stack overflow | `<g id="l0"><rect/></g>`<br>`<g id="l1"><use href="#l0"/></g>`<br>`<g id="l2"><use href="#l1"/></g>`<br>… ×100k | ❌ no guard |
-| 4 | Billion-laughs (exponential fan-out) | `<g id="l0"><rect/></g>`<br>`<g id="l1"><use href="#l0"/><use href="#l0"/></g>`<br>`<g id="l2"><use href="#l1"/><use href="#l1"/></g>`<br>… ×30 levels | ❌ no guard |
-| 5 | Quadratic blow-up | `<g id="l1"><rect/></g>`<br>`<g id="l2"><use href="#l1"/><rect/></g>`<br>`<g id="l3"><use href="#l2"/><rect/></g>`<br>… ×10,000 levels | ❌ no guard |
-| 6 | Command amplification (big-but-legit) | `<symbol id="icon">`<br>… 1000 shapes …<br>`</symbol>`<br>`<use href="#icon" x="0"/>`<br>… ×10,000 | ❌ no guard |
+| 3 | Deep acyclic chain → stack overflow | `<g id="l0"><rect/></g>`<br>`<g id="l1"><use href="#l0"/></g>`<br>`<g id="l2"><use href="#l1"/></g>`<br>… ×100k | ✅ `MAX_USE_DEPTH` (64) |
+| 4 | Billion-laughs (exponential fan-out) | `<g id="l0"><rect/></g>`<br>`<g id="l1"><use href="#l0"/><use href="#l0"/></g>`<br>`<g id="l2"><use href="#l1"/><use href="#l1"/></g>`<br>… ×30 levels | ✅ `MAX_TOTAL_NODES` budget |
+| 5 | Quadratic blow-up | `<g id="l1"><rect/></g>`<br>`<g id="l2"><use href="#l1"/><rect/></g>`<br>`<g id="l3"><use href="#l2"/><rect/></g>`<br>… ×10,000 levels | ✅ `MAX_TOTAL_NODES` budget |
+| 6 | Command amplification (big-but-legit) | `<symbol id="icon">`<br>… 1000 shapes …<br>`</symbol>`<br>`<use href="#icon" x="0"/>`<br>… ×10,000 | ✅ `MAX_TOTAL_NODES` budget |
 
 The `resolving` set is a **DFS path-set**, not a global visited-set: it breaks
 cycles (rows 1–2) but deliberately re-expands sibling references, which is what
-allows rows 4–5 to amplify. Each `<use>` is a full clone, so memory amplifies
-along with time in rows 4–5 and 6.
+allows rows 4–5 to amplify. The `MAX_USE_DEPTH` guard caps reference nesting
+(row 3), and `MAX_TOTAL_NODES` caps the total number of nodes materialized in a
+single build, terminating the amplification in rows 4–6 before memory is
+exhausted. Each `<use>` is still a full clone, so memory amplifies within the
+budget; the shared-`defs` map would remove that copy entirely.

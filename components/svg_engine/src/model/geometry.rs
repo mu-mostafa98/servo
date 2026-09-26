@@ -4,6 +4,8 @@
 
 //! Pure geometry primitives for the SVG data model.
 //!
+//! Paths spec: <https://www.w3.org/TR/SVG2/paths.html>
+//!
 //! Kept free of any external geometry library (`kurbo`, `webrender`, …): the
 //! layout layer produces these from parsed attribute values, and the render
 //! layer converts them into [`kurbo::BezPath`] for rasterization.

@@ -4,16 +4,18 @@
 
 //! SVG elements — every kind of node that can appear in the render tree.
 //!
+//! Document Structure spec (containers, `<use>`, `<switch>`, `<symbol>`):
+//! <https://www.w3.org/TR/SVG2/struct.html>
+//!
 //! This module holds the *element* types (anything written as `<element>` in
 //! SVG): shapes, images, text, and the container/`SvgNode`/`SvgTag` machinery
 //! that ties them into a tree. It is pure data — no WebRender/vello dependency.
 
 pub mod image;
-pub mod shape;
 pub mod text;
 
 pub use self::image::SvgImage;
-pub use self::shape::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
+pub use crate::model::shapes::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
 pub use self::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
 
 use crate::model::document::viewport::SvgViewport;
@@ -67,6 +69,9 @@ pub enum Container {
     Defs,
     /// `<use>` — references another element by its `#id`.
     Use,
+    /// `<switch>` — a conditional container that renders the first child whose
+    /// `requiredExtensions` / `systemLanguage` tests pass (§5.7).
+    Switch,
     /// `<symbol>` — a re-usable viewBox'd container referenced by `<use>`.
     Symbol,
     /// `<text>` — a logical text element whose children are the inline

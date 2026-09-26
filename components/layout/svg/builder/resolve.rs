@@ -22,7 +22,7 @@ use svg_engine::document::{
 };
 use svg_engine::element::{Container, SvgNode, SvgTag};
 use svg_engine::style::NodeStyle;
-use svg_engine::style::gradient::{GradientDef, PaintServer};
+use svg_engine::style::paint_servers::{GradientDef, PaintServer};
 use svg_engine::style::transform::TransformOp;
 use svg_engine::units::Length;
 use web_atoms::ns;
@@ -30,6 +30,36 @@ use web_atoms::ns;
 use super::SvgTreeBuilder;
 use crate::svg::primitives::attrs::{get_attr, parse_length_value};
 use crate::svg::primitives::viewport::{extract_viewbox, parse_aspect_ratio};
+
+/// Mutable expansion state threaded through the recursive tree build.
+///
+/// Guards against pathological `<use>` graphs (§5.6) — deep acyclic chains
+/// (stack overflow), exponential "billion laughs" fan-out, quadratic blow-up,
+/// and command amplification — by bounding reference-nesting depth and total
+/// node output (see README §9.2, issues #3–#6).
+#[derive(Default)]
+pub(crate) struct ResolveState {
+    /// DFS path-set: ids currently being resolved, to detect reference cycles.
+    pub(crate) resolving: HashSet<String>,
+    /// Current `<use>` reference-nesting depth — a guard against a deep acyclic
+    /// chain of distinct references (which the cycle guard never trips on).
+    pub(crate) use_depth: usize,
+    /// Build-work budget consumed so far — a generous global cap on the total
+    /// number of nodes materialized, which bounds exponential fan-out and other
+    /// output amplification.
+    pub(crate) nodes: usize,
+}
+
+/// Maximum nested `<use>` reference depth before expansion is cut off. Deeper
+/// chains are pathological; legitimate content rarely nests `<use>` beyond a
+/// handful of levels.
+pub(crate) const MAX_USE_DEPTH: usize = 64;
+
+/// Maximum total render nodes materialized per build. Chosen high enough that
+/// legitimate documents are unaffected (real-world SVGs number in the
+/// thousands of elements), but low enough to terminate exponential `<use>`
+/// blow-up well before memory is exhausted.
+pub(crate) const MAX_TOTAL_NODES: usize = 1_000_000;
 
 // ======================= Children Resolution =======================
 
@@ -41,14 +71,18 @@ pub(crate) fn resolve_children<'dom>(
     tag: &SvgTag,
     root_node: ServoLayoutNode<'dom>,
     builder: &SvgTreeBuilder<'dom, '_>,
-    resolving: &mut HashSet<String>,
+    state: &mut ResolveState,
     node_style: &NodeStyle,
     in_shadow: bool,
     vw: f32,
     vh: f32,
 ) -> Vec<SvgNode> {
     if let SvgTag::Container(Container::Use) = tag {
-        resolve_use_children(node, root_node, builder, resolving, node_style, vw, vh)
+        resolve_use_children(node, root_node, builder, state, node_style, vw, vh)
+    } else if let SvgTag::Container(Container::Switch) = tag {
+        resolve_switch_children(
+            node, root_node, builder, state, node_style, in_shadow, vw, vh,
+        )
     } else {
         // Manual inheritance only applies inside a `<use>` shadow tree; for
         // normal content Stylo already resolves inherited properties along the
@@ -59,20 +93,60 @@ pub(crate) fn resolve_children<'dom>(
             None
         };
         node.dom_children()
-            .filter_map(|child| builder.build_render_node(child, root_node, resolving, child_inherited, vw, vh))
+            .filter_map(|child| builder.build_render_node(child, root_node, state, child_inherited, vw, vh))
             .collect()
     }
 }
 
-/// Resolve children for a `<use>` element.
+/// Resolve children for a `<switch>` element (§5.7.2).
 ///
-/// Looks up the referenced element by its `#id`, builds its render node,
-/// clones it as a child, and applies x/y translation if specified.
+/// A `<switch>` renders the first of its children for which all conditional
+/// processing attributes test true. Since a child whose tests fail is already
+/// rejected by [`SvgTreeBuilder::build_render_node`] (returning `None`), this
+/// simply builds children in document order and keeps the first one that
+/// produces a render node. The `display`/`visibility` properties of the
+/// children are ignored for selection (§5.7.3).
+fn resolve_switch_children<'dom>(
+    node: ServoLayoutNode<'dom>,
+    root_node: ServoLayoutNode<'dom>,
+    builder: &SvgTreeBuilder<'dom, '_>,
+    state: &mut ResolveState,
+    node_style: &NodeStyle,
+    in_shadow: bool,
+    vw: f32,
+    vh: f32,
+) -> Vec<SvgNode> {
+    // Manual inheritance only applies inside a `<use>` shadow tree; otherwise
+    // Stylo already resolved inherited properties along the real DOM ancestry.
+    let child_inherited = if in_shadow {
+        Some(node_style)
+    } else {
+        None
+    };
+    for child in node.dom_children() {
+        if let Some(built) =
+            builder.build_render_node(child, root_node, state, child_inherited, vw, vh)
+        {
+            return vec![built];
+        }
+    }
+    vec![]
+}
+
+/// Resolve children for a `<use>` element (§5.6).
+///
+/// Looks up the referenced element by its `#id`, builds its render node, and
+/// clones it as a child. The `<use>` element's `x`/`y` translate the
+/// instantiated content; for a referenced `<symbol>` or nested `<svg>`, the
+/// `<use>` element's `width`/`height` (and, for `<symbol>`, also `x`/`y`)
+/// override the referenced element's viewport geometry (§5.6.2). A negative
+/// `width` or `height` is an error and a value of zero disables rendering
+/// (§5.6.3).
 fn resolve_use_children<'dom>(
     node: ServoLayoutNode<'dom>,
     root_node: ServoLayoutNode<'dom>,
     builder: &SvgTreeBuilder<'dom, '_>,
-    resolving: &mut HashSet<String>,
+    state: &mut ResolveState,
     use_style: &NodeStyle,
     vw: f32,
     vh: f32,
@@ -93,27 +167,50 @@ fn resolve_use_children<'dom>(
         });
 
     let Some(ref_id) = ref_id else { return vec![] };
-    if resolving.contains(&ref_id) {
+    if state.resolving.contains(&ref_id) {
         return vec![];
     }
-    resolving.insert(ref_id.clone());
 
-    // Parse x/y offset — percentages resolve against the current viewport
-    // (x against width, y against height).
+    // Parse `x`/`y`/`width`/`height` — percentages resolve against the current
+    // viewport (`x`/`width` against width, `y`/`height` against height).
     let parse_coord = |attr: &str, reference: f32| -> Option<f32> {
         element
             .attribute_as_str(&ns!(), &LocalName::from(attr))
             .and_then(|v| parse_length_value(v, 16.0, reference))
     };
-    let offset = (parse_coord("x", vw), parse_coord("y", vh));
+    let use_x = parse_coord("x", vw);
+    let use_y = parse_coord("y", vh);
+    let use_width = parse_coord("width", vw);
+    let use_height = parse_coord("height", vh);
+
+    // §5.6.3: a negative `width`/`height` on `<use>` is an error (render
+    // nothing); a value of zero disables rendering of the instantiated content.
+    if use_width.is_some_and(|w| w < 0.0) || use_height.is_some_and(|h| h < 0.0) {
+        return vec![];
+    }
+    if use_width.is_some_and(|w| w == 0.0) || use_height.is_some_and(|h| h == 0.0) {
+        return vec![];
+    }
+
+    // §5.6: bound `<use>` expansion. A deep acyclic chain — where each reference
+    // is a distinct id, so the cycle guard above never trips — would otherwise
+    // overflow the stack (README §9.2, issue #3).
+    if state.use_depth >= MAX_USE_DEPTH {
+        return vec![];
+    }
+    state.use_depth += 1;
+
+    state.resolving.insert(ref_id.clone());
+
+    let offset = (use_x, use_y);
 
     // Build target and clone with optional translation.
     let target = builder.element_ids.get(&ref_id).copied();
     let target_element = target.as_ref().and_then(|n| n.as_element());
 
     // The referenced element's viewport attributes, used when the target is a
-    // <symbol> whose viewBox maps its internal coordinates onto the viewport
-    // declared by the <use> (falling back to the symbol's own width/height).
+    // `<symbol>` or nested `<svg>` whose viewport geometry the `<use>` may
+    // override (§5.6.2).
     let parse_len = |e: &ServoLayoutElement, name: &str, reference: f32| -> Option<f32> {
         get_attr(e, name).and_then(|s| parse_length_value(&s, 16.0, reference))
     };
@@ -125,13 +222,15 @@ fn resolve_use_children<'dom>(
         .and_then(|e| get_attr(&e, "preserveAspectRatio"))
         .as_deref()
         .map(parse_aspect_ratio);
+    let sym_x = target_element.and_then(|e| parse_len(&e, "x", vw));
+    let sym_y = target_element.and_then(|e| parse_len(&e, "y", vh));
     let sym_width = target_element.and_then(|e| parse_len(&e, "width", vw));
     let sym_height = target_element.and_then(|e| parse_len(&e, "height", vh));
 
     let result = target
-        .and_then(|t| builder.build_render_node(t, root_node, resolving, Some(use_style), vw, vh))
+        .and_then(|t| builder.build_render_node(t, root_node, state, Some(use_style), vw, vh))
         .map(|target_node| {
-            // Shared helper: apply <use> x/y offset as a translate transform.
+            // Shared helper: apply `<use>` x/y offset as a translate transform.
             let apply_offset = |node: &mut SvgNode| {
                 if let (Some(dx), Some(dy)) = offset {
                     if dx != 0.0 || dy != 0.0 {
@@ -141,25 +240,41 @@ fn resolve_use_children<'dom>(
                 }
             };
 
-            // <symbol> is never rendered directly. When it carries a viewBox,
-            // wrap its children in a viewport-carrying group so the traversal
-            // maps the symbol's coordinates onto the <use> viewport (the same
-            // viewBox → viewport machinery used for nested <svg> elements).
-            if let SvgTag::Container(Container::Symbol) = &target_node.tag {
-                if let Some(vb) = sym_view_box {
-                    let width = parse_coord("width", vw).or(sym_width).unwrap_or(vb.width.get());
-                    let height = parse_coord("height", vh).or(sym_height).unwrap_or(vb.height.get());
+            let is_symbol = matches!(&target_node.tag, SvgTag::Container(Container::Symbol));
+            let is_svg = matches!(&target_node.tag, SvgTag::Container(Container::Svg));
+
+            // `<symbol>` is never rendered directly. When referenced by `<use>`
+            // it establishes a viewport (like a nested `<svg>`) from its own
+            // `viewBox` / `x` / `y` / `width` / `height`, with the `<use>`
+            // element's attributes taking precedence (§5.5, §5.6.2).
+            if is_symbol {
+                let has_geometry = sym_view_box.is_some()
+                    || sym_x.is_some()
+                    || sym_y.is_some()
+                    || sym_width.is_some()
+                    || sym_height.is_some()
+                    || use_width.is_some()
+                    || use_height.is_some();
+                if has_geometry {
+                    let width = use_width
+                        .or(sym_width)
+                        .or_else(|| sym_view_box.map(|vb| vb.width.get()))
+                        .unwrap_or(vw);
+                    let height = use_height
+                        .or(sym_height)
+                        .or_else(|| sym_view_box.map(|vb| vb.height.get()))
+                        .unwrap_or(vh);
                     let wrapper = SvgNode {
                         id: target_node.id,
                         tag: SvgTag::Container(Container::Group),
                         style: target_node.style,
                         transforms: Vec::new(),
                         viewport: Some(SvgViewport {
-                            x: Length::new(offset.0.unwrap_or(0.0)),
-                            y: Length::new(offset.1.unwrap_or(0.0)),
+                            x: Length::new(use_x.or(sym_x).unwrap_or(0.0)),
+                            y: Length::new(use_y.or(sym_y).unwrap_or(0.0)),
                             width: Length::new(width),
                             height: Length::new(height),
-                            view_box: Some(vb),
+                            view_box: sym_view_box,
                             aspect_ratio: sym_aspect_ratio,
                             overflow_visible: false,
                         }),
@@ -168,7 +283,8 @@ fn resolve_use_children<'dom>(
                     return vec![wrapper];
                 }
 
-                // No viewBox — unwrap the children with the x/y offset applied.
+                // No viewBox and no geometry — unwrap the children with the
+                // x/y offset applied.
                 let mut children = target_node.children;
                 for child in &mut children {
                     apply_offset(child);
@@ -177,12 +293,25 @@ fn resolve_use_children<'dom>(
             }
 
             let mut cloned = target_node;
+            // §5.6.2: for a referenced nested `<svg>`, the `<use>` element's
+            // `width`/`height` override the `<svg>` element's.
+            if is_svg {
+                if let Some(vp) = cloned.viewport.as_mut() {
+                    if let Some(w) = use_width {
+                        vp.width = Length::new(w);
+                    }
+                    if let Some(h) = use_height {
+                        vp.height = Length::new(h);
+                    }
+                }
+            }
             apply_offset(&mut cloned);
             vec![cloned]
         })
         .unwrap_or_default();
 
-    resolving.remove(&ref_id);
+    state.use_depth -= 1;
+    state.resolving.remove(&ref_id);
     result
 }
 

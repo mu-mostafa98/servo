@@ -24,7 +24,7 @@ use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
 use crate::model::element::SvgNode;
 use crate::render::renderer::gradient::{color_at_t_with_spread, gradient_projection};
 use crate::render::renderer::{Render, RenderContext, clip_chain_option, shape_rendering_value};
-use crate::model::style::gradient::{GradientStop, SpreadMethod};
+use crate::model::style::paint_servers::{GradientStop, SpreadMethod};
 use crate::model::style::ColorInterpolation;
 use crate::model::style::FillRule;
 

@@ -28,6 +28,126 @@ pub(crate) fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<Strin
         .map(|s| s.to_string())
 }
 
+/// Evaluate SVG 2 conditional-processing attributes (§5.7).
+///
+/// `requiredExtensions`, `systemLanguage`, and `requiredFeatures` each act as
+/// a render test:
+/// - **absent** → the test passes;
+/// - **present, even empty** → the test fails (an empty value explicitly
+///   evaluates to false).
+///
+/// For `requiredExtensions`/`systemLanguage` a *non-empty* value also fails,
+/// because this engine supports no extension URLs and has no user-language
+/// preference to match. For the deprecated `requiredFeatures` (§5.7.5) a
+/// non-empty value passes only when every listed feature string is one the
+/// engine supports (the base static SVG feature set).
+///
+/// The element renders only when *all three* tests pass.
+pub(crate) fn conditional_processing_passes(element: &ServoLayoutElement) -> bool {
+    required_extensions_pass(element)
+        && system_language_pass(element)
+        && required_features_pass(element)
+}
+
+/// `requiredExtensions` test (§5.7.3): absent passes; present (even empty)
+/// fails — this engine supports no extension URLs.
+fn required_extensions_pass(element: &ServoLayoutElement) -> bool {
+    element
+        .attribute_as_str(&ns!(), &LocalName::from("requiredExtensions"))
+        .is_none()
+}
+
+/// `systemLanguage` test (§5.7.4): absent passes; present (even empty) fails —
+/// this engine has no user-language preference to match.
+fn system_language_pass(element: &ServoLayoutElement) -> bool {
+    element
+        .attribute_as_str(&ns!(), &LocalName::from("systemLanguage"))
+        .is_none()
+}
+
+/// `requiredFeatures` test (§5.7.5): absent passes; empty fails; non-empty
+/// passes only if every listed feature string is supported.
+fn required_features_pass(element: &ServoLayoutElement) -> bool {
+    let Some(value) = element.attribute_as_str(&ns!(), &LocalName::from("requiredFeatures"))
+    else {
+        return true;
+    };
+    let tokens: Vec<&str> = value.split_whitespace().collect();
+    !tokens.is_empty() && tokens.iter().all(|f| SUPPORTED_FEATURES.contains(f))
+}
+
+/// Feature strings this engine supports, for the deprecated `requiredFeatures`
+/// test (§5.7.5). The engine implements the base static SVG feature set, so it
+/// matches the corresponding feature strings of both SVG 2 and SVG 1.1 (the
+/// still-widely-deployed form).
+const SUPPORTED_FEATURES: &[&str] = &[
+    "http://www.w3.org/TR/SVG2/feature#SVG",
+    "http://www.w3.org/TR/SVG2/feature#CoreAttribute",
+    "http://www.w3.org/TR/SVG2/feature#BasicStructure",
+    "http://www.w3.org/TR/SVG2/feature#Shape",
+    "http://www.w3.org/TR/SVG2/feature#Text",
+    "http://www.w3.org/TR/SVG2/feature#Image",
+    "http://www.w3.org/TR/SVG2/feature#Gradient",
+    "http://www.w3.org/TR/SVG2/feature#Pattern",
+    "http://www.w3.org/TR/SVG2/feature#Marker",
+    "http://www.w3.org/TR/SVG2/feature#Clip",
+    "http://www.w3.org/TR/SVG2/feature#Mask",
+    "http://www.w3.org/TR/SVG2/feature#Filter",
+    "http://www.w3.org/TR/SVG11/feature#SVG",
+    "http://www.w3.org/TR/SVG11/feature#SVG-static",
+    "http://www.w3.org/TR/SVG11/feature#CoreAttribute",
+    "http://www.w3.org/TR/SVG11/feature#BasicStructure",
+    "http://www.w3.org/TR/SVG11/feature#Shape",
+    "http://www.w3.org/TR/SVG11/feature#Text",
+    "http://www.w3.org/TR/SVG11/feature#Image",
+    "http://www.w3.org/TR/SVG11/feature#Gradient",
+    "http://www.w3.org/TR/SVG11/feature#Pattern",
+    "http://www.w3.org/TR/SVG11/feature#Marker",
+    "http://www.w3.org/TR/SVG11/feature#Clip",
+    "http://www.w3.org/TR/SVG11/feature#Mask",
+    "http://www.w3.org/TR/SVG11/feature#Filter",
+];
+
+/// `true` when `tag` is an SVG-namespace element that is neither a known
+/// renderable element nor a known non-rendering element — i.e. an *unknown*
+/// element, which §5.3 says must be treated as a `<g>` (children render, styles
+/// inherit). Elements in other namespaces are excluded (they must not render).
+pub(crate) fn is_unknown_svg_element(element: &ServoLayoutElement, tag: &str) -> bool {
+    element.is_svg_element() && !is_non_rendering_svg_element(tag)
+}
+
+/// Known SVG element local names that must never be rendered directly (§5.3).
+///
+/// These are definition/metadata/style/effect/animation/media/font elements —
+/// content that only takes effect when *referenced* (`<defs>`, paint servers,
+/// clip paths, markers, …) or that is structurally non-graphical. Anything in
+/// the SVG namespace that is *not* listed here and *not* a known renderable
+/// element is an unknown element and renders as a `<g>`.
+fn is_non_rendering_svg_element(tag: &str) -> bool {
+    matches!(
+        tag,
+        // Document metadata / scripting.
+        "title" | "desc" | "metadata" | "style" | "script"
+        // Paint servers.
+        | "linearGradient" | "radialGradient" | "pattern" | "solidColor" | "hatch"
+        | "meshgradient" | "meshrow" | "meshpatch" | "stop"
+        // Effects / reusable definitions.
+        | "clipPath" | "mask" | "filter" | "marker"
+        // Animation.
+        | "animate" | "animateColor" | "animateMotion" | "animateTransform" | "set"
+        | "discard" | "mpath"
+        // Embedded / foreign media.
+        | "audio" | "video" | "foreignObject"
+        // Font machinery and text-structural references.
+        | "font" | "font-face" | "glyph" | "missing-glyph" | "hkern" | "vkern"
+        | "font-face-src" | "font-face-uri" | "font-face-format" | "font-face-name"
+        | "altGlyph" | "altGlyphDef" | "altGlyphItem" | "glyphRef"
+        | "textPath" | "tref"
+        // Misc.
+        | "view" | "cursor" | "color-profile"
+    )
+}
+
 /// Extract the fragment from a `url(#fragment)` CSS/SVG URL value.
 pub(crate) fn extract_url_fragment(value: &str) -> Option<String> {
     let trimmed = value.trim();

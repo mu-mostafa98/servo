@@ -65,8 +65,9 @@ pub(crate) fn apply_transform_op(
             }
         },
         TransformOp::SkewX(angle_deg) => {
-            // FIXME: SVG viewport clip breaks reference frames for skew/rotate/matrix.
-            // Falls through to use get_attr fallback for now.
+            // skewX(a): x' = x + tan(a)·y, y' = y. Applied as a reference frame,
+            // exactly like `Scale`/`Rotate`/`Matrix` (no coordinate-space
+            // fallback is needed).
             let radians = angle_deg.to_radians();
             let tan_a = radians.tan();
             let xform: Transform2D<f32, (), ()> = Transform2D::new(1.0, 0.0, tan_a, 1.0, 0.0, 0.0);

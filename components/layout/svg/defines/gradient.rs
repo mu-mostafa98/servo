@@ -11,7 +11,7 @@ use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
 use svg_engine::error::{SvgEngineError, SvgResult};
-use svg_engine::style::gradient::{
+use svg_engine::style::paint_servers::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     RadialGradient, SpreadMethod,
 };

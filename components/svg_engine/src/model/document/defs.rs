@@ -4,6 +4,12 @@
 
 //! SVG definitions collected from `<defs>` — clip paths, masks, filters,
 //! patterns, and markers — plus the [`DefRef`] indirection used to resolve them.
+//!
+//! The `<defs>` container itself: <https://www.w3.org/TR/SVG2/struct.html>.
+//! Contained definitions map to their own specs: clip paths and masks
+//! (<https://www.w3.org/TR/css-masking-1/>), filters
+//! (<https://www.w3.org/TR/filter-effects-1/>), and patterns
+//! (<https://www.w3.org/TR/SVG2/pservers.html>).
 
 use std::sync::Arc;
 

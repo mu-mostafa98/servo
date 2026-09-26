@@ -4,6 +4,8 @@
 
 //! The SVG document: the root [`SvgTree`], its viewport, and the definitions
 //! (`<defs>`) collected from the source document.
+//!
+//! Document Structure spec: <https://www.w3.org/TR/SVG2/struct.html>
 
 pub mod defs;
 pub mod viewport;
@@ -19,7 +21,7 @@ use std::collections::HashMap;
 use std::sync::Arc;
 
 use crate::model::element::{SvgNode, SvgTreeVisitor, SvgTreeVisitorMut};
-use crate::model::style::gradient::GradientDef;
+use crate::model::style::paint_servers::GradientDef;
 
 /// The SVG render tree — a tree of [`SvgNode`]s plus viewport info
 /// and gradient/clip-path/pattern/mask/filter definitions collected from `<defs>`.

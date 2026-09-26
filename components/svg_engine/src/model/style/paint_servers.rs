@@ -2,24 +2,58 @@
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
-//! SVG gradient data types.
+//! SVG paint servers — solid colors, gradients, and patterns.
 //!
-//! These types store parsed gradient definitions collected from `<defs>`.
+//! Paint Servers spec: <https://www.w3.org/TR/SVG2/pservers.html>
+//!
+//! Holds the paint-server half of `fill`/`stroke`: the [`PaintServer`]
+//! abstraction (solid color, gradient, pattern, `url(#id)` reference,
+//! `context-fill`/`context-stroke`) plus the gradient definitions collected
+//! from `<defs>`. Patterns themselves live in [`crate::model::document`]
+//! (`PatternDef`); gradients live here.
+//!
 //! The actual rendering converts gradients into multiple `push_rect` calls
 //! with interpolated colors (software gradient rendering).
 //!
 //! **No WebRender dependency** — pure SVG data types via `svgtypes::Color`.
 //! Parsing and `href` resolution live in the layout layer
-//! (`components/layout/svg/defines.rs`).
+//! (`components/layout/svg/defines`).
+
+use std::sync::Arc;
 
 use svgtypes::Color as SvgColor;
 
 use super::transform::TransformOp;
+use crate::model::document::PatternDef;
+use crate::model::units::Id;
 
-// `PaintServer` is the paint abstraction shared by fill and stroke, so its
-// canonical home is `style::paint`. It is re-exported here for backward
-// compatibility with the `svg_engine::style::gradient::PaintServer` path.
-pub use super::paint::PaintServer;
+/// A paint server reference — a solid color, a gradient, a pattern, a
+/// `url(#id)` reference, or a `context-fill`/`context-stroke` keyword.
+///
+/// [`PaintServer::Ref`] is a transient build-time state: the layout layer emits
+/// it while only the string `url(#id)` is known, then the resolve pass rewrites
+/// it into a typed [`PaintServer::Gradient`]/[`PaintServer::Pattern`] `Arc`
+/// handle (or its fallback color) once the definition maps are collected. No
+/// `Ref` value survives past build time.
+#[derive(Debug, Clone)]
+pub enum PaintServer {
+    /// Solid color fill/stroke.
+    Solid(SvgColor),
+    /// A resolved gradient definition (`url(#myGrad)`).
+    Gradient(Arc<GradientDef>),
+    /// A resolved pattern definition (`url(#myPattern)`).
+    Pattern(Arc<PatternDef>),
+    /// Transient `url(#id)` reference, with an optional fallback color used if
+    /// the reference cannot be resolved. `fallback: None` means "no paint" for
+    /// a broken reference (SVG 2 behavior).
+    Ref { id: Id, fallback: Option<SvgColor> },
+    /// `context-fill`: inherit the fill paint from the referencing element's
+    /// context (used by `<marker>`/`<use>`). Renders as no paint when there is
+    /// no context element providing the value.
+    ContextFill,
+    /// `context-stroke`: like [`PaintServer::ContextFill`], but for the stroke.
+    ContextStroke,
+}
 
 /// Definitions collected from `<defs>` during render tree construction.
 #[derive(Debug, Clone)]

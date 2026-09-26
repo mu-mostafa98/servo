@@ -9,7 +9,7 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
 use crate::render::renderer::{Render, RenderContext, fill, paint_order_stroke_before_fill, stroke};
 use crate::render::renderer::path::rasterize_bez;
-use crate::model::element::shape::Polyline;
+use crate::model::shapes::Polyline;
 use crate::model::style::FillRule;
 
 /// Renders an SVG `<polyline>`.

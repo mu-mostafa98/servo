@@ -9,8 +9,8 @@ use webrender_api::DisplayListBuilder;
 
 use crate::render::renderer::{Render, RenderContext};
 use crate::render::geometry::{path_data_to_bez, ComplexClip};
-use crate::model::element::shape::Path;
-use crate::model::style::gradient::{GradientDef, GradientUnits, SpreadMethod};
+use crate::model::shapes::Path;
+use crate::model::style::paint_servers::{GradientDef, GradientUnits, SpreadMethod};
 use crate::model::style::{FillParams, FillRule, StrokeParams};
 use crate::{RasterSink, RasterizedImage};
 
@@ -424,7 +424,7 @@ pub(crate) fn resolve_fill_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
 ) -> Option<ResolvedPaint> {
-    if let Some(crate::model::style::gradient::PaintServer::Gradient(def)) = &fill.paint_server {
+    if let Some(crate::model::style::paint_servers::PaintServer::Gradient(def)) = &fill.paint_server {
         return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
             def.as_ref(),
             w,
@@ -433,7 +433,7 @@ pub(crate) fn resolve_fill_paint(
             bbox,
         )));
     }
-    if let Some(crate::model::style::gradient::PaintServer::Solid(color)) = &fill.paint_server {
+    if let Some(crate::model::style::paint_servers::PaintServer::Solid(color)) = &fill.paint_server {
         return Some(ResolvedPaint::Solid(vello_color(color, fill.opacity.get() * node_opacity)));
     }
     None
@@ -448,7 +448,7 @@ fn resolve_stroke_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
 ) -> Option<ResolvedPaint> {
-    if let Some(crate::model::style::gradient::PaintServer::Gradient(def)) = &stroke.paint_server {
+    if let Some(crate::model::style::paint_servers::PaintServer::Gradient(def)) = &stroke.paint_server {
         return Some(ResolvedPaint::Gradient(gradient_def_to_peniko(
             def.as_ref(),
             w,
@@ -457,7 +457,7 @@ fn resolve_stroke_paint(
             bbox,
         )));
     }
-    if let Some(crate::model::style::gradient::PaintServer::Solid(color)) = &stroke.paint_server {
+    if let Some(crate::model::style::paint_servers::PaintServer::Solid(color)) = &stroke.paint_server {
         return Some(ResolvedPaint::Solid(vello_color(color, stroke.opacity.get() * node_opacity)));
     }
     None
@@ -479,7 +479,7 @@ fn gradient_def_to_peniko(
 
 /// Convert a linear gradient to a [`Gradient`] in pixmap-local coordinates.
 fn linear_to_peniko(
-    lg: &crate::model::style::gradient::LinearGradient,
+    lg: &crate::model::style::paint_servers::LinearGradient,
     w: f32,
     h: f32,
     viewbox_scale: (f32, f32),
@@ -510,7 +510,7 @@ fn linear_to_peniko(
 
 /// Convert a radial gradient to a [`Gradient`] in pixmap-local coordinates.
 fn radial_to_peniko(
-    rg: &crate::model::style::gradient::RadialGradient,
+    rg: &crate::model::style::paint_servers::RadialGradient,
     w: f32,
     h: f32,
     viewbox_scale: (f32, f32),
@@ -547,7 +547,7 @@ fn radial_to_peniko(
 }
 
 /// Convert svg-text gradient stops to peniko [`ColorStops`].
-fn stops_to_colorstops(stops: &[crate::model::style::gradient::GradientStop]) -> ColorStops {
+fn stops_to_colorstops(stops: &[crate::model::style::paint_servers::GradientStop]) -> ColorStops {
     let items: Vec<ColorStop> = stops
         .iter()
         .map(|s| ColorStop {

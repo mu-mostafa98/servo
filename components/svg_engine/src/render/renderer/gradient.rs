@@ -14,7 +14,7 @@ use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
 
 use crate::render::renderer::{RenderContext, ZERO_LENGTH_EPSILON, shape_rendering_value, to_colorf};
-use crate::model::style::gradient::{GradientDef, GradientStop, GradientUnits, SpreadMethod};
+use crate::model::style::paint_servers::{GradientDef, GradientStop, GradientUnits, SpreadMethod};
 use crate::model::style::{ColorInterpolation, ColorRendering};
 use crate::model::style::transform::TransformOp;
 
@@ -418,14 +418,14 @@ fn stops_to_webrender(
     }
 }
 
-/// Whether two [`crate::model::style::gradient::GradientLength`]s denote the same
+/// Whether two [`crate::model::style::paint_servers::GradientLength`]s denote the same
 /// position in gradient space. `Number` and `Percentage` are distinct units, so
 /// a mixed pair conservatively reports inequality (fallback).
 fn gradient_lengths_equal(
-    a: crate::model::style::gradient::GradientLength,
-    b: crate::model::style::gradient::GradientLength,
+    a: crate::model::style::paint_servers::GradientLength,
+    b: crate::model::style::paint_servers::GradientLength,
 ) -> bool {
-    use crate::model::style::gradient::GradientLength;
+    use crate::model::style::paint_servers::GradientLength;
     match (a, b) {
         (GradientLength::Number(x), GradientLength::Number(y)) => (x - y).abs() < 1e-6,
         (GradientLength::Percentage(x), GradientLength::Percentage(y)) => (x - y).abs() < 1e-6,
@@ -436,7 +436,7 @@ fn gradient_lengths_equal(
 /// Resolve a linear gradient's endpoints to absolute layout coordinates,
 /// applying `gradientTransform` in gradient coordinate space.
 fn resolve_linear_geometry(
-    lg: &crate::model::style::gradient::LinearGradient,
+    lg: &crate::model::style::paint_servers::LinearGradient,
     bounds: LayoutRect,
     ctx: &RenderContext,
 ) -> (LayoutPoint, LayoutPoint) {
@@ -477,7 +477,7 @@ fn resolve_linear_geometry(
 /// absolute layout coordinates, applying `gradientTransform`. Returns `None`
 /// for a non-positive radius.
 fn resolve_radial_center_radius(
-    rg: &crate::model::style::gradient::RadialGradient,
+    rg: &crate::model::style::paint_servers::RadialGradient,
     bounds: LayoutRect,
     ctx: &RenderContext,
 ) -> Option<(LayoutPoint, LayoutSize)> {
@@ -536,7 +536,7 @@ fn resolve_radial_center_radius(
 /// Resolve a radial gradient's focal point (`fx`, `fy`) to absolute layout
 /// coordinates, applying `gradientTransform` like [`resolve_radial_center_radius`].
 fn resolve_radial_focal(
-    rg: &crate::model::style::gradient::RadialGradient,
+    rg: &crate::model::style::paint_servers::RadialGradient,
     bounds: LayoutRect,
     ctx: &RenderContext,
 ) -> LayoutPoint {
@@ -606,7 +606,7 @@ pub(crate) fn resolve_gradient(
 /// Push a native linear gradient, returning `false` when it can't be expressed
 /// natively (caller falls back to the software renderer).
 fn push_linear_native(
-    lg: &crate::model::style::gradient::LinearGradient,
+    lg: &crate::model::style::paint_servers::LinearGradient,
     bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
@@ -641,7 +641,7 @@ fn push_linear_native(
 /// Push a native radial gradient, returning `false` when it can't be expressed
 /// natively (caller falls back to the software renderer).
 fn push_radial_native(
-    rg: &crate::model::style::gradient::RadialGradient,
+    rg: &crate::model::style::paint_servers::RadialGradient,
     bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
@@ -682,7 +682,7 @@ fn push_radial_native(
 /// Render a linear gradient.
 /// gradientTransform is applied in gradient coordinate space (normed bbox or user space).
 fn render_linear(
-    lg: &crate::model::style::gradient::LinearGradient,
+    lg: &crate::model::style::paint_servers::LinearGradient,
     bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,
@@ -706,7 +706,7 @@ fn render_linear(
 
 /// Render a radial gradient.
 fn render_radial(
-    rg: &crate::model::style::gradient::RadialGradient,
+    rg: &crate::model::style::paint_servers::RadialGradient,
     bounds: LayoutRect,
     ctx: &mut RenderContext,
     opacity: f32,

@@ -14,7 +14,7 @@
 //! - [`resolve`] — child/`<use>` resolution and reference resolution.
 //! - [`text`] — `<text>`/`<tspan>` node assembly and font shaping.
 
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::sync::Arc;
 
 use html5ever::{LocalName, local_name};
@@ -23,7 +23,7 @@ use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::document::*;
 use svg_engine::element::*;
 use svg_engine::style::NodeStyle;
-use svg_engine::style::gradient::GradientDef;
+use svg_engine::style::paint_servers::GradientDef;
 use svg_engine::units::Id;
 use svg_engine::resource::ResourceKey;
 use web_atoms::ns;
@@ -33,7 +33,7 @@ use crate::svg::defines::{
     ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MarkerParser, MaskParser,
     PatternParser, resolve_gradient_hrefs,
 };
-use crate::svg::primitives::attrs::get_attr;
+use crate::svg::primitives::attrs::{conditional_processing_passes, get_attr, is_unknown_svg_element};
 use crate::svg::primitives::css::collect_svg_css_rules;
 use crate::svg::primitives::geometry::build_shape;
 use crate::svg::primitives::viewport::{
@@ -96,7 +96,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         let root = self.build_render_node(
             self.root_node,
             self.root_node,
-            &mut HashSet::new(),
+            &mut resolve::ResolveState::default(),
             None,
             self.root_vw,
             self.root_vh,
@@ -127,12 +127,31 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         &self,
         node: ServoLayoutNode<'dom>,
         root_node: ServoLayoutNode<'dom>,
-        resolving: &mut HashSet<String>,
+        state: &mut resolve::ResolveState,
         inherited: Option<&NodeStyle>,
         vw: f32,
         vh: f32,
     ) -> Option<SvgNode> {
+        // Global expansion budget: cap the total work of a single build so that
+        // pathological `<use>` graphs — exponential "billion laughs" fan-out,
+        // quadratic blow-up, command amplification — terminate (§5.6; README
+        // §9.2, issues #4–#6). Each invocation consumes one unit of budget; the
+        // cap is generous enough that legitimate documents are unaffected.
+        if state.nodes >= resolve::MAX_TOTAL_NODES {
+            return None;
+        }
+        state.nodes += 1;
+
         let element = node.as_element()?;
+
+        // §5.7 conditional processing: an element whose `requiredExtensions`,
+        // `systemLanguage`, or `requiredFeatures` test fails is not rendered
+        // anywhere — including as a child of a `<switch>` or inside a definition
+        // container.
+        if !conditional_processing_passes(&element) {
+            return None;
+        }
+
         let tag_name = element.local_name().as_ref().to_owned();
 
         // Text / tspan — extract text content from DOM children.
@@ -166,7 +185,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             &tag,
             root_node,
             self,
-            resolving,
+            state,
             &style,
             inherited.is_some(),
             vw,
@@ -194,7 +213,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         self.build_render_node(
             node,
             self.root_node,
-            &mut HashSet::new(),
+            &mut resolve::ResolveState::default(),
             None,
             self.root_vw,
             self.root_vh,
@@ -250,8 +269,19 @@ fn build_tag<'dom>(
         "defs" => Some(SvgTag::Container(Container::Defs)),
         "use" => Some(SvgTag::Container(Container::Use)),
         "symbol" => Some(SvgTag::Container(Container::Symbol)),
+        "switch" => Some(SvgTag::Container(Container::Switch)),
         "image" => build_image_tag(element, node, context, vw, vh).map(SvgTag::Image),
-        _ => build_shape(element, tag, computed, vw, vh).map(SvgTag::Shape),
+        _ => match build_shape(element, tag, computed, vw, vh) {
+            Some(shape) => Some(SvgTag::Shape(shape)),
+            // §5.3 unknown elements: an SVG-namespace element that is not a
+            // known renderable element is treated as a `<g>` (children render,
+            // styles inherit). Non-SVG-namespace elements and known
+            // non-rendering SVG elements are skipped.
+            None if is_unknown_svg_element(element, tag) => {
+                Some(SvgTag::Container(Container::Group))
+            },
+            None => None,
+        },
     }
 }
 

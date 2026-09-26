@@ -3,7 +3,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 //! SVG `<text>` element — text content with positioning.
-//! Reference: https://svgwg.org/svg2-draft/text.html
+//!
+//! Text spec: <https://www.w3.org/TR/SVG2/text.html>
 
 use crate::model::resource::ResourceKey;
 

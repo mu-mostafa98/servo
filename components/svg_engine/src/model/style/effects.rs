@@ -3,6 +3,9 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 //! SVG node effects — clip-path, mask, and filter.
+//!
+//! Clipping and masking: <https://www.w3.org/TR/css-masking-1/>.
+//! Filter effects: <https://www.w3.org/TR/filter-effects-1/>.
 
 use crate::model::document::{ClipPathDef, DefRef, FilterDef, MaskDef};
 

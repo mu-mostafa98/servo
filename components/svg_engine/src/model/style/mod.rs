@@ -7,18 +7,19 @@
 //! SVG Property Reference: https://www.w3.org/TR/SVG2/propidx.html
 //!
 //! This module holds everything that can appear as a style or presentation
-//! attribute: fill/stroke ([`paint`]), gradients ([`gradient`]), transforms
+//! attribute: fill/stroke ([`paint`]), gradients ([`paint_servers`]), transforms
 //! ([`transform`]), node effects ([`effects`]), plus rendering hints and the
 //! combined [`NodeStyle`]. Style construction (FromComputedValues,
 //! FromCssAttrs) lives in `components/layout/svg`.
 
 pub mod effects;
-pub mod gradient;
 pub mod paint;
+pub mod paint_servers;
 pub mod transform;
 
 pub use self::effects::NodeEffects;
-pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, PaintServer, StrokeParams};
+pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, StrokeParams};
+pub use self::paint_servers::PaintServer;
 
 use crate::model::document::{DefRef, MarkerDef};
 use crate::model::units::Opacity;

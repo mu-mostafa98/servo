@@ -17,7 +17,7 @@ use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 
 use crate::model::document::PatternUnits;
 use crate::render::renderer::{RenderContext, gradient, pattern, to_colorf};
-use crate::model::style::gradient::{GradientDef, GradientUnits, PaintServer};
+use crate::model::style::paint_servers::{GradientDef, GradientUnits, PaintServer};
 use crate::model::style::ColorInterpolation;
 use crate::render::tessellator;
 use crate::render::tessellator::FillStyle;
@@ -129,7 +129,7 @@ pub(crate) fn fill_polygon(
 
 /// Convert a linear gradient's endpoints to absolute layout coordinates.
 fn resolve_linear_gradient_coords(
-    lg: &crate::model::style::gradient::LinearGradient,
+    lg: &crate::model::style::paint_servers::LinearGradient,
     bx: f32,
     by: f32,
     bw: f32,
@@ -156,7 +156,7 @@ fn resolve_linear_gradient_coords(
 /// layout coordinates.  Returns `(fx, fy, radius, fr)` — the radius resolves
 /// against the normalized diagonal (§13.2.2), not the box width/height.
 fn resolve_radial_gradient_coords(
-    rg: &crate::model::style::gradient::RadialGradient,
+    rg: &crate::model::style::paint_servers::RadialGradient,
     bx: f32,
     by: f32,
     bw: f32,
@@ -191,7 +191,7 @@ fn color_interpolation_hint(ctx: &RenderContext) -> ColorInterpolation {
 
 /// Build a [`FillStyle::LinearGradient`] from resolved coordinates.
 fn build_linear_fill_style<'a>(
-    lg: &'a crate::model::style::gradient::LinearGradient,
+    lg: &'a crate::model::style::paint_servers::LinearGradient,
     gx1: f32,
     gy1: f32,
     gx2: f32,
@@ -213,7 +213,7 @@ fn build_linear_fill_style<'a>(
 
 /// Build a [`FillStyle::RadialGradient`] from resolved coordinates.
 fn build_radial_fill_style<'a>(
-    rg: &'a crate::model::style::gradient::RadialGradient,
+    rg: &'a crate::model::style::paint_servers::RadialGradient,
     fx: f32,
     fy: f32,
     radius: f32,

@@ -4,7 +4,7 @@
 
 //! Shape renderers — convert SVG shapes into WebRender display list commands.
 //!
-//! Each shape in [`crate::model::element::shape`] implements the [`Render`] trait, which
+//! Each shape in [`crate::model::shapes`] implements the [`Render`] trait, which
 //! produces the corresponding [`webrender_api::DisplayListBuilder`] commands.
 //! The [`crate::render::traversal`] module calls [`Render::render`] during SVG tree
 //! traversal — there is no central dispatch match to maintain.

@@ -17,7 +17,7 @@ use webrender_api::{
 use crate::render::renderer::{Render, RenderContext, to_colorf};
 use crate::render::to_wr_font_key;
 use crate::model::element::text::TextSpan;
-use crate::model::style::gradient::PaintServer;
+use crate::model::style::paint_servers::PaintServer;
 
 const FALLBACK_ADVANCE: f32 = 8.0;
 const FALLBACK_HEIGHT: f32 = 16.0;

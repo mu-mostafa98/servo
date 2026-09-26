@@ -3,6 +3,8 @@
  * file, You can obtain one at https://mozilla.org/MPL/2.0/. */
 
 //! SVG viewport types — `viewBox`, `preserveAspectRatio`, and viewport info.
+//!
+//! Coordinate Systems spec: <https://www.w3.org/TR/SVG2/coords.html>
 
 use crate::model::units::Length;
 
