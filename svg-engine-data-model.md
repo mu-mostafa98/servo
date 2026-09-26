@@ -20,6 +20,10 @@ type (shown as `Color` below).
 | `A ..> B` | `A` uses `B` (method parameter / visitor) |
 | `A <|-- B` | `B` implements `A` |
 
+Where one concept spans several independent clusters of types, they are drawn as
+separate stacked diagrams — one per connected component — so each diagram reads as a
+single self-contained picture.
+
 ---
 
 ## 1. Module map
@@ -50,6 +54,12 @@ canonical homes.
 ---
 
 ## 2. Render tree
+
+The render tree is a **plain owned tree**: `SvgTree → SvgNode → children` with no
+`Arc`/`Rc` indirection. Definitions referenced by id live in flat maps on `SvgTree`
+(see §6); nodes refer to them via `DefRef` / `PaintServer` handles, not pointers.
+
+### Tree structure
 
 ```mermaid
 classDiagram
@@ -98,6 +108,26 @@ classDiagram
         Text
     }
 
+    SvgTree *-- SvgNode : root
+    SvgNode *-- SvgNode : children
+    SvgNode *-- SvgTag : tag
+    SvgTag o-- Container : Container(..)
+```
+
+- Each `SvgNode` carries three kinds of data: **what it is** (`tag`), **how it's
+  painted** (`style: NodeStyle`), and **how it's transformed** (`transforms`, structural
+  not paint-level). A nested `<svg>` viewport hangs off `viewport`.
+- The six def maps on `SvgTree` are `HashMap<String, Arc<T>>` keyed by element `id`
+  (no `#` prefix): `gradients → Arc<GradientDef>`, `clip_paths → Arc<ClipPathDef>`,
+  `patterns → Arc<PatternDef>`, `masks → Arc<MaskDef>`, `filters → Arc<FilterDef>`,
+  `markers → Arc<MarkerDef>`.
+
+### Visitor
+
+```mermaid
+classDiagram
+    direction TB
+
     class VisitDecision {
         <<enum>>
         Continue
@@ -115,30 +145,23 @@ classDiagram
         +visit_node_mut(node) VisitDecision
     }
 
-    SvgTree *-- SvgNode : root
-    SvgNode *-- SvgNode : children
-    SvgNode *-- SvgTag : tag
-    SvgTag o-- Container : Container(..)
-    SvgNode ..> SvgTreeVisitor : accept()
     SvgTreeVisitor ..> VisitDecision
+    SvgTreeVisitorMut ..> VisitDecision
 ```
 
-- The render tree is a **plain owned tree**: `SvgTree → SvgNode → children` with no
-  `Arc`/`Rc` indirection. Definitions referenced by id live in flat maps on `SvgTree`
-  (see §6); nodes refer to them via `DefRef` / `PaintServer` handles, not pointers.
-- Each `SvgNode` carries three kinds of data: **what it is** (`tag`), **how it's
-  painted** (`style: NodeStyle`), and **how it's transformed** (`transforms`, structural
-  not paint-level). A nested `<svg>` viewport hangs off `viewport`.
-- The six def maps on `SvgTree` are `HashMap<String, Arc<T>>` keyed by element `id`
-  (no `#` prefix): `gradients → Arc<GradientDef>`, `clip_paths → Arc<ClipPathDef>`,
-  `patterns → Arc<PatternDef>`, `masks → Arc<MaskDef>`, `filters → Arc<FilterDef>`,
-  `markers → Arc<MarkerDef>`.
-- Traversal is a classic visitor: `SvgTree::visit` delegates to `SvgNode::accept`,
-  which drives `Continue` / `SkipChildren` / `Stop`.
+- Traversal is a classic visitor: `SvgTree::visit` / `visit_mut` delegate to
+  `SvgNode::accept` / `accept_mut` (tree diagram above), which drive
+  `Continue` / `SkipChildren` / `Stop`.
 
 ---
 
 ## 3. Elements — shape, text, image
+
+### Shapes
+
+Shapes live in `element::shape` — re-exported flat as `element::Shape`,
+`element::Rectangle`, … — so every `<element>` type is reachable from
+`svg_engine::element` (see §1).
 
 ```mermaid
 classDiagram
@@ -197,6 +220,35 @@ classDiagram
         +path_length : Option~f32~
     }
 
+    Shape o-- Rectangle : Rect
+    Shape o-- Circle : Circle
+    Shape o-- Ellipse : Ellipse
+    Shape o-- Line : Line
+    Shape o-- Polyline : Polyline
+    Shape o-- Polygon : Polygon
+    Shape o-- Path : Path
+
+    Path *-- PathData : path
+    Polyline *-- Point : points
+    Polygon *-- Point : points
+```
+
+- Shapes hold **already-resolved geometry** (`Length`/`Point`/`PathData`) — the layout
+  layer does the `d`-attribute parsing and `rx`/`ry` resolution; the model stores the
+  result. `Path::path` is a flat `Vec<PathCommand>` (absolute coordinates only).
+- Every shape (and `<path>`) carries `path_length: Option<f32>` — the author-asserted
+  `pathLength` attribute, used to calibrate distance-along-path math (notably stroke
+  dashing). `Shape::path_length()` reads it uniformly.
+- `Ellipse`'s `rx`/`ry` are `Option<Length>` just like `Rectangle`'s: SVG 2 makes the
+  radii support `auto`, resolved by `resolved_radii()` (both `auto` → no rendering; one
+  `auto` → derive from the other, yielding a circle).
+
+### Text
+
+```mermaid
+classDiagram
+    direction TB
+
     class TextSpan {
         +text : String
         +x : Vec~f32~
@@ -244,6 +296,24 @@ classDiagram
         Mathematical
     }
 
+    TextSpan *-- ShapedGlyph : glyphs
+    TextSpan *-- TextAnchor : text_anchor
+    TextSpan *-- DominantBaseline : dominant_baseline
+```
+
+- `TextSpan` carries both raw text *and* pre-shaped `ShapedGlyph`s (per-glyph font key,
+  so mixed-script runs work). `Text` is also a `Container` variant in §2 (inline runs).
+- `x`/`y` are per-character **coordinate lists** (SVG §11.5.2): each entry repositions the
+  current text position for the matching character. `origin_x()`/`origin_y()` return `x[0]`
+  /`y[0]` (or `0` when unset) and the renderer offsets shaped glyphs by that origin.
+  `dx`/`dy`/`rotate` are likewise per-character lists.
+
+### Image
+
+```mermaid
+classDiagram
+    direction TB
+
     class SvgImage {
         +x : f32
         +y : f32
@@ -255,47 +325,16 @@ classDiagram
         +natural_height : Option~u32~
         +preserve_aspect_ratio : AspectRatio
     }
-
-    Shape o-- Rectangle : Rect
-    Shape o-- Circle : Circle
-    Shape o-- Ellipse : Ellipse
-    Shape o-- Line : Line
-    Shape o-- Polyline : Polyline
-    Shape o-- Polygon : Polygon
-    Shape o-- Path : Path
-
-    Path *-- PathData : path
-    Polyline *-- Point : points
-    Polygon *-- Point : points
-
-    TextSpan *-- ShapedGlyph : glyphs
-    TextSpan *-- TextAnchor : text_anchor
-    TextSpan *-- DominantBaseline : dominant_baseline
 ```
 
-- Shapes live in `element::shape` — re-exported flat as `element::Shape`, `element::Rectangle`,
-  … — so every `<element>` type is reachable from `svg_engine::element` (see §1).
-- Shapes hold **already-resolved geometry** (`Length`/`Point`/`PathData`) — the layout
-  layer does the `d`-attribute parsing and `rx`/`ry` resolution; the model stores the
-  result. `Path::path` is a flat `Vec<PathCommand>` (absolute coordinates only).
-- Every shape (and `<path>`) carries `path_length: Option<f32>` — the author-asserted
-  `pathLength` attribute, used to calibrate distance-along-path math (notably stroke
-  dashing). `Shape::path_length()` reads it uniformly.
-- `Ellipse`'s `rx`/`ry` are `Option<Length>` just like `Rectangle`'s: SVG 2 makes the
-  radii support `auto`, resolved by `resolved_radii()` (both `auto` → no rendering; one
-  `auto` → derive from the other, yielding a circle).
 - `SvgImage` keeps the raster handle (`image_key: ResourceKey`) opaque, so the model
   never touches `webrender_api::ImageKey`; the render layer reconstructs the key.
-- `TextSpan` carries both raw text *and* pre-shaped `ShapedGlyph`s (per-glyph font key,
-  so mixed-script runs work). `Text` is also a `Container` variant in §2 (inline runs).
-- `x`/`y` are per-character **coordinate lists** (SVG §11.5.2): each entry repositions the
-  current text position for the matching character. `origin_x()`/`origin_y()` return `x[0]`
-  /`y[0]` (or `0` when unset) and the renderer offsets shaped glyphs by that origin.
-  `dx`/`dy`/`rotate` are likewise per-character lists.
 
 ---
 
 ## 4. Style — paint, effects, hints, transforms
+
+### Node style & painting
 
 ```mermaid
 classDiagram
@@ -374,6 +413,40 @@ classDiagram
         +end : Option~DefRef~MarkerDef~~
     }
 
+    NodeStyle *-- Visibility
+    NodeStyle *-- Display
+    NodeStyle *-- Opacity
+    NodeStyle o-- FillParams : fill
+    NodeStyle o-- StrokeParams : stroke
+    NodeStyle o-- NodeEffects : effects
+    NodeStyle o-- MarkerRefs : markers
+
+    FillParams *-- FillRule
+    FillParams o-- PaintServer : paint_server
+    StrokeParams *-- LineCap
+    StrokeParams *-- LineJoin
+    StrokeParams o-- PaintServer : paint_server
+
+    NodeEffects o-- DefRef : clip_path / mask / filter
+    MarkerRefs o-- DefRef : start / mid / end
+```
+
+- `NodeStyle` is **paint-level only**; layout-affecting state (transforms, viewport) lives
+  on `SvgNode`, not here. Its `render_hints` field is detailed in the next diagram.
+- `fill` / `stroke` are `Option` — SVG's "no fill / no stroke" is distinct from a default
+  black fill, and the renderer checks `is_some()`.
+- There is **no `color` field** on `FillParams`/`StrokeParams`: a solid color lives inside
+  the `PaintServer::Solid(Color)` variant (see §5), reached via `paint_server`.
+- Effects (`clip_path`, `mask`, `filter`) and markers are `DefRef<T>` — a `#id` during
+  build, rewritten to an `Arc<T>` handle by the resolve pass (see §6). The same
+  transient-then-resolved pattern appears as `PaintServer::Ref` in §5.
+
+### Render hints & paint order
+
+```mermaid
+classDiagram
+    direction TB
+
     class RenderHints {
         +vector_effect : Option~VectorEffect~
         +color_rendering : Option~ColorRendering~
@@ -434,6 +507,28 @@ classDiagram
         OptimizeQuality
     }
 
+    RenderHints o-- PaintOrder : paint_order
+    PaintOrder *-- PaintOperation : order
+    RenderHints o-- VectorEffect : vector_effect
+    RenderHints o-- ColorRendering : color_rendering
+    RenderHints o-- ColorInterpolation : color_interpolation
+    RenderHints o-- ShapeRendering : shape_rendering
+    RenderHints o-- TextRendering : text_rendering
+    RenderHints o-- ImageRendering : image_rendering
+```
+
+- `PaintOrder` is a **struct**, not an enum — it wraps an ordered `[PaintOperation; 3]`
+  triple (default `[Fill, Stroke, Markers]`), and `stroke_before_fill()` answers the
+  "does the stroke draw under the fill?" question the renderer needs.
+- `RenderHints` folds the rendering-quality/order hints; several are spec stubs gated
+  `#[allow(dead_code)]` (`text_rendering`, `image_rendering`).
+
+### Transform
+
+```mermaid
+classDiagram
+    direction TB
+
     class TransformOp {
         <<enum>>
         Translate
@@ -443,43 +538,8 @@ classDiagram
         SkewY
         Matrix
     }
-
-    NodeStyle *-- Visibility
-    NodeStyle *-- Display
-    NodeStyle *-- Opacity
-    NodeStyle o-- FillParams : fill
-    NodeStyle o-- StrokeParams : stroke
-    NodeStyle o-- RenderHints : render_hints
-    NodeStyle o-- NodeEffects : effects
-    NodeStyle o-- MarkerRefs : markers
-
-    FillParams *-- FillRule
-    FillParams o-- PaintServer : paint_server
-    StrokeParams *-- LineCap
-    StrokeParams *-- LineJoin
-    StrokeParams o-- PaintServer : paint_server
-
-    NodeEffects o-- DefRef : clip_path / mask / filter
-    MarkerRefs o-- DefRef : start / mid / end
-
-    RenderHints o-- PaintOrder : paint_order
-    PaintOrder *-- PaintOperation : order
 ```
 
-- `NodeStyle` is **paint-level only**; layout-affecting state (transforms, viewport) lives
-  on `SvgNode`, not here.
-- `fill` / `stroke` are `Option` — SVG's "no fill / no stroke" is distinct from a default
-  black fill, and the renderer checks `is_some()`.
-- There is **no `color` field** on `FillParams`/`StrokeParams`: a solid color lives inside
-  the `PaintServer::Solid(Color)` variant (see §5), reached via `paint_server`.
-- `PaintOrder` is a **struct**, not an enum — it wraps an ordered `[PaintOperation; 3]`
-  triple (default `[Fill, Stroke, Markers]`), and `stroke_before_fill()` answers the
-  "does the stroke draw under the fill?" question the renderer needs.
-- Effects (`clip_path`, `mask`, `filter`) and markers are `DefRef<T>` — a `#id` during
-  build, rewritten to an `Arc<T>` handle by the resolve pass (see §6). The same
-  transient-then-resolved pattern appears as `PaintServer::Ref` in §5.
-- `RenderHints` folds the rendering-quality/order hints; several are spec stubs gated
-  `#[allow(dead_code)]` (`text_rendering`, `image_rendering`).
 - `TransformOp` is an ordered list (`Vec<TransformOp>`) on `SvgNode` — `matrix(a b c d e f)`
   is a variant, not a wrapper.
 
@@ -586,6 +646,8 @@ classDiagram
     LinearGradient *-- GradientUnits
     LinearGradient *-- SpreadMethod
     LinearGradient *-- GradientLength
+    LinearGradient *-- GradientExplicit : explicit
+    RadialGradient *-- GradientExplicit : explicit
     GradientStop *-- Color
 ```
 
@@ -605,6 +667,8 @@ classDiagram
 
 ## 6. Definitions & references (`<defs>`)
 
+### `DefRef`
+
 ```mermaid
 classDiagram
     direction TB
@@ -615,6 +679,17 @@ classDiagram
         Resolved(Arc~T~)
         +resolved() Option~T~
     }
+```
+
+- `DefRef<T>` is the core indirection: `Ref(Id)` during tree building → `Resolved(Arc<T>)`
+  after the resolve pass. `Clone` is manual so `DefRef<T>` is `Clone` for any `T`, even
+  `ClipPathDef`/`MaskDef`/`FilterDef`/`MarkerDef` that embed a non-`Clone` `SvgNode`.
+
+### Clip, mask, pattern, marker
+
+```mermaid
+classDiagram
+    direction TB
 
     class ClipPathDef {
         +root : SvgNode
@@ -624,13 +699,6 @@ classDiagram
         +root : SvgNode
         +mask_type : MaskType
         +content_units : MaskContentUnits
-    }
-    class FilterDef {
-        +primitives : Vec~FilterPrimitive~
-        +x : f32
-        +y : f32
-        +width : f32
-        +height : f32
     }
     class PatternDef {
         +width : PatternLength
@@ -653,36 +721,6 @@ classDiagram
         +marker_height : f32
         +marker_units : MarkerUnits
         +orient : MarkerOrient
-    }
-
-    class FilterPrimitive {
-        <<enum>>
-        GaussianBlur(f32, f32)
-        DropShadow(f32, f32, f32, f32, f32, f32, f32)
-        ColorMatrix([f32; 20])
-        Saturate(f32)
-        LuminanceToAlpha
-        Offset(f32, f32)
-        Flood(f32, f32, f32, f32)
-        Composite(FeCompositeKind)
-        Tile
-        Image(FeImageKind)
-    }
-
-    class FeCompositeKind {
-        <<enum>>
-        Arithmetic(f32, f32, f32, f32)
-        Over
-        In
-        Out
-        Atop
-        Xor
-        Lighter
-    }
-    class FeImageKind {
-        <<enum>>
-        FragmentRef(String)
-        ExternalUrl(String)
     }
 
     class ClipPathUnits {
@@ -736,23 +774,67 @@ classDiagram
     MaskDef *-- MaskContentUnits
     PatternDef *-- PatternUnits
     PatternDef *-- PatternContentUnits
+    PatternDef *-- PatternLength : width / height / x / y
     MarkerDef *-- MarkerUnits
     MarkerDef *-- MarkerOrient
-    FilterDef *-- FilterPrimitive : primitives
-    PatternDef *-- PatternLength : width / height / x / y
-    FilterPrimitive o-- FeCompositeKind : Composite
-    FilterPrimitive o-- FeImageKind : Image
 ```
 
-- `DefRef<T>` is the core indirection: `Ref(Id)` during tree building → `Resolved(Arc<T>)`
-  after the resolve pass. `Clone` is manual so `DefRef<T>` is `Clone` for any `T`, even
-  `ClipPathDef`/`MaskDef`/`FilterDef`/`MarkerDef` that embed a non-`Clone` `SvgNode`.
 - Every definition type stores its **content as a nested `SvgNode` subtree** (`root`), so
   `<g>`, `<use>`, `<text>`, and nested `<defs>` inside a clip/mask/pattern/marker are not
   flattened away — they stay a full sub-tree.
 - `PatternDef`'s `x`/`y`/`width`/`height` are `PatternLength` — a `Number`/`Percentage`
   newtype (like `GradientLength`) that keeps the unit until the reference box is known at
   render time.
+
+### Filter
+
+```mermaid
+classDiagram
+    direction TB
+
+    class FilterDef {
+        +primitives : Vec~FilterPrimitive~
+        +x : f32
+        +y : f32
+        +width : f32
+        +height : f32
+    }
+
+    class FilterPrimitive {
+        <<enum>>
+        GaussianBlur(f32, f32)
+        DropShadow(f32, f32, f32, f32, f32, f32, f32)
+        ColorMatrix([f32; 20])
+        Saturate(f32)
+        LuminanceToAlpha
+        Offset(f32, f32)
+        Flood(f32, f32, f32, f32)
+        Composite(FeCompositeKind)
+        Tile
+        Image(FeImageKind)
+    }
+
+    class FeCompositeKind {
+        <<enum>>
+        Arithmetic(f32, f32, f32, f32)
+        Over
+        In
+        Out
+        Atop
+        Xor
+        Lighter
+    }
+    class FeImageKind {
+        <<enum>>
+        FragmentRef(String)
+        ExternalUrl(String)
+    }
+
+    FilterDef *-- FilterPrimitive : primitives
+    FilterPrimitive o-- FeCompositeKind : Composite
+    FilterPrimitive o-- FeImageKind : Image
+```
+
 - `FilterPrimitive` carries typed payloads: `Composite(FeCompositeKind)` (arithmetic or a
   Porter-Duff operator) and `Image(FeImageKind)` (a `#fragment` or external URL). The
   `Arithmetic` composite is a struct variant with named `k1`–`k4` coefficients
@@ -831,6 +913,8 @@ classDiagram
 
 ## 8. Leaf value types
 
+### Geometry
+
 ```mermaid
 classDiagram
     direction LR
@@ -853,10 +937,18 @@ classDiagram
         +commands : Vec~PathCommand~
     }
 
-    class ResourceKey {
-        +namespace : u32
-        +id : u32
-    }
+    PathData *-- PathCommand : commands
+    PathCommand o-- Point
+```
+
+- **`PathData`** is a flat absolute-coordinate command list (no relative commands, no
+  arcs) — the layout layer normalizes the SVG `d` attribute into this form.
+
+### Typed newtypes
+
+```mermaid
+classDiagram
+    direction LR
 
     class Id {
         +new(id) Id
@@ -870,16 +962,6 @@ classDiagram
         +new(value) Opacity
         +get() f32
     }
-
-    class SvgEngineError {
-        <<enum>>
-        MissingAttribute(String)
-        ParseError(String)
-        UnsupportedFeature(String)
-    }
-
-    PathData *-- PathCommand : commands
-    PathCommand o-- Point
 ```
 
 - **Typed newtypes** (`Id`, `Length`, `Opacity`) turn unit mix-ups into compile-time
@@ -887,7 +969,25 @@ classDiagram
   **unit-erased** — by the time it's built, `px`/`em`/`%`/… are already resolved to user
   space, so the renderer cannot recover the original unit. `Opacity` clamps to `[0, 1]`;
   `Length` may be negative.
+
+### Resource & error
+
+```mermaid
+classDiagram
+    direction LR
+
+    class ResourceKey {
+        +namespace : u32
+        +id : u32
+    }
+
+    class SvgEngineError {
+        <<enum>>
+        MissingAttribute(String)
+        ParseError(String)
+        UnsupportedFeature(String)
+    }
+```
+
 - **`ResourceKey`** is an opaque `(namespace, id)` pair that round-trips to
   `webrender_api::{ImageKey, FontInstanceKey}` — the model carries no WebRender type.
-- **`PathData`** is a flat absolute-coordinate command list (no relative commands, no
-  arcs) — the layout layer normalizes the SVG `d` attribute into this form.
