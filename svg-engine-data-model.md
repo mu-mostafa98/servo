@@ -29,9 +29,10 @@ flowchart TD
     CE["svg_engine crate"] --> M["model<br/>(pure data — no WebRender / vello)"]
     CE --> R["render<br/>(display-list emission — future PR)"]
 
-    M --> E["element<br/>SvgNode · SvgTag · shapes · text · image"]
+    M --> E["element<br/>SvgNode · SvgTag · shape · text · image"]
     M --> S["style<br/>NodeStyle · paint · gradient · transform · effects"]
     M --> D["document<br/>SvgTree · defs · viewport"]
+    M --> C["coords<br/>re-export facade (viewport · geometry · transform · length)"]
     M --> U["units<br/>Id · Length · Opacity"]
     M --> G["geometry<br/>Point · PathData · PathCommand"]
     M --> RS["resource<br/>ResourceKey"]
@@ -41,7 +42,10 @@ flowchart TD
 The model splits into three conceptual buckets — **element** (anything written as
 `<element>`), **style** (anything that can be an attribute), **document** (the tree,
 viewport, and `<defs>` definitions) — plus four leaf modules (`units`, `geometry`,
-`resource`, `error`) of small shared value types.
+`resource`, `error`) of small shared value types, and `coords`, a chapter-facing facade
+that re-exports the coordinate-system types (`ViewportInfo`, `SvgViewport`, `ViewBox`,
+`AspectRatio`, `Point`, `PathData`, `PathCommand`, `TransformOp`, `Length`) from their
+canonical homes.
 
 ---
 
@@ -89,6 +93,7 @@ classDiagram
         Svg
         Defs
         Use
+        Switch
         Symbol
         Text
     }
@@ -133,7 +138,7 @@ classDiagram
 
 ---
 
-## 3. Elements — shapes, text, image
+## 3. Elements — shape, text, image
 
 ```mermaid
 classDiagram
@@ -157,38 +162,45 @@ classDiagram
         +height : Length
         +rx : Option~Length~
         +ry : Option~Length~
+        +path_length : Option~f32~
     }
     class Circle {
         +cx : Length
         +cy : Length
         +r : Length
+        +path_length : Option~f32~
     }
     class Ellipse {
         +cx : Length
         +cy : Length
-        +rx : Length
-        +ry : Length
+        +rx : Option~Length~
+        +ry : Option~Length~
+        +path_length : Option~f32~
     }
     class Line {
         +x1 : Length
         +y1 : Length
         +x2 : Length
         +y2 : Length
+        +path_length : Option~f32~
     }
     class Polyline {
         +points : Vec~Point~
+        +path_length : Option~f32~
     }
     class Polygon {
         +points : Vec~Point~
+        +path_length : Option~f32~
     }
     class Path {
         +path : PathData
+        +path_length : Option~f32~
     }
 
     class TextSpan {
         +text : String
-        +x : f32
-        +y : f32
+        +x : Vec~f32~
+        +y : Vec~f32~
         +dx : Vec~f32~
         +dy : Vec~f32~
         +rotate : Vec~f32~
@@ -199,6 +211,8 @@ classDiagram
         +font_instance_key : Option~ResourceKey~
         +advance_offset : f32
         +font_size : f32
+        +origin_x() f32
+        +origin_y() f32
         +total_advance() f32
     }
 
@@ -220,9 +234,14 @@ classDiagram
     class DominantBaseline {
         <<enum>>
         Auto
+        TextBeforeEdge
+        TextAfterEdge
         Hanging
         Middle
         Central
+        Ideographic
+        Alphabetic
+        Mathematical
     }
 
     class SvgImage {
@@ -254,13 +273,25 @@ classDiagram
     TextSpan *-- DominantBaseline : dominant_baseline
 ```
 
+- Shapes live in `element::shape` — re-exported flat as `element::Shape`, `element::Rectangle`,
+  … — so every `<element>` type is reachable from `svg_engine::element` (see §1).
 - Shapes hold **already-resolved geometry** (`Length`/`Point`/`PathData`) — the layout
   layer does the `d`-attribute parsing and `rx`/`ry` resolution; the model stores the
   result. `Path::path` is a flat `Vec<PathCommand>` (absolute coordinates only).
+- Every shape (and `<path>`) carries `path_length: Option<f32>` — the author-asserted
+  `pathLength` attribute, used to calibrate distance-along-path math (notably stroke
+  dashing). `Shape::path_length()` reads it uniformly.
+- `Ellipse`'s `rx`/`ry` are `Option<Length>` just like `Rectangle`'s: SVG 2 makes the
+  radii support `auto`, resolved by `resolved_radii()` (both `auto` → no rendering; one
+  `auto` → derive from the other, yielding a circle).
 - `SvgImage` keeps the raster handle (`image_key: ResourceKey`) opaque, so the model
   never touches `webrender_api::ImageKey`; the render layer reconstructs the key.
 - `TextSpan` carries both raw text *and* pre-shaped `ShapedGlyph`s (per-glyph font key,
   so mixed-script runs work). `Text` is also a `Container` variant in §2 (inline runs).
+- `x`/`y` are per-character **coordinate lists** (SVG §11.5.2): each entry repositions the
+  current text position for the matching character. `origin_x()`/`origin_y()` return `x[0]`
+  /`y[0]` (or `0` when unset) and the renderer offsets shaped glyphs by that origin.
+  `dx`/`dy`/`rotate` are likewise per-character lists.
 
 ---
 
@@ -296,13 +327,11 @@ classDiagram
     }
 
     class FillParams {
-        +color : Option~Color~
         +paint_server : Option~PaintServer~
         +opacity : Opacity
         +fill_rule : FillRule
     }
     class StrokeParams {
-        +color : Option~Color~
         +paint_server : Option~PaintServer~
         +opacity : Opacity
         +width : Length
@@ -327,8 +356,10 @@ classDiagram
     class LineJoin {
         <<enum>>
         Miter
+        MiterClip
         Round
         Bevel
+        Arcs
     }
 
     class NodeEffects {
@@ -354,10 +385,53 @@ classDiagram
     }
 
     class PaintOrder {
+        +order : PaintOperation[3]
+        +stroke_before_fill() bool
+    }
+
+    class PaintOperation {
         <<enum>>
-        Normal
-        StrokeFill
-        FillStroke
+        Fill
+        Stroke
+        Markers
+    }
+
+    class VectorEffect {
+        <<enum>>
+        None
+        NonScalingStroke
+    }
+    class ColorRendering {
+        <<enum>>
+        Auto
+        OptimizeSpeed
+        OptimizeQuality
+    }
+    class ColorInterpolation {
+        <<enum>>
+        Auto
+        Srgb
+        LinearRGB
+    }
+    class ShapeRendering {
+        <<enum>>
+        Auto
+        OptimizeSpeed
+        CrispEdges
+        GeometricPrecision
+    }
+    class TextRendering {
+        <<enum>>
+        Auto
+        OptimizeSpeed
+        OptimizeLegibility
+        GeometricPrecision
+    }
+    class ImageRendering {
+        <<enum>>
+        Auto
+        OptimizeSpeed
+        OptimizeQuality
     }
 
     class TransformOp {
@@ -387,12 +461,20 @@ classDiagram
 
     NodeEffects o-- DefRef : clip_path / mask / filter
     MarkerRefs o-- DefRef : start / mid / end
+
+    RenderHints o-- PaintOrder : paint_order
+    PaintOrder *-- PaintOperation : order
 ```
 
 - `NodeStyle` is **paint-level only**; layout-affecting state (transforms, viewport) lives
   on `SvgNode`, not here.
 - `fill` / `stroke` are `Option` — SVG's "no fill / no stroke" is distinct from a default
   black fill, and the renderer checks `is_some()`.
+- There is **no `color` field** on `FillParams`/`StrokeParams`: a solid color lives inside
+  the `PaintServer::Solid(Color)` variant (see §5), reached via `paint_server`.
+- `PaintOrder` is a **struct**, not an enum — it wraps an ordered `[PaintOperation; 3]`
+  triple (default `[Fill, Stroke, Markers]`), and `stroke_before_fill()` answers the
+  "does the stroke draw under the fill?" question the renderer needs.
 - Effects (`clip_path`, `mask`, `filter`) and markers are `DefRef<T>` — a `#id` during
   build, rewritten to an `Arc<T>` handle by the resolve pass (see §6). The same
   transient-then-resolved pattern appears as `PaintServer::Ref` in §5.
@@ -411,10 +493,12 @@ classDiagram
 
     class PaintServer {
         <<enum>>
-        Solid
-        Gradient
-        Pattern
-        Ref
+        Solid(Color)
+        Gradient(Arc~GradientDef~)
+        Pattern(Arc~PatternDef~)
+        Ref { id : Id, fallback : Option~Color~ }
+        ContextFill
+        ContextStroke
     }
 
     class GradientDef {
@@ -471,8 +555,8 @@ classDiagram
     }
     class GradientLength {
         <<enum>>
-        Number
-        Percentage
+        Number(f32)
+        Percentage(f32)
     }
     class GradientExplicit {
         +x1 : bool
@@ -507,7 +591,9 @@ classDiagram
 
 - `PaintServer` mirrors `DefRef`: `Solid`/`Gradient`/`Pattern` are resolved forms, `Ref(id)`
   is the transient build-time state that the resolve pass rewrites to an `Arc` handle.
-  No `Ref` value survives past build.
+  No `Ref` value survives past build. `ContextFill`/`ContextStroke` carry the
+  `context-fill`/`context-stroke` keywords through `<marker>`/`<use>` (they render as no
+  paint when no context element supplies the value).
 - `GradientDef` stores parsed `<linearGradient>` / `<radialGradient>` from `<defs>`;
   `href` inheritance is supported — `GradientExplicit` records which attributes were
   *authored* (vs. defaulted) so an inherited value can be told apart from a local default
@@ -546,10 +632,10 @@ classDiagram
         +height : f32
     }
     class PatternDef {
-        +width : f32
-        +height : f32
-        +x : f32
-        +y : f32
+        +width : PatternLength
+        +height : PatternLength
+        +x : PatternLength
+        +y : PatternLength
         +pattern_units : PatternUnits
         +pattern_content_units : PatternContentUnits
         +transform : Vec~TransformOp~
@@ -570,16 +656,32 @@ classDiagram
 
     class FilterPrimitive {
         <<enum>>
-        GaussianBlur
-        DropShadow
-        ColorMatrix
-        Saturate
+        GaussianBlur(f32, f32)
+        DropShadow(f32, f32, f32, f32, f32, f32, f32)
+        ColorMatrix([f32; 20])
+        Saturate(f32)
         LuminanceToAlpha
-        Offset
-        Flood
-        Composite
+        Offset(f32, f32)
+        Flood(f32, f32, f32, f32)
+        Composite(FeCompositeKind)
         Tile
-        Image
+        Image(FeImageKind)
+    }
+
+    class FeCompositeKind {
+        <<enum>>
+        Arithmetic { k1, k2, k3, k4 }
+        Over
+        In
+        Out
+        Atop
+        Xor
+        Lighter
+    }
+    class FeImageKind {
+        <<enum>>
+        FragmentRef(String)
+        ExternalUrl(String)
     }
 
     class ClipPathUnits {
@@ -607,6 +709,11 @@ classDiagram
         ObjectBoundingBox
         UserSpaceOnUse
     }
+    class PatternLength {
+        <<enum>>
+        Number(f32)
+        Percentage(f32)
+    }
     class MarkerUnits {
         <<enum>>
         StrokeWidth
@@ -631,6 +738,9 @@ classDiagram
     MarkerDef *-- MarkerUnits
     MarkerDef *-- MarkerOrient
     FilterDef *-- FilterPrimitive : primitives
+    PatternDef *-- PatternLength : width / height / x / y
+    FilterPrimitive o-- FeCompositeKind : Composite
+    FilterPrimitive o-- FeImageKind : Image
 ```
 
 - `DefRef<T>` is the core indirection: `Ref(Id)` during tree building → `Resolved(Arc<T>)`
@@ -639,6 +749,11 @@ classDiagram
 - Every definition type stores its **content as a nested `SvgNode` subtree** (`root`), so
   `<g>`, `<use>`, `<text>`, and nested `<defs>` inside a clip/mask/pattern/marker are not
   flattened away — they stay a full sub-tree.
+- `PatternDef`'s `x`/`y`/`width`/`height` are `PatternLength` — a `Number`/`Percentage`
+  newtype (like `GradientLength`) that keeps the unit until the reference box is known at
+  render time.
+- `FilterPrimitive` carries typed payloads: `Composite(FeCompositeKind)` (arithmetic or a
+  Porter-Duff operator) and `Image(FeImageKind)` (a `#fragment` or external URL).
 
 ---
 
