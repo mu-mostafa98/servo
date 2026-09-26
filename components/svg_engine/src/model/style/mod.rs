@@ -18,10 +18,9 @@ pub mod paint_servers;
 pub mod transform;
 
 pub use self::effects::NodeEffects;
-pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, StrokeParams};
+pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, MarkerRefs, StrokeParams};
 pub use self::paint_servers::PaintServer;
 
-use crate::model::document::{DefRef, MarkerDef};
 use crate::model::units::Opacity;
 
 // ======================= Visibility & Display =======================
@@ -161,16 +160,6 @@ pub enum ImageRendering {
 }
 
 // ======================= Node Style =======================
-
-/// Marker references attached to a shape (`marker-start`, `marker-mid`,
-/// `marker-end`), each holding a [`DefRef`] to a [`MarkerDef`] — a raw `#id`
-/// during tree building, a typed `Arc` handle after the resolve pass.
-#[derive(Debug, Clone, Default)]
-pub struct MarkerRefs {
-    pub start: Option<DefRef<MarkerDef>>,
-    pub mid: Option<DefRef<MarkerDef>>,
-    pub end: Option<DefRef<MarkerDef>>,
-}
 
 /// Combined fill + stroke styling for an SVG render node.
 ///

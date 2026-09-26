@@ -8,6 +8,7 @@
 //! <https://www.w3.org/TR/SVG2/painting.html>
 
 use super::paint_servers::PaintServer;
+use crate::model::document::{DefRef, MarkerDef};
 use crate::model::units::{Length, Opacity};
 
 /// SVG fill properties.
@@ -60,4 +61,14 @@ pub enum LineJoin {
     Round,
     Bevel,
     Arcs,
+}
+
+/// Marker references attached to a shape (`marker-start`, `marker-mid`,
+/// `marker-end`), each holding a [`DefRef`] to a [`MarkerDef`] — a raw `#id`
+/// during tree building, a typed `Arc` handle after the resolve pass.
+#[derive(Debug, Clone, Default)]
+pub struct MarkerRefs {
+    pub start: Option<DefRef<MarkerDef>>,
+    pub mid: Option<DefRef<MarkerDef>>,
+    pub end: Option<DefRef<MarkerDef>>,
 }
