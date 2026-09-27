@@ -8,7 +8,7 @@
 //!
 //! **No WebRender dependency** — pure data types only. Parsing the raw
 //! `transform` attribute lives in the layout layer
-//! (`components/layout/svg/transforms.rs`).
+//! (`components/layout/svg/primitives/transforms.rs`).
 
 /// A single SVG transform operation, in the order it was specified.
 #[derive(Debug, Clone)]

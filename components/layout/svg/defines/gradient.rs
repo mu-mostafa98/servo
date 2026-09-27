@@ -15,7 +15,7 @@ use svg_engine::document::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     RadialGradient, SpreadMethod,
 };
-use svg_engine::style::transform::TransformOp;
+use svg_engine::transform::TransformOp;
 use svgtypes::{Color as SvgColor, Length as SvgLength};
 use web_atoms::ns;
 

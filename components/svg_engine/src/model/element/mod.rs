@@ -20,7 +20,7 @@ pub use self::shape::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle,
 pub use self::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
 
 use crate::model::document::viewport::SvgViewport;
-use crate::model::style::transform::TransformOp;
+use crate::model::transform::TransformOp;
 use crate::model::style::NodeStyle;
 use crate::model::units::Id;
 

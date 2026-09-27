@@ -8,13 +8,12 @@
 //!
 //! This module holds everything that can appear as a style or presentation
 //! attribute: fill/stroke ([`paint`]), paint servers ([`paint_servers`]),
-//! transforms ([`transform`]), node effects (clip-path, mask, filter), plus
+//! node effects (clip-path, mask, filter), plus
 //! rendering hints and the combined [`NodeStyle`]. Style construction
 //! (FromComputedValues, FromCssAttrs) lives in `components/layout/svg`.
 
 pub mod paint;
 pub mod paint_servers;
-pub mod transform;
 
 pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, MarkerRefs, StrokeParams};
 pub use self::paint_servers::PaintServer;

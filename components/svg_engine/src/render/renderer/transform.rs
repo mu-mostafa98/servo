@@ -4,7 +4,7 @@
 
 //! SVG transform WebRender integration.
 //!
-//! Applies each [`TransformOp`](crate::model::style::transform::TransformOp) operation
+//! Applies each [`TransformOp`](crate::model::transform::TransformOp) operation
 //! (translate, scale, rotate) onto a WebRender display list builder by
 //! pushing reference frames.
 
@@ -14,7 +14,7 @@ use webrender_api::{
     DisplayListBuilder, PropertyBinding, ReferenceFrameKind, SpatialId, TransformStyle,
 };
 
-use crate::model::style::transform::TransformOp;
+use crate::model::transform::TransformOp;
 
 // ------------------- WebRender integration ------------------
 

@@ -19,7 +19,7 @@
 //! | Module | Role |
 //! |--------|------|
 //! | [`model::element`] | SVG element types (shapes, image, text, nodes) |
-//! | [`model::style`] | SVG property data types (fill, stroke, paint servers, transform, …) |
+//! | [`model::style`] | SVG property data types (fill, stroke, paint servers, node effects, …) |
 //! | [`model::document`] | `SvgTree` document, viewport, and definition types (gradients, patterns, …) |
 //! | [`model::error`] | Error types for SVG parsing failures |
 //! | `render::traversal` | Recursive tree walk that produces the display list |
@@ -40,6 +40,7 @@ pub use model::error;
 pub use model::geometry;
 pub use model::resource;
 pub use model::style;
+pub use model::transform;
 pub use model::units;
 
 pub use model::element::SvgTag;

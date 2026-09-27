@@ -6,7 +6,7 @@
 
 use crate::model::document::viewport::{AspectRatio, ViewBox};
 use crate::model::element::SvgNode;
-use crate::model::style::transform::TransformOp;
+use crate::model::transform::TransformOp;
 
 /// Coordinate system for pattern tile sizing.
 #[derive(Debug, Clone, Copy, PartialEq)]

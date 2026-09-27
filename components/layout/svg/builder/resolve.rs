@@ -24,7 +24,7 @@ use svg_engine::document::{
 use svg_engine::element::{Container, SvgNode, SvgTag};
 use svg_engine::style::NodeStyle;
 use svg_engine::style::paint_servers::PaintServer;
-use svg_engine::style::transform::TransformOp;
+use svg_engine::transform::TransformOp;
 use svg_engine::units::Length;
 use web_atoms::ns;
 

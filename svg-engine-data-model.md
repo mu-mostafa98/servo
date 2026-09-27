@@ -34,18 +34,20 @@ flowchart TD
     CE --> R["render<br/>(display-list emission — future PR)"]
 
     M --> E["element<br/>SvgNode · SvgTag · shape · text · image"]
-    M --> S["style<br/>NodeStyle · paint · paint_servers · transform"]
+    M --> S["style<br/>NodeStyle · paint · paint_servers"]
     M --> D["document<br/>SvgTree · defs (gradients · patterns · …) · viewport"]
     M --> U["units<br/>Id · Length · Opacity"]
     M --> G["geometry<br/>Point · PathData · PathCommand"]
+    M --> T["transform<br/>TransformOp"]
     M --> RS["resource<br/>ResourceKey"]
     M --> ER["error<br/>SvgEngineError"]
 ```
 
 The model splits into three conceptual buckets — **element** (anything written as
 `<element>`), **style** (anything that can be an attribute), **document** (the tree,
-viewport, and `<defs>` definitions, including gradients and patterns) — plus four leaf
-modules (`units`, `geometry`, `resource`, `error`) of small shared value types.
+viewport, and `<defs>` definitions, including gradients and patterns) — plus five leaf
+modules (`units`, `geometry`, `transform`, `resource`, `error`) of small shared value
+types.
 
 ---
 
@@ -328,7 +330,7 @@ classDiagram
 
 ---
 
-## 4. Style — paint, hints, transforms
+## 4. Style — paint, hints
 
 ### Node style & painting
 
@@ -513,26 +515,6 @@ classDiagram
   "does the stroke draw under the fill?" question the renderer needs.
 - `RenderHints` folds the rendering-quality/order hints; several are spec stubs gated
   `#[allow(dead_code)]` (`text_rendering`, `image_rendering`).
-
-### Transform
-
-```mermaid
-classDiagram
-    direction TB
-
-    class TransformOp {
-        <<enum>>
-        Translate
-        Scale
-        Rotate
-        SkewX
-        SkewY
-        Matrix
-    }
-```
-
-- `TransformOp` is an ordered list (`Vec<TransformOp>`) on `SvgNode` — `matrix(a b c d e f)`
-  is a variant, not a wrapper.
 
 ---
 
@@ -941,6 +923,26 @@ classDiagram
 
 - **`PathData`** is a flat absolute-coordinate command list (no relative commands, no
   arcs) — the layout layer normalizes the SVG `d` attribute into this form.
+
+### Transform
+
+```mermaid
+classDiagram
+    direction LR
+
+    class TransformOp {
+        <<enum>>
+        Translate
+        Scale
+        Rotate
+        SkewX
+        SkewY
+        Matrix
+    }
+```
+
+- `TransformOp` is an ordered list (`Vec<TransformOp>`) on `SvgNode` — `matrix(a b c d e f)`
+  is a variant, not a wrapper.
 
 ### Typed newtypes
 

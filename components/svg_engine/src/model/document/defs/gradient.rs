@@ -6,7 +6,7 @@
 
 use svgtypes::Color as SvgColor;
 
-use crate::model::style::transform::TransformOp;
+use crate::model::transform::TransformOp;
 
 /// Definitions collected from `<defs>` during render tree construction.
 #[derive(Debug, Clone)]
