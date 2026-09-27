@@ -534,7 +534,9 @@ pub(crate) fn stroke_polyline(pts: &[LyonPoint], ctx: &mut RenderContext) {
         display: Display::Inline,
         fill: None,
         render_hints: None,
-        effects: None,
+        clip_path: None,
+        mask: None,
+        filter: None,
         opacity: ctx.style.opacity,
         markers: None,
         stroke: Some(StrokeParams {

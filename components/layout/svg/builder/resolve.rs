@@ -373,16 +373,9 @@ fn resolve_references_in(
         node.style.stroke = None;
     }
 
-    if let Some(effects) = node.style.effects.as_mut() {
-        effects.clip_path = resolve_ref(effects.clip_path.take(), clip_paths);
-        effects.mask = resolve_ref(effects.mask.take(), masks);
-        effects.filter = resolve_ref(effects.filter.take(), filters);
-    }
-    if let Some(effects) = node.style.effects.as_ref() {
-        if effects.clip_path.is_none() && effects.mask.is_none() && effects.filter.is_none() {
-            node.style.effects = None;
-        }
-    }
+    node.style.clip_path = resolve_ref(node.style.clip_path.take(), clip_paths);
+    node.style.mask = resolve_ref(node.style.mask.take(), masks);
+    node.style.filter = resolve_ref(node.style.filter.take(), filters);
 
     if let Some(refs) = node.style.markers.as_mut() {
         refs.start = resolve_ref(refs.start.take(), marker_defs);

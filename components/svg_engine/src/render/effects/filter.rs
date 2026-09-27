@@ -20,8 +20,7 @@ use crate::model::element::SvgNode;
 /// referenced filter definition is missing, or the filter resolves
 /// to an empty op list.
 pub(crate) fn get_filter_ops(node: &SvgNode) -> Option<Vec<FilterOp>> {
-    let effects = node.style.effects.as_ref()?;
-    let filter_def = effects.filter.as_ref().and_then(DefRef::resolved)?;
+    let filter_def = node.style.filter.as_ref().and_then(DefRef::resolved)?;
 
     let mut ops = Vec::new();
     for prim in &filter_def.primitives {

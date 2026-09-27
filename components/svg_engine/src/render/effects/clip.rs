@@ -44,10 +44,7 @@ pub(crate) fn resolve_node_clip_path(
     parent_clip_chain: ClipChainId,
     wr: &mut DisplayListBuilder,
 ) -> (ClipChainId, Vec<ComplexClip>) {
-    let Some(ref effects) = node.style.effects else {
-        return (parent_clip_chain, Vec::new());
-    };
-    let Some(clip_def) = effects.clip_path.as_ref().and_then(DefRef::resolved) else {
+    let Some(clip_def) = node.style.clip_path.as_ref().and_then(DefRef::resolved) else {
         return (parent_clip_chain, Vec::new());
     };
 
@@ -113,8 +110,7 @@ pub(crate) fn build_mask_clips(
     parent_clip_chain: ClipChainId,
     wr: &mut DisplayListBuilder,
 ) -> Option<Vec<MaskClip>> {
-    let effects = node.style.effects.as_ref()?;
-    let mask_def = effects.mask.as_ref().and_then(DefRef::resolved)?;
+    let mask_def = node.style.mask.as_ref().and_then(DefRef::resolved)?;
 
     let mut masks = Vec::new();
     mask_def.root.for_each_shape_leaf(&mut |shape, _style| {

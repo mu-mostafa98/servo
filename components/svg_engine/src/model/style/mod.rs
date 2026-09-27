@@ -8,19 +8,18 @@
 //!
 //! This module holds everything that can appear as a style or presentation
 //! attribute: fill/stroke ([`paint`]), paint servers ([`paint_servers`]),
-//! transforms ([`transform`]), node effects ([`effects`]), plus rendering
-//! hints and the combined [`NodeStyle`]. Style construction
+//! transforms ([`transform`]), node effects (clip-path, mask, filter), plus
+//! rendering hints and the combined [`NodeStyle`]. Style construction
 //! (FromComputedValues, FromCssAttrs) lives in `components/layout/svg`.
 
-pub mod effects;
 pub mod paint;
 pub mod paint_servers;
 pub mod transform;
 
-pub use self::effects::NodeEffects;
 pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, MarkerRefs, StrokeParams};
 pub use self::paint_servers::PaintServer;
 
+use crate::model::document::{ClipPathDef, DefRef, FilterDef, MaskDef};
 use crate::model::units::Opacity;
 
 // ======================= Visibility & Display =======================
@@ -172,7 +171,13 @@ pub struct NodeStyle {
     pub fill: Option<FillParams>,
     pub stroke: Option<StrokeParams>,
     pub render_hints: Option<RenderHints>,
-    pub effects: Option<NodeEffects>,
+    /// Node effects — clip-path, mask, filter. Each is a [`DefRef`]: a raw
+    /// `#id` string during tree building, rewritten to a typed `Arc` handle
+    /// during the post-build resolve pass.
+    pub clip_path: Option<DefRef<ClipPathDef>>,
+    pub mask: Option<DefRef<MaskDef>>,
+    /// Reference to a `<filter>` element (e.g., `url(#myBlur)`).
+    pub filter: Option<DefRef<FilterDef>>,
     /// Element-level opacity (the CSS `opacity` property).
     /// Applied as a multiplier on top of fill-/stroke-opacity.
     pub opacity: Opacity,
@@ -188,7 +193,9 @@ impl Default for NodeStyle {
             fill: None,
             stroke: None,
             render_hints: None,
-            effects: None,
+            clip_path: None,
+            mask: None,
+            filter: None,
             opacity: Opacity::ONE,
             markers: None,
         }

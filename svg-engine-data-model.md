@@ -34,7 +34,7 @@ flowchart TD
     CE --> R["render<br/>(display-list emission — future PR)"]
 
     M --> E["element<br/>SvgNode · SvgTag · shape · text · image"]
-    M --> S["style<br/>NodeStyle · paint · paint_servers · transform · effects"]
+    M --> S["style<br/>NodeStyle · paint · paint_servers · transform"]
     M --> D["document<br/>SvgTree · defs (gradients · patterns · …) · viewport"]
     M --> U["units<br/>Id · Length · Opacity"]
     M --> G["geometry<br/>Point · PathData · PathCommand"]
@@ -328,7 +328,7 @@ classDiagram
 
 ---
 
-## 4. Style — paint, effects, hints, transforms
+## 4. Style — paint, hints, transforms
 
 ### Node style & painting
 
@@ -342,7 +342,9 @@ classDiagram
         +fill : Option~FillParams~
         +stroke : Option~StrokeParams~
         +render_hints : Option~RenderHints~
-        +effects : Option~NodeEffects~
+        +clip_path : Option~DefRef~ClipPathDef~~
+        +mask : Option~DefRef~MaskDef~~
+        +filter : Option~DefRef~FilterDef~~
         +opacity : Opacity
         +markers : Option~MarkerRefs~
         +is_visible() bool
@@ -397,12 +399,6 @@ classDiagram
         Arcs
     }
 
-    class NodeEffects {
-        +clip_path : Option~DefRef~ClipPathDef~~
-        +mask : Option~DefRef~MaskDef~~
-        +filter : Option~DefRef~FilterDef~~
-    }
-
     class MarkerRefs {
         +start : Option~DefRef~MarkerDef~~
         +mid : Option~DefRef~MarkerDef~~
@@ -414,7 +410,7 @@ classDiagram
     NodeStyle *-- Opacity
     NodeStyle o-- FillParams : fill
     NodeStyle o-- StrokeParams : stroke
-    NodeStyle o-- NodeEffects : effects
+    NodeStyle o-- DefRef : clip_path / mask / filter
     NodeStyle o-- MarkerRefs : markers
 
     FillParams *-- FillRule
@@ -423,7 +419,6 @@ classDiagram
     StrokeParams *-- LineJoin
     StrokeParams o-- PaintServer : paint_server
 
-    NodeEffects o-- DefRef : clip_path / mask / filter
     MarkerRefs o-- DefRef : start / mid / end
 ```
 

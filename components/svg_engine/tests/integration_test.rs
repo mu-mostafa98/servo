@@ -487,24 +487,19 @@ fn stroke_line_join_all_variants() {
 
 #[test]
 fn node_effects_default_empty() {
-    let effects = NodeEffects {
-        clip_path: None,
-        mask: None,
-        filter: None,
-    };
-    assert!(effects.clip_path.is_none());
-    assert!(effects.mask.is_none());
-    assert!(effects.filter.is_none());
+    let style = NodeStyle::default();
+    assert!(style.clip_path.is_none());
+    assert!(style.mask.is_none());
+    assert!(style.filter.is_none());
 }
 
 #[test]
 fn node_effects_with_clip_path() {
-    let effects = NodeEffects {
+    let style = NodeStyle {
         clip_path: Some(DefRef::Ref(Id::new("c1"))),
-        mask: None,
-        filter: None,
+        ..NodeStyle::default()
     };
-    assert!(effects.clip_path.is_some());
+    assert!(style.clip_path.is_some());
 }
 
 // ============================================================

@@ -439,13 +439,7 @@ fn resolve_node_mask(
     device_scale: f32,
     inherited_mask: Option<&ResolvedMask>,
 ) -> Option<ResolvedMask> {
-    let Some(mask_def) = node
-        .style
-        .effects
-        .as_ref()
-        .and_then(|e| e.mask.as_ref())
-        .and_then(DefRef::resolved)
-    else {
+    let Some(mask_def) = node.style.mask.as_ref().and_then(DefRef::resolved) else {
         return inherited_mask.cloned();
     };
 

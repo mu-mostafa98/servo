@@ -262,14 +262,8 @@ impl FromComputedValues for NodeStyle {
                 },
                 _ => None,
             });
-        let effects = match (clip_path_ref, mask_ref) {
-            (None, None) => None,
-            (clip, mask) => Some(NodeEffects {
-                clip_path: clip.map(|id| DefRef::Ref(Id::new(id))),
-                mask: mask.map(|id| DefRef::Ref(Id::new(id))),
-                filter: None,
-            }),
-        };
+        let clip_path = clip_path_ref.map(|id| DefRef::Ref(Id::new(id)));
+        let mask = mask_ref.map(|id| DefRef::Ref(Id::new(id)));
         let sr = values.get_inherited_svg().shape_rendering;
         let shape_rendering_hint = match sr {
             style::computed_values::shape_rendering::T::Optimizespeed => {
@@ -298,7 +292,9 @@ impl FromComputedValues for NodeStyle {
                 text_rendering: None,
                 image_rendering: None,
             }),
-            effects,
+            clip_path,
+            mask,
+            filter: None,
             opacity: Opacity::new(values.get_effects().opacity),
             markers: None,
         })
@@ -624,7 +620,7 @@ fn apply_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle)
     apply_filter_attribute(&element, style);
 }
 
-/// Apply the `filter` attribute to a style's effects.
+/// Apply the `filter` attribute to a style's filter reference.
 ///
 /// Filter URLs are not available via Stylo computed values in Servo builds
 /// (the `Filter` type uses `Impossible` for its URL parameter), so we read
@@ -636,16 +632,7 @@ fn apply_filter_attribute(element: &ServoLayoutElement, style: &mut NodeStyle) {
         .as_deref()
         .and_then(extract_url_fragment);
     if let Some(filter_id) = filter_ref {
-        let existing = style.effects.take().unwrap_or(NodeEffects {
-            clip_path: None,
-            mask: None,
-            filter: None,
-        });
-        style.effects = Some(NodeEffects {
-            clip_path: existing.clip_path,
-            mask: existing.mask,
-            filter: Some(DefRef::Ref(Id::new(filter_id))),
-        });
+        style.filter = Some(DefRef::Ref(Id::new(filter_id)));
     }
 }
 
