@@ -26,7 +26,8 @@ use crate::render::renderer::{
     RenderContext, ZERO_LENGTH_EPSILON, clip_chain_option, effective_stroke_width, gradient,
     make_common_props, to_colorf,
 };
-use crate::model::style::paint_servers::{GradientDef, GradientUnits, PaintServer};
+use crate::model::document::{GradientDef, GradientUnits};
+use crate::model::style::paint_servers::PaintServer;
 use crate::model::style::{Display, LineCap, NodeStyle, StrokeParams, Visibility};
 use crate::model::units::Length;
 

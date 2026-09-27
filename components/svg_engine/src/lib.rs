@@ -19,8 +19,8 @@
 //! | Module | Role |
 //! |--------|------|
 //! | [`model::element`] | SVG element types (shapes, image, text, nodes) |
-//! | [`model::style`] | SVG property data types (fill, stroke, gradient, transform, …) |
-//! | [`model::document`] | `SvgTree` document, viewport, and definition types |
+//! | [`model::style`] | SVG property data types (fill, stroke, paint servers, transform, …) |
+//! | [`model::document`] | `SvgTree` document, viewport, and definition types (gradients, patterns, …) |
 //! | [`model::error`] | Error types for SVG parsing failures |
 //! | `render::traversal` | Recursive tree walk that produces the display list |
 //! | `render::renderer` | Per-shape `Render` trait impls + fill/stroke/gradient pipelines |
@@ -34,7 +34,6 @@
 pub mod model;
 mod render;
 
-pub use model::coords;
 pub use model::document;
 pub use model::element;
 pub use model::error;

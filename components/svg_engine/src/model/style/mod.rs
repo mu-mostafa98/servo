@@ -7,10 +7,10 @@
 //! SVG Property Reference: https://www.w3.org/TR/SVG2/propidx.html
 //!
 //! This module holds everything that can appear as a style or presentation
-//! attribute: fill/stroke ([`paint`]), gradients ([`paint_servers`]), transforms
-//! ([`transform`]), node effects ([`effects`]), plus rendering hints and the
-//! combined [`NodeStyle`]. Style construction (FromComputedValues,
-//! FromCssAttrs) lives in `components/layout/svg`.
+//! attribute: fill/stroke ([`paint`]), paint servers ([`paint_servers`]),
+//! transforms ([`transform`]), node effects ([`effects`]), plus rendering
+//! hints and the combined [`NodeStyle`]. Style construction
+//! (FromComputedValues, FromCssAttrs) lives in `components/layout/svg`.
 
 pub mod effects;
 pub mod paint;

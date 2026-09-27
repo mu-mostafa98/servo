@@ -23,7 +23,6 @@ use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::document::*;
 use svg_engine::element::*;
 use svg_engine::style::NodeStyle;
-use svg_engine::style::paint_servers::GradientDef;
 use svg_engine::units::Id;
 use svg_engine::resource::ResourceKey;
 use web_atoms::ns;

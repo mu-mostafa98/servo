@@ -34,9 +34,8 @@ flowchart TD
     CE --> R["render<br/>(display-list emission — future PR)"]
 
     M --> E["element<br/>SvgNode · SvgTag · shape · text · image"]
-    M --> S["style<br/>NodeStyle · paint · gradient · transform · effects"]
-    M --> D["document<br/>SvgTree · defs · viewport"]
-    M --> C["coords<br/>re-export facade (viewport · geometry · transform · length)"]
+    M --> S["style<br/>NodeStyle · paint · paint_servers · transform · effects"]
+    M --> D["document<br/>SvgTree · defs (gradients · patterns · …) · viewport"]
     M --> U["units<br/>Id · Length · Opacity"]
     M --> G["geometry<br/>Point · PathData · PathCommand"]
     M --> RS["resource<br/>ResourceKey"]
@@ -45,11 +44,8 @@ flowchart TD
 
 The model splits into three conceptual buckets — **element** (anything written as
 `<element>`), **style** (anything that can be an attribute), **document** (the tree,
-viewport, and `<defs>` definitions) — plus four leaf modules (`units`, `geometry`,
-`resource`, `error`) of small shared value types, and `coords`, a chapter-facing facade
-that re-exports the coordinate-system types (`ViewportInfo`, `SvgViewport`, `ViewBox`,
-`AspectRatio`, `Point`, `PathData`, `PathCommand`, `TransformOp`, `Length`) from their
-canonical homes.
+viewport, and `<defs>` definitions, including gradients and patterns) — plus four leaf
+modules (`units`, `geometry`, `resource`, `error`) of small shared value types.
 
 ---
 
@@ -657,8 +653,11 @@ classDiagram
   No `Ref` value survives past build. `ContextFill`/`ContextStroke` carry the
   `context-fill`/`context-stroke` keywords through `<marker>`/`<use>` (they render as no
   paint when no context element supplies the value).
-- `GradientDef` stores parsed `<linearGradient>` / `<radialGradient>` from `<defs>`;
-  `href` inheritance is supported — `GradientExplicit` records which attributes were
+- The gradient *definitions* (`GradientDef`, `LinearGradient`, `RadialGradient`,
+  `GradientStop`, `GradientUnits`, `SpreadMethod`, `GradientLength`, `GradientExplicit`)
+  live in `model::document::defs`, alongside `PatternDef` and the other `<defs>`
+  definitions — only the `PaintServer` *handle* lives in `model::style::paint_servers`.
+  `href` inheritance is supported: `GradientExplicit` records which attributes were
   *authored* (vs. defaulted) so an inherited value can be told apart from a local default
   (matters for `fx`/`fy`).
 - `Color` = `svgtypes::Color`.
@@ -666,6 +665,10 @@ classDiagram
 ---
 
 ## 6. Definitions & references (`<defs>`)
+
+Every definition collected from `<defs>` lives in `model::document::defs` — clip paths,
+masks, filters, gradients, patterns, and markers. Gradients are diagrammed in §5 next to
+their `PaintServer` handle; they live here, in the same module as `PatternDef`.
 
 ### `DefRef`
 

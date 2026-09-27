@@ -10,7 +10,7 @@ use webrender_api::DisplayListBuilder;
 use crate::render::renderer::{Render, RenderContext};
 use crate::render::geometry::{path_data_to_bez, ComplexClip};
 use crate::model::element::shape::Path;
-use crate::model::style::paint_servers::{GradientDef, GradientUnits, SpreadMethod};
+use crate::model::document::{GradientDef, GradientUnits, SpreadMethod};
 use crate::model::style::{FillParams, FillRule, StrokeParams};
 use crate::{RasterSink, RasterizedImage};
 
@@ -479,7 +479,7 @@ fn gradient_def_to_peniko(
 
 /// Convert a linear gradient to a [`Gradient`] in pixmap-local coordinates.
 fn linear_to_peniko(
-    lg: &crate::model::style::paint_servers::LinearGradient,
+    lg: &crate::model::document::LinearGradient,
     w: f32,
     h: f32,
     viewbox_scale: (f32, f32),
@@ -510,7 +510,7 @@ fn linear_to_peniko(
 
 /// Convert a radial gradient to a [`Gradient`] in pixmap-local coordinates.
 fn radial_to_peniko(
-    rg: &crate::model::style::paint_servers::RadialGradient,
+    rg: &crate::model::document::RadialGradient,
     w: f32,
     h: f32,
     viewbox_scale: (f32, f32),
@@ -547,7 +547,7 @@ fn radial_to_peniko(
 }
 
 /// Convert svg-text gradient stops to peniko [`ColorStops`].
-fn stops_to_colorstops(stops: &[crate::model::style::paint_servers::GradientStop]) -> ColorStops {
+fn stops_to_colorstops(stops: &[crate::model::document::GradientStop]) -> ColorStops {
     let items: Vec<ColorStop> = stops
         .iter()
         .map(|s| ColorStop {

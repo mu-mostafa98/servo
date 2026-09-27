@@ -18,11 +18,12 @@ use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::document::{
-    ClipPathDef, DefRef, FilterDef, MarkerDef, MaskDef, PatternDef, SvgTree, SvgViewport,
+    ClipPathDef, DefRef, FilterDef, GradientDef, MarkerDef, MaskDef, PatternDef, SvgTree,
+    SvgViewport,
 };
 use svg_engine::element::{Container, SvgNode, SvgTag};
 use svg_engine::style::NodeStyle;
-use svg_engine::style::paint_servers::{GradientDef, PaintServer};
+use svg_engine::style::paint_servers::PaintServer;
 use svg_engine::style::transform::TransformOp;
 use svg_engine::units::Length;
 use web_atoms::ns;
