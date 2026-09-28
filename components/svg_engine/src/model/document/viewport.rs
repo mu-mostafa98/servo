@@ -56,7 +56,12 @@ pub struct ViewBox {
     pub height: Length,
 }
 
-/// Viewport information for the root `<svg>` element.
+/// Common viewport state shared by the root and nested `<svg>` elements —
+/// size, `viewBox` fitting, and clip policy.
+///
+/// The root `<svg>` uses this directly (its size is imposed by CSS layout and
+/// it has no position). A nested `<svg>` adds a position on top of it, via
+/// [`SvgViewport`].
 #[derive(Debug, Clone)]
 pub struct ViewportInfo {
     pub width: Length,
@@ -70,21 +75,15 @@ pub struct ViewportInfo {
 
 /// Viewport established by a nested `<svg>` element.
 ///
-/// Unlike the root [`ViewportInfo`] (whose size is imposed by layout), a nested
-/// `<svg>` carries its own `x`/`y`/`width`/`height` attributes that position and
-/// size the sub-viewport in the parent user coordinate system, plus an optional
-/// `viewBox` and `preserveAspectRatio` that map content into it.
+/// Unlike the root (whose size is imposed by layout and which has no position),
+/// a nested `<svg>` carries its own `x`/`y` attributes that position the
+/// sub-viewport in the parent user coordinate system, plus a [`ViewportInfo`]
+/// holding its size, `viewBox` fitting, and clip policy.
 #[derive(Debug, Clone)]
 pub struct SvgViewport {
     /// Position of the viewport in the parent user coordinate system.
     pub x: Length,
     pub y: Length,
-    /// Size of the viewport (from the `width`/`height` attributes).
-    pub width: Length,
-    pub height: Length,
-    pub view_box: Option<ViewBox>,
-    /// Parsed preserveAspectRatio (defaults to xMidYMid meet via the renderer).
-    pub aspect_ratio: Option<AspectRatio>,
-    /// When true, the sub-viewport clip is omitted (`overflow: visible`).
-    pub overflow_visible: bool,
+    /// Size, `viewBox`, and clip policy shared with the root [`ViewportInfo`].
+    pub viewport: ViewportInfo,
 }

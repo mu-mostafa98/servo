@@ -19,7 +19,7 @@ use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use svg_engine::document::{
     ClipPathDef, DefRef, FilterDef, GradientDef, MarkerDef, MaskDef, PatternDef, SvgTree,
-    SvgViewport,
+    SvgViewport, ViewportInfo,
 };
 use svg_engine::element::{Container, SvgNode, SvgTag};
 use svg_engine::style::NodeStyle;
@@ -273,11 +273,13 @@ fn resolve_use_children<'dom>(
                         viewport: Some(SvgViewport {
                             x: Length::new(use_x.or(sym_x).unwrap_or(0.0)),
                             y: Length::new(use_y.or(sym_y).unwrap_or(0.0)),
-                            width: Length::new(width),
-                            height: Length::new(height),
-                            view_box: sym_view_box,
-                            aspect_ratio: sym_aspect_ratio,
-                            overflow_visible: false,
+                            viewport: ViewportInfo {
+                                width: Length::new(width),
+                                height: Length::new(height),
+                                view_box: sym_view_box,
+                                overflow_visible: false,
+                                aspect_ratio: sym_aspect_ratio,
+                            },
                         }),
                         children: target_node.children,
                     };
@@ -299,10 +301,10 @@ fn resolve_use_children<'dom>(
             if is_svg {
                 if let Some(vp) = cloned.viewport.as_mut() {
                     if let Some(w) = use_width {
-                        vp.width = Length::new(w);
+                        vp.viewport.width = Length::new(w);
                     }
                     if let Some(h) = use_height {
-                        vp.height = Length::new(h);
+                        vp.viewport.height = Length::new(h);
                     }
                 }
             }

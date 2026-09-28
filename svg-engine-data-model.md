@@ -839,11 +839,7 @@ classDiagram
     class SvgViewport {
         +x : Length
         +y : Length
-        +width : Length
-        +height : Length
-        +view_box : Option~ViewBox~
-        +aspect_ratio : Option~AspectRatio~
-        +overflow_visible : bool
+        +viewport : ViewportInfo
     }
 
     class ViewBox {
@@ -878,15 +874,15 @@ classDiagram
 
     ViewportInfo o-- ViewBox : view_box
     ViewportInfo o-- AspectRatio : aspect_ratio
-    SvgViewport o-- ViewBox : view_box
-    SvgViewport o-- AspectRatio : aspect_ratio
+    SvgViewport *-- ViewportInfo : viewport
     AspectRatio *-- AspectAlign
     AspectRatio *-- MeetOrSlice
 ```
 
-- `ViewportInfo` is the **root** `<svg>` viewport (its size is imposed by layout), stored on
-  `SvgTree::viewport`. `SvgViewport` is a **nested** `<svg>` viewport, carried by
-  `SvgNode::viewport` — it owns its `x`/`y`/`width`/`height` in the parent coordinate system.
+- `ViewportInfo` is the **common** viewport state — size, `viewBox` fitting, and clip policy.
+  The root `<svg>` uses it directly (stored on `SvgTree::viewport`); a nested `<svg>` wraps it
+  in `SvgViewport` (carried by `SvgNode::viewport`), which adds the `x`/`y` position in the
+  parent coordinate system.
 - `AspectRatio` defaults to `xMidYMid meet` (SVG spec: `viewBox` alone implies it).
 
 ---

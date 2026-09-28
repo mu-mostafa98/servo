@@ -36,8 +36,7 @@ use crate::svg::primitives::attrs::{conditional_processing_passes, get_attr, is_
 use crate::svg::primitives::css::collect_svg_css_rules;
 use crate::svg::primitives::geometry::build_shape;
 use crate::svg::primitives::viewport::{
-    extract_nested_viewport, extract_viewport_info, parse_aspect_ratio, svg_viewport_reference,
-    viewport_reference,
+    extract_nested_viewport, extract_viewport_info, parse_aspect_ratio, viewport_reference,
 };
 use crate::svg::style::build_style;
 
@@ -168,7 +167,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             None
         };
         let (vw, vh) = match viewport.as_ref() {
-            Some(vp) => svg_viewport_reference(vp),
+            Some(vp) => viewport_reference(&vp.viewport),
             None => (vw, vh),
         };
 

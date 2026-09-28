@@ -237,14 +237,14 @@ fn render_node(
         //  - `clip_rect` (raster space) crops the CPU-rasterized pixmap;
         //  - a WebRender clip chain (parent spatial node) clips the native
         //    primitives to the same viewport rect.
-        if !vp.overflow_visible {
+        if !vp.viewport.overflow_visible {
             let clip_origin = LayoutPoint::new(
                 raster_offset.x + cur_viewbox_scale.0 * vp.x.get(),
                 raster_offset.y + cur_viewbox_scale.1 * vp.y.get(),
             );
             let clip_size = LayoutSize::new(
-                cur_viewbox_scale.0 * vp.width.get(),
-                cur_viewbox_scale.1 * vp.height.get(),
+                cur_viewbox_scale.0 * vp.viewport.width.get(),
+                cur_viewbox_scale.1 * vp.viewport.height.get(),
             );
             let sub_clip = LayoutRect::from_origin_and_size(clip_origin, clip_size);
             clip_rect = match clip_rect {
@@ -259,18 +259,18 @@ fn render_node(
             // parent spatial node (before the viewBox reference frame is pushed
             // below), mirroring how the root viewport clip is built.
             let vp_bounds =
-                LayoutRect::from_origin_and_size(vp_origin, LayoutSize::new(vp.width.get(), vp.height.get()));
+                LayoutRect::from_origin_and_size(vp_origin, LayoutSize::new(vp.viewport.width.get(), vp.viewport.height.get()));
             let vp_clip_id = wr.define_clip_rect(cur_spatial_id, vp_bounds);
             cur_clip_chain = wr.define_clip_chain(clip_chain_option(cur_clip_chain), [vp_clip_id]);
         }
 
-        if let Some(vb) = &vp.view_box {
+        if let Some(vb) = &vp.viewport.view_box {
             let (sx, sy, ox, oy) = compute_viewbox_transform(
                 vb.width.get(),
                 vb.height.get(),
-                vp.width.get(),
-                vp.height.get(),
-                vp.aspect_ratio.as_ref(),
+                vp.viewport.width.get(),
+                vp.viewport.height.get(),
+                vp.viewport.aspect_ratio.as_ref(),
             );
 
             // Translation that maps viewBox space → parent space:

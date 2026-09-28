@@ -97,13 +97,15 @@ pub(crate) fn extract_nested_viewport<'dom>(
     Some(SvgViewport {
         x: Length::new(parse_len("x", 0.0, parent_vw)),
         y: Length::new(parse_len("y", 0.0, parent_vh)),
-        // A nested `<svg>` defaults to 100% of the parent viewport (§8.8), so the
-        // fallback is the parent reference dimension itself.
-        width: Length::new(parse_len("width", parent_vw, parent_vw)),
-        height: Length::new(parse_len("height", parent_vh, parent_vh)),
-        view_box: get("viewBox").as_deref().and_then(extract_viewbox),
-        aspect_ratio: get("preserveAspectRatio").as_deref().map(parse_aspect_ratio),
-        overflow_visible,
+        viewport: ViewportInfo {
+            // A nested `<svg>` defaults to 100% of the parent viewport (§8.8), so
+            // the fallback is the parent reference dimension itself.
+            width: Length::new(parse_len("width", parent_vw, parent_vw)),
+            height: Length::new(parse_len("height", parent_vh, parent_vh)),
+            view_box: get("viewBox").as_deref().and_then(extract_viewbox),
+            overflow_visible,
+            aspect_ratio: get("preserveAspectRatio").as_deref().map(parse_aspect_ratio),
+        },
     })
 }
 
@@ -112,15 +114,6 @@ pub(crate) fn extract_nested_viewport<'dom>(
 /// SVG percentages resolve against the `viewBox` extent when one is present,
 /// otherwise against the viewport `width`/`height` attributes.
 pub(crate) fn viewport_reference(vp: &ViewportInfo) -> (f32, f32) {
-    match vp.view_box.as_ref() {
-        Some(vb) => (vb.width.get(), vb.height.get()),
-        None => (vp.width.get(), vp.height.get()),
-    }
-}
-
-/// Compute the percentage-resolution reference dimensions for a nested `<svg>`
-/// viewport.
-pub(crate) fn svg_viewport_reference(vp: &SvgViewport) -> (f32, f32) {
     match vp.view_box.as_ref() {
         Some(vb) => (vb.width.get(), vb.height.get()),
         None => (vp.width.get(), vp.height.get()),
