@@ -15,6 +15,113 @@ pub enum GradientDef {
     Radial(RadialGradient),
 }
 
+impl GradientDef {
+    /// The referenced gradient id (via `href`/`xlink:href`), without the `#`
+    /// prefix. `None` when this gradient stands alone.
+    pub fn href(&self) -> Option<&str> {
+        match self {
+            GradientDef::Linear(lg) => lg.href.as_deref(),
+            GradientDef::Radial(rg) => rg.href.as_deref(),
+        }
+    }
+
+    /// The gradient coordinate system (`gradientUnits`).
+    pub fn units(&self) -> GradientUnits {
+        match self {
+            GradientDef::Linear(lg) => lg.units,
+            GradientDef::Radial(rg) => rg.units,
+        }
+    }
+
+    /// How the gradient extends beyond its stop range (`spreadMethod`).
+    pub fn spread_method(&self) -> SpreadMethod {
+        match self {
+            GradientDef::Linear(lg) => lg.spread_method,
+            GradientDef::Radial(rg) => rg.spread_method,
+        }
+    }
+
+    /// The `gradientTransform` transform ops.
+    pub fn transform(&self) -> &[TransformOp] {
+        match self {
+            GradientDef::Linear(lg) => &lg.transform,
+            GradientDef::Radial(rg) => &rg.transform,
+        }
+    }
+
+    /// The gradient `<stop>` colors.
+    pub fn stops(&self) -> &[GradientStop] {
+        match self {
+            GradientDef::Linear(lg) => &lg.stops,
+            GradientDef::Radial(rg) => &rg.stops,
+        }
+    }
+
+    /// `x1` of a `<linearGradient>`, or `None` for a radial gradient.
+    pub fn linear_x1(&self) -> Option<GradientLength> {
+        match self {
+            GradientDef::Linear(lg) => Some(lg.x1),
+            _ => None,
+        }
+    }
+
+    /// `y1` of a `<linearGradient>`, or `None` for a radial gradient.
+    pub fn linear_y1(&self) -> Option<GradientLength> {
+        match self {
+            GradientDef::Linear(lg) => Some(lg.y1),
+            _ => None,
+        }
+    }
+
+    /// `x2` of a `<linearGradient>`, or `None` for a radial gradient.
+    pub fn linear_x2(&self) -> Option<GradientLength> {
+        match self {
+            GradientDef::Linear(lg) => Some(lg.x2),
+            _ => None,
+        }
+    }
+
+    /// `y2` of a `<linearGradient>`, or `None` for a radial gradient.
+    pub fn linear_y2(&self) -> Option<GradientLength> {
+        match self {
+            GradientDef::Linear(lg) => Some(lg.y2),
+            _ => None,
+        }
+    }
+
+    /// `cx` of a `<radialGradient>`, or `None` for a linear gradient.
+    pub fn radial_cx(&self) -> Option<GradientLength> {
+        match self {
+            GradientDef::Radial(rg) => Some(rg.cx),
+            _ => None,
+        }
+    }
+
+    /// `cy` of a `<radialGradient>`, or `None` for a linear gradient.
+    pub fn radial_cy(&self) -> Option<GradientLength> {
+        match self {
+            GradientDef::Radial(rg) => Some(rg.cy),
+            _ => None,
+        }
+    }
+
+    /// `r` of a `<radialGradient>`, or `None` for a linear gradient.
+    pub fn radial_r(&self) -> Option<GradientLength> {
+        match self {
+            GradientDef::Radial(rg) => Some(rg.r),
+            _ => None,
+        }
+    }
+
+    /// `fr` of a `<radialGradient>`, or `None` for a linear gradient.
+    pub fn radial_fr(&self) -> Option<GradientLength> {
+        match self {
+            GradientDef::Radial(rg) => Some(rg.fr),
+            _ => None,
+        }
+    }
+}
+
 /// How gradient coordinates are interpreted.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum GradientUnits {

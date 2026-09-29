@@ -78,8 +78,8 @@ fn parse_rect(
         Some(cv) => {
             let svg = cv.get_svg();
             (
-                lp_to_f32(&svg.clone_x(), vw),
-                lp_to_f32(&svg.clone_y(), vh),
+                resolve_length_percentage(&svg.clone_x(), vw),
+                resolve_length_percentage(&svg.clone_y(), vh),
                 match svg.clone_rx() {
                     GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
                         resolve_radius(&nn_lp.0, w)
@@ -137,7 +137,7 @@ fn parse_circle(
     let (cx, cy) = match computed {
         Some(cv) => {
             let svg = cv.get_svg();
-            (lp_to_f32(&svg.clone_cx(), vw), lp_to_f32(&svg.clone_cy(), vh))
+            (resolve_length_percentage(&svg.clone_cx(), vw), resolve_length_percentage(&svg.clone_cy(), vh))
         },
         None => (
             dom_length_resolved("cx", get, fs, vw),
@@ -184,7 +184,7 @@ fn parse_ellipse(
     let (cx, cy) = match computed {
         Some(cv) => {
             let svg = cv.get_svg();
-            (lp_to_f32(&svg.clone_cx(), vw), lp_to_f32(&svg.clone_cy(), vh))
+            (resolve_length_percentage(&svg.clone_cx(), vw), resolve_length_percentage(&svg.clone_cy(), vh))
         },
         None => (
             dom_length_resolved("cx", get, fs, vw),
@@ -271,14 +271,14 @@ fn bez_to_path_data(bez: &kurbo::BezPath) -> PathData {
 
 /// Convert a [`LengthPercentage`] to a pixel value, resolving percentages
 /// against `reference`.
-fn lp_to_f32(lp: &LengthPercentage, reference: f32) -> f32 {
+fn resolve_length_percentage(lp: &LengthPercentage, reference: f32) -> f32 {
     lp.resolve(CssLength::new(reference)).px()
 }
 
 /// Resolve a radius [`LengthPercentage`] against `reference`, mapping a
 /// negative result to `None` (SVG 2 treats a negative radius as `auto`).
 fn resolve_radius(lp: &LengthPercentage, reference: f32) -> Option<f32> {
-    let v = lp_to_f32(lp, reference);
+    let v = resolve_length_percentage(lp, reference);
     (v >= 0.0).then_some(v)
 }
 

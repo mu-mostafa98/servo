@@ -11,7 +11,7 @@ use servo_svg::document::{PatternContentUnits, PatternDef, PatternLength, Patter
 use svgtypes::Length as SvgLength;
 use web_atoms::ns;
 
-use super::{DefinitionParser, collect_def_content, def_content_root};
+use super::{DefinitionParser, build_def_content_root, collect_def_content};
 use crate::svg::builder::SvgTreeBuilder;
 use crate::svg::primitives::transforms::parse_transform_str;
 use crate::svg::primitives::viewport::{extract_viewbox, parse_aspect_ratio};
@@ -93,7 +93,7 @@ impl DefinitionParser for PatternParser {
                 transform,
                 view_box,
                 aspect_ratio,
-                root: def_content_root(children),
+                root: build_def_content_root(children),
             },
         ))
     }

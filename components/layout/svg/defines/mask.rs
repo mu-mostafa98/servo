@@ -10,7 +10,7 @@ use script::layout_dom::ServoLayoutNode;
 use servo_svg::document::{MaskContentUnits, MaskDef, MaskType};
 use web_atoms::ns;
 
-use super::{DefinitionParser, collect_def_content, def_content_root};
+use super::{DefinitionParser, build_def_content_root, collect_def_content};
 use crate::svg::builder::SvgTreeBuilder;
 
 pub(crate) struct MaskParser;
@@ -50,7 +50,7 @@ impl DefinitionParser for MaskParser {
         Some((
             id,
             MaskDef {
-                root: def_content_root(children),
+                root: build_def_content_root(children),
                 mask_type,
                 content_units,
             },

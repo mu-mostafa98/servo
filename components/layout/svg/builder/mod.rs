@@ -8,16 +8,16 @@
 //! (CSS rules, definition maps) through chained methods, then produces the
 //! final tree via [`build`](SvgTreeBuilder::build).
 //!
-//! This module is split into three layers:
-//! - [`mod`] — orchestration: the builder struct, tag dispatch, and image
-//!   assembly.
+//! This module is split into four layers:
+//! - [`mod`] — orchestration: the builder struct and tag dispatch.
 //! - [`resolve`] — child/`<use>` resolution and reference resolution.
 //! - [`text`] — `<text>`/`<tspan>` node assembly and font shaping.
+//! - [`image`] — `<image>` element assembly and image-key resolution.
 
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use html5ever::{LocalName, local_name};
+use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use servo_svg::document::*;
@@ -32,14 +32,15 @@ use crate::svg::defines::{
     ClipPathParser, DefinitionCollector, FilterParser, GradientParser, MarkerParser, MaskParser,
     PatternParser, resolve_gradient_hrefs,
 };
-use crate::svg::primitives::attrs::{conditional_processing_passes, get_attr, is_unknown_svg_element};
+use crate::svg::primitives::attrs::{conditional_processing_passes, is_unknown_svg_element};
 use crate::svg::primitives::css::collect_svg_css_rules;
 use crate::svg::primitives::geometry::build_shape;
 use crate::svg::primitives::viewport::{
-    extract_nested_viewport, extract_viewport_info, parse_aspect_ratio, viewport_reference,
+    extract_nested_viewport, extract_viewport_info, viewport_reference,
 };
 use crate::svg::style::build_style;
 
+mod image;
 mod resolve;
 mod text;
 
@@ -268,7 +269,7 @@ fn build_tag<'dom>(
         "use" => Some(SvgTag::Container(Container::Use)),
         "symbol" => Some(SvgTag::Container(Container::Symbol)),
         "switch" => Some(SvgTag::Container(Container::Switch)),
-        "image" => build_image_tag(element, node, context, vw, vh).map(SvgTag::Image),
+        "image" => image::build_image_tag(element, node, context, vw, vh).map(SvgTag::Image),
         _ => match build_shape(element, tag, computed, vw, vh) {
             Some(shape) => Some(SvgTag::Shape(shape)),
             // §5.3 unknown elements: an SVG-namespace element that is not a
@@ -281,93 +282,6 @@ fn build_tag<'dom>(
             None => None,
         },
     }
-}
-
-/// Build an [`SvgImage`] from element attributes.
-///
-/// Resolves the `href`/`xlink:href` attribute to a WebRender [`ImageKey`] via
-/// the layout image cache: the URL is resolved against the owner document's
-/// base URL, then looked up (or requested) through `image_resolver`. When the
-/// image is not yet loaded the key is `None` and the renderer draws a
-/// placeholder; once it loads, a reflow re-runs this and yields `Some(key)`.
-fn build_image_tag(
-    element: &ServoLayoutElement,
-    node: ServoLayoutNode,
-    context: &LayoutContext,
-    vw: f32,
-    vh: f32,
-) -> Option<SvgImage> {
-    use layout_api::LayoutNode;
-    use net_traits::request::InternalRequest;
-    use net_traits::image_cache::Image;
-    use layout_api::LayoutImageDestination;
-    use crate::svg::primitives::attrs::parse_length_value;
-    let fs = 16.0;
-    let get = |name: &str| get_attr(element, name);
-    // `<image>` x/width percentages resolve against the viewport width, y/height
-    // against the viewport height (§8.8).
-    let read_len = |name: &str, reference: f32, default: f32| -> f32 {
-        get(name)
-            .and_then(|v| parse_length_value(&v, fs, reference))
-            .unwrap_or(default)
-    };
-    let x = read_len("x", vw, 0.0);
-    let y = read_len("y", vh, 0.0);
-    let w = read_len("width", vw, 0.0).max(0.0);
-    let h = read_len("height", vh, 0.0).max(0.0);
-    if w <= 0.0 || h <= 0.0 {
-        return None;
-    }
-    let get_xlink = |name: &str| {
-        element.attribute_as_str(&ns!(xlink), &LocalName::from(name)).map(|s| s.to_string())
-    };
-    let href = get("href").or_else(|| get_xlink("href"));
-    // Resolve href → ImageKey + natural dimensions. Relative URLs are resolved
-    // against the owner document's base URL; data: URIs parse directly.  A
-    // None/empty href, a pending load, or a decode failure all yield
-    // `image_key = None`, in which case the renderer falls back to a
-    // placeholder.
-    let raster_data: Option<(Option<webrender_api::ImageKey>, u32, u32)> =
-        href.as_deref().and_then(|href_str| {
-            let base = node.base_url();
-            let resolved = base.join(href_str.trim()).ok()?;
-            context
-                .image_resolver
-                .get_cached_image_for_url(
-                    node.opaque(),
-                    resolved,
-                    LayoutImageDestination::BoxTreeConstruction,
-                    InternalRequest::No,
-                )
-                .ok()
-                .and_then(|image| match image {
-                    Image::Raster(raster) => {
-                        Some((raster.id, raster.metadata.width, raster.metadata.height))
-                    },
-                    Image::Vector(..) => None, // vector images need rasterization; not handled here
-                })
-        });
-    let (image_key, natural_width, natural_height) = match raster_data {
-        Some((id, w, h)) => (id.map(image_key_to_resource), Some(w), Some(h)),
-        None => (None, None, None),
-    };
-
-    // Parse preserveAspectRatio — defaults to xMidYMid meet per SVG spec.
-    let preserve_aspect_ratio = get("preserveAspectRatio")
-        .map(|v| parse_aspect_ratio(&v))
-        .unwrap_or_default();
-
-    Some(SvgImage {
-        x,
-        y,
-        width: w,
-        height: h,
-        href,
-        image_key,
-        natural_width,
-        natural_height,
-        preserve_aspect_ratio,
-    })
 }
 
 // ======================= Helpers =======================
@@ -387,14 +301,6 @@ fn font_key_to_resource(key: webrender_api::FontInstanceKey) -> ResourceKey {
     }
 }
 
-/// Convert a WebRender image key into the opaque model resource key.
-fn image_key_to_resource(key: webrender_api::ImageKey) -> ResourceKey {
-    ResourceKey {
-        namespace: key.0.0,
-        id: key.1,
-    }
-}
-
 /// Build a document-wide `id → DOM node` map once, so `<use href="#id">`
 /// references resolve in O(1) instead of re-walking the whole document per
 /// `<use>`. References resolve against the whole document (not just the current
@@ -403,7 +309,7 @@ fn build_element_id_map<'dom>(
     node: ServoLayoutNode<'dom>,
 ) -> HashMap<String, ServoLayoutNode<'dom>> {
     let mut map = HashMap::new();
-    collect_ids(document_root(node), &mut map);
+    collect_ids(document_root_node(node), &mut map);
     map
 }
 
@@ -430,7 +336,7 @@ fn collect_ids<'dom>(
 /// parent walk is only `unsafe` because accessing ancestors while layout worker
 /// threads are running is forbidden.
 #[expect(unsafe_code)]
-fn document_root<'dom>(node: ServoLayoutNode<'dom>) -> ServoLayoutNode<'dom> {
+fn document_root_node<'dom>(node: ServoLayoutNode<'dom>) -> ServoLayoutNode<'dom> {
     let mut root = node;
     while let Some(parent) = unsafe { root.dangerous_dom_parent() } {
         root = parent;

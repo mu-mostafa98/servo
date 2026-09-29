@@ -121,7 +121,7 @@ fn collect_def_content<'dom, 'a>(
 }
 
 /// Wrap definition children in a synthetic `<g>` root node.
-fn def_content_root(children: Vec<SvgNode>) -> SvgNode {
+fn build_def_content_root(children: Vec<SvgNode>) -> SvgNode {
     SvgNode {
         id: None,
         tag: SvgTag::Container(Container::Group),

@@ -15,7 +15,6 @@ use servo_svg::document::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     RadialGradient, SpreadMethod,
 };
-use servo_svg::transform::TransformOp;
 use svgtypes::{Color as SvgColor, Length as SvgLength};
 use web_atoms::ns;
 
@@ -250,7 +249,7 @@ pub(crate) fn resolve_gradient_hrefs(map: &mut HashMap<String, Arc<GradientDef>>
     let ids: Vec<String> = map.keys().cloned().collect();
     for id in ids {
         let has_href = match map.get(&id) {
-            Some(def) => grad_href(def).is_some(),
+            Some(def) => def.href().is_some(),
             None => false,
         };
         if !has_href {
@@ -280,7 +279,7 @@ fn resolve_gradient(
     }
 
     let def = map.get(id)?.as_ref().clone();
-    let inherited = grad_href(&def).and_then(|href| resolve_gradient(href, map, visiting));
+    let inherited = def.href().and_then(|href| resolve_gradient(href, map, visiting));
 
     let resolved = match &def {
         GradientDef::Linear(lg) => {
@@ -289,7 +288,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .map(grad_units)
+                    .map(GradientDef::units)
                     .unwrap_or(GradientUnits::ObjectBoundingBox)
             };
             let spread_method = if lg.explicit.spread_method {
@@ -297,7 +296,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .map(grad_spread)
+                    .map(GradientDef::spread_method)
                     .unwrap_or(SpreadMethod::Pad)
             };
             let transform = if lg.explicit.transform {
@@ -305,7 +304,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .map(|d| grad_transform(d).to_vec())
+                    .map(|d| d.transform().to_vec())
                     .unwrap_or_default()
             };
             let stops = if lg.explicit.stops {
@@ -313,7 +312,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .map(|d| grad_stops(d).to_vec())
+                    .map(|d| d.stops().to_vec())
                     .unwrap_or_else(default_stops)
             };
             let x1 = if lg.explicit.x1 {
@@ -321,7 +320,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .and_then(grad_linear_x1)
+                    .and_then(GradientDef::linear_x1)
                     .unwrap_or(GradientLength::Number(0.0))
             };
             let y1 = if lg.explicit.y1 {
@@ -329,7 +328,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .and_then(grad_linear_y1)
+                    .and_then(GradientDef::linear_y1)
                     .unwrap_or(GradientLength::Number(0.0))
             };
             // `x2` defaults to 100% (objectBoundingBox) or 100 (userSpaceOnUse),
@@ -339,7 +338,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .and_then(grad_linear_x2)
+                    .and_then(GradientDef::linear_x2)
                     .unwrap_or(match units {
                         GradientUnits::ObjectBoundingBox => GradientLength::Percentage(100.0),
                         GradientUnits::UserSpaceOnUse => GradientLength::Number(100.0),
@@ -350,7 +349,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .and_then(grad_linear_y2)
+                    .and_then(GradientDef::linear_y2)
                     .unwrap_or(GradientLength::Number(0.0))
             };
             GradientDef::Linear(LinearGradient {
@@ -373,7 +372,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .map(grad_units)
+                    .map(GradientDef::units)
                     .unwrap_or(GradientUnits::ObjectBoundingBox)
             };
             let spread_method = if rg.explicit.spread_method {
@@ -381,7 +380,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .map(grad_spread)
+                    .map(GradientDef::spread_method)
                     .unwrap_or(SpreadMethod::Pad)
             };
             let transform = if rg.explicit.transform {
@@ -389,7 +388,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .map(|d| grad_transform(d).to_vec())
+                    .map(|d| d.transform().to_vec())
                     .unwrap_or_default()
             };
             let stops = if rg.explicit.stops {
@@ -397,7 +396,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .map(|d| grad_stops(d).to_vec())
+                    .map(|d| d.stops().to_vec())
                     .unwrap_or_else(default_stops)
             };
             let cx = if rg.explicit.cx {
@@ -405,7 +404,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .and_then(grad_radial_cx)
+                    .and_then(GradientDef::radial_cx)
                     .unwrap_or(GradientLength::Percentage(50.0))
             };
             let cy = if rg.explicit.cy {
@@ -413,7 +412,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .and_then(grad_radial_cy)
+                    .and_then(GradientDef::radial_cy)
                     .unwrap_or(GradientLength::Percentage(50.0))
             };
             let r = if rg.explicit.r {
@@ -421,7 +420,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .and_then(grad_radial_r)
+                    .and_then(GradientDef::radial_r)
                     .unwrap_or(GradientLength::Percentage(50.0))
             };
             // `fx`/`fy` default to the gradient's own `cx`/`cy`. Walk the chain
@@ -448,7 +447,7 @@ fn resolve_gradient(
             } else {
                 inherited
                     .as_ref()
-                    .and_then(grad_radial_fr)
+                    .and_then(GradientDef::radial_fr)
                     .unwrap_or(GradientLength::Number(0.0))
             };
             GradientDef::Radial(RadialGradient {
@@ -515,104 +514,6 @@ fn default_stops() -> Vec<GradientStop> {
             color: SvgColor::new_rgb(0, 0, 0),
         },
     ]
-}
-
-// ======================= Gradient field accessors =======================
-//
-// Free-function equivalents of `GradientDef`'s former private accessor methods.
-// The resolution logic lives in layout (a separate crate from `servo_svg`), so
-// it reads the `pub` fields of `LinearGradient`/`RadialGradient` directly
-// rather than through inherent methods.
-
-fn grad_href(d: &GradientDef) -> Option<&str> {
-    match d {
-        GradientDef::Linear(lg) => lg.href.as_deref(),
-        GradientDef::Radial(rg) => rg.href.as_deref(),
-    }
-}
-
-fn grad_units(d: &GradientDef) -> GradientUnits {
-    match d {
-        GradientDef::Linear(lg) => lg.units,
-        GradientDef::Radial(rg) => rg.units,
-    }
-}
-
-fn grad_spread(d: &GradientDef) -> SpreadMethod {
-    match d {
-        GradientDef::Linear(lg) => lg.spread_method,
-        GradientDef::Radial(rg) => rg.spread_method,
-    }
-}
-
-fn grad_transform(d: &GradientDef) -> &[TransformOp] {
-    match d {
-        GradientDef::Linear(lg) => &lg.transform,
-        GradientDef::Radial(rg) => &rg.transform,
-    }
-}
-
-fn grad_stops(d: &GradientDef) -> &[GradientStop] {
-    match d {
-        GradientDef::Linear(lg) => &lg.stops,
-        GradientDef::Radial(rg) => &rg.stops,
-    }
-}
-
-fn grad_linear_x1(d: &GradientDef) -> Option<GradientLength> {
-    match d {
-        GradientDef::Linear(lg) => Some(lg.x1),
-        _ => None,
-    }
-}
-
-fn grad_linear_y1(d: &GradientDef) -> Option<GradientLength> {
-    match d {
-        GradientDef::Linear(lg) => Some(lg.y1),
-        _ => None,
-    }
-}
-
-fn grad_linear_x2(d: &GradientDef) -> Option<GradientLength> {
-    match d {
-        GradientDef::Linear(lg) => Some(lg.x2),
-        _ => None,
-    }
-}
-
-fn grad_linear_y2(d: &GradientDef) -> Option<GradientLength> {
-    match d {
-        GradientDef::Linear(lg) => Some(lg.y2),
-        _ => None,
-    }
-}
-
-fn grad_radial_cx(d: &GradientDef) -> Option<GradientLength> {
-    match d {
-        GradientDef::Radial(rg) => Some(rg.cx),
-        _ => None,
-    }
-}
-
-fn grad_radial_cy(d: &GradientDef) -> Option<GradientLength> {
-    match d {
-        GradientDef::Radial(rg) => Some(rg.cy),
-        _ => None,
-    }
-}
-
-fn grad_radial_r(d: &GradientDef) -> Option<GradientLength> {
-    match d {
-        GradientDef::Radial(rg) => Some(rg.r),
-        _ => None,
-    }
-}
-
-fn grad_radial_fr(d: &GradientDef) -> Option<GradientLength> {
-    match d {
-        GradientDef::Radial(rg) => Some(rg.fr),
-        _ => None,
-    }
 }
 
 // ======================= Gradient attribute parsing =======================

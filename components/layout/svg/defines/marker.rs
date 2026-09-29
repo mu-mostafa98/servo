@@ -10,7 +10,7 @@ use script::layout_dom::ServoLayoutNode;
 use servo_svg::document::{MarkerDef, MarkerOrient, MarkerUnits};
 use web_atoms::ns;
 
-use super::{DefinitionParser, collect_def_content, def_content_root};
+use super::{DefinitionParser, build_def_content_root, collect_def_content};
 use crate::svg::builder::SvgTreeBuilder;
 use crate::svg::primitives::viewport::extract_viewbox;
 
@@ -99,7 +99,7 @@ impl DefinitionParser for MarkerParser {
         Some((
             id,
             MarkerDef {
-                root: def_content_root(children),
+                root: build_def_content_root(children),
                 view_box,
                 ref_x,
                 ref_y,
