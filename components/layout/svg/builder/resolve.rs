@@ -17,15 +17,15 @@ use std::sync::Arc;
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-use svg_engine::document::{
+use servo_svg::document::{
     ClipPathDef, DefRef, FilterDef, GradientDef, MarkerDef, MaskDef, PatternDef, SvgTree,
     SvgViewport, ViewportInfo,
 };
-use svg_engine::element::{Container, SvgNode, SvgTag};
-use svg_engine::style::NodeStyle;
-use svg_engine::style::paint_servers::PaintServer;
-use svg_engine::transform::TransformOp;
-use svg_engine::units::Length;
+use servo_svg::element::{Container, SvgNode, SvgTag};
+use servo_svg::style::NodeStyle;
+use servo_svg::style::paint_servers::PaintServer;
+use servo_svg::transform::TransformOp;
+use servo_svg::units::Length;
 use web_atoms::ns;
 
 use super::SvgTreeBuilder;

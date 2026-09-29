@@ -7,7 +7,7 @@ browser, and how each one is treated. The contexts split into five categories.
 |---|---|---|
 | 1. Document mode | A full document — scripts, interaction, and external resources are **allowed** | full document loader |
 | 2. Image mode | **Secure static / animated** — scripts disabled, external resources blocked (only `data:` inlined) | resvg |
-| 3. Inline | Part of the host document's DOM — shares its CSS and scripts | svg_engine |
+| 3. Inline | Part of the host document's DOM — shares its CSS and scripts | servo_svg |
 | 4. External fragment | A fragment of another SVG file, pulled in by reference | not native yet |
 | 5. Web API | Depends on the API used | varies |
 
@@ -176,4 +176,4 @@ const text = await (await fetch('logo.svg')).text();
   They are the one "inlined" source that stays allowed under secure static mode.
 - **Three pipelines, three behaviors:** document mode (1–4) uses the full
   document loader; image mode (5–17) is isolated (currently rasterized by
-  resvg); inline + fragment (3, 18–21) go through `svg_engine`.
+  resvg); inline + fragment (3, 18–21) go through `servo_svg`.

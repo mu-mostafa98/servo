@@ -5,13 +5,13 @@
 //! SVG text span construction from DOM elements.
 //!
 //! Each function parses the attributes of a `<text>` or `<tspan>` element into
-//! an [`svg_engine::element::text::TextSpan`] — the text content plus its
+//! an [`servo_svg::element::text::TextSpan`] — the text content plus its
 //! per-character offsets and typography flags. These are leaf parsers with no
 //! dependency on the builder/defines layers.
 
 use layout_api::LayoutNode;
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::element::text::{DominantBaseline, TextAnchor, TextSpan};
+use servo_svg::element::text::{DominantBaseline, TextAnchor, TextSpan};
 
 /// Build a text span from a `<text>` or `<tspan>` DOM element.
 ///

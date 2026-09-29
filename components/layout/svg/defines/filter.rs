@@ -7,7 +7,7 @@
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::document::{FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive};
+use servo_svg::document::{FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive};
 use web_atoms::ns;
 
 use super::DefinitionParser;

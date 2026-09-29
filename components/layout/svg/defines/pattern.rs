@@ -7,7 +7,7 @@
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::document::{PatternContentUnits, PatternDef, PatternLength, PatternUnits};
+use servo_svg::document::{PatternContentUnits, PatternDef, PatternLength, PatternUnits};
 use svgtypes::Length as SvgLength;
 use web_atoms::ns;
 

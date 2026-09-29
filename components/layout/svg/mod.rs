@@ -27,7 +27,7 @@ pub(crate) mod style;
 use std::sync::Arc;
 
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::document::SvgTree;
+use servo_svg::document::SvgTree;
 
 use crate::context::LayoutContext;
 

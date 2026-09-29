@@ -8,8 +8,8 @@ use std::collections::HashMap;
 
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::element::text::{TextAnchor, TextSpan};
-use svg_engine::element::{Container, SvgNode, SvgTag};
+use servo_svg::element::text::{TextAnchor, TextSpan};
+use servo_svg::element::{Container, SvgNode, SvgTag};
 
 use super::{extract_id, font_key_to_resource};
 use crate::context::LayoutContext;
@@ -229,7 +229,7 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
     use style::values::computed::{
         FontFeatureSettings, FontVariantEastAsian, FontVariantLigatures, FontVariantNumeric,
     };
-    use svg_engine::element::text::{DominantBaseline, ShapedGlyph};
+    use servo_svg::element::text::{DominantBaseline, ShapedGlyph};
     use unicode_script::Script;
 
     if span.text.is_empty() {

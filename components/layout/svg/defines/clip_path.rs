@@ -7,7 +7,7 @@
 use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::document::{ClipPathDef, ClipPathUnits};
+use servo_svg::document::{ClipPathDef, ClipPathUnits};
 use web_atoms::ns;
 
 use super::{DefinitionParser, collect_def_content, def_content_root};

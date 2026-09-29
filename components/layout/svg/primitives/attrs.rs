@@ -6,7 +6,7 @@
 //!
 //! These functions parse raw SVG attribute strings into typed values. They
 //! live in layout (not the engine's `model`) because they are build-time
-//! converters: the DOM → [`svg_engine::model`] boundary. The engine never
+//! converters: the DOM → [`servo_svg::model`] boundary. The engine never
 //! parses attribute strings itself.
 //!
 //! Length parsing is backed by [`svgtypes::Length`] for spec‑compliant handling
@@ -15,7 +15,7 @@
 use html5ever::LocalName;
 use layout_api::LayoutElement;
 use script::layout_dom::ServoLayoutElement;
-use svg_engine::geometry::Point;
+use servo_svg::geometry::Point;
 use svgtypes::{Length as SvgLength, PointsParser};
 use web_atoms::ns;
 

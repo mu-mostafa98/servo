@@ -6,7 +6,7 @@
 //!
 //! Embedded Content spec: <https://www.w3.org/TR/SVG2/embedded.html>
 
-use crate::model::document::viewport::AspectRatio;
+use crate::model::document::AspectRatio;
 use crate::model::resource::ResourceKey;
 
 /// An SVG `<image>` element referencing an external raster or vector image.

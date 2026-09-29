@@ -7,8 +7,8 @@
 //!
 //! Document Structure spec: <https://www.w3.org/TR/SVG2/struct.html>
 
-pub mod defs;
-pub mod viewport;
+mod defs;
+mod viewport;
 
 pub use self::defs::{
     ClipPathDef, ClipPathUnits, DefRef, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,

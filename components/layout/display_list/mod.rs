@@ -75,12 +75,12 @@ use crate::replaced::NaturalSizes;
 use crate::style_ext::{BorderStyleColor, ComputedValuesExt};
 
 #[cfg(feature = "svg-engine")]
-/// Adapts the layout image cache to [`svg_engine::RasterImageUploader`] so the
+/// Adapts the layout image cache to [`servo_svg::RasterImageUploader`] so the
 /// SVG engine can upload CPU-rasterized pixels inline, in document order.
 struct ImageCacheUploader(Arc<dyn ImageCache>);
 
 #[cfg(feature = "svg-engine")]
-impl svg_engine::RasterImageUploader for ImageCacheUploader {
+impl servo_svg::RasterImageUploader for ImageCacheUploader {
     fn upload(
         &self,
         hash: u64,
@@ -852,7 +852,7 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
 
         #[cfg(feature = "svg-engine")]
         if let Some(ref svg_tree) = fragment.svg_render_tree {
-            use svg_engine::render_svg_tree;
+            use servo_svg::render_svg_tree;
             let spatial_id = self.spatial_id(state.spatial_id);
             let clip_chain_id = self.clip_chain_id(state.clip_id);
             let origin = rect.min;
@@ -863,7 +863,7 @@ impl PaintTraversalHandler for DisplayListBuilder<'_> {
             // SVG element's spatial/clip ids, the fragment clip rect, and the
             // style's primitive flags (mirroring `common_properties`).
             let uploader = ImageCacheUploader(self.image_resolver.image_cache.clone());
-            let sink = svg_engine::RasterSink {
+            let sink = servo_svg::RasterSink {
                 uploader: &uploader,
                 spatial_id,
                 clip_chain_id,

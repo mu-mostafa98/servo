@@ -7,7 +7,7 @@
 use html5ever::local_name;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::document::{MaskContentUnits, MaskDef, MaskType};
+use servo_svg::document::{MaskContentUnits, MaskDef, MaskType};
 use web_atoms::ns;
 
 use super::{DefinitionParser, collect_def_content, def_content_root};

@@ -4,7 +4,7 @@
 
 //! `<pattern>` definitions — tile geometry, units, and transform.
 
-use crate::model::document::viewport::{AspectRatio, ViewBox};
+use crate::model::document::{AspectRatio, ViewBox};
 use crate::model::element::SvgNode;
 use crate::model::transform::TransformOp;
 

@@ -1,6 +1,6 @@
 # SVG Engine — Data Model
 
-Class diagrams for the `svg_engine` crate's **model** half (`src/model/`): the pure
+Class diagrams for the `servo_svg` crate's **model** half (`src/model/`): the pure
 SVG data model that the layout layer builds and the render layer consumes.
 
 The model is deliberately free of any rendering dependency — it does **not** import
@@ -30,7 +30,7 @@ single self-contained picture.
 
 ```mermaid
 flowchart TD
-    CE["svg_engine crate"] --> M["model<br/>(pure data — no WebRender / vello)"]
+    CE["servo_svg crate"] --> M["model<br/>(pure data — no WebRender / vello)"]
     CE --> R["render<br/>(display-list emission — future PR)"]
 
     M --> E["element<br/>SvgNode · SvgTag · shape · text · image"]
@@ -159,7 +159,7 @@ classDiagram
 
 Shapes live in `element::shape` — re-exported flat as `element::Shape`,
 `element::Rectangle`, … — so every `<element>` type is reachable from
-`svg_engine::element` (see §1).
+`servo_svg::element` (see §1).
 
 ```mermaid
 classDiagram

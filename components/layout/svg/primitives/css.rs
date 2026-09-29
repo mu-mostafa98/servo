@@ -12,8 +12,8 @@ use std::collections::HashMap;
 
 use layout_api::{LayoutElement, LayoutNode, LayoutNodeType};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-use svg_engine::style::*;
-use svg_engine::units::{Length, Opacity};
+use servo_svg::style::*;
+use servo_svg::units::{Length, Opacity};
 
 use crate::svg::primitives::attrs::get_attr;
 use crate::svg::primitives::paint::parse_paint_server;

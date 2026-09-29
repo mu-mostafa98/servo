@@ -12,13 +12,13 @@
 use std::collections::HashMap;
 use std::sync::Arc;
 
-use svg_engine::document::*;
-use svg_engine::element::*;
-use svg_engine::geometry::{PathCommand, PathData, Point};
-use svg_engine::transform::TransformOp;
-use svg_engine::style::*;
-use svg_engine::units::{Id, Length, Opacity};
-use svg_engine::{DominantBaseline, SvgImage, SvgTag, TextAnchor, TextSpan};
+use servo_svg::document::*;
+use servo_svg::element::*;
+use servo_svg::geometry::{PathCommand, PathData, Point};
+use servo_svg::transform::TransformOp;
+use servo_svg::style::*;
+use servo_svg::units::{Id, Length, Opacity};
+use servo_svg::{DominantBaseline, SvgImage, SvgTag, TextAnchor, TextSpan};
 
 // ============================================================
 // 1. SHAPE DATA STRUCT TESTS
@@ -917,9 +917,9 @@ fn color_interpolation_linear_rgb_gradient_math() {
     ];
 
     // sRGB midpoint
-    let srgb_mid = svg_engine::color_at_t_with_space(&stops, 0.5, ColorInterpolation::Srgb);
+    let srgb_mid = servo_svg::color_at_t_with_space(&stops, 0.5, ColorInterpolation::Srgb);
     // Linear RGB midpoint
-    let linear_mid = svg_engine::color_at_t_with_space(&stops, 0.5, ColorInterpolation::LinearRGB);
+    let linear_mid = servo_svg::color_at_t_with_space(&stops, 0.5, ColorInterpolation::LinearRGB);
 
     // Linear RGB midpoint should be perceptually different from sRGB.
     // The R and B channels diverge — linear RGB produces a darker purple.
@@ -1129,7 +1129,7 @@ fn defs_container_in_tree() {
 
 #[test]
 fn svg_node_with_transforms() {
-    use svg_engine::transform::TransformOp;
+    use servo_svg::transform::TransformOp;
     let node = SvgNode {
         id: Some(Id::new("t")),
         tag: SvgTag::Container(Container::Group),
@@ -1146,36 +1146,36 @@ fn svg_node_with_transforms() {
 // ============================================================
 
 #[test]
-fn svg_engine_error_missing_attr() {
-    use svg_engine::error::SvgEngineError;
+fn servo_svg_error_missing_attr() {
+    use servo_svg::error::SvgEngineError;
     let err = SvgEngineError::MissingAttribute("width".to_owned());
     assert_eq!(err.to_string(), "missing SVG attribute: width");
 }
 
 #[test]
-fn svg_engine_error_parse_error() {
-    use svg_engine::error::SvgEngineError;
+fn servo_svg_error_parse_error() {
+    use servo_svg::error::SvgEngineError;
     let err = SvgEngineError::ParseError("invalid number".to_owned());
     assert_eq!(err.to_string(), "SVG parse error: invalid number");
 }
 
 #[test]
-fn svg_engine_error_unsupported() {
-    use svg_engine::error::SvgEngineError;
+fn servo_svg_error_unsupported() {
+    use servo_svg::error::SvgEngineError;
     let err = SvgEngineError::UnsupportedFeature("gradients".to_owned());
     assert_eq!(err.to_string(), "unsupported SVG feature: gradients");
 }
 
 #[test]
-fn svg_engine_error_implements_std_error() {
-    use svg_engine::error::SvgEngineError;
+fn servo_svg_error_implements_std_error() {
+    use servo_svg::error::SvgEngineError;
     let err: &dyn std::error::Error = &SvgEngineError::ParseError("test".to_owned());
     assert!(!err.to_string().is_empty());
 }
 
 #[test]
-fn svg_engine_error_debug_differs_from_display() {
-    use svg_engine::error::SvgEngineError;
+fn servo_svg_error_debug_differs_from_display() {
+    use servo_svg::error::SvgEngineError;
     let err = SvgEngineError::ParseError("test".to_owned());
     assert_ne!(format!("{err:?}"), format!("{err}"));
 }

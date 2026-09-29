@@ -7,7 +7,7 @@
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::document::{MarkerDef, MarkerOrient, MarkerUnits};
+use servo_svg::document::{MarkerDef, MarkerOrient, MarkerUnits};
 use web_atoms::ns;
 
 use super::{DefinitionParser, collect_def_content, def_content_root};

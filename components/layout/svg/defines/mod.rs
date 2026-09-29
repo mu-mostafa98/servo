@@ -16,8 +16,8 @@ use std::sync::Arc;
 
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::element::{Container, SvgNode, SvgTag};
-use svg_engine::style::NodeStyle;
+use servo_svg::element::{Container, SvgNode, SvgTag};
+use servo_svg::style::NodeStyle;
 
 use crate::svg::builder::SvgTreeBuilder;
 

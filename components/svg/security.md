@@ -21,7 +21,7 @@ flowchart TD
     SEC5 -->|"no"| WARN5["⚠ block & log"]
     SEC5 -->|"yes"| RENDER
 
-    RENDER["<b>5. Render</b> — layout thread<br/>svg_engine"]
+    RENDER["<b>5. Render</b> — layout thread<br/>servo_svg"]
     RENDER -->|"display list commands"| BACKEND
 
     BACKEND["<b>6. Render Service Backend</b>"]

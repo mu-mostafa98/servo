@@ -1,6 +1,6 @@
-# SVG Attribute Support — `svg_engine`
+# SVG Attribute Support — `servo_svg`
 
-Per-element reference of which attributes the `svg_engine` rendering pipeline
+Per-element reference of which attributes the `servo_svg` rendering pipeline
 supports, and through **which mechanism** each one reaches the renderer.
 
 This file has one section per SVG element. It is built up element by element;
@@ -111,7 +111,7 @@ they're the scaffolding the other tables depend on.
 ### Valid on `<svg>` but not consumed by the renderer
 
 Per spec these attributes **are** valid on `<svg>` and have a defined effect —
-that effect just happens in a component other than `svg_engine`:
+that effect just happens in a component other than `servo_svg`:
 
 | Attribute | Effect (per spec) | Handled by |
 |---|---|---|
@@ -759,7 +759,7 @@ attribute-only rows (✅ in the attribute column only).
 Paint servers defined in `<defs>` and referenced from `fill`/`stroke` via
 `fill="url(#id)"`. They are **never rendered directly** — they exist only as
 definitions. Both are parsed by `parse_gradient_element`
-([gradient.rs](components/svg_engine/src/style/gradient.rs#L148-L258)), which
+([gradient.rs](components/svg/src/style/gradient.rs#L148-L258)), which
 reads **raw DOM attributes only**: none of the geometry/units/spread attributes
 below are CSS properties, and Servo does not run the gradient element through
 `build_style` / `synthesize_presentational_hints`. So `style="…"` and stylesheet
@@ -855,7 +855,7 @@ rules have no effect on it.
 ### Behavior notes
 
 - Stops are **sorted by `offset`** after parsing
-  ([gradient.rs:194-198](components/svg_engine/src/style/gradient.rs#L194-L198)).
+  ([gradient.rs:194-198](components/svg/src/style/gradient.rs#L194-L198)).
 - A `<stop>` with no usable `offset` is **dropped**; if a gradient ends up with
   no stops, Servo synthesizes two black stops at `0.0` and `1.0`.
 - Everything else is **not applicable to `<stop>`** — `fill`, `stroke`,
@@ -1047,7 +1047,7 @@ as the shapes, so the shared shape tables apply — with these differences:
   `fill-rule`, and all `stroke-*` sub-properties are parsed into the style but
   ignored for text (they only affect shapes). Stroke on text is a filled-glyph
   recolor, not a true outline
-  ([text.rs](components/svg_engine/src/renderer/text.rs#L49-L68)).
+  ([text.rs](components/svg/src/renderer/text.rs#L49-L68)).
 - **`text-anchor`/`dominant-baseline` are attribute-only** (see above) — their
   CSS form is not applied.
 

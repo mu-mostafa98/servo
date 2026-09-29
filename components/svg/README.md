@@ -1,4 +1,4 @@
-# SVG Rendering Pipeline — `svg_engine`
+# SVG Rendering Pipeline — `servo_svg`
 
 ## 1. Overview
 
@@ -21,7 +21,7 @@ and markers) into a pure-data `SvgTree`. The
 result is a tree of `SvgNode`s carrying only the geometry and paint
 information the renderer needs — no DOM or layout types leak through.
 
-**2. The engine — `SvgTree` → display commands (in `svg_engine`)**
+**2. The engine — `SvgTree` → display commands (in `servo_svg`)**
 
 This crate's core is `render_svg_tree`, which walks the `SvgTree`
 recursively and emits a rendering backend display list. At each node it resolves the
@@ -155,7 +155,7 @@ network-facing) unless the deployer provides that exclusion.
 
 ### 5.1 System boundaries
 
-`svg_engine` exposes a single interface — `render_svg_tree` — which takes an
+`servo_svg` exposes a single interface — `render_svg_tree` — which takes an
 `SvgTree` and emits a rendering backend display list.
 
 ```mermaid
@@ -164,7 +164,7 @@ flowchart LR
         DOM["DOM + Stylo<br/>computed values"]
     end
 
-    subgraph ENGINE["svg_engine (this crate)"]
+    subgraph ENGINE["servo_svg (this crate)"]
         RST["render_svg_tree"]
     end
 
@@ -190,7 +190,7 @@ flowchart TB
 
     IL["layout — SVG image fragment traversal"]:::entry
 
-    subgraph ENG["SVG Engine — components/svg_engine/"]
+    subgraph ENG["SVG Engine — components/svg/"]
         direction TB
         TRAV["Traversal — tree walk & state<br/>(transforms, clips)"]
 
@@ -354,8 +354,8 @@ parsing).
 
 **Build-system impact**
 
-- `svg_engine` is a **workspace member** (listed in the root `Cargo.toml`),
-  published at `components/svg_engine`.
+- `servo_svg` is a **workspace member** (listed in the root `Cargo.toml`),
+  published at `components/svg`.
 - No build bootstrap, feature-unification, or build-script changes are
   introduced — the added crates are pure Rust libraries.
 - `vello_cpu` is enabled with the `multithreading` feature in the workspace pin.
@@ -365,7 +365,7 @@ parsing).
 | API | Description | Input parameters | Return type |
 |-----|-------------|------------------|-------------|
 | `build_svg_tree` (components/layout/svg) | Builds the `SvgTree` from the DOM subtree and resolved CSS values. | `node: ServoLayoutNode<'dom>`, `context: &LayoutContext` | `Option<Arc<SvgTree>>` |
-| `render_svg_tree` (components/svg_engine) | Renders an entire `SvgTree` into a rendering backend display list. | `tree: &SvgTree`, `svg_origin: &LayoutPoint`, `svg_size: LayoutSize`, `device_scale: f32`, `spatial_id: SpatialId`, `clip_chain_id: ClipChainId`, `sink: &RasterSink`, `wr: &mut DisplayListBuilder` | No return — pushes display commands directly into `wr` (`&mut DisplayListBuilder`) |
+| `render_svg_tree` (components/svg) | Renders an entire `SvgTree` into a rendering backend display list. | `tree: &SvgTree`, `svg_origin: &LayoutPoint`, `svg_size: LayoutSize`, `device_scale: f32`, `spatial_id: SpatialId`, `clip_chain_id: ClipChainId`, `sink: &RasterSink`, `wr: &mut DisplayListBuilder` | No return — pushes display commands directly into `wr` (`&mut DisplayListBuilder`) |
 
 ## 8. Complexity and resource usage
 
@@ -446,7 +446,7 @@ transform, and `<symbol>` targets are wrapped in a viewport-carrying group. The
 result is a `SvgNode` `Group` whose children are a **materialized copy**
 of the referenced content.
 
-**Render time (in `svg_engine`).** The traversal treats `Container::Use` like a
+**Render time (in `servo_svg`).** The traversal treats `Container::Use` like a
 `Group`: `render_node` → `recurse_children` → walk the cloned children, each of
 which emits its normal commands (`push_rect` / `push_gradient` / `push_text`
 natively, or a `vello_cpu` `push_image` for paths). The display commands for a

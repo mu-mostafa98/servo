@@ -5,12 +5,12 @@
 //! Paint server and color parsing from SVG attribute strings.
 //!
 //! These are build-time converters from DOM attribute text into the engine's
-//! [`svg_engine::style::paint_servers::PaintServer`] type, so they live in layout
+//! [`servo_svg::style::paint_servers::PaintServer`] type, so they live in layout
 //! (not the engine's `model`), which never parses attribute strings itself.
 
-use svg_engine::style::paint_servers::PaintServer;
-use svg_engine::style::{PaintOperation, PaintOrder};
-use svg_engine::units::Id;
+use servo_svg::style::paint_servers::PaintServer;
+use servo_svg::style::{PaintOperation, PaintOrder};
+use servo_svg::units::Id;
 use svgtypes::Color as SvgColor;
 
 /// Parse a CSS/SVG color value into an [`svgtypes::Color`].

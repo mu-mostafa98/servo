@@ -4,7 +4,7 @@
 
 //! `<marker>` definitions — sizing units, orientation, and geometry.
 
-use crate::model::document::viewport::ViewBox;
+use crate::model::document::ViewBox;
 use crate::model::element::SvgNode;
 
 /// Coordinate system for marker sizing.

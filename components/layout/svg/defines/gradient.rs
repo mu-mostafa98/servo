@@ -10,12 +10,12 @@ use std::sync::Arc;
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use svg_engine::error::{SvgEngineError, SvgResult};
-use svg_engine::document::{
+use servo_svg::error::{SvgEngineError, SvgResult};
+use servo_svg::document::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     RadialGradient, SpreadMethod,
 };
-use svg_engine::transform::TransformOp;
+use servo_svg::transform::TransformOp;
 use svgtypes::{Color as SvgColor, Length as SvgLength};
 use web_atoms::ns;
 
@@ -520,7 +520,7 @@ fn default_stops() -> Vec<GradientStop> {
 // ======================= Gradient field accessors =======================
 //
 // Free-function equivalents of `GradientDef`'s former private accessor methods.
-// The resolution logic lives in layout (a separate crate from `svg_engine`), so
+// The resolution logic lives in layout (a separate crate from `servo_svg`), so
 // it reads the `pub` fields of `LinearGradient`/`RadialGradient` directly
 // rather than through inherent methods.
 

@@ -8768,6 +8768,7 @@ dependencies = [
  "servo-profile-traits",
  "servo-script",
  "servo-script-traits",
+ "servo-svg",
  "servo-tracing",
  "servo-url",
  "servo_arc",
@@ -8776,7 +8777,6 @@ dependencies = [
  "stylo",
  "stylo_atoms",
  "stylo_traits",
- "svg_engine",
  "svgtypes",
  "taffy",
  "tracing",
@@ -9643,6 +9643,19 @@ dependencies = [
 ]
 
 [[package]]
+name = "servo-svg"
+version = "0.6.0"
+dependencies = [
+ "euclid",
+ "kurbo",
+ "log",
+ "lyon",
+ "svgtypes",
+ "vello_cpu 0.2.0",
+ "webrender_api",
+]
+
+[[package]]
 name = "servo-timers"
 version = "0.6.0"
 dependencies = [
@@ -10496,19 +10509,6 @@ dependencies = [
  "winapi",
  "wio",
  "x11-dl",
-]
-
-[[package]]
-name = "svg_engine"
-version = "0.6.0"
-dependencies = [
- "euclid",
- "kurbo",
- "log",
- "lyon",
- "svgtypes",
- "vello_cpu 0.2.0",
- "webrender_api",
 ]
 
 [[package]]

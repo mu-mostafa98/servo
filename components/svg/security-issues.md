@@ -1,4 +1,4 @@
-# SVG Security Threats — `svg_engine`
+# SVG Security Threats — `servo_svg`
 
 A catalog of attack vectors against the SVG rendering pipeline, ordered by
 severity (most critical first). Each entry describes what the attacker achieves,
@@ -73,7 +73,7 @@ flowchart TD
     SEC5 -->|"no"| WARN5["⚠ block & log"]
     SEC5 -->|"yes"| RENDER
 
-    RENDER["<b>5. Render</b> — layout thread<br/>svg_engine"]
+    RENDER["<b>5. Render</b> — layout thread<br/>servo_svg"]
     RENDER -->|"display list commands"| BACKEND
 
     BACKEND["<b>6. Render Service Backend</b>"]
@@ -102,7 +102,7 @@ flowchart TD
   and stylesheets — on demand from style and build.
 - **4. Build** — `layout::svg`, layout thread — resolves `<use>`, geometry, and
   paint servers into an SVG render tree.
-- **5. Render** — `svg_engine`, layout thread — turns the render tree into
+- **5. Render** — `servo_svg`, layout thread — turns the render tree into
   display-list commands — native WebRender primitives, or CPU-rasterized images.
 - **6. Render Service Backend** — `webrender`, render backend thread — draws the
   display-list commands to the screen.
@@ -171,7 +171,7 @@ tessellator/rasterizer.
 ```
 
 - **Fix:**
-  - **Where (Stage 5 — Render):** tessellator `svg_engine::tessellator` ([tessellator.rs](components/svg_engine/src/tessellator.rs)) via `lyon`; rasterizer `svg_engine::renderer` ([renderer/](components/svg_engine/src/renderer/)) via `vello_cpu`.
+  - **Where (Stage 5 — Render):** tessellator `servo_svg::tessellator` ([tessellator.rs](components/svg/src/tessellator.rs)) via `lyon`; rasterizer `servo_svg::renderer` ([renderer/](components/svg/src/renderer/)) via `vello_cpu`.
   - **Describe the fix:** fuzz the tessellator and rasterizer with degenerate geometry and audit their `unsafe` blocks.
 
 **1.3 — Crafted `<text>` → font shaping** *(FFI — HarfBuzz)*
@@ -333,7 +333,7 @@ block.
 <svg><style>@import url("http://169.254.169.254/…");</style></svg>
 ```
 - **Fix:**
-  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` crate — external git dependency (`servo/stylo`, patched to `mu-mostafa98/stylo` `svg-engine` branch); stylesheet loader / `@import`/`url()`. Not in `svg_engine` or this repo tree.
+  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` crate — external git dependency (`servo/stylo`, patched to `mu-mostafa98/stylo` `svg-engine` branch); stylesheet loader / `@import`/`url()`. Not in `servo_svg` or this repo tree.
   - **Describe the fix:** strip external `@import`/`url()` from SVG `<style>` (sanitize), or route them through the same fetch allowlist.
 
 **3.3 — External font (`@font-face`)**
@@ -348,7 +348,7 @@ block.
 <svg><style>@font-face { font-family:x; src:url("http://internal/…"); }</style></svg>
 ```
 - **Fix:**
-  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` crate (external git dep) — `@font-face` rule + external `src` fetch. Not in `svg_engine`.
+  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` crate (external git dep) — `@font-face` rule + external `src` fetch. Not in `servo_svg`.
   - **Describe the fix:** block external `@font-face src` fetches via the same allowlist; fall back to system fonts.
 
 ## 4. Information Disclosure — file read
@@ -409,7 +409,7 @@ leaked one character at a time to the attacker's server.
 ```
 - **Known real cases:** [CVE-2026-40301](https://github.com/advisories/GHSA-93vf-569f-22cq) (SVG `<style>` passes `url()`/`@import` unfiltered), [Snipe-IT CVE-2026-86738](https://vuldb.com/cve/CVE-2026-86738), [PortSwigger blind CSS exfiltration](https://portswigger.net/research/blind-css-exfiltration).
 - **Fix:**
-  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` + `selectors` crates (external git deps) — cascade / attribute-selector matching for SVG `<style>`. Not in `svg_engine`.
+  - **Where (Stage 2 — Style, earliest):** Stylo `stylo` + `selectors` crates (external git deps) — cascade / attribute-selector matching for SVG `<style>`. Not in `servo_svg`.
   - **Describe the fix:** sanitize SVG `<style>` — strip external `url()`/`@import` or whitelist declarations; render SVG in an origin-isolated context so its CSS can't touch host-DOM data.
 
 **5.2 — External URL in an attribute** *(sends a known secret)*
@@ -448,7 +448,7 @@ below are **suggested starting limits** — none are implemented yet.
 <svg><g><g><g> <!-- …100,000 nested <g>… --> </g></g></g></svg>
 ```
 - **Fix:**
-  - **Where (Stage 1 — Parse, earliest):** `script::dom::servoparser::Sink` — `create_element` ([mod.rs:1831](components/script/dom/servoparser/mod.rs#L1831)) / `create_element_for_token` (:2129): cap tree depth during DOM construction. Defense-in-depth at render: `svg_engine::traversal::render_svg_tree` / `render_node` ([traversal.rs:36](components/svg_engine/src/traversal.rs#L36)).
+  - **Where (Stage 1 — Parse, earliest):** `script::dom::servoparser::Sink` — `create_element` ([mod.rs:1831](components/script/dom/servoparser/mod.rs#L1831)) / `create_element_for_token` (:2129): cap tree depth during DOM construction. Defense-in-depth at render: `servo_svg::traversal::render_svg_tree` / `render_node` ([traversal.rs:36](components/svg/src/traversal.rs#L36)).
   - **Describe the fix:** cap element nesting depth (e.g. max 512).
 
 **6.2 — Deep acyclic `<use>` chain**
@@ -629,7 +629,7 @@ below are **suggested starting limits** — none are implemented yet.
 <rect width="100" height="100" fill="url(#p)"/></svg>
 ```
 - **Fix:**
-  - **Where (Stage 5 — Render):** `svg_engine::visitor::PaintServerFixupVisitor` ([visitor.rs:23](components/svg_engine/src/visitor.rs#L23)) and `svg_engine::renderer::pattern` ([pattern.rs](components/svg_engine/src/renderer/pattern.rs)).
+  - **Where (Stage 5 — Render):** `servo_svg::visitor::PaintServerFixupVisitor` ([visitor.rs:23](components/svg/src/visitor.rs#L23)) and `servo_svg::renderer::pattern` ([pattern.rs](components/svg/src/renderer/pattern.rs)).
   - **Describe the fix:** cap paint-server reference depth (e.g. max 16 nested `url(#…)` resolutions).
 
 **6.13 — Extreme stroke / dash values**
