@@ -8,9 +8,10 @@
 //! (CSS rules, definition maps) through chained methods, then produces the
 //! final tree via [`build`](SvgTreeBuilder::build).
 //!
-//! This module is split into four layers:
+//! This module is split into five layers:
 //! - [`mod`] — orchestration: the builder struct and tag dispatch.
-//! - [`resolve`] — child/`<use>` resolution and reference resolution.
+//! - [`resolve`] — child/`<use>`/`<switch>` resolution.
+//! - [`references`] — the post-build reference-resolution pass.
 //! - [`text`] — `<text>`/`<tspan>` node assembly and font shaping.
 //! - [`image`] — `<image>` element assembly and image-key resolution.
 
@@ -41,6 +42,7 @@ use crate::svg::primitives::viewport::{
 use crate::svg::style::build_style;
 
 mod image;
+mod references;
 mod resolve;
 mod text;
 
@@ -116,7 +118,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
 
         // Resolve transient `PaintServer::Ref { id, .. }` / `DefRef::Ref(id)`
         // values into typed `Arc` handles now that the definition maps are collected.
-        resolve::resolve_references(&mut tree);
+        references::resolve_references(&mut tree);
 
         Some(Arc::new(tree))
     }
