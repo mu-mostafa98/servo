@@ -45,7 +45,7 @@ pub(crate) fn build_text_node(
     if runs.is_empty() {
         let mut span = build_text(node, &get, fs)?;
         shape_text_span(&mut span, node, context);
-        let (style, transforms) = build_style(node, context, css_rules, None);
+        let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
         let id = extract_id(&element);
         return Some(SvgNode {
             id,
@@ -63,7 +63,7 @@ pub(crate) fn build_text_node(
         // Shape with the run's own node (the <tspan> for tspan runs, the
         // <text> itself for bare-text runs) so the run's font-size applies.
         shape_text_span(&mut span, run_node, context);
-        let (style, transforms) = build_style(node, context, css_rules, None);
+        let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
         let id = extract_id(&element);
         return Some(SvgNode {
             id,
@@ -119,7 +119,7 @@ pub(crate) fn build_text_node(
         }
         dy_pen += span.dy.iter().sum::<f32>();
         pen += span.total_advance();
-        let (run_style, run_transforms) = build_style(run_node, context, css_rules, None);
+        let (run_style, run_transforms, _color) = build_style(run_node, context, css_rules, None, None);
         let run_id = extract_id(&run_node.as_element()?);
         children.push(SvgNode {
             id: run_id,
@@ -131,7 +131,7 @@ pub(crate) fn build_text_node(
         });
     }
 
-    let (style, transforms) = build_style(node, context, css_rules, None);
+    let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
     let id = extract_id(&element);
     Some(SvgNode {
         id,

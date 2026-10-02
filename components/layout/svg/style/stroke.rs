@@ -92,7 +92,11 @@ impl FromComputedValues for StrokeParams {
     }
 }
 
-pub(crate) fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle) {
+pub(crate) fn apply_stroke_presentation_attrs(
+    element: &ServoLayoutElement,
+    style: &mut NodeStyle,
+    current_color: &SvgColor,
+) {
     let style_attr = get_attr(element, "style");
     let read_attr = |name: &str| -> Option<String> {
         get_attr(element, name).or_else(|| {
@@ -122,7 +126,7 @@ pub(crate) fn apply_stroke_presentation_attrs(element: &ServoLayoutElement, styl
         dash_offset: 0.0,
     });
 
-    stroke.paint_server = parse_paint_server(&stroke_value);
+    stroke.paint_server = parse_paint_server(&stroke_value, current_color);
     if let Some(v) = read_attr("stroke-width") {
         stroke.width = Length::new(
             v.trim_end_matches("px")

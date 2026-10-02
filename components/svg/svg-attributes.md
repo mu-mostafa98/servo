@@ -95,7 +95,7 @@ they're the scaffolding the other tables depend on.
 
 | Attribute | Inline style | CSS | Present. attr | Inherited | Notes |
 |---|---|---|---|---|---|
-| `color` | ✅ | ✅ | ❌ | ✅ | **CSS-only** in Servo — the `color` attribute is not synthesized; only meaningful as inherited `currentColor` for children |
+| `color` | ✅ | ✅ | ✅ | ✅ | Attribute read by the layout layer (not synthesized into computed `color`) to resolve inherited `currentColor` |
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
@@ -203,7 +203,7 @@ only the viewport attributes (`width`/`height`/`viewBox`/`preserveAspectRatio`/
 
 | Attribute | Inline style | CSS | Present. attr | Inherited | Notes |
 |---|---|---|---|---|---|
-| `color` | ✅ | ✅ | ❌ | ✅ | **CSS-only** in Servo — the `color` attribute is not synthesized; only meaningful as inherited `currentColor` for children |
+| `color` | ✅ | ✅ | ✅ | ✅ | Attribute read by the layout layer (not synthesized into computed `color`) to resolve inherited `currentColor` |
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
@@ -311,7 +311,7 @@ drawn in the *referencing* element's context (it does not inherit from `<defs>`)
 
 | Attribute | Inline style | CSS | Present. attr | Inherited | Notes |
 |---|---|---|---|---|---|
-| `color` | ✅ | ✅ | ❌ | ✅ | **CSS-only** in Servo — the `color` attribute is not synthesized; only meaningful as inherited `currentColor` for children |
+| `color` | ✅ | ✅ | ✅ | ✅ | Attribute read by the layout layer (not synthesized into computed `color`) to resolve inherited `currentColor` |
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
@@ -425,7 +425,7 @@ viewport are controlled by the referencing `<use>`.
 
 | Attribute | Inline style | CSS | Present. attr | Inherited | Notes |
 |---|---|---|---|---|---|
-| `color` | ✅ | ✅ | ❌ | ✅ | **CSS-only** in Servo — the `color` attribute is not synthesized; only meaningful as inherited `currentColor` for children |
+| `color` | ✅ | ✅ | ✅ | ✅ | Attribute read by the layout layer (not synthesized into computed `color`) to resolve inherited `currentColor` |
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
@@ -549,7 +549,7 @@ clone can override).
 
 | Attribute | Inline style | CSS | Present. attr | Inherited | Notes |
 |---|---|---|---|---|---|
-| `color` | ✅ | ✅ | ❌ | ✅ | **CSS-only** in Servo — the `color` attribute is not synthesized; only meaningful as inherited `currentColor` for children |
+| `color` | ✅ | ✅ | ✅ | ✅ | Attribute read by the layout layer (not synthesized into computed `color`) to resolve inherited `currentColor` |
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
@@ -662,7 +662,7 @@ attribute-only rows (✅ in the attribute column only).
 
 | Attribute | Inline style | CSS | Present. attr | Inherited | Notes |
 |---|---|---|---|---|---|
-| `color` | ✅ | ✅ | ❌ | ✅ | **CSS-only** in Servo — the `color` attribute is not synthesized; meaningful only as `currentColor` for `fill`/`stroke` |
+| `color` | ✅ | ✅ | ✅ | ✅ | Attribute read by the layout layer (not synthesized) to resolve `currentColor` for `fill`/`stroke`/gradient stops |
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |

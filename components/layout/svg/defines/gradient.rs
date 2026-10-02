@@ -20,7 +20,7 @@ use web_atoms::ns;
 
 use super::DefinitionParser;
 use crate::svg::builder::SvgTreeBuilder;
-use crate::svg::primitives::paint::parse_css_color;
+use crate::svg::primitives::paint::parse_css_color_or_current;
 use crate::svg::primitives::transforms::parse_transform_str;
 
 pub(crate) struct GradientParser;
@@ -33,35 +33,39 @@ impl DefinitionParser for GradientParser {
 
     fn parse<'dom, 'a>(
         node: ServoLayoutNode<'dom>,
-        _builder: &SvgTreeBuilder<'dom, 'a>,
+        builder: &SvgTreeBuilder<'dom, 'a>,
     ) -> Option<(String, Self::Definition)> {
         let element = node.as_element()?;
         let grad_name = element.local_name().as_ref().to_owned();
         if grad_name != "linearGradient" && grad_name != "radialGradient" {
             return None;
         }
-        let mut stop_attrs: Vec<Vec<(String, String)>> = Vec::new();
+        let mut stops_input: Vec<StopInput> = Vec::new();
         for stop_node in node.dom_children() {
             if let Some(stop_elem) = stop_node.as_element() {
                 if stop_elem.local_name() == &local_name!("stop") {
-                    let mut attrs: Vec<(String, String)> = Vec::new();
-                    if let Some(offset) = stop_elem.attribute_as_str(&ns!(), &local_name!("offset"))
-                    {
-                        attrs.push(("offset".to_owned(), offset.to_string()));
+                    let offset = stop_elem
+                        .attribute_as_str(&ns!(), &local_name!("offset"))
+                        .map(|s| s.to_string());
+                    let color = stop_elem
+                        .attribute_as_str(&ns!(), &local_name!("stop-color"))
+                        .map(|s| s.to_string());
+                    let opacity = stop_elem
+                        .attribute_as_str(&ns!(), &local_name!("stop-opacity"))
+                        .map(|s| s.to_string());
+                    if offset.is_none() && color.is_none() && opacity.is_none() {
+                        continue;
                     }
-                    if let Some(color) =
-                        stop_elem.attribute_as_str(&ns!(), &local_name!("stop-color"))
-                    {
-                        attrs.push(("stop-color".to_owned(), color.to_string()));
-                    }
-                    if let Some(op) =
-                        stop_elem.attribute_as_str(&ns!(), &local_name!("stop-opacity"))
-                    {
-                        attrs.push(("stop-opacity".to_owned(), op.to_string()));
-                    }
-                    if !attrs.is_empty() {
-                        stop_attrs.push(attrs);
-                    }
+                    // `stop-color="currentColor"` resolves against the <stop>
+                    // element's own computed `color` (inherited from CSS
+                    // ancestry — Stylo has already computed it).
+                    let current_color = builder.computed_color(stop_node);
+                    stops_input.push(StopInput {
+                        offset,
+                        color,
+                        opacity,
+                        current_color,
+                    });
                 }
             }
         }
@@ -77,7 +81,7 @@ impl DefinitionParser for GradientParser {
             .attribute_as_str(&ns!(xlink), &local_name!("href"))
             .or_else(|| element.attribute_as_str(&ns!(), &local_name!("href")))
             .map(|s| s.trim().trim_start_matches('#').to_string());
-        if let Ok(def) = parse_gradient_element(&grad_name, &grad_get, &stop_attrs, href) {
+        if let Ok(def) = parse_gradient_element(&grad_name, &grad_get, &stops_input, href) {
             match &def {
                 GradientDef::Linear(lg) => return Some((lg.id.clone(), def)),
                 GradientDef::Radial(rg) => return Some((rg.id.clone(), def)),
@@ -89,13 +93,23 @@ impl DefinitionParser for GradientParser {
 
 // ======================= Gradient Parsing =======================
 
+/// Attributes plus computed `color` for a single `<stop>` element.
+struct StopInput {
+    offset: Option<String>,
+    color: Option<String>,
+    opacity: Option<String>,
+    /// The `<stop>` element's computed CSS `color`, used to resolve the
+    /// `currentColor` keyword in `stop-color`.
+    current_color: SvgColor,
+}
+
 /// Parse a `<linearGradient>` or `<radialGradient>` element from its attributes.
 /// `element_name` is `"linearGradient"` or `"radialGradient"`.
 /// Returns the GradientDef keyed by id.
 pub(crate) fn parse_gradient_element(
     element_name: &str,
     get_attr: &dyn Fn(&str) -> Option<String>,
-    stop_attrs: &[Vec<(String, String)>], // list of stop attributes: [(("offset","0"),("stop-color","red")), ...]
+    stops_input: &[StopInput], // per-<stop> offset/color/opacity + computed color
     href: Option<String>,
 ) -> SvgResult<GradientDef> {
     let id = get_attr("id").unwrap_or_default();
@@ -106,21 +120,14 @@ pub(crate) fn parse_gradient_element(
     }
 
     let mut stops: Vec<GradientStop> = Vec::new();
-    for attrs in stop_attrs {
-        let offset = attrs
-            .iter()
-            .find(|(k, _)| k == "offset")
-            .and_then(|(_, v)| parse_offset(v));
-        let mut color = attrs
-            .iter()
-            .find(|(k, _)| k == "stop-color")
-            .and_then(|(_, v)| parse_css_color(v))
+    for stop in stops_input {
+        let offset = stop.offset.as_deref().and_then(parse_offset);
+        let mut color = stop
+            .color
+            .as_deref()
+            .and_then(|v| parse_css_color_or_current(v, &stop.current_color))
             .unwrap_or(SvgColor::new_rgb(0, 0, 0));
-        if let Some(stop_opacity) = attrs
-            .iter()
-            .find(|(k, _)| k == "stop-opacity")
-            .and_then(|(_, v)| parse_offset(v))
-        {
+        if let Some(stop_opacity) = stop.opacity.as_deref().and_then(parse_offset) {
             color.alpha = (color.alpha as f32 * stop_opacity).round() as u8;
         }
         if let Some(offset) = offset {

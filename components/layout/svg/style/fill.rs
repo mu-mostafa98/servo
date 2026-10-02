@@ -64,7 +64,11 @@ impl FromComputedValues for FillParams {
     }
 }
 
-pub(crate) fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle) {
+pub(crate) fn apply_fill_presentation_attrs(
+    element: &ServoLayoutElement,
+    style: &mut NodeStyle,
+    current_color: &SvgColor,
+) {
     let style_attr = get_attr(element, "style");
     let read_attr = |name: &str| -> Option<String> {
         get_attr(element, name).or_else(|| {
@@ -88,7 +92,7 @@ pub(crate) fn apply_fill_presentation_attrs(element: &ServoLayoutElement, style:
         opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     });
-    fill.paint_server = parse_paint_server(&fill_value);
+    fill.paint_server = parse_paint_server(&fill_value, current_color);
     if let Some(v) = read_attr("fill-opacity") {
         fill.opacity = Opacity::new(v.parse::<f32>().unwrap_or(1.0));
     }

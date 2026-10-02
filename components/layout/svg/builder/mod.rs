@@ -26,6 +26,7 @@ use servo_svg::element::*;
 use servo_svg::style::NodeStyle;
 use servo_svg::units::Id;
 use servo_svg::resource::ResourceKey;
+use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
 use crate::context::LayoutContext;
@@ -99,6 +100,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             self.root_node,
             &mut resolve::ResolveState::default(),
             None,
+            None,
             self.root_vw,
             self.root_vh,
         )?;
@@ -130,6 +132,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
         root_node: ServoLayoutNode<'dom>,
         state: &mut resolve::ResolveState,
         inherited: Option<&NodeStyle>,
+        inherited_color: Option<SvgColor>,
         vw: f32,
         vh: f32,
     ) -> Option<SvgNode> {
@@ -179,7 +182,8 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             .is_some()
             .then(|| node.style(&self.context.style_context));
         let tag = build_tag(&element, computed.as_ref().map(|v| &**v), node, self.context, vw, vh)?;
-        let (style, transforms) = build_style(node, self.context, &self.css_rules, inherited);
+        let (style, transforms, current_color) =
+            build_style(node, self.context, &self.css_rules, inherited, inherited_color);
         let id = extract_id(&element);
         let children = resolve::resolve_children(
             node,
@@ -188,6 +192,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             self,
             state,
             &style,
+            &current_color,
             inherited.is_some(),
             vw,
             vh,
@@ -216,9 +221,28 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             self.root_node,
             &mut resolve::ResolveState::default(),
             None,
+            None,
             self.root_vw,
             self.root_vh,
         )
+    }
+
+    /// The computed CSS `color` of an element, resolved to an [`SvgColor`].
+    ///
+    /// Used to resolve the `currentColor` keyword where the element's own
+    /// computed color is needed but `build_style` is not run — notably the
+    /// gradient `<stop>` parser, whose `stop-color="currentColor"` resolves
+    /// against the `<stop>` element's inherited `color`. Falls back to opaque
+    /// black when the element has no computed style.
+    pub(crate) fn computed_color(&self, node: ServoLayoutNode<'dom>) -> SvgColor {
+        let Some(element) = node.as_element() else {
+            return SvgColor::black();
+        };
+        if element.style_data().is_none() {
+            return SvgColor::black();
+        }
+        let computed = node.style(&self.context.style_context);
+        crate::svg::style::absolute_to_svg_color(&computed.clone_color())
     }
 }
 

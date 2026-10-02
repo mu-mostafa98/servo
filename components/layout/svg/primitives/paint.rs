@@ -16,6 +16,8 @@ use svgtypes::Color as SvgColor;
 /// Parse a CSS/SVG color value into an [`svgtypes::Color`].
 ///
 /// Returns `None` for `none` (no paint), `transparent`, and unparseable values.
+/// The `currentColor` keyword is **not** handled here — callers that support it
+/// must resolve it first (see [`parse_css_color_or_current`]).
 pub(crate) fn parse_css_color(val: &str) -> Option<SvgColor> {
     let val = val.trim();
     if val.eq_ignore_ascii_case("none") || val.eq_ignore_ascii_case("transparent") {
@@ -30,6 +32,7 @@ pub(crate) fn parse_css_color(val: &str) -> Option<SvgColor> {
 /// `none | <color> | <url> [none | <color>]? | context-fill | context-stroke`.
 ///
 /// - `"red"`, `"#ff0000"` → [`PaintServer::Solid`].
+/// - `"currentColor"` → [`PaintServer::Solid`] with `current_color`.
 /// - `"url(#myGrad)"` → [`PaintServer::Ref`] with no fallback.
 /// - `"url(#myGrad) red"` → [`PaintServer::Ref`] with a red fallback.
 /// - `"context-fill"` / `"context-stroke"` → the corresponding keyword.
@@ -37,7 +40,10 @@ pub(crate) fn parse_css_color(val: &str) -> Option<SvgColor> {
 /// URL references yield a transient [`PaintServer::Ref`], which is resolved
 /// to a typed handle (or its fallback color) later by the build layer's
 /// reference-resolution pass.
-pub(crate) fn parse_paint_server(val: &str) -> Option<PaintServer> {
+///
+/// `current_color` is the element's computed `color`, used to resolve the
+/// `currentColor` keyword — both standalone and as a `url(…)` fallback.
+pub(crate) fn parse_paint_server(val: &str, current_color: &SvgColor) -> Option<PaintServer> {
     let val = val.trim();
     if val.eq_ignore_ascii_case("context-fill") {
         return Some(PaintServer::ContextFill);
@@ -63,7 +69,7 @@ pub(crate) fn parse_paint_server(val: &str) -> Option<PaintServer> {
             let fallback = if rest.is_empty() || rest.eq_ignore_ascii_case("none") {
                 None
             } else {
-                parse_css_color(rest)
+                parse_css_color_or_current(rest, current_color)
             };
             return Some(PaintServer::Ref {
                 id: Id::new(inner),
@@ -71,7 +77,20 @@ pub(crate) fn parse_paint_server(val: &str) -> Option<PaintServer> {
             });
         }
     }
-    parse_css_color(val).map(PaintServer::Solid)
+    parse_css_color_or_current(val, current_color).map(PaintServer::Solid)
+}
+
+/// Resolve a `<color>` string that may be the `currentColor` keyword.
+///
+/// `currentColor` resolves to `current_color` (the element's computed `color`,
+/// supplied by the caller); any other value is delegated to [`parse_css_color`].
+/// Shared with the gradient `<stop>` parser, which resolves `stop-color`
+/// against each `<stop>` element's own computed `color`.
+pub(crate) fn parse_css_color_or_current(val: &str, current_color: &SvgColor) -> Option<SvgColor> {
+    if val.trim().eq_ignore_ascii_case("currentColor") {
+        return Some(*current_color);
+    }
+    parse_css_color(val)
 }
 
 /// Parse a `paint-order` value into an ordered triple of painting operations.
@@ -195,15 +214,31 @@ mod tests {
 
     #[test]
     fn paint_server_solid_color() {
-        match parse_paint_server("red").unwrap() {
+        match parse_paint_server("red", &SvgColor::black()).unwrap() {
             PaintServer::Solid(_) => {},
             _ => panic!("expected Solid"),
         }
     }
 
     #[test]
+    fn paint_server_current_color() {
+        let current = SvgColor::new_rgb(1, 2, 3);
+        match parse_paint_server("currentColor", &current).unwrap() {
+            PaintServer::Solid(c) => assert_eq!(c, current),
+            _ => panic!("expected Solid currentColor"),
+        }
+        match parse_paint_server("url(#myGrad) currentColor", &current).unwrap() {
+            PaintServer::Ref { id, fallback } => {
+                assert_eq!(id.as_str(), "myGrad");
+                assert_eq!(fallback, Some(current));
+            },
+            _ => panic!("expected Ref with currentColor fallback"),
+        }
+    }
+
+    #[test]
     fn paint_server_url_ref() {
-        match parse_paint_server("url(#myGrad)").unwrap() {
+        match parse_paint_server("url(#myGrad)", &SvgColor::black()).unwrap() {
             PaintServer::Ref { id, fallback } => {
                 assert_eq!(id.as_str(), "myGrad");
                 assert!(fallback.is_none());
@@ -214,7 +249,7 @@ mod tests {
 
     #[test]
     fn paint_server_url_ref_with_color_fallback() {
-        match parse_paint_server("url(#myGrad) red").unwrap() {
+        match parse_paint_server("url(#myGrad) red", &SvgColor::black()).unwrap() {
             PaintServer::Ref { id, fallback } => {
                 assert_eq!(id.as_str(), "myGrad");
                 assert_eq!(fallback, Some(SvgColor::red()));
@@ -225,7 +260,7 @@ mod tests {
 
     #[test]
     fn paint_server_url_ref_with_none_fallback() {
-        match parse_paint_server("url(#myGrad) none").unwrap() {
+        match parse_paint_server("url(#myGrad) none", &SvgColor::black()).unwrap() {
             PaintServer::Ref { id, fallback } => {
                 assert_eq!(id.as_str(), "myGrad");
                 assert!(fallback.is_none());
@@ -237,11 +272,11 @@ mod tests {
     #[test]
     fn paint_server_context_keywords() {
         assert!(matches!(
-            parse_paint_server("context-fill"),
+            parse_paint_server("context-fill", &SvgColor::black()),
             Some(PaintServer::ContextFill)
         ));
         assert!(matches!(
-            parse_paint_server("context-stroke"),
+            parse_paint_server("context-stroke", &SvgColor::black()),
             Some(PaintServer::ContextStroke)
         ));
     }
@@ -276,6 +311,6 @@ mod tests {
 
     #[test]
     fn paint_server_none() {
-        assert!(parse_paint_server("none").is_none());
+        assert!(parse_paint_server("none", &SvgColor::black()).is_none());
     }
 }

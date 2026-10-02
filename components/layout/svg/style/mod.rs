@@ -16,7 +16,7 @@
 
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
-use style::color::ColorSpace;
+use style::color::{AbsoluteColor, ColorSpace};
 use style::values::computed::Image as ComputedImage;
 use style::values::computed::basic_shape::ClipPath;
 use style::values::computed::svg::{SVGPaint, SVGPaintKind, VectorEffect as StyloVectorEffect};
@@ -30,7 +30,7 @@ use svgtypes::Color as SvgColor;
 use crate::context::LayoutContext;
 use crate::svg::primitives::attrs::{get_attr, parse_inline_style_prop};
 use crate::svg::primitives::css::{CssClassRules, apply_css_class_rules};
-use crate::svg::primitives::paint::parse_paint_order;
+use crate::svg::primitives::paint::{parse_css_color_or_current, parse_paint_order};
 use crate::svg::primitives::transforms::{css_transform_from_computed, parse_transform_str};
 
 mod fill;
@@ -58,6 +58,17 @@ enum ResolvedPaint {
     None,
 }
 
+/// Convert a Servo [`AbsoluteColor`] into the model's [`SvgColor`] (sRGB u8s).
+pub(crate) fn absolute_to_svg_color(absolute: &AbsoluteColor) -> SvgColor {
+    let srgb = absolute.to_color_space(ColorSpace::Srgb);
+    SvgColor::new_rgba(
+        (srgb.components.0.clamp(0.0, 1.0) * 255.0) as u8,
+        (srgb.components.1.clamp(0.0, 1.0) * 255.0) as u8,
+        (srgb.components.2.clamp(0.0, 1.0) * 255.0) as u8,
+        (srgb.alpha.clamp(0.0, 1.0) * 255.0) as u8,
+    )
+}
+
 fn resolve_svg_paint(
     svg_paint: &SVGPaint,
     computed_values: &style::properties::ComputedValues,
@@ -66,13 +77,7 @@ fn resolve_svg_paint(
         SVGPaintKind::Color(color) => {
             let current_color = computed_values.clone_color();
             let absolute = color.resolve_to_absolute(&current_color);
-            let srgb = absolute.to_color_space(ColorSpace::Srgb);
-            ResolvedPaint::Color(SvgColor::new_rgba(
-                (srgb.components.0.clamp(0.0, 1.0) * 255.0) as u8,
-                (srgb.components.1.clamp(0.0, 1.0) * 255.0) as u8,
-                (srgb.components.2.clamp(0.0, 1.0) * 255.0) as u8,
-                (srgb.alpha.clamp(0.0, 1.0) * 255.0) as u8,
-            ))
+            ResolvedPaint::Color(absolute_to_svg_color(&absolute))
         },
         SVGPaintKind::None => ResolvedPaint::None,
         SVGPaintKind::PaintServer(url) => {
@@ -228,24 +233,52 @@ pub(crate) fn build_style(
     context: &LayoutContext,
     css_rules: &CssClassRules,
     inherited: Option<&NodeStyle>,
-) -> (NodeStyle, Vec<TransformOp>) {
+    inherited_color: Option<SvgColor>,
+) -> (NodeStyle, Vec<TransformOp>, SvgColor) {
     let element = node.as_element().unwrap();
-    let (mut style, css_transform) = if element.style_data().is_some() {
+    let (mut style, css_transform, computed_color) = if element.style_data().is_some() {
         let computed = node.style(&context.style_context);
         let style = NodeStyle::from_computed_values(&computed).unwrap_or_default();
-        (style, css_transform_from_computed(&computed))
+        let computed_color = absolute_to_svg_color(&computed.clone_color());
+        (style, css_transform_from_computed(&computed), computed_color)
     } else {
-        (NodeStyle::default(), Vec::new())
+        (NodeStyle::default(), Vec::new(), SvgColor::black())
     };
+
+    // Effective `color` for `currentColor` resolution. Stylo already resolves
+    // the CSS `color` property (inline style, class rules, HTML ancestry), but
+    // it does NOT synthesize the SVG `color` presentation attribute, so we
+    // layer that on here: inline `style="color:…"` wins over the attribute,
+    // the attribute wins over the inherited value, otherwise the inherited
+    // effective color (threaded down the tree) or the computed color applies.
+    let fallback = inherited_color.unwrap_or(computed_color);
+    let current_color = if has_inline_color(&element) {
+        computed_color
+    } else if let Some(attr) = get_attr(&element, "color") {
+        parse_css_color_or_current(&attr, &fallback).unwrap_or(fallback)
+    } else {
+        fallback
+    };
+
     let attr_ops = parse_transform_str(&get_attr(&element, "transform").unwrap_or_default());
     let transforms: Vec<TransformOp> = [css_transform, attr_ops].concat();
-    apply_css_class_rules(&element, css_rules, &mut style);
-    apply_presentation_attrs(&element, &mut style);
+    apply_css_class_rules(&element, css_rules, &mut style, &current_color);
+    apply_presentation_attrs(&element, &mut style, &current_color);
     apply_render_hints_from_attrs(&element, &mut style);
     if let Some(inherited) = inherited {
         apply_use_inheritance(&element, &mut style, inherited);
     }
-    (style, transforms)
+    (style, transforms, current_color)
+}
+
+/// Whether an element sets the `color` property via its inline `style`, so its
+/// computed value (already resolved by Stylo) should beat any `color`
+/// presentation attribute.
+fn has_inline_color(element: &ServoLayoutElement) -> bool {
+    get_attr(element, "style")
+        .as_ref()
+        .map(|s| parse_inline_style_prop(s, "color").is_some())
+        .unwrap_or(false)
 }
 
 /// Whether an element explicitly sets a presentation attribute (or the same
@@ -322,9 +355,13 @@ fn apply_use_inheritance(
     }
 }
 
-fn apply_presentation_attrs(element: &ServoLayoutElement, style: &mut NodeStyle) {
-    apply_stroke_presentation_attrs(element, style);
-    apply_fill_presentation_attrs(element, style);
+fn apply_presentation_attrs(
+    element: &ServoLayoutElement,
+    style: &mut NodeStyle,
+    current_color: &SvgColor,
+) {
+    apply_stroke_presentation_attrs(element, style, current_color);
+    apply_fill_presentation_attrs(element, style, current_color);
     apply_marker_presentation_attrs(element, style);
 
     let style_attr = get_attr(element, "style");

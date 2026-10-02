@@ -20,6 +20,7 @@ use servo_svg::element::{Container, SvgNode, SvgTag};
 use servo_svg::style::NodeStyle;
 use servo_svg::transform::TransformOp;
 use servo_svg::units::Length;
+use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
 use super::SvgTreeBuilder;
@@ -68,27 +69,39 @@ pub(crate) fn resolve_children<'dom>(
     builder: &SvgTreeBuilder<'dom, '_>,
     state: &mut ResolveState,
     node_style: &NodeStyle,
+    node_color: &SvgColor,
     in_shadow: bool,
     vw: f32,
     vh: f32,
 ) -> Vec<SvgNode> {
     if let SvgTag::Container(Container::Use) = tag {
-        resolve_use_children(node, root_node, builder, state, node_style, vw, vh)
+        resolve_use_children(node, root_node, builder, state, node_style, node_color, vw, vh)
     } else if let SvgTag::Container(Container::Switch) = tag {
         resolve_switch_children(
-            node, root_node, builder, state, node_style, in_shadow, vw, vh,
+            node, root_node, builder, state, node_style, node_color, in_shadow, vw, vh,
         )
     } else {
         // Manual inheritance only applies inside a `<use>` shadow tree; for
         // normal content Stylo already resolves inherited properties along the
-        // real DOM ancestry.
+        // real DOM ancestry. The effective `color` (which may come from an SVG
+        // `color` presentation attribute Stylo does not see) is always threaded.
         let child_inherited = if in_shadow {
             Some(node_style)
         } else {
             None
         };
         node.dom_children()
-            .filter_map(|child| builder.build_render_node(child, root_node, state, child_inherited, vw, vh))
+            .filter_map(|child| {
+                builder.build_render_node(
+                    child,
+                    root_node,
+                    state,
+                    child_inherited,
+                    Some(*node_color),
+                    vw,
+                    vh,
+                )
+            })
             .collect()
     }
 }
@@ -107,6 +120,7 @@ fn resolve_switch_children<'dom>(
     builder: &SvgTreeBuilder<'dom, '_>,
     state: &mut ResolveState,
     node_style: &NodeStyle,
+    node_color: &SvgColor,
     in_shadow: bool,
     vw: f32,
     vh: f32,
@@ -119,9 +133,15 @@ fn resolve_switch_children<'dom>(
         None
     };
     for child in node.dom_children() {
-        if let Some(built) =
-            builder.build_render_node(child, root_node, state, child_inherited, vw, vh)
-        {
+        if let Some(built) = builder.build_render_node(
+            child,
+            root_node,
+            state,
+            child_inherited,
+            Some(*node_color),
+            vw,
+            vh,
+        ) {
             return vec![built];
         }
     }
@@ -143,6 +163,7 @@ fn resolve_use_children<'dom>(
     builder: &SvgTreeBuilder<'dom, '_>,
     state: &mut ResolveState,
     use_style: &NodeStyle,
+    use_color: &SvgColor,
     vw: f32,
     vh: f32,
 ) -> Vec<SvgNode> {
@@ -223,7 +244,17 @@ fn resolve_use_children<'dom>(
     let sym_height = target_element.and_then(|e| parse_len(&e, "height", vh));
 
     let result = target
-        .and_then(|t| builder.build_render_node(t, root_node, state, Some(use_style), vw, vh))
+        .and_then(|t| {
+            builder.build_render_node(
+                t,
+                root_node,
+                state,
+                Some(use_style),
+                Some(*use_color),
+                vw,
+                vh,
+            )
+        })
         .map(|target_node| {
             // Shared helper: apply `<use>` x/y offset as a translate transform.
             let apply_offset = |node: &mut SvgNode| {

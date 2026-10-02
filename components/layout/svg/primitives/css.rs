@@ -14,6 +14,7 @@ use layout_api::{LayoutElement, LayoutNode, LayoutNodeType};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use servo_svg::style::*;
 use servo_svg::units::{Length, Opacity};
+use svgtypes::Color as SvgColor;
 
 use crate::svg::primitives::attrs::get_attr;
 use crate::svg::primitives::paint::parse_paint_server;
@@ -111,6 +112,7 @@ pub(crate) fn apply_css_class_rules(
     element: &ServoLayoutElement,
     css_rules: &CssClassRules,
     style: &mut NodeStyle,
+    current_color: &SvgColor,
 ) {
     let Some(class_attr) = get_attr(element, "class") else {
         return;
@@ -120,16 +122,16 @@ pub(crate) fn apply_css_class_rules(
             continue;
         };
         for (prop, value) in props {
-            apply_css_property(style, prop, value);
+            apply_css_property(style, prop, value, current_color);
         }
     }
 }
 
 /// Apply a single CSS property to a [`NodeStyle`].
-fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
+fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str, current_color: &SvgColor) {
     match prop {
         "fill" | "fill-color" => {
-            if let Some(ps) = parse_paint_server(value) {
+            if let Some(ps) = parse_paint_server(value, current_color) {
                 let fill = style.fill.get_or_insert_with(|| FillParams {
                     paint_server: None,
                     opacity: Opacity::ONE,
@@ -148,7 +150,7 @@ fn apply_css_property(style: &mut NodeStyle, prop: &str, value: &str) {
             }
         },
         "stroke" | "stroke-color" => {
-            if let Some(ps) = parse_paint_server(value) {
+            if let Some(ps) = parse_paint_server(value, current_color) {
                 let stroke = style.stroke.get_or_insert_with(|| StrokeParams {
                     paint_server: None,
                     opacity: Opacity::ONE,
