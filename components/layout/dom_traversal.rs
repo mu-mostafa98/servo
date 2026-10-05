@@ -184,7 +184,7 @@ fn traverse_element<'dom>(
     // IS allowed through — it generates the replaced element box that
     // triggers the SVG engine.
     // Only applies when the SVG engine feature is enabled.
-    #[cfg(feature = "svg-engine")]
+    #[cfg(feature = "servo-svg")]
     if let Some(el) = element.as_element() {
         if el.is_svg_element() &&
             !matches!(

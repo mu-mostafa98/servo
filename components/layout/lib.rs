@@ -31,7 +31,7 @@ mod quotes;
 mod replaced;
 mod sizing;
 mod style_ext;
-#[cfg(feature = "svg-engine")]
+#[cfg(feature = "servo-svg")]
 pub mod svg;
 pub mod table;
 mod traversal;

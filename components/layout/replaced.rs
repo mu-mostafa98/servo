@@ -6,7 +6,7 @@ use std::sync::Arc;
 use std::sync::atomic::{AtomicBool, Ordering};
 
 use app_units::Au;
-#[cfg(not(feature = "svg-engine"))]
+#[cfg(not(feature = "servo-svg"))]
 use app_units::MAX_AU;
 use data_url::DataUrl;
 use embedder_traits::ViewportDetails;
@@ -18,7 +18,7 @@ use net_traits::request::InternalRequest;
 use script::layout_dom::ServoLayoutNode;
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
-#[cfg(feature = "svg-engine")]
+#[cfg(feature = "servo-svg")]
 use servo_svg::document::SvgTree;
 use servo_url::ServoUrl;
 use style::Zero;
@@ -163,7 +163,7 @@ pub(crate) enum ReplacedContentKind {
     SVGElement {
         vector_image: Option<VectorImage>,
         has_viewbox: bool,
-        #[cfg(feature = "svg-engine")]
+        #[cfg(feature = "servo-svg")]
         #[ignore_malloc_size_of = "SVG render tree, tracked separately"]
         render_tree: Option<Arc<SvgTree>>,
     },
@@ -300,7 +300,7 @@ impl ReplacedContents {
             ratio,
         };
 
-        #[cfg(feature = "svg-engine")]
+        #[cfg(feature = "servo-svg")]
         {
             // Feed the resolved viewport dimensions (already computed from the
             // `width`/`height` presentation attributes above) into the tree so
@@ -321,7 +321,7 @@ impl ReplacedContents {
             );
         }
 
-        #[cfg(not(feature = "svg-engine"))]
+        #[cfg(not(feature = "servo-svg"))]
         {
             let svg_source = match svg_data.source {
                 None => {
@@ -361,7 +361,7 @@ impl ReplacedContents {
                 ReplacedContentKind::SVGElement {
                     vector_image,
                     has_viewbox: svg_data.view_box.is_some(),
-                    #[cfg(feature = "svg-engine")]
+                    #[cfg(feature = "servo-svg")]
                     render_tree: None,
                 },
                 natural_size,
@@ -584,7 +584,7 @@ impl ReplacedContents {
                         url: image_info.url.clone(),
                         natural_width: self.natural_size.width,
                         natural_height: self.natural_size.height,
-                        #[cfg(feature = "svg-engine")]
+                        #[cfg(feature = "servo-svg")]
                         svg_render_tree: None,
                         selected: self.selected.clone(),
                     }))
@@ -602,7 +602,7 @@ impl ReplacedContents {
                     url: video_info.poster_url.clone(),
                     natural_width: self.natural_size.width,
                     natural_height: self.natural_size.height,
-                    #[cfg(feature = "svg-engine")]
+                    #[cfg(feature = "servo-svg")]
                     svg_render_tree: None,
                     selected: self.selected.clone(),
                 }))]
@@ -650,12 +650,12 @@ impl ReplacedContents {
                     url: None,
                     natural_width: self.natural_size.width,
                     natural_height: self.natural_size.height,
-                    #[cfg(feature = "svg-engine")]
+                    #[cfg(feature = "servo-svg")]
                     svg_render_tree: None,
                     selected: self.selected.clone(),
                 }))]
             },
-            #[cfg(feature = "svg-engine")]
+            #[cfg(feature = "servo-svg")]
             ReplacedContentKind::SVGElement { .. } => {
                 if let ReplacedContentKind::SVGElement {
                     render_tree: Some(tree),
@@ -678,7 +678,7 @@ impl ReplacedContents {
                 }
                 return vec![];
             },
-            #[cfg(not(feature = "svg-engine"))]
+            #[cfg(not(feature = "servo-svg"))]
             ReplacedContentKind::SVGElement {
                 vector_image,
                 has_viewbox,
@@ -733,7 +733,7 @@ impl ReplacedContents {
                             url: None,
                             natural_width: self.natural_size.width,
                             natural_height: self.natural_size.height,
-                            #[cfg(feature = "svg-engine")]
+                            #[cfg(feature = "servo-svg")]
                             svg_render_tree: None,
                             selected: self.selected.clone(),
                         }))

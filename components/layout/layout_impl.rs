@@ -116,6 +116,11 @@ static HTML_MODE_CSS: &[u8] = include_bytes!("./stylesheets/html-mode.css");
 /// A CSS file to style the Servo browser.
 static SERVO_CSS: &[u8] = include_bytes!("./stylesheets/servo.css");
 
+/// An override stylesheet that lets SVG children participate in the SVG
+/// engine's own layout instead of being hidden by `servo.css`.
+#[cfg(feature = "servo-svg")]
+static SERVO_SVG_CSS: &[u8] = b"svg > * { display: inline; }";
+
 /// A CSS file to style the presentational hints.
 static PRESENTATIONAL_HINTS_CSS: &[u8] = include_bytes!("./stylesheets/presentational-hints.css");
 
@@ -1772,6 +1777,8 @@ fn get_ua_stylesheets(shared_lock: &SharedRwLock) -> Rc<UserAgentStylesheets> {
                 let user_agent_stylesheets = vec![
                     parse_ua_stylesheet(shared_lock, "user-agent.css", USER_AGENT_CSS),
                     parse_ua_stylesheet(shared_lock, "servo.css", SERVO_CSS),
+                    #[cfg(feature = "servo-svg")]
+                    parse_ua_stylesheet(shared_lock, "servo-svg.css", SERVO_SVG_CSS),
                     parse_ua_stylesheet(
                         shared_lock,
                         "presentational-hints.css",
