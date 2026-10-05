@@ -71,8 +71,8 @@ Within [`builder`](builder/):
 | `mod` | The `SvgTreeBuilder` struct, tag dispatch (`build_tag`), and definition-map collection |
 | `resolve` | Child resolution: walking children, cloning `<use>` content, `<switch>` selection, and the expansion guard (`ResolveState`) |
 | `references` | The second pass: rewriting transient `PaintServer::Ref` / `DefRef::Ref` into typed `Arc` handles |
-| `text` | `<text>`/`<tspan>` assembly and font shaping |
-| `image` | `<image>` assembly and image-key resolution |
+| `text` | `<text>`/`<tspan>`/`<textPath>` assembly and font shaping (including text-on-path placement) |
+| `image` | `<image>` assembly and image-key resolution (raster and vector SVG sources) |
 
 ## Style layering
 

@@ -998,9 +998,10 @@ exactly as in the shared shape tables.
 
 ### Behavior notes
 
-- **Raster only:** a vector image (e.g. an SVG referenced by `href`) is not
-  rasterized — it yields `image_key = None` and the renderer draws a placeholder
-  ([builder.rs:744](components/layout/svg/builder.rs#L744)).
+- **Vector images are rasterized:** an SVG referenced by `href` (SVG-in-SVG) is
+  rasterized at the element's laid-out size scaled to device pixels (via
+  `image_resolver.rasterize_vector_image`), so it is drawn like a raster image
+  rather than a placeholder.
 - **Pending load:** a not-yet-loaded image also renders a placeholder; a reflow
   re-runs the build once it loads.
 - **Required geometry:** `width ≤ 0` or `height ≤ 0` discards the image entirely.
@@ -1033,8 +1034,8 @@ attributes below are read from **raw DOM attributes only** (via
 | Attribute | Inline style | CSS | Present. attr | Inherited | Notes |
 |---|---|---|---|---|---|
 | `alignment-baseline` | ❌ | ❌ | ❌ | ❌ | Valid per spec (and a CSS property), but not read — Servo only honors `dominant-baseline` |
-| `textLength` | not applicable | not applicable | ❌ | — | Valid per spec; not read — no text stretching |
-| `lengthAdjust` | not applicable | not applicable | ❌ | — | Valid per spec (pairs with `textLength`); not read |
+| `textLength` | not applicable | not applicable | ✅ | — | Scales the run so its total advance equals the given length (§11.6) |
+| `lengthAdjust` | not applicable | not applicable | ✅ | — | `spacing` (default) / `spacingAndGlyphs` — controls whether glyph outlines stretch too |
 
 ### Presentation
 
@@ -1084,3 +1085,29 @@ shape tables.
   them only if it sets `x`/`y` explicitly.
 - **Whitespace is trimmed unconditionally** — `xml:space="preserve"` is not
   honored; pure-whitespace between `<tspan>`s is dropped.
+
+## `<textPath>`
+
+Places its text content along a referenced `<path>`. `<textPath>` is a child of
+`<text>` (or `<tspan>`); at build time its glyphs are re-positioned to points on
+the path — advancing by arc length and rotated to the path tangent — and the
+`rotate` list is rewritten to those tangent angles. By render time it is an
+ordinary glyph run, so fill/stroke/font rendering is identical to `<text>`.
+
+### Reference & placement
+
+| Attribute | Inline style | CSS | Present. attr | Inherited | Notes |
+|---|---|---|---|---|---|
+| `href` | not applicable | not applicable | ✅ | — | `#id` of the `<path>` to follow; wins over `xlink:href` |
+| `xlink:href` | not applicable | not applicable | ✅ | — | Legacy SVG 1.1 spelling — fallback when `href` is absent |
+| `startOffset` | not applicable | not applicable | ✅ | — | Distance along the path to start; `%` resolves against the path's total arc length, lengths against the font size |
+| `text-anchor` | ❌ | ❌ | ✅ | ❌ | `start` / `middle` / `end` shifts the start point along the path; falls back to the parent `<text>`'s value |
+
+### Behavior notes
+
+- The referenced element **must be a `<path>`**; a non-`<path>` target (or a
+  missing/unparseable `d`) makes the run fall back to a normal horizontal run.
+- `x`/`y`/`dx`/`dy`/`rotate` on the `<textPath>` are **ignored** — position comes
+  from the path geometry.
+- Leading/trailing whitespace in the text content is trimmed so it neither
+  advances the start point nor shapes into `.notdef` boxes.

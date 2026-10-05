@@ -261,6 +261,9 @@ classDiagram
         +font_instance_key : Option~ResourceKey~
         +advance_offset : f32
         +font_size : f32
+        +text_length : Option~f32~
+        +length_adjust : LengthAdjust
+        +glyph_hscale : f32
         +origin_x() f32
         +origin_y() f32
         +total_advance() f32
@@ -281,6 +284,11 @@ classDiagram
         Middle
         End
     }
+    class LengthAdjust {
+        <<enum>>
+        Spacing
+        SpacingAndGlyphs
+    }
     class DominantBaseline {
         <<enum>>
         Auto
@@ -296,6 +304,7 @@ classDiagram
 
     TextSpan *-- ShapedGlyph : glyphs
     TextSpan *-- TextAnchor : text_anchor
+    TextSpan *-- LengthAdjust : length_adjust
     TextSpan *-- DominantBaseline : dominant_baseline
 ```
 
@@ -305,6 +314,11 @@ classDiagram
   current text position for the matching character. `origin_x()`/`origin_y()` return `x[0]`
   /`y[0]` (or `0` when unset) and the renderer offsets shaped glyphs by that origin.
   `dx`/`dy`/`rotate` are likewise per-character lists.
+- `text_length`/`length_adjust`/`glyph_hscale` implement `textLength` (§11.6): the shaper
+  pre-scales glyph positions and advances to the target length, `length_adjust` records
+  whether glyph *outlines* are also stretched (`spacingAndGlyphs`), and `glyph_hscale` (the
+  resulting horizontal scale factor, `1.0` otherwise) tells the renderer how much to
+  stretch the glyph shapes. `total_advance()` reads the pre-scaled advances.
 
 ### Image
 

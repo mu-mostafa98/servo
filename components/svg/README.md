@@ -53,7 +53,7 @@ SVG element.
 | `<path>` | Converted to a `BezPath`, then `vello_cpu` rasterizes it into an RGBA pixmap | `RasterizedImage` → `push_image` |
 | `<polyline>` | Converted to an open `BezPath`, then `vello_cpu` rasterizes it into an RGBA pixmap | `RasterizedImage` → `push_image` |
 | `<polygon>` | Converted to a closed `BezPath`, then `vello_cpu` rasterizes it into an RGBA pixmap | `RasterizedImage` → `push_image` |
-| `<image>` | `href` resolved to an `ImageKey` at build time; `preserveAspectRatio` fits the natural size into the viewport, then drawn with `push_image` (gray placeholder if not loaded) | `push_image` |
+| `<image>` | `href` resolved to an `ImageKey` at build time (vector SVG sources are rasterized to the element's device-pixel size); `preserveAspectRatio` fits the natural size into the viewport, then drawn with `push_image` (gray placeholder if not yet loaded) | `push_image` |
 | `<text>` | Applies `text-anchor`/RTL alignment and fill/stroke, then emits glyphs grouped by font | `push_text` |
 | `<tspan>` | Applies fill/stroke and emits its glyphs inline within the `<text>` line | `push_text` |
 | `<pattern>` | Paint server (`fill`/`stroke`): content tiled across the host shape via `fill_rect_with_pattern_by_id`, shapes filled with `lyon` tessellation | native primitives (`push_rect` / `push_gradient`) |
@@ -110,11 +110,12 @@ attributes: `fill`, `fill-opacity`, `fill-rule`, `stroke`, `stroke-width`,
 | Effect | `<feColorMatrix>` | `type`, `values` |
 | Effect | `<feOffset>` | `dx`, `dy` |
 | Effect | `<feFlood>` | `flood-color`, `flood-opacity` |
-| Effect | `<feComposite>` | `operator`, `k1`–`k4` *(recognized, renders as no-op)* |
-| Effect | `<feTile>` | — *(recognized, renders as no-op)* |
-| Effect | `<feImage>` | `href` / `xlink:href` *(recognized, renders as no-op)* |
-| Text | `<text>` | `x`, `y`, `dx`, `dy`, `rotate`, `text-anchor`, `dominant-baseline`, `direction` |
+| Effect | `<feComposite>` | `operator`, `k1`–`k4` (arithmetic + Porter-Duff) |
+| Effect | `<feTile>` | — |
+| Effect | `<feImage>` | `href` / `xlink:href` (node emitted; image loading not yet wired) |
+| Text | `<text>` | `x`, `y`, `dx`, `dy`, `rotate`, `text-anchor`, `dominant-baseline`, `direction`, `textLength`, `lengthAdjust` |
 | Text | `<tspan>` | `x`, `y`, `dx`, `dy`, `rotate`, `text-anchor`, `dominant-baseline`, `direction` |
+| Text | `<textPath>` | `href` / `xlink:href`, `startOffset`, `text-anchor` — text placed along a referenced `<path>` |
 | Image | `<image>` | `x`, `y`, `width`, `height`, `href` / `xlink:href`, `preserveAspectRatio` |
 | Marker | `<marker>` | `viewBox`, `refX`, `refY`, `markerWidth`, `markerHeight`, `markerUnits`, `orient`, `preserveAspectRatio` |
 
@@ -260,7 +261,7 @@ flowchart LR
 #### 5.4.2 The node walk
 
 `render_node` applies transforms and effects, then dispatches on the node tag:
-`Shape` → `emit_geometry`, `Text` / `Image` → `emit_leaf`, and `Container` →
+`Shape` → `emit_shape`, `Text` / `Image` → `emit_leaf`, and `Container` →
 `recurse_children` (which walks each child back through `render_node`). A nested
 `<svg>` also pushes a sub-viewport clip and `viewBox` frame before recursing.
 
@@ -272,7 +273,7 @@ flowchart TD
     C --> C2["nested svg<br/>(sub-viewport clip + viewBox frame)"]
     C2 --> E["resolve_node_effects"]
     E --> G{"node.tag?"}
-    G -- "Shape" --> H["emit_geometry(shape)"]
+    G -- "Shape" --> H["emit_shape(shape)"]
     G -- "Text" --> I["emit_leaf(TextSpan)"]
     G -- "Image" --> J["emit_leaf(SvgImage)"]
     G -- "Container::{Group | Svg | Defs | Use | Symbol | Text}" --> L["recurse_children"]
@@ -281,14 +282,14 @@ flowchart TD
 
 #### 5.4.3 Shapes
 
-The node walk hands `Shape` to `emit_geometry`, which wraps the paint in
-effects and delegates to `emit_shape`. `emit_shape` resolves the paint to a
+The node walk hands `Shape` to `emit_shape`, which wraps the paint in
+effects and delegates to `draw_shape`. `draw_shape` resolves the paint to a
 native primitive or a `vello_cpu` raster; markers (`emit_markers`) are emitted
 afterward on line/polyline/polygon shapes.
 
 ```mermaid
 flowchart TD
-    A["emit_geometry(shape)"] --> B["emit_shape(shape)"]
+    A["emit_shape(shape)"] --> B["draw_shape(shape)"]
     B --> C{"fill or stroke?"}
     C -- "pattern / gradient / solid<br/>on basic shapes" --> D["native render<br/>push_gradient / push_rect / push_border / stroke_line_segment"]
     C -- "paths, dashed,<br/>unsupported gradients" --> E["rasterize_bez (vello_cpu)"]
@@ -304,6 +305,14 @@ The node walk hands `Text` to `emit_leaf`, which builds a `RenderContext` and
 calls `TextSpan::render`. Real glyphs are drawn with `push_text` when a
 `FontInstanceKey` is available; otherwise estimated rectangles are drawn as a
 fallback.
+
+`<textPath>` is resolved at **build time** (in `layout`): the run's glyphs are
+re-positioned to points along the referenced `<path>` (advancing by arc length,
+rotated to the path tangent) and the `rotate` list is rewritten to those tangent
+angles. By the time the renderer sees the span it is an ordinary glyph run, so
+the render path above is unchanged — there is no `<textPath>` case at render
+time. `textLength`/`lengthAdjust` are likewise folded into glyph positions and
+advances during shaping.
 
 ```mermaid
 flowchart TD
@@ -322,6 +331,9 @@ flowchart TD
 The node walk hands `Image` to `emit_leaf`, which builds a `RenderContext` and
 calls `SvgImage::render`. A loaded image is drawn with `push_image` (fitted via
 `preserveAspectRatio`); otherwise a placeholder (gray rect with an X) is drawn.
+A vector (SVG-in-SVG) source is rasterized at **build time** to the element's
+device-pixel size, so by render time it is indistinguishable from a raster
+`<image>`.
 
 ```mermaid
 flowchart TD
@@ -330,9 +342,31 @@ flowchart TD
     C --> D["compute_viewbox_transform<br/>(preserveAspectRatio fit)"]
     D --> E{"image_key?"}
     E -- "loaded" --> F["push_image"]
-    E -- "pending / failed / vector" --> G["placeholder<br/>push_rect + X"]
+    E -- "pending / failed" --> G["placeholder<br/>push_rect + X"]
     F --> H["rendering backend display list"]
     G --> H
+```
+
+#### 5.4.6 Filter
+
+A node whose computed style references a `<filter>` (`style.filter`) is wrapped
+in a WebRender **SVG filter context** during the walk. `resolve_node_effects`
+calls [`get_filter_ops`](src/render/effects/filter.rs), which resolves the
+`FilterDef` into a source-graphic-anchored DAG of `FilterOp::SVGFE*` nodes: node
+`0` is `SVGFESourceGraphic`, and each primitive (`feGaussianBlur`, `feDropShadow`,
+`feColorMatrix`, `feOffset`, `feFlood`, `feComposite`, `feTile`, `feImage`) adds
+one op whose input is the previous node's output buffer. `push_filter_context`
+then pushes that op list as the node's filter, so the primitives compose into a
+single filter graph rather than each being a separate pass. `feImage` is emitted
+as a real node but its image content is not yet loaded, so it renders empty.
+
+```mermaid
+flowchart LR
+    A["render_node"] --> B["resolve_node_effects"]
+    B --> C["get_filter_ops(node, origin)"]
+    C --> D["FilterOp::SVGFE* DAG<br/>(SourceGraphic → primitive ops)"]
+    D --> E["push_filter_context"]
+    E --> F["rendering backend display list"]
 ```
 
 ## 6. Dependencies and build impact
