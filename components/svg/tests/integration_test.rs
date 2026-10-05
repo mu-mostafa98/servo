@@ -219,6 +219,9 @@ fn shape_enum_all_variants_constructible() {
         font_instance_key: None,
         advance_offset: 0.0,
         font_size: 16.0,
+        text_length: None,
+        length_adjust: LengthAdjust::Spacing,
+        glyph_hscale: 1.0,
     });
     let _image_tag = SvgTag::Image(SvgImage {
         x: 0.0,
@@ -250,6 +253,9 @@ fn text_span_data() {
         font_instance_key: None,
         advance_offset: 0.0,
         font_size: 16.0,
+        text_length: None,
+        length_adjust: LengthAdjust::Spacing,
+        glyph_hscale: 1.0,
     };
     assert_eq!(t.text, "Hello SVG");
     assert_eq!(t.x, vec![10.0]);
@@ -273,6 +279,9 @@ fn text_span_with_dx_dy() {
         font_instance_key: None,
         advance_offset: 0.0,
         font_size: 16.0,
+        text_length: None,
+        length_adjust: LengthAdjust::Spacing,
+        glyph_hscale: 1.0,
     };
     assert_eq!(t.dx.len(), 2);
     assert_eq!(t.dy.len(), 2);
@@ -296,6 +305,9 @@ fn text_span_advance_offset_positions_runs() {
         font_instance_key: None,
         advance_offset: 0.0,
         font_size: 16.0,
+        text_length: None,
+        length_adjust: LengthAdjust::Spacing,
+        glyph_hscale: 1.0,
     };
     let second = TextSpan {
         text: " Blue".into(), // 5 chars
@@ -311,6 +323,9 @@ fn text_span_advance_offset_positions_runs() {
         font_instance_key: None,
         advance_offset: first.total_advance(),
         font_size: 16.0,
+        text_length: None,
+        length_adjust: LengthAdjust::Spacing,
+        glyph_hscale: 1.0,
     };
     // The second run's pen position is the first run's x + its advance.
     assert_eq!(first.total_advance(), 24.0);

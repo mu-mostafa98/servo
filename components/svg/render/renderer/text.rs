@@ -129,9 +129,10 @@ impl TextSpan {
             ),
         );
 
-        // No per-character rotation — emit glyphs grouped by font (mixed-script
-        // runs shape different characters with different fonts via fallback).
-        if !self.rotate.iter().any(|a| *a != 0.0) {
+        // No per-character rotation or horizontal scaling — emit glyphs grouped
+        // by font (mixed-script runs shape different characters with different
+        // fonts via fallback).
+        if !self.rotate.iter().any(|a| *a != 0.0) && self.glyph_hscale == 1.0 {
             let mut i = 0;
             while i < self.glyphs.len() {
                 let Some(rk) = self.glyphs[i].font_instance_key else {
@@ -175,9 +176,10 @@ impl TextSpan {
             return;
         }
 
-        // Per-character rotation: emit each glyph separately, wrapping rotated
-        // glyphs in a reference frame so they rotate about their origin.
-        // Per SVG, a shorter list applies its last value to remaining chars.
+        // Per-character rotation or horizontal scaling: emit each glyph
+        // separately, wrapping transformed glyphs in a reference frame so they
+        // rotate/scale about their origin. Per SVG, a shorter rotate list
+        // applies its last value to remaining chars.
         let last_angle = self.rotate.last().copied().unwrap_or(0.0);
         for (i, g) in self.glyphs.iter().enumerate() {
             let Some(rk) = g.font_instance_key else { continue };
@@ -191,6 +193,7 @@ impl TextSpan {
                     base_x,
                     base_y,
                     angle,
+                    self.glyph_hscale,
                     ctx.spatial_id,
                     ctx.clip_chain_id,
                     self.font_size,
@@ -205,6 +208,7 @@ impl TextSpan {
                     base_x,
                     base_y,
                     angle,
+                    self.glyph_hscale,
                     ctx.spatial_id,
                     ctx.clip_chain_id,
                     self.font_size,
@@ -250,8 +254,9 @@ impl TextSpan {
     }
 }
 
-/// Push a single glyph, optionally rotated by `angle` (degrees) about its
-/// baseline origin via a reference frame.
+/// Push a single glyph, optionally rotated by `angle` (degrees) and/or
+/// scaled horizontally by `scale_x` about its baseline origin via a reference
+/// frame.
 #[allow(clippy::too_many_arguments)]
 fn push_glyph(
     wr: &mut webrender_api::DisplayListBuilder,
@@ -260,6 +265,7 @@ fn push_glyph(
     base_x: f32,
     base_y: f32,
     angle: f32,
+    scale_x: f32,
     spatial_id: webrender_api::SpatialId,
     clip_chain_id: webrender_api::ClipChainId,
     font_size: f32,
@@ -270,17 +276,26 @@ fn push_glyph(
     let ascent = ascent(font_size);
     let descent = descent(font_size);
 
-    let (glyph_spatial_id, point, bounds) = if angle != 0.0 {
-        let frame_id = wr.push_reference_frame(
-            LayoutPoint::new(glyph_x, glyph_y),
-            spatial_id,
-            TransformStyle::Flat,
-            PropertyBinding::Value(LayoutTransform::rotation(
+    let transformed = angle != 0.0 || scale_x != 1.0;
+    let (glyph_spatial_id, point, bounds) = if transformed {
+        // Compose horizontal scale then rotation (both about the glyph origin),
+        // so `scale_x` stretches the glyph in its own local space before it is
+        // rotated.
+        let transform = if scale_x != 1.0 {
+            LayoutTransform::scale(scale_x, 1.0, 1.0).then(&LayoutTransform::rotation(
                 0.0,
                 0.0,
                 1.0,
                 euclid::Angle::degrees(angle),
-            )),
+            ))
+        } else {
+            LayoutTransform::rotation(0.0, 0.0, 1.0, euclid::Angle::degrees(angle))
+        };
+        let frame_id = wr.push_reference_frame(
+            LayoutPoint::new(glyph_x, glyph_y),
+            spatial_id,
+            TransformStyle::Flat,
+            PropertyBinding::Value(transform),
             ReferenceFrameKind::Transform {
                 is_2d_scale_translation: false,
                 should_snap: false,
@@ -313,7 +328,7 @@ fn push_glyph(
     }];
     wr.push_text(&common, bounds, &glyphs, font_key, color, None);
 
-    if angle != 0.0 {
+    if transformed {
         wr.pop_reference_frame();
     }
 }

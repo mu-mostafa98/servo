@@ -11,7 +11,9 @@
 
 use layout_api::LayoutNode;
 use script::layout_dom::ServoLayoutNode;
-use servo_svg::element::text::{DominantBaseline, TextAnchor, TextSpan};
+use servo_svg::element::text::{DominantBaseline, LengthAdjust, TextAnchor, TextSpan};
+
+use crate::svg::primitives::attrs::parse_length_token;
 
 /// Build a text span from a `<text>` or `<tspan>` DOM element.
 ///
@@ -31,6 +33,8 @@ pub(crate) fn build_text(
     let mut rotate = parse_rotate_list(get);
     let text_anchor = parse_text_anchor(get);
     let dominant_baseline = parse_dominant_baseline(get);
+    let text_length = get("textLength").and_then(|v| parse_length_token(&v, fs));
+    let length_adjust = parse_length_adjust(get);
     let mut text = extract_direct_text(node);
     if text.is_empty() {
         return None;
@@ -50,6 +54,9 @@ pub(crate) fn build_text(
         font_instance_key: None,
         advance_offset: 0.0,
         font_size: fs,
+        text_length,
+        length_adjust,
+        glyph_hscale: 1.0,
     })
 }
 
@@ -70,6 +77,8 @@ pub(crate) fn build_text_run(
     let mut dx = parse_length_list("dx", get, fs);
     let mut dy = parse_length_list("dy", get, fs);
     let mut rotate = parse_rotate_list(get);
+    let text_length = get("textLength").and_then(|v| parse_length_token(&v, fs));
+    let length_adjust = parse_length_adjust(get);
     let rtl = apply_rtl_direction(&mut text, &mut x, &mut y, &mut dx, &mut dy, &mut rotate, get);
     Some(TextSpan {
         text,
@@ -85,6 +94,9 @@ pub(crate) fn build_text_run(
         font_instance_key: None,
         advance_offset: 0.0,
         font_size: fs,
+        text_length,
+        length_adjust,
+        glyph_hscale: 1.0,
     })
 }
 
@@ -114,6 +126,16 @@ fn parse_dominant_baseline(get: &dyn Fn(&str) -> Option<String>) -> DominantBase
             _ => DominantBaseline::Auto,
         })
         .unwrap_or(DominantBaseline::Auto)
+}
+
+fn parse_length_adjust(get: &dyn Fn(&str) -> Option<String>) -> LengthAdjust {
+    get("lengthAdjust")
+        .as_deref()
+        .map(|v| match v.trim() {
+            "spacingAndGlyphs" => LengthAdjust::SpacingAndGlyphs,
+            _ => LengthAdjust::Spacing,
+        })
+        .unwrap_or(LengthAdjust::Spacing)
 }
 
 /// If the element is `direction="rtl"`, reverse the per-character position lists

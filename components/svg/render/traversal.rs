@@ -405,7 +405,7 @@ fn resolve_node_effects(
         device_scale,
         inherited_mask,
     );
-    let filter_ops = get_filter_ops(node);
+    let filter_ops = get_filter_ops(node, *cur_origin);
 
     ResolvedEffects {
         clip_chain: if node_clip_chain != parent_clip_chain {

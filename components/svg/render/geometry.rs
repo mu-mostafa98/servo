@@ -82,6 +82,21 @@ impl Shape {
         }
     }
 
+    /// Axis-aligned bounding box of the shape's fill geometry in local
+    /// coordinates (no stroke expansion), used to resolve the SVG filter
+    /// region (`objectBoundingBox` units). Returns a zero rect for shapes with
+    /// no area (line) or degenerate geometry.
+    pub(crate) fn local_bounds(&self) -> LayoutRect {
+        let Some(bez) = self.to_bez_path() else {
+            return LayoutRect::zero();
+        };
+        let b = bez.bounding_box();
+        LayoutRect::from_origin_and_size(
+            LayoutPoint::new(b.x0 as f32, b.y0 as f32),
+            LayoutSize::new((b.x1 - b.x0) as f32, (b.y1 - b.y0) as f32),
+        )
+    }
+
     /// Convert the shape to a [`kurbo::BezPath`] in its local coordinate
     /// space, used for vello_cpu rasterization (gradient fills/strokes).
     pub(crate) fn to_bez_path(&self) -> Option<kurbo::BezPath> {

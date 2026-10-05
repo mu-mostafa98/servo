@@ -160,7 +160,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
 
         // Text / tspan — extract text content from DOM children.
         if tag_name == "text" || tag_name == "tspan" {
-            return text::build_text_node(node, self.context, &self.css_rules);
+            return text::build_text_node(node, self.context, &self.css_rules, &self.element_ids);
         }
 
         // A nested `<svg>` (any `<svg>` except the root) establishes its own

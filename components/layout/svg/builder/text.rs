@@ -7,16 +7,30 @@
 use std::collections::HashMap;
 
 use html5ever::local_name;
+use kurbo::{ParamCurve as _, ParamCurveArclen as _, ParamCurveDeriv as _};
 use layout_api::{LayoutElement, LayoutNode};
-use script::layout_dom::ServoLayoutNode;
+use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use servo_svg::element::text::{TextAnchor, TextSpan};
 use servo_svg::element::{Container, SvgNode, SvgTag};
+use web_atoms::ns;
 
 use super::{extract_id, font_key_to_resource};
 use crate::context::LayoutContext;
-use crate::svg::primitives::attrs::get_attr;
+use crate::svg::primitives::attrs::{extract_url_fragment, get_attr, parse_length_token};
 use crate::svg::primitives::text::{build_text, build_text_run, parse_length_list};
 use crate::svg::style::build_style;
+
+/// A `<textPath>`'s resolved placement: the reference path, the resolved
+/// `startOffset` (distance along the path at which the text begins), and the
+/// `text-anchor` that positions the text relative to that point.
+struct TextPathPlacement {
+    path: kurbo::BezPath,
+    start_offset: f32,
+    anchor: TextAnchor,
+}
+
+/// Arc-length integration accuracy for path parameterization (`kurbo` units).
+const ARC_LEN_ACCURACY: f64 = 0.1;
 
 /// Build a [`SvgNode`] for `<text>` or `<tspan>`.
 ///
@@ -28,17 +42,22 @@ use crate::svg::style::build_style;
 /// [`SvgTag::Text`] run per bare text node / `<tspan>`. Each run keeps its
 /// own style (so per-tspan `fill` and `font-size` apply) and is positioned
 /// with a cumulative `advance_offset` so runs flow left-to-right on one line.
-pub(crate) fn build_text_node(
-    node: ServoLayoutNode,
+///
+/// A `<textPath>` child places its text along a referenced `<path>`: the run's
+/// glyphs are re-positioned to points on the path (advancing by arc length) and
+/// rotated to follow the path tangent. See [`place_on_path`].
+pub(crate) fn build_text_node<'dom>(
+    node: ServoLayoutNode<'dom>,
     context: &LayoutContext,
     css_rules: &HashMap<String, HashMap<String, String>>,
+    element_ids: &HashMap<String, ServoLayoutNode<'dom>>,
 ) -> Option<SvgNode> {
     let element = node.as_element()?;
     let fs: f32 = 16.0;
     let get = |name: &str| get_attr(&element, name);
 
     // Collect the ordered inline runs of this element.
-    let runs = collect_text_runs(node, fs);
+    let runs = collect_text_runs(node, fs, element_ids);
 
     // No runs → maybe a bare single-span (e.g. <tspan> with only text, or
     // a <text> with no element children). Fall back to the legacy single-span
@@ -60,10 +79,13 @@ pub(crate) fn build_text_node(
 
     // Single run → emit as a direct Text node (no container needed).
     if runs.len() == 1 {
-        let (mut span, run_node) = runs.into_iter().next().unwrap();
+        let (mut span, run_node, placement) = runs.into_iter().next().unwrap();
         // Shape with the run's own node (the <tspan> for tspan runs, the
         // <text> itself for bare-text runs) so the run's font-size applies.
         shape_text_span(&mut span, run_node, context);
+        if let Some(p) = &placement {
+            place_on_path(&mut span, &p.path, p.start_offset, p.anchor);
+        }
         let (style, transforms, _color) = build_style(node, context, css_rules, None, None);
         let id = extract_id(&element);
         return Some(SvgNode {
@@ -82,12 +104,19 @@ pub(crate) fn build_text_node(
     // text-anchor as a single shift on the first run.
     let shaped = runs
         .into_iter()
-        .map(|(mut span, run_node)| {
+        .map(|(mut span, run_node, placement)| {
             shape_text_span(&mut span, run_node, context);
-            (span, run_node)
+            if let Some(p) = &placement {
+                place_on_path(&mut span, &p.path, p.start_offset, p.anchor);
+            }
+            (span, run_node, placement.is_some())
         })
         .collect::<Vec<_>>();
-    let total_advance: f32 = shaped.iter().map(|(s, _)| s.total_advance()).sum();
+    let total_advance: f32 = shaped
+        .iter()
+        .filter(|(_, _, is_text_path)| !is_text_path)
+        .map(|(s, _, _)| s.total_advance())
+        .sum();
     let anchor_shift = get("text-anchor")
         .as_deref()
         .map(|v| match v.trim() {
@@ -103,7 +132,23 @@ pub(crate) fn build_text_node(
     // (a later tspan's `dy` is relative to the position after earlier ones).
     let mut dy_pen = 0.0f32;
     let mut children = Vec::with_capacity(shaped.len());
-    for (mut span, run_node) in shaped {
+    for (mut span, run_node, is_text_path) in shaped {
+        if is_text_path {
+            // A `<textPath>` run is already positioned on the path; it does not
+            // take part in the horizontal pen / vertical dy flow.
+            let (run_style, run_transforms, _color) =
+                build_style(run_node, context, css_rules, None, None);
+            let run_id = extract_id(&run_node.as_element()?);
+            children.push(SvgNode {
+                id: run_id,
+                tag: SvgTag::Text(span),
+                style: run_style,
+                transforms: run_transforms,
+                viewport: None,
+                children: vec![],
+            });
+            continue;
+        }
         span.advance_offset = pen;
         // The whole-line anchor shift is already folded into `advance_offset`,
         // so clear each run's own text-anchor to avoid double-applying it.
@@ -144,11 +189,12 @@ pub(crate) fn build_text_node(
     })
 }
 
-/// An ordered inline run within a `<text>`: the span data plus the DOM node
-/// it inherits style/font from (the `<tspan>` for tspan runs, the `<text>`
-/// itself for bare-text runs). The `ServoLayoutNode` lifetime is elided to
-/// match the enclosing function signatures.
-type RunWithNode<'dom> = (TextSpan, ServoLayoutNode<'dom>);
+/// An ordered inline run within a `<text>`: the span data, the DOM node it
+/// inherits style/font from (the `<tspan>` for tspan runs, the `<text>` itself
+/// for bare-text runs), and — for `<textPath>` runs — the resolved path
+/// placement. The `ServoLayoutNode` lifetime is elided to match the enclosing
+/// function signatures.
+type RunWithNode<'dom> = (TextSpan, ServoLayoutNode<'dom>, Option<TextPathPlacement>);
 
 /// Collect the ordered inline runs of a `<text>` (or `<tspan>`) element.
 ///
@@ -157,7 +203,11 @@ type RunWithNode<'dom> = (TextSpan, ServoLayoutNode<'dom>);
 /// (`fill`, `font-size`, `x`/`y`, `dx`/`dy`, `text-anchor`). Pure-whitespace
 /// text between tspans (indentation/newlines) is dropped so it does not render
 /// as missing-glyph boxes.
-fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithNode<'dom>> {
+fn collect_text_runs<'dom>(
+    node: ServoLayoutNode<'dom>,
+    fs: f32,
+    element_ids: &HashMap<String, ServoLayoutNode<'dom>>,
+) -> Vec<RunWithNode<'dom>> {
     let parent_elem = node.as_element().unwrap();
     // The <text>'s x/y is the line origin. Every run inherits it as the base
     // position; a <tspan> may override x/y explicitly. Horizontal flow between
@@ -180,7 +230,40 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
                     if get_attr(&child_elem, "y").is_none() {
                         span.y = parent_y.clone();
                     }
-                    runs.push((span, *child));
+                    runs.push((span, *child, None));
+                }
+            } else if child_elem.local_name() == &local_name!("textPath") {
+                // A `<textPath>` places its own text along a referenced path.
+                // When the reference cannot be resolved (no href, non-`<path>`
+                // target, unparseable `d`), the placement is `None` and the run
+                // falls back to a normal horizontal run.
+                let get = |n: &str| get_attr(&child_elem, n);
+                if let Some(mut span) = build_text(*child, &get, fs) {
+                    // The text is written on its own line with surrounding
+                    // indentation/newlines; trim leading/trailing whitespace so
+                    // it neither advances the pen nor shapes into `.notdef`
+                    // boxes. textPath ignores x/y/dx/dy/rotate (positions come
+                    // from the path), so drop the per-character lists to stay
+                    // consistent with the trimmed text.
+                    let trimmed = span.text.trim().to_owned();
+                    if trimmed.is_empty() {
+                        continue;
+                    }
+                    span.text = trimmed;
+                    span.x.clear();
+                    span.y.clear();
+                    span.dx.clear();
+                    span.dy.clear();
+                    span.rotate.clear();
+                    // `text-anchor`: the textPath's own value, else the one it
+                    // inherits from the containing `<text>`.
+                    let anchor = parse_text_anchor(
+                        get_attr(&child_elem, "text-anchor")
+                            .or_else(|| get_attr(&parent_elem, "text-anchor")),
+                    );
+                    let placement =
+                        resolve_text_path_placement(&child_elem, fs, element_ids, anchor);
+                    runs.push((span, *child, placement));
                 }
             }
         } else {
@@ -201,7 +284,10 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
             // trailing newline from shaping into a `.notdef` box and from
             // inflating the RTL anchor offset.
             let followed_by_content = children[i + 1..].iter().any(|c| match c.as_element() {
-                Some(e) => e.local_name() == &local_name!("tspan"),
+                Some(e) => {
+                    e.local_name() == &local_name!("tspan")
+                        || e.local_name() == &local_name!("textPath")
+                },
                 None => !(*c).text_content().trim().is_empty(),
             });
             let text = if followed_by_content && trimmed.len() < text.len() {
@@ -212,11 +298,153 @@ fn collect_text_runs<'dom>(node: ServoLayoutNode<'dom>, fs: f32) -> Vec<RunWithN
             // Bare-text runs always use the <text>'s x/y (no own attributes).
             let get = |n: &str| get_attr(&parent_elem, n);
             if let Some(span) = build_text_run(text, &get, fs) {
-                runs.push((span, node));
+                runs.push((span, node, None));
             }
         }
     }
     runs
+}
+
+/// Resolve a `<textPath>`'s referenced `<path>` into a placement. Returns
+/// `None` when the element has no resolvable `href`, the reference does not
+/// point at a `<path>`, or the `d` attribute is unparseable — in which case the
+/// caller falls back to a normal horizontal run.
+fn resolve_text_path_placement(
+    elem: &ServoLayoutElement,
+    fs: f32,
+    element_ids: &HashMap<String, ServoLayoutNode>,
+    anchor: TextAnchor,
+) -> Option<TextPathPlacement> {
+    let href = elem
+        .attribute_as_str(&ns!(), &local_name!("href"))
+        .map(str::to_string)
+        .or_else(|| {
+            elem.attribute_as_str(&ns!(xlink), &local_name!("href"))
+                .map(str::to_string)
+        })?;
+    let id = extract_url_fragment(&href)?;
+    let target = *element_ids.get(&id)?;
+    let target_elem = target.as_element()?;
+    if target_elem.local_name() != &local_name!("path") {
+        return None;
+    }
+    let d = get_attr(&target_elem, "d")?;
+    let path = kurbo::BezPath::from_svg(&d).ok()?;
+    // `startOffset` percentages resolve against the path's total arc length
+    // (not the font size, which is what plain lengths resolve against).
+    let path_length = bez_path_length(&path) as f32;
+    let start_offset = elem
+        .attribute_as_str(&ns!(), &local_name!("startOffset"))
+        .map(|v| parse_start_offset(v.trim(), fs, path_length))
+        .unwrap_or(0.0);
+    Some(TextPathPlacement {
+        path,
+        start_offset,
+        anchor,
+    })
+}
+
+/// Parse a `startOffset` value: percentages resolve against `path_length`,
+/// everything else (px, em, …) against the font size like any SVG length.
+fn parse_start_offset(value: &str, font_size: f32, path_length: f32) -> f32 {
+    if let Some(pct) = value.strip_suffix('%') {
+        if let Ok(p) = pct.trim().parse::<f32>() {
+            return p / 100.0 * path_length;
+        }
+    }
+    parse_length_token(value, font_size).unwrap_or(0.0)
+}
+
+/// Total arc length of a [`kurbo::BezPath`], summed over its segments.
+fn bez_path_length(path: &kurbo::BezPath) -> f64 {
+    path.segments().map(|seg| seg.arclen(ARC_LEN_ACCURACY)).sum()
+}
+
+/// Parse a `text-anchor` attribute value into a [`TextAnchor`].
+fn parse_text_anchor(value: Option<String>) -> TextAnchor {
+    match value.as_deref().map(str::trim) {
+        Some("middle") => TextAnchor::Middle,
+        Some("end") => TextAnchor::End,
+        _ => TextAnchor::Start,
+    }
+}
+
+/// Re-position a shaped text run's glyphs along a `<textPath>` reference path.
+///
+/// Each glyph advances along the path by its shaped advance width; its position
+/// becomes the point on the path at the running arc length (starting at
+/// `start_offset`, shifted by `anchor`) and its rotation follows the path
+/// tangent. The horizontal origin is cleared so the renderer uses the absolute
+/// path coordinates, and the `rotate` list is rewritten to the tangent angles so
+/// the existing per-glyph rotation path in the renderer is driven from the path
+/// geometry.
+fn place_on_path(span: &mut TextSpan, path: &kurbo::BezPath, start_offset: f32, anchor: TextAnchor) {
+    let segments: Vec<kurbo::PathSeg> = path.segments().collect();
+    if segments.is_empty() || span.glyphs.is_empty() {
+        return;
+    }
+    // `text-anchor` shifts the text's *starting* point along the path so that
+    // `start`/`middle`/`end` align the beginning/middle/end of the text to
+    // `start_offset` (§11.6.1.1, applied to textPath).
+    let anchor_shift = anchor.alignment_offset() * span.total_advance();
+    let mut pen = start_offset as f64 + anchor_shift as f64;
+    let mut angles = Vec::with_capacity(span.glyphs.len());
+    for glyph in &mut span.glyphs {
+        let (x, y, angle) = point_tangent_at(&segments, pen);
+        glyph.x = x as f32;
+        glyph.y = y as f32;
+        angles.push(angle as f32);
+        pen += glyph.advance as f64;
+    }
+    span.x.clear();
+    span.y.clear();
+    span.rotate = angles;
+    span.advance_offset = 0.0;
+    span.text_anchor = TextAnchor::Start;
+    // The glyphs are already in visual order; disable RTL anchor mirroring so
+    // `anchor_offset` stays 0 and the path coordinates are used verbatim.
+    span.rtl = false;
+}
+
+/// Sample a point and tangent angle (degrees, y-down clockwise) at arc length
+/// `s` along a set of path segments, clamping `s` into `[0, total]`.
+fn point_tangent_at(segments: &[kurbo::PathSeg], s: f64) -> (f64, f64, f64) {
+    if segments.is_empty() {
+        return (0.0, 0.0, 0.0);
+    }
+    let mut remaining = s.max(0.0);
+    for (i, seg) in segments.iter().enumerate() {
+        let len = seg.arclen(ARC_LEN_ACCURACY);
+        let is_last = i == segments.len() - 1;
+        if remaining <= len || is_last {
+            let t = if len > 0.0 {
+                seg.inv_arclen(remaining.min(len), ARC_LEN_ACCURACY)
+            } else {
+                0.0
+            };
+            let point = seg.eval(t);
+            let (dx, dy) = tangent_at(seg, t);
+            let angle = if dx * dx + dy * dy < 1e-12 {
+                0.0
+            } else {
+                dy.atan2(dx).to_degrees()
+            };
+            return (point.x, point.y, angle);
+        }
+        remaining -= len;
+    }
+    // Unreachable (the last segment always matches above), but keep a fallback.
+    (0.0, 0.0, 0.0)
+}
+
+/// The derivative (tangent) vector of a path segment at parameter `t`.
+fn tangent_at(seg: &kurbo::PathSeg, t: f64) -> (f64, f64) {
+    let d = match seg {
+        kurbo::PathSeg::Line(line) => line.deriv().eval(t),
+        kurbo::PathSeg::Quad(quad) => quad.deriv().eval(t),
+        kurbo::PathSeg::Cubic(cubic) => cubic.deriv().eval(t),
+    };
+    (d.x, d.y)
 }
 
 /// Shape a [`TextSpan`]'s text using the font subsystem (HarfBuzz), so cursive
@@ -227,12 +455,11 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
     use app_units::Au;
     use fonts::{ShapingFlags, ShapingOptions};
     use layout_api::LayoutNode;
-    use style::Zero;
     use style::computed_values::font_variant_position::T as FontVariantPosition;
     use style::values::computed::{
         FontFeatureSettings, FontVariantEastAsian, FontVariantLigatures, FontVariantNumeric,
     };
-    use servo_svg::element::text::{DominantBaseline, ShapedGlyph};
+    use servo_svg::element::text::{DominantBaseline, LengthAdjust, ShapedGlyph};
     use unicode_script::Script;
 
     if span.text.is_empty() {
@@ -241,7 +468,7 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
 
     // Build a font group from the element's computed style, and capture the
     // resolved font size (needed for the dominant-baseline offset below).
-    let Some((font_group, font_size)) = (|| {
+    let Some((font_group, font_size, letter_spacing, word_spacing)) = (|| {
         let element = node.as_element()?;
         if !element.style_data().is_some() {
             return None;
@@ -252,7 +479,19 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         if font_size <= 0.0 {
             return None;
         }
-        Some((context.font_context.font_group(font_style), font_size))
+        // Resolve `letter-spacing` / `word-spacing` to device pixels so HarfBuzz
+        // shaping applies them per glyph. `em`/`%` units resolve against the
+        // font size, mirroring `text_run.rs`.
+        let font_size_au: Au = font_style.font_size.computed_size().into();
+        let inherited_text = computed.get_inherited_text().clone();
+        let letter_spacing = inherited_text.letter_spacing.0.to_used_value(font_size_au);
+        let word_spacing = inherited_text.word_spacing.to_used_value(font_size_au);
+        Some((
+            context.font_context.font_group(font_style),
+            font_size,
+            letter_spacing,
+            word_spacing,
+        ))
     })() else {
         return;
     };
@@ -340,8 +579,8 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         // Shape the whole run (HarfBuzz handles Arabic joining, ligatures, …).
         let run_text: String = chars[ci..cj].iter().collect();
         let options = ShapingOptions {
-            letter_spacing: Au::zero(),
-            word_spacing: Au::zero(),
+            letter_spacing,
+            word_spacing,
             script: Script::from(chars[ci]),
             language,
             ligatures: FontVariantLigatures::NORMAL,
@@ -392,6 +631,24 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
         }
 
         ci = cj;
+    }
+
+    // Apply `textLength` / `lengthAdjust` (§11.6): scale the glyph run so its
+    // total advance equals the requested length. `spacing` stretches only the
+    // inter-glyph space; `spacingAndGlyphs` additionally stretches the glyph
+    // outlines (via `glyph_hscale`, handled by the renderer).
+    if let Some(target) = span.text_length {
+        let natural = glyphs.last().map(|g| g.x + g.advance).unwrap_or(0.0);
+        if natural > 0.0 && (target - natural).abs() > 0.001 {
+            let factor = target / natural;
+            for g in &mut glyphs {
+                g.x *= factor;
+                g.advance *= factor;
+            }
+            if span.length_adjust == LengthAdjust::SpacingAndGlyphs {
+                span.glyph_hscale = factor;
+            }
+        }
     }
 
     span.glyphs = glyphs;

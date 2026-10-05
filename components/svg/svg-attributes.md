@@ -99,8 +99,8 @@ they're the scaffolding the other tables depend on.
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
-| `letter-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
-| `word-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
+| `letter-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
+| `word-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
 | `text-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
 | `text-decoration` | ❌ | ❌ | ❌ | ❌ | Not applied by the engine |
 | `image-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `auto` |
@@ -207,8 +207,8 @@ only the viewport attributes (`width`/`height`/`viewBox`/`preserveAspectRatio`/
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
-| `letter-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
-| `word-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
+| `letter-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
+| `word-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
 | `text-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
 | `text-decoration` | ❌ | ❌ | ❌ | ❌ | Not applied by the engine |
 | `image-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `auto` |
@@ -315,8 +315,8 @@ drawn in the *referencing* element's context (it does not inherit from `<defs>`)
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
-| `letter-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
-| `word-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
+| `letter-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
+| `word-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
 | `text-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
 | `text-decoration` | ❌ | ❌ | ❌ | ❌ | Not applied by the engine |
 | `image-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `auto` |
@@ -429,8 +429,8 @@ viewport are controlled by the referencing `<use>`.
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
-| `letter-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
-| `word-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
+| `letter-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
+| `word-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
 | `text-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
 | `text-decoration` | ❌ | ❌ | ❌ | ❌ | Not applied by the engine |
 | `image-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `auto` |
@@ -553,8 +553,8 @@ clone can override).
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
-| `letter-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
-| `word-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
+| `letter-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
+| `word-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
 | `text-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
 | `text-decoration` | ❌ | ❌ | ❌ | ❌ | Not applied by the engine |
 | `image-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `auto` |
@@ -666,8 +666,8 @@ attribute-only rows (✅ in the attribute column only).
 | `font-stretch` | ✅ | ✅ | ❌ | ✅ | CSS-only (not synthesized as an attribute) |
 | `font-size-adjust` | ❌ | ❌ | ❌ | ✅ | Not applied by the engine |
 | `font-variant` | ❌ | ❌ | ❌ | ✅ | Variant features hardcoded to normal |
-| `letter-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
-| `word-spacing` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
+| `letter-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
+| `word-spacing` | ❌ | ✅ | ❌ | ✅ | Resolved from computed style in `shape_text_span` |
 | `text-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `None` |
 | `text-decoration` | ❌ | ❌ | ❌ | ❌ | Not applied by the engine |
 | `image-rendering` | ❌ | ❌ | ❌ | ✅ | Hardcoded `auto` |

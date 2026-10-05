@@ -142,7 +142,7 @@ fn is_non_rendering_svg_element(tag: &str) -> bool {
         | "font" | "font-face" | "glyph" | "missing-glyph" | "hkern" | "vkern"
         | "font-face-src" | "font-face-uri" | "font-face-format" | "font-face-name"
         | "altGlyph" | "altGlyphDef" | "altGlyphItem" | "glyphRef"
-        | "textPath" | "tref"
+        | "tref"
         // Misc.
         | "view" | "cursor" | "color-profile"
     )

@@ -74,7 +74,27 @@ pub(super) fn build_image_tag(
                     Image::Raster(raster) => {
                         Some((raster.id, raster.metadata.width, raster.metadata.height))
                     },
-                    Image::Vector(..) => None, // vector images need rasterization; not handled here
+                    Image::Vector(vector_image) => {
+                        // Rasterize the vector image (SVG-in-SVG) at the
+                        // element's laid-out size, scaled to device pixels, so
+                        // it can be drawn like a raster `<image>`.
+                        let scale = context.style_context.device_pixel_ratio();
+                        let raster_size = webrender_api::units::DeviceIntSize::new(
+                            (w * scale.0).round().max(1.0) as i32,
+                            (h * scale.0).round().max(1.0) as i32,
+                        );
+                        context
+                            .image_resolver
+                            .rasterize_vector_image(
+                                vector_image.id,
+                                raster_size,
+                                node.opaque(),
+                                vector_image.svg_id,
+                            )
+                            .map(|raster| {
+                                (raster.id, raster.metadata.width, raster.metadata.height)
+                            })
+                    },
                 })
         });
     let (image_key, natural_width, natural_height) = match raster_data {

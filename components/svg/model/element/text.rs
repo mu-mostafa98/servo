@@ -68,6 +68,18 @@ pub struct TextSpan {
     /// renderer to size the glyph clip rect's ascent/descent so glyphs are not
     /// clipped when the font is larger than the fallback height estimate.
     pub font_size: f32,
+    /// The `textLength` target (SVG §11.6): the run is scaled so its total
+    /// advance equals this length. `None` when the attribute is absent.
+    pub text_length: Option<f32>,
+    /// How `textLength` is applied (§11.6.1): `spacing` adjusts only the
+    /// inter-glyph space (glyphs keep their natural size); `spacingAndGlyphs`
+    /// also scales the glyphs horizontally.
+    pub length_adjust: LengthAdjust,
+    /// Horizontal scale factor applied to the glyph *outlines* for
+    /// `lengthAdjust="spacingAndGlyphs"`. `1.0` otherwise. Advances and
+    /// positions are always pre-scaled by the shaper; this field only tells the
+    /// renderer to additionally stretch the glyph shapes.
+    pub glyph_hscale: f32,
 }
 
 impl TextSpan {
@@ -150,4 +162,14 @@ impl TextAnchor {
             TextAnchor::End => -1.0,
         }
     }
+}
+
+/// How `textLength` is applied to a text run (SVG `lengthAdjust` attribute).
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum LengthAdjust {
+    /// Only the space between glyphs is adjusted; glyphs keep their natural size.
+    #[default]
+    Spacing,
+    /// Both the advance and the glyph outlines are scaled horizontally.
+    SpacingAndGlyphs,
 }
