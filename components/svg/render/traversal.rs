@@ -167,7 +167,7 @@ fn push_viewbox_frame(
 
 // ======================= Bundled Parameter Structs =======================
 
-/// Bundled effect parameters — reduces argument count for `emit_geometry`.
+/// Bundled effect parameters — reduces argument count for `emit_shape`.
 struct EffectParams<'a> {
     mask: &'a Option<ResolvedMask>,
     complex_clips: &'a [ComplexClip],
@@ -505,7 +505,7 @@ fn emit_element(
     sink: &RasterSink,
 ) {
     match &node.tag {
-        SvgTag::Shape(shape) => emit_geometry(
+        SvgTag::Shape(shape) => emit_shape(
             shape,
             node.style.clone(),
             cur_origin,
@@ -552,7 +552,7 @@ fn emit_element(
 }
 
 /// Render a geometric shape with full clip-path, mask, and filter support.
-fn emit_geometry(
+fn emit_shape(
     shape: &crate::model::element::shape::Shape,
     style: crate::model::style::NodeStyle,
     cur_origin: &LayoutPoint,
@@ -578,7 +578,7 @@ fn emit_geometry(
         Some(ResolvedMask::Raster(raster)) => {
             // Real luminance/alpha mask: force CPU rasterization and multiply
             // the content's alpha by the mask value.
-            emit_shape(
+            draw_shape(
                 shape,
                 &style,
                 cur_origin,
@@ -604,7 +604,7 @@ fn emit_geometry(
                 if let Some(c) = &mask_clip.complex {
                     combined.push(c.clone());
                 }
-                emit_shape(
+                draw_shape(
                     shape,
                     &style,
                     cur_origin,
@@ -624,7 +624,7 @@ fn emit_geometry(
             }
         },
         None => {
-            emit_shape(
+            draw_shape(
                 shape,
                 &style,
                 cur_origin,
@@ -651,7 +651,7 @@ fn emit_geometry(
 
 /// Emit a single render call for the shape (or one of its mask-clipped copies).
 #[allow(clippy::too_many_arguments)]
-fn emit_shape(
+fn draw_shape(
     shape: &crate::model::element::shape::Shape,
     style: &crate::model::style::NodeStyle,
     svg_origin: &LayoutPoint,
