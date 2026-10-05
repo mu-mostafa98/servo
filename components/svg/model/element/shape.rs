@@ -4,7 +4,7 @@
 
 //! SVG geometric shapes — a single module for all `<shape>` elements.
 //!
-//! SVG Geometric Shapes Reference: https://www.w3.org/TR/SVG2/shapes.html
+//! SVG Geometric Shapes Reference: <https://www.w3.org/TR/SVG2/shapes.html>
 //!
 //! Shapes are pure data structs constructed directly from computed geometry
 //! in the layout integration layer.

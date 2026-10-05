@@ -4,7 +4,7 @@
 
 //! SVG properties — style and presentation attributes.
 //!
-//! SVG Property Reference: https://www.w3.org/TR/SVG2/propidx.html
+//! SVG Property Reference: <https://www.w3.org/TR/SVG2/propidx.html>
 //!
 //! This module holds everything that can appear as a style or presentation
 //! attribute: fill/stroke ([`paint`]), paint servers ([`paint_servers`]),
