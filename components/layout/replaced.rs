@@ -18,6 +18,8 @@ use net_traits::request::InternalRequest;
 use script::layout_dom::ServoLayoutNode;
 use servo_arc::Arc as ServoArc;
 use servo_base::id::{BrowsingContextId, PipelineId};
+#[cfg(feature = "svg-engine")]
+use servo_svg::document::SvgTree;
 use servo_url::ServoUrl;
 use style::Zero;
 use style::attr::AttrValue;
@@ -34,8 +36,6 @@ use style::values::CSSFloat;
 use style::values::computed::image::Image as ComputedImage;
 use style::values::computed::{Content, Context, ToComputedValue};
 use style::values::generics::counters::{GenericContentItem, GenericContentItems};
-#[cfg(feature = "svg-engine")]
-use servo_svg::document::SvgTree;
 use url::Url;
 use web_atoms::local_name;
 use webrender_api::ImageKey;

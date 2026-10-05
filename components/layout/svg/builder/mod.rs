@@ -23,9 +23,9 @@ use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
 use servo_svg::document::*;
 use servo_svg::element::*;
+use servo_svg::resource::ResourceKey;
 use servo_svg::style::NodeStyle;
 use servo_svg::units::Id;
-use servo_svg::resource::ResourceKey;
 use svgtypes::Color as SvgColor;
 use web_atoms::ns;
 
@@ -181,9 +181,21 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
             .style_data()
             .is_some()
             .then(|| node.style(&self.context.style_context));
-        let tag = build_tag(&element, computed.as_ref().map(|v| &**v), node, self.context, vw, vh)?;
-        let (style, transforms, current_color) =
-            build_style(node, self.context, &self.css_rules, inherited, inherited_color);
+        let tag = build_tag(
+            &element,
+            computed.as_ref().map(|v| &**v),
+            node,
+            self.context,
+            vw,
+            vh,
+        )?;
+        let (style, transforms, current_color) = build_style(
+            node,
+            self.context,
+            &self.css_rules,
+            inherited,
+            inherited_color,
+        );
         let id = extract_id(&element);
         let children = resolve::resolve_children(
             node,
@@ -212,10 +224,7 @@ impl<'dom, 'a> SvgTreeBuilder<'dom, 'a> {
     /// to build clip-path / pattern / mask / marker children into full render
     /// nodes (recursively handling `<g>`, `<use>`, `<text>`, nested `<defs>`)
     /// instead of flattening them to a flat list of shapes.
-    pub(crate) fn build_def_content(
-        &self,
-        node: ServoLayoutNode<'dom>,
-    ) -> Option<SvgNode> {
+    pub(crate) fn build_def_content(&self, node: ServoLayoutNode<'dom>) -> Option<SvgNode> {
         self.build_render_node(
             node,
             self.root_node,

@@ -11,22 +11,22 @@
 use std::rc::Rc;
 
 use euclid::Transform2D;
+use kurbo::BezPath;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{
     ClipChainId, DisplayListBuilder, MixBlendMode, PrimitiveFlags, PropertyBinding, RasterSpace,
     ReferenceFrameKind, SpatialId, StackingContextFlags, TransformStyle,
 };
 
+use crate::RasterSink;
+use crate::model::document::*;
+use crate::model::element::*;
 use crate::render::effects::clip::{MaskClip, build_mask_clips, resolve_node_clip_path};
 use crate::render::effects::filter::get_filter_ops;
 use crate::render::effects::mask::{MaskRaster, rasterize_mask};
-use crate::model::document::*;
-use crate::model::element::*;
-use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
-use crate::render::renderer::path::rasterize_bez;
 use crate::render::geometry::ComplexClip;
-use crate::RasterSink;
-use kurbo::BezPath;
+use crate::render::renderer::path::rasterize_bez;
+use crate::render::renderer::{Render, RenderContext, clip_chain_option, transform};
 
 // ======================= Public Entry Point =======================
 
@@ -51,10 +51,7 @@ pub fn render_svg_tree(
     let (root_origin, root_spatial_id, pop_frame, viewbox) =
         push_viewbox_frame(tree, svg_origin, svg_size, spatial_id, wr);
 
-    let viewbox_scale = viewbox
-        .as_ref()
-        .map(|v| (v.sx, v.sy))
-        .unwrap_or((1.0, 1.0));
+    let viewbox_scale = viewbox.as_ref().map(|v| (v.sx, v.sy)).unwrap_or((1.0, 1.0));
     // Fold the root viewBox translation into the raster offset up front. The
     // scale is applied during rasterization (via `viewbox_scale`), and the
     // document-space `svg_origin` is added back when the rasters are finalized
@@ -258,8 +255,10 @@ fn render_node(
             // Native clip chain: confine rendering to the viewport rect in the
             // parent spatial node (before the viewBox reference frame is pushed
             // below), mirroring how the root viewport clip is built.
-            let vp_bounds =
-                LayoutRect::from_origin_and_size(vp_origin, LayoutSize::new(vp.viewport.width.get(), vp.viewport.height.get()));
+            let vp_bounds = LayoutRect::from_origin_and_size(
+                vp_origin,
+                LayoutSize::new(vp.viewport.width.get(), vp.viewport.height.get()),
+            );
             let vp_clip_id = wr.define_clip_rect(cur_spatial_id, vp_bounds);
             cur_clip_chain = wr.define_clip_chain(clip_chain_option(cur_clip_chain), [vp_clip_id]);
         }
@@ -386,13 +385,8 @@ fn resolve_node_effects(
     device_scale: f32,
     inherited_mask: Option<&ResolvedMask>,
 ) -> ResolvedEffects {
-    let (node_clip_chain, complex_clips) = resolve_node_clip_path(
-        node,
-        cur_origin,
-        cur_spatial_id,
-        parent_clip_chain,
-        wr,
-    );
+    let (node_clip_chain, complex_clips) =
+        resolve_node_clip_path(node, cur_origin, cur_spatial_id, parent_clip_chain, wr);
     let mask = resolve_node_mask(
         node,
         cur_origin,
@@ -444,9 +438,13 @@ fn resolve_node_mask(
     };
 
     if mask_def.content_units == MaskContentUnits::UserSpaceOnUse {
-        if let Some(raster) =
-            rasterize_mask(mask_def, &raster_offset, node_xform, viewbox_scale, device_scale)
-        {
+        if let Some(raster) = rasterize_mask(
+            mask_def,
+            &raster_offset,
+            node_xform,
+            viewbox_scale,
+            device_scale,
+        ) {
             return Some(ResolvedMask::Raster(Rc::new(raster)));
         }
     }
@@ -580,8 +578,8 @@ fn emit_shape(
     // is popped below.
     {
         let mut draw = |clip_chain: ClipChainId,
-                    complex_clips: &[ComplexClip],
-                    alpha_mask: Option<&MaskRaster>| {
+                        complex_clips: &[ComplexClip],
+                        alpha_mask: Option<&MaskRaster>| {
             draw_shape(
                 shape,
                 &style,
@@ -897,18 +895,19 @@ fn style_has_pattern(style: &crate::model::style::NodeStyle) -> bool {
 /// `stroke_line_segment`. A dashed stroke on rect/circle/ellipse stays on vello
 /// (the native border can't emit dashes), but line strokes handle dashes
 /// natively.
-fn is_native_solid_shape(shape: &crate::model::element::shape::Shape, style: &crate::model::style::NodeStyle) -> bool {
+fn is_native_solid_shape(
+    shape: &crate::model::element::shape::Shape,
+    style: &crate::model::style::NodeStyle,
+) -> bool {
     use crate::model::element::shape::Shape;
     use crate::model::style::paint_servers::PaintServer;
 
-    let fill_is_solid = style
-        .fill
-        .as_ref()
-        .map_or(true, |f| matches!(f.paint_server, None | Some(PaintServer::Solid(_))));
-    let stroke_is_solid = style
-        .stroke
-        .as_ref()
-        .map_or(true, |s| matches!(s.paint_server, None | Some(PaintServer::Solid(_))));
+    let fill_is_solid = style.fill.as_ref().map_or(true, |f| {
+        matches!(f.paint_server, None | Some(PaintServer::Solid(_)))
+    });
+    let stroke_is_solid = style.stroke.as_ref().map_or(true, |s| {
+        matches!(s.paint_server, None | Some(PaintServer::Solid(_)))
+    });
     if !fill_is_solid || !stroke_is_solid {
         return false;
     }
@@ -975,7 +974,9 @@ fn emit_markers(
     sink: &RasterSink,
 ) {
     let Some(refs) = &style.markers else { return };
-    let Some(vertices) = shape_vertices(shape, bez) else { return };
+    let Some(vertices) = shape_vertices(shape, bez) else {
+        return;
+    };
     let n = vertices.len();
 
     let stroke_width = style.stroke.as_ref().map(|s| s.width.get()).unwrap_or(1.0);
@@ -984,8 +985,20 @@ fn emit_markers(
         let (x, y) = vertices[0];
         let (nx, ny) = vertices[1];
         emit_marker(
-            def, x, y, nx - x, ny - y, true, stroke_width,
-            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, wr, sink,
+            def,
+            x,
+            y,
+            nx - x,
+            ny - y,
+            true,
+            stroke_width,
+            node_xform,
+            viewbox_scale,
+            device_scale,
+            raster_offset,
+            clip_rect,
+            wr,
+            sink,
         );
     }
     if let Some(def) = refs.mid.as_ref().and_then(DefRef::resolved) {
@@ -993,8 +1006,20 @@ fn emit_markers(
             let (x, y) = vertices[i];
             let (nx, ny) = vertices[i + 1];
             emit_marker(
-                def, x, y, nx - x, ny - y, false, stroke_width,
-                node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, wr, sink,
+                def,
+                x,
+                y,
+                nx - x,
+                ny - y,
+                false,
+                stroke_width,
+                node_xform,
+                viewbox_scale,
+                device_scale,
+                raster_offset,
+                clip_rect,
+                wr,
+                sink,
             );
         }
     }
@@ -1002,8 +1027,20 @@ fn emit_markers(
         let (x, y) = vertices[n - 1];
         let (px, py) = vertices[n - 2];
         emit_marker(
-            def, x, y, x - px, y - py, false, stroke_width,
-            node_xform, viewbox_scale, device_scale, raster_offset, clip_rect, wr, sink,
+            def,
+            x,
+            y,
+            x - px,
+            y - py,
+            false,
+            stroke_width,
+            node_xform,
+            viewbox_scale,
+            device_scale,
+            raster_offset,
+            clip_rect,
+            wr,
+            sink,
         );
     }
 }
@@ -1044,11 +1081,7 @@ fn emit_marker(
         MarkerOrient::Auto => tangent_angle_deg(tangent_x, tangent_y),
         MarkerOrient::AutoStartReverse => {
             let a = tangent_angle_deg(tangent_x, tangent_y);
-            if is_start {
-                a + 180.0
-            } else {
-                a
-            }
+            if is_start { a + 180.0 } else { a }
         },
         MarkerOrient::Angle(a) => *a,
     };
@@ -1068,7 +1101,9 @@ fn emit_marker(
         if !m_style.is_visible() {
             return;
         }
-        let Some(bez) = m_shape.to_bez_path() else { return };
+        let Some(bez) = m_shape.to_bez_path() else {
+            return;
+        };
         rasterize_bez(
             &bez,
             m_style.fill.as_ref(),
@@ -1146,9 +1181,7 @@ fn emit_leaf<T: crate::render::renderer::Render>(
     let pushed_filter = push_filter_context(params.filter_ops, cur_spatial_id, clip_chain_id, wr);
 
     let effective_clip = match &params.mask {
-        Some(ResolvedMask::Clips(clips)) => {
-            clips.first().map(|m| m.chain).unwrap_or(clip_chain_id)
-        },
+        Some(ResolvedMask::Clips(clips)) => clips.first().map(|m| m.chain).unwrap_or(clip_chain_id),
         _ => clip_chain_id,
     };
 
@@ -1192,7 +1225,10 @@ fn recurse_children(
 ) {
     // <defs> and <symbol> children are only rendered when referenced
     // via <use>, never directly during tree traversal.
-    if matches!(&node.tag, SvgTag::Container(Container::Defs | Container::Symbol)) {
+    if matches!(
+        &node.tag,
+        SvgTag::Container(Container::Defs | Container::Symbol)
+    ) {
         return;
     }
     for child in &node.children {

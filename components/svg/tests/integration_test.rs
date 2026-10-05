@@ -15,8 +15,8 @@ use std::sync::Arc;
 use servo_svg::document::*;
 use servo_svg::element::*;
 use servo_svg::geometry::{PathCommand, PathData, Point};
-use servo_svg::transform::TransformOp;
 use servo_svg::style::*;
+use servo_svg::transform::TransformOp;
 use servo_svg::units::{Id, Length, Opacity};
 use servo_svg::{DominantBaseline, SvgImage, SvgTag, TextAnchor, TextSpan};
 
@@ -128,7 +128,10 @@ fn polyline_data() {
         Point::new(50.0, 100.0),
         Point::new(100.0, 0.0),
     ];
-    let p = Polyline { points: pts, path_length: None };
+    let p = Polyline {
+        points: pts,
+        path_length: None,
+    };
     assert_eq!(p.points.len(), 3);
 }
 
@@ -139,7 +142,10 @@ fn polygon_data() {
         Point::new(100.0, 0.0),
         Point::new(50.0, 100.0),
     ];
-    let p = Polygon { points: pts, path_length: None };
+    let p = Polygon {
+        points: pts,
+        path_length: None,
+    };
     assert_eq!(p.points.len(), 3);
 }
 
@@ -151,7 +157,10 @@ fn path_data_parse() {
             PathCommand::LineTo(Point::new(100.0, 100.0)),
         ],
     };
-    let p = Path { path, path_length: None };
+    let p = Path {
+        path,
+        path_length: None,
+    };
     assert_eq!(p.path.commands.len(), 2);
 }
 
@@ -168,7 +177,10 @@ fn path_data_curve_command() {
             PathCommand::Close,
         ],
     };
-    let p = Path { path, path_length: None };
+    let p = Path {
+        path,
+        path_length: None,
+    };
     assert_eq!(p.path.commands.len(), 3);
     assert!(matches!(p.path.commands[2], PathCommand::Close));
 }
@@ -447,11 +459,16 @@ fn fill_params_solid_color() {
 #[test]
 fn fill_params_ref_paint_server() {
     let f = FillParams {
-        paint_server: Some(PaintServer::Ref { id: Id::new("myGrad"), fallback: None }),
+        paint_server: Some(PaintServer::Ref {
+            id: Id::new("myGrad"),
+            fallback: None,
+        }),
         opacity: Opacity::ONE,
         fill_rule: FillRule::NonZero,
     };
-    assert!(matches!(f.paint_server, Some(PaintServer::Ref { ref id, .. }) if id.as_str() == "myGrad"));
+    assert!(
+        matches!(f.paint_server, Some(PaintServer::Ref { ref id, .. }) if id.as_str() == "myGrad")
+    );
 }
 
 #[test]

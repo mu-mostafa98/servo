@@ -161,9 +161,7 @@ fn op_to_matrix(op: &TransformOp) -> Transform2D<f32, (), ()> {
             let tan_a = a.to_radians().tan();
             Transform2D::new(1.0, tan_a, 0.0, 1.0, 0.0, 0.0)
         },
-        TransformOp::Matrix([a, b, c, d, e, f]) => {
-            Transform2D::new(*a, *b, *c, *d, *e, *f)
-        },
+        TransformOp::Matrix([a, b, c, d, e, f]) => Transform2D::new(*a, *b, *c, *d, *e, *f),
     }
 }
 

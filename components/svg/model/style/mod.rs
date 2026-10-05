@@ -17,7 +17,6 @@ pub mod paint_servers;
 
 pub use self::paint::{FillParams, FillRule, LineCap, LineJoin, MarkerRefs, StrokeParams};
 pub use self::paint_servers::PaintServer;
-
 use crate::model::document::{ClipPathDef, DefRef, FilterDef, MaskDef};
 use crate::model::units::Opacity;
 

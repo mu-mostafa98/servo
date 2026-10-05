@@ -7,10 +7,10 @@
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{BorderRadius, ClipMode, ComplexClipRegion};
 
+use crate::model::element::shape::Rectangle;
 use crate::render::renderer::{
     Render, RenderContext, clip_chain_option, fill, paint_order_stroke_before_fill, stroke,
 };
-use crate::model::element::shape::Rectangle;
 
 /// Compute the layout-space bounds and corner radii for an axis-aligned
 /// [`Rectangle`]. Returns `None` for a rect with non-positive width/height.
@@ -67,8 +67,7 @@ pub(crate) fn rect_bounds_and_radii(
 /// - Delegates gradient/pattern paint server lookup to paint helpers.
 impl Render for Rectangle {
     fn render(&self, ctx: &mut RenderContext) {
-        let Some((bounds, radii)) = rect_bounds_and_radii(self, ctx.svg_origin)
-        else {
+        let Some((bounds, radii)) = rect_bounds_and_radii(self, ctx.svg_origin) else {
             return;
         };
 

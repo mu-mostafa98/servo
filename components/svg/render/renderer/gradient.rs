@@ -13,10 +13,12 @@
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
 
-use crate::render::renderer::{RenderContext, ZERO_LENGTH_EPSILON, color_interpolation, shape_rendering_value, to_colorf};
 use crate::model::document::{GradientDef, GradientStop, GradientUnits, SpreadMethod};
 use crate::model::style::{ColorInterpolation, ColorRendering};
 use crate::model::transform::TransformOp;
+use crate::render::renderer::{
+    RenderContext, ZERO_LENGTH_EPSILON, color_interpolation, shape_rendering_value, to_colorf,
+};
 
 // ======================= Shared color math =======================
 
@@ -501,12 +503,9 @@ fn resolve_radial_center_radius(
     let ry = m.transform_vector(euclid::Vector2D::new(0.0, r)).length();
 
     let (cx_abs, cy_abs, rx_abs, ry_abs) = match rg.units {
-        GradientUnits::ObjectBoundingBox => (
-            bx + center.x * bw,
-            by + center.y * bh,
-            rx * nd,
-            ry * nd,
-        ),
+        GradientUnits::ObjectBoundingBox => {
+            (bx + center.x * bw, by + center.y * bh, rx * nd, ry * nd)
+        },
         GradientUnits::UserSpaceOnUse => (
             ctx.svg_origin.x + center.x,
             ctx.svg_origin.y + center.y,
@@ -624,8 +623,13 @@ fn push_linear_native(
             clip_chain_id: ctx.clip_chain_id,
         },
     );
-    ctx.wr
-        .push_gradient(&common, bounds, gradient, bounds.size(), LayoutSize::new(0.0, 0.0));
+    ctx.wr.push_gradient(
+        &common,
+        bounds,
+        gradient,
+        bounds.size(),
+        LayoutSize::new(0.0, 0.0),
+    );
     true
 }
 
@@ -665,8 +669,13 @@ fn push_radial_native(
             clip_chain_id: ctx.clip_chain_id,
         },
     );
-    ctx.wr
-        .push_radial_gradient(&common, bounds, gradient, bounds.size(), LayoutSize::new(0.0, 0.0));
+    ctx.wr.push_radial_gradient(
+        &common,
+        bounds,
+        gradient,
+        bounds.size(),
+        LayoutSize::new(0.0, 0.0),
+    );
     true
 }
 
@@ -692,7 +701,14 @@ fn render_linear(
         offset_x: bx,
         offset_y: by,
     };
-    render_gradient(bounds, ctx, opacity, &strategy, color_interpolation(ctx), lg.spread_method);
+    render_gradient(
+        bounds,
+        ctx,
+        opacity,
+        &strategy,
+        color_interpolation(ctx),
+        lg.spread_method,
+    );
 }
 
 /// Render a radial gradient.
@@ -733,7 +749,14 @@ fn render_radial(
         offset_x: bounds.min.x,
         offset_y: bounds.min.y,
     };
-    render_gradient(bounds, ctx, opacity, &strategy, color_interpolation(ctx), rg.spread_method);
+    render_gradient(
+        bounds,
+        ctx,
+        opacity,
+        &strategy,
+        color_interpolation(ctx),
+        rg.spread_method,
+    );
 }
 
 // ======================= Helpers =======================

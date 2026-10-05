@@ -13,10 +13,10 @@ use kurbo::Shape as _;
 use webrender_api::BorderRadius;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
-use crate::model::geometry::{PathCommand, PathData, Point};
-use crate::model::element::shape::{Circle, Ellipse, Path, Polygon, Polyline, Rectangle, Shape};
-use crate::model::style::FillRule;
 use crate::model::document::ClipPathUnits;
+use crate::model::element::shape::{Circle, Ellipse, Path, Polygon, Polyline, Rectangle, Shape};
+use crate::model::geometry::{PathCommand, PathData, Point};
+use crate::model::style::FillRule;
 
 /// Scale factor for objectBoundingBox clip-path coordinates (0..1 → 0..100).
 pub(crate) const OBJECT_BBOX_REF_SIZE: f32 = 100.0;
@@ -113,24 +113,30 @@ impl Shape {
                 let ry = ry_len.get() as f64;
                 if rx > 0.0 || ry > 0.0 {
                     let radius = (rx + ry) / 2.0;
-                    Some(RoundedRect::new(x0, y0, x1, y1, RoundedRectRadii::from(radius)).to_path(0.1))
+                    Some(
+                        RoundedRect::new(x0, y0, x1, y1, RoundedRectRadii::from(radius))
+                            .to_path(0.1),
+                    )
                 } else {
                     Some(Rect::new(x0, y0, x1, y1).to_path(0.1))
                 }
             },
-            Shape::Circle(c) => {
-                Some(Circle::new((c.cx.get() as f64, c.cy.get() as f64), c.r.get() as f64).to_path(0.1))
-            },
+            Shape::Circle(c) => Some(
+                Circle::new((c.cx.get() as f64, c.cy.get() as f64), c.r.get() as f64).to_path(0.1),
+            ),
             Shape::Ellipse(e) => {
                 let (rx, ry) = e.resolved_radii()?;
                 if rx.get() <= 0.0 || ry.get() <= 0.0 {
                     return None;
                 }
-                Some(Ellipse::new(
-                    (e.cx.get() as f64, e.cy.get() as f64),
-                    Vec2::new(rx.get() as f64, ry.get() as f64),
-                    0.0,
-                ).to_path(0.1))
+                Some(
+                    Ellipse::new(
+                        (e.cx.get() as f64, e.cy.get() as f64),
+                        Vec2::new(rx.get() as f64, ry.get() as f64),
+                        0.0,
+                    )
+                    .to_path(0.1),
+                )
             },
             Shape::Line(l) => {
                 let mut bez = BezPath::new();
@@ -378,7 +384,10 @@ pub(crate) fn clip_path_geometry(
     let bbox = transformed.bounding_box();
     let bounds = LayoutRect::from_origin_and_size(
         LayoutPoint::new(bbox.x0 as f32, bbox.y0 as f32),
-        LayoutSize::new((bbox.width() as f32).max(1.0), (bbox.height() as f32).max(1.0)),
+        LayoutSize::new(
+            (bbox.width() as f32).max(1.0),
+            (bbox.height() as f32).max(1.0),
+        ),
     );
     ClipGeometry::Path {
         bounds,

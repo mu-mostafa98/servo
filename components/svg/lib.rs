@@ -33,22 +33,12 @@
 pub mod model;
 mod render;
 
-pub use model::document;
-pub use model::element;
-pub use model::error;
-pub use model::geometry;
-pub use model::resource;
-pub use model::style;
-pub use model::transform;
-pub use model::units;
-
 pub use model::element::SvgTag;
-pub use render::renderer::gradient::color_at_t_with_space;
-pub use render::traversal::render_svg_tree;
-
 pub use model::element::image::SvgImage;
 pub use model::element::text::{DominantBaseline, ShapedGlyph, TextAnchor, TextSpan};
-
+pub use model::{document, element, error, geometry, resource, style, transform, units};
+pub use render::renderer::gradient::color_at_t_with_space;
+pub use render::traversal::render_svg_tree;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{
     AlphaType, ClipChainId, ColorF, CommonItemProperties, DisplayListBuilder, ExtendMode,

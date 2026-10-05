@@ -21,12 +21,11 @@ use lyon::tessellation::{
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 use webrender_api::{ColorF, CommonItemProperties, SpaceAndClipInfo};
 
+use crate::model::document::{GradientStop, SpreadMethod};
 use crate::model::element::SvgNode;
+use crate::model::style::{ColorInterpolation, FillRule};
 use crate::render::renderer::gradient::{color_at_t_with_spread, gradient_projection};
 use crate::render::renderer::{Render, RenderContext, clip_chain_option, shape_rendering_value};
-use crate::model::document::{GradientStop, SpreadMethod};
-use crate::model::style::ColorInterpolation;
-use crate::model::style::FillRule;
 
 // ======================= Fill Style =======================
 

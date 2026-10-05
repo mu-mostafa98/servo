@@ -13,10 +13,10 @@ pub(crate) mod renderer;
 pub(crate) mod tessellator;
 pub(crate) mod traversal;
 
-use crate::model::resource::ResourceKey;
 use crate::model::element::shape::Shape;
-use crate::model::style::NodeStyle;
 use crate::model::element::{Container, SvgNode, SvgTag};
+use crate::model::resource::ResourceKey;
+use crate::model::style::NodeStyle;
 
 impl SvgNode {
     /// Flatten container groups and invoke `f(shape, style)` for every shape

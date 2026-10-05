@@ -9,10 +9,12 @@ use kurbo::{BezPath, Point as KurboPoint};
 use lyon::math::Point as LyonPoint;
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
 
-use crate::render::renderer::{Render, RenderContext, fill, fill_rule, paint_order_stroke_before_fill, stroke};
-use crate::render::renderer::path::rasterize_bez;
 use crate::model::element::shape::Polyline;
 use crate::model::style::FillRule;
+use crate::render::renderer::path::rasterize_bez;
+use crate::render::renderer::{
+    Render, RenderContext, fill, fill_rule, paint_order_stroke_before_fill, stroke,
+};
 
 /// Renders an SVG `<polyline>`.
 ///
@@ -117,10 +119,8 @@ pub(crate) fn render_native_fill(
         .collect();
     if shifted_pts.len() >= 3 {
         let (bx, by, bw, bh) = fill::points_bounds(&shifted_pts);
-        let bounds = LayoutRect::from_origin_and_size(
-            LayoutPoint::new(bx, by),
-            LayoutSize::new(bw, bh),
-        );
+        let bounds =
+            LayoutRect::from_origin_and_size(LayoutPoint::new(bx, by), LayoutSize::new(bw, bh));
         fill::fill_polygon(&shifted_pts, bounds, fill_rule, ctx);
     }
 }

@@ -44,9 +44,9 @@ pub(crate) fn get_attr(element: &ServoLayoutElement, attr: &str) -> Option<Strin
 ///
 /// The element renders only when *all three* tests pass.
 pub(crate) fn conditional_processing_passes(element: &ServoLayoutElement) -> bool {
-    required_extensions_pass(element)
-        && system_language_pass(element)
-        && required_features_pass(element)
+    required_extensions_pass(element) &&
+        system_language_pass(element) &&
+        required_features_pass(element)
 }
 
 /// `requiredExtensions` test (§5.7.3): absent passes; present (even empty)
@@ -68,8 +68,7 @@ fn system_language_pass(element: &ServoLayoutElement) -> bool {
 /// `requiredFeatures` test (§5.7.5): absent passes; empty fails; non-empty
 /// passes only if every listed feature string is supported.
 fn required_features_pass(element: &ServoLayoutElement) -> bool {
-    let Some(value) = element.attribute_as_str(&ns!(), &LocalName::from("requiredFeatures"))
-    else {
+    let Some(value) = element.attribute_as_str(&ns!(), &LocalName::from("requiredFeatures")) else {
         return true;
     };
     let tokens: Vec<&str> = value.split_whitespace().collect();
@@ -295,9 +294,7 @@ mod tests {
     fn parse_length_missing_attr() {
         let result = parse_length("width", &|_| None, FS);
         assert!(result.is_err());
-        assert!(result
-            .unwrap_err()
-            .contains("missing SVG attribute: width"));
+        assert!(result.unwrap_err().contains("missing SVG attribute: width"));
     }
 
     #[test]

@@ -13,18 +13,17 @@
 //! when it is itself CPU-rasterized.
 
 use euclid::Transform2D;
-use webrender_api::units::LayoutPoint;
-
 use kurbo::{BezPath, Rect, Shape as _};
 use vello_cpu::kurbo::Affine;
 use vello_cpu::peniko::{Fill, Gradient, GradientKind};
+use webrender_api::units::LayoutPoint;
 
 use crate::model::document::{MaskContentUnits, MaskDef, MaskType};
+use crate::model::style::FillRule;
+use crate::model::style::paint::FillParams;
 use crate::render::renderer::path::{
     apply_paint, resolve_fill_paint, scale_paint, transform_to_affine,
 };
-use crate::model::style::paint::FillParams;
-use crate::model::style::FillRule;
 
 /// A CPU-rasterized mask: grayscale pixels whose alpha channel holds the mask
 /// value (luminance or alpha of the mask content). Positioned in the same
@@ -183,9 +182,7 @@ pub(crate) fn rasterize_mask(
     let mut data = Vec::with_capacity((w as usize) * (h as usize) * 4);
     for p in target.data().iter() {
         let value = match mask.mask_type {
-            MaskType::Luminance => {
-                0.2126 * p.r as f32 + 0.7152 * p.g as f32 + 0.0722 * p.b as f32
-            },
+            MaskType::Luminance => 0.2126 * p.r as f32 + 0.7152 * p.g as f32 + 0.0722 * p.b as f32,
             MaskType::Alpha => p.a as f32,
         };
         let v = value.round().clamp(0.0, 255.0) as u8;

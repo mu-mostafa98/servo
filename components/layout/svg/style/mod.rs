@@ -16,15 +16,15 @@
 
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::{ServoLayoutElement, ServoLayoutNode};
+use servo_svg::document::DefRef;
+use servo_svg::style::*;
+use servo_svg::transform::TransformOp;
+use servo_svg::units::{Id, Opacity};
 use style::color::{AbsoluteColor, ColorSpace};
 use style::values::computed::Image as ComputedImage;
 use style::values::computed::basic_shape::ClipPath;
 use style::values::computed::svg::{SVGPaint, SVGPaintKind, VectorEffect as StyloVectorEffect};
 use style::values::specified::box_ as stylo_box;
-use servo_svg::document::DefRef;
-use servo_svg::style::*;
-use servo_svg::transform::TransformOp;
-use servo_svg::units::{Id, Opacity};
 use svgtypes::Color as SvgColor;
 
 use crate::context::LayoutContext;
@@ -242,7 +242,11 @@ pub(crate) fn build_style(
         let computed = node.style(&context.style_context);
         let style = NodeStyle::from_computed_values(&computed).unwrap_or_default();
         let computed_color = absolute_to_svg_color(&computed.clone_color());
-        (style, css_transform_from_computed(&computed), computed_color)
+        (
+            style,
+            css_transform_from_computed(&computed),
+            computed_color,
+        )
     } else {
         (NodeStyle::default(), Vec::new(), SvgColor::black())
     };

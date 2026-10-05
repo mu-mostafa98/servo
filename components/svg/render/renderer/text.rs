@@ -10,14 +10,14 @@
 
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize, LayoutTransform};
 use webrender_api::{
-    ColorF, CommonItemProperties, GlyphInstance, PropertyBinding, ReferenceFrameKind, SpaceAndClipInfo,
-    TransformStyle,
+    ColorF, CommonItemProperties, GlyphInstance, PropertyBinding, ReferenceFrameKind,
+    SpaceAndClipInfo, TransformStyle,
 };
 
-use crate::render::renderer::{Render, RenderContext, to_colorf};
-use crate::render::to_wr_font_key;
 use crate::model::element::text::TextSpan;
 use crate::model::style::paint_servers::PaintServer;
+use crate::render::renderer::{Render, RenderContext, to_colorf};
+use crate::render::to_wr_font_key;
 
 const FALLBACK_ADVANCE: f32 = 8.0;
 const FALLBACK_HEIGHT: f32 = 16.0;
@@ -151,8 +151,7 @@ impl TextSpan {
                 };
                 let font_key = to_wr_font_key(rk);
                 let mut j = i + 1;
-                while j < self.glyphs.len() && self.glyphs[j].font_instance_key == Some(rk)
-                {
+                while j < self.glyphs.len() && self.glyphs[j].font_instance_key == Some(rk) {
                     j += 1;
                 }
                 let glyphs: Vec<GlyphInstance> = self.glyphs[i..j]
@@ -192,7 +191,9 @@ impl TextSpan {
         // applies its last value to remaining chars.
         let last_angle = self.rotate.last().copied().unwrap_or(0.0);
         for (i, g) in self.glyphs.iter().enumerate() {
-            let Some(rk) = g.font_instance_key else { continue };
+            let Some(rk) = g.font_instance_key else {
+                continue;
+            };
             let font_key = to_wr_font_key(rk);
             let angle = self.rotate.get(i).copied().unwrap_or(last_angle);
             if let Some(color) = fill_color {

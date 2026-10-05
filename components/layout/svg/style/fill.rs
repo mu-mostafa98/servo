@@ -6,11 +6,11 @@
 //! bridge and the matching presentation-attribute application.
 
 use script::layout_dom::ServoLayoutElement;
-use style::color::ColorSpace;
-use style::values::computed::svg::{SVGOpacity, SVGPaintKind};
 use servo_svg::style::paint_servers::PaintServer;
 use servo_svg::style::{FillParams, FillRule, NodeStyle};
 use servo_svg::units::{Id, Opacity};
+use style::color::ColorSpace;
+use style::values::computed::svg::{SVGOpacity, SVGPaintKind};
 use svgtypes::Color as SvgColor;
 
 use super::{FromComputedValues, ResolvedPaint, resolve_svg_paint};
@@ -38,7 +38,10 @@ impl FromComputedValues for FillParams {
             ResolvedPaint::PaintServer(id) => Some(FillParams {
                 // An invalid/missing reference falls back to black at resolve
                 // time (see `resolve_paint_server`).
-                paint_server: Some(PaintServer::Ref { id: Id::new(id), fallback: None }),
+                paint_server: Some(PaintServer::Ref {
+                    id: Id::new(id),
+                    fallback: None,
+                }),
                 opacity,
                 fill_rule,
             }),

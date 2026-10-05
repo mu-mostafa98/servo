@@ -65,14 +65,24 @@ fn resolve_references_in(
     filters: &HashMap<String, Arc<FilterDef>>,
     marker_defs: &HashMap<String, Arc<MarkerDef>>,
 ) {
-    let fill_keep = match node.style.fill.as_mut().and_then(|f| f.paint_server.as_mut()) {
+    let fill_keep = match node
+        .style
+        .fill
+        .as_mut()
+        .and_then(|f| f.paint_server.as_mut())
+    {
         Some(paint) => resolve_paint_server(paint, gradients, patterns),
         None => true,
     };
     if !fill_keep {
         node.style.fill = None;
     }
-    let stroke_keep = match node.style.stroke.as_mut().and_then(|s| s.paint_server.as_mut()) {
+    let stroke_keep = match node
+        .style
+        .stroke
+        .as_mut()
+        .and_then(|s| s.paint_server.as_mut())
+    {
         Some(paint) => resolve_paint_server(paint, gradients, patterns),
         None => true,
     };

@@ -71,7 +71,11 @@ fn node_local_bounds(node: &SvgNode) -> LayoutRect {
     match &node.tag {
         SvgTag::Shape(shape) => shape.local_bounds(),
         SvgTag::Text(span) => {
-            let fs = if span.font_size > 0.0 { span.font_size } else { 16.0 };
+            let fs = if span.font_size > 0.0 {
+                span.font_size
+            } else {
+                16.0
+            };
             LayoutRect::from_origin_and_size(
                 LayoutPoint::new(span.origin_x(), span.origin_y() - fs),
                 LayoutSize::new(span.total_advance().max(1.0), fs * 1.25),

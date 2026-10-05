@@ -48,7 +48,15 @@ pub(crate) fn build_text_run(
     let mut rotate = parse_rotate_list(get);
     let text_length = get("textLength").and_then(|v| parse_length_token(&v, fs));
     let length_adjust = parse_length_adjust(get);
-    let rtl = apply_rtl_direction(&mut text, &mut x, &mut y, &mut dx, &mut dy, &mut rotate, get);
+    let rtl = apply_rtl_direction(
+        &mut text,
+        &mut x,
+        &mut y,
+        &mut dx,
+        &mut dy,
+        &mut rotate,
+        get,
+    );
     Some(TextSpan {
         text,
         x,
@@ -136,14 +144,20 @@ fn apply_rtl_direction(
 
 /// Parse the `rotate` attribute into a list of per-character angles (degrees).
 fn parse_rotate_list(get: &dyn Fn(&str) -> Option<String>) -> Vec<f32> {
-    let Some(val) = get("rotate") else { return vec![] };
+    let Some(val) = get("rotate") else {
+        return vec![];
+    };
     val.split(|c: char| c == ',' || c.is_ascii_whitespace())
         .filter_map(|s| s.trim().parse::<f32>().ok())
         .collect()
 }
 
 /// Parse a space/comma-separated list of lengths from an attribute.
-pub(crate) fn parse_length_list(name: &str, get: &dyn Fn(&str) -> Option<String>, fs: f32) -> Vec<f32> {
+pub(crate) fn parse_length_list(
+    name: &str,
+    get: &dyn Fn(&str) -> Option<String>,
+    fs: f32,
+) -> Vec<f32> {
     let Some(val) = get(name) else { return vec![] };
     val.split(|c: char| c == ',' || c.is_ascii_whitespace())
         .filter_map(|s| {

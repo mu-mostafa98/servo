@@ -11,14 +11,12 @@
 //! No tree walking, no display list management beyond clip definition.
 
 use webrender_api::units::LayoutPoint;
-use webrender_api::{
-    ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId,
-};
+use webrender_api::{ClipChainId, ClipMode, ComplexClipRegion, DisplayListBuilder, SpatialId};
 
 use crate::model::document::{ClipPathUnits, DefRef};
 use crate::model::element::SvgNode;
-use crate::render::renderer::clip_chain_option;
 use crate::render::geometry::{ClipGeometry, ComplexClip};
+use crate::render::renderer::clip_chain_option;
 
 // ======================= Clip Path Resolution =======================
 
@@ -65,13 +63,11 @@ pub(crate) fn resolve_node_clip_path(
                         mode: ClipMode::Clip,
                     },
                 );
-                current_chain =
-                    wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
+                current_chain = wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
             },
             ClipGeometry::Rect { bounds } => {
                 let clip_id = wr.define_clip_rect(spatial_id, bounds);
-                current_chain =
-                    wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
+                current_chain = wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
             },
             ClipGeometry::Path {
                 bounds,
@@ -84,8 +80,7 @@ pub(crate) fn resolve_node_clip_path(
                 // can't be rasterized (e.g. pattern fills) and defer the real
                 // clip to vello rasterization via `ComplexClip`.
                 let clip_id = wr.define_clip_rect(spatial_id, bounds);
-                current_chain =
-                    wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
+                current_chain = wr.define_clip_chain(clip_chain_option(current_chain), [clip_id]);
                 complex.push(ComplexClip { path, fill_rule });
             },
         }

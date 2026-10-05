@@ -10,14 +10,15 @@
 //! its fill work here, eliminating the duplicated match-on-`PaintServer`
 //! pattern that previously lived in each shape's `Render` impl.
 
-use lyon::math::Point as LyonPoint;
 use std::sync::Arc;
+
+use lyon::math::Point as LyonPoint;
 use webrender_api::units::LayoutRect;
 use webrender_api::{ClipChainId, CommonItemProperties, SpaceAndClipInfo};
 
 use crate::model::document::{GradientDef, GradientUnits, PatternUnits};
-use crate::render::renderer::{RenderContext, color_interpolation, gradient, pattern, to_colorf};
 use crate::model::style::paint_servers::PaintServer;
+use crate::render::renderer::{RenderContext, color_interpolation, gradient, pattern, to_colorf};
 use crate::render::tessellator;
 use crate::render::tessellator::FillStyle;
 
@@ -59,10 +60,10 @@ pub(crate) fn fill_rect(bounds: LayoutRect, clip: ClipChainId, ctx: &mut RenderC
         },
         // A transient `Ref` should already have been resolved before render;
         // `context-fill`/`context-stroke` render as no paint (no context element).
-        Some(PaintServer::Ref { .. })
-        | Some(PaintServer::ContextFill)
-        | Some(PaintServer::ContextStroke)
-        | None => {},
+        Some(PaintServer::Ref { .. }) |
+        Some(PaintServer::ContextFill) |
+        Some(PaintServer::ContextStroke) |
+        None => {},
     }
 
     ctx.clip_chain_id = orig_clip;
@@ -101,7 +102,8 @@ pub(crate) fn fill_polygon(
                     tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
                 },
                 GradientDef::Radial(rg) => {
-                    let (fx, fy, radius, fr) = resolve_radial_gradient_coords(rg, bx, by, bw, bh, ctx);
+                    let (fx, fy, radius, fr) =
+                        resolve_radial_gradient_coords(rg, bx, by, bw, bh, ctx);
                     let fill_style = build_radial_fill_style(rg, fx, fy, radius, fr, opacity, ctx);
                     tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
                 },
@@ -117,10 +119,10 @@ pub(crate) fn fill_polygon(
             let fill_style = FillStyle::Solid(color);
             tessellator::tessellate_polygon(pts, fill_rule, &fill_style, ctx);
         },
-        Some(PaintServer::Ref { .. })
-        | Some(PaintServer::ContextFill)
-        | Some(PaintServer::ContextStroke)
-        | None => {},
+        Some(PaintServer::Ref { .. }) |
+        Some(PaintServer::ContextFill) |
+        Some(PaintServer::ContextStroke) |
+        None => {},
     }
 }
 
@@ -247,10 +249,7 @@ fn handle_pattern_fill(
             def.width.to_object_bbox() * bw,
             def.height.to_object_bbox() * bh,
         ),
-        PatternUnits::UserSpaceOnUse => (
-            def.width.to_user_space(bw),
-            def.height.to_user_space(bh),
-        ),
+        PatternUnits::UserSpaceOnUse => (def.width.to_user_space(bw), def.height.to_user_space(bh)),
     };
 
     if tile_w <= 0.0 || tile_h <= 0.0 {

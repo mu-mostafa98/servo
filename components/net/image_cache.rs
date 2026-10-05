@@ -969,7 +969,10 @@ impl ImageCache for ImageCacheImpl {
             is_opaque: false,
             loop_count: None,
         };
-        if let Some(key) = store.paint_api.generate_image_key_blocking(store.webview_id) {
+        if let Some(key) = store
+            .paint_api
+            .generate_image_key_blocking(store.webview_id)
+        {
             set_webrender_image_key(&store.paint_api, &mut image, key);
             store.raw_pixel_keys.insert(hash, key);
         }

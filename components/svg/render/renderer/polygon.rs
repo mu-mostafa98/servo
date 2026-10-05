@@ -8,10 +8,10 @@ use euclid::Transform2D;
 use kurbo::Point as KurboPoint;
 use webrender_api::units::LayoutPoint;
 
+use crate::model::element::shape::Polygon;
 use crate::render::renderer::path::rasterize_bez;
 use crate::render::renderer::polyline::points_to_bez;
 use crate::render::renderer::{Render, RenderContext};
-use crate::model::element::shape::Polygon;
 
 /// Renders an SVG `<polygon>` as a closed path.
 ///

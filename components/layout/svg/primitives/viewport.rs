@@ -7,7 +7,9 @@
 use html5ever::LocalName;
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use servo_svg::document::{AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo};
+use servo_svg::document::{
+    AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo,
+};
 use servo_svg::units::Length;
 use svgtypes::ViewBox as SvgViewBox;
 use web_atoms::ns;
@@ -114,7 +116,9 @@ pub(crate) fn extract_nested_viewport<'dom>(
             height: Length::new(parse_len("height", parent_vh, parent_vh)),
             view_box: get("viewBox").as_deref().and_then(extract_viewbox),
             overflow_visible,
-            aspect_ratio: get("preserveAspectRatio").as_deref().map(parse_aspect_ratio),
+            aspect_ratio: get("preserveAspectRatio")
+                .as_deref()
+                .map(parse_aspect_ratio),
         },
     })
 }

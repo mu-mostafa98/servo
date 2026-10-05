@@ -10,17 +10,18 @@
 mod defs;
 mod viewport;
 
+use std::collections::HashMap;
+use std::sync::Arc;
+
 pub use self::defs::{
     ClipPathDef, ClipPathUnits, DefRef, FeCompositeKind, FeImageKind, FilterDef, FilterPrimitive,
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     MarkerDef, MarkerOrient, MarkerUnits, MaskContentUnits, MaskDef, MaskType, PatternContentUnits,
     PatternDef, PatternLength, PatternUnits, RadialGradient, SpreadMethod,
 };
-pub use self::viewport::{AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo};
-
-use std::collections::HashMap;
-use std::sync::Arc;
-
+pub use self::viewport::{
+    AspectAlign, AspectRatio, MeetOrSlice, SvgViewport, ViewBox, ViewportInfo,
+};
 use crate::model::element::{SvgNode, SvgTreeVisitor, SvgTreeVisitorMut};
 
 /// The SVG render tree — a tree of [`SvgNode`]s plus viewport info

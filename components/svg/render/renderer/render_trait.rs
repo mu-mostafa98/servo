@@ -8,9 +8,9 @@
 use webrender_api::units::LayoutPoint;
 use webrender_api::{ClipChainId, DisplayListBuilder, SpatialId};
 
+use crate::RasterSink;
 use crate::model::element::shape::Shape;
 use crate::model::style::NodeStyle;
-use crate::RasterSink;
 
 /// Bundled rendering parameters passed to every [`Render::render`] call.
 pub(crate) struct RenderContext<'a> {

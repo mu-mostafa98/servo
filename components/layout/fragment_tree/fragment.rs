@@ -16,12 +16,12 @@ use servo_arc::Arc as ServoArc;
 use servo_base::id::PipelineId;
 use servo_base::print_tree::PrintTree;
 use servo_base::text::Utf32CodeUnits;
+#[cfg(feature = "svg-engine")]
+use servo_svg::document::SvgTree;
 use servo_url::ServoUrl;
 use style::Zero;
 use style::properties::ComputedValues;
 use style_traits::CSSPixel;
-#[cfg(feature = "svg-engine")]
-use servo_svg::document::SvgTree;
 use webrender_api::{FontInstanceKey, ImageKey};
 
 use super::{

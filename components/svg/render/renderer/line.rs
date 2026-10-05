@@ -4,8 +4,8 @@
 
 //! Rendering for SVG `<line>`.
 
-use crate::render::renderer::{Render, RenderContext, stroke};
 use crate::model::element::shape::Line;
+use crate::render::renderer::{Render, RenderContext, stroke};
 
 /// Renders an SVG `<line>`.
 ///

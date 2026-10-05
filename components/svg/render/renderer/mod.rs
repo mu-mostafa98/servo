@@ -28,7 +28,6 @@ pub(crate) mod circle;
 pub(crate) mod ellipse;
 pub(crate) mod fill;
 pub(crate) mod gradient;
-pub(crate) mod util;
 pub(crate) mod image;
 pub(crate) mod line;
 pub(crate) mod path;
@@ -40,10 +39,11 @@ pub(crate) mod render_trait;
 pub(crate) mod stroke;
 pub(crate) mod text;
 pub(crate) mod transform;
+pub(crate) mod util;
 
 // Re-export the public API so existing imports stay working.
+pub(crate) use render_trait::{Render, RenderContext};
 pub(crate) use util::{
     ZERO_LENGTH_EPSILON, clip_chain_option, color_interpolation, effective_stroke_width, fill_rule,
     make_common_props, paint_order_stroke_before_fill, shape_rendering_value, to_colorf,
 };
-pub(crate) use render_trait::{Render, RenderContext};

@@ -4,8 +4,8 @@
 
 //! Rendering for SVG `<circle>`.
 
-use crate::render::renderer::{Render, RenderContext};
 use crate::model::element::shape::Circle;
+use crate::render::renderer::{Render, RenderContext};
 
 /// Renders an SVG `<circle>`.
 ///

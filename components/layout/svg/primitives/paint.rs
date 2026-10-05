@@ -293,18 +293,24 @@ mod tests {
         assert_eq!(po.order[0], PaintOperation::Stroke);
 
         let po = parse_paint_order("stroke markers").unwrap();
-        assert_eq!(po.order, [
-            PaintOperation::Stroke,
-            PaintOperation::Markers,
-            PaintOperation::Fill,
-        ]);
+        assert_eq!(
+            po.order,
+            [
+                PaintOperation::Stroke,
+                PaintOperation::Markers,
+                PaintOperation::Fill,
+            ]
+        );
 
         let po = parse_paint_order("markers stroke fill").unwrap();
-        assert_eq!(po.order, [
-            PaintOperation::Markers,
-            PaintOperation::Stroke,
-            PaintOperation::Fill,
-        ]);
+        assert_eq!(
+            po.order,
+            [
+                PaintOperation::Markers,
+                PaintOperation::Stroke,
+                PaintOperation::Fill,
+            ]
+        );
 
         assert!(parse_paint_order("bogus").is_none());
     }

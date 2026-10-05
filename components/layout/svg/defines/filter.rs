@@ -103,7 +103,13 @@ impl DefinitionParser for FilterParser {
                         let (r, g, b, a) = parse_color_rgba(&flood_color_str);
                         let flood_opacity = prim_get_float("flood-opacity", 1.0);
                         primitives.push(FilterPrimitive::DropShadow(
-                            dx, dy, std_dev, r, g, b, a * flood_opacity,
+                            dx,
+                            dy,
+                            std_dev,
+                            r,
+                            g,
+                            b,
+                            a * flood_opacity,
                         ));
                     },
                     "feColorMatrix" => {

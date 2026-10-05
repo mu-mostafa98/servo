@@ -21,9 +21,15 @@ pub(crate) fn apply_marker_presentation_attrs(element: &ServoLayoutElement, styl
         })
     };
 
-    let start = read_attr("marker-start").as_deref().and_then(extract_url_fragment);
-    let mid = read_attr("marker-mid").as_deref().and_then(extract_url_fragment);
-    let end = read_attr("marker-end").as_deref().and_then(extract_url_fragment);
+    let start = read_attr("marker-start")
+        .as_deref()
+        .and_then(extract_url_fragment);
+    let mid = read_attr("marker-mid")
+        .as_deref()
+        .and_then(extract_url_fragment);
+    let end = read_attr("marker-end")
+        .as_deref()
+        .and_then(extract_url_fragment);
 
     if start.is_some() || mid.is_some() || end.is_some() {
         style.markers = Some(MarkerRefs {

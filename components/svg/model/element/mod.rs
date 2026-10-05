@@ -18,10 +18,9 @@ pub mod text;
 pub use self::image::SvgImage;
 pub use self::shape::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
 pub use self::text::{DominantBaseline, LengthAdjust, ShapedGlyph, TextAnchor, TextSpan};
-
 use crate::model::document::SvgViewport;
-use crate::model::transform::TransformOp;
 use crate::model::style::NodeStyle;
+use crate::model::transform::TransformOp;
 use crate::model::units::Id;
 
 /// A single node in the SVG render tree.

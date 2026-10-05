@@ -6,11 +6,11 @@
 //! the matching presentation-attribute application.
 
 use script::layout_dom::ServoLayoutElement;
-use style::values::computed::svg::{SVGOpacity, SVGStrokeDashArray};
-use style::values::generics::svg::SVGLength;
 use servo_svg::style::paint_servers::PaintServer;
 use servo_svg::style::{LineCap, LineJoin, NodeStyle, StrokeParams};
 use servo_svg::units::{Id, Length, Opacity};
+use style::values::computed::svg::{SVGOpacity, SVGStrokeDashArray};
+use style::values::generics::svg::SVGLength;
 use svgtypes::Color as SvgColor;
 
 use super::{FromComputedValues, ResolvedPaint, resolve_svg_paint};
@@ -79,7 +79,10 @@ impl FromComputedValues for StrokeParams {
             ResolvedPaint::PaintServer(id) => Some(StrokeParams {
                 // An invalid/missing reference falls back to black at resolve
                 // time (see `resolve_paint_server`).
-                paint_server: Some(PaintServer::Ref { id: Id::new(id), fallback: None }),
+                paint_server: Some(PaintServer::Ref {
+                    id: Id::new(id),
+                    fallback: None,
+                }),
                 opacity,
                 width: Length::new(width),
                 line_cap,

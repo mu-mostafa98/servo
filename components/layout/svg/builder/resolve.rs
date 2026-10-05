@@ -75,7 +75,9 @@ pub(crate) fn resolve_children<'dom>(
     vh: f32,
 ) -> Vec<SvgNode> {
     if let SvgTag::Container(Container::Use) = tag {
-        resolve_use_children(node, root_node, builder, state, node_style, node_color, vw, vh)
+        resolve_use_children(
+            node, root_node, builder, state, node_style, node_color, vw, vh,
+        )
     } else if let SvgTag::Container(Container::Switch) = tag {
         resolve_switch_children(
             node, root_node, builder, state, node_style, node_color, in_shadow, vw, vh,
@@ -85,11 +87,7 @@ pub(crate) fn resolve_children<'dom>(
         // normal content Stylo already resolves inherited properties along the
         // real DOM ancestry. The effective `color` (which may come from an SVG
         // `color` presentation attribute Stylo does not see) is always threaded.
-        let child_inherited = if in_shadow {
-            Some(node_style)
-        } else {
-            None
-        };
+        let child_inherited = if in_shadow { Some(node_style) } else { None };
         node.dom_children()
             .filter_map(|child| {
                 builder.build_render_node(
@@ -127,11 +125,7 @@ fn resolve_switch_children<'dom>(
 ) -> Vec<SvgNode> {
     // Manual inheritance only applies inside a `<use>` shadow tree; otherwise
     // Stylo already resolved inherited properties along the real DOM ancestry.
-    let child_inherited = if in_shadow {
-        Some(node_style)
-    } else {
-        None
-    };
+    let child_inherited = if in_shadow { Some(node_style) } else { None };
     for child in node.dom_children() {
         if let Some(built) = builder.build_render_node(
             child,
@@ -260,8 +254,7 @@ fn resolve_use_children<'dom>(
             let apply_offset = |node: &mut SvgNode| {
                 if let (Some(dx), Some(dy)) = offset {
                     if dx != 0.0 || dy != 0.0 {
-                        node.transforms
-                            .insert(0, TransformOp::Translate(dx, dy));
+                        node.transforms.insert(0, TransformOp::Translate(dx, dy));
                     }
                 }
             };
@@ -274,13 +267,13 @@ fn resolve_use_children<'dom>(
             // `viewBox` / `x` / `y` / `width` / `height`, with the `<use>`
             // element's attributes taking precedence (§5.5, §5.6.2).
             if is_symbol {
-                let has_geometry = sym_view_box.is_some()
-                    || sym_x.is_some()
-                    || sym_y.is_some()
-                    || sym_width.is_some()
-                    || sym_height.is_some()
-                    || use_width.is_some()
-                    || use_height.is_some();
+                let has_geometry = sym_view_box.is_some() ||
+                    sym_x.is_some() ||
+                    sym_y.is_some() ||
+                    sym_width.is_some() ||
+                    sym_height.is_some() ||
+                    use_width.is_some() ||
+                    use_height.is_some();
                 if has_geometry {
                     let width = use_width
                         .or(sym_width)

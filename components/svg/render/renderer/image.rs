@@ -14,9 +14,7 @@
 //! `Some` and the real image is drawn on the next paint.
 
 use webrender_api::units::{LayoutPoint, LayoutRect, LayoutSize};
-use webrender_api::{
-    AlphaType, ColorF, CommonItemProperties, ImageRendering, SpaceAndClipInfo,
-};
+use webrender_api::{AlphaType, ColorF, CommonItemProperties, ImageRendering, SpaceAndClipInfo};
 
 use crate::model::element::image::SvgImage;
 use crate::render::renderer::{Render, RenderContext};
@@ -30,9 +28,7 @@ impl Render for SvgImage {
         let vp_w = self.width;
         let vp_h = self.height;
 
-        let bounds = if let (Some(nw), Some(nh)) =
-            (self.natural_width, self.natural_height)
-        {
+        let bounds = if let (Some(nw), Some(nh)) = (self.natural_width, self.natural_height) {
             // Apply preserveAspectRatio: fit the image's natural size into the
             // viewport rect (x, y, vp_w, vp_h) according to the alignment/slice.
             let (sx, sy, ox, oy) = compute_viewbox_transform(
@@ -49,10 +45,7 @@ impl Render for SvgImage {
         } else {
             // No natural dimensions (pending / vector / missing metadata) —
             // fall back to filling the full viewport rect.
-            LayoutRect::from_origin_and_size(
-                LayoutPoint::new(x, y),
-                LayoutSize::new(vp_w, vp_h),
-            )
+            LayoutRect::from_origin_and_size(LayoutPoint::new(x, y), LayoutSize::new(vp_w, vp_h))
         };
 
         let common = CommonItemProperties::new(

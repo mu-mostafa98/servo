@@ -49,7 +49,9 @@ pub(super) fn build_image_tag(
         return None;
     }
     let get_xlink = |name: &str| {
-        element.attribute_as_str(&ns!(xlink), &LocalName::from(name)).map(|s| s.to_string())
+        element
+            .attribute_as_str(&ns!(xlink), &LocalName::from(name))
+            .map(|s| s.to_string())
     };
     let href = get("href").or_else(|| get_xlink("href"));
     // Resolve href → ImageKey + natural dimensions. Relative URLs are resolved

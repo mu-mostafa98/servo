@@ -10,11 +10,11 @@ use std::sync::Arc;
 use html5ever::{LocalName, local_name};
 use layout_api::{LayoutElement, LayoutNode};
 use script::layout_dom::ServoLayoutNode;
-use servo_svg::error::{SvgEngineError, SvgResult};
 use servo_svg::document::{
     GradientDef, GradientExplicit, GradientLength, GradientStop, GradientUnits, LinearGradient,
     RadialGradient, SpreadMethod,
 };
+use servo_svg::error::{SvgEngineError, SvgResult};
 use svgtypes::{Color as SvgColor, Length as SvgLength};
 use web_atoms::ns;
 
@@ -286,7 +286,9 @@ fn resolve_gradient(
     }
 
     let def = map.get(id)?.as_ref().clone();
-    let inherited = def.href().and_then(|href| resolve_gradient(href, map, visiting));
+    let inherited = def
+        .href()
+        .and_then(|href| resolve_gradient(href, map, visiting));
 
     let resolved = match &def {
         GradientDef::Linear(lg) => {

@@ -4,8 +4,8 @@
 
 //! Rendering for SVG `<ellipse>`.
 
-use crate::render::renderer::{Render, RenderContext};
 use crate::model::element::shape::Ellipse;
+use crate::render::renderer::{Render, RenderContext};
 
 /// Renders an SVG `<ellipse>`.
 ///

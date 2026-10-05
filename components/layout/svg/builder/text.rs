@@ -124,8 +124,8 @@ pub(crate) fn build_text_node<'dom>(
             "end" => -1.0,
             _ => 0.0,
         })
-        .unwrap_or(0.0)
-        * total_advance;
+        .unwrap_or(0.0) *
+        total_advance;
 
     let mut pen = anchor_shift;
     // `dy` shifts the *current* text position, so it accumulates across runs
@@ -165,7 +165,8 @@ pub(crate) fn build_text_node<'dom>(
         }
         dy_pen += span.dy.iter().sum::<f32>();
         pen += span.total_advance();
-        let (run_style, run_transforms, _color) = build_style(run_node, context, css_rules, None, None);
+        let (run_style, run_transforms, _color) =
+            build_style(run_node, context, css_rules, None, None);
         let run_id = extract_id(&run_node.as_element()?);
         children.push(SvgNode {
             id: run_id,
@@ -285,8 +286,8 @@ fn collect_text_runs<'dom>(
             // inflating the RTL anchor offset.
             let followed_by_content = children[i + 1..].iter().any(|c| match c.as_element() {
                 Some(e) => {
-                    e.local_name() == &local_name!("tspan")
-                        || e.local_name() == &local_name!("textPath")
+                    e.local_name() == &local_name!("tspan") ||
+                        e.local_name() == &local_name!("textPath")
                 },
                 None => !(*c).text_content().trim().is_empty(),
             });
@@ -357,7 +358,9 @@ fn parse_start_offset(value: &str, font_size: f32, path_length: f32) -> f32 {
 
 /// Total arc length of a [`kurbo::BezPath`], summed over its segments.
 fn bez_path_length(path: &kurbo::BezPath) -> f64 {
-    path.segments().map(|seg| seg.arclen(ARC_LEN_ACCURACY)).sum()
+    path.segments()
+        .map(|seg| seg.arclen(ARC_LEN_ACCURACY))
+        .sum()
 }
 
 /// Parse a `text-anchor` attribute value into a [`TextAnchor`].
@@ -378,7 +381,12 @@ fn parse_text_anchor(value: Option<String>) -> TextAnchor {
 /// path coordinates, and the `rotate` list is rewritten to the tangent angles so
 /// the existing per-glyph rotation path in the renderer is driven from the path
 /// geometry.
-fn place_on_path(span: &mut TextSpan, path: &kurbo::BezPath, start_offset: f32, anchor: TextAnchor) {
+fn place_on_path(
+    span: &mut TextSpan,
+    path: &kurbo::BezPath,
+    start_offset: f32,
+    anchor: TextAnchor,
+) {
     let segments: Vec<kurbo::PathSeg> = path.segments().collect();
     if segments.is_empty() || span.glyphs.is_empty() {
         return;
@@ -455,11 +463,11 @@ fn shape_text_span(span: &mut TextSpan, node: ServoLayoutNode, context: &LayoutC
     use app_units::Au;
     use fonts::{ShapingFlags, ShapingOptions};
     use layout_api::LayoutNode;
+    use servo_svg::element::text::{DominantBaseline, LengthAdjust, ShapedGlyph};
     use style::computed_values::font_variant_position::T as FontVariantPosition;
     use style::values::computed::{
         FontFeatureSettings, FontVariantEastAsian, FontVariantLigatures, FontVariantNumeric,
     };
-    use servo_svg::element::text::{DominantBaseline, LengthAdjust, ShapedGlyph};
     use unicode_script::Script;
 
     if span.text.is_empty() {

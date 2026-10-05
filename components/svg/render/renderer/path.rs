@@ -4,23 +4,22 @@
 
 //! Rendering for SVG `<path>` (vello_cpu rasterization or native primitives).
 
-use euclid::Transform2D;
-use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
-use webrender_api::units::{LayoutPoint, LayoutRect};
-use webrender_api::DisplayListBuilder;
-
-use crate::render::renderer::{Render, RenderContext, fill_rule};
-use crate::render::geometry::{path_data_to_bez, ComplexClip};
-use crate::model::element::shape::Path;
-use crate::model::document::{GradientDef, GradientUnits, SpreadMethod};
-use crate::model::style::paint_servers::PaintServer;
-use crate::model::style::{FillParams, FillRule, StrokeParams};
-use crate::{RasterSink, RasterizedImage};
-
 use std::hash::{Hash, Hasher};
 
+use euclid::Transform2D;
+use kurbo::{BezPath, PathEl, Point as KurboPoint, Shape};
 use vello_cpu::color::{AlphaColor, DynamicColor, Srgb};
 use vello_cpu::peniko::{ColorStop, ColorStops, Extend, Gradient};
+use webrender_api::DisplayListBuilder;
+use webrender_api::units::{LayoutPoint, LayoutRect};
+
+use crate::model::document::{GradientDef, GradientUnits, SpreadMethod};
+use crate::model::element::shape::Path;
+use crate::model::style::paint_servers::PaintServer;
+use crate::model::style::{FillParams, FillRule, StrokeParams};
+use crate::render::geometry::{ComplexClip, path_data_to_bez};
+use crate::render::renderer::{Render, RenderContext, fill_rule};
+use crate::{RasterSink, RasterizedImage};
 
 /// Tolerance for flattening bezier curves into line segments.
 /// Lower values = smoother curves, more segments.
@@ -240,7 +239,14 @@ pub(crate) fn rasterize_bez(
     }
 
     if let Some(f) = fill {
-        if let Some(paint) = resolve_fill_paint(f, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity) {
+        if let Some(paint) = resolve_fill_paint(
+            f,
+            css_w as f32,
+            css_h as f32,
+            viewbox_scale,
+            &bbox,
+            node_opacity,
+        ) {
             context.set_fill_rule(match f.fill_rule {
                 FillRule::NonZero => vello_cpu::peniko::Fill::NonZero,
                 FillRule::EvenOdd => vello_cpu::peniko::Fill::EvenOdd,
@@ -251,7 +257,14 @@ pub(crate) fn rasterize_bez(
     }
 
     if let Some(s) = stroke {
-        if let Some(paint) = resolve_stroke_paint(s, css_w as f32, css_h as f32, viewbox_scale, &bbox, node_opacity) {
+        if let Some(paint) = resolve_stroke_paint(
+            s,
+            css_w as f32,
+            css_h as f32,
+            viewbox_scale,
+            &bbox,
+            node_opacity,
+        ) {
             apply_paint(&mut context, scale_paint(paint, scale as f64));
             let mut vello_stroke =
                 vello_cpu::kurbo::Stroke::new(s.width.get() as f64 * total_scale as f64);
@@ -345,7 +358,11 @@ pub(crate) fn rasterize_bez(
                 let ly = raster_y + (row as f32 + 0.5) / scale;
                 let mx = (lx - mask.x) * mask.scale;
                 let my = (ly - mask.y) * mask.scale;
-                let mask_alpha: f32 = if mx < 0.0 || my < 0.0 || mx >= mask.width as f32 || my >= mask.height as f32 {
+                let mask_alpha: f32 = if mx < 0.0 ||
+                    my < 0.0 ||
+                    mx >= mask.width as f32 ||
+                    my >= mask.height as f32
+                {
                     0.0
                 } else {
                     let mxi = mx as usize;
@@ -422,7 +439,15 @@ pub(crate) fn resolve_fill_paint(
     bbox: &kurbo::Rect,
     node_opacity: f32,
 ) -> Option<ResolvedPaint> {
-    resolve_paint(&fill.paint_server, fill.opacity.get(), node_opacity, w, h, viewbox_scale, bbox)
+    resolve_paint(
+        &fill.paint_server,
+        fill.opacity.get(),
+        node_opacity,
+        w,
+        h,
+        viewbox_scale,
+        bbox,
+    )
 }
 
 /// Resolve a stroke to a concrete paint (solid color or gradient).
@@ -464,14 +489,15 @@ fn resolve_paint(
             viewbox_scale,
             bbox,
         ))),
-        Some(PaintServer::Solid(color)) => {
-            Some(ResolvedPaint::Solid(vello_color(color, paint_opacity * node_opacity)))
-        },
-        Some(PaintServer::Pattern(_))
-        | Some(PaintServer::Ref { .. })
-        | Some(PaintServer::ContextFill)
-        | Some(PaintServer::ContextStroke)
-        | None => None,
+        Some(PaintServer::Solid(color)) => Some(ResolvedPaint::Solid(vello_color(
+            color,
+            paint_opacity * node_opacity,
+        ))),
+        Some(PaintServer::Pattern(_)) |
+        Some(PaintServer::Ref { .. }) |
+        Some(PaintServer::ContextFill) |
+        Some(PaintServer::ContextStroke) |
+        None => None,
     }
 }
 
@@ -564,9 +590,12 @@ fn stops_to_colorstops(stops: &[crate::model::document::GradientStop]) -> ColorS
         .iter()
         .map(|s| ColorStop {
             offset: s.offset,
-            color: DynamicColor::from_alpha_color(
-                AlphaColor::<Srgb>::from_rgba8(s.color.red, s.color.green, s.color.blue, s.color.alpha),
-            ),
+            color: DynamicColor::from_alpha_color(AlphaColor::<Srgb>::from_rgba8(
+                s.color.red,
+                s.color.green,
+                s.color.blue,
+                s.color.alpha,
+            )),
         })
         .collect();
     ColorStops(items.into())

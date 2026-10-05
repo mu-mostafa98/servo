@@ -15,11 +15,11 @@
 //! no shared mutable state and no side effects.
 
 use script::layout_dom::ServoLayoutElement;
+use servo_svg::element::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
+use servo_svg::geometry::{PathCommand, PathData, Point};
+use servo_svg::units::Length;
 use style::values::computed::{Length as CssLength, LengthPercentage};
 use style::values::generics::length::GenericLengthPercentageOrAuto;
-use servo_svg::geometry::{PathCommand, PathData, Point};
-use servo_svg::element::{Circle, Ellipse, Line, Path, Polygon, Polyline, Rectangle, Shape};
-use servo_svg::units::Length;
 
 use crate::svg::primitives::attrs::{get_attr, parse_length_resolved, parse_points};
 
@@ -137,7 +137,10 @@ fn parse_circle(
     let (cx, cy) = match computed {
         Some(cv) => {
             let svg = cv.get_svg();
-            (resolve_length_percentage(&svg.clone_cx(), vw), resolve_length_percentage(&svg.clone_cy(), vh))
+            (
+                resolve_length_percentage(&svg.clone_cx(), vw),
+                resolve_length_percentage(&svg.clone_cy(), vh),
+            )
         },
         None => (
             dom_length_resolved("cx", get, fs, vw),
@@ -165,18 +168,14 @@ fn parse_ellipse(
     // the renderer, which performs the derivation.
     let rx = match computed {
         Some(cv) => match cv.get_svg().clone_rx() {
-            GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
-                resolve_radius(&nn_lp.0, vw)
-            },
+            GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => resolve_radius(&nn_lp.0, vw),
             _ => None,
         },
         None => parse_radius("rx", get, fs, vw),
     };
     let ry = match computed {
         Some(cv) => match cv.get_svg().clone_ry() {
-            GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => {
-                resolve_radius(&nn_lp.0, vh)
-            },
+            GenericLengthPercentageOrAuto::LengthPercentage(nn_lp) => resolve_radius(&nn_lp.0, vh),
             _ => None,
         },
         None => parse_radius("ry", get, fs, vh),
@@ -184,7 +183,10 @@ fn parse_ellipse(
     let (cx, cy) = match computed {
         Some(cv) => {
             let svg = cv.get_svg();
-            (resolve_length_percentage(&svg.clone_cx(), vw), resolve_length_percentage(&svg.clone_cy(), vh))
+            (
+                resolve_length_percentage(&svg.clone_cx(), vw),
+                resolve_length_percentage(&svg.clone_cy(), vh),
+            )
         },
         None => (
             dom_length_resolved("cx", get, fs, vw),
@@ -200,12 +202,7 @@ fn parse_ellipse(
     }))
 }
 
-fn parse_line(
-    get: &dyn Fn(&str) -> Option<String>,
-    fs: f32,
-    vw: f32,
-    vh: f32,
-) -> Option<Shape> {
+fn parse_line(get: &dyn Fn(&str) -> Option<String>, fs: f32, vw: f32, vh: f32) -> Option<Shape> {
     Some(Shape::Line(Line {
         x1: Length::new(dom_length_resolved("x1", get, fs, vw)),
         y1: Length::new(dom_length_resolved("y1", get, fs, vh)),
